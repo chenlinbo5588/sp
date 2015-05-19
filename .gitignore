@@ -1,0 +1,13 @@
+.project
+/user_guide/
+license.txt
+composer.json
+contributing.md
+readme.rst
+
+/application/cache/*
+!/application/cache/index.html
+!/application/cache/.htaccess
+
+/application/logs/*
+!/application/logs/index.html
