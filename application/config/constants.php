@@ -90,3 +90,4 @@ define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
 
 define('SUCCESS_TEXT','成功');
 define('SUCCESS_CODE',0);
+

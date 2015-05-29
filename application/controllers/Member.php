@@ -2,15 +2,16 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Member extends MY_Controller {
-
+	
+	public function __construct(){
+		parent::__construct();
+	}
 	
 	/**
 	 * 登陆
 	 */
 	public function login()
 	{
-		
-		
 		if($this->isPostRequest()){
 			
 			$this->load->library('Member_Service');

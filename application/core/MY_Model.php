@@ -13,10 +13,17 @@ class MY_Model extends CI_Model {
 
     public function __construct(){
         parent::__construct();
+        
+        $this->_tableRealName = $this->getTableRealName();
     }
     
     public function getTableRealName(){
     	return $this->_tablePre.$this->_tableName;
+    }
+    
+    public function getTableFields(){
+    	$fields = $this->db->list_fields($this->_tableRealName);
+    	return $fields;
     }
     
     public function sumByCondition($condition){
@@ -37,7 +44,7 @@ class MY_Model extends CI_Model {
         return $this->db->count_all_results($this->_tableRealName);
     }
     
-    public function queryById($id,$key = 'id'){
+    public function getFirstByKey($id,$key = 'id'){
         $query = $this->db->get_where($this->_tableRealName,array($key => $id));
         $data = $query->result_array();
         if($data[0]){
@@ -115,6 +122,20 @@ class MY_Model extends CI_Model {
         return $this->db->update_batch($this->_tableRealName, $data,$key); 
     }
     
+    public function update($param, $where){
+        $fields = $this->_metaData();
+        
+        foreach($param as $key => $value){
+        	if(in_array($key,$fields)){
+        		$data[$key] = $value;
+        	}
+        }
+        
+        $this->db->update($this->_tableRealName, $param, $where);
+        return $this->db->affected_rows();
+    }
+    
+    
     public function getMaxByWhere($field,$where = array()){
         if($where){
             $this->db->where($where);
@@ -163,8 +184,6 @@ class MY_Model extends CI_Model {
         
         if($condition['order']){
             $this->db->order_by($condition['order']);
-        }else{
-            $this->db->order_by("gmt_create DESC");
         }
         
         if($condition['pager']){

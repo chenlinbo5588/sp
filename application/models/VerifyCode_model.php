@@ -1,22 +1,17 @@
 <?php
 
 
-class Member_Model extends MY_Model {
+class VerifyCode_Model extends MY_Model {
     
-    public $_tableName = 'member';
+    public $_tableName = 'verifycode';
     
     public function __construct(){
         parent::__construct();
-        
     }
     
     private function _metaData(){
     	static $_meta = array(
-			'uid','emai','username','password','status','mobile','sex',
-			'nickname','emailstatus','avatarstatus','videophotostatus',
-			'groupid','groupexpiry','extgroupids','regdate','credits','notifysound',
-			'timeoffset','newpm','newprompt','onlyacceptfriendpm','conisbind',
-			'district_id','freeze','gmt_create','gmt_modify'
+			'phone','ip','code','expire_time','gmt_create','gmt_modify'
 		);
     	
     	return $_meta;
@@ -25,9 +20,9 @@ class Member_Model extends MY_Model {
     /**
      * 获得用户
      */
-    public function getUserByUserName($username,$field = '*'){
+    public function getVerifyCodeByPhone($phone,$field = '*'){
         $sql = "SELECT {$field} FROM ".$this->_tableRealName ." WHERE username = ?"; 
-        $query = $this->db->query($sql, array($username));
+        $query = $this->db->query($sql, array($phone));
         $row = $query->result_array();
         
         if($row[0]){
@@ -37,19 +32,7 @@ class Member_Model extends MY_Model {
         }
     }
     
-    public function checkUserNameNoExist($username){
-    	$count = $this->getCount(array(
-    		'where' => array(
-    			'username' => $username
-    		)
-    	));
-    	
-    	if($count > 0){
-    		return false;
-    	}else{
-    		return true;
-    	}
-    }
+    
     
     public function add($param){
         $now = time();
@@ -63,14 +46,7 @@ class Member_Model extends MY_Model {
         	}
         }
         
-        if(!in_array($param['sex'],array('F','M'))){
-        	$data['sex'] = 'M';
-        }
-        
-        $data['uid'] = null;
         $data['gmt_create'] = $data['gmt_modify'] = time();
-        
-        
         $this->db->insert($this->_tableRealName, $data);
         
         return $this->db->insert_id();

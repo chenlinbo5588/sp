@@ -67,9 +67,10 @@ $lang['form_validation_greater_than_equal_to']	= 'The {field} field must contain
 $lang['form_validation_error_message_not_set']	= 'Unable to access an error message corresponding to your field name {field}.';
 $lang['form_validation_in_list']		= 'The {field} field must be one of: {param}.';
 
+
 //custome method
-$lang['form_validation_valid_date']						= 'The {field} field must contain a valid Date.';
-$lang['form_validation_valid_mobile']					= 'The {field} field must be a valid Chinese Mobile.';
-$lang['form_validation_valid_telephone']				= 'The {field} field must be a valid Chinese Telephone No.';
-$lang['form_validation_is_unique_by_status'] 			= 'The {field} field must contain a unique value.';
-$lang['form_validation_is_unique_not_self'] 			= 'The {field} field must contain a unique value.';
+$lang['form_validation_valid_date']						= '{field} 字段必须是一个有效的日期.';
+$lang['form_validation_valid_mobile']					= '{field} 字段必须是一个有效的手机号码.';
+$lang['form_validation_valid_telephone']				= '{field} 字段必须是一个有效的固定电话号码.';
+$lang['form_validation_is_unique_by_status'] 			= '{field} 字段必须唯一,该值已被占用 .';
+$lang['form_validation_is_unique_not_self'] 			= '{field} 字段必须唯一,该值已被占用.';
