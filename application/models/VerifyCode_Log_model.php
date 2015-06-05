@@ -1,27 +1,28 @@
 <?php
 
 
-class VerifyCode_Model extends MY_Model {
+class VerifyCode_Log_Model extends MY_Model {
     
-    public $_tableName = 'verifycode';
+    public $_tableName = 'verifycode_log';
     
     public function __construct(){
         parent::__construct();
     }
     
-    private function _metaData(){
+    protected function _metaData(){
     	static $_meta = array(
-			'phone','ip','code','expire_time','gmt_create','gmt_modify'
+			'id','phone','ip','code','expire_time','send_normal','send_fail','gmt_create','gmt_modify'
 		);
     	
     	return $_meta;
     }
     
-    /**
-     * 获得用户
-     */
+    public function checkVerifyCode($phone,$code){
+    	
+    }
+    
     public function getVerifyCodeByPhone($phone,$field = '*'){
-        $sql = "SELECT {$field} FROM ".$this->_tableRealName ." WHERE username = ?"; 
+        $sql = "SELECT {$field} FROM ".$this->_tableRealName ." WHERE phone = ?"; 
         $query = $this->db->query($sql, array($phone));
         $row = $query->result_array();
         
@@ -31,8 +32,6 @@ class VerifyCode_Model extends MY_Model {
             return false;
         }
     }
-    
-    
     
     public function add($param){
         $now = time();
@@ -52,5 +51,20 @@ class VerifyCode_Model extends MY_Model {
         return $this->db->insert_id();
     }
     
+    public function sendNormalAddup($id){
+    	$this->db->set('send_normal','send_normal + 1',false);
+    	$this->db->where('id',$id);
+    	$this->db->update($this->_tableRealName);
+    	
+    	return $this->db->affected_rows();
+    }
+    
+    public function sendFailedAddup($id){
+    	$this->db->set('send_fail','send_fail + 1',false);
+    	$this->db->where('id',$id);
+    	$this->db->update($this->_tableRealName);
+    	
+    	return $this->db->affected_rows();
+    }
     
 }

@@ -30,9 +30,6 @@ class Member extends MY_Controller {
 			}else{
 				$this->jsonOutput($result['message'],array());
 			}
-			
-		}else{
-			$this->jsonOutput('',array('formhash' => $this->security->get_csrf_hash()));
 		}
 		
 	}
@@ -43,7 +40,7 @@ class Member extends MY_Controller {
 	 */
 	public function logout(){
 		$this->session->sess_destroy();
-		$this->jsonOutput('',array());
+		$this->jsonOutput('',$this->getFormHash());
 	}
 	
 }

@@ -10,7 +10,7 @@ class Member_Model extends MY_Model {
         
     }
     
-    private function _metaData(){
+    protected function _metaData(){
     	static $_meta = array(
 			'uid','emai','username','password','status','mobile','sex',
 			'nickname','emailstatus','avatarstatus','videophotostatus',
