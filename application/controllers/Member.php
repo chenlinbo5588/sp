@@ -7,6 +7,8 @@ class Member extends MY_Controller {
 		parent::__construct();
 	}
 	
+	
+	
 	/**
 	 * 登陆
 	 */

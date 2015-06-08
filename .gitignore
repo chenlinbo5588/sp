@@ -11,3 +11,9 @@ readme.rst
 
 /application/logs/*
 !/application/logs/index.html
+
+/application/smarty_tpl/*/templates_c/*
+!/application/smarty_tpl/*/templates_c/index.html
+
+/application/smarty_tpl/*/cache/*
+!/application/smarty_tpl/*/cache/index.html
