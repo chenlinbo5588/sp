@@ -122,6 +122,31 @@ class MY_Model extends CI_Model {
         return $this->db->update_batch($this->_tableRealName, $data,$key); 
     }
     
+    /**
+     * 添加
+     */
+    public function _add($param){
+    	$now = time();
+        $fields = $this->_metaData();
+        
+        $data = array();
+        
+        foreach($param as $key => $value){
+        	if(in_array($key,$fields)){
+        		$data[$key] = $value;
+        	}
+        }
+        
+        $data['gmt_create'] = $data['gmt_modify'] = time();
+    	$this->db->insert($this->_tableRealName, $data);
+        
+        return $this->db->insert_id();
+
+    }
+    
+    /**
+     * 更新
+     */
     public function update($param, $where){
         $fields = $this->_metaData();
         

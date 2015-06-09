@@ -151,11 +151,14 @@ class MY_Controller extends CI_Controller {
     }
     
     public function display($viewname = ''){
+    	$this->_smarty->assign($this->_seo);
     	$this->_smarty->display($this->_smarty->getTemplateDir(0).$viewname.'.tpl');
     }
     
-    public function seo($title = '', $desc = '', $meta = ''){
-    	
+    public function seo($title = '',$keyword = '', $desc = ''){
+    	$this->_seo['SEO_title'] = $title;
+    	$this->_seo['SEO_description'] = $desc;
+    	$this->_seo['SEO_keywords'] = $keyword;
     }
     
     
@@ -214,7 +217,8 @@ class Ydzj_Admin_Controller extends MY_Controller {
 	
 	
 	public function isLogin(){
-		if($this->session->userdata('memberinfo') && ($this->_reqtime - $this->session->userdata('last_activity') < 3600)){
+		//print_r($this->session->userdata('memberinfo'));
+		if($this->session->userdata('memberinfo') && ($this->_reqtime - $this->session->userdata('last_activity') < 86400)){
 			return true;
 		}
 		

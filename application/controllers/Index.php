@@ -32,7 +32,7 @@ class Index extends MY_Controller {
 					'last_activity' => $this->_reqtime
 				));
 				
-				redirect(site_url('sp_admin'));
+				redirect(admin_site_url('stadium/index'));
 				
 			}else{
 				

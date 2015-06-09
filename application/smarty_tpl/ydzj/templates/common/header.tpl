@@ -11,11 +11,10 @@
                                    maximum-scale=1.0,
                                    user-scalable=no,
                                    minimal-ui">
-		<link href="{base_url('css/base.css')}" rel="stylesheet" type="text/css" />
-		<script src="{base_url('js/jquery-1.11.3.js')}" type="text/javascript"></script>
-		{*
-		<link href="{base_url('css/jquery.mobile-1.4.5.css')}" rel="stylesheet" type="text/css" />
-		<script src="{base_url('js/jquery.mobile-1.4.5.js')}" type="text/javascript"></script>
-		*}
+		
+		
+		<link href="{css_url('css/jquery.mobile-1.4.5.css')}" rel="stylesheet" type="text/css" />
+		<script src="{js_url('js/jquery-1.11.3.js')}" type="text/javascript"></script>
+		<script src="{js_url('js/jquery.mobile-1.4.5.js')}" type="text/javascript"></script>
 	</head>
 	<body>

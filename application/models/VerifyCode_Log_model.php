@@ -33,23 +33,6 @@ class VerifyCode_Log_Model extends MY_Model {
         }
     }
     
-    public function add($param){
-        $now = time();
-        $fields = $this->_metaData();
-        
-        $data = array();
-        
-        foreach($param as $key => $value){
-        	if(in_array($key,$fields)){
-        		$data[$key] = $value;
-        	}
-        }
-        
-        $data['gmt_create'] = $data['gmt_modify'] = time();
-        $this->db->insert($this->_tableRealName, $data);
-        
-        return $this->db->insert_id();
-    }
     
     public function sendNormalAddup($id){
     	$this->db->set('send_normal','send_normal + 1',false);

@@ -71,7 +71,7 @@ class Verify_Service extends Base_Service {
 		$param['ip'] = $this->CI->input->ip_address();
 		$param['code'] = random_string($type,$length);
 		
-		$id = $this->_verifyCodeLogModel->add($param);
+		$id = $this->_verifyCodeLogModel->_add($param);
 		
 		if($id > 0){
 			return array('id' => $id, 'code' => $param['code']);

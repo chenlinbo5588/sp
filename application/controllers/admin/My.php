@@ -1,10 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-/**
- * 场馆
- */
-class Sp_Admin extends Ydzj_Admin_Controller {
+class My extends Ydzj_Admin_Controller {
 	
 	public function __construct(){
 		parent::__construct();
@@ -13,7 +10,7 @@ class Sp_Admin extends Ydzj_Admin_Controller {
 	
 	public function index()
 	{
-		$this->display('index/index');
+		$this->display('stadium/index');
 	}
 	
 }

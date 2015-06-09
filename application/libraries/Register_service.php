@@ -14,7 +14,7 @@ class Register_Service extends Base_Service {
 	public function createHalfRegisterMemebr($regParam){
 		$return = $this->formatArrayReturn();
 		
-		$uid = $this->_userModel->add(array(
+		$uid = $this->_userModel->_add(array(
 			'username' => $regParam['mobile'],
 			'mobile' => $regParam['mobile'],
 			'regip' => $regParam['regip'],
