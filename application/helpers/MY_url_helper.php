@@ -27,7 +27,7 @@
  * THE SOFTWARE.
  *
  * @package	CodeIgniter
- * @author	EllisLab Dev Team
+ * @author	linbo.chen
  * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (http://ellislab.com/)
  * @copyright	Copyright (c) 2014 - 2015, British Columbia Institute of Technology (http://bcit.ca/)
  * @license	http://opensource.org/licenses/MIT	MIT License
@@ -63,7 +63,7 @@ if ( ! function_exists('js_url'))
 	 */
 	function js_url($uri = '', $protocol = NULL)
 	{
-		return get_instance()->config->base_url('static/'.$uri, $protocol);
+		return get_instance()->config->base_url($uri, $protocol);
 	}
 }
 
@@ -82,7 +82,7 @@ if ( ! function_exists('css_url'))
 	 */
 	function css_url($uri = '', $protocol = NULL)
 	{
-		return get_instance()->config->base_url('static/'.$uri, $protocol);
+		return get_instance()->config->base_url($uri, $protocol);
 	}
 }
 

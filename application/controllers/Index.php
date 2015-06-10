@@ -45,9 +45,11 @@ class Index extends MY_Controller {
 			$this->display('index/admin_login');
 		}
 		
-		
-		
 	}
 	
 	
+	public function map(){
+		$this->display('index/map');
+	}
+
 }
