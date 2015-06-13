@@ -4,17 +4,16 @@
 class VerifyCode_Log_Model extends MY_Model {
     
     public $_tableName = 'verifycode_log';
+    public static $_tableMeta = null;
+    
     
     public function __construct(){
         parent::__construct();
+        self::$_tableMeta = $this->getTableMeta();
     }
     
     protected function _metaData(){
-    	static $_meta = array(
-			'id','phone','ip','code','expire_time','send_normal','send_fail','gmt_create','gmt_modify'
-		);
-    	
-    	return $_meta;
+    	return array_keys(self::$_tableMeta);
     }
     
     public function checkVerifyCode($phone,$code){

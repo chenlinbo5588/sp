@@ -4,22 +4,16 @@
 class Member_Model extends MY_Model {
     
     public $_tableName = 'member';
-    
+    public static $_tableMeta = null;
+
+
     public function __construct(){
         parent::__construct();
-        
+        self::$_tableMeta = $this->getTableMeta();
     }
     
     protected function _metaData(){
-    	static $_meta = array(
-			'uid','emai','username','password','status','mobile','sex',
-			'nickname','emailstatus','avatarstatus','videophotostatus',
-			'groupid','groupexpiry','extgroupids','regdate','credits','notifysound',
-			'timeoffset','newpm','newprompt','onlyacceptfriendpm','conisbind',
-			'district_id','freeze','gmt_create','gmt_modify'
-		);
-    	
-    	return $_meta;
+    	return array_keys(self::$_tableMeta);
     }
     
     /**

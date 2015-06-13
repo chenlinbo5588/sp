@@ -13,7 +13,7 @@ class Base_Service {
 		$this->_userModel = $this->CI->Member_Model;
 		
 	}
-	
+    
 	protected function successRetun($data = array()){
 		return array(
 			'code' => 'success',

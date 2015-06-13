@@ -17,13 +17,20 @@ class MY_Model extends CI_Model {
         $this->_tableRealName = $this->getTableRealName();
     }
     
-    public function getTableRealName(){
-    	return $this->_tablePre.$this->_tableName;
+    /**
+     * 获得表实体
+     * @return type 
+     */
+    protected function getTableMeta(){
+        return $this->load->entity($this->_tableRealName);
     }
     
-    public function getTableFields(){
-    	$fields = $this->db->list_fields($this->_tableRealName);
-    	return $fields;
+    /**
+     * 获得表真实名称
+     * @return type 
+     */
+    public function getTableRealName(){
+    	return $this->_tablePre.$this->_tableName;
     }
     
     public function sumByCondition($condition){
@@ -137,7 +144,12 @@ class MY_Model extends CI_Model {
         	}
         }
         
-        $data['gmt_create'] = $data['gmt_modify'] = time();
+        foreach(array('gmt_create','gmt_modify') as $value){
+            if(in_array($value,$fields)){
+                $data[$value] = $now;
+            }
+        }
+        
     	$this->db->insert($this->_tableRealName, $data);
         
         return $this->db->insert_id();
@@ -150,10 +162,16 @@ class MY_Model extends CI_Model {
     public function update($param, $where){
         $fields = $this->_metaData();
         
+        $now = time();
+        
         foreach($param as $key => $value){
         	if(in_array($key,$fields)){
         		$data[$key] = $value;
         	}
+        }
+        
+        if(in_array('gmt_modify',$fields)){
+            $data['gmt_modify'] = $now;
         }
         
         $this->db->update($this->_tableRealName, $param, $where);

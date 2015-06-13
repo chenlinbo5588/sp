@@ -18,3 +18,5 @@ readme.rst
 
 /application/smarty_tpl/*/cache/*
 !/application/smarty_tpl/*/cache/index.html
+/nbproject/private/
+/nbproject/

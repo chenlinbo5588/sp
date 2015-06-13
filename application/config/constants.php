@@ -90,4 +90,5 @@ define('SUCCESS_TEXT','成功');
 define('SUCCESS_CODE',0);
 
 define('SMARTY_TPL_PATH',APPPATH.'smarty_tpl/');
+define('EntityPATH',APPPATH.'entity/');
 
