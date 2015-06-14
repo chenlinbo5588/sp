@@ -18,15 +18,17 @@
     </head>
     <body>
 	   <div id="mainWrap">
-	        <div class="site_title"><h1>{$SEO_title}</h1></div>
+            <div data-role="header" data-theme="a">
+                <h1>{$SEO_title}</h1>
+            </div>
 	        <div data-role="navbar" data-grid="c" data-position="fixed">
                 <ul>
-                    <li><a href="{admin_site_url('stadium')}" class="ui-btn-active">体育场馆</a></li>
-                    <li><a href="{admin_site_url('product')}">周边产品</a></li>
-                    <li><a href="{admin_site_url('my')}">我</a></li>
-                    <li><a href="#">Three</a></li>
+                    <li><a href="{admin_site_url('member')}">用户</a></li>
+                    <li><a href="{admin_site_url('stadium')}" class="ui-btn-active">场馆</a></li>
+                    <li><a href="{admin_site_url('product')}">道具</a></li>
+                    <li><a href="{admin_site_url('my')}">设置</a></li>
                 </ul>
-            </div><!-- /navbar -->
+            </div>
             
 
             

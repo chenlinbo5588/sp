@@ -146,8 +146,13 @@ class MY_Controller extends CI_Controller {
     }
     
     
-    public function assign($name , $value){
-    	$this->_smarty->assign($name,$value);	
+    public function assign($name , $value = ''){
+        if(is_array($name)){
+            $this->_smarty->assign($name);
+        }else{
+            $this->_smarty->assign($name,$value);
+        }
+        
     }
     
     public function display($viewname = ''){

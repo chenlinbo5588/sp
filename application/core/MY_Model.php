@@ -135,7 +135,7 @@ class MY_Model extends CI_Model {
     public function _add($param){
     	$now = time();
         $fields = $this->_metaData();
-        
+
         $data = array();
         
         foreach($param as $key => $value){

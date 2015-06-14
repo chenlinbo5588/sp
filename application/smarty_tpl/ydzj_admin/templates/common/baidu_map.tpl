@@ -2,7 +2,6 @@
 function loadScript() {  
   var script = document.createElement("script");  
   script.src = "http://api.map.baidu.com/api?v=2.0&ak=qkNnEXk6nC3jcPTM8mv3dcE8&callback=initialize";  
-  // http://api.map.baidu.com/api?v=1.5&ak=您的密钥&callback=initialize"; //此为v1.4版本及以前版本的引用方式  
   document.body.appendChild(script);  
 }
 
@@ -24,7 +23,4 @@ function getCurrentLocation(map,callbackFunction){
     },{ enableHighAccuracy: true })
 }
 
-$(function(){
-    loadScript();
-});
 </script>

@@ -16,5 +16,34 @@ class Stadium_Service extends Base_Service {
         $this->_stadiumMetaModel = $this->CI->Stadium_Meta_Model;
         
 	}
+    
+    public function addOneStadium($param){
+        
+        if($param['has_coordinates'] != '1'){
+            $param['has_coordinates'] = 0;
+        }
+        
+        return $this->_stadiumModel->_add($param);
+    }
+    
+    public function getAllMetaGroups(){
+        
+        $all = $this->_stadiumMetaModel->getList(array(
+            'order' => 'group ASC ,displayorder DESC'
+            
+        ));
+        
+        $data = array();
+        
+        foreach($all as $key => $item){
+            if(!isset($data[$item['group']])){
+                $data[$item['group']] = array();
+            }
+            
+            $data[$item['group']][] = $item;
+        }
+        
+        return $data;
+    }
 	
 }
