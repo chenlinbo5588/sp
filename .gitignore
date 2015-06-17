@@ -5,6 +5,8 @@ license.txt
 composer.json
 contributing.md
 readme.rst
+proxy_log.log
+proxy.sqlite
 
 /application/cache/*
 !/application/cache/index.html

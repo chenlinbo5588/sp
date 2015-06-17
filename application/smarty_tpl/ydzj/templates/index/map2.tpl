@@ -47,6 +47,20 @@
         z-index:100;
       }
       
+      #footer {
+        background-color: white;
+        color: #808080;
+        font-size: 10pt; 
+        height: 81px;
+        padding: 0 8px 8px 8px;
+        text-align: center; 
+      }
+      .templatePicker {
+        border: 1px solid #808080;
+        border-radius: 0;
+      }
+      
+      
    </style>
    <script>
       var map, toolbar,editToolbar, geomTask;
@@ -55,29 +69,35 @@
         "esri/map", 
         "esri/toolbars/edit",
         "esri/toolbars/draw",
-
+        
         "esri/layers/GraphicsLayer","esri/graphic", 
         
         "esri/geometry/Point",
         "esri/geometry/Polyline",
         "esri/geometry/Polygon",
         "esri/geometry/Circle",
-        
-        
+
         "esri/layers/FeatureLayer",
         
         "esri/Color",
         "esri/symbols/SimpleMarkerSymbol",
         "esri/symbols/SimpleLineSymbol",
         "esri/symbols/SimpleFillSymbol",
+        "esri/symbols/TextSymbol",
         "esri/renderers/SimpleRenderer",
         "esri/InfoTemplate",
         
         "esri/dijit/Search",
+        "esri/dijit/editing/Editor",
+        "esri/dijit/editing/TemplatePicker",
+        "esri/dijit/AttributeInspector",
+        
         "esri/tasks/query", 
         "esri/tasks/FindTask", "esri/tasks/FindParameters",
         
         "dojo/_base/event",
+        "dojo/_base/array",
+        "dojo/keys",
         "dojo/dom", 
         "dojo/dom-style", 
         "dijit/Menu",
@@ -93,64 +113,127 @@
         "dojo/domReady!"
       ], function(
         Map, Edit,Draw, 
-        GraphicsLayer,Graphic,
         
+        
+        GraphicsLayer,Graphic,
         Point, Polyline, Polygon,Circle,
         FeatureLayer,
+        
         Color,
-        SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol,
+        SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol,TextSymbol,
         SimpleRenderer,
         InfoTemplate ,
+        
         Search,
+        Editor,
+        TemplatePicker,
+        AttributeInspector,
         Query,
         FindTask,FindParameters,
 
-        event, dom, domStyle,Menu,
-        parser, registry
+        event, 
+        arrayUtils,
+        keys,
+        dom, 
+        domStyle,
+        Menu,
+        parser, 
+        registry
       ) {
-        //parser.parse();
+        parser.parse();
 
         map = new Map("mapDiv");
-        var map2D = new esri.layers.ArcGISTiledMapServiceLayer("http://yr140307-hosv/ArcGIS/rest/services/2d/MapServer", { id: "2d"});
-        var searchLayer = new GraphicsLayer({ id : "seachLayer" });
-        var pipeNodeLayer = new GraphicsLayer({ id: "pipeNodeLayer" });
-         
-        map.addLayer(map2D);
-        map.addLayer(searchLayer);
-        map.addLayer(pipeNodeLayer);
+        var map2D = new esri.layers.ArcGISDynamicMapServiceLayer("http://yr140307-hosv/ArcGIS/rest/services/mypipe/MapServer", { id: "2d"});
+        var panWorkLayer = new GraphicsLayer({ id : "panWork" });
         
+        map.infoWindow.resize(400,300);
+        
+        map.addLayer(map2D);
+        map.addLayer(panWorkLayer);
+
         {literal}
         
-        //点属性
-        var featureLayer = new FeatureLayer("http://yr140307-hosv/ArcGIS/rest/services/2d/MapServer/1",{
-          infoTemplate: new InfoTemplate("单位一级点属性:", "${*}"),
-          outFields: ["*"],
-          id : "dx2jd"
-        });
-        
+        var nullSymbol = new SimpleMarkerSymbol().setSize(0);
         var symbol = new SimpleMarkerSymbol(
           SimpleMarkerSymbol.STYLE_CIRCLE, 
-          12, 
+          10, 
           new SimpleLineSymbol(
             SimpleLineSymbol.STYLE_NULL, 
             new Color([247, 34, 101, 0.9]), 
             1
           ),
-          new Color([207, 34, 171, 0.5])
+          new Color([255, 0, 0, 0.5])
         );
-        featureLayer.setSelectionSymbol(symbol); 
+        /*
+        //点属性
+        var pipeNodeLayer = new FeatureLayer("http://yr140307-hosv/ArcGIS/rest/services/mypipe/MapServer/0",{
+          //infoTemplate: new InfoTemplate("取水点属性:", "${*}"),
+          outFields: ["*"],
+          id : "pipenode"
+        });
         
+        
+        //pipeNodeLayer.setSelectionSymbol(symbol); 
         //make unselected features invisible
-        var nullSymbol = new SimpleMarkerSymbol().setSize(0);
-        featureLayer.setRenderer(new SimpleRenderer(nullSymbol));
+        
+        //pipeNodeLayer.setRenderer(new SimpleRenderer(nullSymbol));
+        pipeNodeLayer.setRenderer(new SimpleRenderer(symbol));
         
         
-        var suixiLayer =  new FeatureLayer("http://yr140307-hosv/ArcGIS/rest/services/2d/MapServer/17",{
+        
+        var dianpuInfoTemplate = new InfoTemplate();
+        var dianpuDetail = function(){
+        
+            var html = '<label>名称:<input type="text" name="title" value="${title}"/>';
+            html += '<input type="button" name="submit" value="保存"/>';
+            return html;
+        };
+        
+        dianpuInfoTemplate.setTitle("店铺${title}");
+        dianpuInfoTemplate.setContent(dianpuDetail());
+        */
+        
+        // 店铺
+        var dianpuNodeLayer = new FeatureLayer("http://yr140307-hosv/ArcGIS/rest/services/mydianpu/FeatureServer/0",{
+          infoTemplate: new InfoTemplate("店铺属性:", "${*}"),
+          //infoTemplate: dianpuInfoTemplate,
+          opacity: 0.75,
+          outFields: ["*"],
+          id : "dianpu"
+        });
+        
+        /*
+        //dianpuNodeLayer.setRenderer(new SimpleRenderer(nullSymbol));
+        dianpuNodeLayer.setRenderer(new SimpleRenderer(new SimpleMarkerSymbol(
+          SimpleMarkerSymbol.STYLE_CIRCLE, 
+          12, 
+          new SimpleLineSymbol(
+            SimpleLineSymbol.STYLE_SOLID, 
+            new Color([0, 0, 0, 0.9]), 
+            1
+          ),
+          //fill color
+          new Color([56, 128, 128])
+        )));
+        
+        
+        dianpuNodeLayer.setSelectionSymbol(
+          new SimpleMarkerSymbol().setSize(12).setOutline(new SimpleLineSymbol(
+            SimpleLineSymbol.STYLE_DOT, 
+            new Color([0, 0, 255, 0.9]), 
+            1
+          )).setColor(new Color([0, 56, 12]))
+        );
+       */
+        
+        
+        
+        // 水系
+        var suixiLayer =  new FeatureLayer("http://yr140307-hosv/ArcGIS/rest/services/mypipe/MapServer/1",{
           infoTemplate: new InfoTemplate("水系属性:", "${*}"),
           outFields: ["*"],
           id : "suixi"
         });
-        
         
         var lineSymbol = new SimpleLineSymbol(
             SimpleLineSymbol.STYLE_SOLID,
@@ -158,32 +241,9 @@
             3
         );
         suixiLayer.setRenderer(lineSymbol);
-        
-        
-        // 道路层
-        var template = new InfoTemplate();
-        template.setTitle("<b>${PName}</b>");
-        template.setContent(getTpl());
+        map.addLayer(dianpuNodeLayer);
+        map.addLayer(suixiLayer);
 
-        function getTpl(){
-            return $("#pipeEdit").html();
-            //return "${FID} ${PName}";
-        }
-        
-        var daoluFeatureLayer = new FeatureLayer("http://yr140307-hosv/ArcGIS/rest/services/2d/MapServer/22",{
-          infoTemplate:template,
-          outFields: ["*"],
-          id : "daolu"
-        });
-        
-        {/literal}
-        // selection symbol used to draw the selected census block points within the buffer polygon
-        
-        
-        
-        
-        map.addLayer(featureLayer);
-        
         var search = new Search({
           map: map,
           enableSuggestions : true,
@@ -191,15 +251,14 @@
           sources: []
         },"search");
         
-        {literal}
+        
         search.on("load", function () {
-
             var sources = search.sources;
             sources.push({
-               featureLayer: featureLayer,
+               featureLayer: dianpuNodeLayer,
                enableLabel: true,
-               name:"单位商铺",
-               placeholder: "单位名称",
+               name:"店铺",
+               placeholder: "店铺名称",
                searchFields: ["title"],
                displayField: "title",
                maxResults: 10,
@@ -231,7 +290,6 @@
 
             });
             
-            
             //Set the sources above to the search widget
             search.set("sources", sources);
          });
@@ -244,11 +302,7 @@
             console.log(response);
             map.graphics.clear();
             
-            
-            //注意下标0 表示第一个datasource 的返回结果
-            var searchResult = response.results;
-            
-            
+            searchResult = response.results;
             for(var el in searchResult){
 			     for(var j = 0 ; j < searchResult[el].length ; j++){
 			        if(el == 0){
@@ -257,12 +311,10 @@
 			             var graphic = new Graphic(searchResult[el][j].feature.geometry,lineSymbol);
 			        }
 
-                    graphic.setInfoTemplate(new InfoTemplate("属性", "${FID}"));
-                    graphic.setAttributes(searchResult[el][j].feature.attributes);
                     map.graphics.add(graphic);
                 }
 			}
-            
+       
         });
         
         
@@ -271,75 +323,11 @@
         });
         
          {/literal}
-        
-        var sls = new SimpleLineSymbol(
-		    SimpleLineSymbol.STYLE_SOLID,
-		    new Color([255,0,0]),
-		    3
-		  );
-        
-        daoluFeatureLayer.setRenderer(new SimpleRenderer(sls));
-        map.addLayer(daoluFeatureLayer);
-        
+     
         
         map.on("load", createToolbar);
         
         
-        
-        /**
-         * 范围搜索
-         */
-        var circleSymb = new SimpleFillSymbol(
-          SimpleFillSymbol.STYLE_NULL,
-          new SimpleLineSymbol(
-            SimpleLineSymbol.STYLE_SHORTDASHDOTDOT,
-            new Color([105, 105, 105]),
-            2
-          ), new Color([255, 255, 0, 0.25])
-        );
-        var circle;
-         /*
-         map.on("click", function(evt){
-          circle = new Circle({
-            center: evt.mapPoint,
-            radius: 100
-            
-          });
-          map.graphics.clear();
-          map.infoWindow.hide();
-          var graphic = new Graphic(circle, circleSymb);
-          map.graphics.add(graphic);
-
-          var query = new Query();
-          query.geometry = circle.getExtent();
-          //use a fast bounding box query. will only go to the server if bounding box is outside of the visible map
-          featureLayer.queryFeatures(query, selectInBuffer);
-        });
-*/
-        function selectInBuffer(response){
-          var feature;
-          var features = response.features;
-          var inBuffer = [];
-          //filter out features that are not actually in buffer, since we got all points in the buffer's bounding box
-          for (var i = 0; i < features.length; i++) {
-            feature = features[i];
-            if(circle.contains(feature.geometry)){
-              inBuffer.push(feature.attributes[featureLayer.objectIdField]);
-            }
-          }
-          var query = new Query();
-          query.objectIds = inBuffer;
-          //use a fast objectIds selection query (should not need to go to the server)
-          featureLayer.selectFeatures(query, FeatureLayer.SELECTION_NEW, function(results){
-            var r = "";
-            r = "<b>The total Census Block population within the buffer is <i>" + results.length + "</i>.</b>";
-            console.log(results);
-            console.log("找到" + results.length + "个结果");
-          });
-        }
-        
-        
-         
         //画笔
         $("#header button").bind("click",activateTool);
         
@@ -358,7 +346,7 @@
           editToolbar = new Edit(map);
           
           
-          map.getLayer("pipeNodeLayer").on("click", function(evt) {
+          map.getLayer("panWork").on("click", function(evt) {
             event.stop(evt);
             console.log(evt.graphic);
             activateToolbar(evt.graphic);
@@ -366,7 +354,7 @@
           
           //deactivate the toolbar when you click outside a graphic
           map.on("click", function(evt){
-            console.log(evt.mapPoint);
+            //console.log(evt.mapPoint);
             editToolbar.deactivate();
           });
           
@@ -393,7 +381,7 @@
           }
           var graphic = new Graphic(evt.geometry, symbol);
           
-          map.getLayer("pipeNodeLayer").add(graphic);
+          map.getLayer("panWork").add(graphic);
           
           //map.graphics.add(graphic);
         }
@@ -447,37 +435,14 @@
             
             <label>管线名称<input type="text" name="pipeName" value="${PName}"/></label>{/literal}
             <label>年份<input type="text" name="pipeYear"/></label>
-            <label>年份<input type="text" name="pipeYear"/></label>
-            <label>年份<input type="text" name="pipeYear"/></label>
-            <label>年份<input type="text" name="pipeYear"/></label>
-            <label>年份<input type="text" name="pipeYear"/></label>
-            <label>年份<input type="text" name="pipeYear"/></label>
-            <label>年份<input type="text" name="pipeYear"/></label>
-            <label>年份<input type="text" name="pipeYear"/></label>
-            <label>年份<input type="text" name="pipeYear"/></label>
-            <label>年份<input type="text" name="pipeYear"/></label>
-            <label>年份<input type="text" name="pipeYear"/></label>
-            <label>年份<input type="text" name="pipeYear"/></label>
-            <label>年份<input type="text" name="pipeYear"/></label>
-            <label>年份<input type="text" name="pipeYear"/></label>
-            <label>年份<input type="text" name="pipeYear"/></label>
-            <label>年份<input type="text" name="pipeYear"/></label>
-            <label>年份<input type="text" name="pipeYear"/></label>
-            <label>年份<input type="text" name="pipeYear"/></label>
-            <label>年份<input type="text" name="pipeYear"/></label>
-            <label>年份<input type="text" name="pipeYear"/></label>
-            <label>年份<input type="text" name="pipeYear"/></label>
-            <label>年份<input type="text" name="pipeYear"/></label>
-            <label>年份<input type="text" name="pipeYear"/></label>
-            <label>年份<input type="text" name="pipeYear"/></label>
-            <label>年份<input type="text" name="pipeYear"/></label>
-            <label>年份<input type="text" name="pipeYear"/></label>
-            <label>年份<input type="text" name="pipeYear"/></label>
         </form>
    </script>
    
    <div id="search"></div>
    <div id="mapDiv"></div>
+    <div id="footer" class="roundedCorners" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'bottom'">
+      <div id="editorDiv"></div>
+    </div>
 
 </body>
 

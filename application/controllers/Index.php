@@ -49,8 +49,18 @@ class Index extends MY_Controller {
 	
 	
 	public function map(){
+		
 		$this->display('index/map');
 	}
+	
+	public function map2(){
+		$this->display('index/map2');
+	}
+	
+	public function map3(){
+		$this->display('index/map3');
+	}
+	
 
 
 	public function pipe_node(){
