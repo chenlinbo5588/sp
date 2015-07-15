@@ -75,6 +75,7 @@ $(function(){
     <input type="hidden" name="longitude" value="{$smarty.post['longitude']}"/>
     <input type="hidden" name="latitude" value="{$smarty.post['latitude']}"/>
     <input type="hidden" name="has_coordinates" value="{$smarty.post['has_coordinates']}"/>
+    <input type="hidden" name="other_image_count" value="1"/>
     <div class="ui-field-contain">
         <label class="required">场馆名称</label>
         <input type="text" name="title" value="{set_value('title')}" placeholder="请输入场馆名称"/>
@@ -121,19 +122,35 @@ $(function(){
         <input type="file" name="cover_img" />
     </div>
     
-    <a href="javascript:void(0);" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-b ui-mini">添加文件选择</a>
-    <div class="ui-field-contain ">
-        <label>其它照片1</label>
-        <input type="file" name="other_img" />
+    <a href="javascript:void(0);" id="moreFile" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-b ui-mini">添加文件选择</a>
+    <div id="fileArea">
+        <div class="ui-field-contain">
+            <label>其它照片<em>1</em></label>
+            <input type="file" name="other_img1" />
+        </div>
     </div>
     <button type="submit" name="submit" class="ui-btn-active">保存</button>
 </form>
 
-<script type="sp-template">
+<script type="sp-template" id="addFileTpl">
     <div class="ui-field-contain">
-        <label>其它照片</label>
+        <label>其它照片<em></em></label>
         <input type="file" name="other_img" />
     </div>
 </script>
 <a href="{admin_site_url('stadium')}" class="ui-btn">返回</a>
+<script>
+
+$("#moreFile").bind("click",function(event){
+    var count = $("#fileArea em").size() + 1;
+    var fileTpl = $($("#addFileTpl").html());
+    
+    fileTpl.find("input").attr("name","other_img" + count);
+    fileTpl.find("em").html(count);
+    
+    $("input[name=other_image_count]").val(count);
+    $("#fileArea").append(fileTpl);
+});
+
+</script>
 {include file="common/admin_footer.tpl"}
