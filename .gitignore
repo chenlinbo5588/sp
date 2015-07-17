@@ -1,4 +1,5 @@
 .project
+/static/attach/
 /js/arcgis_js_api/
 /user_guide/
 license.txt

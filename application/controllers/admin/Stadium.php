@@ -39,7 +39,7 @@ class Stadium extends Ydzj_Admin_Controller {
                 $this->load->library('Attachment_Service');
 	            $fileInfo = $this->attachment_service->addImageAttachment('cover_img');
 	            
-	            for($i = 1; $i < $this->input->post('other_image_count'); $i++){
+	            for($i = 1; $i <= $this->input->post('other_image_count'); $i++){
 	            	$otherFile = $this->attachment_service->addImageAttachment('other_img'.$i);
 	            }
             

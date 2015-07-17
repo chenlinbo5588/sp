@@ -4,7 +4,7 @@
 var map;
 
 function setJW(obj){
-     $.mobile.loading( "hide" );
+
      //console.log(obj);
      if(typeof(obj) != "undefined"){
 	     $("input[name=longitude]").val(obj.longitude);
@@ -37,21 +37,7 @@ function initialize() {
   //getCurrentLocation(map,setJW);
   
   $("button[name=getAddress]").bind("click",function(){
-	    var $this = $( this ),
-	        theme = $this.jqmData( "theme" ) || $.mobile.loader.prototype.options.theme,
-	        msgText = $this.jqmData( "msgtext" ) || $.mobile.loader.prototype.options.text,
-	        textVisible = $this.jqmData( "textvisible" ) || $.mobile.loader.prototype.options.textVisible,
-	        textonly = !!$this.jqmData( "textonly" );
-	        html = $this.jqmData( "html" ) || "";
-	
-	    $.mobile.loading( "show", {
-	            text: msgText,
-	            textVisible: textVisible,
-	            theme: theme,
-	            textonly: textonly,
-	            html: html
-	    });
-
+       //获取当前地址
       getCurrentLocation(map,setJW);
   });
 }
@@ -62,8 +48,6 @@ $(function(){
         $("#mapDiv").show();
         loadScript();
     });
-    
-    
     
 });
 </script>
@@ -85,7 +69,7 @@ $(function(){
     <div class="ui-field-contain">
         <label class="required">场馆地址</label>
         <input type="text" name="address" value="{set_value('address')}" placeholder="请输入场馆地址,(地图模式下)可通过获取位置自动填充"/>
-        <input type="button" data-inline="true" name="openMap" value="地图模式"/>
+        <input type="button" name="openMap" value="地图模式"/>
         {form_error('address')}
     </div>
     <div class="ui-field-contain" id="mapDiv" style="display:none;">
@@ -122,14 +106,14 @@ $(function(){
         <input type="file" name="cover_img" />
     </div>
     
-    <a href="javascript:void(0);" id="moreFile" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-b ui-mini">添加文件选择</a>
+    <a href="javascript:void(0);" id="moreFile">添加文件选择</a>
     <div id="fileArea">
         <div class="ui-field-contain">
             <label>其它照片<em>1</em></label>
             <input type="file" name="other_img1" />
         </div>
     </div>
-    <button type="submit" name="submit" class="ui-btn-active">保存</button>
+    <button type="submit" name="submit">保存</button>
 </form>
 
 <script type="sp-template" id="addFileTpl">
