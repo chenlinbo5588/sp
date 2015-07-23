@@ -2,7 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 
-$config['log_threshold'] = 2;
+$config['log_threshold'] = 1;
 
 
 $config['base_url'] = 'http://www.su.com/';

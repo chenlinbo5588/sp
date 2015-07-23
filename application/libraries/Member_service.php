@@ -8,23 +8,18 @@ class Member_Service extends Base_Service {
 	}
 	
 	public function do_login($param){
-		$result = array(
-			'code' => -1,
-			'message' => '登陆失败'
-		);
 		
-		$userInfo = $this->_userModel->getUserByUserName($param['username'],'uid,username,password,status,groupid,credits,freeze');
+		$result = $this->formatArrayReturn();
+		$result['message'] = '登陆失败';
 		
+		$userInfo = $this->_userModel->getUserByEmail($param['email']);
 		
 		if(!empty($userInfo)){
 			if($userInfo['password'] == $param['password']){
 				unset($userInfo['password']);
 				
-				$result = array(
-					'code' => SUCCESS_CODE,
-					'message' => '登陆成功',
-					'memberinfo' => $userInfo
-				);
+				$result = $this->successRetun(array('memberinfo' => $userInfo));
+				
 			}else{
 				$result['message'] = '密码错误';
 			}
@@ -33,7 +28,7 @@ class Member_Service extends Base_Service {
 		}
 		
 		return $result;
-	}	
+	}
 	
 	
 }

@@ -2,11 +2,10 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 $entity = array(
-'id' => 'int',
-'name' => 'varchar',
-'status' => 'tinyint',
-'displayorder' => 'smallint',
-'teamwork' => 'tinyint',
+'id' => 'mediumint',
+'aid' => 'mediumint',
+'stadium_id' => 'mediumint',
+'album_id' => 'mediumint',
 'gmt_create' => 'int',
 'gmt_modify' => 'int'
 );

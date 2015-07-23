@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $entity = array(
 'id' => 'int',
 'category_id' => 'int',
-'team_title' => 'varchar',
+'title' => 'varchar',
 'max_memebr' => 'smallint',
 'current_num' => 'smallint',
 'logo_url' => 'varchar',
@@ -18,6 +18,7 @@ $entity = array(
 'fail_games' => 'int',
 'draw_game' => 'int',
 'victory_rate' => 'int',
+'owner_uid' => 'mediumint',
 'gmt_create' => 'int',
 'gmt_modify' => 'int'
 );

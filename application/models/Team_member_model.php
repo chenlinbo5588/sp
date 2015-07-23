@@ -1,9 +1,9 @@
 <?php
 
 
-class Team_Model extends MY_Model {
+class Team_Member_Model extends MY_Model {
     
-    public $_tableName = 'team';
+    public $_tableName = 'team_member';
     public static $_tableMeta = null;
 
 
@@ -15,4 +15,5 @@ class Team_Model extends MY_Model {
     protected function _metaData(){
     	return array_keys(self::$_tableMeta);
     }
+    
 }

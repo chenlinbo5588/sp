@@ -86,8 +86,6 @@ define('EXIT__AUTO_MIN', 9); // lowest automatically-assigned error code
 define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
 
 
-define('SUCCESS_TEXT','成功');
-define('SUCCESS_CODE',0);
 
 define('SMARTY_TPL_PATH',APPPATH.'smarty_tpl/');
 define('EntityPATH',APPPATH.'entity/');

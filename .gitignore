@@ -21,3 +21,6 @@ readme.rst
 !/application/smarty_tpl/*/cache/index.html
 /nbproject/private/
 /nbproject/
+
+proxy.sqlite
+proxy_log.log

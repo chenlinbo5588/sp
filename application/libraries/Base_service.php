@@ -17,7 +17,7 @@ class Base_Service {
 	protected function successRetun($data = array()){
 		return array(
 			'code' => 'success',
-			'date' => $data
+			'data' => $data
 		);
 	}
 	
@@ -25,7 +25,7 @@ class Base_Service {
 		return array(
 			'code' => $code,
 			'message' => $message,
-			'date' => $data
+			'data' => $data
 		);
 	}
 }

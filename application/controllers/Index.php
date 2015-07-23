@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Index extends MY_Controller {
+class Index extends Ydzj_Controller {
 	
 	public function __construct(){
 		parent::__construct();
@@ -16,36 +16,7 @@ class Index extends MY_Controller {
 	}
 	
 	
-	public function admin_login(){
-		if($this->isPostRequest()){
-			
-			$this->load->library('Member_Service');
-			
-			$result = $this->member_service->do_login(array(
-				'username' => $this->input->post('username'),
-				'password' => $this->input->post('password')
-			));
-			
-			if($result['code'] == SUCCESS_CODE){
-				$this->session->set_userdata(array(
-					'memberinfo' => $result['memberinfo'],
-					'last_activity' => $this->_reqtime
-				));
-				
-				redirect(admin_site_url('stadium/index'));
-				
-			}else{
-				
-				$this->assign('message',$result['message']);
-				$this->display('index/admin_login');
-			}
-			
-			
-		}else{
-			$this->display('index/admin_login');
-		}
-		
-	}
+	
 	
 	
 	public function map(){

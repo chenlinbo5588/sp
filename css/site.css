@@ -1,0 +1,138 @@
+@CHARSET "UTF-8";
+
+
+input[type=text],input[type=password] {
+    border:1px solid #d0d0d0;
+    border-radius:5px;
+    height:26px;
+    -webkit-border-radius:5px;
+    -moz-border-radius:5px;
+    -o-border-radius:5px;
+    text-indent:3px;
+}
+
+input[type=checkbox],input[type=radio] {
+    vertical-align:middle;
+    margin-top:-2px;
+    margin-bottom:1px;
+}
+
+input[type=text]:focus , input[type=password]:focus {
+    border:1px solid rgb(26, 161, 105);
+}
+
+.logo {
+    height:	100px;
+    background:url(../img/logo.jpg) no-repeat 50% 50%;
+}
+
+.primaryBtn {
+    width:100%;
+    height:30px;
+    background:#db3652;
+    color:#fff;
+    font-size:14px;
+    border:0px;
+    
+    border-radius:5px;
+    -webkit-border-radius:5px;
+    -moz-border-radius:5px;
+    -o-border-radius:5px;
+    text-indent:3px;
+}
+
+.pd5 {
+    padding: 5px;	
+}
+
+.tip {
+    color:rgb(250, 0, 218);
+}
+.form_error {
+    color:red;
+    border:1px solid #d0d0d0;
+}
+
+.row {
+    margin:5px 0;
+}
+
+.handle_area {
+    padding:5px;
+}
+
+/** 表单左侧 标题说明 */
+.handle_area .side_lb {
+    display:inline-block;
+    width:18%;
+}
+.handle_area .at_txt {
+    width:80%;
+}
+
+
+/** 注册样式 **/
+#register {
+    padding:5px;	
+}
+
+
+
+
+#footer {
+    margin-bottom:40px;
+    text-align:center;
+}
+
+#main_menu {
+    position:fixed;
+    bottom:0;
+    left:0;
+    width:100%;
+    height:40px;
+      border-top: 1px solid rgb(26, 161, 105);
+}
+
+.navbar li {
+    float:left;
+    width:20%;
+    height:40px;
+}
+
+#top_bar {
+    border-bottom:1px solid rgb(26, 161, 105);
+    padding:2px;
+}
+
+#top_bar h1 {
+    font-size:14px;
+    text-align:center;
+}
+
+#categoryList {
+    border:1px solid black;
+    border-width:1px 0 1px 0;
+}
+#categoryList li {
+	width:25%;
+}
+
+
+#categoryList li a {
+    display:block;	
+}
+
+
+
+/** 创建队伍 **/
+#create_team .row {
+    margin:10px 0px
+}
+
+#create_team .side_lb {
+    width:20%;
+}
+
+#create_team .at_txt {
+    width:75%;
+}

@@ -1,10 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-/**
- * 
- */
-class Sp_Admin extends Ydzj_Admin_Controller {
+class My extends MyYdzj_Controller {
 	
 	public function __construct(){
 		parent::__construct();
@@ -13,7 +10,14 @@ class Sp_Admin extends Ydzj_Admin_Controller {
 	
 	public function index()
 	{
-		$this->display('index/index');
+		$this->display('my/index');
+	}
+	
+	
+	public function set_city()
+	{
+		
+		$this->display('my/set_city');
 	}
 	
 }

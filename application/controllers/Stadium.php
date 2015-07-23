@@ -1,24 +1,21 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class My extends Ydzj_Admin_Controller {
+class Stadium extends Ydzj_Controller {
+	
+	//public $_controllerUrl;
 	
 	public function __construct(){
 		parent::__construct();
+        
+        $this->load->library('Stadium_Service');
 	}
 	
 	
 	public function index()
 	{
+		$this->seo('体育场馆');
 		$this->display('stadium/index');
 	}
 	
-	
-	public function logout()
-	{
-		
-		$this->session->unset_userdata('admin_info');
-		
-		redirect(site_url('member/admin_login'));
-	}
 }

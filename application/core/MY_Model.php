@@ -33,6 +33,15 @@ class MY_Model extends CI_Model {
     	return $this->_tablePre.$this->_tableName;
     }
     
+    
+    
+    
+    
+    
+    
+    
+    // Database related
+    
     public function sumByCondition($condition){
         
         $this->db->select_sum($condition['field']);
@@ -179,6 +188,10 @@ class MY_Model extends CI_Model {
     }
     
     
+    public function distinct($flag = false){
+    	$this->db->distinct($flag);
+    }
+    
     public function getMaxByWhere($field,$where = array()){
         if($where){
             $this->db->where($where);
@@ -265,7 +278,7 @@ class MY_Model extends CI_Model {
             }
             
             $config['total_rows'] = $this->db->count_all_results($this->_tableRealName);
-            $pager = pageArrayGenerator($_GET['page'],$condition['pager']['page_size'],$config['total_rows'],$condition['pager']['query_param']);
+            $pager = pageArrayGenerator($condition['pager']['current_page'],$condition['pager']['page_size'],$config['total_rows'],$condition['pager']['query_param']);
             $data['pager'] = $pager['pager'];
         }else{
         	$data = $query->result_array();

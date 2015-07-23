@@ -98,7 +98,7 @@ class MY_Controller extends CI_Controller {
     
     
     public function getAppTemplateDir(){
-    	return 'ydzj';
+    	return 'default';
     }
     
     
@@ -121,6 +121,7 @@ class MY_Controller extends CI_Controller {
     }
     
     private function _security(){
+    	
     	/*
     	if($this->input->cookie($this->_lastVisit) != ''){
 			$elapsed_time = number_format(microtime(TRUE) -  $this->input->cookie($this->_lastVisit), 2);
@@ -152,7 +153,6 @@ class MY_Controller extends CI_Controller {
         }else{
             $this->_smarty->assign($name,$value);
         }
-        
     }
     
     public function display($viewname = ''){
@@ -160,12 +160,15 @@ class MY_Controller extends CI_Controller {
     	$this->_smarty->display($this->_smarty->getTemplateDir(0).$viewname.'.tpl');
     }
     
+    public function seoTitle($title){
+    	$this->_seo['SEO_title'] = $title;
+    }
+    
     public function seo($title = '',$keyword = '', $desc = ''){
     	$this->_seo['SEO_title'] = $title;
     	$this->_seo['SEO_description'] = $desc;
     	$this->_seo['SEO_keywords'] = $keyword;
     }
-    
     
     /**
      * 
@@ -201,38 +204,7 @@ class MY_Controller extends CI_Controller {
     }
 }
 
-/**
- * 运动之家 管理控制器
- */
-class Ydzj_Admin_Controller extends MY_Controller {
-	
-	public function __construct(){
-		parent::__construct();
-		
-		if(!$this->isLogin()){
-			
-			if($this->input->is_ajax_request()){
-				$this->responseJOSN('您尚未登陆',array('url' => site_url('index/admin_login')));
-			}else{
-				redirect(site_url('index/admin_login'));
-			}
-		}
-		
-	}
-	
-	
-	public function isLogin(){
-		//print_r($this->session->userdata('memberinfo'));
-		if($this->session->userdata('memberinfo') && ($this->_reqtime - $this->session->userdata('last_activity') < 86400)){
-			return true;
-		}
-		
-		return false;
-	}
-	
-	
-	public function getAppTemplateDir(){
-		return 'ydzj_admin';
-	}
-} 
 
+
+include APPPATH.'core/Ydzj_Controller.php';
+include APPPATH.'core/Ydzj_Admin_Controller.php';

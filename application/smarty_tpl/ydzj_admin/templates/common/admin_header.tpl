@@ -25,6 +25,7 @@
                     <li><a href="{admin_site_url('stadium')}" class="ui-btn-active">场馆</a></li>
                     <li><a href="{admin_site_url('product')}">道具</a></li>
                     <li><a href="{admin_site_url('my')}">设置</a></li>
+                    <li><a href="{admin_site_url('my/logout')}">退出</a></li>
                 </ul>
             </div>
             

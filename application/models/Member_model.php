@@ -16,6 +16,20 @@ class Member_Model extends MY_Model {
     	return array_keys(self::$_tableMeta);
     }
     
+    
+    public function getUserByEmail($email,$field = '*'){
+        $sql = "SELECT {$field} FROM ".$this->_tableRealName ." WHERE email = ?"; 
+        $query = $this->db->query($sql, array($email));
+        $row = $query->result_array();
+        
+        if($row[0]){
+            return $row[0];
+        }else{
+            return false;
+        }
+    }
+    
+    
     /**
      * 获得用户
      */
@@ -30,6 +44,22 @@ class Member_Model extends MY_Model {
             return false;
         }
     }
+    
+    
+    public function checkEmailNoExist($email){
+    	$count = $this->getCount(array(
+    		'where' => array(
+    			'email' => $email
+    		)
+    	));
+    	
+    	if($count > 0){
+    		return false;
+    	}else{
+    		return true;
+    	}
+    }
+    
     
     public function checkUserNameNoExist($username){
     	$count = $this->getCount(array(
