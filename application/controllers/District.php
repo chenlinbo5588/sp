@@ -20,6 +20,6 @@ class District extends MY_Controller {
 		}
 		
 		$ds = $this->common_district_service->getDistrictByPid($upid);
-		$this->jsonOutput('',$ds,1);
+		$this->jsonOutput('',$ds,86400);
 	}
 }

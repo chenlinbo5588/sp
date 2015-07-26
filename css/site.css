@@ -101,7 +101,7 @@ input[type=text]:focus , input[type=password]:focus {
 
 #top_bar {
     border-bottom:1px solid rgb(26, 161, 105);
-    padding:2px;
+    padding:10px 0;
 }
 
 #top_bar h1 {

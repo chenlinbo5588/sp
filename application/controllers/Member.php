@@ -106,10 +106,12 @@ class Member extends Ydzj_Controller {
 	
 	public function register()
 	{
+		
+		$registerOk = false;
+		
 		if($this->isPostRequest()){
 			
 			$this->form_validation->reset_validation();
-			
 			$this->form_validation->set_rules('email','用户名',array(
 						'required',
 						'valid_email',
@@ -132,6 +134,7 @@ class Member extends Ydzj_Controller {
 			
 			if($this->form_validation->run() !== FALSE){
 				
+				$this->load->library('Member_Service');
 				$this->load->library('Register_Service');
 				
 				$todayRegistered = $this->register_service->getIpLimit($this->input->ip_address());
@@ -147,9 +150,14 @@ class Member extends Ydzj_Controller {
 				
 					if($result['code'] == 'success'){
 						
-						//@todo 发送验证邮件
-						$this->load->library('email');
-
+						$userInfo = $this->member_service->getUserInfoByEmail($this->input->post('email'));
+						$this->session->set_userdata(array(
+							'profile' => array('memberinfo' => $userInfo)
+						));
+						
+						
+						/**
+						 * @todo 需要做更多测试
 						$this->email->from('cixi_tdkc@163.com', '运动之家');
 						$this->email->to('104071152@qq.com');
 						//$this->email->cc('another@another-example.com');
@@ -157,11 +165,13 @@ class Member extends Ydzj_Controller {
 						
 						$this->email->subject('【运动之家 邮件激活】');
 						$this->email->message('尊敬的'.$this->input->post('nickname').'用户,欢迎你加入运动之家， 点击以下链接进行邮件激活,链接2小时内有效');
-						$this->email->send();
+						if($this->email->send()){
+							$this->assign('tip_email',true);
+						}
+						*/
 						
 						
-						
-						redirect('my/set_city');
+						$registerOk = true;
 					}else{
 						
 						$this->assign('feedback',$result['message']);
@@ -173,8 +183,14 @@ class Member extends Ydzj_Controller {
 		
 		}
 		
-		$this->seoTitle('用户注册');
-		$this->display("member/register");
+		
+		if($registerOk){
+			$this->seoTitle('设置您的所在地');
+			$this->display('my/set_city');
+		}else{
+			$this->seoTitle('用户注册');
+			$this->display("member/register");
+		}
 		
 	}
 	

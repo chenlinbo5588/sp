@@ -31,4 +31,7 @@ class Member_Service extends Base_Service {
 	}
 	
 	
+	public function getUserInfoByEmail($email){
+		return $this->_userModel->getUserByEmail($email);
+	}
 }
