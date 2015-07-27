@@ -1,6 +1,4 @@
 {include file="common/header.tpl"}
-
-
 <div class="handle_area">
 	{if $mailed}
 	<div class="row">
@@ -8,9 +6,8 @@
 	</di>
 	{/if}
 
-    {form_open(site_url('my/set_city'))}
+    {form_open(site_url('my/set_city'),"id='setCityForm'")}
     <div id="profile_city">
-        {form_error('category_id')}
         <div class="row">
             <label class="side_lb" for="d1_sel">省：</label>
             <select name="d1" id="d1_sel" class="at_txt">
@@ -20,26 +17,30 @@
                 {/foreach}
             </select>
         </div>
+        <div class="form_error" id="d1_error"></div>
         <div class="row">
             <label class="side_lb" for="d2_sel">市：</label>
             <select name="d2" id="d2_sel" class="at_txt">
                 <option value="">请选择</option>
             </select>
         </div>
+        <div class="form_error" id="d2_error"></div>
         <div class="row">
-            <label class="side_lb" for="d3_sel">镇：</label>
+            <label class="side_lb" for="d3_sel">县：</label>
             <select name="d3" id="d3_sel" class="at_txt">
                 <option value="">请选择</option>
             </select>
         </div>
+        <div class="form_error" id="d3_error"></div>
         <div class="row">
-            <label class="side_lb" for="d4_sel">街道/乡：</label>
+            <label class="side_lb" for="d4_sel">街道/镇：</label>
             <select name="d4" id="d4_sel" class="at_txt">
                 <option value="">请选择</option>
             </select>
         </div>
+        <div class="form_error" id="d4_error"></div>
         <div class="row">
-            <input type="submit" name="submit" class="primaryBtn" value="保存"/>
+            <input type="button" name="submit" class="primaryBtn" value="保存"/>
         </div>
     </div>
     </form>
@@ -47,6 +48,31 @@
 
 <script>
 var cityUrl = "{site_url('district/index/')}";
+
+$(function(){
+    $("input[name=submit]").bind("click",function(e){
+        $.ajax({
+	        type:"POST",
+	        dataType: "json",
+	        url:"{site_url('my/set_city')}",
+	        data:$("#setCityForm").serialize(),
+	        success:function(resp){
+	           if(resp.message == '设置成功'){
+	               alert(resp.message);
+	               //location.href = resp.url;
+	           }else{
+	               $("input[name=formhash]").val(resp.data.formhash);
+	               $(".form_error").html('');
+	               for(var err in resp.data.errormsg){
+	                   $("#" + err + "_error").html(resp.data.errormsg[err]);
+	               }
+	           }
+	        }
+	    });
+    });
+    
+});
 </script>
 <script src="{base_url('js/my.js')}" type="text/javascript"></script>
+
 {include file="common/footer.tpl"}

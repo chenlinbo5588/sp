@@ -9,7 +9,17 @@ class Member extends Ydzj_Controller {
 	
 	
 	public function index()
-	{
+	{	
+		$this->email->from('tdkc_of_cixi@163.com', '运动之家');
+		$this->email->to('104071152@qq.com');
+		//$this->email->cc('another@another-example.com');
+		//$this->email->bcc('them@their-example.com');
+		
+		$this->email->subject('【运动之家 邮件激活】');
+		$this->email->message('尊敬的'.$this->input->post('nickname').'用户,欢迎你加入运动之家， 点击以下链接进行邮件激活,链接2小时内有效');
+		if($this->email->send()){
+			$this->assign('tip_email',true);
+		}
 		
 	}
 	
@@ -128,7 +138,7 @@ class Member extends Ydzj_Controller {
 				);
 				
 			$this->form_validation->set_rules('nickname','昵称', 'required');
-			$this->form_validation->set_rules('psw','密码','required|alpha_numeric');
+			$this->form_validation->set_rules('psw','密码','required|alpha_dash|min_length[6]|max_length[12]');
 			$this->form_validation->set_rules('psw_confirm','密码确认','required|matches[psw]');
 			$this->form_validation->set_rules('agreee_licence','同意注册条款','required');
 			
@@ -144,7 +154,8 @@ class Member extends Ydzj_Controller {
 						'email' => $this->input->post('email'),
 						'nickname' => $this->input->post('nickname'),
 						'password' => $this->input->post('psw'),
-						'regip' => $this->input->ip_address()
+						'regip' => $this->input->ip_address(),
+						'regdate' => $this->input->server('REQUEST_TIME')
 					));
 				
 				
@@ -156,9 +167,8 @@ class Member extends Ydzj_Controller {
 						));
 						
 						
-						/**
-						 * @todo 需要做更多测试
-						$this->email->from('cixi_tdkc@163.com', '运动之家');
+						//@todo mail 模版,邮件链接
+						$this->email->from('tdkc_of_cixi@163.com', '运动之家');
 						$this->email->to('104071152@qq.com');
 						//$this->email->cc('another@another-example.com');
 						//$this->email->bcc('them@their-example.com');
@@ -166,9 +176,9 @@ class Member extends Ydzj_Controller {
 						$this->email->subject('【运动之家 邮件激活】');
 						$this->email->message('尊敬的'.$this->input->post('nickname').'用户,欢迎你加入运动之家， 点击以下链接进行邮件激活,链接2小时内有效');
 						if($this->email->send()){
-							$this->assign('tip_email',true);
+							$this->assign('mailed',true);
 						}
-						*/
+						
 						
 						
 						$registerOk = true;
@@ -185,6 +195,10 @@ class Member extends Ydzj_Controller {
 		
 		
 		if($registerOk){
+			
+			$this->load->library('Common_District_Service');
+			$this->assign('d1',$this->common_district_service->getDistrictByPid(0));
+		
 			$this->seoTitle('设置您的所在地');
 			$this->display('my/set_city');
 		}else{

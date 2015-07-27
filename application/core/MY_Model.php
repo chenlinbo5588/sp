@@ -141,7 +141,7 @@ class MY_Model extends CI_Model {
     /**
      * 添加
      */
-    public function _add($param){
+    public function _add($param,$replace = false){
     	$now = time();
         $fields = $this->_metaData();
 
@@ -159,9 +159,14 @@ class MY_Model extends CI_Model {
             }
         }
         
-    	$this->db->insert($this->_tableRealName, $data);
-        
-        return $this->db->insert_id();
+        if(!$replace){
+        	$this->db->insert($this->_tableRealName, $data);
+        	return $this->db->insert_id();
+        }else{
+        	$this->db->replace($this->_tableRealName, $data);
+        	return $this->db->affected_rows();
+        }
+    	
 
     }
     

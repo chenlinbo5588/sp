@@ -48,6 +48,9 @@ class MY_Controller extends CI_Controller {
 		return array('formhash' => $this->security->get_csrf_hash(), $this->_verifyName => $this->_verify());
 	}
 	
+	/**
+	 * @todo for iOS api , need to revamp
+	 */
 	public function formhash(){
 		$this->jsonOutput('',$this->getFormHash());
 	}

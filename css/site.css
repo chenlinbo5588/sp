@@ -4,7 +4,7 @@
 input[type=text],input[type=password] {
     border:1px solid #d0d0d0;
     border-radius:5px;
-    height:26px;
+    height:28px;
     -webkit-border-radius:5px;
     -moz-border-radius:5px;
     -o-border-radius:5px;
@@ -50,7 +50,6 @@ input[type=text]:focus , input[type=password]:focus {
 }
 .form_error {
     color:red;
-    border:1px solid #d0d0d0;
 }
 
 .row {
@@ -64,10 +63,12 @@ input[type=text]:focus , input[type=password]:focus {
 /** 表单左侧 标题说明 */
 .handle_area .side_lb {
     display:inline-block;
-    width:18%;
+    width:20%;
+    text-align:right;
 }
 .handle_area .at_txt {
-    width:80%;
+    width:78%;
+    height:28px;
 }
 
 

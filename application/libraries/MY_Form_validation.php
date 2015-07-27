@@ -78,12 +78,10 @@ class MY_Form_validation extends CI_Form_validation {
         
     }
 
-    
 	
     public function numeric_dash($str)
 	{
         return ( ! preg_match("/^([-0-9_-])+$/i", $str)) ? FALSE : TRUE;
-
 	}
 
 }

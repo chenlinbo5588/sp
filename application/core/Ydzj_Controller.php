@@ -56,11 +56,12 @@ class Ydzj_Controller extends MY_Controller {
 	
 	
 	protected function initEmail(){
-		$config['smtp_host'] = "mail.163.com";
-		$config['smtp_user'] = "cixi_tdkc";
+		$config['protocol'] = 'smtp';
+		$config['smtp_host'] = "smtp.163.com";
+		$config['smtp_port'] = 25;
+		$config['smtp_user'] = "tdkc_of_cixi";
 		$config['smtp_pass'] = 'woaitdkc1234';
 		$config['charset'] = config_item('charset');
-		$config['wordwrap'] = TRUE;
 		
 		$this->load->library('email');
 		$this->email->initialize($config);
@@ -73,12 +74,17 @@ class Ydzj_Controller extends MY_Controller {
  */
 class MyYdzj_Controller extends Ydzj_Controller {
 	
+	public $_profile ;
+	
+	
 	public function __construct(){
 		parent::__construct();
 		
 		if(!$this->isLogin()){
 			redirect('member/login');
 		}
+		
+		$this->_profile = $this->session->userdata('profile');
 	}
 	
 }

@@ -34,11 +34,13 @@ class Register_Service extends Base_Service {
 	 * 业务逻辑 用统一个 IP 不能 ，在一天只内最多只能注册 3 个
 	 */
 	public function getIpLimit($ip, $time = 86400){
+		$now = $this->CI->input->server('REQUEST_TIME');
+		
 		$count = $this->CI->Security_Control_Model->getCount(array(
 			'where' => array(
 				'ip' => $ip,
-				'gmt_create >=' => $this->CI->input->server('REQUEST_TIME') - $time,
-				'gmt_create <=' => $this->CI->input->server('REQUEST_TIME')
+				'gmt_create >=' => $now - $time,
+				'gmt_create <=' => $now
 			)
 		));
 		
@@ -55,6 +57,7 @@ class Register_Service extends Base_Service {
 			'nickname' => $regParam['nickname'],
 			'password' => $regParam['password'],
 			'regip' => $regParam['regip'],
+			'regdate' => $regParam['regdate'],
 			'status' => -1,
 		));
 		

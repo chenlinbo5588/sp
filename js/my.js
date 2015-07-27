@@ -1,10 +1,7 @@
 /**
  * 个人中心
  */
-
-
 var districtCache = [];
-
 
 $(function(){
 	$("#logout_link").bind("click",function(e){
@@ -13,9 +10,7 @@ $(function(){
 		}
 	});
 	
-	
 	$("#profile_city select").bind("change",function(e){
-		
 		var id = $(this).attr("id");
 		var name = id.replace('_sel','');
 		var index = parseInt(name.replace('d',''));
@@ -24,7 +19,10 @@ $(function(){
 		
 		if(index < 4 && upid != ""){
 			var targetSel = $("#d" + (index + 1) + "_sel");
-			targetSel.html('').append('<option value="">请选择</option>');
+			
+			for(var i = index; i < 4; i++){
+				$("#d" + (i + 1) + "_sel").html('').append('<option value="">请选择</option>');
+			}
 			
 			if(districtCache[upid]){
 				showCity(districtCache[upid]);
@@ -37,13 +35,11 @@ $(function(){
 			});
 		}
 		
-		
 		function showCity(cityList){
 			for(var i = 0; i < cityList.length; i++){
 				targetSel.append('<option value="' + cityList[i].id + '">' + cityList[i].name + '</option>');
 			}
 		}
-		
 	});
 	
 	

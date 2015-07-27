@@ -1,9 +1,10 @@
 {include file="common/header.tpl"}
 
 <div id="my" class="pd5">
-    <div class="row">{$profile['memberinfo']['nickname']}</div>
+    <div class="row avator">{$profile['memberinfo']['nickname']}</div>
     <div class="row">邮箱:{$profile['memberinfo']['email']} 未验证</div>
     <div class="row">手机:{$profile['memberinfo']['mobile']}</div>
+    <div class="row">地区:未设置 <a href="{site_url('my/set_city')}">去设置</a></div>
     <div class="row">我的积分:{$profile['memberinfo']['credits']}</div>
     <div class="row">我的队伍:{$profile['memberinfo']['credits']}</div>
     <div class="row">参加队伍:{$profile['memberinfo']['credits']}</div>

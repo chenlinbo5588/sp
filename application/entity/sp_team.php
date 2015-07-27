@@ -4,8 +4,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $entity = array(
 'id' => 'int',
 'category_id' => 'int',
+'category_name' => 'varchar',
 'title' => 'varchar',
-'max_memebr' => 'smallint',
+'max_member' => 'smallint',
 'current_num' => 'smallint',
 'logo_url' => 'varchar',
 'leader_name' => 'varchar',
