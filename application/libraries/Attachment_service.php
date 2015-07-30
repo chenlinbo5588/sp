@@ -29,7 +29,6 @@ class Attachment_Service extends Base_Service {
 		$config['file_ext_tolower'] = true;
 		$config['encrypt_name'] = true;
 		
-		
 		return $config;
 	}
 	

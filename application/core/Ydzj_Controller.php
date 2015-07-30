@@ -9,6 +9,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 class Ydzj_Controller extends MY_Controller {
 	
+	public $_profile ;
+	
 	public function __construct(){
 		parent::__construct();
 		
@@ -16,6 +18,7 @@ class Ydzj_Controller extends MY_Controller {
 		
 		//print_r($this->session->all_userdata());
 		if($this->isLogin()){
+			$this->_profile = $this->session->userdata('profile');
 			$this->assign('profile',$this->session->userdata('profile'));
 		}
 		
@@ -74,9 +77,6 @@ class Ydzj_Controller extends MY_Controller {
  */
 class MyYdzj_Controller extends Ydzj_Controller {
 	
-	public $_profile ;
-	
-	
 	public function __construct(){
 		parent::__construct();
 		
@@ -84,7 +84,6 @@ class MyYdzj_Controller extends Ydzj_Controller {
 			redirect('member/login');
 		}
 		
-		$this->_profile = $this->session->userdata('profile');
 	}
 	
 }

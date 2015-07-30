@@ -887,3 +887,10 @@ function pageArrayGenerator($currPage,$pageSize,$total, $url = '',$callJs = 'pag
 
     );
 }
+
+/**
+ * 是否是本站链接,防止钓鱼
+ */
+function isLocalUrl($url){
+	return preg_match("/^https?\:\/\/".config_item('site_domain').'/',$url);
+}

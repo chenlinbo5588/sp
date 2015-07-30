@@ -20,7 +20,7 @@ class Team_Service extends Base_Service {
 		
 		
 		$this->_teamModel = $this->CI->Team_Model;
-		$this->_teamMemberModel = $this->CI->Team_Memebr_Model;
+		$this->_teamMemberModel = $this->CI->Team_Member_Model;
 		$this->_sportsCategoryModel = $this->CI->Sports_Category_Model;
 		$this->_districtStatModel = $this->CI->District_Stat_Model;
 	}
@@ -37,9 +37,122 @@ class Team_Service extends Base_Service {
 		return $data;
 	}
 	
-	
+	/**
+	 * 获得活动分类
+	 */
 	public function getSportsCategory($condition = array())
 	{
 		return $this->_sportsCategoryModel->getList($condition);
+	}
+	
+	
+	
+	public function getTeamInfo($teamid){
+		
+		$team['basic'] = $this->_teamModel->getById(array(
+			'where' => array('id' => $teamid)
+		));
+		
+		$team['members'] = $this->_teamMemberModel->getList(array(
+			'where' => array('team_id' => $teamid)
+		));
+		
+		return $team;
+	}
+	
+	
+	/**
+	 * 生成邀请链接
+	 * 加密参数 队伍和用户信息到里面
+	 */
+	public function generateInviteUrl($teamInfo,$userInfo){
+		//teamid,uid,有效期
+		// 一小时内有效
+		$expire = time() + 3600 * 48;
+		
+		$text = "{$teamInfo['id']}\t{$userInfo['uid']}\t{$expire}";
+		$encrypted_string = $this->CI->encrypt->encode($text, config_item('encryption_key'));
+		
+		return site_url('team/invite/?param='.urlencode($encrypted_string));
+	}
+	
+	/**
+	 * 添加队伍
+	 */
+	public function addTeam($param,$creatorInfo){
+		
+		// 启动事务
+		$this->_sportsCategoryModel->transStart();
+		
+		$cateName = $this->_sportsCategoryModel->getById(array(
+			'select' => 'name',
+			'where' => array('id' => $param['category_id'])
+		));
+		
+		$param['category_name'] = $cateName['name'];
+		$param['current_num'] = 1;
+		$param['owner_uid'] = $creatorInfo['uid'];
+		$param['d1'] = $creatorInfo['d1'];
+		$param['d2'] = $creatorInfo['d2'];
+		$param['d3'] = $creatorInfo['d3'];
+		$param['d4'] = $creatorInfo['d4'];
+		
+		
+		$teamid = $this->_teamModel->_add($param);
+		
+		if ($this->_sportsCategoryModel->transStatus() === FALSE){
+			$this->_sportsCategoryModel->transRollback();
+			return false;
+		}
+		
+		$memberid = $this->_teamMemberModel->_add(array(
+			'uid' => $creatorInfo['uid'],
+			'team_id' => $teamid,
+			'nickname' => $creatorInfo['nickname'],
+			'avatar' => $creatorInfo['avatar'],
+		));
+		
+		
+		if ($this->_sportsCategoryModel->transStatus() === FALSE){
+			$this->_sportsCategoryModel->transRollback();
+			return false;
+		}
+		
+		
+		$stat_id = md5($param['category_id'].$creatorInfo['d1'].$creatorInfo['d2'].$creatorInfo['d3'].$creatorInfo['d4']);
+		$cnt = $this->_districtStatModel->getCount(array(
+			'where' => array(
+				'id' => $stat_id
+			)
+		));
+		
+		if($cnt > 0){
+			//update
+			$this->_districtStatModel->increseOrDecrease(array(
+				array('key' => 'teams' ,'value' => 'teams + 1')
+			),array('id' => $stat_id));
+		}else{
+			//add
+			$this->_districtStatModel->_add(array(
+				'id' => $stat_id,
+				'category_id' => $param['category_id'],
+				'd1' => $creatorInfo['d1'],
+				'd2' => $creatorInfo['d2'],
+				'd3' => $creatorInfo['d3'],
+				'd4' => $creatorInfo['d4'],
+				'teams' => 1
+			));
+		}
+		
+		if ($this->_sportsCategoryModel->transStatus() === FALSE){
+			$this->_sportsCategoryModel->transRollback();
+			
+			return false;
+		}
+		
+		$this->_sportsCategoryModel->transCommit();
+		$this->_sportsCategoryModel->transOff();
+		
+		return $teamid;
 	}
 }

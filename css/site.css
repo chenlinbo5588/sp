@@ -1,6 +1,6 @@
 @CHARSET "UTF-8";
 
-
+/** 通用样式 **/
 input[type=text],input[type=password] {
     border:1px solid #d0d0d0;
     border-radius:5px;
@@ -26,19 +26,24 @@ input[type=text]:focus , input[type=password]:focus {
     background:url(../img/logo.jpg) no-repeat 50% 50%;
 }
 
-.primaryBtn {
+.primaryBtn , .link_btn {
     width:100%;
     height:30px;
     background:#db3652;
     color:#fff;
     font-size:14px;
     border:0px;
+    text-align:center;
     
     border-radius:5px;
     -webkit-border-radius:5px;
     -moz-border-radius:5px;
     -o-border-radius:5px;
     text-indent:3px;
+}
+
+.link_btn {
+    display:block;
 }
 
 .pd5 {
@@ -48,12 +53,23 @@ input[type=text]:focus , input[type=password]:focus {
 .tip {
     color:rgb(250, 0, 218);
 }
+
+.success {
+	color: green;
+	font-weight: bold
+}
+
+.warning {
+    background:#F1FF21;
+    padding:5px;
+}
+
 .form_error {
     color:red;
 }
 
 .row {
-    margin:5px 0;
+    margin:3px 0;
 }
 
 .handle_area {
@@ -66,22 +82,94 @@ input[type=text]:focus , input[type=password]:focus {
     width:20%;
     text-align:right;
 }
+
+.at_txt {
+    width:100%;
+}
+
 .handle_area .at_txt {
     width:78%;
     height:28px;
 }
 
 
-/** 注册样式 **/
-#register {
-    padding:5px;	
+/** ajax 加载中样式 **/
+.lightbox {
+	display: none;
+	line-height: 20px;
+	overflow: hidden;
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	left: 0;
+	top: 0;
+	z-index: 100;
+	background-color: rgba(0, 0, 0, 0.3);
+	filter: progid:DXImageTransform.Microsoft.gradient(enabled='true',startColorstr='#7F000000', endColorstr='#7F000000');
+	zoom: 1;
+}
+
+.lightbox table {
+	height: 100%;
+	width: 100%; 
+}
+
+.lightbox td, .lightbox th {
+    vertical-align: middle; 
+}
+
+.lightbox-content {
+	background-color: #fff;
+	width: 80%;
+	margin: 0 auto;
+	position: relative;
+	padding: 5px 0;
+}
+
+.lightbox-body {
+	border: 1px solid #cecece;
+	border-top: 0;
+	padding: 10px 30px 30px 30px;
+}
+
+.lightbox-head {
+	border: 1px solid #cecece;
+	border-bottom: 0;
+	background-color: #eeeeee; 
+}
+
+.loading_icon {
+	vertical-align: middle;
+	display: inline-block;
+	height: 40px;
+	width: 40px;
+	background: url(../img/loading/loading.gif) no-repeat 50% 50%;
+}
+
+.loading_box div {
+	border: 3px solid #666;
+	text-align: center;
+}
+
+.loading_text {
+	color: #666;
+	font-size: 14px;
+}
+
+.loading_close {
+	cursor: pointer;
+	color: #ccc;
+	font-size: 20px;
+	font-weight: bold;
+	position: absolute;
+	right: 5px;
+	top: 5px;
 }
 
 
-
-
+/** 页脚和顶部 */
 #footer {
-    margin-bottom:40px;
+    margin-bottom:60px;
     text-align:center;
 }
 
@@ -94,11 +182,6 @@ input[type=text]:focus , input[type=password]:focus {
       border-top: 1px solid rgb(26, 161, 105);
 }
 
-.navbar li {
-    float:left;
-    width:20%;
-    height:40px;
-}
 
 #top_bar {
     border-bottom:1px solid rgb(26, 161, 105);
@@ -110,6 +193,58 @@ input[type=text]:focus , input[type=password]:focus {
     text-align:center;
 }
 
+.navbar li {
+    float:left;
+    width:20%;
+    height:40px;
+    background:#000;
+}
+
+.bordered .row {
+    height:30px;
+    border-bottom:1px solid #E0E0E0;
+    line-height:30px;
+}
+
+.subTitle {
+	text-align:center;
+	padding:3px 0;
+	border-top: 1px dotted;
+}
+
+table.fulltable {
+    width:100%;
+}
+
+
+.fulltable thead th , .fulltable tbody td {
+	border:1px solid rgb(26, 161, 105);
+	border-width:1px 0 1px 0;
+}
+
+/** 个人中心 */
+
+#my .side_link {
+	float:right;
+}
+
+#my .first {
+    height:140px;
+}
+
+#my .avator {
+	height:120px;
+	display:black;
+	text-indent:-100em;
+}
+
+#my .icon {
+    display:inline-block;
+    width:65px;	
+}
+
+
+/** 队伍 */
 #categoryList {
     border:1px solid black;
     border-width:1px 0 1px 0;
@@ -125,6 +260,12 @@ input[type=text]:focus , input[type=password]:focus {
 
 
 
+
+/** 注册样式 **/
+#register {
+    padding:5px;    
+}
+
 /** 创建队伍 **/
 #create_team .row {
     margin:10px 0px
@@ -137,3 +278,34 @@ input[type=text]:focus , input[type=password]:focus {
 #create_team .at_txt {
     width:75%;
 }
+
+.teamCoverImg {
+    height:200px;
+}
+
+/** 队伍列表 */
+
+#teamList .row img {
+	width:80px;
+    height:80px;
+}
+
+/** 队伍详情 **/
+
+#teamMembers li {
+    width:30%;
+}
+	
+#teamMembers .member  {
+	float:left;
+}
+
+#teamMembers .member img {
+	width:60px;
+    height:60px;
+}
+
+#teamMembers .member span {
+    display:block;
+}
+

@@ -15,6 +15,7 @@
     <link href="{base_url('css/base.css')}" rel="stylesheet" type="text/css" />
     <link href="{base_url('css/site.css')}" rel="stylesheet" type="text/css" />
 	<script src="{js_url('js/jquery-1.11.3.js')}" type="text/javascript"></script>
+	<script src="{js_url('js/ydzj.js')}" type="text/javascript"></script>
 </head>
 <body>
    <div id="wrap">

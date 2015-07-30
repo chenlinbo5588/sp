@@ -12,9 +12,12 @@ class Register_Service extends Base_Service {
 	
 	/**
 	 * 手机号码 半注册
+	 * @tod 后续加入 暂时未用
 	 */
 	public function createHalfRegisterMemebr($regParam){
 		$return = $this->formatArrayReturn();
+		
+		$regParam['status'] = -1;
 		
 		$uid = $this->_userModel->_add(array(
 			'username' => $regParam['mobile'],
@@ -52,14 +55,8 @@ class Register_Service extends Base_Service {
 	public function createMemberByEmail($regParam){
 		$return = $this->formatArrayReturn();
 		
-		$uid = $this->_userModel->_add(array(
-			'email' => $regParam['email'],
-			'nickname' => $regParam['nickname'],
-			'password' => $regParam['password'],
-			'regip' => $regParam['regip'],
-			'regdate' => $regParam['regdate'],
-			'status' => -1,
-		));
+		$regParam['status'] = -1;
+		$uid = $this->_userModel->_add($regParam);
 		
 		if($uid > 0){
 			$return = $this->successRetun(array('uid' => $uid));

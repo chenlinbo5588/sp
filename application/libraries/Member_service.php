@@ -3,15 +3,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Member_Service extends Base_Service {
 	
-	private $_memberExt;
-	
-
+	//private $_memberExt;
 
 	public function __construct(){
 		parent::__construct();
 		
-		$this->CI->load->model('Member_Ext_Model');
-		$this->_memberExt = $this->CI->Member_Ext_Model;
+		//$this->CI->load->model('Member_Ext_Model');
+		//$this->_memberExt = $this->CI->Member_Ext_Model;
+	}
+	
+	public function refreshProfile($email){
+		$this->CI->session->set_userdata(array(
+			'profile' => array('memberinfo' => $this->_userModel->getUserByEmail($email))
+		));
 	}
 	
 	public function do_login($param){
@@ -46,16 +50,13 @@ class Member_Service extends Base_Service {
 	 * 用户设置所在地
 	 */
 	public function set_city($param){
-		$rows = $this->_memberExt->_add($param,true);
-		if($rows){
-			$this->_userModel->update(array(
-				'district_bind' => 1
-			),array('uid' => $param['uid']));
-			
-			return $rows;
-		}else{
-			return false;
-		}
 		
+		return $this->_userModel->update(array(
+			'district_bind' => 1,
+			'd1' => $param['d1'],
+			'd2' => $param['d2'],
+			'd3' => $param['d3'],
+			'd4' => $param['d4']
+		),array('uid' => $param['uid']));
 	}
 }

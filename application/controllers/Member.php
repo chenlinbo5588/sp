@@ -10,6 +10,7 @@ class Member extends Ydzj_Controller {
 	
 	public function index()
 	{	
+		/*
 		$this->email->from('tdkc_of_cixi@163.com', '运动之家');
 		$this->email->to('104071152@qq.com');
 		//$this->email->cc('another@another-example.com');
@@ -20,9 +21,13 @@ class Member extends Ydzj_Controller {
 		if($this->email->send()){
 			$this->assign('tip_email',true);
 		}
-		
+		*/
 	}
 	
+	private function _remberLoginEmail($email, $liveSeconds = 2592000){
+		$this->input->set_cookie('loginemail',$email, $liveSeconds);
+		
+	}
 	
 	/**
 	 * 前台 登陆
@@ -53,7 +58,9 @@ class Member extends Ydzj_Controller {
 						'profile' => $result['data']
 					));
 					
-					if($this->input->post('returnUrl') && preg_match("/^https?\:\/\/".config_item('site_domain').'/',$this->input->post('returnUrl'))){
+					$this->_remberLoginEmail($this->input->post('email'));
+					
+					if($this->input->post('returnUrl') && isLocalUrl($this->input->post('returnUrl'))){
 						redirect($this->input->post('returnUrl'));
 					}else{
 						redirect('team');
@@ -66,12 +73,12 @@ class Member extends Ydzj_Controller {
 				}
 			}
 		}else{
-			
-			
+			//创建队伍
 			$this->assign('returnUrl', $this->input->get('returnUrl'));
 		}
 		
 		$this->seoTitle('登陆');
+		$this->assign('loginemail',$this->input->cookie('loginemail'));
 		$this->display("member/login");
 	}
 	
@@ -120,6 +127,10 @@ class Member extends Ydzj_Controller {
 		$registerOk = false;
 		
 		if($this->isPostRequest()){
+			$inviter = $this->input->post('inviter');
+			
+			$this->assign('inviter', $inviter);
+			$this->assign('returnUrl',$this->input->post('returnUrl'));
 			
 			$this->form_validation->reset_validation();
 			$this->form_validation->set_rules('email','用户名',array(
@@ -155,17 +166,20 @@ class Member extends Ydzj_Controller {
 						'nickname' => $this->input->post('nickname'),
 						'password' => $this->input->post('psw'),
 						'regip' => $this->input->ip_address(),
-						'regdate' => $this->input->server('REQUEST_TIME')
+						'regdate' => $this->input->server('REQUEST_TIME'),
+						'avatar' => 'img/avator/'.rand(1,4).'.jpg',
+						'inviter' => empty($inviter) == true ? 0 : intval($inviter)
 					));
 				
 				
 					if($result['code'] == 'success'){
 						
 						$userInfo = $this->member_service->getUserInfoByEmail($this->input->post('email'));
+						$this->_remberLoginEmail($this->input->post('email'));
+						
 						$this->session->set_userdata(array(
 							'profile' => array('memberinfo' => $userInfo)
 						));
-						
 						
 						//@todo mail 模版,邮件链接
 						$this->email->from('tdkc_of_cixi@163.com', '运动之家');
@@ -174,12 +188,10 @@ class Member extends Ydzj_Controller {
 						//$this->email->bcc('them@their-example.com');
 						
 						$this->email->subject('【运动之家 邮件激活】');
-						$this->email->message('尊敬的'.$this->input->post('nickname').'用户,欢迎你加入运动之家， 点击以下链接进行邮件激活,链接2小时内有效');
+						$this->email->message('尊敬的用户 '.$this->input->post('nickname').',欢迎你加入运动之家， 点击以下链接进行邮件激活,链接2小时内有效');
 						if($this->email->send()){
 							$this->assign('mailed',true);
 						}
-						
-						
 						
 						$registerOk = true;
 					}else{
@@ -195,10 +207,8 @@ class Member extends Ydzj_Controller {
 		
 		
 		if($registerOk){
-			
 			$this->load->library('Common_District_Service');
 			$this->assign('d1',$this->common_district_service->getDistrictByPid(0));
-		
 			$this->seoTitle('设置您的所在地');
 			$this->display('my/set_city');
 		}else{

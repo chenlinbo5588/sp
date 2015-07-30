@@ -7,13 +7,14 @@
 	{/if}
 
     {form_open(site_url('my/set_city'),"id='setCityForm'")}
+    <input type="hidden" name="returnUrl" value="{$returnUrl}"/>
     <div id="profile_city">
         <div class="row">
             <label class="side_lb" for="d1_sel">省：</label>
             <select name="d1" id="d1_sel" class="at_txt">
                 <option value="">请选择</option>
                 {foreach from=$d1 item=item}
-                <option value="{$item['id']}" {set_select('d1',$item['id'])}>{$item['name']}</option>
+                <option value="{$item['id']}" {if $profile['memberinfo']['d1'] == $item['id']}selected="selected"{/if}>{$item['name']}</option>
                 {/foreach}
             </select>
         </div>
@@ -22,6 +23,9 @@
             <label class="side_lb" for="d2_sel">市：</label>
             <select name="d2" id="d2_sel" class="at_txt">
                 <option value="">请选择</option>
+                {foreach from=$d2 item=item}
+                <option value="{$item['id']}" {if $profile['memberinfo']['d2'] == $item['id']}selected="selected"{/if}>{$item['name']}</option>
+                {/foreach}
             </select>
         </div>
         <div class="form_error" id="d2_error"></div>
@@ -29,6 +33,9 @@
             <label class="side_lb" for="d3_sel">县：</label>
             <select name="d3" id="d3_sel" class="at_txt">
                 <option value="">请选择</option>
+                {foreach from=$d3 item=item}
+                <option value="{$item['id']}" {if $profile['memberinfo']['d3'] == $item['id']}selected="selected"{/if}>{$item['name']}</option>
+                {/foreach}
             </select>
         </div>
         <div class="form_error" id="d3_error"></div>
@@ -36,6 +43,9 @@
             <label class="side_lb" for="d4_sel">街道/镇：</label>
             <select name="d4" id="d4_sel" class="at_txt">
                 <option value="">请选择</option>
+                {foreach from=$d4 item=item}
+                <option value="{$item['id']}" {if $profile['memberinfo']['d4'] == $item['id']}selected="selected"{/if}>{$item['name']}</option>
+                {/foreach}
             </select>
         </div>
         <div class="form_error" id="d4_error"></div>
@@ -48,6 +58,7 @@
 
 <script>
 var cityUrl = "{site_url('district/index/')}";
+$.loadingbar({ autoHide: true});
 
 $(function(){
     $("input[name=submit]").bind("click",function(e){
@@ -59,7 +70,7 @@ $(function(){
 	        success:function(resp){
 	           if(resp.message == '设置成功'){
 	               alert(resp.message);
-	               //location.href = resp.url;
+	               location.href = resp.data.url;
 	           }else{
 	               $("input[name=formhash]").val(resp.data.formhash);
 	               $(".form_error").html('');

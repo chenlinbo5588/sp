@@ -105,3 +105,8 @@ $db['default'] = array(
 	'failover' => array(),
 	'save_queries' => TRUE
 );
+
+
+if(ENVIRONMENT == 'production'){
+	$db['default']['db_debug'] = FALSE;
+}

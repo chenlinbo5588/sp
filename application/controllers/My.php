@@ -33,15 +33,23 @@ class My extends MyYdzj_Controller {
 				$this->load->library('Member_Service');
 				$result = $this->member_service->set_city(array(
 					'uid' => $this->_profile['memberinfo']['uid'],
-					'd1' => $this->input->post('d1'),
-					'd2' => $this->input->post('d2'),
-					'd3' => $this->input->post('d3'),
+					'd1' => intval($this->input->post('d1')),
+					'd2' => intval($this->input->post('d2')),
+					'd3' => intval($this->input->post('d3')),
 					'd4' => intval($this->input->post('d4'))
 				));
 				
+				$this->member_service->refreshProfile($this->_profile['memberinfo']['email']);
+				
+				$url = $this->input->post('returnUrl');
+				if(empty($url) || !isLocalUrl($url)){
+					$url = site_url('my/index');
+				}
+				
 				$this->jsonOutput('设置成功',array(
-					'url' => site_url('my/index')
+					'url' => $url
 				));
+				
 			}else{
 				$this->jsonOutput('',array(
 					'formhash' => $this->security->get_csrf_hash(),
@@ -49,11 +57,32 @@ class My extends MyYdzj_Controller {
 				));
 			}
 		}else{
+			
+			$ds = array(
+				'd1' => $this->_profile['memberinfo']['d1'],
+				'd2' => $this->_profile['memberinfo']['d2'],
+				'd3' => $this->_profile['memberinfo']['d3'],
+				'd4' => $this->_profile['memberinfo']['d4']
+			);
+			
+			//print_r($ds);
 			$this->assign('d1',$this->common_district_service->getDistrictByPid(0));
+			
+			if($ds['d1'] > 0){
+				$this->assign('d2',$this->common_district_service->getDistrictByPid($ds['d1']));
+			}
+			
+			if($ds['d2'] > 0){
+				$this->assign('d3',$this->common_district_service->getDistrictByPid($ds['d2']));
+			}
+			
+			if($ds['d3'] > 0){
+				$this->assign('d4',$this->common_district_service->getDistrictByPid($ds['d3']));
+			}
+			
 			$this->seoTitle('设置您的所在地');
 			$this->display('my/set_city');
 		}
-		
 		
 	}
 	

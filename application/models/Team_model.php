@@ -15,4 +15,18 @@ class Team_Model extends MY_Model {
     protected function _metaData(){
     	return array_keys(self::$_tableMeta);
     }
+    
+    
+    public function isTitleNotUsed($title,$param){
+		if(!$this->getCount(
+			array(
+				'where' => array('title' => $title , 'd4' => $param)
+			))
+		){
+			return true;
+		}else{
+			return false;
+		}
+		
+	}
 }

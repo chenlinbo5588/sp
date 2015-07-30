@@ -3,6 +3,8 @@
 <div id="register" class="handle_area">
     <div>{$feedback}</div>
     {form_open(site_url('member/register'))}
+        <input type="hidden" name="inviter" value="{$inviter}"/>
+        <input type="hidden" name="returnUrl" value="{$returnUrl}"/>
         <div class="row">
             <label class="side_lb" for="email_text">用户名：</label><input id="email_text" class="at_txt" type="text" name="email" value="{set_value('email')}" placeholder="如:example@163.com"/>
         </div>

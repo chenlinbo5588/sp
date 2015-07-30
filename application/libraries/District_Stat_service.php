@@ -30,14 +30,11 @@ class District_Stat_Service extends Base_Service {
 	}
 	
 	
-	public function getAvailableCity($sportsName = ''){
-		
-		$this->_districtStatModel->distinct(true);
-		
+	public function getAvailableCity($category = 1){
 		return $this->_districtStatModel->getList(array(
-			'select' => 'name',
+			'select' => 'd1,d2,d3,d4',
 			'where' => array(
-				'category_name' => $sportsName
+				'category_id' => $category
 			)
 		));
 	}

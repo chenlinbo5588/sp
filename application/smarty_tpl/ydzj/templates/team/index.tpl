@@ -30,10 +30,10 @@
             {/foreach}
         </ul>
     </div>
-    <div id="teamList" class="list">
+    <div id="teamList" class="list pd5">
         {foreach from=$teamList['data'] item=item}
         <div class="row">
-            <img src="{base_url('img/nophoto.gif')}"/>
+            <img src="{base_url($item['logo_url'])}"/>
             <a href="{site_url('team/detail')}/{$item['id']}">{$item['title']}</a>
         </div>
         {/foreach}

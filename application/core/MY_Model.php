@@ -33,14 +33,44 @@ class MY_Model extends CI_Model {
     	return $this->_tablePre.$this->_tableName;
     }
     
-    
-    
-    
-    
-    
-    
-    
     // Database related
+    /**
+     * 事务
+     */
+    public function transStart(){
+    	$this->db->trans_start();
+    }
+    
+    public function transStatus(){
+    	return $this->db->trans_status();
+    }
+    
+    public function transCommit(){
+    	$this->db->trans_commit();
+    }
+    
+    public function transRollback(){
+    	$this->db->trans_rollback();
+    }
+    
+    public function transComplete(){
+    	$this->db->trans_complete();
+    }
+    
+    public function transOff(){
+    	$this->db->trans_off();
+    }
+    
+     
+     
+     
+    /**
+     * 计算
+     */
+    public function distinct($flag = false){
+    	$this->db->distinct($flag);
+    }
+    
     
     public function sumByCondition($condition){
         
@@ -60,33 +90,19 @@ class MY_Model extends CI_Model {
         return $this->db->count_all_results($this->_tableRealName);
     }
     
-    public function getFirstByKey($id,$key = 'id'){
-        $query = $this->db->get_where($this->_tableRealName,array($key => $id));
-        $data = $query->result_array();
-        if($data[0]){
-            return $data[0];
-        }else{
-            return false;
-        }
-    }
     
-    public function getById($condition){
-        if($condition['where']){
-            
-            if($condition['select']){
-                $this->db->select($condition['select']);
-            }
-            
-            $this->db->where($condition['where']);
-            $query = $this->db->get($this->_tableRealName);
-            $data = $query->result_array();
-            
-            if($data[0]){
-                return $data[0];
-            }
+    
+    public function getMaxByWhere($field,$where = array()){
+        if($where){
+            $this->db->where($where);
         }
         
-        return false;
+        $this->db->select_max($field);
+        $query = $this->db->get($this->_tableRealName);
+        
+        $data = $query->result_array();
+        
+        return $data[0][$field];
     }
     
     
@@ -108,6 +124,10 @@ class MY_Model extends CI_Model {
         }
     }
     
+    
+    /**
+     * 删除
+     */
     public function deleteByCondition($condition){
     	if(empty($condition)){
     		return 0;
@@ -125,18 +145,7 @@ class MY_Model extends CI_Model {
         return $this->db->affected_rows();
     }
     
-    public function updateByWhere($data,$where){
-        $this->db->update($this->_tableRealName,$data,$where);
-        return $this->db->affected_rows();
-    }
     
-    public function batchInsert($data){
-        return $this->db->insert_batch($this->_tableRealName, $data); 
-    }
-    
-    public function batchUpdate($data,$key = 'id'){
-        return $this->db->update_batch($this->_tableRealName, $data,$key); 
-    }
     
     /**
      * 添加
@@ -193,23 +202,68 @@ class MY_Model extends CI_Model {
     }
     
     
-    public function distinct($flag = false){
-    	$this->db->distinct($flag);
+    /**
+     * 增加或者 减少 字段数值
+     */
+    public function increseOrDecrease($param, $where){
+    	
+    	
+		foreach($param as $p){
+			$this->db->set($p['key'],$p['value'],false);
+		}
+    	
+    	$this->db->where($where);
+    	$this->db->update($this->_tableRealName);
+    	
+    	return $this->db->affected_rows();
+    	
     }
     
-    public function getMaxByWhere($field,$where = array()){
-        if($where){
-            $this->db->where($where);
+    public function updateByWhere($data,$where){
+        $this->db->update($this->_tableRealName,$data,$where);
+        return $this->db->affected_rows();
+    }
+    
+    public function batchInsert($data){
+        return $this->db->insert_batch($this->_tableRealName, $data); 
+    }
+    
+    public function batchUpdate($data,$key = 'id'){
+        return $this->db->update_batch($this->_tableRealName, $data,$key); 
+    }
+    
+    
+    /**
+     * 查询
+     */
+    public function getFirstByKey($id,$key = 'id'){
+        $query = $this->db->get_where($this->_tableRealName,array($key => $id));
+        $data = $query->result_array();
+        if($data[0]){
+            return $data[0];
+        }else{
+            return false;
+        }
+    }
+    
+    public function getById($condition){
+        if($condition['where']){
+            
+            if($condition['select']){
+                $this->db->select($condition['select']);
+            }
+            
+            $this->db->where($condition['where']);
+            $query = $this->db->get($this->_tableRealName);
+            $data = $query->result_array();
+            
+            if($data[0]){
+                return $data[0];
+            }
         }
         
-        $this->db->select_max($field);
-        $query = $this->db->get($this->_tableRealName);
-        
-        $data = $query->result_array();
-        
-        return $data[0][$field];
+        return false;
     }
-    
     
     public function getList($condition = array()){
         

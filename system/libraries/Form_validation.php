@@ -746,14 +746,21 @@ class CI_Form_validation {
 				}
 				else
 				{
-					$result = is_array($rule)
-						? $rule[0]->{$rule[1]}($postdata)
-						: $rule($postdata);
-
+					preg_match('/(.*?)\[(.*)\]/', $callable, $callableMatch);
+					if(empty($callableMatch[2])){
+						$result = is_array($rule)
+							? $rule[0]->{$rule[1]}($postdata)
+							: $rule($postdata);
+					}else{
+						$result = is_array($rule)
+							? $rule[0]->{$rule[1]}($postdata,$callableMatch[2])
+							: $rule($postdata,$callableMatch[2]);
+					}
+					
 					// Is $callable set to a rule name?
 					if ($callable !== FALSE)
 					{
-						$rule = $callable;
+						$rule = $callableMatch[1];
 					}
 				}
 
