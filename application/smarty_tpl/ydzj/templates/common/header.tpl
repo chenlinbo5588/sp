@@ -22,5 +22,10 @@
        <header>
            <div id="top_bar">
                <h1>{$SEO_title}</h1>
+               {if $profile}
+               <a class="rounded" href="{site_url('my')}" title="我">我</a>
+               {else}
+               <a class="rounded" href="{site_url('member/login')}" title="登陆">登陆</a>
+               {/if}
            </div>
        </header>

@@ -6,6 +6,7 @@ $entity = array(
 'category_id' => 'int',
 'category_name' => 'varchar',
 'title' => 'varchar',
+'notice_board' => 'varchar',
 'max_member' => 'smallint',
 'current_num' => 'smallint',
 'logo_url' => 'varchar',

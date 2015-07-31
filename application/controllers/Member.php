@@ -73,12 +73,12 @@ class Member extends Ydzj_Controller {
 				}
 			}
 		}else{
-			//创建队伍
+			$this->assign('loginemail',$this->input->cookie('loginemail'));
+			//记住用户点击时  因为需要登录的返回链接
 			$this->assign('returnUrl', $this->input->get('returnUrl'));
 		}
 		
 		$this->seoTitle('登陆');
-		$this->assign('loginemail',$this->input->cookie('loginemail'));
 		$this->display("member/login");
 	}
 	
@@ -137,18 +137,31 @@ class Member extends Ydzj_Controller {
 						'required',
 						'valid_email',
 						array(
-							'email_callable',
+							'email_callable[email]',
 							array(
-								$this->Member_Model,'checkEmailNoExist'
+								$this->Member_Model,'isUnqiueByKey'
 							)
 						)
 					),
 					array(
-						'email_callable' => '%s已经存在'
+						'email_callable' => '%s已经被占用'
 					)
 				);
 				
-			$this->form_validation->set_rules('nickname','昵称', 'required');
+			$this->form_validation->set_rules('nickname','昵称', array(
+						'required',
+						array(
+							'nickname_callable[nickname]',
+							array(
+								$this->Member_Model,'isUnqiueByKey'
+							)
+						)
+					),
+					array(
+						'nickname_callable' => '%s已经被占用'
+					)
+				);
+				
 			$this->form_validation->set_rules('psw','密码','required|alpha_dash|min_length[6]|max_length[12]');
 			$this->form_validation->set_rules('psw_confirm','密码确认','required|matches[psw]');
 			$this->form_validation->set_rules('agreee_licence','同意注册条款','required');

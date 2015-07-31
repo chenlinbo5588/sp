@@ -1,24 +1,46 @@
 {include file="common/header.tpl"}
 
-
+{if $inManageMode}
+{form_open(site_url('team/detail'))}
+{/if}
 <div id="teamDetail" class="row">
-    <div class="row teamCoverImg" style="background:url({base_url($teamInfo['basic']['logo_url'])}) no-repeat 50% 50%;"></div>
-    {form_open(site_url('team/join_apply'))}
+    <div class="row teamCoverImg" style="background:url({base_url($team['basic']['logo_url'])}) no-repeat 50% 50%;"></div>
+    {if $canManager}
+    <a class="link_btn" href="{$editUrl}"}>{$mangeText}</a>
+    {/if}
     <div class="row bordered pd5">
-        <div class="row"><label class="side_lb">留言：</label><span>队长没有留下留言</span></div>
+        <div class="row">
+            <label class="side_lb">留言：</label>
+            {if $inManageMode}
+            <input type="text" name="notice_board" value="{$team['basic']['notice_board']}" placeholder="请输入留言"/>
+            {else}
+            <span>{$team['basic']['notice_board']}</span>
+            {/if}
+        </div>
         <div class="row"><label class="side_lb">地址：</label><span>浙江省慈溪市崇寿镇</span><a class="fr" href="javascript:void(0);">导航到这里</a></div>
-        <div class="row"><label class="side_lb">总比赛数：</label><span>{$teamInfo['basic']['games']}</span></div>
-        <div class="row"><label class="side_lb">胜/负/胜率：</label><span>{$teamInfo['basic']['victory_game']}/{$teamInfo['basic']['fail_game']}/{$teamInfo['basic']['victory_rate']}</span></div>
+        <div class="row"><label class="side_lb">总比赛数：</label><span>{$team['basic']['games']}</span></div>
+        <div class="row"><label class="side_lb">胜/负/胜率：</label><span>{$team['basic']['victory_game']}/{$team['basic']['fail_game']}/{$team['basic']['victory_rate']}</span></div>
     </div>
-    <div class="row">
+    <div class="row pd5">
         <h3 class="subTitle">成员列表</h3>
-        <ul id="teamMembers" class="clearfix">
-            {foreach from=$teamInfo['members'] item=item}
+        <ul id="teamMembers" class="{if $inManageMode}manage {/if}clearfix">
+            {foreach from=$team['members'] item=item}
             <li>
                 <div class="member">
                     <a href="{site_url('user/info/')}/{$item['uid']}" title="{$item['nickname']|escape}"><img src="{base_url($item['avatar'])}"/></a>
-                    <span>[{if empty($item['position'])}未知{else}{$item['position']}{/if}]</span>
+                    <span>
+                    {if $inManageMode}
+                    <select name="position">
+                        <option value=""></option>
+                    </select>
+                    {else}
+                    [{if empty($item['position'])}未知{else}{$item['position']}{/if}]
+                    {/if}
+                    </span>
                     <span>{$item['nickname']|escape}</span>
+                    {if $inManageMode && $profile['memberinfo']['uid'] !=  $item['uid']}
+                    <input type="button" name="kickoff" value="踢掉"/>
+                    {/if}
                 </div>
             </li>
             {/foreach}
@@ -72,22 +94,23 @@
     </div>
     
     <div class="row pd5">
-        {if $teamInfo['basic']['joined_type'] == 1}
+        {* 二期完善 *}
+        {if $team['basic']['joined_type'] == 2}
         <input class="primaryBtn" type="button" name="joinApply" value="申请加入"/>
-        {else}
+        {/if}
         
-        {if !empty($profile['memberinfo']['uid'])}
+        {if $canManager}
         <div class="row">
             <input type="text" class="at_txt" name="inviteUrl" value="{$inviteUrl}"/>
-            <p class="warning">链接48小时内有效，超过时间请刷新页面重新复制</p>
+            <p class="muted">链接24小时内有效，超过时间请刷新页面重新复制</p>
         </div>
         <input class="primaryBtn" type="button" name="inviteUrl" value="全选复制邀请链接并发送给您的朋友"/>
         {/if}
-        {/if}
     </div>
-    </form>
 </div>
-
+{if $inManageMode}
+</form>
+{/if}
 {*
 <!-- JiaThis Button BEGIN -->
 <div class="jiathis_style_m"></div>

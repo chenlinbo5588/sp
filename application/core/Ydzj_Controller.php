@@ -64,6 +64,7 @@ class Ydzj_Controller extends MY_Controller {
 		$config['smtp_port'] = 25;
 		$config['smtp_user'] = "tdkc_of_cixi";
 		$config['smtp_pass'] = 'woaitdkc1234';
+		$config['smtp_timeout'] = 10;
 		$config['charset'] = config_item('charset');
 		
 		$this->load->library('email');

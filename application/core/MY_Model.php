@@ -82,6 +82,21 @@ class MY_Model extends CI_Model {
         return $data;
     }
     
+    public function isUnqiueByKey($value,$key){
+    	$count = $this->getCount(array(
+    		'where' => array(
+    			$key => $value
+    		)
+    	));
+    	
+    	if($count > 0){
+    		return false;
+    	}else{
+    		return true;
+    	}
+    	
+    }
+    
     public function getCount($condition = array()){
         if($condition['where']){
             $this->db->where($condition['where']);

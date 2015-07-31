@@ -67,13 +67,47 @@ class Team_Service extends Base_Service {
 	 */
 	public function generateInviteUrl($teamInfo,$userInfo){
 		//teamid,uid,有效期
-		// 一小时内有效
-		$expire = time() + 3600 * 48;
+		// 24小时内有效
+		$expire = time() + 3600 * 24;
 		
+		//teamid + uid + timestamp
 		$text = "{$teamInfo['id']}\t{$userInfo['uid']}\t{$expire}";
 		$encrypted_string = $this->CI->encrypt->encode($text, config_item('encryption_key'));
 		
 		return site_url('team/invite/?param='.urlencode($encrypted_string));
+	}
+	
+	/**
+	 * 用户加入队伍
+	 */
+	public function joinTeam($teamid,$userinfo){
+		
+		$notJoined = $this->_teamMemberModel->getCount(array(
+			'where' => array(
+				'team_id' => $teamid,
+				'uid' => $userinfo['uid']
+			)
+		));
+		
+		
+		if($notJoined == 0){
+			$id = $this->_teamMemberModel->_add(array(
+				'uid' => $userinfo['uid'],
+				'nickname' => $userinfo['nickname'],
+				'avatar' => $userinfo['avatar'],
+				'team_id' => $teamid
+			));
+			
+			if($id > 0){
+				$this->_teamModel->increseOrDecrease(array(
+					array('key' => 'current_num','value' => 'current_num+1')
+				),array('id' => $teamid));
+			}
+		}
+		
+		return true;
+		
+		
 	}
 	
 	/**
@@ -110,6 +144,7 @@ class Team_Service extends Base_Service {
 			'team_id' => $teamid,
 			'nickname' => $creatorInfo['nickname'],
 			'avatar' => $creatorInfo['avatar'],
+			'rolename' => $param['leader_uid'] == 0 ? '队员' : '队长'
 		));
 		
 		

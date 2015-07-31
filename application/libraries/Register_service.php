@@ -20,7 +20,7 @@ class Register_Service extends Base_Service {
 		$regParam['status'] = -1;
 		
 		$uid = $this->_userModel->_add(array(
-			'username' => $regParam['mobile'],
+			'nickname' => $regParam['mobile'],
 			'mobile' => $regParam['mobile'],
 			'regip' => $regParam['regip'],
 			'status' => -1,

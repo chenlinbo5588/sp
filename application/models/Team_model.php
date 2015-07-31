@@ -29,4 +29,20 @@ class Team_Model extends MY_Model {
 		}
 		
 	}
+	
+	public function userCategoryTeamCount($category,$uid){
+    	$cnt = $this->getCount(array(
+    		'where' => array(
+				'category_id' => $category,
+				'owner_uid' => $uid
+    		)
+    	
+    	));
+    	
+    	if($cnt >= 2){
+    		return false;
+    	}else{
+    		return true;
+    	}
+    }
 }

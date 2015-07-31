@@ -42,14 +42,14 @@ class Register extends MY_Controller {
 				$this->form_validation->reset_validation();
 				$this->form_validation->set_rules('phoneNo','手机号码',array(
 						array(
-							'username_callable',
+							'nickname_callable[nickname]',
 							array(
-								$this->Member_Model,'checkUserNameNoExist'
+								$this->Member_Model,'isUnqiueByKey'
 							)
 						)
 					),
 					array(
-						'username_callable' => '%s已经存在'
+						'nickname_callable' => '%s已经被占用'
 					)
 				);
 				

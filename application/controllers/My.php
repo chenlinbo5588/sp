@@ -47,7 +47,7 @@ class My extends MyYdzj_Controller {
 				}
 				
 				$this->jsonOutput('设置成功',array(
-					'url' => $url
+					'url' => str_replace("+", "%20", $url)
 				));
 				
 			}else{

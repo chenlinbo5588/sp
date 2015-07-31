@@ -46,20 +46,26 @@ class Team extends Ydzj_Controller {
 	public function invite(){
 		
 		$param = $this->input->get('param');
-		$string = $this->encrypt->decode($param,$this->config->item('encryption_key'));
 		
+		if(empty($param)){
+			show_error('邀请链接参数不正确');
+		}
+		
+		$string = $this->encrypt->decode($param,$this->config->item('encryption_key'));
 		$info = explode("\t",$string);
 		
 		if($this->input->server('REQUEST_TIME') > $info[2]){
-			show_error('对不起，请求已经过期');
+			show_error('邀请链接已经过期');
 		}else{
 			if(!$this->isLogin()){
 				$this->assign('inviter',$info[1]);
-				$this->assign('returnUrl',site_url('team/detail/'.$info[0]));
+				$this->assign('returnUrl',site_url('team/invite/?param='.$param));
 				
 				$this->display('member/register');
 			}else{
 				//直接加入
+				$this->team_service->joinTeam($info[0],$this->_profile['memberinfo']);
+				
 				$this->_prepareDetailData($info[0]);
 				$this->display('team/detail');	
 			}
@@ -72,11 +78,33 @@ class Team extends Ydzj_Controller {
 		
 		$team = $this->team_service->getTeamInfo($teamid);
 			
-		if($team['basic']['joined_type'] == 2 && $this->isLogin()){
+		if($team['basic']['joined_type'] == 1 && $this->isLogin()){
 			$this->assign('inviteUrl',$this->team_service->generateInviteUrl($team['basic'],$this->_profile['memberinfo']));
 		}
 		
-		$this->assign('teamInfo',$team);
+		$canManager = false;
+		$teamOwnerUid = $team['basic']['leader_uid'];
+		if(!$teamOwnerUid){
+			$teamOwnerUid = $team['basic']['owner_uid'];
+		}
+		
+		if($this->_profile['memberinfo']['uid'] == $teamOwnerUid){
+			$canManager = true;
+		}
+		
+		if($canManager){
+			if($this->uri->segment(4) == 'manage'){
+				$this->assign('inManageMode',true);
+				$this->assign('mangeText','退出编辑模式');
+				$this->assign('editUrl',site_url('team/detail/'.$team['basic']['id']));
+			}else{
+				$this->assign('mangeText','进入编辑模式');
+				$this->assign('editUrl',site_url('team/detail/'.$team['basic']['id'].'/manage/'));
+			}
+		}
+		
+		$this->assign('canManager',$canManager);
+		$this->assign('team',$team);
 		$this->seoTitle($team['basic']['title']);
 	}
 	
@@ -124,10 +152,17 @@ class Team extends Ydzj_Controller {
 									array(
 										$this->Sports_Category_Model,'avaiableCategory'
 									)
+								),
+								array(
+									'user_categroy_callbale['.$this->_profile['memberinfo']['uid'].']',
+									array(
+										$this->Team_Model,'userCategoryTeamCount'
+									)
 								)
 							),
 							array(
-								'category_callable' => '%s无效'
+								'category_callable' => '%s无效',
+								'user_categroy_callbale' => '同一个分类的队伍最多可以创建两个'
 							)
 						);
 						
@@ -163,7 +198,7 @@ class Team extends Ydzj_Controller {
 					$this->form_validation->set_rules('leader','队长设置','required|in_list[1,2]');
 					//$this->form_validation->set_rules('logo_url','队伍合影','required');
 					
-					$this->form_validation->set_rules('joined_type','入队设置','required|in_list[1,2]');
+					$this->form_validation->set_rules('joined_type','入队设置','required|in_list[1]');
 					
 					
 					if($this->form_validation->run() == FALSE){
@@ -203,24 +238,20 @@ class Team extends Ydzj_Controller {
 					$teamid = $this->team_service->addTeam($addParam,$this->_profile['memberinfo']);
 					
 					if($teamid){
-						$this->assign('teamUrl',site_url('team/detail/'.$teamid));
 						$isCreateOk = true;
-						if($addParam['joined_type'] == 1){
-							// 队长验证
-							$this->assign('feedback','<div class="success">恭喜，你有自己的队伍啦，快来邀请朋友注册并加入吧。</div>');
-						}else{
-							// 邀请加入
-							$this->assign('feedback','<div class="success">恭喜，你有自己的队伍啦，快来邀请队员加入吧。</div>');
-						}
-						
+						$this->_prepareDetailData($teamid);
 					}else{
 						$this->assign('feedback','<div class="warning">对不请创建队伍失败，请刷新页面重新尝试。</div>');
 					}
 				}
 			}
 			
-			$this->assign('isCreateOk',$isCreateOk);
-			$this->display('team/create_team');
+			if($isCreateOk){
+				$this->display('team/detail');
+			}else{
+				$this->display('team/create_team');
+			}
+			
 		}else{
 			//创建队伍需要登陆态下
 			$this->assign('returnUrl',site_url('team/create_team'));

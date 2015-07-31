@@ -46,32 +46,4 @@ class Member_Model extends MY_Model {
     }
     
     
-    public function checkEmailNoExist($email){
-    	$count = $this->getCount(array(
-    		'where' => array(
-    			'email' => $email
-    		)
-    	));
-    	
-    	if($count > 0){
-    		return false;
-    	}else{
-    		return true;
-    	}
-    }
-    
-    
-    public function checkUserNameNoExist($username){
-    	$count = $this->getCount(array(
-    		'where' => array(
-    			'username' => $username
-    		)
-    	));
-    	
-    	if($count > 0){
-    		return false;
-    	}else{
-    		return true;
-    	}
-    }
 }
