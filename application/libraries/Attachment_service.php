@@ -25,18 +25,26 @@ class Attachment_Service extends Base_Service {
         
         make_dir($config['upload_path']);
         
-		$config['allowed_types'] = 'gif|jpg|png';
+		$config['allowed_types'] = 'jpg';
 		$config['file_ext_tolower'] = true;
 		$config['encrypt_name'] = true;
 		
 		return $config;
 	}
 	
-	
-	public function addImageAttachment($filename){
+	/**
+	 * 添加附件信息
+	 */
+	public function addImageAttachment($filename, $moreConfig = array()){
 		
 		//处理照片
 		$config = $this->getImageConfig();
+		
+		if(!empty($moreConfig)){
+			$config = array_merge($config,$moreConfig);
+		}
+		
+		//print_r($config);
 		
 		$this->CI->load->library('upload', $config);
 		if($this->CI->upload->do_upload($filename)){
@@ -55,6 +63,14 @@ class Attachment_Service extends Base_Service {
 			//echo $this->CI->upload->display_errors();
 			return false;
 		}
+		
+	}
+	
+	/**
+	 *  显示错误信息
+	 */
+	public function getErrorMsg($open = '<div class="form_error">',$close = '</div>'){
+		return $this->CI->upload->display_errors($open,$close);
 	}
 	
 }

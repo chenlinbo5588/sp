@@ -7,7 +7,7 @@
 <div id="create_team" class="handle_area">
     {form_error('category_id')}
     <div class="row">
-        <label class="side_lb" for="category_sel">队伍类型：</label>
+        <label class="side_lb" for="category_sel"><em>*</em>队伍类型：</label>
         <select name="category_id" id="category_sel" class="at_txt">
             {foreach from=$sportsCategoryList item=item}
             <option value="{$item['id']}" {set_select('category_id',$item['id'])}>{$item['name']}</option>
@@ -16,19 +16,19 @@
     </div>
     {form_error('title')}
     <div class="row">
-        <label class="side_lb" for="title_text">队伍名称：</label>
+        <label class="side_lb" for="title_text"><em>*</em>队伍名称：</label>
         <input id="title_text" class="at_txt" type="text" name="title" value="{set_value('title')}" placeholder="请输入队伍名称,最多20个汉字"/>
     </div>
     {form_error('leader')}
     <div class="row">
-        <label class="side_lb">队长设置：</label>
+        <label class="side_lb"><em>*</em>队长设置：</label>
         <label style="margin:0 20px 0 0;"><input type="radio" name="leader" value="1" {set_radio('leader',1,true)}/>我是队长</label>
         <label><input type="radio" name="leader" value="2" {set_radio('leader',2)}/>以后设置</label>
     </div>
     {form_error('logo_url')}
     <div class="row">
-        <label class="side_lb" for="logo_url_file">队伍合影：</label>
-        <input id="logo_url_file" type="file" name="logo_url"/>
+        <label class="side_lb"  for="logo_url_file">队伍合影：</label>
+        <input id="logo_url_file" class="at_txt" type="file" name="logo_url"/>
     </div>
     <div class="row"><label class="side_lb"></label>队伍合影照片<em class="tip">JPG</em>格式,大小不超过<em class="tip">4MB</em></div>
     <div class="row"><label class="side_lb"></label>分辨率大于<em class="tip">100X100</em></div>

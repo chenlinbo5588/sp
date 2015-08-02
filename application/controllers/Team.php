@@ -59,6 +59,9 @@ class Team extends Ydzj_Controller {
 		}else{
 			if(!$this->isLogin()){
 				$this->assign('inviter',$info[1]);
+				
+				//表明是通过队伍邀请链接
+				$this->assign('inviteFrom','teamInvite');
 				$this->assign('returnUrl',site_url('team/invite/?param='.$param));
 				
 				$this->display('member/register');

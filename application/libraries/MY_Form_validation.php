@@ -83,6 +83,8 @@ class MY_Form_validation extends CI_Form_validation {
 	{
         return ( ! preg_match("/^([-0-9_-])+$/i", $str)) ? FALSE : TRUE;
 	}
+	
+	
 
 }
 // END Form Validation Class

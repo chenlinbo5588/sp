@@ -12,12 +12,19 @@ class Member_Service extends Base_Service {
 		//$this->_memberExt = $this->CI->Member_Ext_Model;
 	}
 	
+	
+	/**
+	 * 刷新信息
+	 */
 	public function refreshProfile($email){
 		$this->CI->session->set_userdata(array(
 			'profile' => array('memberinfo' => $this->_userModel->getUserByEmail($email))
 		));
 	}
 	
+	/**
+	 * 登录判断
+	 */
 	public function do_login($param){
 		
 		$result = $this->formatArrayReturn();
@@ -42,9 +49,26 @@ class Member_Service extends Base_Service {
 	}
 	
 	
+	/**
+	 * 获得用户信息
+	 */
 	public function getUserInfoByEmail($email){
 		return $this->_userModel->getUserByEmail($email);
 	}
+	
+	
+	
+	/**
+	 * 设置用户真实名称和用户头像
+	 */
+	public function set_avatar($param){
+		return $this->_userModel->update(array(
+			'username' => $param['username'],
+			'avatar' => $param['avatar']
+			),array('uid' => $param['uid']));
+			
+	}
+	
 	
 	/**
 	 * 用户设置所在地

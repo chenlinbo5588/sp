@@ -2,12 +2,13 @@
 <div class="handle_area">
 	{if $mailed}
 	<div class="row">
-		<p>我们已经发送验证邮件到您的 <a href="#"/>{$email}</a> , 点击登陆有限进行邮箱验证</p>
+		<p>我们已经发送验证邮件到{$email}, 请登录邮箱进行激活</p>
 	</di>
 	{/if}
 
     {form_open(site_url('my/set_city'),"id='setCityForm'")}
     <input type="hidden" name="returnUrl" value="{$returnUrl}"/>
+    <input type="hidden" name="inviteFrom" value="{$inviteFrom}"/>
     <div id="profile_city">
         <div class="row">
             <label class="side_lb" for="d1_sel">省：</label>

@@ -128,9 +128,12 @@ class Member extends Ydzj_Controller {
 		
 		if($this->isPostRequest()){
 			$inviter = $this->input->post('inviter');
+			$inviteFrom = $this->input->post('inviteFrom');
 			
 			$this->assign('inviter', $inviter);
+			$this->assign('inviteFrom',$inviteFrom);
 			$this->assign('returnUrl',$this->input->post('returnUrl'));
+			
 			
 			$this->form_validation->reset_validation();
 			$this->form_validation->set_rules('email','用户名',array(
@@ -174,7 +177,8 @@ class Member extends Ydzj_Controller {
 				$todayRegistered = $this->register_service->getIpLimit($this->input->ip_address());
 				
 				if($todayRegistered < 3){
-					$result = $this->register_service->createMemberByEmail(array(
+					
+					$addParam = array(
 						'email' => $this->input->post('email'),
 						'nickname' => $this->input->post('nickname'),
 						'password' => $this->input->post('psw'),
@@ -182,8 +186,26 @@ class Member extends Ydzj_Controller {
 						'regdate' => $this->input->server('REQUEST_TIME'),
 						'avatar' => 'img/avator/'.rand(1,4).'.jpg',
 						'inviter' => empty($inviter) == true ? 0 : intval($inviter)
-					));
-				
+					);
+					
+					$this->assign('default_avatar',$addParam['avatar']);
+					
+					if('teamInvite' == $inviteFrom){
+						
+						
+						$inviterInfo = $this->Member_Model->getById(array(
+							'where' => array('uid' => $inviter)
+						));
+						
+						$addParam['district_bind'] = 1;
+						$addParam['d1'] = $inviterInfo['d1'];
+						$addParam['d2'] = $inviterInfo['d2'];
+						$addParam['d3'] = $inviterInfo['d3'];
+						$addParam['d4'] = $inviterInfo['d4'];
+						
+					}
+					
+					$result = $this->register_service->createMemberByEmail($addParam);
 				
 					if($result['code'] == 'success'){
 						
@@ -202,7 +224,7 @@ class Member extends Ydzj_Controller {
 						
 						$this->email->subject('【运动之家 邮件激活】');
 						$this->email->message('尊敬的用户 '.$this->input->post('nickname').',欢迎你加入运动之家， 点击以下链接进行邮件激活,链接2小时内有效');
-						if($this->email->send()){
+						if(true || $this->email->send()){
 							$this->assign('mailed',true);
 						}
 						
@@ -216,15 +238,18 @@ class Member extends Ydzj_Controller {
 				}
 			}
 		
+		}else{
+			$this->assign('inviter', $this->input->get('inviter'));
 		}
 		
 		
 		if($registerOk){
-			$this->load->library('Common_District_Service');
-			$this->assign('d1',$this->common_district_service->getDistrictByPid(0));
-			$this->seoTitle('设置您的所在地');
-			$this->display('my/set_city');
+			
+			$this->seoTitle('设置头像');
+			$this->display('my/set_avatar');
+			
 		}else{
+			
 			$this->seoTitle('用户注册');
 			$this->display("member/register");
 		}

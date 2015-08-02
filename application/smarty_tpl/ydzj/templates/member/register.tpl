@@ -4,6 +4,7 @@
     <div>{$feedback}</div>
     {form_open(site_url('member/register'))}
         <input type="hidden" name="inviter" value="{$inviter}"/>
+        <input type="hidden" name="inviteFrom" value="{$inviteFrom}"/>
         <input type="hidden" name="returnUrl" value="{$returnUrl}"/>
         <div class="row">
             <label class="side_lb" for="email_text">用户名：</label><input id="email_text" class="at_txt" type="text" name="email" value="{set_value('email')}" placeholder="如:example@163.com"/>
@@ -22,7 +23,7 @@
         </div>
         {form_error('psw_confirm')}
         <div class="row">
-            <label class="side_lb" for="agreee_licence_text">&nbsp;</label><input id="agreee_licence_text" type="checkbox" name="agreee_licence" value="yes" {set_checkbox('agreee_licence','yes')}/>同意注册条款&nbsp;<a href="javascript:void(0);">显示注册条款</a>
+            <label class="side_lb" for="agreee_licence_text">&nbsp;</label><label><input id="agreee_licence_text" type="checkbox" name="agreee_licence" value="yes" {set_checkbox('agreee_licence','yes')}/>同意注册条款&nbsp;</label><a href="javascript:void(0);">显示注册条款</a>
         </div>
         {form_error('agreee_licence')}
         <div class="row"><input class="primaryBtn" type="submit" name="register" value="注册"/></div>
