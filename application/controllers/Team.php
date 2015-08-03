@@ -24,6 +24,7 @@ class Team extends Ydzj_Controller {
 		$teamList = $this->team_service->getAllPagerTeam();
 		
 		
+		
 		$this->seoTitle('队伍');
 		$this->assign('cities',$availableCity);
 		$this->assign('sportsCategoryList',$sportsCategoryList);
@@ -80,7 +81,7 @@ class Team extends Ydzj_Controller {
 	private function _prepareDetailData($teamid){
 		
 		$team = $this->team_service->getTeamInfo($teamid);
-			
+
 		if($team['basic']['joined_type'] == 1 && $this->isLogin()){
 			$this->assign('inviteUrl',$this->team_service->generateInviteUrl($team['basic'],$this->_profile['memberinfo']));
 		}

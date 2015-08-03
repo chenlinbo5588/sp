@@ -368,7 +368,9 @@ $config['encryption_key'] = 'Wow, this is an project for sport union';
 */
 $config['sess_driver'] = 'database';
 $config['sess_cookie_name'] = 'sid';
-$config['sess_expiration'] = 7200;
+
+// keep one month
+$config['sess_expiration'] = 2592000;
 $config['sess_save_path'] = 'sp_sessions';
 $config['sess_match_ip'] = FALSE;
 $config['sess_time_to_update'] = 300;

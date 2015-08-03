@@ -24,4 +24,26 @@ class Common_District_Service extends Base_Service {
 		));
 	}
 	
+	public function getDistrictByIds($ids,$field = 'id,name'){
+		$ds = $this->_districtModel->getList(array(
+			'select' => $field,
+			'where_in' => array(
+				array('key' => 'id', 'value' => $ids)
+			),
+			'order' => 'id ASC,displayorder DESC'
+		));
+		
+		if(!empty($ds)){
+			$userDs = array();
+			foreach($ds as $key => $dv){
+				$userDs[$dv['id']] = $dv;
+			}
+			
+			return $userDs;
+		}else{
+			
+			return array();
+		}
+	}
+	
 }

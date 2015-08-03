@@ -10,7 +10,17 @@ class My extends MyYdzj_Controller {
 	
 	public function index()
 	{
+		//$this->assign('teamCount',$this->);
 		
+		$this->load->library('Common_District_Service');
+		
+		$ds = array();
+		for($i = 1; $i <= 4; $i++){
+			$ds[] = $this->_profile['memberinfo']['d'.$i];
+		}
+		
+		$ds = array_unique($ds);
+		$this->assign('userDs',$this->common_district_service->getDistrictByIds($ds));
 		$this->assign('inviteUrl',site_url('member/register?inviter='.$this->_profile['memberinfo']['uid']));
 		$this->display('my/index');
 	}
