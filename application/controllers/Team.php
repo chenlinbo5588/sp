@@ -87,6 +87,8 @@ class Team extends Ydzj_Controller {
 		}
 		
 		$canManager = false;
+		$inManageMode = false;
+		
 		$teamOwnerUid = $team['basic']['leader_uid'];
 		if(!$teamOwnerUid){
 			$teamOwnerUid = $team['basic']['owner_uid'];
@@ -98,14 +100,24 @@ class Team extends Ydzj_Controller {
 		
 		if($canManager){
 			if($this->uri->segment(4) == 'manage'){
-				$this->assign('inManageMode',true);
-				$this->assign('mangeText','退出编辑模式');
+				$inManageMode = true;
+				$this->assign('inManageMode',$inManageMode);
+				$this->assign('mangeText','退出管理');
 				$this->assign('editUrl',site_url('team/detail/'.$team['basic']['id']));
 			}else{
-				$this->assign('mangeText','进入编辑模式');
+				$this->assign('mangeText','管理队伍');
 				$this->assign('editUrl',site_url('team/detail/'.$team['basic']['id'].'/manage/'));
 			}
 		}
+		
+		if($inManageMode){
+			$this->load->library('Sports_Service');
+			$poistionList = $this->sports_service->getMetaByCategoryAndGroup($team['basic']['category_name'],'位置');
+			$this->assign('positionList',$poistionList);
+		}
+		
+		
+		$this->assign('formTarget',$this->uri->uri_string());
 		
 		$this->assign('canManager',$canManager);
 		$this->assign('team',$team);

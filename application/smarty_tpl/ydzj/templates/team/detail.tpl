@@ -1,7 +1,7 @@
 {include file="common/header.tpl"}
 
 {if $inManageMode}
-{form_open(site_url('team/detail'),'id="teamManageForm"')}
+{form_open(site_url($formTarget),'id="teamManageForm"')}
 {/if}
 <div id="teamDetail" class="row{if $inManageMode} {/if}">
     <div class="row teamCoverImg" style="background:url({base_url($team['basic']['logo_url'])}) no-repeat 50% 50%;"></div>
@@ -21,24 +21,38 @@
     <div class="row pd5">
         <h3 class="subTitle">成员({$team['basic']['current_num']})人</h3>
         <ul id="teamMembers" class="clearfix">
+        {if $inManageMode}
             {foreach from=$team['members'] item=item}
-            <li {if $inManageMode}class="manage"{/if}>
-                <div class="member">
-                    <a href="{site_url('user/info/')}/{$item['uid']}" title="{$item['nickname']|escape}"><img src="{base_url($item['avatar'])}"/></a>
-                    <span>
-                    {if $inManageMode}
-                        <label><input type="radio" name="position[{$item['uid']}]" value="前锋"/>前锋</label>
-                    {else}
-                    [{if empty($item['position'])}未知{else}{$item['position']}{/if}]
-                    {/if}
-                    </span>
-                    <span>{$item['nickname']|escape}</span>
-                    {if $inManageMode && $profile['memberinfo']['uid'] !=  $item['uid']}
-                    <input type="button" class="slaveBtn" name="kickoff" value="踢掉"/>
-                    {/if}
+            <li class="member manage clearfix">
+                <div>
+	                <div class="headerImg fl">
+	                   <a href="{site_url('user/info/')}/{$item['uid']}" title="{$item['nickname']|escape}"><img src="{base_url($item['avatar'])}"/></a>
+	                   <div>[{if empty($item['position'])}未知{else}{$item['position']}{/if}]</div>
+	                </div>
+	                <div class="positionSet fl">
+	                    {if $profile['memberinfo']['uid'] !=  $item['uid']}
+	                    <input type="hidden" name="kick[{$item['uid']}]" id="kick_{$item['uid']}" value=""/>
+                        <input type="button" class="at_txt kickoffBtn" class="slaveBtn" name="kickoff" value="踢掉" data-id="kick_{$item['uid']}"/>
+                        {/if}
+	                    <input type="text" class="at_txt" name="nickname[{$item['uid']}]" value="{$item['nickname']|escape}"/>
+	                    {foreach from=$positionList item=pitem}
+	                    <label><input type="radio" name="position[{$item['uid']}]" value="$pitem['name']" {if $pitem['name'] == $item['position']}checked{/if}/>{$pitem['name']}</label>
+	                    {/foreach}
+	                    
+	                </div>
+	                
                 </div>
             </li>
             {/foreach}
+       {else}
+           {foreach from=$team['members'] item=item}
+            <li class="member">
+                <a href="{site_url('user/info/')}/{$item['uid']}" title="{$item['nickname']|escape}"><img src="{base_url($item['avatar'])}"/></a>
+                <div>[{if empty($item['position'])}未知{else}{$item['position']}{/if}]</div>
+                <div>{$item['nickname']|escape}</div>
+            </li>
+            {/foreach}
+       {/if}
         </ul>
     </div>
     
@@ -119,10 +133,12 @@
 <div class="row" id="submitFixedWrap" >
     {if $canManager}
     <div class="row col">
-        <a class="link_btn grayed" href="{$editUrl}"}>{$mangeText}</a>
+        <a class="link_btn" href="{$editUrl}"}>{$mangeText}</a>
     </div>
     {else}
-    
+    <div class="row col">
+        <a class="link_btn" href="javascript:void(0)"}>预约比赛</a>
+    </div>
     {/if}
 </div>
 {/if}

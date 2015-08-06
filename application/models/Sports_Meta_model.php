@@ -1,9 +1,9 @@
 <?php
 
 
-class Stadium_Meta_Model extends MY_Model {
+class Sports_Meta_Model extends MY_Model {
     
-    public $_tableName = 'stadium_meta';
+    public $_tableName = 'sports_meta';
     public static $_tableMeta = null;
     
     public function __construct(){
