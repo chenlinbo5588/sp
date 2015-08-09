@@ -24,7 +24,6 @@ class Team extends Ydzj_Controller {
 		$teamList = $this->team_service->getAllPagerTeam();
 		
 		
-		
 		$this->seoTitle('队伍');
 		$this->assign('cities',$availableCity);
 		$this->assign('sportsCategoryList',$sportsCategoryList);
@@ -32,6 +31,13 @@ class Team extends Ydzj_Controller {
 		$this->display('team/index');
 	}
 	
+	
+	public function team()
+	{
+		
+		
+		$this->display('team/list');
+	}
 	
 	
 	/**

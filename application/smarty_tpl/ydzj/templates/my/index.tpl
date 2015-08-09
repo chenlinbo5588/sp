@@ -15,12 +15,15 @@
     <div class="row"><span class="icon ico_join">参加的队伍:</span><span>0</span><a class="side_link" href="{site_url('team')}">去加入队伍</a></div>
     
     <div class="row">
-        <span class="icon ico_invite">推广链接:</span><span><input type="text" name="inviteUrl" value="{$inviteUrl}"/></span><span class="muted">复制链接发送给好友</span>
+        <span class="icon ico_invite">推广链接:</span><span><input style="width:72%" type="text" name="inviteUrl" value="{$inviteUrl}"/></span>
     </div>
     
-        
     {* 链接, 进去再细分 各类运动，参加的比赛参数 和比赛数据 *}
     <div class="row">职业生涯</div>
+    <div class="row">
+        <input type="button" class="primaryBtn grayed" name="inviteUrl" value="复制链接发送给好友"/>
+    </div>
+    
     <div class="row last"><a id="logout_link" class="link_btn" href="javascript:void(0)" data-href="{site_url('member/logout')}">退出</a>
 </div>
 <script src="{base_url('js/my.js')}" type="text/javascript"></script>
