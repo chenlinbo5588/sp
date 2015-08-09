@@ -190,4 +190,53 @@ class Team_Service extends Base_Service {
 		
 		return $teamid;
 	}
+	
+	
+	public function isTeamManager($team,$userInfo){
+		
+		$canManager = false;
+		
+		$teamOwnerUid = $team['basic']['leader_uid'];
+		if(!$teamOwnerUid){
+			$teamOwnerUid = $team['basic']['owner_uid'];
+		}
+		
+		if($userInfo['uid'] == $teamOwnerUid){
+			$canManager = true;
+		}
+		
+		return $canManager;
+	}
+	
+	
+	/**
+	 * 更新队伍 和队员信息
+	 */
+    public function manageTeam($team,$members){
+    	
+    	$this->_sportsCategoryModel->transStart();
+    	
+    	$teamid = $team['id'];
+    	
+    	//unset($team['id']);
+    	$this->_teamModel->update($team,array('id' => $team['id']));
+    	
+    	if ($this->_sportsCategoryModel->transStatus() === FALSE){
+			$this->_sportsCategoryModel->transRollback();
+			return false;
+		}
+    	
+    	$this->_teamMemberModel->batchUpdate($members);
+    	
+    	if ($this->_sportsCategoryModel->transStatus() === FALSE){
+			$this->_sportsCategoryModel->transRollback();
+			return false;
+		}
+    	
+    	$this->_sportsCategoryModel->transCommit();
+		$this->_sportsCategoryModel->transOff();
+    	
+    	return true;
+    	
+    }
 }

@@ -78,25 +78,18 @@ class Team extends Ydzj_Controller {
 	}
 	
 	
-	private function _prepareDetailData($teamid){
+	/**
+	 * 
+	 */
+	private function _extraTeamInfo($team){
 		
-		$team = $this->team_service->getTeamInfo($teamid);
-
 		if($team['basic']['joined_type'] == 1 && $this->isLogin()){
 			$this->assign('inviteUrl',$this->team_service->generateInviteUrl($team['basic'],$this->_profile['memberinfo']));
 		}
 		
-		$canManager = false;
+		
 		$inManageMode = false;
-		
-		$teamOwnerUid = $team['basic']['leader_uid'];
-		if(!$teamOwnerUid){
-			$teamOwnerUid = $team['basic']['owner_uid'];
-		}
-		
-		if($this->_profile['memberinfo']['uid'] == $teamOwnerUid){
-			$canManager = true;
-		}
+		$canManager = $this->team_service->isTeamManager($team,$this->_profile['memberinfo']);
 		
 		if($canManager){
 			if($this->uri->segment(4) == 'manage'){
@@ -113,7 +106,9 @@ class Team extends Ydzj_Controller {
 		if($inManageMode){
 			$this->load->library('Sports_Service');
 			$poistionList = $this->sports_service->getMetaByCategoryAndGroup($team['basic']['category_name'],'位置');
+			$roleList = $this->sports_service->getMetaByCategoryAndGroup($team['basic']['category_name'],'职务');
 			$this->assign('positionList',$poistionList);
+			$this->assign('roleList',$roleList);
 		}
 		
 		
@@ -121,14 +116,115 @@ class Team extends Ydzj_Controller {
 		
 		$this->assign('canManager',$canManager);
 		$this->assign('team',$team);
+		
 		$this->seoTitle($team['basic']['title']);
+	}
+	
+	
+	private function _prepareDetailData($teamid){
+		$team = $this->team_service->getTeamInfo($teamid);
+		$this->_extraTeamInfo($team);
 	}
 	
 	public function detail(){
 		$ar = $this->uri->segment_array();
 		if(is_numeric($ar[3])){
-			$this->_prepareDetailData(intval($ar[3]));
-			$this->display('team/detail');
+			$feedback = '';
+			
+			if($this->isPostRequest()){
+				$this->assign('ispost',true);
+				
+				for($i = 0; $i < 1; $i++){
+					if(!$this->isLogin()){
+						
+						$this->assign('returnUrl',site_url($this->uri->uri_string()));
+						$this->display('member/login');
+						
+						break;
+					}
+					
+					$team = $this->team_service->getTeamInfo(intval($ar[3]));
+					$canManager = $this->team_service->isTeamManager($team,$this->_profile['memberinfo']);
+					
+					if(!$canManager){
+						$feedback = '对不起，您不是队长不能管理';
+						break;
+					}
+				
+				
+					$memberIds = array();
+					foreach($team['members'] as $member){
+						$memberIds[] = $member['id'];
+					}
+					
+					foreach(array('username','num','rolename', 'position','kick') as $value){
+						$data[$value] = $this->input->post($value);
+					};
+					
+					
+					$updateMemeber = array();
+					
+					$noticeText = $this->input->post('notice_board');
+					if(!empty($noticeText)){
+						$this->form_validation->set_rules('notice_board','留言','max_length[100]');
+					}else{
+						$noticeText = '';
+					}
+						
+					foreach($data['username'] as $nk => $value){
+						if(in_array($nk,$memberIds)){
+							$updateMemeber[$nk] = array(
+								'id' => $nk,
+								'username' => empty($value) == true ? '' : $value,
+								'num' => intval($data['num'][$nk]),
+								'rolename' => empty($data['rolename'][$nk]) == true ? '' : $data['rolename'][$nk],
+								'position' => empty($data['position'][$nk]) == true ? '' : $data['position'][$nk],
+								'is_del' => $data['kick'][$nk] == 'yes' ? 'y' : 'n'
+							);
+						}
+						
+						if(!empty($value)){
+							$this->form_validation->set_rules('username['.$nk.']','真实名称','min_length[2]|max_length[30]');
+						}
+						
+						if(!empty($data['num'][$nk])){
+							$this->form_validation->set_rules('num['.$nk.']','球衣号码','integer|greater_than_equal_to[0]|less_than[100]');
+						}
+						
+					}
+					
+					//print_r($updateMemeber);
+					
+					if($this->form_validation->run() === false){
+						$errorMsg = $this->form_validation->error_array();
+						$this->assign('errorMsg',$errorMsg);
+						break;
+					}
+					
+					$flag = $this->team_service->manageTeam(array(
+							'id' => $team['basic']['id'],
+							'notice_board' => $noticeText
+						),
+						$updateMemeber
+					);
+					
+					$feedback = "更新成功";
+					$team = $this->team_service->getTeamInfo($team['basic']['id']);
+				}
+				
+				
+				if($feedback){
+					$this->assign('feedback','<div class="warning">'.$feedback.'</div>');
+				}
+				
+				$this->_extraTeamInfo($team);
+				$this->display('team/detail');
+				
+			}else{
+				$this->_prepareDetailData(intval($ar[3]));
+				$this->display('team/detail');
+			}
+			
 		}else{
 			show_error('对不起，服务器无法理解你的请求');
 		}

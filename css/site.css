@@ -87,12 +87,20 @@ input[type=text]:focus , input[type=password]:focus {
 }
 
 .warning {
-    background:#F1FF21;
+    background:#FFD500;
     padding:5px;
 }
 
 .form_error {
     color:red;
+}
+
+.validation_error {
+	border:1px solid red;
+}
+
+input[type=text].validation_error {
+	border:1px solid red;
 }
 
 .row {
@@ -316,8 +324,6 @@ table.fulltable {
 }
 
 
-
-
 /** 注册样式 **/
 #register {
     padding:5px;    
@@ -347,6 +353,23 @@ table.fulltable {
     height:80px;
 }
 
+.delmask {
+	position:absolute;
+	font-size:13px;
+	width:100%;
+	height:100%;
+	filter:alpha(opacity=30);       /* IE */
+	-moz-opacity:0.3;              /* 老版Mozilla */
+	-khtml-opacity:0.3;              /* 老版Safari */
+	opacity: 0.3;           /* 支持opacity的浏览器*/
+	z-index:2;
+	background:rgb(4, 4, 5);
+	display:none;
+	text-align:right;
+	color:#fff;
+}
+
+
 /** 队伍详情 **/
 
 #teamMembers li.member {
@@ -363,28 +386,62 @@ table.fulltable {
 #teamMembers li.manage {
     float:none;
     width:auto;
-    border-bottom:1px dotted black;
-    padding:5px 0;
+    border:1px solid black;
+    margin:5px 0;
+    position:relative;
 }
 
 #teamMembers li.manage .headerImg {
 	margin:0 5px 0 0;
+	position:relative;
+}
+
+#teamMembers li.manage .headerImg a {
+	float:left;
+	margin: 0 5px 0 0;
+}
+
+
+
+
+#teamMembers li.manage .headerImg strong {
+	vertical-align:top;
+}
+#teamMembers li.manage .headerImg span {
+	vertical-align:top;
+}
+
+
+#teamMembers li.manage .edit_username {
+	width:40%;
+}
+
+#teamMembers li.manage .edit_num {
+	width:25%;
 }
 
 #teamMembers li.manage .positionSet {
   position: relative;
-  width: 75%;
 }
+
+#teamMembers li.manage .positionSet h3 {
+	text-align: center;
+	background: #D9DAFF;
+	padding: 3px;
+}
+
+
 
 #teamMembers li.manage .positionSet label {
 	display:inline-block;
-    width:30%;
     padding:3px 0;
     margin:2px 0;
+    width:30%;
 }
 
 #teamMembers li.manage .kickoffBtn {
 	margin:3px 0;
+	height:30px;
 }
 
 
