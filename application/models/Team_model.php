@@ -39,7 +39,7 @@ class Team_Model extends MY_Model {
     	
     	));
     	
-    	if($cnt >= 2){
+    	if($cnt >= 3){
     		return false;
     	}else{
     		return true;

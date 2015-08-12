@@ -10,10 +10,8 @@ class MY_Model extends CI_Model {
 	public $_tablePre = 'sp_';
 	public $_tableRealName = '';
 	
-
     public function __construct(){
         parent::__construct();
-        
         $this->_tableRealName = $this->getTableRealName();
     }
     
@@ -279,6 +277,16 @@ class MY_Model extends CI_Model {
         
         return false;
     }
+    
+    
+    public function query($sql){
+    	
+    	$this->db->query($sql);
+		$data = $query->result_array();
+		
+		return $data;
+    }
+    
     
     public function getList($condition = array()){
         

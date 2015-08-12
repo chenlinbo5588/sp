@@ -255,10 +255,8 @@ input[type=text].validation_error {
 }
 
 .bordered .row {
-    height:30px;
     border-bottom:1px solid #E0E0E0;
-    line-height:30px;
-    padding:2px 0px;
+    padding:8px 0px;
 }
 
 .subTitle {

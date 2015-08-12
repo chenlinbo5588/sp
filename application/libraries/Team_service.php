@@ -53,9 +53,31 @@ class Team_Service extends Base_Service {
 			'where' => array('id' => $teamid)
 		));
 		
-		$team['members'] = $this->_teamMemberModel->getList(array(
+		$team['members'] = array();
+		
+		$members = $this->_teamMemberModel->getList(array(
 			'where' => array('team_id' => $teamid)
 		));
+		
+		$memberIds = array();
+		foreach($members as $member){
+			$memberIds[] = $member['uid'];
+			$team['members'][$member['uid']] = $member;
+		}
+		
+		if($memberIds){
+			$userInfo = $this->_userModel->getList(array(
+				'select' => 'uid,nickname,avatar_middle',
+				'where_in' => array(
+					array('key' => 'uid' , 'value' => $memberIds)
+				)
+			));
+			
+			foreach($userInfo as $user){
+				$team['members'][$user['uid']] = array_merge($team['members'][$user['uid']],$user);
+			}
+		}
+		
 		
 		return $team;
 	}
@@ -142,8 +164,6 @@ class Team_Service extends Base_Service {
 		$memberid = $this->_teamMemberModel->_add(array(
 			'uid' => $creatorInfo['uid'],
 			'team_id' => $teamid,
-			'nickname' => $creatorInfo['nickname'],
-			'avatar' => $creatorInfo['avatar'],
 			'rolename' => $param['leader_uid'] == 0 ? '队员' : '队长'
 		));
 		

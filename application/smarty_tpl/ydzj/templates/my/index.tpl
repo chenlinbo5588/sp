@@ -1,10 +1,10 @@
 {include file="common/header.tpl"}
 
 <div id="my" class="pd5 bordered">
-    <div class="row first">
-        <a class="avator" href="{site_url('my/set_avatar?inviteFrom=my')}" style="display:block;background:url({base_url($profile['memberinfo']['avatar'])}) no-repeat 50% 50%;">{$profile['memberinfo']['nickname']}</a>
+    <div class="">
+        <a class="avator" href="{site_url('my/set_avatar?inviteFrom=my')}"><img src="{base_url($profile['memberinfo']['avatar_large'])}" alt="{base_url($profile['memberinfo']['nickname'])}"/></a>
     </div>
-    <div class="row"><span class="icon ico_username">真实名称:</span><span>{$profile['memberinfo']['username']}</span><a class="side_link" href="javascript:void(0)"></a></div>
+    <div class="row"><span class="icon ico_username">真实名称:</span><span>{$profile['memberinfo']['username']}</span><a class="side_link" href="{site_url('my/set_username')}">去修改</a></div>
     <div class="row"><span class="icon ico_nickname">昵称:</span><span>{$profile['memberinfo']['nickname']} 在线离线</span><a class="side_link" href="javascript:void(0)">去修改</a></div>
     <div class="row"><span class="icon ico_email">邮箱:</span><span>{$profile['memberinfo']['email']}</span><a class="side_link" href="javascript:void(0)">去验证邮箱</a></div>
     <div class="row"><span class="icon ico_mobile">手机:</span><span>{$profile['memberinfo']['mobile']}</span><a class="side_link" href="javascript:void(0)">去绑定手机</a></div>

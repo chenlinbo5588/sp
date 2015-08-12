@@ -4,7 +4,7 @@
 {form_open_multipart(site_url($formTarget),'id="teamManageForm"')}
 {/if}
 <div id="teamDetail" class="row{if $inManageMode} {/if}">
-    <div class="row teamCoverImg" style="background:url({base_url($team['basic']['logo_url'])}) no-repeat 50% 50%;"></div>
+    <div class="row teamCoverImg"><img src="{base_url($team['basic']['avatar_large'])}" alt="{$team['basic']['title']}"></div>
     <div class="row bordered pd5">
     	{form_error('notice_board')}
         <div class="row">
@@ -28,7 +28,7 @@
             <li class="member manage clearfix">
             	<div class="delmask" {if set_value('kick['|cat:$item['id']|cat:']')}style="width:100%;height:100%;display:block;"{/if}>已标记删除,轻触取消</div>
                 <div class="headerImg pd5">
-                   <a href="{site_url('user/info/')}/{$item['uid']}" title="{$item['nickname']|escape}"><img src="{base_url($item['avatar'])}"/></a>
+                   <a href="{site_url('user/info/')}/{$item['uid']}" title="{$item['nickname']|escape}"><img src="{base_url($item['avatar_middle'])}"/></a>
                    <strong>昵称:{$item['nickname']|escape}</strong>
                    <p>真名:{$item['username']|escape}</p>
                    <p>位置:{$item['position']|escape}</p>
@@ -63,7 +63,7 @@
        {else}
            {foreach from=$team['members'] item=item}
             <li class="member">
-                <a href="{site_url('user/info/')}/{$item['uid']}" title="{$item['nickname']|escape}"><img src="{base_url($item['avatar'])}"/></a>
+                <a href="{site_url('user/info/')}/{$item['uid']}" title="{$item['nickname']|escape}"><img src="{base_url($item['avatar_middle'])}"/></a>
                 <div>[{if empty($item['position'])}未知{else}{$item['position']}{/if}]</div>
                 <div>{$item['nickname']|escape}</div>
             </li>

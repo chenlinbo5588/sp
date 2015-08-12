@@ -11,7 +11,7 @@ class My extends MyYdzj_Controller {
 	public function index()
 	{
 		//$this->assign('teamCount',$this->);
-		
+		//phpinfo();
 		$this->load->library('Common_District_Service');
 		
 		$ds = array();
@@ -27,6 +27,49 @@ class My extends MyYdzj_Controller {
 	
 	
 	/**
+	 * 设置用户名称
+	 */
+	public function set_username(){
+		
+		if($this->isPostRequest()){
+			
+			$setOk = false;
+			$inviteFrom = $this->input->post('inviteFrom');
+			
+			$this->assign('inviteFrom',$inviteFrom);
+			$this->assign('returnUrl',$this->input->post('returnUrl'));
+			
+			$this->form_validation->reset_validation();
+			$this->form_validation->set_rules('username','真实姓名','required|min_length[2]|max_length[4]');
+			
+			
+			for($i = 0; $i < 1; $i++){
+				if($this->form_validation->run() == FALSE){
+					break;
+				}
+				
+				$this->load->library('Member_Service');
+				$result = $this->member_service->updateUserInfo(array(
+					'username' => $this->input->post('username')
+				),$this->_profile['memberinfo']['uid']);
+				
+				$this->member_service->refreshProfile($this->_profile['memberinfo']['email']);
+				$setOk = true;
+			}
+			
+			if($setOk){
+				redirect('my');
+			}else{
+				$this->display('my/set_username');
+			}
+			
+		}else{
+			$this->assign('default_username',$this->_profile['memberinfo']['username']);
+			$this->display('my/set_username');
+		}
+	}
+	
+	/**
 	 * 设置头像
 	 * 
 	 * 
@@ -36,7 +79,7 @@ class My extends MyYdzj_Controller {
 		
 		if($this->isPostRequest()){
 			
-			$setAvatarOk = false;
+			$setOk = false;
 			
 			$inviteFrom = $this->input->post('inviteFrom');
 			
@@ -49,15 +92,14 @@ class My extends MyYdzj_Controller {
 			
 			
 			for($i = 0; $i < 1; $i++){
-				
 				$this->load->library('Attachment_Service');
 				$fileData = $this->attachment_service->addImageAttachment('avatar',array(
 					'min_width' => 200,
 					'min_height' => 200
 				));
 				
-				if(!empty($fileData['file_url'])){
-					$newAvatar = $fileData['file_url'];
+				if(!empty($fileData['img_big'])){
+					$newAvatar = $fileData['img_big'];
 				}else{
 					$newAvatar = $this->input->post('new_avatar');
 				}
@@ -69,24 +111,21 @@ class My extends MyYdzj_Controller {
 					break;
 				}
 				
-				if($this->form_validation->run() == FALSE){
-					break;	
-				}
-				
 				$this->load->library('Member_Service');
-				$result = $this->member_service->set_avatar(array(
-					'uid' => $this->_profile['memberinfo']['uid'],
-					'username' => $this->input->post('username'),
-					'avatar' => $newAvatar
-				));
+				$result = $this->member_service->updateUserInfo(array(
+					'avatar' => $fileData['file_url'],
+					'avatar_large' => $fileData['img_large'],
+					'avatar_big' => $fileData['img_big'],
+					'avatar_middle' => $fileData['img_middle'],
+					'avatar_small' => $fileData['img_small']
+				),$this->_profile['memberinfo']['uid']);
 				
 				$this->member_service->refreshProfile($this->_profile['memberinfo']['email']);
-				$setAvatarOk = true;
-				
+				$setOk = true;
 			}
 			
 			
-			if($setAvatarOk){
+			if($setOk){
 				
 				if('teamInvite' == $inviteFrom){
 					//不需要设置地区了
@@ -109,7 +148,7 @@ class My extends MyYdzj_Controller {
 			
 			$this->assign('default_username',$this->_profile['memberinfo']['username']);
 			$this->assign('inviteFrom',$this->input->get('inviteFrom'));
-			$this->assign('default_avatar',$this->_profile['memberinfo']['avatar']);
+			$this->assign('default_avatar',$this->_profile['memberinfo']['avatar_large']);
 			$this->display('my/set_avatar');
 		}
 		
@@ -183,13 +222,13 @@ class My extends MyYdzj_Controller {
 			
 			if($this->form_validation->run() !== FALSE){
 				$this->load->library('Member_Service');
-				$result = $this->member_service->set_city(array(
-					'uid' => $this->_profile['memberinfo']['uid'],
+				$result = $this->member_service->updateUserInfo(array(
+					'district_bind' => 1,
 					'd1' => intval($this->input->post('d1')),
 					'd2' => intval($this->input->post('d2')),
 					'd3' => intval($this->input->post('d3')),
 					'd4' => intval($this->input->post('d4'))
-				));
+				), $this->_profile['memberinfo']['uid']);
 				
 				$this->member_service->refreshProfile($this->_profile['memberinfo']['email']);
 				

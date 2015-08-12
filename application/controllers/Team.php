@@ -280,7 +280,7 @@ class Team extends Ydzj_Controller {
 							),
 							array(
 								'category_callable' => '%s无效',
-								'user_categroy_callbale' => '同一个分类的队伍最多可以创建两个'
+								'user_categroy_callbale' => '同一个类型的队伍最多创建三个'
 							)
 						);
 						
@@ -339,6 +339,11 @@ class Team extends Ydzj_Controller {
 					$this->load->library('Attachment_Service');
 					$fileData = $this->attachment_service->addImageAttachment('logo_url');
 					
+					if(!$fileData){
+						$this->assign('logo_url',$this->attachment_service->getErrorMsg());
+						break;
+					}
+					
 					$addParam = array(
 						'category_id' => $this->input->post('category_id'),
 						'title' => $this->input->post('title'),
@@ -348,16 +353,17 @@ class Team extends Ydzj_Controller {
 					);
 					
 					if($fileData){
-						$addParam['logo_url'] = $fileData['file_url'];
-					}else{
-						$num = rand(1,4);
-						$addParam['logo_url'] = base_url("img/avator/{$num}.jpg");
+						$addParam['avatar'] = $fileData['file_url'];
+						$addParam['avatar_large'] = $fileData['img_large'];
+						$addParam['avatar_big'] = $fileData['img_big'];
+						$addParam['avatar_middle'] = $fileData['img_middle'];
+						$addParam['avatar_small'] = $fileData['img_small'];
 					}
 					$teamid = $this->team_service->addTeam($addParam,$this->_profile['memberinfo']);
 					
 					if($teamid){
 						$isCreateOk = true;
-						$this->_prepareDetailData($teamid);
+						//$this->_prepareDetailData($teamid);
 					}else{
 						$this->assign('feedback','<div class="warning">对不请创建队伍失败，请刷新页面重新尝试。</div>');
 					}
@@ -365,7 +371,7 @@ class Team extends Ydzj_Controller {
 			}
 			
 			if($isCreateOk){
-				$this->display('team/detail');
+				redirect('team/detail/id/'.$teamid);
 			}else{
 				$this->display('team/create_team');
 			}

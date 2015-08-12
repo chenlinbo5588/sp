@@ -56,19 +56,12 @@ class Member_Service extends Base_Service {
 		return $this->_userModel->getUserByEmail($email);
 	}
 	
-	
-	
 	/**
-	 * 设置用户真实名称和用户头像
+	 * 更新用户信息
 	 */
-	public function set_avatar($param){
-		return $this->_userModel->update(array(
-			'username' => $param['username'],
-			'avatar' => $param['avatar']
-			),array('uid' => $param['uid']));
-			
+	public function updateUserInfo($data,$uid){
+		return $this->_userModel->update($data,array('uid' => $uid));
 	}
-	
 	
 	/**
 	 * 用户设置所在地

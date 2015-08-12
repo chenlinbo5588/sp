@@ -25,7 +25,7 @@
         <label style="margin:0 20px 0 0;"><input type="radio" name="leader" value="1" {set_radio('leader',1,true)}/>我是队长</label>
         <label><input type="radio" name="leader" value="2" {set_radio('leader',2)}/>以后设置</label>
     </div>
-    {form_error('logo_url')}
+    {$logo_url}
     <div class="row">
         <label class="side_lb"  for="logo_url_file">队伍合影：</label>
         <input id="logo_url_file" class="at_txt" type="file" name="logo_url"/>
