@@ -31,7 +31,7 @@
         <input id="logo_url_file" class="at_txt" type="file" name="logo_url"/>
     </div>
     <div class="row"><label class="side_lb"></label>队伍合影照片<em class="tip">JPG</em>格式,大小不超过<em class="tip">4MB</em></div>
-    <div class="row"><label class="side_lb"></label>分辨率最小<em class="tip">200X200</em></div>
+    <div class="row"><label class="side_lb"></label>分辨率最小<em class="tip">800x800</em></div>
     {form_error('joined_type')}
     <div class="row">
         <label class="side_lb">入队设置：</label>

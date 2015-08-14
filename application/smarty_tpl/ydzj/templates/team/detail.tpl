@@ -4,18 +4,36 @@
 {form_open_multipart(site_url($formTarget),'id="teamManageForm"')}
 {/if}
 <div id="teamDetail" class="row{if $inManageMode} {/if}">
-    <div class="row teamCoverImg"><img src="{base_url($team['basic']['avatar_large'])}" alt="{$team['basic']['title']}"></div>
+    <div class="row teamCoverImg"><img src="{base_url($team['basic']['avatar_big'])}" data-largeurl="{$team['basic']['avatar_large']}" alt="{$team['basic']['title']}"></div>
     <div class="row bordered pd5">
+        <div class="row"><label class="side_lb">球队类型：</label><span>{$team['basic']['category_name']}队</span></div>
     	{form_error('notice_board')}
         <div class="row">
-            <label class="side_lb">留言：</label>
+            <label class="side_lb">队长留言：</label>
             {if $inManageMode}
-            <input type="text" style="width:80%;"; name="notice_board" value="{$team['basic']['notice_board']}" placeholder="请输入留言"/>
+            <input type="text" class="at_txt" name="notice_board" value="{$team['basic']['notice_board']}" placeholder="请输入留言"/>
             {else}
             <span>{$team['basic']['notice_board']|escape}</span>
             {/if}
         </div>
-        <div class="row"><label class="side_lb">分类：</label><span>{$team['basic']['category_name']}</span></div>
+        {form_error('slogan')}
+        <div class="row">
+            <label class="side_lb">球队口号：</label>
+            {if $inManageMode}
+            <input type="text" class="at_txt" name="slogan" value="{$team['basic']['slogan']}" placeholder="请输入队伍口号"/>
+            {else}
+            <span>{$team['basic']['slogan']|escape}</span>
+            {/if}
+        </div>
+        {form_error('base_area')}
+        <div class="row">
+            <label class="side_lb">主场场地：</label>
+            {if $inManageMode}
+            <input type="text" class="at_txt" name="base_area" value="{$team['basic']['base_area']}" placeholder="请输入主场地址:如傅家路文化广场"/>
+            {else}
+            <span>{$team['basic']['base_area']|escape}</span>
+            {/if}
+        </div>
         <div class="row"><label class="side_lb">地址：</label><span>浙江省慈溪市崇寿镇</span><a class="fr" href="{site_url('team/placeto')}/{$team['basic']['id']}">地图</a></div>
         <div class="row"><label class="side_lb">总比赛数：</label><span>{$team['basic']['games']}</span></div>
         <div class="row"><label class="side_lb">胜/负/胜率：</label><span>{$team['basic']['victory_game']}/{$team['basic']['fail_game']}/{$team['basic']['victory_rate']}</span></div>
@@ -74,7 +92,7 @@
     
     {* 最近比赛情况 *}
     <div class="row">
-        <h3 class="subTitle">最近比赛</h3>
+        <h3 class="subTitle">最近战绩</h3>
         <table class="fulltable">
             <colgroup>
                 <col style="witdh:20%;"/>

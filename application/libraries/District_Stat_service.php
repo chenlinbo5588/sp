@@ -6,8 +6,6 @@ class District_Stat_Service extends Base_Service {
 	private $_districtModel;
 	private $_districtStatModel;
 	
-
-
 	public function __construct(){
 		parent::__construct();
 		

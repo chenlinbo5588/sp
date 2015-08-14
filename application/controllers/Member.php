@@ -35,13 +35,19 @@ class Member extends Ydzj_Controller {
 	public function login()
 	{
 		
+		if($this->isLogin()){
+			redirect('my');
+		}
+		
 		if($this->isPostRequest()){
+			
+			$this->assign('returnUrl',$this->input->post('returnUrl'));
 			
 			$this->form_validation->reset_validation();
 			$this->form_validation->set_rules('email','用户名', 'required|valid_email');
 			$this->form_validation->set_rules('password','密码','required|alpha_numeric');
 			
-			$this->form_validation->set_rules('returnUrl','返回地址','valid_url');
+			//$this->form_validation->set_rules('returnUrl','返回地址','valid_url');
 			
 			if($this->form_validation->run() !== FALSE){
 
@@ -52,6 +58,7 @@ class Member extends Ydzj_Controller {
 					'password' => $this->input->post('password')
 				));
 				
+				print_r($result);
 				
 				if($result['code'] == 'success'){
 					$this->session->set_userdata(array(
@@ -60,22 +67,30 @@ class Member extends Ydzj_Controller {
 					
 					$this->_remberLoginEmail($this->input->post('email'));
 					
-					if($this->input->post('returnUrl') && isLocalUrl($this->input->post('returnUrl'))){
-						redirect($this->input->post('returnUrl'));
+					$url = $this->input->post('returnUrl');
+					if(!empty($url) && isLocalUrl($url)){
+						redirect($url);
 					}else{
 						redirect('team');
 					}
 					
-					
-					//$this->jsonOutput($result['message'],array('memberinfo' => $result['memberinfo']));
 				}else{
 					$this->assign('feedback',$result['message']);
 				}
 			}
 		}else{
-			$this->assign('loginemail',$this->input->cookie('loginemail'));
 			//记住用户点击时  因为需要登录的返回链接
-			$this->assign('returnUrl', $this->input->get('returnUrl'));
+			$teamJoinParam = $this->input->get('teamjoin');
+			//$string = $this->encrypt->decode($teamJoinParam,$this->config->item('encryption_key'));
+			if($teamJoinParam){
+				$this->assign('returnUrl',site_url('team/invite/?param='.$teamJoinParam));
+			}else{
+				$this->assign('returnUrl', $this->input->get('returnUrl'));
+			}
+			
+			$this->assign('loginemail',$this->input->cookie('loginemail'));
+			
+			
 		}
 		
 		$this->seoTitle('登陆');
@@ -184,6 +199,7 @@ class Member extends Ydzj_Controller {
 						'password' => $this->input->post('psw'),
 						'regip' => $this->input->ip_address(),
 						'regdate' => $this->input->server('REQUEST_TIME'),
+						//todo 修改
 						'avatar' => 'img/avator/'.rand(1,4).'.jpg',
 						'inviter' => empty($inviter) == true ? 0 : intval($inviter)
 					);

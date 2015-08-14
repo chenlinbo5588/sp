@@ -37,11 +37,15 @@ class Team_Service extends Base_Service {
 		return $data;
 	}
 	
+	
+	
+	
 	/**
 	 * 获得活动分类
 	 */
 	public function getSportsCategory($condition = array())
 	{
+		$condition['where']['status'] = 0;
 		return $this->_sportsCategoryModel->getList($condition);
 	}
 	
@@ -53,12 +57,14 @@ class Team_Service extends Base_Service {
 			'where' => array('id' => $teamid)
 		));
 		
-		$team['members'] = array();
+		//$team['members'] = array();
 		
-		$members = $this->_teamMemberModel->getList(array(
+		$team['members'] = $this->_teamMemberModel->getList(array(
 			'where' => array('team_id' => $teamid)
 		));
 		
+		
+		/*
 		$memberIds = array();
 		foreach($members as $member){
 			$memberIds[] = $member['uid'];
@@ -77,7 +83,7 @@ class Team_Service extends Base_Service {
 				$team['members'][$user['uid']] = array_merge($team['members'][$user['uid']],$user);
 			}
 		}
-		
+		*/
 		
 		return $team;
 	}
@@ -104,6 +110,12 @@ class Team_Service extends Base_Service {
 	 */
 	public function joinTeam($teamid,$userinfo){
 		
+		$message = array(
+			'join_in' => false,
+			'new_member' => false
+		);
+		
+		
 		$notJoined = $this->_teamMemberModel->getCount(array(
 			'where' => array(
 				'team_id' => $teamid,
@@ -113,10 +125,13 @@ class Team_Service extends Base_Service {
 		
 		
 		if($notJoined == 0){
+			$message['new_member'] = true;
+			
 			$id = $this->_teamMemberModel->_add(array(
 				'uid' => $userinfo['uid'],
 				'nickname' => $userinfo['nickname'],
-				'avatar' => $userinfo['avatar'],
+				'username' => $userinfo['username'],
+				'avatar_middle' => $userinfo['avatar_middle'],
 				'team_id' => $teamid
 			));
 			
@@ -127,7 +142,8 @@ class Team_Service extends Base_Service {
 			}
 		}
 		
-		return true;
+		$message['join_in'] = true;
+		return $message;
 		
 		
 	}
@@ -163,6 +179,9 @@ class Team_Service extends Base_Service {
 		
 		$memberid = $this->_teamMemberModel->_add(array(
 			'uid' => $creatorInfo['uid'],
+			'nickname' => $creatorInfo['nickname'],
+			'username' => $creatorInfo['username'],
+			'avatar_middle' => $creatorInfo['avatar_middle'],
 			'team_id' => $teamid,
 			'rolename' => $param['leader_uid'] == 0 ? '队员' : '队长'
 		));

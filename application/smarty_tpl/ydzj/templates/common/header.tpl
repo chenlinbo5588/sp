@@ -20,12 +20,7 @@
 <body>
    <div id="wrap">
        <header>
-           <div id="top_bar">
+           <div id="topBar">
                <h1>{$SEO_title|escape}</h1>
-               {if $profile}
-               <a href="{site_url('my')}" title="我">我</a>
-               {else}
-               <a href="{site_url('member/login')}" title="登陆">登陆</a>
-               {/if}
            </div>
        </header>

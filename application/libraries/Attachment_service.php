@@ -31,13 +31,15 @@ class Attachment_Service extends Base_Service {
 	
 	/**
 	 * 图片裁剪配置
+	 * 
+	 * 队伍图片
 	 */
 	public function getImageResizeConfig(){
 		return array(
-			'large' => array('width' => 600,'height' => 600, 'maintain_ratio' => true),
-			'big' => array('width' => 200,'height' => 200 , 'maintain_ratio' => false),
-			'middle' => array('width' => 120,'height' => 120,'maintain_ratio' => false),
-			'small' => array('width' => 80,'height' => 80,'maintain_ratio' => false)
+			'large' => array('width' => 800,'height' => 800, 'maintain_ratio' => false),
+			'big' => array('width' => 400,'height' => 400 , 'maintain_ratio' => false),
+			'middle' => array('width' => 200,'height' => 200,'maintain_ratio' => false),
+			'small' => array('width' => 100,'height' => 100,'maintain_ratio' => false)
 		);
 	}
 	

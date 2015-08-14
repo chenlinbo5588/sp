@@ -27,8 +27,8 @@
         </div>
         {form_error('agreee_licence')}
         <div class="row"><input class="primaryBtn" type="submit" name="register" value="注册"/></div>
-        <div class="row"><a href="{site_url('member/login')}" title="登陆">登陆</a>
     </form>
+    <div class="row" style="margin:0 0 20px 0;"><a class="link_btn grayed" href="{site_url('member/login')}?teamjoin={$param}" title="登陆">登陆</a>
 </div>
 
 

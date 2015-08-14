@@ -15,7 +15,8 @@
             <label class="side_lb" for="password_text">密&nbsp;&nbsp;&nbsp;&nbsp;码：</label><input id="password_text" class="at_txt" type="password" name="password" value="{set_value('password')}" placeholder="请输入您的登陆密码"/>
         </div>
         <div class="row"><input class="primaryBtn" type="submit" name="login" value="登陆"/></div>
-        <div class="row"><a href="{site_url('member/register')}" title="注册">注册</a> | <a href="{site_url('member/forget')}" title="忘记密码">忘记密码</div>
+        <div class="row"><a class="link_btn grayed" href="{site_url('member/register')}" title="注册">注册</a></div>
+        <div class="row center" style="margin:20px 0 10px 0;"><a href="{site_url('member/forget')}" title="忘记密码">忘记密码</div>
     </form>
 </div>
 {else}

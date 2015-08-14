@@ -20,13 +20,13 @@ class Team extends Ydzj_Controller {
 	{
 		$availableCity = $this->district_stat_service->getAvailableCity(1);
 		//print_r($availableCity);
-		$sportsCategoryList = $this->team_service->getSportsCategory();
+		//$sportsCategoryList = $this->team_service->getSportsCategory();
+		
 		$teamList = $this->team_service->getAllPagerTeam();
 		
-		
-		$this->seoTitle('队伍');
+		$this->seoTitle('球队');
 		$this->assign('cities',$availableCity);
-		$this->assign('sportsCategoryList',$sportsCategoryList);
+		//$this->assign('sportsCategoryList',$sportsCategoryList);
 		$this->assign('teamList',$teamList);
 		$this->display('team/index');
 	}
@@ -70,11 +70,15 @@ class Team extends Ydzj_Controller {
 				//表明是通过队伍邀请链接
 				$this->assign('inviteFrom','teamInvite');
 				$this->assign('returnUrl',site_url('team/invite/?param='.$param));
+				$this->assign('param',urlencode($param));
 				
 				$this->display('member/register');
 			}else{
 				//直接加入
-				$this->team_service->joinTeam($info[0],$this->_profile['memberinfo']);
+				$mes = $this->team_service->joinTeam($info[0],$this->_profile['memberinfo']);
+				if($mes['new_member']){
+					$this->assign('feedback','<div class="success">欢迎 '.urlencode($this->_profile['memberinfo']['nickname']).' 加入</div>');
+				}
 				
 				$this->_prepareDetailData($info[0]);
 				$this->display('team/detail');	
@@ -171,11 +175,27 @@ class Team extends Ydzj_Controller {
 					$updateMemeber = array();
 					
 					$noticeText = $this->input->post('notice_board');
+					$sloganText = $this->input->post('slogan');
+					$baseArea = $this->input->post('base_area');
+					
 					if(!empty($noticeText)){
-						$this->form_validation->set_rules('notice_board','留言','max_length[100]');
+						$this->form_validation->set_rules('notice_board','队长留言','max_length[100]');
 					}else{
 						$noticeText = '';
 					}
+					
+					if(!empty($sloganText)){
+						$this->form_validation->set_rules('slogan','球队口号','max_length[80]');
+					}else{
+						$sloganText = '';
+					}
+					
+					if(!empty($baseArea)){
+						$this->form_validation->set_rules('base_area','主场场地','max_length[80]');
+					}else{
+						$baseArea = '';
+					}
+					
 						
 					foreach($data['username'] as $nk => $value){
 						if(in_array($nk,$memberIds)){
@@ -209,7 +229,9 @@ class Team extends Ydzj_Controller {
 					
 					$flag = $this->team_service->manageTeam(array(
 							'id' => $team['basic']['id'],
-							'notice_board' => $noticeText
+							'slogan' => $sloganText,
+							'base_area' => $baseArea,
+							'notice_board' => $noticeText,
 						),
 						$updateMemeber
 					);
@@ -371,7 +393,7 @@ class Team extends Ydzj_Controller {
 			}
 			
 			if($isCreateOk){
-				redirect('team/detail/id/'.$teamid);
+				redirect('team/detail/'.$teamid);
 			}else{
 				$this->display('team/create_team');
 			}

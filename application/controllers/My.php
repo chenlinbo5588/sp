@@ -148,7 +148,7 @@ class My extends MyYdzj_Controller {
 			
 			$this->assign('default_username',$this->_profile['memberinfo']['username']);
 			$this->assign('inviteFrom',$this->input->get('inviteFrom'));
-			$this->assign('default_avatar',$this->_profile['memberinfo']['avatar_large']);
+			$this->assign('default_avatar',$this->_profile['memberinfo']['avatar_big']);
 			$this->display('my/set_avatar');
 		}
 		
