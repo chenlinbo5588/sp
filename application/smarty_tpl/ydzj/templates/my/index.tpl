@@ -2,7 +2,8 @@
 
 <div id="my" class="bordered">
     <div class="row avatar">
-        <a href="{site_url('my/set_avatar?inviteFrom=my')}"><img src="{base_url($profile['memberinfo']['avatar_large'])}" alt="{base_url($profile['memberinfo']['nickname'])}"/></a>
+        <img src="{base_url($profile['memberinfo']['avatar_big'])}" alt="{base_url($profile['memberinfo']['nickname'])}"/>
+        <div class="pd5"><a class="link_btn" href="{site_url('my/set_avatar?inviteFrom=my')}">修改头像</a></div>
     </div>
     <div class="pd5">
         <div class="row first"><span class="icon ico_username">真实名称:</span><span>{$profile['memberinfo']['username']}</span><a class="side_link" href="{site_url('my/set_username')}">修改</a></div>

@@ -94,8 +94,9 @@ $.loadingbar = function(settings) {
     });
 
     return spin_wrap;
-
 };
+
+var regMobile = /^(\+?86)?1[0-9][0-9]{1}[0-9]{8}$|15[0189]{1}[0-9]{8}$|189[0-9]{8}$/;
 
 
 $(function(){

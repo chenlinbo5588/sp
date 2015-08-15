@@ -10,6 +10,8 @@ class ShortMessage_Service extends Base_Service {
 	
 	/**
 	 * 发送手机短信
+	 * 
+	 * @todo 需要添加实现
 	 */
 	public function sendMessage($phone,$content = ''){
 		return true;

@@ -17,9 +17,9 @@ class Member_Model extends MY_Model {
     }
     
     
-    public function getUserByEmail($email,$field = '*'){
-        $sql = "SELECT {$field} FROM ".$this->_tableRealName ." WHERE email = ?"; 
-        $query = $this->db->query($sql, array($email));
+    public function getUserByUid($uid,$field = '*'){
+        $sql = "SELECT {$field} FROM ".$this->_tableRealName ." WHERE uid = ?"; 
+        $query = $this->db->query($sql, array($uid));
         $row = $query->result_array();
         
         if($row[0]){
@@ -29,21 +29,6 @@ class Member_Model extends MY_Model {
         }
     }
     
-    
-    /**
-     * 获得用户
-     */
-    public function getUserByUserName($username,$field = '*'){
-        $sql = "SELECT {$field} FROM ".$this->_tableRealName ." WHERE username = ?"; 
-        $query = $this->db->query($sql, array($username));
-        $row = $query->result_array();
-        
-        if($row[0]){
-            return $row[0];
-        }else{
-            return false;
-        }
-    }
     
     
 }

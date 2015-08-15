@@ -16,9 +16,9 @@ class Member_Service extends Base_Service {
 	/**
 	 * 刷新信息
 	 */
-	public function refreshProfile($email){
+	public function refreshProfile($uid){
 		$this->CI->session->set_userdata(array(
-			'profile' => array('memberinfo' => $this->_userModel->getUserByEmail($email))
+			'profile' => array('memberinfo' => $this->_userModel->getUserByUid($uid))
 		));
 	}
 	
@@ -30,7 +30,7 @@ class Member_Service extends Base_Service {
 		$result = $this->formatArrayReturn();
 		$result['message'] = '登陆失败';
 		
-		$userInfo = $this->_userModel->getUserByEmail($param['email']);
+		$userInfo = $this->_userModel->getFirstByKey($param['mobile'],'mobile');
 		
 		if(!empty($userInfo)){
 			if($userInfo['password'] == $param['password']){
@@ -48,12 +48,18 @@ class Member_Service extends Base_Service {
 		return $result;
 	}
 	
+	/**
+	 * 
+	 */
+	public function getUserInfoByMobile($mobile){
+		return $this->_userModel->getFirstByKey($mobile,'mobile');
+	}
 	
 	/**
 	 * 获得用户信息
 	 */
 	public function getUserInfoByEmail($email){
-		return $this->_userModel->getUserByEmail($email);
+		return $this->_userModel->getFirstByKey($email,'email');
 	}
 	
 	/**

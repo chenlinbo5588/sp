@@ -97,6 +97,7 @@ input[type=text]:focus , input[type=password]:focus {
 
 .form_error {
     color:red;
+    text-align:center;
 }
 
 .validation_error {

@@ -51,11 +51,12 @@ class Register_Service extends Base_Service {
 	}
 	
 	
-	
-	public function createMemberByEmail($regParam){
+	/**
+	 * 创建会员
+	 */
+	public function createMember($regParam){
 		$return = $this->formatArrayReturn();
 		
-		$regParam['status'] = -1;
 		$uid = $this->_userModel->_add($regParam);
 		
 		if($uid > 0){

@@ -80,6 +80,23 @@ class Verify_Service extends Base_Service {
 		return false;
 	}
 	
+	
+	/**
+	 * 验证验证码是否有效
+	 */
+	public function validateAuthCode($code,$phone = ''){
+		//echo $code;
+		//echo $phone;
+		
+		if($this->isAuthCodeValidate($phone,$code) > 0){
+			return true;
+		}
+		
+		return false;
+		
+	} 
+	
+	
 	public function isAuthCodeValidate($phone , $code){
 		
 		$count = $this->_verifyCodeLogModel->getCount(array(

@@ -53,7 +53,7 @@ class My extends MyYdzj_Controller {
 					'username' => $this->input->post('username')
 				),$this->_profile['memberinfo']['uid']);
 				
-				$this->member_service->refreshProfile($this->_profile['memberinfo']['email']);
+				$this->member_service->refreshProfile($this->_profile['memberinfo']['uid']);
 				$setOk = true;
 			}
 			
@@ -120,7 +120,7 @@ class My extends MyYdzj_Controller {
 					'avatar_small' => $fileData['img_small']
 				),$this->_profile['memberinfo']['uid']);
 				
-				$this->member_service->refreshProfile($this->_profile['memberinfo']['email']);
+				$this->member_service->refreshProfile($this->_profile['memberinfo']['uid']);
 				$setOk = true;
 			}
 			
@@ -211,6 +211,9 @@ class My extends MyYdzj_Controller {
 		
 		if($this->isPostRequest()){
 			
+			$url = $this->input->post('returnUrl');
+			$this->assign('returnUrl',$url);
+			
 			$this->form_validation->reset_validation();
 			$this->form_validation->set_rules('d1','省','required|is_natural_no_zero');
 			$this->form_validation->set_rules('d2','市','required|is_natural_no_zero');
@@ -230,9 +233,9 @@ class My extends MyYdzj_Controller {
 					'd4' => intval($this->input->post('d4'))
 				), $this->_profile['memberinfo']['uid']);
 				
-				$this->member_service->refreshProfile($this->_profile['memberinfo']['email']);
+				$this->member_service->refreshProfile($this->_profile['memberinfo']['uid']);
 				
-				$url = $this->input->post('returnUrl');
+				
 				$targetUrl = '';
 				if(empty($url) || !isLocalUrl($url)){
 					$targetUrl = site_url('my/index');
@@ -252,6 +255,7 @@ class My extends MyYdzj_Controller {
 			}
 		}else{
 			
+			$this->assign('returnUrl',$this->input->get('returnUrl'));
 			$this->_prepareSetCity();
 			
 			$this->seoTitle('设置您的所在地');

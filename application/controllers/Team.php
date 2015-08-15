@@ -275,7 +275,7 @@ class Team extends Ydzj_Controller {
 				$this->seoTitle('创建我的队伍');
 				
 				if(!$this->_profile['memberinfo']['district_bind']){
-					$this->assign('warning','<div class="warning">您尚未设置地区,暂时不能创建队伍, <a href="'.site_url('my/set_city').'">立即设置</a></div>');
+					$this->assign('warning','<div class="warning">您尚未设置地区,暂时不能创建队伍, <a href="'.site_url('my/set_city').'?returnUrl='.urlencode(site_url('team/create_team')).'">立即设置</a></div>');
 					break;
 				}
 				

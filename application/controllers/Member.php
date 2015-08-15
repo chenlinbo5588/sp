@@ -24,8 +24,8 @@ class Member extends Ydzj_Controller {
 		*/
 	}
 	
-	private function _remberLoginEmail($email, $liveSeconds = 2592000){
-		$this->input->set_cookie('loginemail',$email, $liveSeconds);
+	private function _rememberLoginName($loginName, $liveSeconds = 2592000){
+		$this->input->set_cookie('loginname',$loginName, $liveSeconds);
 		
 	}
 	
@@ -42,9 +42,9 @@ class Member extends Ydzj_Controller {
 		if($this->isPostRequest()){
 			
 			$this->assign('returnUrl',$this->input->post('returnUrl'));
-			
 			$this->form_validation->reset_validation();
-			$this->form_validation->set_rules('email','用户名', 'required|valid_email');
+			
+			$this->form_validation->set_rules('loginname','用户名', 'required|valid_mobile');
 			$this->form_validation->set_rules('password','密码','required|alpha_numeric');
 			
 			//$this->form_validation->set_rules('returnUrl','返回地址','valid_url');
@@ -54,18 +54,17 @@ class Member extends Ydzj_Controller {
 				$this->load->library('Member_Service');
 				
 				$result = $this->member_service->do_login(array(
-					'email' => $this->input->post('email'),
+					'mobile' => $this->input->post('loginname'),
 					'password' => $this->input->post('password')
 				));
 				
-				print_r($result);
 				
 				if($result['code'] == 'success'){
 					$this->session->set_userdata(array(
 						'profile' => $result['data']
 					));
 					
-					$this->_remberLoginEmail($this->input->post('email'));
+					$this->_rememberLoginName($this->input->post('email'));
 					
 					$url = $this->input->post('returnUrl');
 					if(!empty($url) && isLocalUrl($url)){
@@ -88,7 +87,7 @@ class Member extends Ydzj_Controller {
 				$this->assign('returnUrl', $this->input->get('returnUrl'));
 			}
 			
-			$this->assign('loginemail',$this->input->cookie('loginemail'));
+			$this->assign('loginname',$this->input->cookie('loginname'));
 			
 			
 		}
@@ -99,7 +98,9 @@ class Member extends Ydzj_Controller {
 	
 	
 	
-	
+	/**
+	 * 管理后台登陆
+	 */
 	public function admin_login(){
 		
 		if($this->isPostRequest()){
@@ -136,6 +137,10 @@ class Member extends Ydzj_Controller {
 	}
 	
 	
+	/**
+	 * 用户注册
+	 * 
+	 */
 	public function register()
 	{
 		
@@ -151,21 +156,37 @@ class Member extends Ydzj_Controller {
 			
 			
 			$this->form_validation->reset_validation();
-			$this->form_validation->set_rules('email','用户名',array(
+			$this->form_validation->set_rules('mobile','手机号',array(
 						'required',
-						'valid_email',
+						'valid_mobile',
 						array(
-							'email_callable[email]',
+							'loginname_callable[mobile]',
 							array(
 								$this->Member_Model,'isUnqiueByKey'
 							)
 						)
 					),
 					array(
-						'email_callable' => '%s已经被占用'
+						'loginname_callable' => '%s已经被注册'
 					)
 				);
 				
+			$this->load->library('Verify_Service');
+			$this->form_validation->set_rules('auth_code','验证码', array(
+						'required',
+						array(
+							'authcode_callable['.$this->input->post('mobile').']',
+							array(
+								$this->verify_service,'validateAuthCode'
+							)
+						)
+					),
+					array(
+						'authcode_callable' => '验证码不正确'
+					)
+				);
+			
+			
 			$this->form_validation->set_rules('nickname','昵称', array(
 						'required',
 						array(
@@ -179,7 +200,11 @@ class Member extends Ydzj_Controller {
 						'nickname_callable' => '%s已经被占用'
 					)
 				);
-				
+			
+			
+			
+			
+			
 			$this->form_validation->set_rules('psw','密码','required|alpha_dash|min_length[6]|max_length[12]');
 			$this->form_validation->set_rules('psw_confirm','密码确认','required|matches[psw]');
 			$this->form_validation->set_rules('agreee_licence','同意注册条款','required');
@@ -193,22 +218,29 @@ class Member extends Ydzj_Controller {
 				
 				if($todayRegistered < 3){
 					
+					
+					$avatarIndex = rand(1,3);
+					
+					
 					$addParam = array(
-						'email' => $this->input->post('email'),
+						'mobile' => $this->input->post('mobile'),
 						'nickname' => $this->input->post('nickname'),
 						'password' => $this->input->post('psw'),
 						'regip' => $this->input->ip_address(),
 						'regdate' => $this->input->server('REQUEST_TIME'),
-						//todo 修改
-						'avatar' => 'img/avator/'.rand(1,4).'.jpg',
+						'avatar' => 'img/avatar/'.$avatarIndex.'.jpg',
+						'avatar_large' => 'img/avatar/'.$avatarIndex.'@large.jpg',
+						'avatar_big' => 'img/avatar/'.$avatarIndex.'@big.jpg',
+						'avatar_middle' => 'img/avatar/'.$avatarIndex.'@middle.jpg',
+						'avatar_small' => 'img/avatar/'.$avatarIndex.'@small.jpg',
+						
+						
 						'inviter' => empty($inviter) == true ? 0 : intval($inviter)
 					);
 					
-					$this->assign('default_avatar',$addParam['avatar']);
+					$this->assign('default_avatar',$addParam['avatar_big']);
 					
 					if('teamInvite' == $inviteFrom){
-						
-						
 						$inviterInfo = $this->Member_Model->getById(array(
 							'where' => array('uid' => $inviter)
 						));
@@ -221,28 +253,17 @@ class Member extends Ydzj_Controller {
 						
 					}
 					
-					$result = $this->register_service->createMemberByEmail($addParam);
+					$result = $this->register_service->createMember($addParam);
 				
 					if($result['code'] == 'success'){
 						
-						$userInfo = $this->member_service->getUserInfoByEmail($this->input->post('email'));
-						$this->_remberLoginEmail($this->input->post('email'));
+						$userInfo = $this->member_service->getUserInfoByMobile($this->input->post('mobile'));
+						$this->_rememberLoginName($this->input->post('mobile'));
 						
 						$this->session->set_userdata(array(
 							'profile' => array('memberinfo' => $userInfo)
 						));
 						
-						//@todo mail 模版,邮件链接
-						$this->email->from('tdkc_of_cixi@163.com', '运动之家');
-						$this->email->to('104071152@qq.com');
-						//$this->email->cc('another@another-example.com');
-						//$this->email->bcc('them@their-example.com');
-						
-						$this->email->subject('【运动之家 邮件激活】');
-						$this->email->message('尊敬的用户 '.$this->input->post('nickname').',欢迎你加入运动之家， 点击以下链接进行邮件激活,链接2小时内有效');
-						if(true || $this->email->send()){
-							$this->assign('mailed',true);
-						}
 						
 						$registerOk = true;
 					}else{
@@ -260,7 +281,6 @@ class Member extends Ydzj_Controller {
 		
 		
 		if($registerOk){
-			
 			$this->seoTitle('设置头像');
 			$this->display('my/set_avatar');
 			
