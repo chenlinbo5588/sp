@@ -3,14 +3,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Common_District_Service extends Base_Service {
 
-	private $_districtModel;
-
 
 	public function __construct(){
 		parent::__construct();
 		
-		$this->CI->load->model('Common_District_Model');
-		$this->_districtModel = $this->CI->Common_District_Model;
 	}
 	
 	

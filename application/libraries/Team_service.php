@@ -162,13 +162,11 @@ class Team_Service extends Base_Service {
 		));
 		
 		$param['category_name'] = $cateName['name'];
-		$param['current_num'] = 1;
 		$param['owner_uid'] = $creatorInfo['uid'];
 		$param['d1'] = $creatorInfo['d1'];
 		$param['d2'] = $creatorInfo['d2'];
 		$param['d3'] = $creatorInfo['d3'];
 		$param['d4'] = $creatorInfo['d4'];
-		
 		
 		$teamid = $this->_teamModel->_add($param);
 		
@@ -207,6 +205,15 @@ class Team_Service extends Base_Service {
 			),array('id' => $stat_id));
 		}else{
 			//add
+			
+			/*
+			if($param['d4'] > 0){
+				$district = $this->_districtModel->getFirstByKey($param['d4']);
+			}else{
+				$district = $this->_districtModel->getFirstByKey($param['d3']);
+			}
+			*/
+			
 			$this->_districtStatModel->_add(array(
 				'id' => $stat_id,
 				'category_id' => $param['category_id'],
@@ -214,6 +221,7 @@ class Team_Service extends Base_Service {
 				'd2' => $creatorInfo['d2'],
 				'd3' => $creatorInfo['d3'],
 				'd4' => $creatorInfo['d4'],
+				//'dname' => $district['name'] == '' ? '' : $district['name'],
 				'teams' => 1
 			));
 		}

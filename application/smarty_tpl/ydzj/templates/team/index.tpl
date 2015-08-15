@@ -7,7 +7,7 @@
 	        <select name="city">
 	            <option value="">全部</option>
 	            {foreach from=$cities item=item}
-	            <option value="{$item['name']}" {if $smarty.post.city == $item['name']}selected="selected"{/if}>{$item['name']}</option>
+	            <option value="{$item['dname']}" {if $smarty.post.city == $item['dname']}selected="selected"{/if}>{$item['dname']}</option>
 	            {/foreach}
 	        </select>
 	        <a class="baritem_addteam fr" href="{site_url('team/create_team')}">+创建球队</a>

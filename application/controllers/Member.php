@@ -271,7 +271,7 @@ class Member extends Ydzj_Controller {
 						$this->assign('feedback',$result['message']);
 					}
 				}else{
-					$this->assign('feedback','很抱歉，您今日注册数量已经用完');
+					$this->assign('feedback','<div class="warning">很抱歉，您今日注册数量已经用完</div>');
 				}
 			}
 		

@@ -5,12 +5,16 @@ class Base_Service {
 
 	protected $CI ;
 	protected $_userModel;
+	protected $_districtModel;
 	
 	
 	public function __construct(){
 		$this->CI = & get_instance();
 		$this->CI->load->model('Member_Model');
+		$this->CI->load->model('Common_District_Model');
+		
 		$this->_userModel = $this->CI->Member_Model;
+		$this->_districtModel = $this->CI->Common_District_Model;
 		
 	}
     

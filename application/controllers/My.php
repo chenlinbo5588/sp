@@ -225,13 +225,16 @@ class My extends MyYdzj_Controller {
 			
 			if($this->form_validation->run() !== FALSE){
 				$this->load->library('Member_Service');
-				$result = $this->member_service->updateUserInfo(array(
+				
+				$addParam = array(
 					'district_bind' => 1,
 					'd1' => intval($this->input->post('d1')),
 					'd2' => intval($this->input->post('d2')),
 					'd3' => intval($this->input->post('d3')),
 					'd4' => intval($this->input->post('d4'))
-				), $this->_profile['memberinfo']['uid']);
+				);
+				
+				$result = $this->member_service->updateUserInfo($addParam, $this->_profile['memberinfo']['uid']);
 				
 				$this->member_service->refreshProfile($this->_profile['memberinfo']['uid']);
 				
