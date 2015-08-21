@@ -70,13 +70,9 @@ class My extends MyYdzj_Controller {
 	}
 	
 	/**
-	 * 设置头像
-	 * 
-	 * 
+	 * 设置用户头像
 	 */
 	public function set_avatar(){
-		
-		
 		if($this->isPostRequest()){
 			
 			$setOk = false;
@@ -87,15 +83,11 @@ class My extends MyYdzj_Controller {
 			$this->assign('inviteFrom',$inviteFrom);
 			$this->assign('returnUrl',$this->input->post('returnUrl'));
 			
-			$this->form_validation->reset_validation();
-			$this->form_validation->set_rules('username','真实姓名','required|min_length[2]|max_length[4]');
-			
-			
 			for($i = 0; $i < 1; $i++){
 				$this->load->library('Attachment_Service');
 				$fileData = $this->attachment_service->addImageAttachment('avatar',array(
-					'min_width' => 200,
-					'min_height' => 200
+					'min_width' => 800,
+					'min_height' => 800
 				));
 				
 				if(!empty($fileData['img_big'])){
@@ -126,14 +118,12 @@ class My extends MyYdzj_Controller {
 			
 			
 			if($setOk){
-				
 				if('teamInvite' == $inviteFrom){
 					//不需要设置地区了
 					$this->_jumpToTeam();
 				}else if('my' == $inviteFrom){
 					redirect('my');
 				}else{
-					
 					$this->load->library('Common_District_Service');
 					$this->_prepareSetCity();
 					$this->seoTitle('设置您的所在地');
@@ -146,7 +136,6 @@ class My extends MyYdzj_Controller {
 			
 		}else{
 			
-			$this->assign('default_username',$this->_profile['memberinfo']['username']);
 			$this->assign('inviteFrom',$this->input->get('inviteFrom'));
 			$this->assign('default_avatar',$this->_profile['memberinfo']['avatar_big']);
 			$this->display('my/set_avatar');

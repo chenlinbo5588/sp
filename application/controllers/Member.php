@@ -64,7 +64,7 @@ class Member extends Ydzj_Controller {
 						'profile' => $result['data']
 					));
 					
-					$this->_rememberLoginName($this->input->post('email'));
+					$this->_rememberLoginName($this->input->post('loginname'));
 					
 					$url = $this->input->post('returnUrl');
 					if(!empty($url) && isLocalUrl($url)){

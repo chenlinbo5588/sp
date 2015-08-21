@@ -26,6 +26,13 @@ class Team_Service extends Base_Service {
 	}
 	
 	
+	/**
+	 * 更新球队信息
+	 */
+	public function updateTeamInfo($data,$id){
+		return $this->_teamModel->update($data,array('id' => $id));
+	}
+	
 	public function getAllPagerTeam($search = array(),$page = 1, $pageSize = 10)
 	{
 		$search['pager'] = array(
@@ -168,6 +175,25 @@ class Team_Service extends Base_Service {
 		$param['d3'] = $creatorInfo['d3'];
 		$param['d4'] = $creatorInfo['d4'];
 		
+		$dIDs = array($param['d1'],$param['d2'],$param['d3'],$param['d4']);
+		$dNameList = $this->_districtModel->getList(array(
+			'select' => 'id,name',
+			'where_in' => array(
+				array('key' => 'id', 'value' => $dIDs)
+			)
+		));
+		
+		$dName = array();
+		foreach($dNameList as $dn){
+			$dName[$dn['id']] = $dn['name'];
+		}
+		
+		$param['dname1'] = $dName[$param['d1']];
+		$param['dname2'] = $dName[$param['d2']];
+		$param['dname3'] = $dName[$param['d3']];
+		$param['dname4'] = empty($dName[$param['d4']]) ? '' : $dName[$param['d4']];
+		
+		
 		$teamid = $this->_teamModel->_add($param);
 		
 		if ($this->_sportsCategoryModel->transStatus() === FALSE){
@@ -285,5 +311,12 @@ class Team_Service extends Base_Service {
     	
     	return true;
     	
+    }
+    
+    /**
+     * 
+     */
+    public function getUserCity($city_id){
+    	return  $this->_districtModel->getFirstByKey($city_id);
     }
 }

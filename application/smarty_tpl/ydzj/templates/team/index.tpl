@@ -1,22 +1,10 @@
 {include file="common/header.tpl"}
 <section>
-    {form_open(site_url('team/index'))}
-    <div class="searchbar pd5">
-        <div id="switchCity" class="row">
-	        <label>切换城市</label>
-	        <select name="city">
-	            <option value="">全部</option>
-	            {foreach from=$cities item=item}
-	            <option value="{$item['dname']}" {if $smarty.post.city == $item['dname']}selected="selected"{/if}>{$item['dname']}</option>
-	            {/foreach}
-	        </select>
-	        <a class="baritem_addteam fr" href="{site_url('team/create_team')}">+创建球队</a>
-	    </div>
-        <div class="row">
-	        <label for="seach_key">搜素队伍</label>
-	        <input type="text" name="search_key" value="{$smarty.post.search_key}" placeholder="请输入队伍名称"/>
-	        <input class="" type="submit" value="查询"/>
-        </div>
+    <form name="searchForm" action="{site_url('team/index/cate/1')}" method="get">
+    <div class="searchbar pd5 clearfix">
+        <label for="seach_key" class="fl">搜素队伍</label>
+        <input type="text" class="fl" style="width:50%;" name="search_key" value="{$smarty.get.search_key|escape}" placeholder="请输入队伍名称"/>
+        <input class="primaryBtn fl"  style="width:20%;" type="submit" value="查询"/>
     </div>
     </form>
 </section>
@@ -41,7 +29,7 @@
                 <ul>
                     <li><a class="team_title" href="{site_url('team/detail/'|cat:$item['id'])}">{$item['title']|escape}</a></li>
                     <li><label>队长:</label><a class="team_leader" href="{site_url('user/info/'|cat:$item['leader_uid'])}">{$item['leader_name']|escape}</a></li>
-                    <li><label>根据地:</label><span>{if $item['base_area']}{$item['base_area']|escape}{else}未设置{/if}</span></li>
+                    <li><label>区域:</label><span>{$item[$cityLevel]}</span></li>
                     <li><label>成员数:</label><strong class="team_pnum">{$item['current_num']}</strong><span>人</span></li>
                     <li><label>比赛场次:</label><strong>{$item['games']}场</strong><label class="win_rate">胜率:</label><strong>{$item['win_rate']}</strong></li>
                 </ul>

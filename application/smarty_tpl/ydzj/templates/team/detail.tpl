@@ -1,11 +1,14 @@
 {include file="common/header.tpl"}
 {$feedback}
 {if $inManageMode}
-{form_open_multipart(site_url($formTarget),'id="teamManageForm"')}
+{form_open(site_url($formTarget),'id="teamManageForm"')}
 {/if}
-<div id="teamDetail" class="row{if $inManageMode} {/if}">
-    <div class="row teamCoverImg"><img src="{base_url($team['basic']['avatar_big'])}" data-largeurl="{$team['basic']['avatar_large']}" alt="{$team['basic']['title']}"></div>
+<div id="teamDetail">
+    <div class="teamCoverImg"><img src="{base_url($team['basic']['avatar_big'])}" data-largeurl="{$team['basic']['avatar_large']}" alt="{$team['basic']['title']}"></div>
     <div class="row bordered pd5">
+        {if $canManager}
+        <a class="link_btn grayed" href="{site_url('team/set_teamavatar/'|cat:$team['basic']['id'])}">修改球队合影</a>
+        {/if}
         <div class="row"><label class="side_lb">球队类型：</label><span>{$team['basic']['category_name']}队</span></div>
     	{form_error('notice_board')}
         <div class="row">
@@ -34,7 +37,7 @@
             <span>{$team['basic']['base_area']|escape}</span>
             {/if}
         </div>
-        <div class="row"><label class="side_lb">地址：</label><span>浙江省慈溪市崇寿镇</span><a class="fr" href="{site_url('team/placeto')}/{$team['basic']['id']}">地图</a></div>
+        <div class="row"><label class="side_lb">地址：</label><span>{$team['basic']['dname1']}{$team['basic']['dname2']}{$team['basic']['dname3']}{$team['basic']['dname4']}</span><a class="fr" href="{site_url('team/placeto/team/'|cat:$team['basic']['id'])}">地图</a></div>
         <div class="row"><label class="side_lb">总比赛数：</label><span>{$team['basic']['games']}</span></div>
         <div class="row"><label class="side_lb">胜/负/胜率：</label><span>{$team['basic']['victory_game']}/{$team['basic']['fail_game']}/{$team['basic']['victory_rate']}</span></div>
     </div>
@@ -60,7 +63,7 @@
 	                    <input type="hidden" name="kick[{$item['id']}]" id="kick_{$item['id']}" value="{set_value('kick['|cat:$item['id']|cat:']')}"/>
 	                    <input type="button" class="at_txt kickoffBtn" class="slaveBtn" name="kickoff" value="踢掉" data-id="kick_{$item['id']}"/>
 	                    {/if}
-	                    <label>真名:</label><input type="text" class="at_txt edit_username" name="username[{$item['id']}]" value="{if $ispost}{set_value('username['|cat:$item['id']|cat:']')}{else}{$item['username']|escape}{/if}" placeholder="请输入真实名称,仅队内可见"/>
+	                    <label>真名:</label><input type="text" class="at_txt edit_username" name="username[{$item['id']}]" value="{if $ispost}{set_value('username['|cat:$item['id']|cat:']')}{else}{$item['username']|escape}{/if}" placeholder="真实名称,仅队内可见"/>
 	                    <label>球衣号码:</label><input type="text" class="at_txt edit_num" name="num[{$item['id']}]" value="{if $ispost}{set_value('num['|cat:$item['id']|cat:']')}{else}{$item['num']|escape}{/if}" placeholder="请输入球衣号码"/>
                 	</div>
 	                <div class="positionSet">

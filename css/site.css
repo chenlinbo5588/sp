@@ -191,7 +191,7 @@ input[type=text].validation_error {
 }
 
 .loading_box div {
-	border: 3px solid #666;
+	1border: 3px solid #666;
 	text-align: center;
 }
 
@@ -242,23 +242,21 @@ input[type=text].validation_error {
     text-align:center;
 }
 
-#topBar a {
-	display: block;
-	width: 30px;
-	height: 30px;
-	
-	position: absolute;
-	/* top: 50%; */
-	right: 2px;
-	/* margin: -5px 0 0 0; */
-	text-align: center;
-	top: 2px;
-}
 
 .searchbar {
     border-bottom:1px solid rgb(26, 161, 105);
 }
 
+.searchbar label {
+    width: 20%;
+    display: inline-block;
+    height: 30px;
+    line-height: 30px;
+}
+
+.searchbar .primaryBtn {
+    margin:0 0 0 10px;
+}
 
 
 .navbar li {
@@ -315,6 +313,40 @@ table.fulltable {
 
 #profile_avatar .at_txt {
     width:65%;
+}
+
+
+
+.cityList {
+	
+}
+
+.cityList .row {
+    height:30px;
+    line-height:30px;
+    margin:0;
+    border-bottom:1px solid #d0d0d0;
+}
+
+.cityList .row a {
+	color:black;
+	text-indent:10px;
+    display:block;
+}
+
+    
+.cityList .goback {
+	background-color:rgb(202, 225, 229);
+}
+    
+
+.cityList .goback a {
+    color:blue;
+    text-align:center;
+}
+
+.cityList .current {
+    background-color:rgb(255, 223, 0);
 }
 
 
@@ -395,6 +427,18 @@ table.fulltable {
 }
 
 /** 队伍列表 */
+
+#leftBarLink {
+    position:absolute;
+    left:5px;
+    top:10px;
+}
+
+#rightBarLink {
+    position:absolute;
+    right:5px;
+    top:10px;	
+}
 
 #teamList .row img {
 	width:100px;

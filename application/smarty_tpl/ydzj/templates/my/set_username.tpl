@@ -17,10 +17,7 @@
 
 <script>
 
-$(function(){
-    
-    
-});
+
 </script>
 <script src="{base_url('js/my.js')}" type="text/javascript"></script>
 

@@ -1,19 +1,13 @@
 {include file="common/header.tpl"}
+{$feedback}
 <div class="handle_area">
-	{if $mailed}
-	<div class="row">
-		<p>我们已经发送验证邮件到{$email}, 请登录邮箱进行激活</p>
-	</di>
-	{/if}
-
-    {form_open_multipart(site_url('my/set_avatar'),"id='setAvatarForm'")}
+    {form_open_multipart(site_url('team/set_teamavatar/'|cat:$teamid),"id='setAvatarForm'")}
     <input type="hidden" name="returnUrl" value="{$returnUrl}"/>
-    <input type="hidden" name="inviteFrom" value="{$inviteFrom}"/>
     <input type="hidden" name="new_avatar" value="{if $new_avatar}{$new_avatar}{/if}" />
     <input type="hidden" name="default_avatar" value="{$default_avatar}"/>
     <div id="profile_avatar">
         <div class="row" style="position:relative;">
-            <label class="side_lb" for="avatar_txt"><em>*</em>用户头像：</label>
+            <label class="side_lb" for="avatar_txt"><em>*</em>球队合影：</label>
             <input type="file" class="at_txt" id="avatar_txt" name="avatar" value=""/>
         </div>
         <div class="warning">头像格式JPG 尺寸图片最小尺寸 800x800 正方形照片</div>
@@ -37,6 +31,4 @@
 
 
 </script>
-<script src="{base_url('js/my.js')}" type="text/javascript"></script>
-
 {include file="common/footer.tpl"}

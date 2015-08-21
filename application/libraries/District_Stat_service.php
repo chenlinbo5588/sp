@@ -24,13 +24,35 @@ class District_Stat_Service extends Base_Service {
 	}
 	
 	
-	public function getAvailableCity($category = 1){
-		return $this->_districtStatModel->getList(array(
-			'select' => 'd1,d2,d3,d4',
+	
+	/**
+	 * @todo 运营起来后再添加
+	 */
+	public function getAvailableCity($category = 1, $limit = 100){
+		$dList = $this->_districtStatModel->getList(array(
+			'select' => 'd2',
 			'where' => array(
 				'category_id' => $category
-			)
+			),
+			'limit' => $limit
 		));
+		
+		$mainCity = array();
+		
+		foreach($dList as $d){
+			$mainCity[] = $d['d2'];
+		}
+		
+		$city = $this->_districtModel->getList(array(
+			'select' => 'id,name',
+			'where_in' => array(
+				array('key' => 'id', 'value' => $mainCity)
+			),
+			'order' => 'id ASC,displayorder DESC'
+		));
+		
+		return $city;
+		//print_r($dList);
 	}
 	
 }

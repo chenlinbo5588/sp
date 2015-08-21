@@ -8,7 +8,7 @@
         <input type="hidden" name="returnUrl" value="{$returnUrl}"/>
         {form_error('loginname')}
         <div class="row">
-            <label class="side_lb" for="loginname_text">用户名：</label><input id="loginname_text" class="at_txt" type="text" name="loginname" {if $loginname}value="{$loginname}"{else}value="{set_value('loginname')}"{/if} placeholder="请输入手机号码或邮箱"/>
+            <label class="side_lb" for="loginname_text">用户名：</label><input id="loginname_text" class="at_txt" type="text" name="loginname" {if $loginname}value="{$loginname}"{else}value="{set_value('loginname')}"{/if} placeholder="请输入手机号码"/>
         </div>
         {form_error('password')}
         <div class="row">

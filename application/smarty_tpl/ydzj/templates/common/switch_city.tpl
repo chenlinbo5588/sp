@@ -1,0 +1,24 @@
+{include file="common/header.tpl"}
+
+
+{form_open(site_url('team/switch_city/upid/'|cat:$currentCity['id']),'id="swictCityForm"')}
+<input type="hidden" name="cityid" value="{$currentCity['id']}"/>
+<div class="cityList">
+    {if $currentCity['id'] != 0}
+    <div class="row goback"><a href="{site_url('team/switch_city/upid/'|cat:$currentCity['upid'])}">返回上一级</a></div>
+    {/if}
+    {foreach from=$cityList item=item}
+    <div class="row {if $item['id'] == $currentCity['id']}current{/if}">
+        <a href="{site_url('team/switch_city/upid/'|cat:$item['id'])}">{$item['name']}</a>
+    </div>
+    {/foreach}
+</div>
+
+<div class="row" id="submitFixedWrap" >
+    <div class="row col">
+        <input type="submit" class="primaryBtn" name="submit" value="确定" />
+    </div>
+</div>
+</form>
+
+{include file="common/footer.tpl"}
