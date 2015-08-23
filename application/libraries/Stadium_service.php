@@ -29,18 +29,18 @@ class Stadium_Service extends Base_Service {
     public function getAllMetaGroups(){
         
         $all = $this->_stadiumMetaModel->getList(array(
-            'order' => 'group ASC ,displayorder DESC'
+            'order' => 'gname ASC ,displayorder DESC'
             
         ));
         
         $data = array();
         
         foreach($all as $key => $item){
-            if(!isset($data[$item['group']])){
-                $data[$item['group']] = array();
+            if(!isset($data[$item['gname']])){
+                $data[$item['gname']] = array();
             }
             
-            $data[$item['group']][] = $item;
+            $data[$item['gname']][] = $item;
         }
         
         return $data;

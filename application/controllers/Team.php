@@ -437,10 +437,19 @@ class Team extends Ydzj_Controller {
 	 */
 	public function order_game(){
 		if(!$this->isLogin()){
+			
+			
+			
 			$this->assign('returnUrl',site_url($this->uri->uri_string()));
 			$this->display('member/login');
 			
 		}else{
+			
+			/**
+			 * 当前用户使用创建篮球队或者是管理者
+			 */
+			
+			
 			$this->display('team/order_game');
 		}
 		

@@ -17,8 +17,12 @@ input[type=checkbox],input[type=radio] {
     margin-bottom:1px;
 }
 
-input[type=text]:focus , input[type=password]:focus {
+input[type=text]:focus , input[type=password]:focus ,textarea:focus {
     border:1px solid rgb(26, 161, 105);
+}
+
+.disabled {
+	background:#d0d0d0;
 }
 
 .muted {
@@ -125,6 +129,11 @@ input[type=text].validation_error {
     display:inline-block;
     width:22%;
     text-align:right;
+}
+
+.vtop {
+	
+	vertical-align:top;
 }
 
 .at_txt {
