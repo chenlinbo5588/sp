@@ -161,14 +161,16 @@ class Team_Service extends Base_Service {
 	public function addTeam($param,$creatorInfo){
 		
 		// 启动事务
-		$this->_sportsCategoryModel->transStart();
+		$this->_teamModel->transStart();
 		
+		/*
 		$cateName = $this->_sportsCategoryModel->getById(array(
 			'select' => 'name',
 			'where' => array('id' => $param['category_id'])
 		));
-		
 		$param['category_name'] = $cateName['name'];
+		*/
+		
 		$param['owner_uid'] = $creatorInfo['uid'];
 		$param['d1'] = $creatorInfo['d1'];
 		$param['d2'] = $creatorInfo['d2'];
@@ -196,8 +198,8 @@ class Team_Service extends Base_Service {
 		
 		$teamid = $this->_teamModel->_add($param);
 		
-		if ($this->_sportsCategoryModel->transStatus() === FALSE){
-			$this->_sportsCategoryModel->transRollback();
+		if ($this->_teamModel->transStatus() === FALSE){
+			$this->_teamModel->transRollback();
 			return false;
 		}
 		
@@ -211,8 +213,8 @@ class Team_Service extends Base_Service {
 		));
 		
 		
-		if ($this->_sportsCategoryModel->transStatus() === FALSE){
-			$this->_sportsCategoryModel->transRollback();
+		if ($this->_teamModel->transStatus() === FALSE){
+			$this->_teamModel->transRollback();
 			return false;
 		}
 		
@@ -252,14 +254,14 @@ class Team_Service extends Base_Service {
 			));
 		}
 		
-		if ($this->_sportsCategoryModel->transStatus() === FALSE){
-			$this->_sportsCategoryModel->transRollback();
+		if ($this->_teamModel->transStatus() === FALSE){
+			$this->_teamModel->transRollback();
 			
 			return false;
 		}
 		
-		$this->_sportsCategoryModel->transCommit();
-		$this->_sportsCategoryModel->transOff();
+		$this->_teamModel->transCommit();
+		$this->_teamModel->transOff();
 		
 		return $teamid;
 	}
@@ -313,10 +315,4 @@ class Team_Service extends Base_Service {
     	
     }
     
-    /**
-     * 
-     */
-    public function getUserCity($city_id){
-    	return  $this->_districtModel->getFirstByKey($city_id);
-    }
 }

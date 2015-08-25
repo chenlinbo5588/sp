@@ -14,6 +14,7 @@
 	    <div class="row"><span class="icon ico_district">所在地区:</span><span>{if $profile['memberinfo']['district_bind'] == 0}未设置{else}{$userDs[$profile['memberinfo']['d1']]['name']}{$userDs[$profile['memberinfo']['d2']]['name']}{$userDs[$profile['memberinfo']['d3']]['name']}{$userDs[$profile['memberinfo']['d4']]['name']}{/if}</span><a class="side_link" href="{site_url('my/set_city')}">{if $profile['memberinfo']['district_bind'] == 1}修改{else}设置{/if}</a></div>
 	    <div class="row"><span class="icon ico_credits">我的积分:</span><span>{$profile['memberinfo']['credits']}</span><a class="side_link" href="{site_url('credits/details')}">积分明细</a></div>
 	    <div class="row"><span class="icon ico_team">我的队伍:</span><span>0</span><a class="side_link" href="{site_url('team/create_team')}">创建队伍</a></div>
+	    
 	    <div class="row"><span class="icon ico_join">参加的队伍:</span><span>0</span><a class="side_link" href="{site_url('team')}">加入队伍</a></div>
 	    <div class="row">
 	        <span class="icon ico_invite">推广链接:</span><span><input style="width:72%" type="text" name="inviteUrl" value="{$inviteUrl}"/></span>

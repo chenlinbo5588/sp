@@ -30,23 +30,6 @@ class Team extends Ydzj_Controller {
 	}
 	
 	
-	private function _getCity(){
-		
-		$city_id = $this->input->cookie('city');
-		if($city_id == NULL){
-			if($this->_profile['memberinfo']['district_bind'] != 0){
-				$city_id = $this->_profile['memberinfo']['d2'];
-			}else{
-				$city_id = 176; //默认宁波市;
-			}
-		}
-		
-		$this->input->set_cookie('city',$city_id,2592000);
-		
-		return $city_id;
-	}
-	
-	
 	/**
 	 * 队伍 聚合页
 	 */
@@ -59,7 +42,7 @@ class Team extends Ydzj_Controller {
 		$city_id = $this->_getCity();
 		
 		if($city_id){
-			$cityInfo = $this->team_service->getUserCity($city_id);
+			$cityInfo = $this->team_service->getCityById($city_id);
 		}
 		
 		//print_r($cityInfo);
@@ -592,6 +575,7 @@ class Team extends Ydzj_Controller {
 						$addParam['avatar_middle'] = $fileData['img_middle'];
 						$addParam['avatar_small'] = $fileData['img_small'];
 					}else if($team_logo){
+						
 						$addParam['avatar'] = $team_logo;
 						$dotPos = strrpos($team_logo,'.');
 						$fileName = substr($team_logo,0,$dotPos);
@@ -603,13 +587,20 @@ class Team extends Ydzj_Controller {
 						$addParam['avatar_small'] = $fileName.'@small'.$suffixName;
 					}
 					
+					foreach($sportsCategoryList as $cate){
+		            	if($cate['id'] == $this->input->post('category_id')){
+		            		$addParam['category_name'] = $cate['name'];
+		            		break;
+		            	}
+		            }
+					
 					$teamid = $this->team_service->addTeam($addParam,$this->_profile['memberinfo']);
 					
 					if($teamid){
 						$isCreateOk = true;
 						//$this->_prepareDetailData($teamid);
 					}else{
-						$this->assign('feedback','<div class="warning">对不请创建队伍失败，请刷新页面重新尝试。</div>');
+						$this->assign('feedback','<div class="warning">创建队伍失败，请刷新页面重新尝试。</div>');
 					}
 				}
 			}

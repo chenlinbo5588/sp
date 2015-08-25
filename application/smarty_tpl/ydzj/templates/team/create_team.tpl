@@ -33,7 +33,7 @@
     </div>
     <div class="row"><label class="side_lb"></label>队伍合影照片<em class="tip">JPG</em>格式,大小不超过<em class="tip">4MB</em></div>
     <div class="row"><label class="side_lb"></label>分辨率最小<em class="tip">800x800</em></div>
-    <div class="row">
+    <div class="row img_preview">
         {if $team_logo_url}
         <img src="{base_url($team_logo_url)}"/>
         {/if}

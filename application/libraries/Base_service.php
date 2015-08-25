@@ -32,4 +32,8 @@ class Base_Service {
 			'data' => $data
 		);
 	}
+	
+	public function getCityById($city_id){
+    	return  $this->_districtModel->getFirstByKey($city_id);
+    }
 }

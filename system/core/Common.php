@@ -894,3 +894,26 @@ function pageArrayGenerator($currPage,$pageSize,$total, $url = '',$callJs = 'pag
 function isLocalUrl($url){
 	return preg_match("/^https?\:\/\/".config_item('site_domain').'/',$url);
 }
+
+/**
+ * 截取字符串
+ *
+ * @param string $str
+ * @param int $len
+ * @param int $mode
+ *
+ * @return string
+ */
+function cutText($str, $len, $mode = true) {
+	$tmp = '';
+	
+	$sLen = mb_strlen($str, 'UTF-8');
+	if (($sLen <= $len) || (true === empty($len))) {
+		
+		return $str;
+	} else {
+		$tmp = mb_substr($str, 0, $len, 'UTF-8');
+		
+	}
+	return ($mode) ? $tmp . '...' : $tmp;
+}

@@ -90,6 +90,22 @@ class Ydzj_Controller extends MY_Controller {
 		$this->_smarty->assign('TOP_NAV_TITLE',$title);
 		$this->_smarty->assign('TOP_NAV_CSS',$css);
 	}
+	
+	protected function _getCity(){
+		
+		$city_id = $this->input->cookie('city');
+		if($city_id == NULL){
+			if($this->_profile['memberinfo']['district_bind'] != 0){
+				$city_id = $this->_profile['memberinfo']['d2'];
+			}else{
+				$city_id = 176; //默认宁波市;
+			}
+		}
+		
+		$this->input->set_cookie('city',$city_id,2592000);
+		
+		return $city_id;
+	}
 }
 
 
