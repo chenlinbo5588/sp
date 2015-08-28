@@ -1,8 +1,3 @@
-{include file="common/header.tpl"}
-{include file="common/baidu_map.tpl"}
-{$feedback}
-<div id="stadium" class="handle_area">
-{form_open_multipart(site_url('stadium/add'),'id="stadiumForm"')}
     <input type="hidden" name="longitude" value="{$smarty.post['longitude']}"/>
     <input type="hidden" name="latitude" value="{$smarty.post['latitude']}"/>
     <input type="hidden" name="province" value="{$smarty.post['province']}"/>
@@ -76,12 +71,11 @@
     </div>
     
     {foreach from=$maxOtherFile item=item}
-    <div class="row photoUpload">
+    <div class="row">
         <label class="side_lb">{if $item == 0}封面照片{else}其它照片<em>{$item}</em>{/if}</label>
         <input type="hidden" value="{$fileUpload['other_img'][$item]['url']}" name="other_img{$item}_url"/>
         <input type="hidden" value="{$fileUpload['other_img'][$item]['id']}" name="other_img{$item}_id"/>
         <input type="file" name="other_img{$item}" />
-        {if $fileUpload['other_img'][$item]['url']}<a class="opTrash"><i class="fa fa-trash"></i> 删除</a>{/if}
     </div>
     {if $item == 0}
     <div class="row form_error" id="tip_img{$item}">{$img_error0}</div>
@@ -89,40 +83,3 @@
     {/if}
     <div class="row img_preview">{if $fileUpload['other_img'][$item]['preview']}<img class="nature" src="{base_url($fileUpload['other_img'][$item]['preview'])}"/>{/if}</div>
     {/foreach}
-    
-    {*
-    <div class="row" id="moreFileWrap" style="margin-top:20px;">
-    	<label class="side_lb"></label><input type="button" class="primaryBtn grayed at_txt" id="moreFile" value="+添加照片选择"/>
-   	</div>
-   	*}
-   	
-   	<div class="row" id="submitFixedWrap" >
-        <div class="row col" ><button id="saveBtn" type="submit" class="primaryBtn" name="submit">保存</button>
-        <input type="button" id="closeMapBtn" name="closeMap" class="primaryBtn" style="display:none;margin:5px 0" value="关闭地图"/></div>
-    </div>
-</form>
-</div>
-
-{* 暂时不用
-<script type="sp-template" id="addFileTpl">
-    <div class="row">
-        <label class="side_lb">其它照片<em></em></label>
-        <input type="hidden" value="" name="other_img_txt"/>
-        <input type="file" name="other_img" />
-    </div>
-</script>
-*}
-<script>
-var stadiumPic = "{base_url('img/basketball.png')}";
-{if $smarty.post['longitude']}
-var longitude = "{$smarty.post['longitude']}";
-var latitude = "{$smarty.post['latitude']}";
-{/if}
-
-{if $img_error0}
-var hash = "cover_error";
-{/if}
-
-</script>
-<script src="{base_url('js/stadium.js')}" type="text/javascript"></script>
-{include file="common/footer.tpl"}

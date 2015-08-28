@@ -168,9 +168,18 @@ class MY_Controller extends CI_Controller {
     }
     
     public function seo($title = '',$keyword = '', $desc = ''){
-    	$this->_seo['SEO_title'] = $title;
-    	$this->_seo['SEO_description'] = $desc;
-    	$this->_seo['SEO_keywords'] = $keyword;
+    	
+    	if($title){
+    		$this->_seo['SEO_title'] = $title;
+    	}
+    	
+    	if($keyword){
+    		$this->_seo['SEO_keywords'] = $keyword;
+    	}
+    	
+    	if($desc){
+    		$this->_seo['SEO_description'] = $desc;
+    	}
     }
     
     /**

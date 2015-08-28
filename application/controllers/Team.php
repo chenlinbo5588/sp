@@ -1,6 +1,8 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+
+define('BASKET_BALL','team/index/cate/1');
 /**
  * 队伍
  */
@@ -22,7 +24,7 @@ class Team extends Ydzj_Controller {
 		
 		/*
 		if(empty($this->_urlParam[3])){
-			redirect(site_url('team/index/cate/1'));
+			redirect(site_url(BASKET_BALL));
 		}else{
 			$this->_teamid = $this->_urlParam[3];
 		}
@@ -86,17 +88,16 @@ class Team extends Ydzj_Controller {
 	 * 切换城市
 	 */
 	public function switch_city(){
-		$this->setLeftNavLink('<a id="leftBarLink" class="bar_button goback" href="'.site_url('team/index/cate/1').'" title="返回篮球队">篮球队</a>');
+		$this->setLeftNavLink('<a id="leftBarLink" class="bar_button goback" href="'.site_url(BASKET_BALL).'" title="返回篮球队">篮球队</a>');
 		
-		
-		$this->load->library('Common_District_Service');
 		$ar = $this->uri->segment_array();
 		
 		if($this->isPostRequest()){
 			$this->input->set_cookie('city',$ar[4],2592000);
-			redirect('team/index/cate/1');
+			redirect(BASKET_BALL);
 		}
 		
+		$this->load->library('Common_District_Service');
 		if($ar[4]){
 			$city = $ar[4];
 			$cityInfo = $this->common_district_service->getDistrictInfoById($city);
@@ -113,6 +114,8 @@ class Team extends Ydzj_Controller {
 		$this->setTopNavTitle($title);
 		$this->seoTitle($title);
 		
+		$this->assign('cityUrl','team/switch_city/upid/');
+		$this->assign('formUrl',site_url('team/switch_city/upid/'.$cityInfo['id']));
 		$this->assign('currentCity',$cityInfo);
 		$this->assign('cityList',$childCity);
 		$this->display('common/switch_city');
@@ -404,8 +407,9 @@ class Team extends Ydzj_Controller {
 			}
 			
 		}else{
+			$team = $this->team_service->getTeamInfo(intval($this->_teamid),false);
 			
-			$this->assign('default_avatar',$this->_profile['memberinfo']['avatar_big']);
+			$this->assign('default_avatar',$team['basic']['avatar_big']);
 			$this->display('team/set_teamavatar');
 		}
 		
@@ -475,6 +479,7 @@ class Team extends Ydzj_Controller {
 					$fileData = $this->attachment_service->addImageAttachment('logo_url');
 					
 					$team_logo = $this->input->post('team_logo');
+					
 					if(!$fileData && empty($team_logo)){
 						$this->assign('logo_error',$this->attachment_service->getErrorMsg());
 						break;
@@ -577,6 +582,7 @@ class Team extends Ydzj_Controller {
 					}else if($team_logo){
 						
 						$addParam['avatar'] = $team_logo;
+						
 						$dotPos = strrpos($team_logo,'.');
 						$fileName = substr($team_logo,0,$dotPos);
 						$suffixName = substr($team_logo,$dotPos);

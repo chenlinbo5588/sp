@@ -3,6 +3,7 @@
 
 {$feedback}
 {form_open_multipart(site_url('team/create_team'))}
+<input type="hidden" name="team_log_id" value="{$team_log_id}"/>
 <input type="hidden" name="team_logo" value="{$team_logo}" />
 <input type="hidden" name="team_logo_url" value="{$team_logo_url}"/>
 <div id="create_team" class="handle_area">

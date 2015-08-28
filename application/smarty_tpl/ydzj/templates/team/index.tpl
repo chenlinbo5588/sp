@@ -1,8 +1,8 @@
 {include file="common/header.tpl"}
 <section>
-    <form name="searchForm" action="{site_url('team/index/cate/1')}" method="get">
+    <form name="searchForm" action="{site_url($smarty.const.BASKET_BALL)}" method="get">
     <div class="searchbar pd5 clearfix">
-        <label for="seach_key" class="fl">搜素队伍</label>
+        <label for="seach_key" class="fl">搜索队伍</label>
         <input type="text" class="fl" style="width:50%;" name="search_key" value="{$smarty.get.search_key|escape}" placeholder="请输入队伍名称"/>
         <input class="primaryBtn fl"  style="width:20%;" type="submit" value="查询"/>
     </div>

@@ -55,6 +55,7 @@ class Stadium_Service extends Base_Service {
 	 */
 	public function getSportsCategory($condition = array())
 	{
+		$condition['where']['status'] = 0;
 		return $this->_sportsCategoryModel->getList($condition);
 	}
 	
@@ -65,6 +66,13 @@ class Stadium_Service extends Base_Service {
 		$info['basic'] = $this->_stadiumModel->getById(array(
 			'where' => array('stadium_id' => $id)
 		));
+		
+		//图片列表
+		
+		$info['photos'] = $this->_stadiumPhotosModel->getList(array(
+			'where' => array('stadium_id' => $id)
+		));
+		
 		
 		return $info;
 	}
@@ -78,6 +86,8 @@ class Stadium_Service extends Base_Service {
 		);
 		
 		$data = $this->_stadiumModel->getList($search);
+		
+		
 		return $data;
 	}
 	
@@ -116,6 +126,8 @@ class Stadium_Service extends Base_Service {
     		'ground_type' => $param['ground_type'],
     		'stadium_type' => $param['stadium_type'],
     		'charge_type' => $param['charge_type'],
+    		'reporter' => empty($user['username']) == true ? $user['nickname'] : $user['username'],
+    		'reporter_uid' => $user['uid']
     	);
     	
     	if(!empty($param['remark'])){
@@ -123,11 +135,13 @@ class Stadium_Service extends Base_Service {
     	}
     	
     	if($param['is_mine'] == 'y'){
+    		$addParam['owner'] = $addParam['contact'] = empty($user['username']) == true ? $user['nickname'] : $user['username'];
+    		$addParam['owner_uid'] = $user['uid'];
     		$addParam['mobile'] = $user['mobile'];
-    		$addParam['contact'] = empty($user['username']) == true ? $user['nickname'] : $user['username'];
     	}else{
-    		$addParam['mobile'] = empty($param['mobil']) == true ? '' : $param['mobil'];
     		$addParam['contact'] = empty($param['contact']) == true ? '' : $param['contact'];
+    		$addParam['mobile'] = empty($param['mobil']) == true ? '' : $param['mobil'];
+    		$addParam['tel'] = empty($param['tel']) == true ? '' : $param['tel'];
     	}
     	
     	//浙江省, 宁波市, 慈溪市, 孙塘南路, 126-～130
@@ -186,13 +200,15 @@ class Stadium_Service extends Base_Service {
 		//插入图片
 		$now = time();
 		$insertImage = array();
-		foreach($images as $img){
-			$insertImage[] = array(
-				'aid' => $img['id'],
-				'stadium_id' => $stadiumId,
-				'gmt_create' => $now,
-				'gmt_modify' => $now
-			);
+		foreach($images as $ik => $img){
+			
+			$img['aid'] = $img['id'];
+			$img['stadium_id'] = $stadiumId;
+			$img['gmt_create'] = $now;
+			$img['gmt_modify'] = $now;
+			
+			unset($img['id']);
+			$insertImage[] = $img;
 		}
 		
     	$this->_stadiumPhotosModel->batchInsert($insertImage);

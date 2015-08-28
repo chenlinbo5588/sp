@@ -21,7 +21,7 @@ class Stadium extends Ydzj_Controller {
 	public function index()
 	{
 		
-		$title = '场馆';
+		$title = '场馆场地';
 		$city_id = $this->_getCity();
 		if($city_id){
 			$cityInfo = $this->stadium_service->getCityById($city_id);
@@ -29,7 +29,7 @@ class Stadium extends Ydzj_Controller {
 		
 		//print_r($cityInfo);
 		
-		$title = '场馆';
+		$title = '场馆场地';
 		$this->setTopNavTitle($title);
 		
 		$searchKey = $this->input->get('search_key');
@@ -46,24 +46,61 @@ class Stadium extends Ydzj_Controller {
 		}
 		
 		$list = $this->stadium_service->getPagerData($condition);
-		$this->setLeftNavLink('<a id="leftBarLink" class="bar_button" href="'.site_url('team/switch_city/upid/'.$city_id).'" title="点击切换城市">'.$cityInfo['name'].'</a>');
+		$this->setLeftNavLink('<a id="leftBarLink" class="bar_button" href="'.site_url('stadium/switch_city/upid/'.$city_id).'" title="点击切换城市">'.$cityInfo['name'].'</a>');
 		$this->setRightNavLink('<a id="rightBarLink" class="bar_button" href="'.site_url('stadium/add').'">+添加场馆</a>');
 		
 		$this->setTopNavTitle($title);
-		$this->seo('篮球馆，体育场馆');
+		$this->seo('体育场馆','篮球馆,足球场,游泳馆,羽毛球场,网球场,体育场馆');
 		
+		
+		
+		$this->assign('cityLevel',$cityInfo['level']);
 		$this->assign('list',$list);
 		$this->display('stadium/index');
 	}
 	
 	
 	/**
+	 * 切换城市
+	 */
+	public function switch_city(){
+		$this->setLeftNavLink('<a id="leftBarLink" class="bar_button goback" href="'.site_url('stadium').'" title="返回场馆">场馆</a>');
+		
+		$ar = $this->uri->segment_array();
+		
+		if($this->isPostRequest()){
+			$this->input->set_cookie('city',$ar[4],2592000);
+			redirect('stadium');
+		}
+		
+		$this->load->library('Common_District_Service');
+		if($ar[4]){
+			$city = $ar[4];
+			$cityInfo = $this->common_district_service->getDistrictInfoById($city);
+		}else{
+			$city = $ar[4];
+			
+			$cityInfo['id'] = $city;
+			$cityInfo['name'] = '全国';
+		}
+		
+		$childCity = $this->common_district_service->getDistrictByPid($city);
+		
+		$title = $cityInfo['name'];
+		$this->setTopNavTitle($title);
+		$this->seoTitle($title);
+		
+		$this->assign('cityUrl','stadium/switch_city/upid/');
+		$this->assign('formUrl',site_url('stadium/switch_city/upid/'.$cityInfo['id']));
+		$this->assign('currentCity',$cityInfo);
+		$this->assign('cityList',$childCity);
+		$this->display('common/switch_city');
+	}
+	
+	/**
 	 * 
 	 */
 	private function _extraStadiumInfo($stadium){
-		
-		
-		
 		
 		$inManageMode = false;
 		$canManager = $this->stadium_service->isManager($stadium,$this->_profile['memberinfo']);
@@ -81,15 +118,28 @@ class Stadium extends Ydzj_Controller {
 		}
 		
 		if($inManageMode){
-			/*
-			$this->load->library('Sports_Service');
-			$poistionList = $this->sports_service->getMetaByCategoryAndGroup($team['basic']['category_name'],'位置');
-			$roleList = $this->sports_service->getMetaByCategoryAndGroup($team['basic']['category_name'],'职务');
-			$this->assign('positionList',$poistionList);
-			$this->assign('roleList',$roleList);
-			*/
+			
+			$this->assign('maxOtherFile',range(0,5));
+        	$sportsCategoryList = $this->stadium_service->getSportsCategory();
+			$this->assign('sportsCategoryList',$sportsCategoryList);
+        	$allMetaGroups = $this->stadium_service->getAllMetaGroups();
+	        //print_r($allMetaGroups);
+	        $this->assign('allMetaGroups',$allMetaGroups);
+	        
+	        foreach($stadium['photos'] as $key => $photo ){
+	        	$fileUpload['other_img'][$key] = array(
+					'id' => $photo['id'],
+					'url' => $photo['avatar'],
+					'preview' => $photo['avatar_middle']
+				);
+	        }
+	        
+	        $this->assign('fileUpload',$fileUpload);
+	        
 		}
 		
+		
+		$this->assign('formTarget',$this->uri->uri_string());
 		$this->assign('canManager',$canManager);
 		$this->assign('stadium',$stadium);
 		
@@ -105,7 +155,6 @@ class Stadium extends Ydzj_Controller {
 	
 	public function detail(){
 		$feedback = '';
-		
 		$this->_stadiumid = $this->_urlParam[3];
 		
 		$this->setLeftNavLink('<a id="leftBarLink" class="bar_button" href="'.site_url('stadium').'" title="返回">返回</a>');
@@ -113,6 +162,7 @@ class Stadium extends Ydzj_Controller {
 		
 		if($this->isPostRequest()){
 			
+			$this->assign('inPost',true);
 			for($i = 0; $i < 1; $i++){
 				if(!$this->isLogin()){
 					$this->assign('returnUrl',site_url($this->uri->uri_string()));
@@ -128,6 +178,84 @@ class Stadium extends Ydzj_Controller {
 					$feedback = '对不起，您不是馆主无法管理';
 					break;
 				}
+				
+				$this->_commonRules();
+            	$this->load->library('Attachment_Service');
+            	$fileUpload = array();
+            	$fileInfo = $this->attachment_service->addImageAttachment('cover_img');
+            	
+            	$this->load->helper('img');
+            	
+            	$images = array();
+            	
+            	for($i = 0; $i <= 5; $i++){
+	            	$otherFile = $this->attachment_service->addImageAttachment('other_img'.$i);
+	            	if($otherFile){
+	            		$images[] = array(
+	            			'id' => $otherFile['id'],
+	            			'avatar' => $otherFile['file_url'],
+	            			'avatar_large' => $otherFile['img_large'],
+	            			'avatar_big' => $otherFile['img_big'],
+	            			'avatar_middle' => $otherFile['img_middle'],
+	            			'avatar_small' => $otherFile['img_small']
+	            		);
+	            		
+	            		//对已上传的图片 在提交校验错误的情况下，显示预览
+	            		$fileUpload['other_img'][$i] = array(
+	            			'id' => $otherFile['id'],
+	            			'url' => $otherFile['file_url'],
+	            			'preview' => $otherFile['img_middle']
+	            		);
+	            		
+	            	}else{
+	            		$otherImgUrl = $this->input->post('other_img'.$i.'_url');
+	            		if(!empty($otherImgUrl)){
+	            			$otherFile = array_merge(array('id' => $this->input->post('other_img'.$i.'_id')),getImgPathArray($otherImgUrl));
+	            			$images[] = $otherFile;
+	            			
+	            			$fileUpload['other_img'][$i] = array(
+								'id' => $otherFile['id'],
+	            				'url' => $otherFile['avatar'],
+	            				'preview' => $otherFile['avatar_middle']
+	            			);
+	            		}else{
+	            			//待删除
+	            			$fileUpload['other_img'][$i] = array(
+								'id' => $otherFile['id']
+	            			);
+	            		}
+	            	}
+	            }
+		        
+		        $this->assign('fileUpload',$fileUpload);
+		        
+	            if($this->form_validation->run() == false){
+	            	break;
+	            }else{
+	            	//必须传一张封面
+	            	if(empty($fileUpload['other_img'][0]['id'])){
+	            		$this->assign('img_error0','请上传场馆封面照片,JPG格式');
+	            		break;
+	            	}
+	            }
+	            
+	            /*
+	            foreach($sportsCategoryList as $cate){
+	            	if($cate['id'] == $this->input->post('category_id')){
+	            		$_POST['category_name'] = $cate['name'];
+	            		break;
+	            	}
+	            }
+	            
+                $id = $this->stadium_service->addStadium($_POST,$images,$this->_profile['memberinfo']);
+                
+                if($id > 0){
+                	redirect('stadium/detail/'.$id);
+                }else{
+                	$this->assign('feedback','<div class="warning">场馆创建失败，请刷新页面重新尝试。</div>');
+                }
+				*/
+				
 			}
 			
 			if($feedback){
@@ -140,9 +268,13 @@ class Stadium extends Ydzj_Controller {
 		}else{
 			
 			$this->_prepareDetailData(intval($this->_stadiumid));
+			
+			
 			$this->display('stadium/detail');
 		}
-		
+	}
+	
+	private function _stadiumWeihu(){
 		
 	}
 	
@@ -158,11 +290,11 @@ class Stadium extends Ydzj_Controller {
         	
         }else{
         	
+        	$this->setLeftNavLink('<a id="leftBarLink" class="bar_button" href="'.site_url('stadium').'" title="返回场馆">返回</a>');
+		
         	$this->assign('maxOtherFile',range(0,5));
         	$sportsCategoryList = $this->stadium_service->getSportsCategory();
-        	
 			$this->assign('sportsCategoryList',$sportsCategoryList);
-			
         	$allMetaGroups = $this->stadium_service->getAllMetaGroups();
 	        //print_r($allMetaGroups);
 	        $this->assign('allMetaGroups',$allMetaGroups);
@@ -197,7 +329,7 @@ class Stadium extends Ydzj_Controller {
 		            		$fileUpload['other_img'][$i] = array(
 		            			'id' => $otherFile['id'],
 		            			'url' => $otherFile['file_url'],
-		            			'preview' => $otherFile['img_small']
+		            			'preview' => $otherFile['img_middle']
 		            		);
 		            		
 		            	}else{
@@ -209,7 +341,7 @@ class Stadium extends Ydzj_Controller {
 		            			$fileUpload['other_img'][$i] = array(
 									'id' => $otherFile['id'],
 		            				'url' => $otherFile['avatar'],
-		            				'preview' => $otherFile['avatar_small']
+		            				'preview' => $otherFile['avatar_middle']
 		            			);
 		            		}
 		            	}
@@ -218,7 +350,14 @@ class Stadium extends Ydzj_Controller {
 			        $this->assign('fileUpload',$fileUpload);
 			        
 		            if($this->form_validation->run() == false){
-			            break;
+		            	break;
+		            }else{
+		            	//必须传一张封面
+		            	
+		            	if(empty($fileUpload['other_img'][0]['id'])){
+		            		$this->assign('img_error0','请上传场馆封面照片,JPG格式');
+		            		break;
+		            	}
 		            }
 		            
 		            foreach($sportsCategoryList as $cate){
@@ -228,20 +367,16 @@ class Stadium extends Ydzj_Controller {
 		            	}
 		            }
 		            
-	                $id = $this->stadium_service->addStadium($_POST,$images , $this->_profile['memberinfo']);
+	                $id = $this->stadium_service->addStadium($_POST,$images,$this->_profile['memberinfo']);
 	                
 	                if($id > 0){
 	                	redirect('stadium/detail/'.$id);
-	                	/*
-	                    $this->assign('feedback','<div class="warning">场馆创建，请刷新页面重新尝试。</div>');
-			        	$this->_prepareDetailData(intval($this->_stadiumid));
-						$this->display('stadium/detail');
-	                	*/
 	                }else{
 	                	$this->assign('feedback','<div class="warning">场馆创建失败，请刷新页面重新尝试。</div>');
-	                	$this->display('stadium/add');
 	                }
 	            }
+	            
+	            $this->display('stadium/add');
 	        }else{
 	        	$this->display('stadium/add');
 	        }
@@ -267,7 +402,7 @@ class Stadium extends Ydzj_Controller {
 			)
 		);
 
-        $this->form_validation->set_rules('title','场馆名称',array('required'),
+        $this->form_validation->set_rules('title','场馆名称','required|min_length[1]|max_length[20]',
             array(
                 'required' => '请输入场馆名称'
             )
@@ -278,6 +413,19 @@ class Stadium extends Ydzj_Controller {
                 'required' => '请标记场馆位置'
             )
         );
+        
+        
+        if(!empty($_POST['contact'])){
+        	$this->form_validation->set_rules('contact','联系人','max_length[10]');
+        }
+        
+        if(!empty($_POST['mobile'])){
+        	$this->form_validation->set_rules('mobile','手机号码','valid_mobile');
+        }
+        
+        if(!empty($_POST['tel'])){
+        	$this->form_validation->set_rules('tel','座机号码','valid_telephone');
+        }
         
     }
     

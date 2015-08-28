@@ -69,8 +69,8 @@ $lang['form_validation_in_list']		= '{field}必须为{param}其中之一';
 
 
 //custome method
-$lang['form_validation_valid_date']						= '{field} 字段必须是一个有效的日期.';
-$lang['form_validation_valid_mobile']					= '{field} 字段必须是一个有效的手机号码.';
-$lang['form_validation_valid_telephone']				= '{field} 字段必须是一个有效的固定电话号码.';
-$lang['form_validation_is_unique_by_status'] 			= '{field} 字段必须唯一,该值已被占用 .';
-$lang['form_validation_is_unique_not_self'] 			= '{field} 字段必须唯一,该值已被占用.';
+$lang['form_validation_valid_date']						= '{field}必须是一个有效的日期.';
+$lang['form_validation_valid_mobile']					= '{field}必须是一个有效的手机号码.';
+$lang['form_validation_valid_telephone']				= '{field}必须是一个有效的固定电话号码.';
+$lang['form_validation_is_unique_by_status'] 			= '{field}已被占用 .';
+$lang['form_validation_is_unique_not_self'] 			= '{field}已被占用.';

@@ -1,29 +1,53 @@
 {include file="common/header.tpl"}
 
-<div class="row pd5"><a href="#" class="link_btn">我要报告场馆、场地</a></div>
-
-<div id="stadiumList" class="list pd5">
-    {foreach from=$list['data'] item=item}
-    <div class="team clearfix">
-        <div class="fl"><a href="{site_url('stadium/detail/'|cat:$item['stadium_id'])}"><img src="{base_url($item['avatar_small'])}"/></a></div>
-        <div class="team_basic">
-            <ul>
-                <li><a class="team_title" href="{site_url('team/detail/'|cat:$item['stadium_id'])}">{$item['title']|escape}</a></li>
-                <li><label>队长:</label><a class="team_leader" href="{site_url('user/info/'|cat:$item['leader_uid'])}">{$item['leader_name']|escape}</a></li>
-                <li><label>区域:</label><span>{$item[$cityLevel]}</span></li>
-                <li><label>成员数:</label><strong class="team_pnum">{$item['current_num']}</strong><span>人</span></li>
-                <li><label>比赛场次:</label><strong>{$item['games']}场</strong><label class="win_rate">胜率:</label><strong>{$item['win_rate']}</strong></li>
-            </ul>
-        </div>
-        <div class="order_game">
-            {if $item['accept_game']}
-            <a class="link_btn greenBtn" href="{site_url('team/order_game')}">预约比赛</a>
-            {else}
-            <a class="link_btn grayed" href="javascript:void(0);">暂时不能预约</a>
-            {/if}
-        </div>
+<section>
+    <form name="searchForm" action="{site_url('stadium')}" method="get">
+    <div class="searchbar pd5 clearfix">
+        <label for="seach_key" class="fl">搜索场馆</label>
+        <input type="text" class="fl" style="width:50%;" name="search_key" value="{$smarty.get.search_key|escape}" placeholder="请输入队伍名称"/>
+        <input class="primaryBtn fl"  style="width:20%;" type="submit" value="查询"/>
     </div>
-    {/foreach}
-</div>
+    </form>
+</section>
 
+<section>
+	<div id="stadiumList" class="list pd5">
+	    {foreach from=$list['data'] item=item}
+	    <div class="team clearfix">
+	        <div class="fl"><a href="{site_url('stadium/detail/'|cat:$item['stadium_id'])}"><img src="{base_url($item['avatar_small'])}"/></a></div>
+	        <div class="team_basic">
+	            <ul>
+	                <li><a class="team_title" href="{site_url('stadium/detail/'|cat:$item['stadium_id'])}">{$item['title']|escape}</a></li>
+	                <li><i class="fa fa-tag"></i>：{$item['category_name']}</li>
+	                <li><i class="fa fa-map-marker"></i>：
+	                {if $cityLevel == 0}
+	                <span>{$item['dname1']}{$item['dname2']}{$item['dname3']}{$item['dname4']}</span>
+	                {elseif $cityLevel == 1}
+	                <span>{$item['dname2']}{$item['dname3']}{$item['dname4']}</span>
+	                {elseif $cityLevel == 2}
+	                <span>{$item['dname3']}{$item['dname4']}</span>
+	                {elseif $cityLevel == 3}
+	                <span>{$item['dname4']}</span>
+	                {elseif $cityLevel == 4}
+	                <span>{$item['dname4']}{$item['street_number']}</span>
+	                {/if}
+	                </li>
+	                <li><i class="fa fa-user"></i>：{$item['contact']|escape}</li>
+	                <li><i class="fa fa-phone"></i>：{if $item['mobile']}{$item['mobile']}{else}{$item['tel']}{/if}</li>
+	                <li>{$stadium['basic']['stadium_type']} {$stadium['basic']['ground_type']} {$stadium['basic']['charge_type']}</li>
+	            </ul>
+	        </div>
+	        {*
+	        <div class="order_game">
+	            {if $item['can_booking'] == 'y'}
+	            <a class="link_btn greenBtn" href="{site_url('stadium/booking')}">预定</a>
+	            {else}
+	            <a class="link_btn grayed" href="javascript:void(0);">未开放预定</a>
+	            {/if}
+	        </div>
+	        *}
+	    </div>
+	    {/foreach}
+	</div>
+</section>
 {include file="common/footer.tpl"}

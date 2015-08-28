@@ -23,7 +23,17 @@ function setJW(obj){
 	    });
     }
 }
-  
+
+function addMyIcon(lng,lat){
+	map.clearOverlays();
+	var point = new BMap.Point(lng, lat);
+    var myIcon = new BMap.Icon(stadiumPic, new BMap.Size(32,32));
+    var marker = new BMap.Marker(point,{icon:myIcon});  // 创建标注
+    //marker.setAnimation(BMAP_ANIMATION_BOUNCE);
+	map.addOverlay(marker);           				 // 将标注添加到地图中
+}
+
+
 function initialize() {
   map = new BMap.Map('map');  
   map.centerAndZoom(new BMap.Point(121.272, 30.175), 14);
@@ -36,8 +46,12 @@ function initialize() {
   //map.addControl(top_left_control);
   map.addControl(top_right_navigation);    
   
+  
+  if(typeof(longitude) != "undefined"){
+	  addMyIcon(longitude,latitude);
+  }
+  
   map.addEventListener("click",function(e){
-	  
 	  $("input[name=longitude]").val(e.point.lng);
 	  $("input[name=latitude]").val(e.point.lat);
 	  
@@ -58,7 +72,10 @@ function initialize() {
 			$("input[name=street]").val(addComp.street);
 			$("input[name=streetNumber]").val(addComp.streetNumber);
 			
-			$("input[name=address]").val(addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber);
+			$("#tip_address").html('');
+			$("input[name=address]").removeClass("validation_error").val(addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber);
+			
+			
 			//alert(addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber);
 		});
 	  //alert(e.point.lng + "," + e.point.lat);
@@ -78,29 +95,33 @@ function initialize() {
 
 
 $(function(){
-	loadScript();
-	/*
-	$("#moreFile").bind("click",function(event){
-	    var count = $("#fileArea em").size() + 1;
-	    
-	    if(count > 5){
-	    	alert("最多允许5张其他图片");
-	    	return;
-	    }
-	    
-	    var fileTpl = $($("#addFileTpl").html());
-	    
-	    fileTpl.find("input[type=file]").attr("name","other_img" + count);
-	    fileTpl.find("input[type=hidden]").attr("name","other_img_txt" + count);
-	    fileTpl.find("em").html(count);
-	    
-	    $("input[name=other_image_count]").val(count);
-	    //fileTpl.insertBefore("#moreFileWrap");
-	    $("#fileArea").append(fileTpl);
-	});
-	*/
 	
-	$("input[name=is_mine]").bind("click",function(e){
+	if(typeof(hash) != "undefined"){
+		location.hash = hash;
+	}
+	
+	$("#markerOnMap").bind("click",function(e){
+		var w = $(document).width(),h = $(document).height();
+		
+		$("#mapDiv").css({width:w + 'px',height:h + 'px'}).show();
+		$("#map").css({height:h + 'px'});
+		
+		$("#saveBtn").hide();
+		$("#closeMapBtn").show();
+		
+		if(typeof(map) == "undefined"){
+			loadScript();
+		}
+	});
+	
+	$("input[name=closeMap]").bind("click",function(){
+		$("#mapDiv").hide();
+		$("#closeMapBtn").hide();
+		$("#saveBtn").show();
+		
+	});
+	
+	$("select[name=is_mine]").bind("change",function(e){
 		if($(this).val() == 'n'){
 			$(".notmine").slideDown();
 		}else{
@@ -108,9 +129,14 @@ $(function(){
 		}
 	});
 	
+	$(".photoUpload .opTrash").bind("click",function(e){
+		
+		//var that = $(this) , div = 
+		
+		
+	});
 	
 	$("#stadiumForm").bind("submit",function(e){
-		return true;
 		$("input.validation_error").removeClass("validation_error");
 		
 		if($.trim($("input[name=title]").val()) == ''){
@@ -119,15 +145,11 @@ $(function(){
 			return false;
 		}
 		
-		/*
-		$("input[name=is_mine]").each(function(i,obj){
-			if($(obj).prop("checked") && $(obj).val() == 'n'){
-				if(regMobile.test()){
-					
-				}
-			}
-		});
-		*/
+		if($.trim($("input[name=address]").val()) == ''){
+			$("input[name=address]").addClass("validation_error").focus();
+			$("#tip_address").html(FormErrorHtml('请在地图上标记场馆位置'));
+			return false;
+		}
 		
 		return true;
 	});

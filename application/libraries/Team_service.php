@@ -58,7 +58,7 @@ class Team_Service extends Base_Service {
 	
 	
 	
-	public function getTeamInfo($teamid){
+	public function getTeamInfo($teamid ,$withMemeber = true){
 		
 		$team['basic'] = $this->_teamModel->getById(array(
 			'where' => array('id' => $teamid)
@@ -66,9 +66,11 @@ class Team_Service extends Base_Service {
 		
 		//$team['members'] = array();
 		
-		$team['members'] = $this->_teamMemberModel->getList(array(
-			'where' => array('team_id' => $teamid)
-		));
+		if($withMemeber){
+			$team['members'] = $this->_teamMemberModel->getList(array(
+				'where' => array('team_id' => $teamid)
+			));
+		}
 		
 		
 		/*
