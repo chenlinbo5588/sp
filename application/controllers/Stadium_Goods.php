@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Stadium extends Ydzj_Controller {
+class Stadium_Goods extends Ydzj_Controller {
 	
 	//public $_controllerUrl;
 	
@@ -10,7 +10,6 @@ class Stadium extends Ydzj_Controller {
 	
 	public function __construct(){
 		parent::__construct();
-		//$this->_controllerUrl = admin_site_url();
         
         $this->load->library('Stadium_Service');
         
@@ -119,8 +118,11 @@ class Stadium extends Ydzj_Controller {
 		if($inManageMode){
 			
 			$this->assign('maxOtherFile',range(0,5));
-			$stadiumOwnerList = $this->stadium_service->getStadiumMeta(array('where' => array('gname' => '权属')));
-			$this->assign('stadiumOwnerList',$stadiumOwnerList);
+        	$sportsCategoryList = $this->stadium_service->getSportsCategory();
+			$this->assign('sportsCategoryList',$sportsCategoryList);
+        	$allMetaGroups = $this->stadium_service->getAllMetaGroups();
+	        //print_r($allMetaGroups);
+	        $this->assign('allMetaGroups',$allMetaGroups);
 	        
 	        foreach($stadium['photos'] as $key => $photo ){
 	        	$fileUpload['other_img'][$key] = array(
@@ -270,69 +272,8 @@ class Stadium extends Ydzj_Controller {
 		}
 	}
 	
-	
-	
-	private function _dealPicture(){
+	private function _stadiumWeihu(){
 		
-    	$this->load->library('Attachment_Service');
-    	
-    	$this->attachment_service->setUid($this->_profile['basic']['uid']);
-    	
-    	$fileUpload = array();
-    	$fileInfo = $this->attachment_service->addImageAttachment('cover_img');
-    	
-    	
-    	$images = array();
-    	$deleteImage = array();
-    	
-    	for($i = 0; $i <= 5; $i++){
-        	$otherFile = $this->attachment_service->addImageAttachment('other_img'.$i);
-        	if($otherFile){
-        		$images[] = array(
-        			'id' => $otherFile['id'],
-        			'avatar' => $otherFile['file_url'],
-        			'avatar_large' => $otherFile['img_large'],
-        			'avatar_big' => $otherFile['img_big'],
-        			'avatar_middle' => $otherFile['img_middle'],
-        			'avatar_small' => $otherFile['img_small']
-        		);
-        		
-        		//对已上传的图片 在提交校验错误的情况下，显示预览
-        		$fileUpload['other_img'][$i] = array(
-        			'id' => $otherFile['id'],
-        			'url' => $otherFile['file_url'],
-        			'preview' => $otherFile['img_middle']
-        		);
-        		
-        		
-        	}else{
-        		$otherImgUrl = $this->input->post('other_img'.$i.'_url');
-        		if(!empty($otherImgUrl)){
-        			$otherFile = array_merge(array('id' => $this->input->post('other_img'.$i.'_id')),getImgPathArray($otherImgUrl));
-        			$images[] = $otherFile;
-        			
-        			$fileUpload['other_img'][$i] = array(
-						'id' => $otherFile['id'],
-        				'url' => $otherFile['avatar'],
-        				'preview' => $otherFile['avatar_middle']
-        			);
-        		}
-        	}
-        	
-        	$delId = $this->input->post('other_img'.$i.'_id');
-        	$delUrl = $this->input->post('other_img'.$i.'_url');
-        	
-        	//删除了图片
-        	if($delId && empty($delUrl)){
-        		$deleteImage[] = $delId;
-        	}
-        }
-        
-        if($deleteImage){
-        	$this->attachment_service->deleteFiles($deleteImage);
-        }
-		
-		return array($fileUpload,$images,$deleteImage);
 	}
 	
 	/**
@@ -353,35 +294,81 @@ class Stadium extends Ydzj_Controller {
         	$stadiumOwnerList = $this->stadium_service->getStadiumMeta(array('where' => array('gname' => '权属')));
 			$this->assign('stadiumOwnerList',$stadiumOwnerList);
         	
-        	
+        	//$allMetaGroups = $this->stadium_service->getAllMetaGroups();
+	        //print_r($allMetaGroups);
+	        //$this->assign('allMetaGroups',$allMetaGroups);
+	        
 			$this->seo('添加体育场馆');
 	        
 	        if($this->isPostRequest()){
 	            //$this->form_validation->set_error_delimiters('<div class="error">','</div>');
 	            for($i = 0 ; $i < 1; $i++){
 	            	$this->_commonRules();
+	            	$this->load->library('Attachment_Service');
+	            	$fileUpload = array();
+	            	$fileInfo = $this->attachment_service->addImageAttachment('cover_img');
 	            	
-			        $dealData = $this->_dealPicture();
+	            	$this->load->helper('img');
+	            	
+	            	$images = array();
+	            	
+	            	for($i = 0; $i <= 5; $i++){
+		            	$otherFile = $this->attachment_service->addImageAttachment('other_img'.$i);
+		            	if($otherFile){
+		            		$images[] = array(
+		            			'id' => $otherFile['id'],
+		            			'avatar' => $otherFile['file_url'],
+		            			'avatar_large' => $otherFile['img_large'],
+		            			'avatar_big' => $otherFile['img_big'],
+		            			'avatar_middle' => $otherFile['img_middle'],
+		            			'avatar_small' => $otherFile['img_small']
+		            		);
+		            		
+		            		//对已上传的图片 在提交校验错误的情况下，显示预览
+		            		$fileUpload['other_img'][$i] = array(
+		            			'id' => $otherFile['id'],
+		            			'url' => $otherFile['file_url'],
+		            			'preview' => $otherFile['img_middle']
+		            		);
+		            		
+		            	}else{
+		            		$otherImgUrl = $this->input->post('other_img'.$i.'_url');
+		            		if(!empty($otherImgUrl)){
+		            			$otherFile = array_merge(array('id' => $this->input->post('other_img'.$i.'_id')),getImgPathArray($otherImgUrl));
+		            			$images[] = $otherFile;
+		            			
+		            			$fileUpload['other_img'][$i] = array(
+									'id' => $otherFile['id'],
+		            				'url' => $otherFile['avatar'],
+		            				'preview' => $otherFile['avatar_middle']
+		            			);
+		            		}
+		            	}
+		            }
 			        
-			        $fileUpload = $dealData[0];
-			        
-			        $this->assign('fileUpload',$dealData[0]);
+			        $this->assign('fileUpload',$fileUpload);
 			        
 		            if($this->form_validation->run() == false){
-		            	if(empty($fileUpload['other_img'][0]['id'])){
-		            		$this->assign('img_error0','请上传场馆封面照片,JPG格式');
-		            	}
-		            	
 		            	break;
 		            }else{
 		            	//必须传一张封面
+		            	
 		            	if(empty($fileUpload['other_img'][0]['id'])){
 		            		$this->assign('img_error0','请上传场馆封面照片,JPG格式');
 		            		break;
 		            	}
 		            }
 		            
-	                $id = $this->stadium_service->addStadium($_POST,$dealData[1],$this->_profile['basic']);
+		            /*
+		            foreach($stadiumOwnerList as $cate){
+		            	if($cate['id'] == $this->input->post('category_id')){
+		            		$_POST['category_name'] = $cate['name'];
+		            		break;
+		            	}
+		            }
+		            */
+		            
+	                $id = $this->stadium_service->addStadium($_POST,$images,$this->_profile['basic']);
 	                
 	                if($id > 0){
 	                	redirect('stadium/detail/'.$id);
@@ -400,6 +387,22 @@ class Stadium extends Ydzj_Controller {
     
     private function _commonRules(){
         
+        $this->load->model('Sports_Category_Model');
+        $this->form_validation->set_rules('category_id','场馆分类',array(
+				'required',
+				'is_natural_no_zero',
+				array(
+					'category_callable',
+					array(
+						$this->Sports_Category_Model,'avaiableCategory'
+					)
+				)
+			),
+			array(
+				'category_callable' => '%s无效'
+			)
+		);
+
         $this->form_validation->set_rules('title','场馆名称','required|min_length[1]|max_length[20]',
             array(
                 'required' => '请输入场馆名称'

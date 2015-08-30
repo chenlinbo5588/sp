@@ -147,9 +147,9 @@ class Team extends Ydzj_Controller {
 				$this->display('member/register');
 			}else{
 				//直接加入
-				$mes = $this->team_service->joinTeam($info[0],$this->_profile['memberinfo']);
+				$mes = $this->team_service->joinTeam($info[0],$this->_profile['basic']);
 				if($mes['new_member']){
-					$this->assign('feedback','<div class="success">欢迎 '.urlencode($this->_profile['memberinfo']['nickname']).' 加入</div>');
+					$this->assign('feedback','<div class="success">欢迎 '.urlencode($this->_profile['basic']['nickname']).' 加入</div>');
 				}
 				
 				$this->_prepareDetailData($info[0]);
@@ -166,12 +166,12 @@ class Team extends Ydzj_Controller {
 	private function _extraTeamInfo($team){
 		
 		if($team['basic']['joined_type'] == 1 && $this->isLogin()){
-			$this->assign('inviteUrl',$this->team_service->generateInviteUrl($team['basic'],$this->_profile['memberinfo']));
+			$this->assign('inviteUrl',$this->team_service->generateInviteUrl($team['basic'],$this->_profile['basic']));
 		}
 		
 		
 		$inManageMode = false;
-		$canManager = $this->team_service->isTeamManager($team,$this->_profile['memberinfo']);
+		$canManager = $this->team_service->isTeamManager($team,$this->_profile['basic']);
 		
 		if($canManager){
 			if($this->uri->segment(4) == 'manage'){
@@ -232,7 +232,7 @@ class Team extends Ydzj_Controller {
 				}
 				
 				$team = $this->team_service->getTeamInfo(intval($this->_teamid));
-				$canManager = $this->team_service->isTeamManager($team,$this->_profile['memberinfo']);
+				$canManager = $this->team_service->isTeamManager($team,$this->_profile['basic']);
 				
 				if(!$canManager){
 					$feedback = '对不起，您不是队长不能管理';
@@ -356,7 +356,7 @@ class Team extends Ydzj_Controller {
 			for($i = 0; $i < 1; $i++){
 				
 				$team = $this->team_service->getTeamInfo(intval($this->_teamid));
-				$canManager = $this->team_service->isTeamManager($team,$this->_profile['memberinfo']);
+				$canManager = $this->team_service->isTeamManager($team,$this->_profile['basic']);
 				
 				if(!$canManager){
 					$feedback = '对不起，您不是队长不能管理';
@@ -463,7 +463,7 @@ class Team extends Ydzj_Controller {
 				$this->assign('sportsCategoryList',$sportsCategoryList);
 				$this->seoTitle('创建我的队伍');
 				
-				if(!$this->_profile['memberinfo']['district_bind']){
+				if(!$this->_profile['basic']['district_bind']){
 					$this->assign('warning','<div class="warning">您尚未设置地区,暂时不能创建队伍, <a href="'.site_url('my/set_city').'?returnUrl='.urlencode(site_url('team/create_team')).'">立即设置</a></div>');
 					break;
 				}
@@ -504,7 +504,7 @@ class Team extends Ydzj_Controller {
 									)
 								),
 								array(
-									'user_categroy_callbale['.$this->_profile['memberinfo']['uid'].']',
+									'user_categroy_callbale['.$this->_profile['basic']['uid'].']',
 									array(
 										$this->Team_Model,'userCategoryTeamCount'
 									)
@@ -518,20 +518,20 @@ class Team extends Ydzj_Controller {
 						
 					//队伍名称允许相同,因现实情况下确实有可能相同
 					//用户如果设置 d4 级的话， 则校验名称重复，如果d4 级没有设置，则不校验
-					if($this->_profile['memberinfo']['d4'] > 0){
+					if($this->_profile['basic']['d4'] > 0){
 						
 						//获得地区名称
 						$this->load->model('Common_District_Model');
 						$districtName = $this->Common_District_Model->getById(array(
 							'select' => 'name',
-							'where' => array('id' => $this->_profile['memberinfo']['d4'])
+							'where' => array('id' => $this->_profile['basic']['d4'])
 						));
 						
 						$this->form_validation->set_rules('title','队伍名称', array(
 								'required',
 								'max_length[4]',
 								array(
-									'title_callable['.$this->_profile['memberinfo']['d4'].']',
+									'title_callable['.$this->_profile['basic']['d4'].']',
 									array(
 										$this->Team_Model,'isTitleNotUsed'
 									)
@@ -561,8 +561,8 @@ class Team extends Ydzj_Controller {
 					);
 					
 					if($this->input->post('leader') == 1){
-						$leader['uid'] = $this->_profile['memberinfo']['uid'];
-						$leader['name'] = $this->_profile['memberinfo']['nickname'];
+						$leader['uid'] = $this->_profile['basic']['uid'];
+						$leader['name'] = $this->_profile['basic']['nickname'];
 					}
 					
 					$addParam = array(
@@ -600,7 +600,7 @@ class Team extends Ydzj_Controller {
 		            	}
 		            }
 					
-					$teamid = $this->team_service->addTeam($addParam,$this->_profile['memberinfo']);
+					$teamid = $this->team_service->addTeam($addParam,$this->_profile['basic']);
 					
 					if($teamid){
 						$isCreateOk = true;

@@ -16,12 +16,12 @@ class My extends MyYdzj_Controller {
 		
 		$ds = array();
 		for($i = 1; $i <= 4; $i++){
-			$ds[] = $this->_profile['memberinfo']['d'.$i];
+			$ds[] = $this->_profile['basic']['d'.$i];
 		}
 		
 		$ds = array_unique($ds);
 		$this->assign('userDs',$this->common_district_service->getDistrictByIds($ds));
-		$this->assign('inviteUrl',site_url('member/register?inviter='.$this->_profile['memberinfo']['uid']));
+		$this->assign('inviteUrl',site_url('member/register?inviter='.$this->_profile['basic']['uid']));
 		$this->display('my/index');
 	}
 	
@@ -51,9 +51,9 @@ class My extends MyYdzj_Controller {
 				$this->load->library('Member_Service');
 				$result = $this->member_service->updateUserInfo(array(
 					'username' => $this->input->post('username')
-				),$this->_profile['memberinfo']['uid']);
+				),$this->_profile['basic']['uid']);
 				
-				$this->member_service->refreshProfile($this->_profile['memberinfo']['uid']);
+				$this->member_service->refreshProfile($this->_profile['basic']['uid']);
 				$setOk = true;
 			}
 			
@@ -64,7 +64,7 @@ class My extends MyYdzj_Controller {
 			}
 			
 		}else{
-			$this->assign('default_username',$this->_profile['memberinfo']['username']);
+			$this->assign('default_username',$this->_profile['basic']['username']);
 			$this->display('my/set_username');
 		}
 	}
@@ -110,9 +110,9 @@ class My extends MyYdzj_Controller {
 					'avatar_big' => $fileData['img_big'],
 					'avatar_middle' => $fileData['img_middle'],
 					'avatar_small' => $fileData['img_small']
-				),$this->_profile['memberinfo']['uid']);
+				),$this->_profile['basic']['uid']);
 				
-				$this->member_service->refreshProfile($this->_profile['memberinfo']['uid']);
+				$this->member_service->refreshProfile($this->_profile['basic']['uid']);
 				$setOk = true;
 			}
 			
@@ -137,7 +137,7 @@ class My extends MyYdzj_Controller {
 		}else{
 			
 			$this->assign('inviteFrom',$this->input->get('inviteFrom'));
-			$this->assign('default_avatar',$this->_profile['memberinfo']['avatar_big']);
+			$this->assign('default_avatar',$this->_profile['basic']['avatar_big']);
 			$this->display('my/set_avatar');
 		}
 		
@@ -165,10 +165,10 @@ class My extends MyYdzj_Controller {
 	
 	private function _prepareSetCity(){
 		$ds = array(
-			'd1' => $this->_profile['memberinfo']['d1'],
-			'd2' => $this->_profile['memberinfo']['d2'],
-			'd3' => $this->_profile['memberinfo']['d3'],
-			'd4' => $this->_profile['memberinfo']['d4']
+			'd1' => $this->_profile['basic']['d1'],
+			'd2' => $this->_profile['basic']['d2'],
+			'd3' => $this->_profile['basic']['d3'],
+			'd4' => $this->_profile['basic']['d4']
 		);
 		
 		$this->assign('d1',$this->common_district_service->getDistrictByPid(0));
@@ -223,9 +223,9 @@ class My extends MyYdzj_Controller {
 					'd4' => intval($this->input->post('d4'))
 				);
 				
-				$result = $this->member_service->updateUserInfo($addParam, $this->_profile['memberinfo']['uid']);
+				$result = $this->member_service->updateUserInfo($addParam, $this->_profile['basic']['uid']);
 				
-				$this->member_service->refreshProfile($this->_profile['memberinfo']['uid']);
+				$this->member_service->refreshProfile($this->_profile['basic']['uid']);
 				
 				
 				$targetUrl = '';

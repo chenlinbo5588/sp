@@ -49,6 +49,13 @@ class Stadium_Service extends Base_Service {
     }
     
     
+    public function getStadiumMeta($condition = array()){
+    	$all = $this->_stadiumMetaModel->getList($condition);
+        
+        return $all;
+    	
+    }
+    
     
 	/**
 	 * 获得活动分类
@@ -123,9 +130,7 @@ class Stadium_Service extends Base_Service {
     		'address' => $param['address'],
     		'longitude' => $param['longitude'],
     		'latitude' => $param['latitude'],
-    		'ground_type' => $param['ground_type'],
-    		'stadium_type' => $param['stadium_type'],
-    		'charge_type' => $param['charge_type'],
+    		'owner_type' => $param['owner_type'],
     		'reporter' => empty($user['username']) == true ? $user['nickname'] : $user['username'],
     		'reporter_uid' => $user['uid']
     	);

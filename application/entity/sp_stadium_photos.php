@@ -9,6 +9,7 @@ $entity = array(
 'avatar_big' => 'varchar',
 'avatar_middle' => 'varchar',
 'avatar_small' => 'varchar',
+'remark' => 'varchar',
 'stadium_id' => 'mediumint',
 'album_id' => 'mediumint',
 'gmt_create' => 'int',

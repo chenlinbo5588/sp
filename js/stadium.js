@@ -40,11 +40,11 @@ function initialize() {
   
   //var top_left_control = new BMap.ScaleControl({ anchor: BMAP_ANCHOR_TOP_LEFT });// 左上角，添加比例尺
   //var top_left_navigation = new BMap.NavigationControl();  //左上角，添加默认缩放平移控件
-  var top_right_navigation = new BMap.NavigationControl({anchor: BMAP_ANCHOR_TOP_RIGHT, type: BMAP_NAVIGATION_CONTROL_SMALL}); 
+  var top_left_navigation = new BMap.NavigationControl({anchor: BMAP_ANCHOR_TOP_LEFT, type: BMAP_NAVIGATION_CONTROL_SMALL}); 
   var geoc = new BMap.Geocoder();
   
   //map.addControl(top_left_control);
-  map.addControl(top_right_navigation);    
+  map.addControl(top_left_navigation);    
   
   
   if(typeof(longitude) != "undefined"){
@@ -130,13 +130,16 @@ $(function(){
 	});
 	
 	$(".photoUpload .opTrash").bind("click",function(e){
+		var that = $(this) , div = that.closest(".photoUpload");
+		div.find(".img_url").val("");
+		$("#" + that.attr("data-id")).remove();
 		
-		//var that = $(this) , div = 
-		
-		
+		that.hide();
 	});
 	
 	$("#stadiumForm").bind("submit",function(e){
+		
+		return true;
 		$("input.validation_error").removeClass("validation_error");
 		
 		if($.trim($("input[name=title]").val()) == ''){

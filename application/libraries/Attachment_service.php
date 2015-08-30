@@ -3,11 +3,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Attachment_Service extends Base_Service {
 
+	protected $_uid = 0;
+	
+	private $_attachModel ;
+
 	public function __construct(){
 		parent::__construct();
 		
 		$this->CI->load->model('Attachment_Model');
+		$this->CI->load->helper('img');
 		
+		$this->_attachModel = $this->CI->Attachment_Model;
 	}
 	
 	
@@ -36,18 +42,48 @@ class Attachment_Service extends Base_Service {
 	 */
 	public function getImageResizeConfig(){
 		return array(
-			'large' => array('width' => 800,'height' => 800, 'maintain_ratio' => false),
+			'large' => array('width' => 800,'height' => 800, 'maintain_ratio' => true),
 			'big' => array('width' => 400,'height' => 400 , 'maintain_ratio' => false),
 			'middle' => array('width' => 200,'height' => 200,'maintain_ratio' => false),
 			'small' => array('width' => 100,'height' => 100,'maintain_ratio' => false)
 		);
 	}
 	
+	/**
+	 * 设置用户id
+	 */
+	public function setUid($uid){
+		$this->_uid = $uid;
+	}
+	
+	
+	public function deleteFiles($files){
+		
+		if($files){
+			$list = $this->_attachModel->getList(array(
+				'select' => 'file_url',
+				'where' => array('uid' => $this->_uid > 0 ?  $this->_uid : -1),
+				'where_in' => array(
+					array('key' => 'id','value' => $files)
+				)
+			));
+			
+			foreach($list as $file){
+				$delList = getImgPathArray($file['file_url']);
+				foreach($delList as $del){
+					@unlink(ROOTPATH.DIRECTORY_SEPARATOR.$del);
+				}
+			}
+		}
+		
+		
+	}
+	
 	
 	/**
 	 * 添加图片附件信息
 	 */
-	public function addImageAttachment($filename, $moreConfig = array()){
+	public function addImageAttachment($filename, $moreConfig = array(),$uid = 0){
 		
 		//处理照片
 		$config = $this->getImageConfig();
@@ -65,6 +101,11 @@ class Attachment_Service extends Base_Service {
 			
 			$fileData['file_url'] = $config['file_path'].$fileData['file_name'];
 			$fileData['ip'] = $this->CI->input->ip_address();
+			
+			if($this->_uid){
+				$fileData['uid'] = $this->_uid;
+			}
+			
 			
 			$file_id = $this->CI->Attachment_Model->_add($fileData);
 			$fileData['id'] = $file_id;

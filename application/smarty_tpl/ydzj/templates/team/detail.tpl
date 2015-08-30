@@ -43,7 +43,7 @@
     </div>
     <div class="row pd5">
         <h3 class="subTitle">成员({$team['basic']['current_num']})人</h3>
-        <ul id="teamMembers" class="clearfix">
+        <ul class="teamMembers clearfix">
         {if $inManageMode}
             {foreach from=$team['members'] item=item}
             <li class="member manage clearfix">
@@ -59,7 +59,7 @@
                     {form_error('username['|cat:$item['id']|cat:']')}
                     {form_error('num['|cat:$item['id']|cat:']')}
                 	<div class="row">
-                		{if $profile['memberinfo']['uid'] !=  $item['uid']}
+                		{if $profile['basic']['uid'] !=  $item['uid']}
 	                    <input type="hidden" name="kick[{$item['id']}]" id="kick_{$item['id']}" value="{set_value('kick['|cat:$item['id']|cat:']')}"/>
 	                    <input type="button" class="at_txt kickoffBtn" class="slaveBtn" name="kickoff" value="踢掉" data-id="kick_{$item['id']}"/>
 	                    {/if}

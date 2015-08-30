@@ -124,7 +124,6 @@ class Member extends Ydzj_Controller {
 					));
 					
 					redirect(admin_site_url('stadium/index'));
-					//$this->jsonOutput($result['message'],array('memberinfo' => $result['memberinfo']));
 				}else{
 					
 					$this->assign('feedback',$result['message']);
@@ -261,7 +260,7 @@ class Member extends Ydzj_Controller {
 						$this->_rememberLoginName($this->input->post('mobile'));
 						
 						$this->session->set_userdata(array(
-							'profile' => array('memberinfo' => $userInfo)
+							'profile' => array('basic' => $userInfo)
 						));
 						
 						

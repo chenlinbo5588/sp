@@ -32,7 +32,7 @@ class Ydzj_Controller extends MY_Controller {
 	}
 	
 	public function isLogin(){
-		//print_r($this->session->userdata('memberinfo'));
+		//print_r($this->session->userdata('basic'));
 		//if($this->session->userdata('admin_info') && ($this->_reqtime - $this->session->userdata('last_activity') < 86400)){
 		if($this->session->userdata('profile')){
 			return true;
@@ -95,8 +95,8 @@ class Ydzj_Controller extends MY_Controller {
 		
 		$city_id = $this->input->cookie('city');
 		if($city_id == NULL){
-			if($this->_profile['memberinfo']['district_bind'] != 0){
-				$city_id = $this->_profile['memberinfo']['d2'];
+			if($this->_profile['basic']['district_bind'] != 0){
+				$city_id = $this->_profile['basic']['d2'];
 			}else{
 				$city_id = 176; //默认宁波市;
 			}

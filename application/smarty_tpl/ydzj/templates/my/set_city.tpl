@@ -15,7 +15,7 @@
             <select name="d1" id="d1_sel" class="at_txt">
                 <option value="">请选择</option>
                 {foreach from=$d1 item=item}
-                <option value="{$item['id']}" {if $profile['memberinfo']['d1'] == $item['id']}selected="selected"{/if}>{$item['name']}</option>
+                <option value="{$item['id']}" {if $profile['basic']['d1'] == $item['id']}selected="selected"{/if}>{$item['name']}</option>
                 {/foreach}
             </select>
         </div>
@@ -25,7 +25,7 @@
             <select name="d2" id="d2_sel" class="at_txt">
                 <option value="">请选择</option>
                 {foreach from=$d2 item=item}
-                <option value="{$item['id']}" {if $profile['memberinfo']['d2'] == $item['id']}selected="selected"{/if}>{$item['name']}</option>
+                <option value="{$item['id']}" {if $profile['basic']['d2'] == $item['id']}selected="selected"{/if}>{$item['name']}</option>
                 {/foreach}
             </select>
         </div>
@@ -35,7 +35,7 @@
             <select name="d3" id="d3_sel" class="at_txt">
                 <option value="">请选择</option>
                 {foreach from=$d3 item=item}
-                <option value="{$item['id']}" {if $profile['memberinfo']['d3'] == $item['id']}selected="selected"{/if}>{$item['name']}</option>
+                <option value="{$item['id']}" {if $profile['basic']['d3'] == $item['id']}selected="selected"{/if}>{$item['name']}</option>
                 {/foreach}
             </select>
         </div>
@@ -45,7 +45,7 @@
             <select name="d4" id="d4_sel" class="at_txt">
                 <option value="">请选择</option>
                 {foreach from=$d4 item=item}
-                <option value="{$item['id']}" {if $profile['memberinfo']['d4'] == $item['id']}selected="selected"{/if}>{$item['name']}</option>
+                <option value="{$item['id']}" {if $profile['basic']['d4'] == $item['id']}selected="selected"{/if}>{$item['name']}</option>
                 {/foreach}
             </select>
         </div>

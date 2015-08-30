@@ -1,6 +1,8 @@
 {include file="common/header.tpl"}
 {$feedback}
 <link rel="stylesheet" href="{base_url('css/swiper.min.css')}">
+
+
 <div id="stadiumDetail" {if $inManageMode}class="handle_area"{/if}>
 {if $inManageMode}
 {include file="common/baidu_map.tpl"}
@@ -24,15 +26,15 @@
     {/if}
     
     <div class="row">
-        <label class="required side_lb">权属</label>
-        <select name="owner_type" class="at_txt">
+        <label class="required side_lb">场馆分类</label>
+        <select name="category_id" class="at_txt">
         {if $inPost}
-            {foreach from=$stadiumOwnerList item=item}
-            <option value="{$item['name']}" {set_select('owner_type',$item['id'])}>{$item['name']}</option>
+            {foreach from=$sportsCategoryList item=item}
+            <option value="{$item['id']}" {set_select('category_id',$item['id'])}>{$item['name']}</option>
             {/foreach}
         {else}
-            {foreach from=$stadiumOwnerList item=item}
-            <option value="{$item['name']}" {if $stadium['basic']['owner_type'] == $item['name']}selected{/if}>{$item['name']}</option>
+            {foreach from=$sportsCategoryList item=item}
+            <option value="{$item['id']}" {if $stadium['basic']['category_id'] == $item['id']}selected{/if}>{$item['name']}</option>
             {/foreach}
          {/if}
         </select>
@@ -69,6 +71,22 @@
     </div>
     <div id="tip_tel">{form_error('tel')}</div>
     
+    {foreach from=$allMetaGroups key=key item=item}
+    <div class="row">
+        <label class="required side_lb">{$key}</label>
+        <select class="at_txt" name="{if $key == '地面材质'}ground_type{else if $key == '收费类型'}charge_type{else if $key == '场地类型'}stadium_type{/if}">
+        {if $inPost}
+            {foreach from=$item item=list}
+            <option value="{$list['name']}" {if $smarty.post[$key] == $list['name']}selected{/if}>{$list['name']}</option>
+            {/foreach}
+        {else}
+            {foreach from=$item item=list}
+            <option value="{$list['name']}" {if $stadium['basic'][$key] == $list['name']}selected{/if}>{$list['name']}</option>
+            {/foreach}
+        {/if}
+        </select>
+    </div>
+    {/foreach}
     <div class="row">
         <label class="required side_lb vtop" >备注</label>
         <textarea class="at_txt" style="height:100px;" name="remark" placeholder="如：场馆开放时间 周一至周五:早8点至晚10点">{if $inPost}{set_value('remark')}{else}{$stadium['basic']['remark']|escape}{/if}</textarea>
@@ -99,21 +117,17 @@
 	    </div>
 	</div>
 	</form>
+	
 	<script>
 	var stadiumPic = "{base_url('img/basketball.png')}";
-	{if $inPost}
-		{if $smarty.post['longitude']}
+	{if $smarty.post['longitude']}
 	var longitude = "{$smarty.post['longitude']}";
 	var latitude = "{$smarty.post['latitude']}";
-		{/if}
-	{else}
-	var longitude = "{$stadium['basic']['longitude']}";
-	var latitude = "{$stadium['basic']['latitude']}";
 	{/if}
-	
 	{if $img_error0}
 	var hash = "cover_error";
 	{/if}
+	
 	</script>
 	<script src="{base_url('js/stadium.js')}" type="text/javascript"></script>
 {else}
@@ -130,7 +144,7 @@
     
     <div class="row bordered pd5">
         <div class="row"><label class="side_lb">名称：</label><span>{$stadium['basic']['title']|escape}</span></div>
-        <div class="row"><label class="side_lb">权属：</label><span>{$stadium['basic']['owner_type']}</span></div>
+        <div class="row"><label class="side_lb">场馆分类：</label><span>{$stadium['basic']['category_name']}</span></div>
         <div class="row"><label class="side_lb">地址：</label><span>{$stadium['basic']['dname1']}{$stadium['basic']['dname2']}{$stadium['basic']['dname3']}{$stadium['basic']['dname4']}</span><a class="" href="{site_url('stadium/map/'|cat:$stadium['basic']['id'])}"><i class="fa fa-map-marker fa-2x"></i></a></div>
         <div class="row">
             <label class="side_lb">联系人：</label>
@@ -140,11 +154,14 @@
             <label class="side_lb">联系号码：</label>
             <span>{$stadium['basic']['mobile']|escape} {$stadium['basic']['tel']|escape}</span>
         </div>
+        <div class="row"><label class="side_lb">场地类型：</label><span>{$stadium['basic']['stadium_type']}</span></div>
+        <div class="row"><label class="side_lb">收费类型：</label><span>{$stadium['basic']['charge_type']}</span></div>
+        <div class="row"><label class="side_lb">地面材质：</label><span>{$stadium['basic']['ground_type']}</span></div>
     </div>
 </div>
 
 <div class="row">
-    <h3 class="subTitle">产品列表</h3>
+    <h3 class="subTitle">最近进行的比赛</h3>
     <table class="fulltable">
         <colgroup>
             <col style="witdh:20%;"/>
@@ -196,6 +213,7 @@
 	});
 	</script>
 	
+	
 	<div class="row" id="submitFixedWrap" >
 	    {if $canManager}
 	    <div class="row col">
@@ -204,6 +222,7 @@
 	    {/if}
 	</div>
 {/if}
+
 </div>
 
 {include file="common/footer.tpl"}

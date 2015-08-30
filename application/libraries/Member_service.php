@@ -18,7 +18,7 @@ class Member_Service extends Base_Service {
 	 */
 	public function refreshProfile($uid){
 		$this->CI->session->set_userdata(array(
-			'profile' => array('memberinfo' => $this->_userModel->getUserByUid($uid))
+			'profile' => array('basic' => $this->_userModel->getUserByUid($uid))
 		));
 	}
 	
@@ -36,7 +36,7 @@ class Member_Service extends Base_Service {
 			if($userInfo['password'] == $param['password']){
 				unset($userInfo['password']);
 				
-				$result = $this->successRetun(array('memberinfo' => $userInfo));
+				$result = $this->successRetun(array('basic' => $userInfo));
 				
 			}else{
 				$result['message'] = '密码错误';

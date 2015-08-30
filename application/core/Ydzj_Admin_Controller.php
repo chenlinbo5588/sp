@@ -24,7 +24,7 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 	
 	
 	public function isLogin(){
-		//print_r($this->session->userdata('memberinfo'));
+		//print_r($this->session->userdata('basic'));
 		//if($this->session->userdata('admin_info') && ($this->_reqtime - $this->session->userdata('last_activity') < 86400)){
 		if($this->session->userdata('manage_profile')){
 			return true;
