@@ -38,6 +38,20 @@
         </select>
     </div>
     <div class="row">
+        <label class="required side_lb">开放程度</label>
+        <select name="open_type" class="at_txt">
+        {if $inPost}
+            {foreach from=$openType key=key item=item}
+            <option value="{$key}" {set_select('open_type',$key)}>{$item}</option>
+            {/foreach}
+        {else}
+            {foreach from=$openType key=key item=item}
+            <option value="{$key}" {if $stadium['basic']['open_type'] == $key}selected{/if}>{$item}</option>
+            {/foreach}
+        {/if}
+        </select>
+    </div>
+    <div class="row">
         <label class="required side_lb">场馆名称</label>
         <input type="text" class="at_txt" name="title" {if $inPost}value="{set_value('title')}"{else}value="{$stadium['basic']['title']|escape}"{/if} placeholder="请输入场馆名称"/>
     </div>
@@ -53,21 +67,54 @@
         <div id="map"><i class="fa fa-spinner fa-spin"></i></div>
     </div>
     
-    <div class="row notmine" {if $smarty.post['is_mine'] != 'n'}style="display:none;"{/if}>
-        <label class="required side_lb">联系人</label>
-        <input type="text" class="at_txt" name="contact" value="{set_value('contact')}" placeholder="请输入联系人名称"/>
+    <div class="row" style="padding:10px 0;">
+        <label class="side_lb">权属设置</label>
+        <select name="is_mine" class="at_txt">
+        {if $inPost}
+           <option value="y" {set_select('is_mine','y')}>我是权属人</option>
+           <option value="n" {set_select('is_mine','n')}>我不是权属人，我知道联系方式</option>
+           <option value="unknow"  {set_select('is_mine','unknow')}>我不是权属人，不知道联系方式</option>
+        {else}
+           <option value="y" {if $stadium['basic']['owner_uid'] == $profile['basic']['uid']}selected{/if}>我是权属人</option>
+           <option value="n" {if $stadium['basic']['owner_uid'] != $profile['basic']['uid'] && ($stadium['basic']['mobile'] || $stadium['basic']['tel'])}selected{/if}>我不是权属人，我知道联系方式</option>
+           <option value="unknow" {if $stadium['basic']['owner_uid'] != $profile['basic']['uid'] && $stadium['basic']['mobile'] == '' && $stadium['basic']['tel'] == '' }selected{/if}>我不是权属人，不知道联系方式</option>
+        {/if}
+        </select>
     </div>
-    <div id="tip_contact">{form_error('contact')}</div>
-    <div class="row notmine" {if $smarty.post['is_mine'] != 'n'}style="display:none;"{/if}>
-        <label class="required side_lb">手机号码</label>
-        <input type="text" class="at_txt" name="mobile" value="{set_value('mobile')}" placeholder="如:13800880088"/>
-    </div>
-    <div id="tip_mobile">{form_error('mobile')}</div>
-    <div class="row notmine" {if $smarty.post['is_mine'] != 'n'}style="display:none;"{/if}>
-        <label class="required side_lb">座机号码</label>
-        <input type="text" class="at_txt" name="tel" value="{set_value('tel')}" placeholder="如:0574-63006300"/>
-    </div>
-    <div id="tip_tel">{form_error('tel')}</div>
+    
+    {if $inPost}
+        <div class="row notmine" {if $smarty.post['is_mine'] != 'n'}style="display:none;"{/if}>
+	        <label class="required side_lb">联系人</label>
+	        <input type="text" class="at_txt" name="contact" value="{set_value('contact')}" placeholder="请输入联系人名称"/>
+	    </div>
+	    <div id="tip_contact">{form_error('contact')}</div>
+	    <div class="row notmine" {if $smarty.post['is_mine'] != 'n'}style="display:none;"{/if}>
+	        <label class="required side_lb">手机号码</label>
+	        <input type="text" class="at_txt" name="mobile" value="{set_value('mobile')}" placeholder="如:13800880088"/>
+	    </div>
+	    <div id="tip_mobile">{form_error('mobile')}</div>
+	    <div class="row notmine" {if $smarty.post['is_mine'] != 'n'}style="display:none;"{/if}>
+	        <label class="required side_lb">座机号码</label>
+	        <input type="text" class="at_txt" name="tel" value="{set_value('tel')}" placeholder="如:0574-63006300"/>
+	    </div>
+	    <div id="tip_tel">{form_error('tel')}</div>
+    {else}
+        <div class="row notmine" {if $stadium['baisc']['owner_uid'] != $profile['basic']['uid']}style="display:none;"{/if}>
+            <label class="required side_lb">联系人</label>
+            <input type="text" class="at_txt" name="contact" value="{set_value('contact')}" placeholder="请输入联系人名称"/>
+        </div>
+        <div id="tip_contact">{form_error('contact')}</div>
+        <div class="row notmine" {if $stadium['baisc']['owner_uid'] != $profile['basic']['uid']}style="display:none;"{/if}>
+            <label class="required side_lb">手机号码</label>
+            <input type="text" class="at_txt" name="mobile" value="{set_value('mobile')}" placeholder="如:13800880088"/>
+        </div>
+        <div id="tip_mobile">{form_error('mobile')}</div>
+        <div class="row notmine" {if $stadium['baisc']['owner_uid'] != $profile['basic']['uid']}style="display:none;"{/if}>
+            <label class="required side_lb">座机号码</label>
+            <input type="text" class="at_txt" name="tel" value="{set_value('tel')}" placeholder="如:0574-63006300"/>
+        </div>
+        <div id="tip_tel">{form_error('tel')}</div>
+    {/if}
     
     <div class="row">
         <label class="required side_lb vtop" >备注</label>
@@ -77,16 +124,21 @@
     {foreach from=$maxOtherFile item=item}
     <div class="row photoUpload">
         <label class="side_lb">{if $item == 0}封面照片{else}其它照片<em>{$item}</em>{/if}</label>
-        <input type="hidden" value="{$fileUpload['other_img'][$item]['url']}" name="other_img{$item}_url"/>
-        <input type="hidden" value="{$fileUpload['other_img'][$item]['id']}" name="other_img{$item}_id"/>
+        <input type="hidden" value="{$fileUpload['other_img'][$item]['url']}" name="other_img{$item}_url" id="url{$item}"/>
+        <input type="hidden" value="{$fileUpload['other_img'][$item]['aid']}" name="other_img{$item}_aid"/>
         <input type="file" name="other_img{$item}" />
-        {if $fileUpload['other_img'][$item]['url']}<a class="opTrash"><i class="fa fa-trash"></i> 删除</a>{/if}
+        
     </div>
     {if $item == 0}
     <div class="row form_error" id="tip_img{$item}">{$img_error0}</div>
     <a name="cover_error"></a>
     {/if}
-    <div class="row img_preview">{if $fileUpload['other_img'][$item]['preview']}<img class="nature" src="{base_url($fileUpload['other_img'][$item]['preview'])}"/>{/if}</div>
+    <div class="row img_preview">
+        {if $fileUpload['other_img'][$item]['preview']}
+        <img class="nature" src="{base_url($fileUpload['other_img'][$item]['preview'])}"/>
+        <a href="javascript:void(0)" class="link_btn grayed opTrash" data-id="url{$item}">删除照片</a>
+        {/if}
+    </div>
     {/foreach}
 	
 	<div class="row" id="submitFixedWrap" >
@@ -117,7 +169,7 @@
 	</script>
 	<script src="{base_url('js/stadium.js')}" type="text/javascript"></script>
 {else}
-
+    
     <div class="swiper-container">
         <div class="swiper-wrapper">
             {foreach from=$stadium['photos'] item=item}
@@ -129,8 +181,9 @@
     </div>
     
     <div class="row bordered pd5">
-        <div class="row"><label class="side_lb">名称：</label><span>{$stadium['basic']['title']|escape}</span></div>
         <div class="row"><label class="side_lb">权属：</label><span>{$stadium['basic']['owner_type']}</span></div>
+        <div class="row"><label class="side_lb">名称：</label><span>{$stadium['basic']['title']|escape}</span></div>
+        <div class="row"><label class="side_lb">开放程度：</label><span>{$openType[$stadium['basic']['open_type']]}</span></div>
         <div class="row"><label class="side_lb">地址：</label><span>{$stadium['basic']['dname1']}{$stadium['basic']['dname2']}{$stadium['basic']['dname3']}{$stadium['basic']['dname4']}</span><a class="" href="{site_url('stadium/map/'|cat:$stadium['basic']['id'])}"><i class="fa fa-map-marker fa-2x"></i></a></div>
         <div class="row">
             <label class="side_lb">联系人：</label>
@@ -138,7 +191,7 @@
         </div>
         <div class="row">
             <label class="side_lb">联系号码：</label>
-            <span>{$stadium['basic']['mobile']|escape} {$stadium['basic']['tel']|escape}</span>
+            <span>{mask_mobile($stadium['basic']['mobile']|escape)} {$stadium['basic']['tel']|escape}</span>
         </div>
     </div>
 </div>

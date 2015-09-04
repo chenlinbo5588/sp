@@ -3,6 +3,7 @@
  */
 $(function(){
 	$("input[name=authCodeBtn]").bind("click",function(e){
+		
 		var mobile = $("input[name=mobile]").val();
 		var timer = null;
 		var that = $(this);

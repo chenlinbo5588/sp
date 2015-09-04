@@ -1,5 +1,8 @@
 .project
 /static/attach/
+/img/captcha/*
+!/img/captcha/index.html
+
 /js/arcgis_js_api/
 license.txt
 composer.json

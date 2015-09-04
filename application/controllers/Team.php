@@ -216,7 +216,7 @@ class Team extends Ydzj_Controller {
 		
 		$this->_teamid = $this->_urlParam[3];
 		
-		$this->setLeftNavLink('<a id="leftBarLink" class="bar_button" href="'.site_url('team/index/cate/1/').'" title="返回">返回</a>');
+		$this->setLeftNavLink('<a id="leftBarLink" class="bar_button" href="'.site_url(BASKET_BALL).'" title="返回">返回</a>');
 		//$this->setRightNavLink('<a id="rightBarLink" class="bar_button" href="'.site_url($this->uri->uri_string()).'">+收藏</a>');
 		
 		if($this->isPostRequest()){
@@ -364,6 +364,10 @@ class Team extends Ydzj_Controller {
 				}
 				
 				$this->load->library('Attachment_Service');
+				$this->attachment_service->setUid($this->_profile['basic']['uid']);
+				
+				$avatar_id = $this->input->post('avatar_id');
+				
 				$fileData = $this->attachment_service->addImageAttachment('avatar',array(
 					'min_width' => 800,
 					'min_height' => 800
@@ -371,7 +375,13 @@ class Team extends Ydzj_Controller {
 				
 				if(!empty($fileData['img_big'])){
 					$newAvatar = $fileData['img_big'];
+					$this->assign('avatar_id',$fileData['id']);
+					
+					if($avatar_id){
+						$this->attachment_service->deleteFiles(array($avatar_id));
+					}
 				}else{
+					$this->assign('avatar_id',$avatar_id);
 					$newAvatar = $this->input->post('new_avatar');
 				}
 				
@@ -383,13 +393,20 @@ class Team extends Ydzj_Controller {
 				}
 				
 				$this->load->library('Team_Service');
+				
 				$result = $this->team_service->updateTeamInfo(array(
+					'aid' => $fileData['id'],
 					'avatar' => $fileData['file_url'],
 					'avatar_large' => $fileData['img_large'],
 					'avatar_big' => $fileData['img_big'],
 					'avatar_middle' => $fileData['img_middle'],
 					'avatar_small' => $fileData['img_small']
 				),$team['basic']['id']);
+				
+				
+				if($team['basic']['aid']){
+					$this->attachment_service->deleteFiles(array($team['basic']['aid']));
+				}
 				
 				$setOk = true;
 			}
@@ -436,7 +453,6 @@ class Team extends Ydzj_Controller {
 			 * 当前用户使用创建篮球队或者是管理者
 			 */
 			
-			
 			$this->display('team/order_game');
 		}
 		
@@ -453,7 +469,7 @@ class Team extends Ydzj_Controller {
 	{
 		if($this->isLogin()){
 			
-			$this->setLeftNavLink('<a id="leftBarLink" class="bar_button" href="'.site_url('team/index/cate/1/').'" title="返回">返回</a>');
+			$this->setLeftNavLink('<a id="leftBarLink" class="bar_button" href="'.site_url(BASKET_BALL).'" title="返回">返回</a>');
 			
 			$isCreateOk = false;
 			
@@ -461,10 +477,10 @@ class Team extends Ydzj_Controller {
 				
 				$sportsCategoryList = $this->team_service->getSportsCategory();
 				$this->assign('sportsCategoryList',$sportsCategoryList);
-				$this->seoTitle('创建我的队伍');
+				$this->seoTitle('创建我的球队');
 				
 				if(!$this->_profile['basic']['district_bind']){
-					$this->assign('warning','<div class="warning">您尚未设置地区,暂时不能创建队伍, <a href="'.site_url('my/set_city').'?returnUrl='.urlencode(site_url('team/create_team')).'">立即设置</a></div>');
+					$this->assign('warning','<div class="warning">您尚未设置地区,暂时不能创建球队, <a href="'.site_url('my/set_city').'?returnUrl='.urlencode(site_url('team/create_team')).'">立即设置</a></div>');
 					break;
 				}
 				
@@ -476,19 +492,27 @@ class Team extends Ydzj_Controller {
 					 * 首先处理上传图片，并记录，防止其他信息错误，不再消耗流量重传
 					 */
 					$this->load->library('Attachment_Service');
+					$this->attachment_service->setUid($this->_profile['basic']['uid']);
 					$fileData = $this->attachment_service->addImageAttachment('logo_url');
 					
 					$team_logo = $this->input->post('team_logo');
-					
+					$team_logo_id = $this->input->post('team_log_id');
 					if(!$fileData && empty($team_logo)){
-						$this->assign('logo_error',$this->attachment_service->getErrorMsg());
+						$this->assign('logo_error','<div class="form_error">请上传球队合影照片</div>');
 						break;
 					}
 					
 					if($fileData){
+						$this->assign('team_log_id',$fileData['id']);
 						$this->assign('team_logo',$fileData['file_url']);
 						$this->assign('team_logo_url',$fileData['img_big']);
+						
+						//重传了直接删除原先传的那张图片
+						if($team_logo_id){
+							$this->attachment_service->deleteFiles(array($team_logo_id));
+						}
 					}else{
+						$this->assign('team_log_id',$team_logo_id);
 						$this->assign('team_logo',$team_logo);
 						$this->assign('team_logo_url',$this->input->post('team_logo_url'));
 					}
@@ -512,7 +536,7 @@ class Team extends Ydzj_Controller {
 							),
 							array(
 								'category_callable' => '%s无效',
-								'user_categroy_callbale' => '同一个类型的队伍最多创建三个'
+								'user_categroy_callbale' => '同一个类型的球队最多创建三个'
 							)
 						);
 						
@@ -527,7 +551,7 @@ class Team extends Ydzj_Controller {
 							'where' => array('id' => $this->_profile['basic']['d4'])
 						));
 						
-						$this->form_validation->set_rules('title','队伍名称', array(
+						$this->form_validation->set_rules('title','球队名称', array(
 								'required',
 								'max_length[4]',
 								array(
@@ -542,7 +566,7 @@ class Team extends Ydzj_Controller {
 							)
 						);
 					}else{
-						$this->form_validation->set_rules('title','队伍名称', 'required|max_length[20]');
+						$this->form_validation->set_rules('title','球队名称', 'required|max_length[20]');
 					}
 					
 					$this->form_validation->set_rules('leader','队长设置','required|in_list[1,2]');
@@ -574,6 +598,7 @@ class Team extends Ydzj_Controller {
 					);
 					
 					if($fileData){
+						$addParam['aid'] = $fileData['id'];
 						$addParam['avatar'] = $fileData['file_url'];
 						$addParam['avatar_large'] = $fileData['img_large'];
 						$addParam['avatar_big'] = $fileData['img_big'];
@@ -581,6 +606,7 @@ class Team extends Ydzj_Controller {
 						$addParam['avatar_small'] = $fileData['img_small'];
 					}else if($team_logo){
 						
+						$addParam['aid'] = $team_logo_id;
 						$addParam['avatar'] = $team_logo;
 						
 						$dotPos = strrpos($team_logo,'.');
@@ -606,7 +632,7 @@ class Team extends Ydzj_Controller {
 						$isCreateOk = true;
 						//$this->_prepareDetailData($teamid);
 					}else{
-						$this->assign('feedback','<div class="warning">创建队伍失败，请刷新页面重新尝试。</div>');
+						$this->assign('feedback','<div class="warning">创建球队失败，请刷新页面重新尝试。</div>');
 					}
 				}
 			}
@@ -618,7 +644,7 @@ class Team extends Ydzj_Controller {
 			}
 			
 		}else{
-			//创建队伍需要登陆态下
+			//创建球队需要登陆态下
 			$this->assign('returnUrl',site_url('team/create_team'));
 			$this->display('member/login');
 			

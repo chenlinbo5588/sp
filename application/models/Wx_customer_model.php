@@ -1,10 +1,11 @@
 <?php
 
 /**
- * 微信公众账号
+ * 微信公众 关注者
  */
-class Mp_Ticket_Model extends MY_Model {
-    public $_tableName = 'mp_ticket';
+ 
+class Wx_Customer_Model extends MY_Model {
+    public $_tableName = 'wx_customer';
     public static $_tableMeta = null;
     
     public function __construct(){

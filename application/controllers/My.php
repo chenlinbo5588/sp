@@ -20,6 +20,7 @@ class My extends MyYdzj_Controller {
 		}
 		
 		$ds = array_unique($ds);
+		$this->seoTitle('个人中心');
 		$this->assign('userDs',$this->common_district_service->getDistrictByIds($ds));
 		$this->assign('inviteUrl',site_url('member/register?inviter='.$this->_profile['basic']['uid']));
 		$this->display('my/index');
@@ -27,10 +28,21 @@ class My extends MyYdzj_Controller {
 	
 	
 	/**
-	 * 设置用户名称
+	 * 申请裁判员
 	 */
-	public function set_username(){
+	public function apply_judge(){
 		
+		
+		
+	}
+	
+	/**
+	 * 
+	 */
+	public function set_email(){
+		
+		$this->setTopNavTitle('绑定邮箱');
+		$this->setLeftNavLink('<a id="leftBarLink" class="bar_button" href="'.site_url('my').'" title="返回">返回</a>');
 		if($this->isPostRequest()){
 			
 			$setOk = false;
@@ -38,6 +50,48 @@ class My extends MyYdzj_Controller {
 			
 			$this->assign('inviteFrom',$inviteFrom);
 			$this->assign('returnUrl',$this->input->post('returnUrl'));
+			
+			$this->form_validation->reset_validation();
+			$this->form_validation->set_rules('email','真实姓名','required|valid_email');
+			
+			
+			for($i = 0; $i < 1; $i++){
+				if($this->form_validation->run() == FALSE){
+					break;
+				}
+				
+				$this->load->library('Member_Service');
+				$result = $this->member_service->updateUserInfo(array(
+					'username' => $this->input->post('username')
+				),$this->_profile['basic']['uid']);
+				
+				$this->member_service->refreshProfile($this->_profile['basic']['uid']);
+				$setOk = true;
+			}
+			
+			if($setOk){
+				redirect('my');
+			}else{
+				$this->display('my/set_username');
+			}
+			
+		}else{
+			$this->assign('default_username',$this->_profile['basic']['username']);
+			$this->display('my/set_username');
+		}
+		
+	}
+	
+	/**
+	 * 设置用户名称
+	 */
+	public function set_username(){
+		
+		$this->setTopNavTitle('设置真实名称');
+		$this->setLeftNavLink('<a id="leftBarLink" class="bar_button" href="'.site_url('my').'" title="返回">返回</a>');
+		if($this->isPostRequest()){
+			
+			$setOk = false;
 			
 			$this->form_validation->reset_validation();
 			$this->form_validation->set_rules('username','真实姓名','required|min_length[2]|max_length[4]');
@@ -73,6 +127,10 @@ class My extends MyYdzj_Controller {
 	 * 设置用户头像
 	 */
 	public function set_avatar(){
+		
+		$this->setTopNavTitle('修改头像');
+		$this->setLeftNavLink('<a id="leftBarLink" class="bar_button" href="'.site_url('my').'" title="返回">返回</a>');
+		
 		if($this->isPostRequest()){
 			
 			$setOk = false;
@@ -85,14 +143,27 @@ class My extends MyYdzj_Controller {
 			
 			for($i = 0; $i < 1; $i++){
 				$this->load->library('Attachment_Service');
+				$this->attachment_service->setUid($this->_profile['basic']['uid']);
+				
 				$fileData = $this->attachment_service->addImageAttachment('avatar',array(
 					'min_width' => 800,
 					'min_height' => 800
 				));
 				
+				
+				$avatar_id = $this->input->post('avatar_id');
+				
 				if(!empty($fileData['img_big'])){
 					$newAvatar = $fileData['img_big'];
+					
+					$this->assign('avatar_id',$fileData['id']);
+					
+					if($avatar_id){
+						$this->attachment_service->deleteFiles(array($avatar_id));
+					}
+					
 				}else{
+					$this->assign('avatar_id',$avatar_id);
 					$newAvatar = $this->input->post('new_avatar');
 				}
 				
@@ -105,12 +176,17 @@ class My extends MyYdzj_Controller {
 				
 				$this->load->library('Member_Service');
 				$result = $this->member_service->updateUserInfo(array(
+					'aid' => $fileData['id'],
 					'avatar' => $fileData['file_url'],
 					'avatar_large' => $fileData['img_large'],
 					'avatar_big' => $fileData['img_big'],
 					'avatar_middle' => $fileData['img_middle'],
 					'avatar_small' => $fileData['img_small']
 				),$this->_profile['basic']['uid']);
+				
+				if($this->_profile['basic']['aid']){
+					$this->attachment_service->deleteFiles(array($this->_profile['basic']['aid']));
+				}
 				
 				$this->member_service->refreshProfile($this->_profile['basic']['uid']);
 				$setOk = true;

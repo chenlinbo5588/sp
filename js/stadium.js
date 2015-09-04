@@ -100,7 +100,7 @@ $(function(){
 		location.hash = hash;
 	}
 	
-	$("#markerOnMap").bind("click",function(e){
+	$("#markerOnMap,input[name=address]").bind("click",function(e){
 		var w = $(document).width(),h = $(document).height();
 		
 		$("#mapDiv").css({width:w + 'px',height:h + 'px'}).show();
@@ -129,17 +129,17 @@ $(function(){
 		}
 	});
 	
-	$(".photoUpload .opTrash").bind("click",function(e){
-		var that = $(this) , div = that.closest(".photoUpload");
-		div.find(".img_url").val("");
-		$("#" + that.attr("data-id")).remove();
+	$(".opTrash").bind("click",function(e){
+		var that = $(this);
+		var input = $("#" + that.attr("data-id"));
+		input.val("");
+		that.closest(".img_preview").slideUp("fast",function(){
+			$(this).remove();
+		});
 		
-		that.hide();
 	});
 	
 	$("#stadiumForm").bind("submit",function(e){
-		
-		return true;
 		$("input.validation_error").removeClass("validation_error");
 		
 		if($.trim($("input[name=title]").val()) == ''){
@@ -156,6 +156,5 @@ $(function(){
 		
 		return true;
 	});
-	
 	
 });

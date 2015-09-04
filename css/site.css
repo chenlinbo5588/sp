@@ -18,7 +18,7 @@ input[type=checkbox],input[type=radio] {
 }
 
 input[type=text]:focus , input[type=password]:focus ,textarea:focus {
-    border:1px solid rgb(26, 161, 105);
+    border:1px solid #1AA169;
 }
 
 .disabled {
@@ -46,7 +46,7 @@ img.nature {
     height:auto;	
 }
 
-.primaryBtn , .link_btn {
+.primaryBtn , .link_btn , .slaveBtn {
 	cursor:pointer;
     width:100%;
     height:30px;
@@ -62,13 +62,16 @@ img.nature {
     -o-border-radius:5px;
 }
 
+
 .greenBtn {
     background:#34AB75;
 }
 
 .slaveBtn {
+	background:#34AB75;
     font-size:13px;
-    padding:3px;	
+    padding:3px;
+    display:block;	
 }
 
 .col2 {
@@ -96,13 +99,17 @@ img.nature {
 }
 
 .success {
-	color: green;
-	font-weight: bold
+	font-weight: bold;
+	text-align: center;
+	background-color: green;
+	color: white;
+	padding: 5px;
 }
 
 .warning {
     background:#FFD500;
     padding:5px;
+    text-align: center;
 }
 
 .form_error {
@@ -228,7 +235,7 @@ input[type=text].validation_error {
 
 /** 页脚和顶部 */
 #footer {
-    margin-bottom:60px;
+    margin-bottom:80px;
     text-align:center;
 }
 
@@ -248,7 +255,7 @@ input[type=text].validation_error {
 
 
 #topBar {
-    border-bottom:1px solid rgb(26, 161, 105);
+    border-bottom:1px solid #1AA169;
     padding:10px 0;
     position:relative;
 }
@@ -260,7 +267,7 @@ input[type=text].validation_error {
 
 
 .searchbar {
-    border-bottom:1px solid rgb(26, 161, 105);
+    border-bottom:1px solid #1AA169;
 }
 
 .searchbar label {
@@ -301,7 +308,7 @@ table.fulltable {
 
 
 .fulltable thead th , .fulltable tbody td {
-	border:1px solid rgb(26, 161, 105);
+	border:1px solid #1AA169;
 	border-width:1px 0 1px 0;
 }
 
@@ -477,31 +484,31 @@ table.fulltable {
 
 /** 队伍详情 **/
 
-。teamMembers li.member {
+.teamMembers li.member {
     width:25%;
     float:left;
     margin:2px 0;
 }
 
-。teamMembers .member img {
+.teamMembers .member img {
     width:60px;
     height:60px;
 }
 
-。teamMembers li.manage {
+.teamMembers li.manage {
     float:none;
     width:auto;
-    border:1px solid rgb(26, 161, 105);
+    border:1px solid #1AA169;
     margin:5px 0;
     position:relative;
 }
 
-。teamMembers li.manage .headerImg {
+.teamMembers li.manage .headerImg {
 	margin:0 5px 0 0;
 	position:relative;
 }
 
-。teamMembers li.manage .headerImg a {
+.teamMembers li.manage .headerImg a {
 	float:left;
 	margin: 0 5px 0 0;
 }
@@ -509,27 +516,27 @@ table.fulltable {
 
 
 
-。teamMembers li.manage .headerImg strong {
+.teamMembers li.manage .headerImg strong {
 	vertical-align:top;
 }
-。teamMembers li.manage .headerImg span {
+.teamMembers li.manage .headerImg span {
 	vertical-align:top;
 }
 
 
-。teamMembers li.manage .edit_username {
+.teamMembers li.manage .edit_username {
 	width:40%;
 }
 
-。teamMembers li.manage .edit_num {
+.teamMembers li.manage .edit_num {
 	width:25%;
 }
 
-。teamMembers li.manage .positionSet {
+.teamMembers li.manage .positionSet {
   position: relative;
 }
 
-。teamMembers li.manage .positionSet h3 {
+.teamMembers li.manage .positionSet h3 {
 	text-align: center;
 	background: #D9DAFF;
 	padding: 3px;
@@ -537,21 +544,26 @@ table.fulltable {
 
 
 
-。teamMembers li.manage .positionSet label {
+.teamMembers li.manage .positionSet label {
 	display:inline-block;
     padding:3px 0;
     margin:2px 0;
     width:30%;
 }
 
-。teamMembers li.manage .kickoffBtn {
+.teamMembers li.manage .kickoffBtn {
 	margin:3px 0;
 	height:30px;
 }
 
 
 #submitFixedWrap {
-    position:fixed;width:100%;height:30px;bottom:40px;left:0px;
+    position:fixed;
+    width:100%;
+    height:30px;
+    bottom:40px;
+    left:0px;
+    margin:5px 0;
     z-index:2;
 }
 
@@ -559,6 +571,14 @@ table.fulltable {
 .img_preview {
     text-align:center;	
 }
+
+.img_preview a {
+  width: 65%;
+  text-align: center;
+  display: block;
+  margin: 0 auto;
+}
+
 
 #stadium {
     position:relative;	
@@ -569,14 +589,4 @@ table.fulltable {
     left:0;
     top:0;
     z-index: 1;
-}
-
-.photoUpload {
-    position:relative;	
-}
-
-.photoUpload a.opTrash {
-    position:absolute;
-    right:5px;
-    top:5px;
 }

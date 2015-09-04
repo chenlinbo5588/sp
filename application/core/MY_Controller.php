@@ -25,7 +25,7 @@ class MY_Controller extends CI_Controller {
 		$this->_initLibrary();
 		$this->_initApp();
 		
-		$this->_security();
+		//$this->_security();
 		$this->_initSmarty();
 		
 		
@@ -123,12 +123,12 @@ class MY_Controller extends CI_Controller {
 		$this->load->library(array('user_agent','form_validation','encrypt','Base_Service'));
     }
     
+    
     private function _security(){
     	
-    	/*
     	if($this->input->cookie($this->_lastVisit) != ''){
 			$elapsed_time = number_format(microtime(TRUE) -  $this->input->cookie($this->_lastVisit), 2);
-			if($elapsed_time < 0.3){
+			if($elapsed_time < 0.2){
 				if($this->input->is_ajax_request() || $this->_inApp == true){
 					$this->responseJOSN('请求过于频繁');
 				}else{
@@ -146,7 +146,6 @@ class MY_Controller extends CI_Controller {
 				show_error('请求失效',500);
 			}
 		}
-		*/
     }
     
     

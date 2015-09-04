@@ -15,12 +15,12 @@ class Weixin_Mp_Api extends Weixin_Api {
     public function __construct($config){
         parent::__construct();
         $this->_mpConfig = $config;
+        
         $this->_msgCrypt = new WXBizMsgCrypt($config['token'],$config['EncodingAESKey'],$config['appid']);
         
         $this->_CI->load->model('Mp_Ticket_Model');
-        $this->_CI->load->model('Customer_Model');
+        $this->_CI->load->model('Wx_Customer_Model');
         $this->_CI->load->helper('url');
-        
         
         $this->_CI->Mp_Ticket_Model->deleteByWhere(array(
         	'gmt_create <=' => time() - 86400
@@ -31,13 +31,14 @@ class Weixin_Mp_Api extends Weixin_Api {
          */
         $tickets = $this->_CI->Mp_Ticket_Model->getList(array(
             'where' => array(
+            	'appid' => $this->_mpConfig['appid'],
                 'gmt_create >= ' => time() - 7200
             ),
             'limit' => 1
         ));
         
         if(!empty($tickets['data'])){
-            Weixin_Mp_Api::$_mpAccessToken = $tickets['data'][0]['access_token'];
+            Weixin_Mp_Api::$_mpAccessToken = $tickets[0]['access_token'];
         }else{
             $this->getAccessToken();
         }
@@ -74,7 +75,7 @@ class Weixin_Mp_Api extends Weixin_Api {
         
         if($result['access_token']){
             Weixin_Mp_Api::$_mpAccessToken = $result['access_token'];
-            $row = $this->_CI->Mp_Ticket_Model->add(array('access_token' => $result['access_token'],'expire_in' => $result['expires_in'], 'gmt_create' => time()));
+            $row = $this->_CI->Mp_Ticket_Model->_add(array('appid' => $this->_mpConfig['appid'], 'access_token' => $result['access_token'],'expire_in' => $result['expires_in'], 'gmt_create' => time()));
         }
     }
     
@@ -83,7 +84,7 @@ class Weixin_Mp_Api extends Weixin_Api {
      * @param type $openId 
      */
     public function getUserInfoByOpenId($openId){
-        $customer =  $this->_CI->Customer_Model->queryById($openId,'openid');
+        $customer =  $this->_CI->Wx_Customer_Model->getFirstByKey($openId,'openid');
         if(empty($customer)){
             $param = array(
                 'url' => '/cgi-bin/user/info?access_token='.Weixin_Mp_Api::$_mpAccessToken.'&openid='.$openId.'&lang=zh_CN',
@@ -96,14 +97,14 @@ class Weixin_Mp_Api extends Weixin_Api {
         
         //file_put_contents("debug.txt",print_r($result,true),FILE_APPEND);
         if(empty($customer) && !empty($result)){
-            $this->_CI->Customer_Model->add($result);
+            $this->_CI->Customer_Model->_add($result);
             $customer = $result;
         }else if((time() - $customer['gmt_modify']) >  86400 ){
             //自动更新
-            $this->_CI->Customer_Model->update($result);
+            $this->_CI->Customer_Model->update($result, array('openid' => $openId));
         }
         
         return $customer;
     }
 }
-?>
+

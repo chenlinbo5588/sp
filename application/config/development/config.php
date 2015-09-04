@@ -5,7 +5,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $config['log_threshold'] = 2;
 
 
-$config['base_url'] = 'http://www.su.com/';
-$config['site_domain'] = 'www.su.com';
+$config['base_url'] = '';
+$config['site_domain'] = $_SERVER['SERVER_NAME'];
 
 //$config['csrf_protection'] = FALSE;

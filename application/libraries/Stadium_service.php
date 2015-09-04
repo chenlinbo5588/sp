@@ -117,59 +117,41 @@ class Stadium_Service extends Base_Service {
 	}
     
     /**
-     * 添加体育场馆
+     * 获得开发程度
      */
-    public function addStadium($param,$images , $user){
-    	
-    	$this->_stadiumModel->transStart();
-    	
-    	$addParam = array(
-    		'category_id' => $param['category_id'],
-    		'category_name' => $param['category_name'],
-    		'title' => $param['title'],
-    		'address' => $param['address'],
-    		'longitude' => $param['longitude'],
-    		'latitude' => $param['latitude'],
-    		'owner_type' => $param['owner_type'],
-    		'reporter' => empty($user['username']) == true ? $user['nickname'] : $user['username'],
-    		'reporter_uid' => $user['uid']
-    	);
-    	
-    	if(!empty($param['remark'])){
-    		$addParam['remark'] = cutText($param['remark'],60);
-    	}
-    	
-    	if($param['is_mine'] == 'y'){
-    		$addParam['owner'] = $addParam['contact'] = empty($user['username']) == true ? $user['nickname'] : $user['username'];
-    		$addParam['owner_uid'] = $user['uid'];
-    		$addParam['mobile'] = $user['mobile'];
-    	}else{
-    		$addParam['contact'] = empty($param['contact']) == true ? '' : $param['contact'];
-    		$addParam['mobile'] = empty($param['mobil']) == true ? '' : $param['mobil'];
-    		$addParam['tel'] = empty($param['tel']) == true ? '' : $param['tel'];
-    	}
+    public function getOpenType(){
+		return array(
+			'1' => '完全对外开放',
+			'2' => '部分设施对外开放',
+			'3' => '仅对内部人员开放'
+		);
+	}
+    
+    /**
+     * 解析 地址名称到 id
+     */
+    private function _getDistrictIdFromName($stadiumParam , $param){
     	
     	//浙江省, 宁波市, 慈溪市, 孙塘南路, 126-～130
     	$addressInfo = array();
-    	$addressCode = array();
     	if(!empty($param['province'])){
-    		$addParam['dname1'] = $addressInfo['level1'] = trim($param['province']);
+    		$stadiumParam['dname1'] = $addressInfo['level1'] = trim($param['province']);
     	}
     	
     	if(!empty($param['city'])){
-    		$addParam['dname2'] = $addressInfo['level2'] = trim($param['city']);
+    		$stadiumParam['dname2'] = $addressInfo['level2'] = trim($param['city']);
     	}
     	
     	if(!empty($param['district'])){
-    		$addParam['dname3'] = $addressInfo['level3'] = trim($param['district']);
+    		$stadiumParam['dname3'] = $addressInfo['level3'] = trim($param['district']);
     	}
     	
     	if(!empty($param['street'])){
-    		$addParam['dname4'] = $addressInfo['level4'] = trim($param['street']);
+    		$stadiumParam['dname4'] = $addressInfo['level4'] = trim($param['street']);
     	}
     	
     	if(!empty($param['street_number'])){
-    		$addParam['street_number'] = trim($param['street_number']);
+    		$stadiumParam['street_number'] = trim($param['street_number']);
     	}
     	
     	if(is_array($addressInfo)){
@@ -182,18 +164,67 @@ class Stadium_Service extends Base_Service {
     		
     		foreach($dList as $dk => $dname){
     			if($dname['name'] == $addressInfo['level'.$dname['level']]){
-    				$addParam['d'.$dname['level']] = $dname['id'];
+    				$stadiumParam['d'.$dname['level']] = $dname['id'];
     			}
     		}
     	}
     	
-    	if($images[0]['id']){
-    		$addParam['avatar'] = $images[0]['avatar'];
-    		$addParam['avatar_large'] = $images[0]['avatar_large'];
-    		$addParam['avatar_big'] = $images[0]['avatar_big'];
-    		$addParam['avatar_middle'] = $images[0]['avatar_middle'];
-    		$addParam['avatar_small'] = $images[0]['avatar_small'];
+    	return $stadiumParam;
+    }
+    
+    /**
+     * 维护场馆基本信息
+     */
+    private function _stadiumBasicInfo($param , $images , $user){
+    	
+    	$stadiumParam = array(
+    		'owner_type' => $param['owner_type'],
+    		'open_type' => $param['open_type'],
+    		'title' => $param['title'],
+    		'address' => $param['address'],
+    		'longitude' => $param['longitude'],
+    		'latitude' => $param['latitude'],
+    		
+    	);
+    	
+    	if(!empty($param['remark'])){
+    		$stadiumParam['remark'] = cutText($param['remark'],60);
     	}
+    	
+    	if($param['is_mine'] == 'y'){
+    		$stadiumParam['owner'] = $stadiumParam['contact'] = empty($user['username']) == true ? $user['nickname'] : $user['username'];
+    		$stadiumParam['owner_uid'] = $user['uid'];
+    		$stadiumParam['mobile'] = $user['mobile'];
+    	}else{
+    		$stadiumParam['contact'] = empty($param['contact']) == true ? '' : $param['contact'];
+    		$stadiumParam['mobile'] = empty($param['mobil']) == true ? '' : $param['mobil'];
+    		$stadiumParam['tel'] = empty($param['tel']) == true ? '' : $param['tel'];
+    	}
+    	
+    	if($images['aid']){
+    		$stadiumParam = array_merge($stadiumParam,$images);
+    	}
+    	
+    	
+    	return $stadiumParam;
+    }
+    
+    /**
+     * 添加体育场馆
+     * 
+     * @param  param  基本信息
+     * @param  images 图片
+     * @param  user   用户
+     */
+    public function addStadium($param,$images , $user){
+    	
+    	$this->_stadiumModel->transStart();
+    	
+    	$addParam = $this->_stadiumBasicInfo($param, $images[0],$user);
+    	$addParam = $this->_getDistrictIdFromName($addParam,$param);
+    	
+    	$addParam['reporter'] = empty($user['username']) == true ? $user['nickname'] : $user['username'];
+    	$addParam['reporter_uid'] = $user['uid'];
     	
     	$stadiumId = $this->_stadiumModel->_add($addParam);
     	
@@ -206,13 +237,10 @@ class Stadium_Service extends Base_Service {
 		$now = time();
 		$insertImage = array();
 		foreach($images as $ik => $img){
-			
-			$img['aid'] = $img['id'];
 			$img['stadium_id'] = $stadiumId;
 			$img['gmt_create'] = $now;
 			$img['gmt_modify'] = $now;
 			
-			unset($img['id']);
 			$insertImage[] = $img;
 		}
 		
@@ -227,6 +255,90 @@ class Stadium_Service extends Base_Service {
 		$this->_stadiumModel->transOff();
     	
     	return $stadiumId;
+    	
+    }
+    
+    /**
+     * 编辑场馆
+     * @param  stadium  场馆信息
+     * @param  param  新提交的信息
+     * @param  images 当前图片信息
+     * @param  user   用户
+     * 
+     */
+    public function editStadium($stadium,$param,$images,$user){
+    	
+    	$useTrans = false;
+    	$stadiumId = $stadium['basic']['stadium_id'];
+    	
+    	$oldPhotos = array();
+    	foreach($stadium['photos'] as $photo){
+    		$oldPhotos[] = $photo['aid'];
+    	}
+    	
+    	
+    	$currentPhotos = array();
+    	foreach($images as $photo){
+    		$currentPhotos[] = $photo['aid'];
+    	}
+    	
+    	sort($oldPhotos,SORT_NUMERIC);
+    	sort($currentPhotos,SORT_NUMERIC);
+    	
+		if (implode(',',$currentPhotos) != implode(',',$oldPhotos)){
+			$useTrans = true;
+		}
+    	
+    	if($useTrans){
+    		$this->_stadiumModel->transStart();
+    	}
+    	
+    	$updateParam = $this->_stadiumBasicInfo($param, $images[0],$user);
+    	$updateParam = $this->_getDistrictIdFromName($updateParam,$param);
+    	
+    	$rows = $this->_stadiumModel->update($updateParam , array('stadium_id' => $stadiumId));
+    	
+    		
+    	if ($useTrans && $this->_stadiumModel->transStatus() === FALSE){
+			$this->_stadiumModel->transRollback();
+			return false;
+		}
+		
+		
+		$deletedRows = $this->_stadiumPhotosModel->deleteByWhere(array(
+			'stadium_id' => $stadiumId
+		));
+		
+		
+		if ($useTrans && $this->_stadiumModel->transStatus() === FALSE){
+			$this->_stadiumModel->transRollback();
+			return false;
+		}
+		
+		//插入图片
+		$now = time();
+		$insertImage = array();
+		foreach($images as $ik => $img){
+			$img['stadium_id'] = $stadiumId;
+			$img['gmt_create'] = $now;
+			$img['gmt_modify'] = $now;
+			
+			$insertImage[] = $img;
+		}
+		
+    	$this->_stadiumPhotosModel->batchInsert($insertImage);
+    	
+    	if ($useTrans && $this->_stadiumModel->transStatus() === FALSE){
+			$this->_stadiumModel->transRollback();
+			return false;
+		}
+    	
+    	if($useTrans){
+    		$this->_stadiumModel->transCommit();
+			$this->_stadiumModel->transOff();
+    	}
+    	
+    	return $rows;
     	
     }
 	

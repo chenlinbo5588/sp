@@ -1,15 +1,14 @@
 <?php
 
-/**
- * 微信公众账号
- */
-class Mp_Ticket_Model extends MY_Model {
-    public $_tableName = 'mp_ticket';
-    public static $_tableMeta = null;
+
+class Captcha_Model extends MY_Model {
     
+    public $_tableName = 'captcha';
+    public static $_tableMeta = null;
+
+
     public function __construct(){
         parent::__construct();
-        
         self::$_tableMeta = $this->getTableMeta();
     }
     

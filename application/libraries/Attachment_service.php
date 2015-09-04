@@ -42,8 +42,8 @@ class Attachment_Service extends Base_Service {
 	 */
 	public function getImageResizeConfig(){
 		return array(
-			'large' => array('width' => 800,'height' => 800, 'maintain_ratio' => true),
-			'big' => array('width' => 400,'height' => 400 , 'maintain_ratio' => false),
+			'large' => array('width' => 800,'height' => 600, 'maintain_ratio' => true),
+			'big' => array('width' => 400,'height' => 300 , 'maintain_ratio' => true),
 			'middle' => array('width' => 200,'height' => 200,'maintain_ratio' => false),
 			'small' => array('width' => 100,'height' => 100,'maintain_ratio' => false)
 		);
@@ -53,12 +53,11 @@ class Attachment_Service extends Base_Service {
 	 * 设置用户id
 	 */
 	public function setUid($uid){
-		$this->_uid = $uid;
+		$this->_uid = intval($uid);
 	}
 	
 	
 	public function deleteFiles($files){
-		
 		if($files){
 			$list = $this->_attachModel->getList(array(
 				'select' => 'file_url',
@@ -75,8 +74,6 @@ class Attachment_Service extends Base_Service {
 				}
 			}
 		}
-		
-		
 	}
 	
 	

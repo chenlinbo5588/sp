@@ -11,6 +11,7 @@ $entity = array(
 'sex' => 'char',
 'nickname' => 'varchar',
 'emailstatus' => 'tinyint',
+'aid' => 'mediumint',
 'avatar' => 'varchar',
 'avatar_large' => 'varchar',
 'avatar_big' => 'varchar',

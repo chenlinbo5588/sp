@@ -8,10 +8,12 @@
         <input type="hidden" name="returnUrl" value="{$returnUrl}"/>
         {form_error('mobile')}
         <div class="row">
-            <label class="side_lb" for="mobile_text">手机号：</label><input id="mobile_text" class="at_txt" type="text" name="mobile" value="{set_value('mobile')}" placeholder="请输入您常用的11位手机号码"/>
+            <label class="side_lb" for="mobile_text">手机号：</label>
+            <input id="mobile_text" class="at_txt" type="text" name="mobile" value="{set_value('mobile')}" placeholder="请输入您常用的11位手机号码"/>
         </div>
         <div class="row">
-            <label class="side_lb" for="authcode_text"></label><input class="primaryBtn at_txt" type="button" name="authCodeBtn" value="发送手机验证码"/>
+            <label class="side_lb" for="authcode_text"></label>
+            <input class="primaryBtn greenBtn at_txt" type="button" name="authCodeBtn" value="发送手机验证码"/>
         </div>
         {form_error('auth_code')}
         <div class="row">
@@ -35,7 +37,7 @@
         </div>
         <div class="row"><input class="primaryBtn" type="submit" name="register" value="注册"/></div>
     </form>
-    <div class="row" style="margin:0 0 20px 0;"><a class="link_btn grayed" href="{site_url('member/login')}?teamjoin={$param}" title="登陆">登陆</a>
+    <div class="row center" style="margin:0 0 20px 0;"><a class="" href="{site_url('member/login')}?teamjoin={$param}" title="登陆">登陆</a>
 </div>
 <script>
 

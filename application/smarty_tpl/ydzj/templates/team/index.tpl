@@ -29,17 +29,10 @@
                 <ul>
                     <li><a class="team_title" href="{site_url('team/detail/'|cat:$item['id'])}">{$item['title']|escape}</a></li>
                     <li><label>队长:</label><a class="team_leader" href="{site_url('user/info/'|cat:$item['leader_uid'])}">{$item['leader_name']|escape}</a></li>
-                    <li><label>区域:</label><span>{$item[$cityLevel]}</span></li>
+                    <li><label>地区:</label><span>{$item[$cityLevel]}</span></li>
                     <li><label>成员数:</label><strong class="team_pnum">{$item['current_num']}</strong><span>人</span></li>
                     <li><label>比赛场次:</label><strong>{$item['games']}场</strong><label class="win_rate">胜率:</label><strong>{$item['win_rate']}</strong></li>
                 </ul>
-            </div>
-            <div class="order_game">
-                {if $item['accept_game']}
-                <a class="link_btn greenBtn" href="{site_url('team/order_game')}">预约比赛</a>
-                {else}
-                <a class="link_btn grayed" href="javascript:void(0);">暂时不能预约</a>
-                {/if}
             </div>
         </div>
         {/foreach}

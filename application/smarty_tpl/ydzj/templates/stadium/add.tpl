@@ -1,6 +1,6 @@
 {include file="common/header.tpl"}
 {include file="common/baidu_map.tpl"}
-{$feedback}
+<div id="feedback">{$feedback}</div>
 <div id="stadium" class="handle_area">
 {form_open_multipart(site_url('stadium/add'),'id="stadiumForm"')}
     <input type="hidden" name="longitude" value="{$smarty.post['longitude']}"/>
@@ -15,6 +15,14 @@
         <select name="owner_type" class="at_txt">
             {foreach from=$stadiumOwnerList item=item}
             <option value="{$item['name']}" {set_select('owner_type',$item['id'])}>{$item['name']}</option>
+            {/foreach}
+        </select>
+    </div>
+    <div class="row">
+        <label class="required side_lb">开放程度</label>
+        <select name="open_type" class="at_txt">
+            {foreach from=$openType key=key item=item}
+            <option value="{$key}" {set_select('open_type',$key)}>{$item}</option>
             {/foreach}
         </select>
     </div>
@@ -67,16 +75,20 @@
     {foreach from=$maxOtherFile item=item}
     <div class="row photoUpload">
         <label class="side_lb">{if $item == 0}封面照片{else}其它照片<em>{$item}</em>{/if}</label>
-        <input type="hidden" class="img_url" value="{$fileUpload['other_img'][$item]['url']}" name="other_img{$item}_url"/>
-        <input type="hidden" value="{$fileUpload['other_img'][$item]['id']}" name="other_img{$item}_id"/>
+        <input type="hidden" value="{$fileUpload['other_img'][$item]['url']}" name="other_img{$item}_url" id="url{$item}"/>
+        <input type="hidden" value="{$fileUpload['other_img'][$item]['aid']}" name="other_img{$item}_aid"/>
         <input type="file" name="other_img{$item}" />
-        {if $fileUpload['other_img'][$item]['url']}<a class="opTrash" data-id="preview{$item}"><i class="fa fa-trash"></i> 删除</a>{/if}
     </div>
     {if $item == 0}
     <div class="row form_error" id="tip_img{$item}">{$img_error0}</div>
     <a name="cover_error"></a>
     {/if}
-    <div class="row img_preview" id="preview{$item}">{if $fileUpload['other_img'][$item]['preview']}<img class="nature" src="{base_url($fileUpload['other_img'][$item]['preview'])}"/>{/if}</div>
+    <div class="row img_preview" id="url{$item}">
+    {if $fileUpload['other_img'][$item]['preview']}
+    <img class="nature" src="{base_url($fileUpload['other_img'][$item]['preview'])}"/>
+    <a href="javascript:void(0)" class="link_btn grayed opTrash" data-id="url{$item}">删除照片</a>
+    {/if}
+    </div>
     {/foreach}
    	
    	<div class="row" id="submitFixedWrap" >
@@ -86,15 +98,6 @@
 </form>
 </div>
 
-{* 暂时不用
-<script type="sp-template" id="addFileTpl">
-    <div class="row">
-        <label class="side_lb">其它照片<em></em></label>
-        <input type="hidden" value="" name="other_img_txt"/>
-        <input type="file" name="other_img" />
-    </div>
-</script>
-*}
 <script>
 var stadiumPic = "{base_url('img/basketball.png')}";
 {if $smarty.post['longitude']}

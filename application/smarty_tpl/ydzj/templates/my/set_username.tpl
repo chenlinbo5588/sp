@@ -14,11 +14,4 @@
     </div>
     </form>
 </div>
-
-<script>
-
-
-</script>
-<script src="{base_url('js/my.js')}" type="text/javascript"></script>
-
 {include file="common/footer.tpl"}

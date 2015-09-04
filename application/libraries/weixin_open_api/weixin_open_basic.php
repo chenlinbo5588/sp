@@ -41,4 +41,3 @@ class Weixin_Open_Basic extends Weixin_Open_Api {
     }
     
 }
-?>

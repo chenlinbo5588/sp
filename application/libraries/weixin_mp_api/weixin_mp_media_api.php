@@ -36,4 +36,4 @@ class Weixin_Mp_Media_Api extends Weixin_Mp_Api {
         return $result;
     }
 }
-?>
+
