@@ -18,6 +18,7 @@ class Captcha extends Ydzj_Controller {
         	'expiration'    => 180,
         	'word_length'   => 4,
         	'font_size'     => 16,
+        	'font_path'     => SYSDIR.'/fonts/arial.ttf',
 		);
 
 		$cap = create_captcha($vals);
