@@ -9,8 +9,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 class Ydzj_Admin_Controller extends Ydzj_Controller {
 	
+	public $_adminProfile = array() ;
+	
 	public function __construct(){
 		parent::__construct();
+		
+		
+		$this->_adminProfile = $this->session->userdata('manage_profile');
+		
+		if(empty($this->_adminProfile)){
+			$this->_adminProfile = array();
+		}
 		
 		if(!$this->isLogin()){
 			if($this->input->is_ajax_request()){
@@ -19,16 +28,16 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 				redirect(site_url('member/admin_login'));
 			}
 		}else{
-			
-			$this->assign('manage_profile',$this->session->userdata('manage_profile'));
+			$this->assign('manage_profile',$this->_adminProfile);
 		}
+		
+		//print_r($this->session->all_userdata());
 	}
 	
 	
 	public function isLogin(){
-		//print_r($this->session->userdata('basic'));
-		//if($this->session->userdata('admin_info') && ($this->_reqtime - $this->session->userdata('last_activity') < 86400)){
-		if($this->session->userdata('manage_profile')){
+		
+		if($this->_adminProfile && ($this->_reqtime - $this->session->userdata('lastvisit') < 86400)){
 			return true;
 		}
 		

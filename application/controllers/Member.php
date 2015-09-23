@@ -61,7 +61,8 @@ class Member extends Ydzj_Controller {
 				
 				if($result['code'] == 'success'){
 					$this->session->set_userdata(array(
-						'profile' => $result['data']
+						'profile' => $result['data'],
+						'lastvisit' => $this->_reqtime
 					));
 					
 					$this->_rememberLoginName($this->input->post('loginname'));
@@ -108,11 +109,34 @@ class Member extends Ydzj_Controller {
 			$this->form_validation->set_rules('email','用户名', 'required|valid_email');
 			$this->form_validation->set_rules('password','密码','required|alpha_numeric');
 			
-			if($this->form_validation->run() !== FALSE){
+			
+			for($i = 0; $i < 1; $i++){
 				
-				$this->load->library('Member_Service');
+				if($this->form_validation->run() == FALSE){
+					break;
+				}
 				
-				$result = $this->member_service->do_login(array(
+				$this->load->model('Captcha_Model');
+				$captcha = $this->Captcha_Model->getList(array(
+					'where' => array(
+						'ip_address' => $this->input->ip_address(),
+						'captcha_time >' => $this->input->server('REQUEST_TIME') - 7200
+					),
+					'limit' => 1,
+					'order' => 'captcha_id DESC'
+				));
+				
+				//print_r($captcha);
+				
+				if(strtolower($captcha[0]['word']) != strtolower($this->input->post('auth_code')) ){
+					$this->assign('feedback','<div class="form_error">验证码错误</div>');
+					break;
+				}
+				
+				
+				$this->load->library('Admin_Service');
+					
+				$result = $this->admin_service->do_adminlogin(array(
 					'email' => $this->input->post('email'),
 					'password' => $this->input->post('password')
 				));
@@ -120,12 +144,12 @@ class Member extends Ydzj_Controller {
 				
 				if($result['code'] == 'success'){
 					$this->session->set_userdata(array(
-						'manage_profile' => $result['data']
+						'manage_profile' => $result['data'],
+						'lastvisit' => $this->_reqtime
 					));
 					
-					redirect(admin_site_url('stadium/index'));
+					redirect(admin_site_url('index'));
 				}else{
-					
 					$this->assign('feedback',$result['message']);
 				}
 			}

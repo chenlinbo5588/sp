@@ -22,6 +22,7 @@ class Member_Service extends Base_Service {
 		));
 	}
 	
+	
 	/**
 	 * 登录判断
 	 */

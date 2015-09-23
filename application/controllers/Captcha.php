@@ -29,6 +29,13 @@ class Captcha extends Ydzj_Controller {
 		);
 		
 		$this->load->model('Captcha_Model');
+		
+		//清空数据
+		$this->Captcha_Model->deleteByCondition(array(
+			'where' => array('captcha_time <= ' => $this->input->server('REQUEST_TIME') - 7200),
+			'limit' => 10
+		));
+		
 		$this->Captcha_Model->_add($data);
 		
 		
