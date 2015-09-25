@@ -25,9 +25,9 @@ class MY_Controller extends CI_Controller {
 		$this->_initLibrary();
 		$this->_initApp();
 		
-		//$this->_security();
-		$this->_initSmarty();
 		
+		$this->_initSmarty();
+		$this->_security();
 		
 		$this->smartyConfig();
 	}
@@ -126,6 +126,8 @@ class MY_Controller extends CI_Controller {
     
     private function _security(){
     	
+    	$this->assign('formhash',$this->security->get_csrf_hash());
+    	/*
     	if($this->input->cookie($this->_lastVisit) != ''){
 			$elapsed_time = number_format(microtime(TRUE) -  $this->input->cookie($this->_lastVisit), 2);
 			if($elapsed_time < 0.2){
@@ -146,6 +148,7 @@ class MY_Controller extends CI_Controller {
 				show_error('请求失效',500);
 			}
 		}
+		*/
     }
     
     
@@ -188,7 +191,7 @@ class MY_Controller extends CI_Controller {
     	$this->output
 		    	->set_status_header(200)
 		    	->set_content_type('application/json')
-		    	->set_output(array('message' => $message,'data' => $data));
+		    	->set_output(json_encode(array('message' => $message,'data' => $data)));
 		    	
 		$this->output->_display();
 		

@@ -15,7 +15,6 @@ class Base_Service {
 		
 		$this->_userModel = $this->CI->Member_Model;
 		$this->_districtModel = $this->CI->Common_District_Model;
-		
 	}
     
 	protected function successRetun($data = array()){

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html;" charset="UTF-8">
-<title>{config_item('site_name')}</title>
+<title>{config_item('site_name')}-管理中心</title>
 <link href="{base_url('css/skin_0.css')}" rel="stylesheet" type="text/css" id="cssfile"/>
 <script src="{base_url('js/jquery-1.11.3.js')}" type="text/javascript"></script>
 <script type="text/javascript" src="{base_url('js/jquery.cookie.js')}"></script>
@@ -206,7 +206,7 @@ $(function(){
 	    <dl>    
             <dt>会员</dt>
             <dd><a href="javascript:void(0)" onclick="openItem('index,member,member')">会员管理</a></dd>
-            <dd><a href="javascript:void(0)" onclick="openItem('notice,member,member')">会员通知</a></dd>
+            <dd><a href="javascript:void(0)" onclick="openItem('notify,member,member')">会员通知</a></dd>
             <dd><a href="javascript:void(0)" onclick="openItem('credits,member,member')">积分管理</a></dd>
             <dd><a href="javascript:void(0)" onclick="openItem('album,member,member')">会员相册</a></dd>
             <dd><a href="javascript:void(0)" onclick="openItem('tag,member,member')">会员标签</a></dd>
@@ -281,13 +281,13 @@ $(function(){
 	    <dl>    
 	        <dt>CMS</dt>
 	        <dd><a href="javascript:void(0)" onclick="openItem('setting,cms,cms')">CMS管理</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('article,cms,cms')">文章管理</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('category,cms,cms')">文章分类</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('magazine,cms,cms')">画报管理</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('magazine_cate,cms,cms')">画报分类</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('special,cms,cms')">专题管理</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('tag,cms,cms')">标签管理</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('comment,cms,cms')">评论管理</a></dd>
+	        <dd><a href="javascript:void(0)" onclick="openItem('index,cms_article,cms')">文章管理</a></dd>
+	        <dd><a href="javascript:void(0)" onclick="openItem('category,cms_article,cms')">文章分类</a></dd>
+	        <dd><a href="javascript:void(0)" onclick="openItem('index,magazine,cms')">画报管理</a></dd>
+	        <dd><a href="javascript:void(0)" onclick="openItem('category,magazine,cms')">画报分类</a></dd>
+	        <dd><a href="javascript:void(0)" onclick="openItem('index,special,cms')">专题管理</a></dd>
+	        <dd><a href="javascript:void(0)" onclick="openItem('index,tag,cms')">标签管理</a></dd>
+	        <dd><a href="javascript:void(0)" onclick="openItem('index,comment,cms')">评论管理</a></dd>
 	    </dl>
     </div>
     
@@ -529,13 +529,13 @@ $(function(){
                 <dd>
                   <ol>
                     <li><a href="JavaScript:void(0);" id="setting_cms" onclick="openItem('setting,cms,cms');">CMS设置</a></li>
-                    <li><a href="JavaScript:void(0);" id="article_cms" onclick="openItem('article,cms,cms');">文章管理</a></li>
-                    <li><a href="JavaScript:void(0);" id="category_cms" onclick="openItem('category,cms,cms');">文章分类</a></li>
-                    <li><a href="JavaScript:void(0);" id="magazine_cms" onclick="openItem('magazine,cms,cms');">画报管理</a></li>
-                    <li><a href="JavaScript:void(0);" id="magazine_cate_cms" onclick="openItem('magazine_cate,cms,cms');">画报分类</a></li>
-                    <li><a href="JavaScript:void(0);" id="special_cms" onclick="openItem('special,cms,cms');">专题管理</a></li>
-                    <li><a href="JavaScript:void(0);" id="tag_cms" onclick="openItem('tag,cms,cms');">标签管理</a></li>
-                    <li><a href="JavaScript:void(0);" id="comment_cms" onclick="openItem('comment,cms,cms');">评论管理</a></li>
+                    <li><a href="JavaScript:void(0);" id="index_cms_article" onclick="openItem('index,cms_article,cms');">文章管理</a></li>
+                    <li><a href="JavaScript:void(0);" id="category_cms_article" onclick="openItem('category,cms_article,cms');">文章分类</a></li>
+                    <li><a href="JavaScript:void(0);" id="index_magazine" onclick="openItem('index,magazine,cms');">画报管理</a></li>
+                    <li><a href="JavaScript:void(0);" id="category_magazine" onclick="openItem('category,magazine,cms');">画报分类</a></li>
+                    <li><a href="JavaScript:void(0);" id="index_special" onclick="openItem('index,special,cms');">专题管理</a></li>
+                    <li><a href="JavaScript:void(0);" id="index_tag" onclick="openItem('index,tag,cms');">标签管理</a></li>
+                    <li><a href="JavaScript:void(0);" id="index_comment" onclick="openItem('index,comment,cms');">评论管理</a></li>
                   </ol>
                 </dd>
               </dl>

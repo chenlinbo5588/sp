@@ -9,8 +9,21 @@ class Member extends Ydzj_Admin_Controller {
 	
 	public function index(){
 		
+		
+		
+		$this->load->library('Member_Service');
+		
+		
 		$this->display('member/index');
 	}
 	
+	
+	public function add(){
+		
+		
+		
+		$this->display('member/add');
+		
+	}
 	
 }

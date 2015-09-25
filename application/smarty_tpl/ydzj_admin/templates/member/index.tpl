@@ -5,7 +5,7 @@
       <h3>会员管理</h3>
       <ul class="tab-base">
         <li><a href="javascript:void(0);" class="current"><span>管理</span></a></li>
-        <li><a href="index.php?act=member&op=member_add" ><span>新增</span></a></li>
+        <li><a href="{admin_site_url('member/add')}" ><span>新增</span></a></li>
       </ul>
     </div>
   </div>

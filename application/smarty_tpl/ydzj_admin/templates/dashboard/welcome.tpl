@@ -1,15 +1,4 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta http-equiv="X-UA-Compatible" content="IE=edge;chrome=1">
-<meta http-equiv="Content-Type" content="text/html; charset={config_item('charset')}">
-<title>{config_item('site_name')}</title>
-<link href="{base_url('css/skin_0.css')}" rel="stylesheet" type="text/css" id="cssfile2" />
-</head>
-<body>
-<div id="append_parent"></div>
-<div id="ajaxwaitid"></div>
-
+{include file="common/main_header.tpl"}
 <div class="page">
   <div class="fixed-bar">
     <div class="item-title">
@@ -148,8 +137,7 @@
         </ul>
       </dd>
     </dl>
-    <div class=" clear"></div>
+    <div class="clear"></div>
   </div>
 </div>
-</body>
-</html>
+{include file="common/main_footer.tpl"}
