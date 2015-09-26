@@ -68,10 +68,10 @@ $(function(){
 
     $('#pic_submit').click(function(){
         var d=$('#form_cut').serialize();
-        $.post('index.php?act=common&op=pic_cut',d,function(data){
+        $.post('{admin_site_url('common/pic_cut')}',d,function(data){
             call_back(data);
             DialogManager.close('cutpic');
-        });
+        },'json');
     });
 });
 </script>

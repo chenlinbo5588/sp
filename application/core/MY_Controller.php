@@ -132,7 +132,7 @@ class MY_Controller extends CI_Controller {
 			$elapsed_time = number_format(microtime(TRUE) -  $this->input->cookie($this->_lastVisit), 2);
 			if($elapsed_time < 0.2){
 				if($this->input->is_ajax_request() || $this->_inApp == true){
-					$this->responseJOSN('请求过于频繁');
+					$this->responseJSON('请求过于频繁');
 				}else{
 					show_error('请求过于频繁',200);
 				}
@@ -143,7 +143,7 @@ class MY_Controller extends CI_Controller {
 		
 		if($this->isPostRequest() && !$this->_checkVerify()){
 			if($this->input->is_ajax_request() || $this->_inApp == true){
-				$this->responseJOSN('请求失效');
+				$this->responseJSON('请求失效');
 			}else{
 				show_error('请求失效',500);
 			}
@@ -187,7 +187,7 @@ class MY_Controller extends CI_Controller {
     /**
      * 
      */
-    public function responseJOSN($message = '' , $data = array()){
+    public function responseJSON($message = '' , $data = array()){
     	$this->output
 		    	->set_status_header(200)
 		    	->set_content_type('application/json')

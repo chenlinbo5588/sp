@@ -23,7 +23,7 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 		
 		if(!$this->isLogin()){
 			if($this->input->is_ajax_request()){
-				$this->responseJOSN('您尚未登陆',array('url' => site_url('member/admin_login')));
+				$this->responseJSON('您尚未登陆',array('url' => site_url('member/admin_login')));
 			}else{
 				redirect(site_url('member/admin_login'));
 			}

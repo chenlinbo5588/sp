@@ -85,6 +85,6 @@ $(function(){
     
 });
 </script>
-<script src="{base_url('js/my.js')}" type="text/javascript"></script>
+<script src="{base_url('js/user/my.js')}" type="text/javascript"></script>
 
 {include file="common/footer.tpl"}

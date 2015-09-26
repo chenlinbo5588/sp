@@ -85,7 +85,7 @@
         <tr class="noborder">
           <td class="vatop rowform">
             <span class="type-file-show">
-            <img class="show_image" src="http://www.nzbestprice.com/admin/templates/default/images/preview.png">
+            <img class="show_image" src="{base_url('img/preview.png')}">
             <div class="type-file-preview" style="display: none;"><img id="view_img"></div>
             </span>
             <span class="type-file-box">
@@ -113,9 +113,11 @@
 <script type="text/javascript">
 
 //裁剪图片后返回接收函数
-function call_back(picname){
-    $('#member_avatar').val(picname);
-    $('#view_img').attr('src','http://www.nzbestprice.com/data/upload/shop/avatar/'+picname);
+function call_back(resp){
+	formhash = resp.formhash;
+	
+    $('#member_avatar').val(resp.picname);
+    $('#view_img').attr('src',resp.url);
 }
 $(function(){
     $('input[class="type-file-file"]').change(uploadChange);
@@ -144,9 +146,7 @@ $(function(){
                 success: function (resp, status)
                 {
                     if (resp.status == 1){
-                        var url = '{admin_site_url("common/pic_cut")}?type=member&x=200&y=200&resize=0&ratio=1&url='+resp.url;
-                        console.log(url);
-                        ajax_form('cutpic','裁剪','{admin_site_url("common/pic_cut")}?type=member&x=200&y=200&resize=0&ratio=1&url='+resp.url,690);
+                        ajax_form('cutpic','裁剪','{admin_site_url("common/pic_cut")}?type=member&x=200&y=200&resize=0&ratio=1&url='+resp.url,800);
                     }else
                     {
                         alert(resp.message);

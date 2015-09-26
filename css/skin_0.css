@@ -223,6 +223,10 @@ h6 { font-size:12px;}
     .table th, .table td{ padding:6px !important; height:26px; }
     .nohover td { background:#FFF !important;}
 
+
+.table tbody tr:hover td {background: #FBFBFB;}
+
+
 .tb-type1{}
 .tb-type1 th{ padding:5px 5px 3px 0; line-height:21px; color: #333;}
 .tb-type1 td{ padding:5px 5px 3px 0;}
@@ -1237,50 +1241,71 @@ span.module-assembly-html { background-position: -490px -1040px;}
 /*方形图裁切*/
 .pic-cut-150brand,
 .pic-cut-120circle,
-.pic-cut-120member { font-size: 12px; line-height: 20px; color: #555; width: 652px; height: 520px; margin: 20px auto; position: relative; z-index: 1; }
+.pic-cut-120member, 
+.pic-cut-200member { font-size: 12px; line-height: 20px; color: #555; width: 652px; height: 520px; margin: 20px auto; position: relative; z-index: 1; }
 
 .pic-cut-150brand .work-title,
 .pic-cut-120circle .work-title,
-.pic-cut-120member .work-title  { font-size: 12px; line-height: 20px; text-align: center; width: 500px; position: absolute; z-index: 1; top: 0; left: 0;}
+.pic-cut-120member .work-title,
+.pic-cut-200member .work-title  { font-size: 12px; line-height: 20px; text-align: center; width: 500px; position: absolute; z-index: 1; top: 0; left: 0;}
 
 .pic-cut-150brand .thumb-title,
 .pic-cut-120circle .thumb-title,
-.pic-cut-120member .thumb-title { text-align: center; width: 124px; position: absolute; z-index: 1; top: 0; right: 0;}
+.pic-cut-120member .thumb-title, 
+.pic-cut-200member .thumb-title { text-align: center; width: 124px; position: absolute; z-index: 1; top: 0; right: 0;}
+
 
 .pic-cut-150brand .work-layer,
 .pic-cut-120circle .work-layer,
-.pic-cut-120member .work-layer { background: #FFF; padding: 1px; border: dashed 1px #777; position: absolute; z-index: 1; top: 20px; left:0;}
+.pic-cut-120member .work-layer,
+.pic-cut-200member .work-layer { background: #FFF; padding: 1px; border: dashed 1px #777; position: absolute; z-index: 1; top: 20px; left:0;}
+
+.pic-cut-200member .thumb-title , .pic-cut-200member .work-layer { left: -50px;}
 
 .pic-cut-150brand .work-layer p,
 .pic-cut-120circle .work-layer p,
-.pic-cut-120member .work-layer p { background: url(../img/cut_bg.png) repeat 0 0; display: block; width: 500px; height: 500px; overflow: hidden;}
+.pic-cut-120member .work-layer p,
+.pic-cut-200member .work-layer p { background: url(../img/cut_bg.png) repeat 0 0; display: block; width: 500px; height: 500px; overflow: hidden;}
 
 .pic-cut-150brand .thumb-layer,
 .pic-cut-120circle .thumb-layer,
-.pic-cut-120member .thumb-layer { padding: 1px; border: dashed 1px #777; position: absolute; z-index: 1; top: 20px; right: 0;}
+.pic-cut-120member .thumb-layer,
+.pic-cut-200member .thumb-layer { padding: 1px; border: dashed 1px #777; position: absolute; z-index: 1; top: 20px; right: 0;}
+
 .pic-cut-150brand .thumb-layer { right: -10px;}
+.pic-cut-200member .thumb-layer { right: -30px;}
+
 
 .pic-cut-150brand .thumb-layer p { width: 150px; height: 50px; overflow: hidden;}
 .pic-cut-120circle .thumb-layer p,
 .pic-cut-120member .thumb-layer p { width: 120px; height: 120px; overflow: hidden;}
+.pic-cut-200member .thumb-layer p { width: 200px; height: 200px; overflow: hidden;}
+
 
 .pic-cut-150brand .thumb-layer p img,
 .pic-cut-120circle .thumb-layer p img,
-.pic-cut-120member .thumb-layer p img { margin: 0; display: inline;}
+.pic-cut-120member .thumb-layer p img,
+.pic-cut-200member .thumb-layer p img { margin: 0; display: inline;}
 
 .pic-cut-150brand .cut-help,
 .pic-cut-120circle .cut-help,
-.pic-cut-120member .cut-help { width: 120px; position: absolute; z-index: 1; top: 160px; right: 0;}
+.pic-cut-120member .cut-help,
+.pic-cut-200member .cut-help { width: 120px; position: absolute; z-index: 1; top: 160px; right: 0;}
 .pic-cut-150brand .cut-help { width: 120px; top: 100px;}
+
+.pic-cut-200member .cut-help { width:160px; top: 220px;}
 
 .pic-cut-150brand .cut-help h4,
 .pic-cut-120circle .cut-help h4,
-.pic-cut-120member .cut-help h4 { font-size: 12px; line-height: 28px; color: #333;}
+.pic-cut-120member .cut-help h4,
+.pic-cut-200member .cut-help h4 { font-size: 12px; line-height: 28px; color: #333;}
 
 .pic-cut-150brand .cut-btn,
 .pic-cut-120circle .cut-btn,
-.pic-cut-120member .cut-btn { position: absolute; z-index: 1; top:340px; left: 530px;}
+.pic-cut-120member .cut-btn,
+.pic-cut-200member .cut-btn { position: absolute; z-index: 1; top:340px; left: 530px;}
 .pic-cut-150brand .cut-btn { top:280px;}
+.pic-cut-200member .cut-btn { top:400px;}
 
 
 /* Scrollbar jQuery Plugin

@@ -6,17 +6,12 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
 	<meta name="description" content="{$SEO_description}" />
 	<meta name="keywords" content="{$SEO_keywords}" />
-	<meta name="viewport" content="width=device-width,
-                               initial-scale=1.0,
-                               maximum-scale=1.0,
-                               user-scalable=no,
-                               minimal-ui">
-                               
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,minimal-ui">
     <link rel="stylesheet" href="{base_url('css/base.css')}"/>
     <link rel="stylesheet" href="{base_url('css/site.css')}"/>
     <link rel="stylesheet" href="{base_url('font-awesome/css/font-awesome.min.css')}"/>
 	<script src="{js_url('js/jquery-1.11.3.min.js')}" type="text/javascript"></script>
-	<script src="{js_url('js/ydzj.js')}" type="text/javascript"></script>
+	<script src="{js_url('js/common.js')}" type="text/javascript"></script>
 </head>
 <body>
    <div id="wrap">

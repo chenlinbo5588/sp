@@ -11,6 +11,8 @@ class Attachment_Service extends Base_Service {
 		parent::__construct();
 		
 		$this->CI->load->model('Attachment_Model');
+		$this->CI->load->library('image_lib');
+		
 		$this->CI->load->helper('img');
 		
 		$this->_attachModel = $this->CI->Attachment_Model;
@@ -114,13 +116,13 @@ class Attachment_Service extends Base_Service {
 			foreach($smallConfig as $whKey => $whConfig){
 				$fileData['img_'.$whKey] = '';
 				
-				$resize['image_library'] = 'gd2';
 				$resize['source_image'] = $fileData['full_path'];
 				$resize['create_thumb'] = false;
 				$resize['maintain_ratio'] = $whConfig['maintain_ratio'];
 				$resize['new_image'] = $fileData['raw_name'].'@'.$whKey.$fileData['file_ext'];
 				$resize['width']         = $whConfig['width'];
 				$resize['height']       = $whConfig['height'];
+				$resize['quality']      = 100;
 				
 				$this->CI->image_lib->initialize($resize);
 				if(!@$this->CI->image_lib->resize()){

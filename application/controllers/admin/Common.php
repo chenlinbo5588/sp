@@ -35,6 +35,53 @@ class Common extends Ydzj_Admin_Controller {
 		
 		if($this->isPostRequest()){
 			
+			/*
+			$thumb_width = $_POST['x'];
+			$x1 = $_POST["x1"];
+			$y1 = $_POST["y1"];
+			$x2 = $_POST["x2"];
+			$y2 = $_POST["y2"];
+			$w = $_POST["w"];
+			$h = $_POST["h"];
+			$scale = $thumb_width/$w;
+			*/
+			
+			$src_file = str_ireplace(base_url(),'',$this->input->post('url'));
+
+			$this->load->library('image_lib');
+			
+			
+			$index = strrpos($src_file,'/');
+			$prefix = substr($src_file, 0 , $index + 1);
+
+			$config['source_image'] = ROOTPATH.'/'.$src_file;
+			$pathinfo = pathinfo($config['source_image']);
+			
+			
+			$config['new_image'] = $pathinfo['dirname'].'/c_'.$pathinfo['basename'];
+			$config['x_axis'] = $this->input->post('x1');
+			$config['y_axis'] = $this->input->post('y1');
+			$config['width'] = $this->input->post('w');
+			$config['height'] = $this->input->post('h');
+			$config['quality'] = 100;
+			$config['maintain_ratio'] = false;
+			
+			$this->image_lib->initialize($config);
+			
+			
+			//@todo 需要完善 , 裁切 200x200 100x100 各一套 , attachment 表增加 上传 uid 来源区分,是后台用户还是前台用户 uid
+			
+			if ( ! $this->image_lib->crop()){
+				log_message('error',$config['source_image'] .' crop failed.');
+				exit(json_encode(array('status' => 0, 'formhash'=>$this->security->get_csrf_hash(),'msg'=>$this->attachment_service->getErrorMsg('',''))));
+			}else{
+				exit(json_encode(array(
+					'status' => 1, 'formhash'=>$this->security->get_csrf_hash(),
+					'url'=>base_url($prefix . 'c_'.$pathinfo['basename']),
+					'picname' => 'c_'.$pathinfo['basename']
+				)));
+			}
+			
 		}else{
 			$save_file = str_ireplace(base_url(),'',$this->input->get('url'));
 			

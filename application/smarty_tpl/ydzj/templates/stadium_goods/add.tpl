@@ -107,5 +107,5 @@ var hash = "cover_error";
 {/if}
 
 </script>
-<script src="{base_url('js/stadium.js')}" type="text/javascript"></script>
+<script src="{base_url('js/stadium/stadium.js')}" type="text/javascript"></script>
 {include file="common/footer.tpl"}

@@ -171,7 +171,7 @@ var errorInputKey = [];
 errorInputKey.push("{$ek}");
 {/foreach}
 </script>
-<script src="{base_url('js/team_manage.js')}" type="text/javascript"></script>
+<script src="{base_url('js/team/team_manage.js')}" type="text/javascript"></script>
 {else}
 <div class="row" id="submitFixedWrap" >
     {if $canManager}

@@ -57,6 +57,6 @@
     </div>
 </div>
 </form>
-<script src="{base_url('js/team.js')}"></script>
+<script src="{base_url('js/team/team.js')}"></script>
 
 {include file="common/footer.tpl"}
