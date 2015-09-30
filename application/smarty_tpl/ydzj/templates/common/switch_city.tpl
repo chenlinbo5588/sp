@@ -16,7 +16,7 @@
 
 <div class="row" id="submitFixedWrap" >
     <div class="row col">
-        <input type="submit" class="primaryBtn" name="submit" value="确定" />
+        <input type="submit" class="master_btn" name="submit" value="确定" />
     </div>
 </div>
 </form>

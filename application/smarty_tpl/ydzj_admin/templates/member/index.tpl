@@ -10,9 +10,7 @@
     </div>
   </div>
   <div class="fixed-empty"></div>
-  <form method="get" name="formSearch" id="formSearch">
-    <input type="hidden" value="member" name="act">
-    <input type="hidden" value="member" name="op">
+  <form method="get" name="formSearch" id="formSearch" action="{admin_site_url('member')}">
     <table class="tb-type1 noborder search">
       <tbody>
         <tr>
@@ -64,37 +62,66 @@
           <th colspan="2">会员</th>
           <th class="align-center"><span fieldname="logins" nc_type="order_by">登录次数</span></th>
           <th class="align-center"><span fieldname="last_login" nc_type="order_by">最后登录</span></th>
+          <th class="align-center">地区</th>
           <th class="align-center">积分</th>
-          <th class="align-center">预存款</th>
           <th class="align-center">登录</th>
           <th class="align-center">操作</th>
         </tr>
       <tbody>
-                        <tr class="hover member">
+      {foreach from=$list['data'] item=item key=key}
+        <tr class="hover member">
           <td class="w24"></td>
-          <td class="w48 picture"><div class="size-44x44"><span class="thumb size-44x44"><i></i><img src="http://www.nzbestprice.com/data/upload/shop/common/default_user_portrait.gif?0.21931600 1442994749"  /></span></div></td>
-          <td><p class="name"><strong>shopnc</strong>(真实姓名: )</p>
-            <p class="smallfont">注册时间:&nbsp;2013-12-25 11:23:44</p>
+          <td class="w120 picture">
+            <div class=""><span class="thumb"><i></i><img src="{base_url($item['avatar_small'])}"  data-avatar="{$item['avatar_middle']}" /></span></div></td>
+          <td>
+            <p class="name"><strong>{$item['nickname']|escape}</strong>(真实姓名: {$item['username']|escape})</p>
+            <p class="smallfont">注册时间:&nbsp;{$item['regdate']|date_format:"%Y-%m-%d %H:%M:%S"}</p>
+            <p class="smallfont">注册IP:&nbsp;{$item['regip']}</p>
+            <div class="im">
+                {if $item['email'] != ''}
+                <span class="email">
+                    <a href="mailto:{$item['email']}" class="yes" title="电子邮箱:{$item['email']}">{$item['email']}</a>
+                </span>
+                {/if}
+                
+                {if $item['qq'] != ''}
+                <span class="qq">
+                    <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin={$item['qq']}&site=qq&menu=yes" class=""  title="QQ: {$item['qq']}"><img border="0" src="http://wpa.qq.com/pa?p=2:{$item['qq']}:52"/></a>
+                </span>
+                {/if}
+                
+                {if $item['weixin'] != ''}
+                <span class="weixin">
+                    
+                </span>
+                {/if}
+            </div>
             
-              <div class="im"><span class="email" >
-                                <a href="mailto:feng@shopnc.com" class=" yes" title="电子邮箱:feng@shopnc.com">feng@shopnc.com</a></span>
-                                                              </div></td>
-          <td class="align-center">7</td>
-          <td class="w150 align-center"><p>2014-01-15 18:06:14</p>
-            <p>127.0.0.1</p></td>
-          <td class="align-center">90</td>
-          <td class="align-center"><p>可用:&nbsp;<strong class="red">0.00</strong>&nbsp;元</p>
-            <p>冻结:&nbsp;<strong class="red">0.00</strong>&nbsp;元</p></td>
+          </td>
+          <td class="align-center">{$item['login_times']}</td>
+          <td class="w150 align-center">
+            <p>{$item['last_login']}</p>
+            <p>{$item['last_loginip']}</p>
+          </td>
+          <td class="align-center">
+            {*
+            <p>可用:&nbsp;<strong class="red">0.00</strong>&nbsp;元</p>
+            <p>冻结:&nbsp;<strong class="red">0.00</strong>&nbsp;元</p>
+            *}
+          </td>
+          <td class="align-center">{$item['credits']}</td>
+          
           <td class="align-center">允许</td>
           <td class="align-center"><a href="index.php?act=member&op=member_edit&member_id=1">编辑</a> | <a href="index.php?act=notice&op=notice&member_name=c2hvcG5j">通知</a></td>
         </tr>
-                      </tbody>
+      {/foreach}
+      </tbody>
       <tfoot class="tfoot">
-                <tr>
+        <tr>
           <td colspan="16">
             <div class="pagination"> <ul><li><span>首页</span></li><li><span>上一页</span></li><li><span class="currentpage">1</span></li><li><span>下一页</span></li><li><span>末页</span></li></ul> </div></td>
         </tr>
-              </tfoot>
+      </tfoot>
     </table>
   </form>
 </div>

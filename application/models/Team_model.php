@@ -31,6 +31,10 @@ class Team_Model extends MY_Model {
 	}
 	
 	public function userCategoryTeamCount($category,$uid){
+		
+		//@todo delete 
+		
+		return true;
     	$cnt = $this->getCount(array(
     		'where' => array(
 				'category_id' => $category,
@@ -38,6 +42,7 @@ class Team_Model extends MY_Model {
     		)
     	
     	));
+    	
     	
     	if($cnt >= 3){
     		return false;

@@ -237,11 +237,15 @@ class Stadium_Service extends Base_Service {
 		$now = time();
 		$insertImage = array();
 		foreach($images as $ik => $img){
-			$img['stadium_id'] = $stadiumId;
-			$img['gmt_create'] = $now;
-			$img['gmt_modify'] = $now;
+			$newImag = array();
+			$newImag['stadium_id'] = $stadiumId;
+			$newImag['aid'] = $img['aid'];
+			$newImag['avatar_large'] = $img['avatar_large'];
+			$newImag['avatar_big'] = $img['avatar_big'];
+			$newImag['gmt_create'] = $now;
+			$newImag['gmt_modify'] = $now;
 			
-			$insertImage[] = $img;
+			$insertImage[] = $newImag;
 		}
 		
     	$this->_stadiumPhotosModel->batchInsert($insertImage);

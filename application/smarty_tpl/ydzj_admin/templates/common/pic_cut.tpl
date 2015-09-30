@@ -61,8 +61,8 @@ $(function(){
       minSize:[50, 50],
       allowSelect:0,
       allowResize:{$smarty.get['resize']},
-        onChange: showPreview,
-        onSelect: showPreview,
+      onChange: showPreview,
+      onSelect: showPreview,
       onDblClick:submitCoords
     });
 

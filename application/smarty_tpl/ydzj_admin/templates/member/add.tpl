@@ -132,7 +132,7 @@ $(function(){
         }
         if ($(this).val() == '') return false;
         ajaxFileUpload();
-    }   
+    }
     function ajaxFileUpload()
     {
         $.ajaxFileUpload
@@ -142,7 +142,7 @@ $(function(){
                 secureuri:false,
                 fileElementId:'_pic',
                 dataType: 'json',
-                data: { formhash : formhash },
+                data: { formhash : formhash , type : "member" },
                 success: function (resp, status)
                 {
                     if (resp.status == 1){
@@ -160,7 +160,7 @@ $(function(){
                 }
             }
         )
-    };
+    }
     
     $("#submitBtn").click(function(){
 	    if($("#user_form").valid()){

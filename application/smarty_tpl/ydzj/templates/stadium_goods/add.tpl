@@ -80,8 +80,8 @@
     {/foreach}
    	
    	<div class="row" id="submitFixedWrap" >
-        <div class="row col" ><button id="saveBtn" type="submit" class="primaryBtn" name="submit">保存</button>
-        <input type="button" id="closeMapBtn" name="closeMap" class="primaryBtn" style="display:none;" value="关闭地图"/></div>
+        <div class="row col" ><button id="saveBtn" type="submit" class="master_btn" name="submit">保存</button>
+        <input type="button" id="closeMapBtn" name="closeMap" class="master_btn" style="display:none;" value="关闭地图"/></div>
     </div>
 </form>
 </div>

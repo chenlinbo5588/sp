@@ -110,6 +110,9 @@ class Ydzj_Controller extends MY_Controller {
 		
 		return $city_id;
 	}
+	
+	
+	
 }
 
 

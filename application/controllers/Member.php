@@ -209,7 +209,7 @@ class Member extends Ydzj_Controller {
 					)
 				);
 			
-			
+			/*
 			$this->form_validation->set_rules('nickname','昵称', array(
 						'required',
 						array(
@@ -223,9 +223,7 @@ class Member extends Ydzj_Controller {
 						'nickname_callable' => '%s已经被占用'
 					)
 				);
-			
-			
-			
+			*/
 			
 			
 			$this->form_validation->set_rules('psw','密码','required|alpha_dash|min_length[6]|max_length[12]');
@@ -241,13 +239,11 @@ class Member extends Ydzj_Controller {
 				
 				if($todayRegistered < 3){
 					
-					
 					$avatarIndex = rand(1,3);
-					
 					
 					$addParam = array(
 						'mobile' => $this->input->post('mobile'),
-						'nickname' => $this->input->post('nickname'),
+						'nickname' => $this->input->post('mobile'),
 						'password' => $this->input->post('psw'),
 						'regip' => $this->input->ip_address(),
 						'regdate' => $this->input->server('REQUEST_TIME'),
@@ -256,13 +252,14 @@ class Member extends Ydzj_Controller {
 						'avatar_big' => 'img/avatar/'.$avatarIndex.'@big.jpg',
 						'avatar_middle' => 'img/avatar/'.$avatarIndex.'@middle.jpg',
 						'avatar_small' => 'img/avatar/'.$avatarIndex.'@small.jpg',
-						
-						
+						'status' => -2,
 						'inviter' => empty($inviter) == true ? 0 : intval($inviter)
 					);
 					
 					$this->assign('default_avatar',$addParam['avatar_big']);
 					
+					
+					//来源为队伍邀请链接
 					if('teamInvite' == $inviteFrom){
 						$inviterInfo = $this->Member_Model->getById(array(
 							'where' => array('uid' => $inviter)
@@ -274,6 +271,8 @@ class Member extends Ydzj_Controller {
 						$addParam['d3'] = $inviterInfo['d3'];
 						$addParam['d4'] = $inviterInfo['d4'];
 						
+						//只需要设置头像
+						$addParam['status'] = -1;
 					}
 					
 					$result = $this->register_service->createMember($addParam);

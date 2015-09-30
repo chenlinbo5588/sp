@@ -5,7 +5,7 @@
     <div class="searchbar pd5 clearfix">
         <label for="seach_key" class="fl">搜索场馆</label>
         <input type="text" class="fl" style="width:50%;" name="search_key" value="{$smarty.get.search_key|escape}" placeholder="请输入队伍名称"/>
-        <input class="primaryBtn fl"  style="width:20%;" type="submit" value="查询"/>
+        <input class="master_btn fl"  style="width:20%;" type="submit" value="查询"/>
     </div>
     </form>
 </section>
@@ -14,7 +14,7 @@
 	<div id="stadiumList" class="list pd5">
 	    {foreach from=$list['data'] item=item}
 	    <div class="team clearfix">
-	        <div class="fl"><a href="{site_url('stadium/detail/'|cat:$item['stadium_id'])}"><img src="{base_url($item['avatar_small'])}"/></a></div>
+	        <div class="fl"><a href="{site_url('stadium/detail/'|cat:$item['stadium_id'])}"><img src="{base_url($item['avatar_big'])}"/></a></div>
 	        <div class="team_basic">
 	            <ul>
 	                <li><a class="team_title" href="{site_url('stadium/detail/'|cat:$item['stadium_id'])}">{$item['title']|escape}</a></li>

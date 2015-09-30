@@ -6,7 +6,74 @@ class Tools extends MY_Controller {
 	public function __construct(){
 		parent::__construct();
 	}
-
+	
+	public function com_poi(){
+		$file = 'poi.m.csv.txt';
+		
+		for($i = 1; $i <= 9; $i++){
+			echo "sed /1,\$/p poi.csv{$i}.txt >> {$file} <br/>";
+		}
+		
+	}
+	
+	public function com_address(){
+		$file = 'address.m.csv.txt';
+		
+		for($i = 1; $i <= 36; $i++){
+			echo "sed /1,\$/p address.csv{$i}.txt >> {$file} <br/>";
+		}
+		
+	}
+	
+	public function spl_poi(){
+		$file = file('poi.csv.txt');
+		
+		$lines = array();
+		
+		$i = 1;
+		
+		$line = array();
+		foreach($file as $key => $row){
+			if($key > 0 && $key % 1500 == 0){
+				file_put_contents("poi.csv{$i}.txt",implode('',$line));
+				$i++;
+				
+				$line = array();
+			}
+			
+			$line[] = $row;
+		}
+		
+		if(!empty($line)){
+			file_put_contents("poi.csv{$i}.txt",implode('',$line));
+		}
+		
+	}
+	
+	public function spl_address(){
+		$file = file('address.csv.txt');
+		
+		$lines = array();
+		
+		$i = 1;
+		
+		$line = array();
+		foreach($file as $key => $row){
+			if($key > 0 && $key % 1500 == 0){
+				file_put_contents("address.csv{$i}.txt",implode('',$line));
+				$i++;
+				
+				$line = array();
+			}
+			
+			$line[] = $row;
+		}
+		
+		if(!empty($line)){
+			file_put_contents("address.csv{$i}.txt",implode('',$line));
+		}
+		
+	}
 	
 	public function getxy(){
 		$file = file('poi.plist');
@@ -31,7 +98,6 @@ class Tools extends MY_Controller {
 	}
 	
 	public function poi(){
-		
 		$output = array();
 		
 		$output[] = <<< EOT
@@ -43,8 +109,7 @@ EOT;
 
 
 		//$txtFile = file("4444poi.txt");
-		$txtFile = file("775兴趣点-度.txt");
-		print_r($txtFile);
+		$txtFile = file("poi.m.csv.txt");
 		foreach($txtFile as $line){
 			
 			$line = str_replace("\r\n","",$line);
@@ -149,7 +214,7 @@ EOT;
 EOT;
 
 
-		$txtFile = file("1787地址-度.txt");
+		$txtFile = file("address.m.csv.txt");
 		
 		//print_r($txtFile);
 		foreach($txtFile as $line){

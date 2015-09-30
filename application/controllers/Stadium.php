@@ -47,7 +47,7 @@ class Stadium extends Ydzj_Controller {
 		
 		$list = $this->stadium_service->getPagerData($condition);
 		$this->setLeftNavLink('<a id="leftBarLink" class="bar_button" href="'.site_url('stadium/switch_city/upid/'.$city_id).'" title="点击切换城市">'.$cityInfo['name'].'</a>');
-		$this->setRightNavLink('<a id="rightBarLink" class="bar_button" href="'.site_url('stadium/add').'">+添加场馆</a>');
+		$this->setRightNavLink('<a id="rightBarLink" class="bar_button" href="'.site_url('stadium/add').'">+报告场馆</a>');
 		
 		$this->setTopNavTitle($title);
 		$this->seo('体育场馆','篮球馆,足球场,游泳馆,羽毛球场,网球场,体育场馆');
@@ -130,10 +130,9 @@ class Stadium extends Ydzj_Controller {
 	        
 	        if($this->isGetRequest()){
 	        	foreach($stadium['photos'] as $key => $photo ){
-		        	$fileUpload['other_img'][$key] = array(
+		        	$fileUpload[$key] = array(
 						'aid' => $photo['aid'],
-						'url' => $photo['avatar'],
-						'preview' => $photo['avatar_middle']
+						'url' => $photo['avatar']
 					);
 		        }
 		        
@@ -188,19 +187,19 @@ class Stadium extends Ydzj_Controller {
 				
 				$this->_commonRules();
 				$dealData = $this->_dealPicture();
-			    $fileUpload = $dealData['preview'];
+			    $fileUpload = $dealData['currentImg'];
 			        
 				$this->assign('fileUpload',$fileUpload);
 				
 				if($this->form_validation->run() == false){
-	            	if(empty($fileUpload['other_img'][0]['aid'])){
+	            	if(empty($fileUpload[0]['aid'])){
 	            		$this->assign('img_error0','请上传场馆封面照片,JPG格式');
 	            	}
 	            	
 	            	break;
 	            }else{
 	            	//必须传一张封面
-	            	if(empty($fileUpload['other_img'][0]['aid'])){
+	            	if(empty($fileUpload[0]['aid'])){
 	            		$this->assign('img_error0','请上传场馆封面照片,JPG格式');
 	            		break;
 	            	}
@@ -236,52 +235,39 @@ class Stadium extends Ydzj_Controller {
 	private function _dealPicture(){
 		
     	$this->load->library('Attachment_Service');
-    	
     	$this->attachment_service->setUid($this->_profile['basic']['uid']);
     	
     	$fileUpload = array();
-    	$fileInfo = $this->attachment_service->addImageAttachment('cover_img');
-    	
-    	
-    	$images = array();
     	$deleteImage = array();
     	
     	for($i = 0; $i <= 5; $i++){
-        	$otherFile = $this->attachment_service->addImageAttachment('other_img'.$i);
+        	$otherFile = $this->attachment_service->addImageAttachment('img'.$i);
+        	
         	if($otherFile){
-        		$images[] = array(
-        			'aid' => $otherFile['id'],
-        			'avatar' => $otherFile['file_url'],
-        			'avatar_large' => $otherFile['img_large'],
-        			'avatar_big' => $otherFile['img_big'],
-        			'avatar_middle' => $otherFile['img_middle'],
-        			'avatar_small' => $otherFile['img_small']
-        		);
+        		$middleFile = $this->attachment_service->resize($otherFile,array('middle' => array('maintain_ratio' => true)));
         		
-        		//对已上传的图片 在提交校验错误的情况下，显示预览
-        		$fileUpload['other_img'][$i] = array(
+        		//对已上传的图片 在提交校验其他数据错误的情况下，记住已传图片
+        		$fileUpload[$i] = array(
         			'aid' => $otherFile['id'],
         			'url' => $otherFile['file_url'],
-        			'preview' => $otherFile['img_middle']
+        			'preview' => $middleFile['img_middle']
         		);
-        		
-        		
         	}else{
-        		$otherImgUrl = $this->input->post('other_img'.$i.'_url');
+        		
+        		//js 前台删除图片了， 再次提交后再清楚。
+        		$otherImgUrl = $this->input->post('img'.$i.'_url');
+        		
         		if(!empty($otherImgUrl)){
-        			$otherFile = array_merge(array('aid' => $this->input->post('other_img'.$i.'_aid')),getImgPathArray($otherImgUrl));
-        			$images[] = $otherFile;
-        			
-        			$fileUpload['other_img'][$i] = array(
-						'aid' => $otherFile['aid'],
-        				'url' => $otherFile['avatar'],
-        				'preview' => $otherFile['avatar_middle']
+        			$fileUpload[$i] = array(
+						'aid' => $this->input->post('img'.$i.'_aid'),
+        				'url' => $otherImgUrl,
+        				'preview' => $this->input->post('img'.$i.'_preview')
         			);
         		}
         	}
         	
-        	$delId = $this->input->post('other_img'.$i.'_aid');
-        	$delUrl = $this->input->post('other_img'.$i.'_url');
+        	$delId = $this->input->post('img'.$i.'_aid');
+        	$delUrl = $this->input->post('img'.$i.'_url');
         	
         	//删除了图片
         	if($delId && empty($delUrl)){
@@ -293,9 +279,25 @@ class Stadium extends Ydzj_Controller {
         	$this->attachment_service->deleteFiles($deleteImage);
         }
 		
-		//预览照片 , 现在的照片 , 已被删除的照片
-		return array('preview' => $fileUpload, 'currentImg' => $images,'deletedImg' => $deleteImage);
+		//现在的照片
+		return array('currentImg' => $fileUpload);
 	}
+	
+	/**
+	 * 存储数据的时候裁切图片
+	 */
+	private function _cutImage($images){
+		foreach($images as $imgK => $img){
+			$file = $this->attachment_service->resize(array('file_url' => $img['url']),array('large','big'));
+			$images[$imgK]['avatar_large'] = $file['img_large'];
+			$images[$imgK]['avatar_big'] = $file['img_big'];
+			
+			$this->attachment_service->deleteFiles($img['aid'],array('middle'));
+		}
+		
+		return $images;
+	}
+	
 	
 	/**
 	 * 添加场馆
@@ -316,7 +318,7 @@ class Stadium extends Ydzj_Controller {
 			$this->assign('stadiumOwnerList',$stadiumOwnerList);
         	$this->assign('openType',$this->stadium_service->getOpenType());
         	
-			$this->seo('添加体育场馆');
+			$this->seo('报告体育场馆');
 	        
 	        if($this->isPostRequest()){
 	            //$this->form_validation->set_error_delimiters('<div class="error">','</div>');
@@ -324,25 +326,26 @@ class Stadium extends Ydzj_Controller {
 	            	$this->_commonRules();
 	            	
 			        $dealData = $this->_dealPicture();
-			        $fileUpload = $dealData['preview'];
+			        
+			        $fileUpload = $dealData['currentImg'];
 			        
 			        $this->assign('fileUpload',$fileUpload);
 			        
 		            if($this->form_validation->run() == false){
-		            	if(empty($fileUpload['other_img'][0]['aid'])){
+		            	if(empty($fileUpload[0]['aid'])){
 		            		$this->assign('img_error0','请上传场馆封面照片,JPG格式');
 		            	}
 		            	
 		            	break;
 		            }else{
 		            	//必须传一张封面
-		            	if(empty($fileUpload['other_img'][0]['aid'])){
+		            	if(empty($fileUpload[0]['aid'])){
 		            		$this->assign('img_error0','请上传场馆封面照片,JPG格式');
 		            		break;
 		            	}
 		            }
 		            
-	                $id = $this->stadium_service->addStadium($_POST,$dealData['currentImg'],$this->_profile['basic']);
+	                $id = $this->stadium_service->addStadium($_POST,$this->_cutImage($fileUpload),$this->_profile['basic']);
 	                
 	                if($id > 0){
 	                	redirect('stadium/detail/'.$id);

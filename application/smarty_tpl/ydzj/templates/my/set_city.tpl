@@ -51,7 +51,7 @@
         </div>
         <div class="form_error" id="d4_error"></div>
         <div class="row">
-            <input type="button" name="submit" class="primaryBtn" value="保存"/>
+            <input type="button" name="submit" class="master_btn" value="保存"/>
         </div>
     </div>
     </form>

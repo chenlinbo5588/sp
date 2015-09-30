@@ -9,7 +9,7 @@
         </div>
         {form_error('username')}
         <div class="row">
-            <input type="submit" name="submit" class="primaryBtn" value="保存"/>
+            <input type="submit" name="submit" class="master_btn" value="保存"/>
         </div>
     </div>
     </form>

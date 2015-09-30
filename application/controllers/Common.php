@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Common extends Ydzj_Admin_Controller {
+class Common extends Ydzj_Controller {
 	
 	public function __construct(){
 		parent::__construct();
@@ -11,16 +11,44 @@ class Common extends Ydzj_Admin_Controller {
 	
 	/**
 	 * 图片上传
+	 *
 	 */
 	public function pic_upload(){
 		$this->load->library('Attachment_Service');
-		$this->attachment_service->setUid($this->_adminProfile['basic']['uid']);
+		$this->attachment_service->setUid($this->_profile['basic']['uid']);
 		$fileData = $this->attachment_service->addImageAttachment('_pic');
+		
+		//$Orientation[$exif[IFD0][Orientation]];
+		//$exif = exif_read_data($fileData['file_url'],0,true);
 		if($fileData){
-			$fileData = $this->attachment_service->resize($fileData , array('big'));
+			
+			$size = $this->input->post('size');
+			
+			if(empty($size) || !$this->attachment_service->isAllowedSize($size)){
+				$size = 'big';
+			}
+			
+			$fileData = $this->attachment_service->resize($fileData , array($size));
+			//删除原上传文件
+			unlink($fileData['full_path']);
+			if($this->input->post('id')){
+				$type = $this->input->post('type');
+				$delSize = array();
+				
+				switch($type){
+					case 'member':
+						$delSize = array('big');
+						break;
+					default:
+						break;
+				}
+				
+				$this->attachment_service->deleteFiles(array($this->input->post('id')) , $delSize);
+			}
+			
 			exit(json_encode(array('status'=>1,'formhash'=>$this->security->get_csrf_hash(),'id' => $fileData['id'], 'url'=>base_url($fileData['img_big']))));
 		}else{
-			exit(json_encode(array('status'=>0,'msg'=>$this->attachment_service->getErrorMsg('',''))));
+			exit(json_encode(array('status'=>0,'formhash'=>$this->security->get_csrf_hash(),'msg'=>$this->attachment_service->getErrorMsg('',''))));
 		}
 	}
 	

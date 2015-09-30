@@ -109,8 +109,8 @@
 	
 	<div class="row" id="submitFixedWrap" >
 	    <div class="row fl col2">
-	        <input class="primaryBtn fr" id="saveBtn" type="submit" name="submit" value="保存"/>
-	        <input type="button" id="closeMapBtn" name="closeMap" class="primaryBtn fr" style="display:none;" value="关闭地图"/>
+	        <input class="master_btn fr" id="saveBtn" type="submit" name="submit" value="保存"/>
+	        <input type="button" id="closeMapBtn" name="closeMap" class="master_btn fr" style="display:none;" value="关闭地图"/>
 	    </div>
 	    <div class="row fl col2">
 	        <a class="link_btn grayed" href="{$editUrl}"}>{$mangeText}</a>

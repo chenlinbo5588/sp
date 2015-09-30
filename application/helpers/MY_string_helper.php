@@ -17,8 +17,8 @@ if ( ! function_exists('mask_mobile'))
 	 */
 	function mask_mobile($mobile, $mask = '*')
 	{
-		$str = '';
-		if(strlen($mobile) > 8){
+		$str = $mobile;
+		if(preg_match("/^(\+?86)?1[0-9][0-9]{1}[0-9]{8}$|15[0189]{1}[0-9]{8}$|189[0-9]{8}$/",$mobile)){
 			$str = substr($mobile,0,-8). $mask.$mask.$mask.$mask.substr($mobile,-4);
 		}
 		

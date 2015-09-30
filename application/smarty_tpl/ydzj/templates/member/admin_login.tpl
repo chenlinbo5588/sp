@@ -22,7 +22,7 @@
             <img class="nature" src="{site_url('captcha')}" title="点击图片刷新"/>
         </div>
         
-        <div class="row"><input class="primaryBtn" type="submit" name="login" value="登陆"/></div>
+        <div class="row"><input class="master_btn" type="submit" name="login" value="登陆"/></div>
         <div class="row center"><a href="{site_url('member/login')}" title="去前台登陆">去前台登陆</a>
     </form>
 </div>

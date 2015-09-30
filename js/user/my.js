@@ -39,6 +39,8 @@ $(function(){
 			for(var i = 0; i < cityList.length; i++){
 				targetSel.append('<option value="' + cityList[i].id + '">' + cityList[i].name + '</option>');
 			}
+			
+			targetSel.focus();
 		}
 	});
 	

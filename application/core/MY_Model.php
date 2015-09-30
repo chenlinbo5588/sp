@@ -214,7 +214,7 @@ class MY_Model extends CI_Model {
             $data['gmt_modify'] = $now;
         }
         
-        $this->db->update($this->_tableRealName, $param, $where);
+        $this->db->update($this->_tableRealName, $data, $where);
         return $this->db->affected_rows();
     }
     

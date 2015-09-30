@@ -142,7 +142,7 @@
     <div class="row pd5">
         {* 二期完善 *}
         {if $team['basic']['joined_type'] == 2}
-        <input class="primaryBtn" type="button" name="joinApply" value="申请加入"/>
+        <input class="master_btn" type="button" name="joinApply" value="申请加入"/>
         {/if}
         
         {if $canManager}
@@ -150,7 +150,7 @@
             <input type="text" class="at_txt" name="inviteUrl" value="{$inviteUrl}"/>
             <p class="muted">链接24小时内有效，超过时间请刷新页面重新复制</p>
         </div>
-        <input class="primaryBtn grayed" type="button" name="inviteUrl" value="全选复制邀请链接并发送给您的朋友"/>
+        <input class="master_btn grayed" type="button" name="inviteUrl" value="全选复制邀请链接并发送给您的朋友"/>
         {/if}
     </div>
 </div>
@@ -158,7 +158,7 @@
 {if $inManageMode}
 <div class="row" id="submitFixedWrap" >
     <div class="row fl col2">
-        <input class="primaryBtn fr " type="submit" name="submit" value="保存"/>
+        <input class="master_btn fr " type="submit" name="submit" value="保存"/>
     </div>
     <div class="row fl col2">
         <a class="link_btn grayed" href="{$editUrl}"}>{$mangeText}</a>

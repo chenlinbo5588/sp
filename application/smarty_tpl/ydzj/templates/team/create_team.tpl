@@ -4,7 +4,6 @@
 {form_open_multipart(site_url('team/create_team'),'id="createTeamForm"')}
 <input type="hidden" name="team_log_id" value="{$team_log_id}"/>
 <input type="hidden" name="team_logo" value="{$team_logo}" />
-<input type="hidden" name="team_logo_url" value="{$team_logo_url}"/>
 <div id="create_team" class="handle_area">
     
     <div class="row">
@@ -48,12 +47,12 @@
         <img data-src="{base_url('img/team/team_sample.jpg')}"/>
     </div>
     <div class="row img_preview">
-        {if $team_logo_url}
-        <img src="{base_url($team_logo_url)}"/>
+        {if $team_logo}
+        <img src="{base_url($team_logo)}"/>
         {/if}
     </div>
     <div id="submitFixedWrap" >
-        <input type="submit" name="submit" class="primaryBtn" value="保存"/>
+        <input type="submit" name="submit" class="master_btn" value="保存"/>
     </div>
 </div>
 </form>

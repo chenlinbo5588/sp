@@ -55,6 +55,8 @@ class Team extends Ydzj_Controller {
 		
 		
 		$searchKey = $this->input->get('search_key');
+		$condition['order'] = 'id DESC';
+		
 		if($searchKey){
 			$condition['like']['title'] = $searchKey;
 		}
@@ -366,51 +368,30 @@ class Team extends Ydzj_Controller {
 				$this->load->library('Attachment_Service');
 				$this->attachment_service->setUid($this->_profile['basic']['uid']);
 				
-				$avatar_id = $this->input->post('avatar_id');
+				$fileData = $this->attachment_service->addImageAttachment('avatar');
 				
-				$fileData = $this->attachment_service->addImageAttachment('avatar',array(
-					'min_width' => 800,
-					'min_height' => 800
-				));
-				
-				if(!empty($fileData['img_big'])){
-					$newAvatar = $fileData['img_big'];
-					$this->assign('avatar_id',$fileData['id']);
-					
-					if($avatar_id){
-						$this->attachment_service->deleteFiles(array($avatar_id));
-					}
-				}else{
-					$this->assign('avatar_id',$avatar_id);
-					$newAvatar = $this->input->post('new_avatar');
-				}
-				
-				$this->assign('new_avatar',$newAvatar);
-				
-				if($newAvatar == ''){
+				if(empty($fileData)){
 					$this->assign('avatar_error',$this->attachment_service->getErrorMsg());
 					break;
 				}
 				
-				$this->load->library('Team_Service');
+				//创建缩略图
+				$resizeFile = $this->attachment_service->resize($fileData , array('large','big'));
 				
+				$this->load->library('Team_Service');
 				$result = $this->team_service->updateTeamInfo(array(
 					'aid' => $fileData['id'],
-					'avatar' => $fileData['file_url'],
-					'avatar_large' => $fileData['img_large'],
-					'avatar_big' => $fileData['img_big'],
-					'avatar_middle' => $fileData['img_middle'],
-					'avatar_small' => $fileData['img_small']
+					'avatar_large' => $resizeFile['img_large'],
+					'avatar_big' => $resizeFile['img_big']
 				),$team['basic']['id']);
 				
-				
+				$this->attachment_service->deleteByFileUrl($fileData['file_url']);
 				if($team['basic']['aid']){
-					$this->attachment_service->deleteFiles(array($team['basic']['aid']));
+					$this->attachment_service->deleteFiles(array($team['basic']['aid']) ,'all');
 				}
 				
 				$setOk = true;
 			}
-			
 			
 			if($setOk){
 				redirect('team/detail/'.$this->_teamid);
@@ -505,7 +486,6 @@ class Team extends Ydzj_Controller {
 					if($fileData){
 						$this->assign('team_log_id',$fileData['id']);
 						$this->assign('team_logo',$fileData['file_url']);
-						$this->assign('team_logo_url',$fileData['img_big']);
 						
 						//重传了直接删除原先传的那张图片
 						if($team_logo_id){
@@ -514,7 +494,6 @@ class Team extends Ydzj_Controller {
 					}else{
 						$this->assign('team_log_id',$team_logo_id);
 						$this->assign('team_logo',$team_logo);
-						$this->assign('team_logo_url',$this->input->post('team_logo_url'));
 					}
 					
 					$this->form_validation->reset_validation();
@@ -566,7 +545,7 @@ class Team extends Ydzj_Controller {
 							)
 						);
 					}else{
-						$this->form_validation->set_rules('title','球队名称', 'required|max_length[20]');
+						$this->form_validation->set_rules('title','球队名称', 'required|max_length[4]');
 					}
 					
 					$this->form_validation->set_rules('leader','队长设置','required|in_list[1,2]');
@@ -600,24 +579,17 @@ class Team extends Ydzj_Controller {
 					if($fileData){
 						$addParam['aid'] = $fileData['id'];
 						$addParam['avatar'] = $fileData['file_url'];
-						$addParam['avatar_large'] = $fileData['img_large'];
-						$addParam['avatar_big'] = $fileData['img_big'];
-						$addParam['avatar_middle'] = $fileData['img_middle'];
-						$addParam['avatar_small'] = $fileData['img_small'];
 					}else if($team_logo){
-						
 						$addParam['aid'] = $team_logo_id;
 						$addParam['avatar'] = $team_logo;
-						
-						$dotPos = strrpos($team_logo,'.');
-						$fileName = substr($team_logo,0,$dotPos);
-						$suffixName = substr($team_logo,$dotPos);
-						
-						$addParam['avatar_large'] = $fileName.'@large'.$suffixName;
-						$addParam['avatar_big'] = $fileName.'@big'.$suffixName;
-						$addParam['avatar_middle'] = $fileName.'@middle'.$suffixName;
-						$addParam['avatar_small'] = $fileName.'@small'.$suffixName;
 					}
+					
+					//创建缩略图
+					$resizeFile = $this->attachment_service->resize(array('file_url' => $addParam['avatar']) , array('large','big'));
+					$addParam['avatar_large'] = $resizeFile['img_large'];
+					$addParam['avatar_big'] = $resizeFile['img_big'];
+					//$addParam['avatar_middle'] = $resizeFile['img_middle'];
+					//$addParam['avatar_small'] = $resizeFile['img_small'];
 					
 					foreach($sportsCategoryList as $cate){
 		            	if($cate['id'] == $this->input->post('category_id')){
@@ -627,10 +599,9 @@ class Team extends Ydzj_Controller {
 		            }
 					
 					$teamid = $this->team_service->addTeam($addParam,$this->_profile['basic']);
-					
+					$this->attachment_service->deleteByFileUrl($addParam['avatar']);
 					if($teamid){
 						$isCreateOk = true;
-						//$this->_prepareDetailData($teamid);
 					}else{
 						$this->assign('feedback','<div class="warning">创建球队失败，请刷新页面重新尝试。</div>');
 					}

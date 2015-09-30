@@ -1,17 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8"/>
-	<title>{$SEO_title}</title>
-	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
-	<meta name="description" content="{$SEO_description}" />
-	<meta name="keywords" content="{$SEO_keywords}" />
-	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,minimal-ui">
-    <link rel="stylesheet" href="{base_url('css/base.css')}"/>
-    <link rel="stylesheet" href="{base_url('css/site.css')}"/>
-    <link rel="stylesheet" href="{base_url('font-awesome/css/font-awesome.min.css')}"/>
-	<script src="{js_url('js/jquery-1.11.3.min.js')}" type="text/javascript"></script>
-	<script src="{js_url('js/common.js')}" type="text/javascript"></script>
+<meta charset="utf-8"/>
+<title>{$SEO_title}</title>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="description" content="{$SEO_description}" />
+<meta name="keywords" content="{$SEO_keywords}" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,minimal-ui">
+<link rel="stylesheet" href="{base_url('css/site.css')}"/>
+<script type="text/javascript" src="{js_url('js/jquery.js')}" ></script>
+<script>
+var cookiedomain = "",
+    cookiepath = "{config_item('cookie_path')}",
+    cookiepre = "{config_item('cookie_prefix')}",
+    formhash = "{$formhash}",
+    SITEURL = '{base_url()}',
+    LOADING_IMAGE = "{base_url('img/loading/loading.gif')}";
+</script>
+<script type="text/javascript" src="{js_url('js/common.js')}"></script>
 </head>
 <body>
    <div id="wrap">

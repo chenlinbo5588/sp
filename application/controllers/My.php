@@ -132,61 +132,41 @@ class My extends MyYdzj_Controller {
 		$this->setLeftNavLink('<a id="leftBarLink" class="bar_button" href="'.site_url('my').'" title="返回">返回</a>');
 		
 		if($this->isPostRequest()){
-			
 			$setOk = false;
 			
 			$inviteFrom = $this->input->post('inviteFrom');
-			
-			$this->assign('default_avatar',$this->input->post('default_avatar'));
+			//$this->assign('default_avatar',$this->input->post('default_avatar'));
 			$this->assign('inviteFrom',$inviteFrom);
 			$this->assign('returnUrl',$this->input->post('returnUrl'));
 			
 			for($i = 0; $i < 1; $i++){
+				$avatar_id = $this->input->post('avatar_id');
+				$newAvatar = $this->input->post('new_avatar');
+				$newAvatar = str_replace(base_url(),'',$newAvatar);
+				
 				$this->load->library('Attachment_Service');
 				$this->attachment_service->setUid($this->_profile['basic']['uid']);
 				
-				$fileData = $this->attachment_service->addImageAttachment('avatar',array(
-					'min_width' => 800,
-					'min_height' => 800
-				));
+				$fileData = $this->attachment_service->resize(array(
+					'file_url' => $newAvatar
+				) , array('middle') , array('x_axis' => $this->input->post('x1'), 'y_axis' => $this->input->post('y1')));
 				
 				
-				$avatar_id = $this->input->post('avatar_id');
-				
-				if(!empty($fileData['img_big'])){
-					$newAvatar = $fileData['img_big'];
-					
-					$this->assign('avatar_id',$fileData['id']);
-					
-					if($avatar_id){
-						$this->attachment_service->deleteFiles(array($avatar_id));
-					}
-					
-				}else{
-					$this->assign('avatar_id',$avatar_id);
-					$newAvatar = $this->input->post('new_avatar');
+				if($fileData['img_middle']){
+					$smallImg = $this->attachment_service->resize(array(
+						'file_url' => $fileData['img_middle']
+					) , array('small') );
 				}
 				
-				$this->assign('new_avatar',$newAvatar);
-				
-				if($newAvatar == ''){
-					$this->assign('avatar_error',$this->attachment_service->getErrorMsg());
-					break;
-				}
+				//删除原图
+				unlink($fileData['full_path']);
 				
 				$this->load->library('Member_Service');
 				$result = $this->member_service->updateUserInfo(array(
-					'aid' => $fileData['id'],
-					'avatar' => $fileData['file_url'],
-					'avatar_large' => $fileData['img_large'],
-					'avatar_big' => $fileData['img_big'],
+					'aid' => $avatar_id,
 					'avatar_middle' => $fileData['img_middle'],
-					'avatar_small' => $fileData['img_small']
+					'avatar_small' => $smallImg['img_small']
 				),$this->_profile['basic']['uid']);
-				
-				if($this->_profile['basic']['aid']){
-					$this->attachment_service->deleteFiles(array($this->_profile['basic']['aid']));
-				}
 				
 				$this->member_service->refreshProfile($this->_profile['basic']['uid']);
 				$setOk = true;
@@ -203,6 +183,7 @@ class My extends MyYdzj_Controller {
 					$this->load->library('Common_District_Service');
 					$this->_prepareSetCity();
 					$this->seoTitle('设置您的所在地');
+					$this->setTopNavTitle('设置您的所在地');
 					$this->display('my/set_city');
 				}
 				

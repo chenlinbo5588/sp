@@ -11,8 +11,6 @@
 <script type="text/javascript" src="{js_url('js/jquery.js')}" ></script>
 <script type="text/javascript" src="{js_url('js/jquery.validation.min.js')}"></script>
 <script type="text/javascript" src="{js_url('js/jquery.cookie.js')}"></script>
-<script type="text/javascript" src="{js_url('js/common.js')}"></script>
-<script type="text/javascript" src="{js_url('js/admincp.js')}"></script>
 <script>
 var cookiedomain = "",
     cookiepath = "{config_item('cookie_path')}",
@@ -27,6 +25,8 @@ if (cookie_skin) {
     $('#cssfile2').attr("href","{base_url('css')}/"+ cookie_skin +".css");
 } 
 </script>
+<script type="text/javascript" src="{js_url('js/common.js')}"></script>
+<script type="text/javascript" src="{js_url('js/admincp.js')}"></script>
 </head>
 <body>
 <div id="append_parent"></div>

@@ -1,5 +1,6 @@
 {include file="common/header.tpl"}
 {include file="common/baidu_map.tpl"}
+
 <div id="feedback">{$feedback}</div>
 <div id="stadium" class="handle_area">
 {form_open_multipart(site_url('stadium/add'),'id="stadiumForm"')}
@@ -75,25 +76,26 @@
     {foreach from=$maxOtherFile item=item}
     <div class="row photoUpload">
         <label class="side_lb">{if $item == 0}封面照片{else}其它照片<em>{$item}</em>{/if}</label>
-        <input type="hidden" value="{$fileUpload['other_img'][$item]['url']}" name="other_img{$item}_url" id="url{$item}"/>
-        <input type="hidden" value="{$fileUpload['other_img'][$item]['aid']}" name="other_img{$item}_aid"/>
-        <input type="file" name="other_img{$item}" />
+        <input type="hidden" value="{$fileUpload[$item]['url']}" name="img{$item}_url" id="url{$item}"/>
+        <input type="hidden" value="{$fileUpload[$item]['preview']}" name="img{$item}_preview"/>
+        <input type="hidden" value="{$fileUpload[$item]['aid']}" name="img{$item}_aid"/>
+        <input type="file" name="img{$item}" />
     </div>
     {if $item == 0}
     <div class="row form_error" id="tip_img{$item}">{$img_error0}</div>
     <a name="cover_error"></a>
     {/if}
     <div class="row img_preview" id="url{$item}">
-    {if $fileUpload['other_img'][$item]['preview']}
-    <img class="nature" src="{base_url($fileUpload['other_img'][$item]['preview'])}"/>
+    {if $fileUpload[$item]['preview']}
+    <img class="nature" src="{base_url($fileUpload[$item]['preview'])}"/>
     <a href="javascript:void(0)" class="link_btn grayed opTrash" data-id="url{$item}">删除照片</a>
     {/if}
     </div>
     {/foreach}
    	
    	<div class="row" id="submitFixedWrap" >
-        <div class="row col" ><button id="saveBtn" type="submit" class="primaryBtn" name="submit">保存</button>
-        <input type="button" id="closeMapBtn" name="closeMap" class="primaryBtn" style="display:none;" value="关闭地图"/></div>
+        <div class="row col" ><button id="saveBtn" type="submit" class="master_btn" name="submit">保存</button>
+        <input type="button" id="closeMapBtn" name="closeMap" class="master_btn" style="display:none;" value="关闭地图"/></div>
     </div>
 </form>
 </div>
