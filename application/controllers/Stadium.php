@@ -244,13 +244,13 @@ class Stadium extends Ydzj_Controller {
         	$otherFile = $this->attachment_service->addImageAttachment('img'.$i);
         	
         	if($otherFile){
-        		$middleFile = $this->attachment_service->resize($otherFile,array('middle' => array('maintain_ratio' => true)));
+        		$previewFile = $this->attachment_service->resize($otherFile,array('small'));
         		
         		//对已上传的图片 在提交校验其他数据错误的情况下，记住已传图片
         		$fileUpload[$i] = array(
         			'aid' => $otherFile['id'],
         			'url' => $otherFile['file_url'],
-        			'preview' => $middleFile['img_middle']
+        			'preview' => $previewFile['img_small']
         		);
         	}else{
         		
@@ -288,11 +288,12 @@ class Stadium extends Ydzj_Controller {
 	 */
 	private function _cutImage($images){
 		foreach($images as $imgK => $img){
-			$file = $this->attachment_service->resize(array('file_url' => $img['url']),array('large','big'));
+			$file = $this->attachment_service->resize(array('file_url' => $img['url']),array('large','big','middle'));
 			$images[$imgK]['avatar_large'] = $file['img_large'];
 			$images[$imgK]['avatar_big'] = $file['img_big'];
+			$images[$imgK]['avatar_middle'] = $file['img_middle'];
 			
-			$this->attachment_service->deleteFiles($img['aid'],array('middle'));
+			$this->attachment_service->deleteFiles($img['aid'],array('small'));
 		}
 		
 		return $images;

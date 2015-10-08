@@ -18,8 +18,8 @@ var cookiedomain = "",
     formhash = "{$formhash}",
     cookie_skin = $.cookie("MyCssSkin"),
     SITEURL = '{base_url()}',
+    cityUrl = "{site_url('district/index/')}",
     LOADING_IMAGE = "{base_url('img/loading/loading.gif')}";
-    
     
 if (cookie_skin) {
     $('#cssfile2').attr("href","{base_url('css')}/"+ cookie_skin +".css");

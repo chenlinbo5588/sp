@@ -1,5 +1,5 @@
 <div class="page">
-  {form_open(admin_site_url('common/pic_cut'),'id="form_cut"')}
+  {form_open(admin_site_url('member/pic_cut'),'id="form_cut"')}
     <input type="hidden" name="form_submit" value="ok" />
     <input type="hidden" id="x" name="x" value="{$smarty.get['x']}" />
     <input type="hidden" id="x1" name="x1" />
@@ -23,7 +23,7 @@
         <h4>操作帮助</h4>
         <p>请在工作区域放大缩小及移动选取框，选择要裁剪的范围，裁切宽高比例固定；裁切后的效果为右侧预览图所显示；保存提交后生效。</p>
       </div>
-      <div class="cut-btn"> <a href="JavaScript:void(0);" class="btn" id="pic_submit"><span>提交</span></a> </div>
+      <div class="cut-btn"> <a href="JavaScript:void(0);" class="btn" id="pic_submit"><span>提交</span></a></div>
     </div>
   </form>
 </div>
@@ -68,7 +68,7 @@ $(function(){
 
     $('#pic_submit').click(function(){
         var d=$('#form_cut').serialize();
-        $.post('{admin_site_url('common/pic_cut')}',d,function(data){
+        $.post('{admin_site_url('member/pic_cut')}',d,function(data){
             call_back(data);
             DialogManager.close('cutpic');
         },'json');

@@ -26,7 +26,36 @@ class Common_District_Service extends Base_Service {
 		));
 	}
 	
+	/**
+	 * 准备数据
+	 */
+	public function prepareCityData($ds = array()){
+		
+		$rt = array();
+		$rt['d1'] = $this->getDistrictByPid(0);
+		
+		if($ds['d1'] > 0){
+			$rt['d2'] = $this->getDistrictByPid($ds['d1']);
+		}
+		
+		if($ds['d2'] > 0){
+			$rt['d3'] = $this->getDistrictByPid($ds['d2']);
+		}
+		
+		if($ds['d3'] > 0){
+			$rt['d4'] = $this->getDistrictByPid($ds['d3']);
+		}
+		
+		return $rt;
+	}
+	
+	
 	public function getDistrictByIds($ids,$field = 'id,name'){
+		
+		if(empty($ids)){
+			return array();
+		}
+		
 		$ds = $this->_districtModel->getList(array(
 			'select' => $field,
 			'where_in' => array(

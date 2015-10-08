@@ -242,6 +242,7 @@ class Stadium_Service extends Base_Service {
 			$newImag['aid'] = $img['aid'];
 			$newImag['avatar_large'] = $img['avatar_large'];
 			$newImag['avatar_big'] = $img['avatar_big'];
+			$newImag['avatar_middle'] = $img['avatar_middle'];
 			$newImag['gmt_create'] = $now;
 			$newImag['gmt_modify'] = $now;
 			

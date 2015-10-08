@@ -200,6 +200,7 @@ class MY_Model extends CI_Model {
      * 更新
      */
     public function update($param, $where){
+    	
         $fields = $this->_metaData();
         
         $now = time();
@@ -223,8 +224,6 @@ class MY_Model extends CI_Model {
      * 增加或者 减少 字段数值
      */
     public function increseOrDecrease($param, $where){
-    	
-    	
 		foreach($param as $p){
 			$this->db->set($p['key'],$p['value'],false);
 		}
@@ -364,7 +363,7 @@ class MY_Model extends CI_Model {
             }
             
             $config['total_rows'] = $this->db->count_all_results($this->_tableRealName);
-            $pager = pageArrayGenerator($condition['pager']['current_page'],$condition['pager']['page_size'],$config['total_rows'],$condition['pager']['query_param']);
+            $pager = pageArrayGenerator($condition['pager']['current_page'],$condition['pager']['page_size'],$config['total_rows'],$condition['pager']['query_param'],$condition['pager']['call_js']);
             $data['pager'] = $pager['pager'];
         }else{
         	$data = $query->result_array();

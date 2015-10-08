@@ -2,18 +2,20 @@
 
 class MY_Form_validation extends CI_Form_validation {
     
-    public function is_unique_by_status($str,$field){
-        list($table, $field,$key,$value)=explode('.', $field);
+    public function is_unique_by_status($str,$fields){
+        list($table, $field,$key,$value)=explode('.', $fields);
 		$query = $this->CI->db->get_where($table, array($field => $str,$key => $value));
 		
 		return $query->num_rows() === 0;
     }
     
-    
-    public function is_unique_not_self($str,$field){
-        list($table, $field,$key,$value,$key2,$value2)=explode('.', $field);
+    /**
+     * sp_member.nickname.uid.182
+     */
+    public function is_unique_not_self($str,$fields){
+        list($table, $field,$key,$value)=explode('.', $fields);
         
-        $query = $this->CI->db->get_where($table, array($field => $str, $key2 => $value2));
+        $query = $this->CI->db->get_where($table, array($field => $str));
         $result = $query->result_array();
         
         /*
@@ -27,7 +29,7 @@ class MY_Form_validation extends CI_Form_validation {
         }
         
         if($query->num_rows() == 1 && $value == $result[0][$key]){
-                return true;
+            return true;
         }else{
             return false;
         }

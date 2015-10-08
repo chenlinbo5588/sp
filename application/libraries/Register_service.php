@@ -17,13 +17,13 @@ class Register_Service extends Base_Service {
 	public function createHalfRegisterMemebr($regParam){
 		$return = $this->formatArrayReturn();
 		
-		$regParam['status'] = -1;
+		$regParam['status'] = -2;
 		
 		$uid = $this->_userModel->_add(array(
 			'nickname' => $regParam['mobile'],
 			'mobile' => $regParam['mobile'],
-			'regip' => $regParam['regip'],
-			'status' => -1,
+			'reg_ip' => $regParam['reg_ip'],
+			'status' => -2,
 		));
 		
 		if($uid > 0){
@@ -57,12 +57,22 @@ class Register_Service extends Base_Service {
 	public function createMember($regParam){
 		$return = $this->formatArrayReturn();
 		
+		$regParam['reg_ip'] = $this->CI->input->ip_address();
+		$regParam['reg_date'] = $this->CI->input->server('REQUEST_TIME');
+						
+		
+		if(empty($regParam['aid'])){
+			$avatarIndex = rand(1,3);
+			$regParam['avatar_middle'] = 'img/avatar/'.$avatarIndex.'@middle.jpg';
+			$regParam['avatar_small'] = 'img/avatar/'.$avatarIndex.'@small.jpg';
+		}
+		
 		$uid = $this->_userModel->_add($regParam);
 		
 		if($uid > 0){
 			$return = $this->successRetun(array('uid' => $uid));
 			$this->CI->Security_Control_Model->_add(array(
-				'ip' => $regParam['regip'],
+				'ip' => $regParam['reg_ip'],
 				'action' => 'register',
 				'extra' => $uid
 			));

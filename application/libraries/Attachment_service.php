@@ -14,7 +14,6 @@ class Attachment_Service extends Base_Service {
 		
 		$this->CI->load->model('Attachment_Model');
 		$this->CI->load->library('image_lib');
-		$this->CI->load->helper('img');
 		
 		$this->_attachModel = $this->CI->Attachment_Model;
 		$this->_imageSizeConfig = $this->getImageSizeConfig();
@@ -37,7 +36,7 @@ class Attachment_Service extends Base_Service {
         
         make_dir($config['upload_path']);
         
-		$config['allowed_types'] = 'jpg|jpeg';
+		$config['allowed_types'] = 'jpg';
 		$config['file_ext_tolower'] = true;
 		$config['encrypt_name'] = true;
 		$config['max_size'] = 4096;
@@ -51,10 +50,10 @@ class Attachment_Service extends Base_Service {
 	 */
 	private function getImageSizeConfig(){
 		return array(
-			'large' => array('width' => 800,'height' => 600, 'maintain_ratio' => true,'quality' => 90),
+			'large' => array('width' => 1200,'height' => 900, 'maintain_ratio' => true,'quality' => 90),
 			'big' => array('width' => 400,'height' => 300 , 'maintain_ratio' => true,'quality' => 90),
-			'middle' => array('width' => 200,'height' => 200,'maintain_ratio' => false,'quality' => 90),
-			'small' => array('width' => 100,'height' => 100,'maintain_ratio' => false,'quality' => 90)
+			'middle' => array('width' => 150,'height' => 150,'maintain_ratio' => true,'quality' => 90),
+			'small' => array('width' => 100,'height' => 100,'maintain_ratio' => true,'quality' => 100)
 		);
 	}
 	
@@ -73,19 +72,24 @@ class Attachment_Service extends Base_Service {
 	public function deleteByFileUrl($files){
 		if(is_array($files)){
 			foreach($files as $del){
-				unlink(ROOTPATH.DIRECTORY_SEPARATOR.$del);
+				@unlink(ROOTPATH.DIRECTORY_SEPARATOR.$del);
 			}
 		}else{
-			unlink(ROOTPATH.DIRECTORY_SEPARATOR.$files);
+			@unlink(ROOTPATH.DIRECTORY_SEPARATOR.$files);
 		}
 		
 	}
 	
-	public function deleteFiles($files , $size = array()){
+	/**
+	 * @param array $files id列表
+	 * @param array $size array('big','middle')
+	 * @param array $fromBg  0 = 前台用户上传的  1 = 后台用户上传的
+	 */
+	public function deleteFiles($files , $size = array() , $fromBg = 0){
 		if(is_array($files)){
 			$list = $this->_attachModel->getList(array(
 				'select' => 'file_url',
-				'where' => array('uid' => $this->_uid > 0 ?  $this->_uid : -1),
+				'where' => array('uid' => $this->_uid > 0 ?  $this->_uid : -1 , 'from_bg' => $fromBg),
 				'where_in' => array(
 					array('key' => 'id','value' => $files)
 				)
@@ -94,7 +98,7 @@ class Attachment_Service extends Base_Service {
 		}else{
 			$list = $this->_attachModel->getList(array(
 				'select' => 'file_url',
-				'where' => array('uid' => $this->_uid > 0 ?  $this->_uid : -1 , 'id' => $files)
+				'where' => array('uid' => $this->_uid > 0 ?  $this->_uid : -1 , 'from_bg' => $fromBg ,  'id' => $files)
 			));
 		}
 		
@@ -105,9 +109,9 @@ class Attachment_Service extends Base_Service {
 			}
 			
 			$delList = getImgPathArray($file['file_url'] , $size);
-			file_put_contents("deleteFiles.txt",print_r($delList,true));
+			//file_put_contents("deleteFiles.txt",print_r($delList,true));
 			foreach($delList as $del){
-				unlink(ROOTPATH.DIRECTORY_SEPARATOR.$del);
+				@unlink(ROOTPATH.DIRECTORY_SEPARATOR.$del);
 			}
 		}
 	}
@@ -148,7 +152,7 @@ class Attachment_Service extends Base_Service {
 				$currentConfig = $this->_imageSizeConfig[$resizeName];
 			}
 			
-			file_put_contents("currentResizeConfig.txt",print_r($currentConfig,true));
+			//file_put_contents("currentResizeConfig.txt",print_r($currentConfig,true));
 			$fileData['img_'.$resizeName] = '';
 			$resize['maintain_ratio'] = $currentConfig['maintain_ratio'];
 			$resize['new_image'] = $fileData['raw_name'].'@'.$resizeName.$fileData['file_ext'];
@@ -181,8 +185,9 @@ class Attachment_Service extends Base_Service {
 	
 	/**
 	 * 添加图片附件信息
+	 * 
 	 */
-	public function addImageAttachment($filename, $moreConfig = array(),$uid = 0){
+	public function addImageAttachment($filename, $moreConfig = array(),$from = 0){
 		
 		//处理照片
 		$config = $this->getImageConfig();
@@ -204,6 +209,7 @@ class Attachment_Service extends Base_Service {
 				$fileData['uid'] = $this->_uid;
 			}
 			
+			$fileData['from_bg'] = $from;
 			$file_id = $this->CI->Attachment_Model->_add($fileData);
 			$fileData['id'] = $file_id;
 			
@@ -222,5 +228,45 @@ class Attachment_Service extends Base_Service {
 	public function getErrorMsg($open = '<div class="form_error">',$close = '</div>'){
 		return $this->CI->upload->display_errors($open,$close);
 	}
+	
+	
+	
+	
+	/**
+	 * 前后台上传图片公告逻辑
+	 * 
+	 * @param datatype $uid 操作人
+	 * @param datatype $uploadName 上传名
+	 * @param datatype $fromBg description
+	 */
+	public function pic_upload($uid,$uploadName , $fromBg = 0){
+		$this->setUid($uid);
+		
+		$fileData = $this->addImageAttachment($uploadName,array(),$fromBg);
+		
+		//$Orientation[$exif[IFD0][Orientation]];
+		//$exif = exif_read_data($fileData['file_url'],0,true);
+		if($fileData){
+			$size = $this->CI->input->post('size');
+			
+			if(empty($size) || !$this->isAllowedSize($size)){
+				$size = 'big';
+			}
+			
+			$fileData = $this->resize($fileData , array($size => array('quality' => 100)));
+			//删除原上传文件
+			unlink($fileData['full_path']);
+			
+			//上传多次情况下，清理上一次上传的文件
+			if($this->CI->input->post('id')){
+				$this->deleteFiles(array($this->CI->input->post('id')),'all');
+			}
+			
+			return array('status'=>1,'formhash'=>$this->CI->security->get_csrf_hash(),'id' => $fileData['id'], 'url'=>base_url($fileData['img_big']));
+		}else{
+			return array('status'=>0,'formhash'=>$this->CI->security->get_csrf_hash(),'msg'=>$this->getErrorMsg('',''));
+		}
+	}
+	
 	
 }

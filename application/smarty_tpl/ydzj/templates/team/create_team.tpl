@@ -37,7 +37,7 @@
     {form_error('joined_type')}
     
     <div class="row">
-        <label class="side_lb"  for="logo_url_file">球队合影：</label>
+        <label class="side_lb"  for="logo_url_file"><em>*</em>球队合影：</label>
         <input id="logo_url_file" class="at_txt" type="file" name="logo_url"/>
     </div>
     {$logo_error}

@@ -15,6 +15,7 @@ var cookiedomain = "",
     cookiepre = "{config_item('cookie_prefix')}",
     formhash = "{$formhash}",
     SITEURL = '{base_url()}',
+    cityUrl = "{site_url('district/index/')}",
     LOADING_IMAGE = "{base_url('img/loading/loading.gif')}";
 </script>
 <script type="text/javascript" src="{js_url('js/common.js')}"></script>

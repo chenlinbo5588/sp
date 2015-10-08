@@ -1,5 +1,6 @@
 var regMobile = /^(\+?86)?1[0-9][0-9]{1}[0-9]{8}$|15[0189]{1}[0-9]{8}$|189[0-9]{8}$/;
-
+//地区缓存
+var districtCache = [];
 
 function drop_confirm(msg, url){
     if(confirm(msg)){
@@ -205,6 +206,56 @@ $.loadingbar = function(settings) {
 
     return spin_wrap;
 };
+
+/**
+ * 绑定地区下拉联动
+ * @param isBind
+ * @returns
+ */
+function districtSelect(isBind){
+	if(isBind){
+		$(".cityGroupWrap .citySelect").bind("change.districtSelect",function(e){
+			var name = $(this).attr("name"),
+				index = parseInt(name.replace('d','')),
+				wrap = $(this).closest(".cityGroupWrap"),
+				targetSel,
+				i,
+				upid = $(this).val();
+			
+			if(index < 4){
+				targetSel = $("select[name=d" + (index + 1) + "]",wrap);
+				
+				for(i = index; i < 4; i++){
+					$("select[name=d" + (i + 1) + "]",wrap).html('').append('<option value="">请选择</option>');
+				}
+				
+				if(upid != ""){
+					if(districtCache[upid]){
+						showCity(districtCache[upid]);
+						return ;
+					}
+					
+					$.getJSON(cityUrl + "/upid/" + upid,function(resp){
+						showCity(resp.data);
+						districtCache[upid] = resp.data;
+					});
+				}
+			}
+			
+			function showCity(cityList){
+				for(i = 0; i < cityList.length; i++){
+					targetSel.append('<option value="' + cityList[i].id + '">' + cityList[i].name + '</option>');
+				}
+				
+				targetSel.focus();
+			}
+		});
+	}else{
+		$(".cityGroupWrap .citySelect").unbind("change.districtSelect");
+	}
+	
+}
+
 
 
 /**

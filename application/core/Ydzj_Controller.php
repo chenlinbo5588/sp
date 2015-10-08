@@ -16,9 +16,10 @@ class Ydzj_Controller extends MY_Controller {
 		
 		$this->form_validation->set_error_delimiters('<div class="form_error">','</div>');
 		
-		$this->session->set_userdata(array('lastvisit' => $this->_reqtime));
 		
+		$this->session->set_userdata(array('lastvisit' => $this->_reqtime));
 		$this->_profile = $this->session->userdata('profile');
+		//print_r($this->session->all_userdata());
 		if(empty($this->_profile)){
 			$this->_profile = array();
 		}
@@ -27,14 +28,8 @@ class Ydzj_Controller extends MY_Controller {
 			$this->assign('profile',$this->session->userdata('profile'));
 		}
 		
-		/*
-		if($this->isAdminLogin()){
-			$this->assign('manage_profile',$this->session->userdata('manage_profile'));
-		}
-		*/
-		
 		$this->initEmail();
-		$this->seo('运动之家','体育运动 爱好 体育场馆查询预定 个人赛事、业余联赛组织', '一个综合性体育运动爱好者聚集地，约朋友出来运动、组织对抗比赛、预约场馆，给您带来一站式体育运动服务，节省您宝贵的时间');
+		$this->seo('运动之家','体育运动 体育场馆 查询预定 个人赛事,业余联赛组织', '一个综合性体育运动爱好者聚集地，约朋友出来运动、组织对抗比赛、预约场馆，给您带来一站式体育运动服务，节省您宝贵的时间');
 	}
 	
 	public function isLogin(){
@@ -46,22 +41,14 @@ class Ydzj_Controller extends MY_Controller {
 	}
 	
 	
-	/*
-	public function isAdminLogin(){
-		if($this->session->userdata('manage_profile')){
-			return true;
-		}
-		
-		return false;
-	}
-	*/
-	
-	
 	public function getAppTemplateDir(){
 		return 'ydzj';
 	}
 	
 	
+	/**
+	 * @todo modify when online
+	 */
 	protected function initEmail(){
 		$config['protocol'] = 'smtp';
 		$config['smtp_host'] = "smtp.163.com";

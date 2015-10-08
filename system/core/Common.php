@@ -867,7 +867,7 @@ function pageArrayGenerator($currPage,$pageSize,$total, $url = '',$callJs = 'pag
     
     return array(
         'pager'=>array(
-        	'shortStyle'=>true,
+        	'shortStyle'=> false,
             'pageUnit'=>'条',
             'pageTit'=>'记录',
             'pageBeginNum'=> ($currPage-1)*$pageSize+1,
@@ -916,4 +916,35 @@ function cutText($str, $len, $mode = true) {
 		
 	}
 	return ($mode) ? $tmp . '...' : $tmp;
+}
+
+
+/**
+ * 图片路径处理
+ */
+if ( ! function_exists('getImgPathArray'))
+{
+	
+	function getImgPathArray($srcImgUrl , $size = array()){
+		
+		if(strpos($srcImgUrl,'@') !== false){
+			$tempUrl = substr($srcImgUrl,0,strrpos($srcImgUrl,'@')) . substr($srcImgUrl,strrpos($srcImgUrl,'.'));
+			$srcImgUrl = $tempUrl;
+		}
+		
+		$img['avatar'] = $srcImgUrl;
+		
+		if($size){
+			$dotPos = strrpos($srcImgUrl,'.');
+			$fileName = substr($srcImgUrl,0,$dotPos);
+			$suffixName = substr($srcImgUrl,$dotPos);
+			
+			foreach($size as $sname){
+				$img['avatar_'.$sname] = $fileName.'@'.$sname.$suffixName;
+			}
+		}
+		
+		return $img;
+	}
+
 }

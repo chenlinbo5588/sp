@@ -50,7 +50,7 @@
             	<div class="delmask" {if set_value('kick['|cat:$item['id']|cat:']')}style="width:100%;height:100%;display:block;"{/if}>已标记删除,轻触取消</div>
                 <div class="headerImg pd5">
                    <a href="{site_url('user/info/')}/{$item['uid']}" title="{$item['nickname']|escape}"><img src="{base_url($item['avatar_middle'])}"/></a>
-                   <strong>昵称:{$item['nickname']|escape}</strong>
+                   <strong>昵称:{mask_mobile($item['nickname'])|escape}</strong>
                    <p>真名:{$item['username']|escape}</p>
                    <p>位置:{$item['position']|escape}</p>
                    <p>职务:{$item['rolename']|escape}</p>
@@ -86,7 +86,7 @@
             <li class="member">
                 <a href="{site_url('user/info/')}/{$item['uid']}" title="{$item['nickname']|escape}"><img src="{base_url($item['avatar_middle'])}"/></a>
                 <div>[{if empty($item['position'])}未知{else}{$item['position']}{/if}]</div>
-                <div>{$item['nickname']|escape}</div>
+                <div>{mask_mobile($item['nickname'])|escape}</div>
             </li>
             {/foreach}
        {/if}

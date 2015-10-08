@@ -16,6 +16,7 @@ $entity = array(
 'status' => 'tinyint',
 'expire_time' => 'int',
 'uid' => 'mediumint',
+'from_bg' => 'tinyint',
 'gmt_create' => 'int',
 'gmt_modify' => 'int',
 'ip' => 'varchar'

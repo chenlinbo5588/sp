@@ -182,7 +182,6 @@ class Stadium_Goods extends Ydzj_Controller {
             	$fileUpload = array();
             	$fileInfo = $this->attachment_service->addImageAttachment('cover_img');
             	
-            	$this->load->helper('img');
             	
             	$images = array();
             	
@@ -308,7 +307,6 @@ class Stadium_Goods extends Ydzj_Controller {
 	            	$fileUpload = array();
 	            	$fileInfo = $this->attachment_service->addImageAttachment('cover_img');
 	            	
-	            	$this->load->helper('img');
 	            	
 	            	$images = array();
 	            	

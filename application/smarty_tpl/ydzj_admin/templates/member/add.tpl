@@ -10,73 +10,75 @@
     </div>
   </div>
   <div class="fixed-empty"></div>
+  {$feedback}
   {form_open_multipart(admin_site_url('member/add'),'id="user_form"')}
     <input type="hidden" name="form_submit" value="ok" />
     <table class="table tb-type2">
       <tbody>
         <tr class="noborder">
-          <td colspan="2" class="required"><label class="validation" for="member_name">会员:</label></td>
+          <td colspan="2" class="required"><label class="validation" for="member_mobile">登陆账号(中国大陆手机号码):</label>{form_error('member_mobile')}</td>
         </tr>
         <tr class="noborder">
-          <td class="vatop rowform"><input type="text" value="" name="member_name" id="member_name" class="txt"></td>
+          <td class="vatop rowform"><input type="text" value="{set_value('member_mobile')}" name="member_mobile" id="member_mobile" class="txt"></td>
           <td class="vatop tips"></td>
         </tr>
         <tr>
-          <td colspan="2" class="required"><label class="validation" for="member_passwd">密码:</label></td>
+          <td colspan="2" class="required"><label class="validation" for="member_passwd">密码:</label>{form_error('member_passwd')}</td>
         </tr>
         <tr class="noborder">
-          <td class="vatop rowform"><input type="text" id="member_passwd" name="member_passwd" class="txt"></td>
+          <td class="vatop rowform"><input type="text" id="member_passwd" value="{set_value('member_passwd')}" name="member_passwd" class="txt"></td>
           <td class="vatop tips"></td>
         </tr>
         <tr>
-          <td colspan="2" class="required"><label class="validation" for="member_email">电子邮箱:</label></td>
+          <td colspan="2" class="required"><label class="validation" for="member_passwd2">密码确认:</label>{form_error('member_passwd2')}</td>
         </tr>
         <tr class="noborder">
-          <td class="vatop rowform"><input type="text" value="" id="member_email" name="member_email" class="txt"></td>
+          <td class="vatop rowform"><input type="text" id="member_passwd2" value="{set_value('member_passwd2')}" name="member_passwd2" class="txt"></td>
           <td class="vatop tips"></td>
         </tr>
         <tr>
-          <td colspan="2" class="required"><label for="member_truename">真实姓名:</label></td>
+          <td colspan="2" class="required"><label for="member_email">电子邮箱:</label>{form_error('member_email')}</td>
         </tr>
         <tr class="noborder">
-          <td class="vatop rowform"><input type="text" value="" id="member_truename" name="member_truename" class="txt"></td>
+          <td class="vatop rowform"><input type="text"  id="member_email" value="{set_value('member_email')}" name="member_email" class="txt"></td>
           <td class="vatop tips"></td>
         </tr>
         <tr>
-          <td colspan="2" class="required"><label> 性别:</label></td>
+          <td colspan="2" class="required"><label for="member_username">真实姓名:</label>{form_error('member_username')}</td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform"><input type="text" id="member_username" value="{set_value('member_username')}" name="member_username" class="txt"></td>
+          <td class="vatop tips"></td>
+        </tr>
+        <tr>
+          <td colspan="2" class="required"><label>性别:</label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><ul>
               <li>
-                <label>
-                  <input type="radio" checked="checked" value="0" name="member_sex">
-                  保密</label>
+                <label><input type="radio" checked="checked" value="S" {set_radio('member_sex','S')} name="member_sex">保密</label>
               </li>
               <li>
-                <label>
-                  <input type="radio" value="1" name="member_sex">
-                  男</label>
+                <label><input type="radio" value="M" {set_radio('member_sex','M')} name="member_sex">男</label>
               </li>
               <li>
-                <label>
-                  <input type="radio" value="2" name="member_sex">
-                  女</label>
+                <label><input type="radio" value="F" {set_radio('member_sex','F')} name="member_sex">女</label>
               </li>
             </ul></td>
           <td class="vatop tips"></td>
         </tr>
         <tr>
-          <td colspan="2" class="required"><label for="member_qq">QQ:</label></td>
+          <td colspan="2" class="required"><label for="member_qq">QQ:</label>{form_error('member_qq')}</td>
         </tr>
         <tr class="noborder">
-          <td class="vatop rowform"><input type="text" value="" id="member_qq" name="member_qq" class="txt"></td>
+          <td class="vatop rowform"><input type="text" value="{set_value('member_qq')}" id="member_qq" name="member_qq" class="txt"></td>
           <td class="vatop tips"></td>
         </tr>
         <tr>
-          <td colspan="2" class="required"><label class="member_ww">阿里旺旺:</label></td>
+          <td colspan="2" class="required"><label class="member_weixin">微信号:</label>{form_error('member_weixin')}</td>
         </tr>
         <tr class="noborder">
-          <td class="vatop rowform"><input type="text" value="" id="member_ww" name="member_ww" class="txt"></td>
+          <td class="vatop rowform"><input type="text" value="{set_value('member_weixin')}" id="member_weixin" name="member_weixin" class="txt"></td>
           <td class="vatop tips"></td>
         </tr>
         <tr>
@@ -84,6 +86,7 @@
         </tr>
         <tr class="noborder">
           <td class="vatop rowform">
+            <input type="hidden" name="avatar_id" value=""/>
             <span class="type-file-show">
             <img class="show_image" src="{base_url('img/preview.png')}">
             <div class="type-file-preview" style="display: none;"><img id="view_img"></div>
@@ -94,78 +97,45 @@
               <input name="_pic" type="file" class="type-file-file" id="_pic" size="30" hidefocus="true" />
             </span>
             </td>
-          <td class="vatop tips">支持格式jpg,jpeg</td>
+          <td class="vatop tips">支持格式jpg</td>
+        </tr>
+        <tr>
+          <td colspan="2" class="required"><label>允许发表言论:</label>{form_error('allowtalk')}</td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform onoff">
+            <label for="allowtalk_1" class="cb-enable selected"><span>允许</span></label>
+            <label for="allowtalk_2" class="cb-disable" ><span>禁止</span></label>
+            <input id="allowtalk_1" name="allowtalk" value="Y" {set_radio('allowtalk','Y')} type="radio"/>
+            <input id="allowtalk_2" name="allowtalk" value="N" {set_radio('allowtalk','N')} type="radio"/></td>
+          <td class="vatop tips">如果禁止该项则会员不能发表咨询和发送站内信</td>
+        </tr>
+        <tr>
+          <td colspan="2" class="required"><label>允许登录:</label>{form_error('freeze')}</td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform onoff">
+            <label for="memberstate_1" class="cb-enable selected" ><span>允许</span></label>
+            <label for="memberstate_2" class="cb-disable" ><span>禁止</span></label>
+            <input id="memberstate_1" name="memberstate" value="N" {set_radio('memberstate','N')} type="radio"/>
+            <input id="memberstate_2" name="memberstate" value="Y" {set_radio('memberstate','Y')} type="radio"/></td>
+          <td class="vatop tips"></td>
         </tr>
       </tbody>
       <tfoot>
         <tr class="tfoot">
-          <td colspan="15"><a href="JavaScript:void(0);" class="btn" id="submitBtn"><span>提交</span></a></td>
+          <td colspan="15"><input type="submit" name="submit" value="保存" class="msbtn"/></td>
         </tr>
       </tfoot>
     </table>
   </form>
 </div>
-<script type="text/javascript" src="{js_url('js/dialog/dialog.js')}" id="dialog_js"></script>
-<script type="text/javascript" src="{js_url('js/jquery-ui/jquery.ui.js')}"></script>
-<script type="text/javascript" src="{js_url('js/ajaxfileupload/ajaxfileupload.js')}"></script>
-<script type="text/javascript" src="{js_url('js/jquery.Jcrop/jquery.Jcrop.js')}"></script>
-<link href="{css_url('js/jquery.Jcrop/jquery.Jcrop.min.css')}" rel="stylesheet" type="text/css"/>
+{include file="member/member_common.tpl"}
 <script type="text/javascript">
-
-//裁剪图片后返回接收函数
-function call_back(resp){
-	formhash = resp.formhash;
-	
-    $('#member_avatar').val(resp.picname);
-    $('#view_img').attr('src',resp.url);
-}
 $(function(){
-    $('input[class="type-file-file"]').change(uploadChange);
-    function uploadChange(){
-        var filepatd=$(this).val();
-        var extStart=filepatd.lastIndexOf(".");
-        var ext=filepatd.substring(extStart,filepatd.lengtd).toUpperCase();     
-        if(ext!=".JPG"&&ext!=".JPEG"){
-            alert("file type error");
-            $(this).attr('value','');
-            return false;
-        }
-        if ($(this).val() == '') return false;
-        ajaxFileUpload();
-    }
-    function ajaxFileUpload()
-    {
-        $.ajaxFileUpload
-        (
-            {
-                url:'{admin_site_url("common/pic_upload")}',
-                secureuri:false,
-                fileElementId:'_pic',
-                dataType: 'json',
-                data: { formhash : formhash , type : "member" },
-                success: function (resp, status)
-                {
-                    if (resp.status == 1){
-                        ajax_form('cutpic','裁剪','{admin_site_url("common/pic_cut")}?type=member&x=200&y=200&resize=0&ratio=1&url='+resp.url,800);
-                    }else
-                    {
-                        alert(resp.message);
-                    }
-                    $('input[class="type-file-file"]').bind('change',uploadChange);
-                },
-                error: function (resp, status, e)
-                {
-                    alert('upload failed');
-                    $('input[class="type-file-file"]').bind('change',uploadChange);
-                }
-            }
-        )
-    }
     
-    $("#submitBtn").click(function(){
-	    if($("#user_form").valid()){
-	       $("#user_form").submit();
-	    }
+    $('#user_form').bind('submit',function(){
+        return $('#user_form').valid();
     });
     
     $('#user_form').validate({
@@ -173,38 +143,26 @@ $(function(){
             error.appendTo(element.parent().parent().prev().find('td:first'));
         },
         rules : {
-            member_name: {
+            member_mobile: {
                 required : true,
-                minlength: 3,
-                maxlength: 20,
+                phoneChina:true,
                 remote   : {
-                    url :'index.php?act=member&op=ajax&branch=check_user_name',
-                    type:'get',
-                    data:{
-                        user_name : function(){
-                            return $('#member_name').val();
-                        },
-                        member_id : ''
-                    }
+                    url :'{admin_site_url('member/check/mobile')}',
+                    type:'get'
                 }
             },
             member_passwd: {
                 maxlength: 20,
                 minlength: 6
             },
+            member_passwd2: {
+                maxlength: 20,
+                minlength: 6,
+                equalTo:"#member_passwd"
+            },
             member_email   : {
-                required : true,
-                email : true,
-                remote   : {
-                    url :'index.php?act=member&op=ajax&branch=check_email',
-                    type:'get',
-                    data:{
-                        user_name : function(){
-                            return $('#member_email').val();
-                        },
-                        member_id : ''
-                    }
-                }
+                email : true
+                
             },
             member_qq : {
                 digits: true,
@@ -213,20 +171,21 @@ $(function(){
             }
         },
         messages : {
-            member_name: {
-                required : '会员名不能为空',
-                maxlength: '用户名必须在3-20字符之间',
-                minlength: '用户名必须在3-20字符之间',
-                remote   : '会员名有重复，请您换一个'
+            member_mobile: {
+                required : '登陆账号不能为空',
+                remote   : '登陆账号已经被注册，请您换一个'
             },
             member_passwd : {
                 maxlength: '密码长度应在6-20个字符之间',
                 minlength: '密码长度应在6-20个字符之间'
             },
+            member_passwd2 : {
+                maxlength: '密码长度应在6-20个字符之间',
+                minlength: '密码长度应在6-20个字符之间',
+                equalTo: '两次密码不一致'
+            },
             member_email  : {
-                required : '电子邮箱不能为空',
-                email   : '请您填写有效的电子邮箱',
-                remote : '邮件地址有重复，请您换一个'
+                email   : '请您填写有效的电子邮箱'
             },
             member_qq : {
                 digits: '请输入正确的QQ号码',

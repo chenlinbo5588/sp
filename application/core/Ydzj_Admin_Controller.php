@@ -14,6 +14,7 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 	public function __construct(){
 		parent::__construct();
 		
+		$this->form_validation->set_error_delimiters('<label class="error">','</label>');
 		
 		$this->_adminProfile = $this->session->userdata('manage_profile');
 		

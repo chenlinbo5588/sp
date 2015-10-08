@@ -12,7 +12,7 @@
     <input type="hidden" name="street" value="{$smarty.post['street']}"/>
     <input type="hidden" name="street_number" value="{$smarty.post['streetNumber']}"/>
     <div class="row">
-        <label class="required side_lb">权属</label>
+        <label class="required side_lb"><em>*</em>权属</label>
         <select name="owner_type" class="at_txt">
             {foreach from=$stadiumOwnerList item=item}
             <option value="{$item['name']}" {set_select('owner_type',$item['id'])}>{$item['name']}</option>
@@ -20,7 +20,7 @@
         </select>
     </div>
     <div class="row">
-        <label class="required side_lb">开放程度</label>
+        <label class="required side_lb"><em>*</em>开放程度</label>
         <select name="open_type" class="at_txt">
             {foreach from=$openType key=key item=item}
             <option value="{$key}" {set_select('open_type',$key)}>{$item}</option>
@@ -28,12 +28,12 @@
         </select>
     </div>
     <div class="row">
-        <label class="required side_lb">名称</label>
+        <label class="required side_lb"><em>*</em>名称</label>
         <input type="text" class="at_txt" name="title" value="{set_value('title')}" placeholder="请输入名称"/>
     </div>
     <div id="tip_title">{form_error('title')}</div>
     <div class="row">
-        <label class="required side_lb">地址</label>
+        <label class="required side_lb"><em>*</em>地址</label>
         <input type="text" class="at_txt disabled" style="width:50%" name="address" readonly="readonly" value="{set_value('address')}" placeholder="请在地图上标注位置"/>
         <i class="fa fa-map-marker fa-lg" style="cursor:pointer" id="markerOnMap">开始标注</i>
     </div>
@@ -45,7 +45,7 @@
     </div>
     
     <div class="row" style="padding:10px 0;">
-    	<label class="side_lb">权属设置</label>
+    	<label class="side_lb"><em>*</em>权属设置</label>
     	<select name="is_mine" class="at_txt">
     	   <option value="y" {set_select('is_mine','y')}>我是权属人</option>
     	   <option value="n" {set_select('is_mine','n')}>我不是权属人，我知道联系方式</option>
@@ -75,7 +75,7 @@
     
     {foreach from=$maxOtherFile item=item}
     <div class="row photoUpload">
-        <label class="side_lb">{if $item == 0}封面照片{else}其它照片<em>{$item}</em>{/if}</label>
+        <label class="side_lb">{if $item == 0}<em>*</em>封面照片{else}其它照片<em>{$item}</em>{/if}</label>
         <input type="hidden" value="{$fileUpload[$item]['url']}" name="img{$item}_url" id="url{$item}"/>
         <input type="hidden" value="{$fileUpload[$item]['preview']}" name="img{$item}_preview"/>
         <input type="hidden" value="{$fileUpload[$item]['aid']}" name="img{$item}_aid"/>

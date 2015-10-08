@@ -32,21 +32,4 @@ class VerifyCode_Log_Model extends MY_Model {
         }
     }
     
-    
-    public function sendNormalAddup($id){
-    	$this->db->set('send_normal','send_normal + 1',false);
-    	$this->db->where('id',$id);
-    	$this->db->update($this->_tableRealName);
-    	
-    	return $this->db->affected_rows();
-    }
-    
-    public function sendFailedAddup($id){
-    	$this->db->set('send_fail','send_fail + 1',false);
-    	$this->db->where('id',$id);
-    	$this->db->update($this->_tableRealName);
-    	
-    	return $this->db->affected_rows();
-    }
-    
 }

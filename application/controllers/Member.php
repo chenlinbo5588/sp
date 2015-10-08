@@ -65,6 +65,15 @@ class Member extends Ydzj_Controller {
 						'lastvisit' => $this->_reqtime
 					));
 					
+					$this->member_service->updateUserInfo(
+						array(
+							'sid' => $this->session->session_id,
+							'last_login' => $this->_reqtime,
+							'last_loginip' => $this->input->ip_address()
+						),
+						$result['data']['basic']['uid']);
+						
+						
 					$this->_rememberLoginName($this->input->post('loginname'));
 					
 					$url = $this->input->post('returnUrl');
@@ -93,7 +102,7 @@ class Member extends Ydzj_Controller {
 			
 		}
 		
-		$this->seoTitle('登陆');
+		$this->seoTitle('登陆'.config_item('site_name'));
 		$this->display("member/login");
 	}
 	
@@ -147,6 +156,14 @@ class Member extends Ydzj_Controller {
 						'manage_profile' => $result['data'],
 						'lastvisit' => $this->_reqtime
 					));
+					
+					$this->admin_service->updateUserInfo(
+						array(
+							'sid' => $this->session->session_id,
+							'last_login' => $this->_reqtime,
+							'last_loginip' => $this->input->ip_address()
+						),
+						$result['data']['basic']['uid']);
 					
 					redirect(admin_site_url('index'));
 				}else{
@@ -239,19 +256,10 @@ class Member extends Ydzj_Controller {
 				
 				if($todayRegistered < 3){
 					
-					$avatarIndex = rand(1,3);
-					
 					$addParam = array(
 						'mobile' => $this->input->post('mobile'),
 						'nickname' => $this->input->post('mobile'),
 						'password' => $this->input->post('psw'),
-						'regip' => $this->input->ip_address(),
-						'regdate' => $this->input->server('REQUEST_TIME'),
-						'avatar' => 'img/avatar/'.$avatarIndex.'.jpg',
-						'avatar_large' => 'img/avatar/'.$avatarIndex.'@large.jpg',
-						'avatar_big' => 'img/avatar/'.$avatarIndex.'@big.jpg',
-						'avatar_middle' => 'img/avatar/'.$avatarIndex.'@middle.jpg',
-						'avatar_small' => 'img/avatar/'.$avatarIndex.'@small.jpg',
 						'status' => -2,
 						'inviter' => empty($inviter) == true ? 0 : intval($inviter)
 					);

@@ -11,6 +11,7 @@ $entity = array(
 'aid' => 'mediumint',
 'avatar_large' => 'varchar',
 'avatar_big' => 'varchar',
+'avatar_middle' => 'varchar',
 'd1' => 'mediumint',
 'd2' => 'mediumint',
 'd3' => 'mediumint',

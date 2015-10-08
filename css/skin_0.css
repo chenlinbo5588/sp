@@ -101,6 +101,49 @@ h6 { font-size:12px;}
 .orange { color: #F60;}
 .bold {font-weight: bold; color: #545454}
 
+
+.tip_success {
+    font-weight: bold;
+    text-align: center;
+    background-color: green;
+    color: white;
+    padding: 5px;
+}
+
+.tip_error {
+	font-weight: bold;
+    text-align: center;
+    background-color: red;
+    color: white;
+    padding: 5px;
+}
+
+.tip_warning {
+    background:#FFD500;
+    padding:5px;
+    text-align: center;
+}
+
+.form_error {
+    color:red;
+    text-align:center;
+}
+
+.validation_error {
+    border:1px solid red;
+}
+
+input[type=text].validation_error {
+    border:1px solid red;
+}
+
+
+input[type=checkbox],input[type=radio] {
+    vertical-align:middle;
+    margin-top:-2px;
+    margin-bottom:1px;
+}
+
 /* tip提示 */
 .tip-yellowsimple { color:#000; background-color:#fff9c9; text-align:left; min-width:50px; max-width:300px; border:1px solid #c7bf93; border-radius:4px; -moz-border-radius:4px; -webkit-border-radius:4px; z-index:1000; padding:6px 8px;}
 .tip-yellowsimple .tip-inner { font:12px/16px arial,helvetica,sans-serif;}
@@ -342,13 +385,17 @@ form label.valid { font-weight: normal; color:#390; background: transparent url(
 .help { line-height: 24px; color: #666; background-color: #F6F6F6; padding: 6px; border: 1px dashed #CCC;}
 .checkinfo { padding: 8px 0px 0px 0px;}
 .checkbox { margin: 0px; padding: 0px;}
+
 .pagination { padding: 2px; float:right; +float:none; +position: absolute; +right:6px;}
-.pagination ul { margin: 0; padding: 0; }
-.pagination ul li { line-height: 22px; color: #AAA; display: inline !important; list-style-type: none; width: auto !important; height: auto !important; float: left; padding: 0px; margin: 0 1px !important;}
-.pagination li span {font-size: 13px;  list-style-type: none; display: inline; float: left; padding: 3px 10px; margin: 0 1px 0 0; }
-.pagination li a span , .pagination li a:visited span { color: #0D93BF; text-decoration: none;  cursor:pointer; -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px;/*Firefox\Chrome\Safari\IE9\元素圆角效果*/}
-.pagination li a:hover span, .pagination li a:active span{ color: #000; background-color: #FFF;  cursor:pointer; -khtml-opacity: .9; -moz-opacity: 0.9; -moz-box-shadow:0 0 3px rgba(204, 204, 204, 0.5); -webkit-box-shadow: 0 0 3px rgba(204, 204, 204, 0.5); box-shadow: 0 0 3px rgba(204, 204, 204, 0.5);}
-.pagination li span.currentpage{ color:#FFF; font-weight: bold;  background-color: #099ACF; -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px;/*Firefox\Chrome\Safari\IE9\元素圆角效果*/}
+.pagination a {
+  padding: 5px 10px;
+  background:#fff;
+  border:1px solid #0D93BF;
+}
+
+.pagination a:hover ,.pagination a.active {background:#0D93BF;color:#fff;cursor:pointer;}
+
+
 .paixv a {text-decoration:none; color:#000}
 .paixv a:hover {color:#06F}
 /*投诉部分*/
@@ -535,6 +582,30 @@ table.search { margin: 12px 0 6px 4px;}
 .power-onoff a:hover.disabled {background-position: -160px -580px;}
 .power-onoff a:active.disabled {background-position: -200px -580px;}
 
+.msbtn  {
+    display:inline-block;
+    cursor:pointer;
+    background-color:#db3652;
+    font-size:14px;
+    color:#fff;
+    border:0;
+    padding:6px 10px;
+    text-align:center;
+    border-radius:5px;
+    -webkit-border-radius:5px;
+    -moz-border-radius:5px;
+    -o-border-radius:5px;
+    
+}
+
+.msbtn:hover {
+	box-shadow:0px 0px 15px #443636;
+    -moz-box-shadow:0px 0px 15px #443636;
+    -o-box-shadow:0px 0px 15px #443636;
+    -webkit-box-shadow:0px 0px 15px #443636;
+	
+}
+
 a.btn { font-size: 14px; color: #555; font-weight: 700; line-height:18px; background: transparent url(../img/sky/bg_position.gif) no-repeat scroll 0 -280px; display: inline-block; height: 38px; padding-left: 15px; margin-right:6px; cursor: pointer;}
 a.btn:hover { background-position: 0 -318px;}
 a.btn:active { background-position: 0 -356px;}
@@ -580,6 +651,10 @@ tr.member div.im span.wangwang a{ background-position: -60px -630px; }
 tr.member div.im span.msn a { background-position: -90px -630px; }
 tr.member div.im span.email a.yes{ background-position: -120px -630px; }
 tr.member div.im span.qq a.yes{ background-position: -150px -630px; }
+
+tr.member div.im span.weixin a { background:url(../img/sky/icon16_wx_logo.png) no-repeat center center; }
+
+
 tr.member div.im span.wangwang a.yes { background-position: -180px -630px; }
 tr.member div.im span.msn a.yes { background-position: -210px -630px; }
 tr.member .relative .im { }

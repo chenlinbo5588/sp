@@ -6,6 +6,7 @@ $entity = array(
 'aid' => 'mediumint',
 'avatar_large' => 'varchar',
 'avatar_big' => 'varchar',
+'avatar_middle' => 'varchar',
 'remark' => 'varchar',
 'stadium_id' => 'mediumint',
 'album_id' => 'mediumint',

@@ -80,12 +80,15 @@ class Register extends MY_Controller {
 				
 				$rt['code'] = 'success';
 				
-				
 				$this->load->library('ShortMessage_Service');
 				if($this->shortmessage_service->sendMessage($phoneNo)){
-					$this->verify_service->sendSuccessAddon($codeInfo['id']);
+					$this->verify_service->updateSendFlag(array(
+			    		array('key' => 'send_normal' , 'value' => 'send_normal + 1')
+			    	),array('id' => $codeInfo['id']));
 				}else{
-					$this->verify_service->sendFailedAddon($codeInfo['id']);
+					$this->verify_service->updateSendFlag(array(
+			    		array('key' => 'send_fail' , 'value' => 'send_fail + 1')
+			    	),array('id' => $codeInfo['id']));
 				}
 			}
 			
@@ -156,10 +159,9 @@ class Register extends MY_Controller {
 					/**
 					 * @todo 同一个IP 不能进行连续注册
 					 */
-					
 					$result = $this->register_service->createHalfRegisterMemebr(array(
 						'mobile' => $phoneNo,
-						'regip' => $this->input->ip_address()
+						'reg_ip' => $this->input->ip_address()
 					));
 				}
 				

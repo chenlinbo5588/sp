@@ -24,7 +24,7 @@
 	    <div class="row">
 	        <span class="icon ico_invite">推广链接:</span><span>
 	        <input style="width:50%" type="text" name="inviteUrl" value="{$inviteUrl}"/></span>
-            <input type="button" style="width:20%" class="master_btn greenBtn" name="inviteUrl" value="复制链接"/>
+            <input type="button" style="width:20%;font-size:12px;" class="master_btn greenBtn" name="inviteUrl" value="复制链接"/>
         </div>
 	    
 	    {* 链接, 进去再细分 各类运动，参加的比赛参数 和比赛数据 暂时留空

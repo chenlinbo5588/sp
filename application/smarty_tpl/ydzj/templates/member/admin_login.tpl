@@ -1,5 +1,4 @@
 {include file="common/header.tpl"}
-
 {if !$manage_profile}
 <div class="handle_area">
     <div class="feedback">{$feedback}</div>
@@ -27,6 +26,7 @@
     </form>
 </div>
 {else}
+
 您已登陆 ,点击进入<a href="{site_url('sp_admin')}"> 管理中心 </a>
 {/if}
 

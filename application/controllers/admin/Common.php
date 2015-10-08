@@ -8,90 +8,20 @@ class Common extends Ydzj_Admin_Controller {
 
 	}
 	
-	
 	/**
-	 * 图片上传
+	 * 
 	 */
 	public function pic_upload(){
 		$this->load->library('Attachment_Service');
-		$this->attachment_service->setUid($this->_adminProfile['basic']['uid']);
-		$fileData = $this->attachment_service->addImageAttachment('_pic');
-		if($fileData){
-			$fileData = $this->attachment_service->resize($fileData , array('big'));
-			exit(json_encode(array('status'=>1,'formhash'=>$this->security->get_csrf_hash(),'id' => $fileData['id'], 'url'=>base_url($fileData['img_big']))));
-		}else{
-			exit(json_encode(array('status'=>0,'msg'=>$this->attachment_service->getErrorMsg('',''))));
-		}
-	}
-	
-	
-	/**
-	 * 图片裁剪
-	 *
-	 */
-	public function pic_cut(){
 		
-		$this->load->helper(array('img'));
-		
-		if($this->isPostRequest()){
-			
-			/*
-			$thumb_width = $_POST['x'];
-			$x1 = $_POST["x1"];
-			$y1 = $_POST["y1"];
-			$x2 = $_POST["x2"];
-			$y2 = $_POST["y2"];
-			$w = $_POST["w"];
-			$h = $_POST["h"];
-			$scale = $thumb_width/$w;
-			*/
-			
-			$src_file = str_ireplace(base_url(),'',$this->input->post('url'));
-
-			$this->load->library('image_lib');
-			
-			
-			$index = strrpos($src_file,'/');
-			$prefix = substr($src_file, 0 , $index + 1);
-
-			$config['source_image'] = ROOTPATH.'/'.$src_file;
-			$pathinfo = pathinfo($config['source_image']);
-			
-			
-			$config['new_image'] = $pathinfo['dirname'].'/c_'.$pathinfo['basename'];
-			$config['x_axis'] = $this->input->post('x1');
-			$config['y_axis'] = $this->input->post('y1');
-			$config['width'] = $this->input->post('w');
-			$config['height'] = $this->input->post('h');
-			$config['quality'] = 100;
-			$config['maintain_ratio'] = false;
-			
-			$this->image_lib->initialize($config);
-			
-			
-			//@todo 需要完善 , 裁切 200x200 100x100 各一套 , attachment 表增加 上传 uid 来源区分,是后台用户还是前台用户 uid
-			
-			if ( ! $this->image_lib->crop()){
-				log_message('error',$config['source_image'] .' crop failed.');
-				exit(json_encode(array('status' => 0, 'formhash'=>$this->security->get_csrf_hash(),'msg'=>$this->attachment_service->getErrorMsg('',''))));
-			}else{
-				exit(json_encode(array(
-					'status' => 1, 'formhash'=>$this->security->get_csrf_hash(),
-					'url'=>base_url($prefix . 'c_'.$pathinfo['basename']),
-					'picname' => 'c_'.$pathinfo['basename']
-				)));
-			}
-			
-		}else{
-			$save_file = str_ireplace(base_url(),'',$this->input->get('url'));
-			
-			list($width, $height, $type, $attr) =  getimagesize(ROOTPATH.'/'.$save_file);
-			
-			$this->assign('image_width',$width);
-			$this->assign('image_height',$height);
-			$this->display('common/pic_cut');
+		$uploadname = $this->input->post('uploadname');
+		if(empty($uploadname)){
+			$uploadname = '_pic';
 		}
 		
+		$json = $this->attachment_service->pic_upload($this->_profile['basic']['uid'],$uploadname,1);
+		
+		exit(json_encode($json));
 	}
 	
 }

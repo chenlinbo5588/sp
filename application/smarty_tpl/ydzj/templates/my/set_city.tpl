@@ -9,12 +9,12 @@
     {form_open(site_url('my/set_city'),"id='setCityForm'")}
     <input type="hidden" name="returnUrl" value="{$returnUrl}"/>
     <input type="hidden" name="inviteFrom" value="{$inviteFrom}"/>
-    <div id="profile_city">
+    <div id="profile_city" class="cityGroupWrap">
         <div class="row">
             <label class="side_lb" for="d1_sel">省：</label>
-            <select name="d1" id="d1_sel" class="at_txt">
+            <select name="d1" id="d1_sel" class="at_txt citySelect">
                 <option value="">请选择</option>
-                {foreach from=$d1 item=item}
+                {foreach from=$ds['d1'] item=item}
                 <option value="{$item['id']}" {if $profile['basic']['d1'] == $item['id']}selected="selected"{/if}>{$item['name']}</option>
                 {/foreach}
             </select>
@@ -22,9 +22,9 @@
         <div class="form_error" id="d1_error"></div>
         <div class="row">
             <label class="side_lb" for="d2_sel">市：</label>
-            <select name="d2" id="d2_sel" class="at_txt">
+            <select name="d2" id="d2_sel" class="at_txt citySelect">
                 <option value="">请选择</option>
-                {foreach from=$d2 item=item}
+                {foreach from=$ds['d2'] item=item}
                 <option value="{$item['id']}" {if $profile['basic']['d2'] == $item['id']}selected="selected"{/if}>{$item['name']}</option>
                 {/foreach}
             </select>
@@ -32,9 +32,9 @@
         <div class="form_error" id="d2_error"></div>
         <div class="row">
             <label class="side_lb" for="d3_sel">县：</label>
-            <select name="d3" id="d3_sel" class="at_txt">
+            <select name="d3" id="d3_sel" class="at_txt citySelect">
                 <option value="">请选择</option>
-                {foreach from=$d3 item=item}
+                {foreach from=$ds['d3'] item=item}
                 <option value="{$item['id']}" {if $profile['basic']['d3'] == $item['id']}selected="selected"{/if}>{$item['name']}</option>
                 {/foreach}
             </select>
@@ -42,9 +42,9 @@
         <div class="form_error" id="d3_error"></div>
         <div class="row">
             <label class="side_lb" for="d4_sel">街道/镇：</label>
-            <select name="d4" id="d4_sel" class="at_txt">
+            <select name="d4" id="d4_sel" class="at_txt citySelect">
                 <option value="">请选择</option>
-                {foreach from=$d4 item=item}
+                {foreach from=$ds['d4'] item=item}
                 <option value="{$item['id']}" {if $profile['basic']['d4'] == $item['id']}selected="selected"{/if}>{$item['name']}</option>
                 {/foreach}
             </select>
@@ -58,7 +58,6 @@
 </div>
 
 <script>
-var cityUrl = "{site_url('district/index/')}";
 $.loadingbar({ autoHide: true});
 
 $(function(){

@@ -12,6 +12,12 @@ class Admin_Service extends Base_Service {
 		$this->_adminUserModel = $this->CI->Adminuser_Model;
 	}
     
+    /**
+	 * 更新用户信息
+	 */
+	public function updateUserInfo($data,$uid){
+		return $this->_adminUserModel->update($data,array('uid' => $uid));
+	}
 	
     public function do_adminlogin($param){
 		
@@ -24,7 +30,11 @@ class Admin_Service extends Base_Service {
 			if($userInfo['password'] == $param['password']){
 				unset($userInfo['password']);
 				
-				$result = $this->successRetun(array('basic' => $userInfo));
+				if($userInfo['freeze'] == 'Y'){
+					$result['message'] = '您的账号已被冻结,请联系网站客服人员';
+				}else{
+					$result = $this->successRetun(array('basic' => $userInfo));
+				}
 				
 			}else{
 				$result['message'] = '密码错误';

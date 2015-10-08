@@ -149,7 +149,8 @@ class My extends MyYdzj_Controller {
 				
 				$fileData = $this->attachment_service->resize(array(
 					'file_url' => $newAvatar
-				) , array('middle') , array('x_axis' => $this->input->post('x1'), 'y_axis' => $this->input->post('y1')));
+				) , array('middle' => array('width' => 200,'height' => 200,'maintain_ratio' => false , 'quality' => 100)) , 
+					array('x_axis' => $this->input->post('x1'), 'y_axis' => $this->input->post('y1')));
 				
 				
 				if($fileData['img_middle']){
@@ -163,6 +164,8 @@ class My extends MyYdzj_Controller {
 				
 				$this->load->library('Member_Service');
 				$result = $this->member_service->updateUserInfo(array(
+					'status' => 0,
+					'avatar_status' => 0,
 					'aid' => $avatar_id,
 					'avatar_middle' => $fileData['img_middle'],
 					'avatar_small' => $smallImg['img_small']
@@ -221,27 +224,16 @@ class My extends MyYdzj_Controller {
 	
 	
 	private function _prepareSetCity(){
-		$ds = array(
+		$d = array(
 			'd1' => $this->_profile['basic']['d1'],
 			'd2' => $this->_profile['basic']['d2'],
 			'd3' => $this->_profile['basic']['d3'],
 			'd4' => $this->_profile['basic']['d4']
 		);
 		
-		$this->assign('d1',$this->common_district_service->getDistrictByPid(0));
+		$rt = $this->common_district_service->prepareCityData($d);
 		
-		if($ds['d1'] > 0){
-			$this->assign('d2',$this->common_district_service->getDistrictByPid($ds['d1']));
-		}
-		
-		if($ds['d2'] > 0){
-			$this->assign('d3',$this->common_district_service->getDistrictByPid($ds['d2']));
-		}
-		
-		if($ds['d3'] > 0){
-			$this->assign('d4',$this->common_district_service->getDistrictByPid($ds['d3']));
-		}
-		
+		$this->assign('ds',$rt);
 	}
 	
 	
@@ -249,7 +241,7 @@ class My extends MyYdzj_Controller {
 	/**
 	 * 设置地区
 	 * 
-	 * @todo 如果用户通过 加入队伍邀请进行注册的 部需要进行该步骤，直接约邀请者设置的地区直接相同
+	 * 如果用户通过 加入队伍邀请进行注册的 不需要进行该步骤，直接约邀请者设置的地区直接相同
 	 */
 	public function set_city()
 	{

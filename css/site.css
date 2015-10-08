@@ -526,8 +526,8 @@ table.fulltable {
     display:block;	
 }
 
-/** 球队列表 */
 
+/** 球队列表 */
 .team {
     margin:5px 0;
     border-bottom: 1px dotted #dcdcdc;
@@ -551,9 +551,13 @@ table.fulltable {
     margin-left:20px;	
 }
 
+.team .team_avatar img {
+    width:140px;
+}
 
 .team .team_basic {
 	position:relative;
+	padding:0 0 0 10px;
 }
 
 .team_basic li {
@@ -604,10 +608,6 @@ table.fulltable {
 #teamList .row img {
 	width:100px;
     height:100px;
-}
-
-#teamList .team_avatar img {
-    width:50%;	
 }
 
 .delmask {

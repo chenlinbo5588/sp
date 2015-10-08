@@ -3,7 +3,7 @@
 <div class="logo" title="运动之家 logo"></div>
 {if !$profile}
 <div class="handle_area">
-    <div class="feedback">{$feedback}</div>
+    {if $feedback}<div class="warning">{$feedback}</div>{/if}
     {form_open(site_url('member/login'))}
         <input type="hidden" name="returnUrl" value="{$returnUrl}"/>
         {form_error('loginname')}

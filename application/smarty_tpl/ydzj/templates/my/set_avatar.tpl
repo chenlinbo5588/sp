@@ -76,7 +76,7 @@ $(function(){
                 secureuri:false,
                 fileElementId:'_pic',
                 dataType: 'json',
-                data: { formhash : formhash , id : $("input[name=avatar_id]").val() , type : "member" , size:'big' },
+                data: { formhash : formhash , id : $("input[name=avatar_id]").val() , size:'big'},
                 success: function (resp, status)
                 {
                     $("#wait_loading").hide();
@@ -105,14 +105,14 @@ $(function(){
 					    
                     }else
                     {
-                        alert(resp.message);
+                        alert(resp.msg);
                     }
                     $('input[class="type-file-file"]').bind('change',uploadChange);
                 },
                 error: function (resp, status, e)
                 {
                     $("#wait_loading").hide();
-                    alert('upload failed');
+                    alert('上传失败');
                     $('input[class="type-file-file"]').bind('change',uploadChange);
                 }
             }

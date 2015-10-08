@@ -14,12 +14,12 @@
 	<div id="stadiumList" class="list pd5">
 	    {foreach from=$list['data'] item=item}
 	    <div class="team clearfix">
-	        <div class="fl"><a href="{site_url('stadium/detail/'|cat:$item['stadium_id'])}"><img src="{base_url($item['avatar_big'])}"/></a></div>
-	        <div class="team_basic">
+	        <div class="team_avatar fl"><a href="{site_url('stadium/detail/'|cat:$item['stadium_id'])}"><img src="{base_url($item['avatar_middle'])}"/></a></div>
+	        <div class="team_basic fl">
 	            <ul>
 	                <li><a class="team_title" href="{site_url('stadium/detail/'|cat:$item['stadium_id'])}">{$item['title']|escape}</a></li>
-	                <li><i class="fa fa-tag"></i>：{$item['category_name']}</li>
-	                <li><i class="fa fa-map-marker"></i>：
+	                <li><label>权属：</label><span>{$item['open_type']}</li>
+	                <li><label>地址：</label>
 	                {if $cityLevel == 0}
 	                <span>{$item['dname1']}{$item['dname2']}{$item['dname3']}{$item['dname4']}</span>
 	                {elseif $cityLevel == 1}
@@ -32,8 +32,8 @@
 	                <span>{$item['dname4']}{$item['street_number']}</span>
 	                {/if}
 	                </li>
-	                <li><i class="fa fa-user"></i>：{$item['contact']|escape}</li>
-	                <li><i class="fa fa-phone"></i>：{if $item['mobile']}{$item['mobile']}{else}{$item['tel']}{/if}</li>
+	                <li><label>联系人：</label>{$item['contact']|escape}</li>
+	                <li><label>手机号：</label>{if $item['mobile']}{$item['mobile']}{else}{$item['tel']}{/if}</li>
 	                <li>{$stadium['basic']['stadium_type']} {$stadium['basic']['ground_type']} {$stadium['basic']['charge_type']}</li>
 	            </ul>
 	        </div>

@@ -51,14 +51,13 @@ class Verify_Service extends Base_Service {
 		return $count;
 	}
 	
-	
-	public function sendSuccessAddon($id){
-		return $this->_verifyCodeLogModel->sendNormalAddup($id);
+	/**
+	 * 更新发送标志
+	 */
+	public function updateSendFlag($param,$where){
+		return $this->_verifyCodeLogModel->increseOrDecrease($param,$where);
 	}
 	
-	public function sendFailedAddon($id){
-		return $this->_verifyCodeLogModel->sendFailedAddup($id);
-	}
 	
 	/**
 	 * 创建验证码
@@ -96,7 +95,9 @@ class Verify_Service extends Base_Service {
 		
 	} 
 	
-	
+	/**
+	 * 执行验证
+	 */
 	public function isAuthCodeValidate($phone , $code){
 		
 		$count = $this->_verifyCodeLogModel->getCount(array(

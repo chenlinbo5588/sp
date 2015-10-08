@@ -8,7 +8,6 @@ define('BASKET_BALL','team/index/cate/1');
  */
 class Team extends Ydzj_Controller {
 	
-	
 	private $_urlParam = null;
 	private $_teamid = 0;
 	
@@ -219,7 +218,7 @@ class Team extends Ydzj_Controller {
 		$this->_teamid = $this->_urlParam[3];
 		
 		$this->setLeftNavLink('<a id="leftBarLink" class="bar_button" href="'.site_url(BASKET_BALL).'" title="返回">返回</a>');
-		//$this->setRightNavLink('<a id="rightBarLink" class="bar_button" href="'.site_url($this->uri->uri_string()).'">+收藏</a>');
+		$this->setRightNavLink('<a id="rightBarLink" class="bar_button" href="'.site_url($this->uri->uri_string()).'">刷新</a>');
 		
 		if($this->isPostRequest()){
 			$this->assign('ispost',true);
@@ -376,13 +375,14 @@ class Team extends Ydzj_Controller {
 				}
 				
 				//创建缩略图
-				$resizeFile = $this->attachment_service->resize($fileData , array('large','big'));
+				$resizeFile = $this->attachment_service->resize($fileData , array('large','big','middle'));
 				
 				$this->load->library('Team_Service');
 				$result = $this->team_service->updateTeamInfo(array(
 					'aid' => $fileData['id'],
 					'avatar_large' => $resizeFile['img_large'],
-					'avatar_big' => $resizeFile['img_big']
+					'avatar_big' => $resizeFile['img_big'],
+					'avatar_middle' => $resizeFile['img_middle']
 				),$team['basic']['id']);
 				
 				$this->attachment_service->deleteByFileUrl($fileData['file_url']);
@@ -585,10 +585,10 @@ class Team extends Ydzj_Controller {
 					}
 					
 					//创建缩略图
-					$resizeFile = $this->attachment_service->resize(array('file_url' => $addParam['avatar']) , array('large','big'));
+					$resizeFile = $this->attachment_service->resize(array('file_url' => $addParam['avatar']) , array('large','big','middle'));
 					$addParam['avatar_large'] = $resizeFile['img_large'];
 					$addParam['avatar_big'] = $resizeFile['img_big'];
-					//$addParam['avatar_middle'] = $resizeFile['img_middle'];
+					$addParam['avatar_middle'] = $resizeFile['img_middle'];
 					//$addParam['avatar_small'] = $resizeFile['img_small'];
 					
 					foreach($sportsCategoryList as $cate){
