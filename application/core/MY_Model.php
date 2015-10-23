@@ -282,6 +282,9 @@ class MY_Model extends CI_Model {
     }
     
     
+    /**
+     * 直接查询
+     */
     public function query($sql){
     	
     	$this->db->query($sql);
@@ -362,8 +365,8 @@ class MY_Model extends CI_Model {
                 $this->db->like($condition['like']);
             }
             
-            $config['total_rows'] = $this->db->count_all_results($this->_tableRealName);
-            $pager = pageArrayGenerator($condition['pager']['current_page'],$condition['pager']['page_size'],$config['total_rows'],$condition['pager']['query_param'],$condition['pager']['call_js']);
+            $total_rows = $this->db->count_all_results($this->_tableRealName);
+            $pager = pageArrayGenerator($condition['pager'],$total_rows);
             $data['pager'] = $pager['pager'];
         }else{
         	$data = $query->result_array();

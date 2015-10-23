@@ -107,7 +107,7 @@ class Weixin_Api {
         }
         
         if($extraParam){
-            if(substr($curl,-1,1) == '&'){
+            if(substr($param['url'],-1,1) == '&'){
                 curl_setopt($curl, CURLOPT_URL, $param['url'] .implode('&',$extraParam));
             }else{
                 if(strpos($param['url'] , '?') === false){

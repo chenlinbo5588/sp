@@ -34,7 +34,7 @@ class Team_Model extends MY_Model {
 		
 		//@todo delete 
 		
-		return true;
+		//return true;
     	$cnt = $this->getCount(array(
     		'where' => array(
 				'category_id' => $category,

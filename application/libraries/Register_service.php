@@ -19,7 +19,7 @@ class Register_Service extends Base_Service {
 		
 		$regParam['status'] = -2;
 		
-		$uid = $this->_userModel->_add(array(
+		$uid = $this->_memberModel->_add(array(
 			'nickname' => $regParam['mobile'],
 			'mobile' => $regParam['mobile'],
 			'reg_ip' => $regParam['reg_ip'],
@@ -67,7 +67,7 @@ class Register_Service extends Base_Service {
 			$regParam['avatar_small'] = 'img/avatar/'.$avatarIndex.'@small.jpg';
 		}
 		
-		$uid = $this->_userModel->_add($regParam);
+		$uid = $this->_memberModel->_add($regParam);
 		
 		if($uid > 0){
 			$return = $this->successRetun(array('uid' => $uid));

@@ -18,7 +18,7 @@ class Member_Service extends Base_Service {
 	 */
 	public function refreshProfile($uid){
 		$this->CI->session->set_userdata(array(
-			'profile' => array('basic' => $this->_userModel->getUserByUid($uid))
+			'profile' => array('basic' => $this->_memberModel->getUserByUid($uid))
 		));
 	}
 	
@@ -31,7 +31,7 @@ class Member_Service extends Base_Service {
 		$result = $this->formatArrayReturn();
 		$result['message'] = '登陆失败';
 		
-		$userInfo = $this->_userModel->getFirstByKey($param['mobile'],'mobile');
+		$userInfo = $this->_memberModel->getFirstByKey($param['mobile'],'mobile');
 		
 		if(!empty($userInfo)){
 			if($userInfo['password'] == $param['password']){
@@ -60,47 +60,38 @@ class Member_Service extends Base_Service {
 	 * 
 	 */
 	public function getUserInfoById($id){
-		return $this->_userModel->getFirstByKey($id,'uid');
+		return $this->_memberModel->getFirstByKey($id,'uid');
 	}
 	
 	public function getUserInfoByKey($value,$key){
-		return $this->_userModel->getFirstByKey($value,$key);
+		return $this->_memberModel->getFirstByKey($value,$key);
 	}
 	/**
 	 * 
 	 */
 	public function getUserInfoByMobile($mobile){
-		return $this->_userModel->getFirstByKey($mobile,'mobile');
+		return $this->_memberModel->getFirstByKey($mobile,'mobile');
 	}
 	
 	/**
 	 * 获得用户信息
 	 */
 	public function getUserInfoByEmail($email){
-		return $this->_userModel->getFirstByKey($email,'email');
+		return $this->_memberModel->getFirstByKey($email,'email');
 	}
 	
 	/**
 	 * 更新用户信息
 	 */
 	public function updateUserInfo($data,$uid){
-		return $this->_userModel->update($data,array('uid' => $uid));
+		return $this->_memberModel->update($data,array('uid' => $uid));
 	}
 	
 	/**
 	 * 
 	 */
 	public function getListByCondition($condition){
-		$users = $this->_userModel->getList($condition);
-		
-		$u = array();
-		if($users){
-			foreach($users as $uk => $user){
-				$u[$user['uid']] = $user;
-			}
-		}
-		
-		return $u;
+		return $this->toEasyUseArray($this->_memberModel->getList($condition),'uid');
 	}
 	
 	/**
@@ -108,7 +99,7 @@ class Member_Service extends Base_Service {
 	 */
 	public function set_city($param){
 		
-		return $this->_userModel->update(array(
+		return $this->_memberModel->update(array(
 			'district_bind' => 1,
 			'd1' => $param['d1'],
 			'd2' => $param['d2'],

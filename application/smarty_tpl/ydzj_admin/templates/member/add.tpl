@@ -1,11 +1,12 @@
 {include file="common/main_header.tpl"}
+{config_load file="member.conf"}
 <div class="page">
   <div class="fixed-bar">
     <div class="item-title">
-      <h3>会员管理</h3>
+      <h3>{#title#}</h3>
       <ul class="tab-base">
-        <li><a href="{admin_site_url('member')}" ><span>管理</span></a></li>
-        <li><a href="JavaScript:void(0);" class="current"><span>新增</span></a></li>
+        <li><a href="{admin_site_url('member')}" ><span>{#manage#}</span></a></li>
+        <li><a href="JavaScript:void(0);" class="current"><span>{#add#}</span></a></li>
       </ul>
     </div>
   </div>
@@ -133,10 +134,6 @@
 {include file="member/member_common.tpl"}
 <script type="text/javascript">
 $(function(){
-    
-    $('#user_form').bind('submit',function(){
-        return $('#user_form').valid();
-    });
     
     $('#user_form').validate({
         errorPlacement: function(error, element){

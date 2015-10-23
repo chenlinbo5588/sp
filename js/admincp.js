@@ -90,8 +90,11 @@ $(function(){
     
     $("input.jumpBtn").bind("click",function(e){
     	var btn = $(e.target);
-    	btn.closest('form').find("input[name=page]").val(btn.closest("strong").find("input[name=jumpPage]").val());
-    	btn.closest('form').submit();
+    	var pagerDiv = btn.closest('.pagination');
+    	var formid = pagerDiv.attr('data-formid');
+    	
+    	$(formid).find("input[name=page]").val(btn.closest("strong").find("input[name=jumpPage]").val());
+    	$(formid).submit();
     });
     
     
@@ -103,9 +106,16 @@ $(function(){
     	}else{
     		return false;
     	}
-    	
-    	
-    	
     },"必须是有效的手机号码");
-
 });
+
+/**
+ * 分页
+ * @param page
+ * @returns
+ */
+function search_page(page,formid){
+	var form = $(formid);
+    $("input[name=page]",form).val(page);
+    form.submit();
+}

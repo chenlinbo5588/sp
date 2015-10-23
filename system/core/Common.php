@@ -851,8 +851,15 @@ if ( ! function_exists('function_usable'))
 	}
 }
 
+/**
+ * 分页函数
+ */
+function pageArrayGenerator($pagerParam,$total){
+	
+	$currPage = $pagerParam['current_page'];
+	$pageSize = $pagerParam['page_size'];
 
-function pageArrayGenerator($currPage,$pageSize,$total, $url = '',$callJs = 'pageJs'){
+	
     $step=5; //显示的页面间隔
     $stepTmp = ceil($step/2);
     $pageEnd = ceil($total/$pageSize); //总页数
@@ -881,8 +888,9 @@ function pageArrayGenerator($currPage,$pageSize,$total, $url = '',$callJs = 'pag
             'pageLastNum'=> $pageEnd,
             'pageAb'=> $pageAb,
             'pageAe'=> $pageAe,
-            'url' => $url,
-            'callJs' => $callJs
+            'query_string' => $pagerParam['query_string'],
+            'call_js' => $pagerParam['call_js'],
+            'form_id' => $pagerParam['form_id']
         )
 
     );

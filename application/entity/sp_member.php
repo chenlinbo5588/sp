@@ -35,8 +35,8 @@ $entity = array(
 'd3' => 'mediumint',
 'd4' => 'mediumint',
 'channel' => 'smallint',
-'allowtalk' => 'tinyint',
-'freeze' => 'tinyint',
+'allowtalk' => 'char',
+'freeze' => 'char',
 'gmt_create' => 'int',
 'gmt_modify' => 'int'
 );

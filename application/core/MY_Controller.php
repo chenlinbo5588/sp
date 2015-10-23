@@ -96,7 +96,7 @@ class MY_Controller extends CI_Controller {
             $this->_smarty->compile_check = true;
         }
         
-    	$this->smartyConfig();
+    	//$this->smartyConfig();
     }
     
     

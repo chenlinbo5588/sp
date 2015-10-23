@@ -466,8 +466,8 @@ class Team extends Ydzj_Controller {
 				}
 				
 				if($this->isPostRequest()){
-					$this->load->model('Sports_Category_Model');
-					$this->load->model('Team_Model');
+					//$this->load->model('Sports_Category_Model');
+					//$this->load->model('Team_Model');
 					
 					/**
 					 * 首先处理上传图片，并记录，防止其他信息错误，不再消耗流量重传
@@ -496,63 +496,7 @@ class Team extends Ydzj_Controller {
 						$this->assign('team_logo',$team_logo);
 					}
 					
-					$this->form_validation->reset_validation();
-					$this->form_validation->set_rules('category_id','队伍类型',array(
-								'required',
-								'is_natural_no_zero',
-								array(
-									'category_callable',
-									array(
-										$this->Sports_Category_Model,'avaiableCategory'
-									)
-								),
-								array(
-									'user_categroy_callbale['.$this->_profile['basic']['uid'].']',
-									array(
-										$this->Team_Model,'userCategoryTeamCount'
-									)
-								)
-							),
-							array(
-								'category_callable' => '%s无效',
-								'user_categroy_callbale' => '同一个类型的球队最多创建三个'
-							)
-						);
-						
-					//队伍名称允许相同,因现实情况下确实有可能相同
-					//用户如果设置 d4 级的话， 则校验名称重复，如果d4 级没有设置，则不校验
-					if($this->_profile['basic']['d4'] > 0){
-						
-						//获得地区名称
-						$this->load->model('Common_District_Model');
-						$districtName = $this->Common_District_Model->getById(array(
-							'select' => 'name',
-							'where' => array('id' => $this->_profile['basic']['d4'])
-						));
-						
-						$this->form_validation->set_rules('title','球队名称', array(
-								'required',
-								'max_length[4]',
-								array(
-									'title_callable['.$this->_profile['basic']['d4'].']',
-									array(
-										$this->Team_Model,'isTitleNotUsed'
-									)
-								)
-							),
-							array(
-								'title_callable' => '%s '.$this->input->post('title').'在'.$districtName['name'].'已经存在'
-							)
-						);
-					}else{
-						$this->form_validation->set_rules('title','球队名称', 'required|max_length[4]');
-					}
-					
-					$this->form_validation->set_rules('leader','队长设置','required|in_list[1,2]');
-					//$this->form_validation->set_rules('logo_url','队伍合影','required');
-					
-					$this->form_validation->set_rules('joined_type','入队设置','required|in_list[1]');
-					
+					$this->team_service->teamAddRules($this->_profile['basic']);
 					
 					if($this->form_validation->run() == FALSE){
 						break;
@@ -591,12 +535,11 @@ class Team extends Ydzj_Controller {
 					$addParam['avatar_middle'] = $resizeFile['img_middle'];
 					//$addParam['avatar_small'] = $resizeFile['img_small'];
 					
-					foreach($sportsCategoryList as $cate){
-		            	if($cate['id'] == $this->input->post('category_id')){
-		            		$addParam['category_name'] = $cate['name'];
-		            		break;
-		            	}
-		            }
+					$addParam['category_name'] = $sportsCategoryList[$this->input->post('category_id')]['name'];
+					if(empty($addParam['category_name'])){
+						$addParam['category_name'] = '';
+					}
+					
 					
 					$teamid = $this->team_service->addTeam($addParam,$this->_profile['basic']);
 					$this->attachment_service->deleteByFileUrl($addParam['avatar']);

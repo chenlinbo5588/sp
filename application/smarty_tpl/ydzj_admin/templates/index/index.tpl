@@ -399,12 +399,12 @@ $(function(){
               <dl>
                 <dd>
                   <ol>
-                    <li><a href="JavaScript:void(0);" id="setting_team" onclick="openItem('setting,team,team');">队伍设置</a></li>
-                    <li><a href="JavaScript:void(0);" id="level_team" onclick="openItem('level,team,team');">队伍头衔设置</a></li>
-                    <li><a href="JavaScript:void(0);" id="category_team" onclick="openItem('category,team,team');">队伍分类管理</a></li>
                     <li><a href="JavaScript:void(0);" id="index_team" onclick="openItem('index,team,team');">队伍管理</a></li>
+                    <li><a href="JavaScript:void(0);" id="category_team" onclick="openItem('category,team,team');">队伍分类管理</a></li>
+                    <li><a href="JavaScript:void(0);" id="level_team" onclick="openItem('level,team,team');">队伍头衔设置</a></li>
                     <li><a href="JavaScript:void(0);" id="member_list_team" onclick="openItem('member_list,team,team');">队伍成员管理</a></li>
                     <li><a href="JavaScript:void(0);" id="inform_team" onclick="openItem('inform,team,team');">队伍举报管理</a></li>
+                    <li><a href="JavaScript:void(0);" id="setting_team" onclick="openItem('setting,team,team');">队伍设置</a></li>
                     <li><a href="JavaScript:void(0);" id="adv_team" onclick="openItem('adv,team,team');">队伍首页广告</a></li>
                     <li><a href="JavaScript:void(0);" id="cache_team" onclick="openItem('cache,team,team');">更新队伍缓存</a></li>
                   </ol>

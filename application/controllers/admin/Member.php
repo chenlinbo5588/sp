@@ -16,7 +16,8 @@ class Member extends Ydzj_Admin_Controller {
 			'pager' => array(
 				'page_size' => config_item('page_size'),
 				'current_page' => $currentPage,
-				'call_js' => 'member_page'
+				'call_js' => 'search_page',
+				'form_id' => '#formSearch'
 			)
 			
 		);
@@ -85,9 +86,7 @@ class Member extends Ydzj_Admin_Controller {
 			$condition['where'][$statArray[0]] = $statArray[1];
 		}
 		
-		
-		
-		$list = $this->Member_Model->getList($condition);
+		$list = $this->member_service->getListByCondition($condition);
 		
 		//邀请人和地区名称
 		$dqList = array();
@@ -327,7 +326,7 @@ class Member extends Ydzj_Admin_Controller {
 			
 			for($i = 0 ; $i < 1; $i++){
 				if(!$this->form_validation->run()){
-					echo $this->form_validation->error_string();
+					$this->assign('feedback','<div class="tip_error">'.$this->form_validation->error_string('','').'</div>');
 					break;
 				}
 				

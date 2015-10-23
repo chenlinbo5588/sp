@@ -263,7 +263,7 @@ input[type=checkbox],input[type=radio] {
 /* table
 ------------------------------------------------------------------- */
 .table { clear:both; width:100%; margin-top: 8px}
-    .table th, .table td{ padding:6px !important; height:26px; }
+    .table th, .table td{ padding:6px !important; }
     .nohover td { background:#FFF !important;}
 
 

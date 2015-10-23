@@ -53,11 +53,20 @@ class Team_Service extends Base_Service {
 	public function getSportsCategory($condition = array())
 	{
 		$condition['where']['status'] = 0;
-		return $this->_sportsCategoryModel->getList($condition);
+		
+		return $this->toEasyUseArray($this->_sportsCategoryModel->getList($condition));
 	}
 	
+	/**
+	 * 根据条件获得队伍
+	 */
+	public function getTeamListByCondition($condition){
+		return $this->toEasyUseArray($this->_teamModel->getList($condition));
+	}
 	
-	
+	/**
+	 * 
+	 */
 	public function getTeamInfo($teamid ,$withMemeber = true){
 		
 		$team['basic'] = $this->_teamModel->getById(array(
@@ -71,28 +80,6 @@ class Team_Service extends Base_Service {
 				'where' => array('team_id' => $teamid)
 			));
 		}
-		
-		
-		/*
-		$memberIds = array();
-		foreach($members as $member){
-			$memberIds[] = $member['uid'];
-			$team['members'][$member['uid']] = $member;
-		}
-		
-		if($memberIds){
-			$userInfo = $this->_userModel->getList(array(
-				'select' => 'uid,nickname,avatar_middle',
-				'where_in' => array(
-					array('key' => 'uid' , 'value' => $memberIds)
-				)
-			));
-			
-			foreach($userInfo as $user){
-				$team['members'][$user['uid']] = array_merge($team['members'][$user['uid']],$user);
-			}
-		}
-		*/
 		
 		return $team;
 	}
@@ -156,6 +143,84 @@ class Team_Service extends Base_Service {
 		
 		
 	}
+	
+	/**
+	 * 增加队伍验证规则
+	 *  
+	 * @param array  $userInfo  登陆用户信息
+	 * 
+	 */
+	public function teamAddRules($userInfo = array()){
+		$this->form_validation->reset_validation();
+		
+		$rule = array();
+		
+		$rule['category_id'] = array(
+			'field' => 'category_id',
+			'label' => '队伍类型',
+			'rules' => array(
+				'required',
+				'is_natural_no_zero',
+				array(
+					'category_callable',
+					array(
+						$this->_sportsCategoryModel,'avaiableCategory'
+					)
+				)
+			),
+			'errors' => array(
+				'category_callable' => '%s无效'
+			)
+		);
+		
+		
+		if($userInfo){
+			$rule['category_id']['rules'][] = array(
+					'user_categroy_callbale['.$userInfo['uid'].']',
+					array(
+						$this->_teamModel,'userCategoryTeamCount'
+					)
+				);
+				
+			$rule['category_id']['errors']['user_categroy_callbale'] = '对不起,同一个类型的球队最多创建三个';
+		}
+		
+		$this->form_validation->set_rules($rule['category_id']['field'],$rule['category_id']['label'],$rule['category_id']['rules'],$rule['category_id']['errors']);
+
+
+		//队伍名称允许相同,因现实情况下确实有可能相同
+		//用户如果设置 d4 级的话， 则校验名称重复，如果d4 级没有设置，则不校验
+		
+		if($userInfo['d4'] > 0){
+			//获得地区名称
+			$districtName = $this->_districtModel->getById(array(
+				'select' => 'name',
+				'where' => array('id' => $userInfo['d4'])
+			));
+			
+			$this->form_validation->set_rules('title','球队名称', array(
+					'required',
+					'max_length[4]',
+					array(
+						'title_callable['.$userInfo['d4'].']',
+						array(
+							$this->_teamModel,'isTitleNotUsed'
+						)
+					)
+				),
+				array(
+					'title_callable' => '%s '.$this->CI->input->post('title').'在'.$districtName['name'].'已经存在'
+				)
+			);
+		}else{
+			$this->form_validation->set_rules('title','球队名称', 'required|max_length[4]');
+		}
+		
+		$this->form_validation->set_rules('leader','队长设置','required|in_list[1,2]');
+		$this->form_validation->set_rules('joined_type','入队设置','required|in_list[1]');
+	}
+	
+	
 	
 	/**
 	 * 添加队伍
