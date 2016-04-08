@@ -1,22 +1,27 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Setting extends Ydzj_Admin_Controller {
+class Upload extends Ydzj_Admin_Controller {
 	
 	public function __construct(){
 		parent::__construct();
+		
+		
 	}
 	
-	
-	
-	public function base(){
+	public function param(){
+		
 		$this->display();
 	}
 	
-	
-	
-	
-	public function dump(){
+	public function default_thumb(){
+		
 		$this->display();
 	}
+	
+	public function login(){
+		
+		$this->display();
+	}
+	
 }

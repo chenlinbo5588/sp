@@ -1,5 +1,4 @@
 {include file="common/main_header.tpl"}
-<div class="page">
   <div class="fixed-bar">
     <div class="item-title">
       <h3>会员管理</h3>
@@ -161,7 +160,6 @@
       </tfoot>
     </table>
   </form>
-</div>
 <script type="text/javascript" src="{js_url('js/dialog/dialog.js')}" id="dialog_js"></script>
 <script type="text/javascript" src="{js_url('js/jquery-ui/jquery.ui.js')}"></script>
 <script type="text/javascript" src="{js_url('js/ajaxfileupload/ajaxfileupload.js')}"></script>

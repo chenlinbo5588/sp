@@ -31,3 +31,4 @@ if (cookie_skin) {
 <body>
 <div id="append_parent"></div>
 <div id="ajaxwaitid"></div>
+<div class="page">

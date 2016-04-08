@@ -1,5 +1,4 @@
 {include file="common/main_header.tpl"}
-<div class="page">
   <div class="fixed-bar">
     <div class="item-title">
       <h3>系统信息<!--上次登录的时间：2015-09-23 08:37:39--></h3>
@@ -139,5 +138,4 @@
     </dl>
     <div class="clear"></div>
   </div>
-</div>
 {include file="common/main_footer.tpl"}

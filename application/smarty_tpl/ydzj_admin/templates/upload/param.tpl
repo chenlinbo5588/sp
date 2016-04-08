@@ -4,10 +4,9 @@
       <h3>上传设置</h3>
       	<ul class="tab-base">
 	      	<li><a  class="current"><span>上传参数</span></a></li>
-	      	<li><a href="index.php?act=upload&op=default_thumb" ><span>默认图片</span></a></li>
-	      	<li><a href="index.php?act=upload&op=login" ><span>登录主题图片</span></a></li>
-	      	<li><a href="index.php?act=upload&op=tool" ><span>压缩工具</span></a></li>
-	      	<li><a href="index.php?act=upload&op=font" ><span>水印字体</span></a></li>
+	      	<li><a href="{admin_site_url('upload/default_thumb')}" ><span>默认图片</span></a></li>
+	      	<li><a href="{admin_site_url('upload/login')}" ><span>登录主题图片</span></a></li>
+	      	<li><a href="{admin_site_url('upload/font')}" ><span>水印字体</span></a></li>
       	</ul>
       </div>
   </div>

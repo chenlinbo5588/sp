@@ -325,12 +325,12 @@ class Team extends Ydzj_Controller {
 			}
 			
 			$this->_extraTeamInfo($team);
-			$this->display('team/detail');
+			$this->display();
 			
 		}else{
 			
 			$this->_prepareDetailData(intval($this->_teamid));
-			$this->display('team/detail');
+			$this->display();
 		}
 		
 	}
@@ -401,14 +401,14 @@ class Team extends Ydzj_Controller {
 					$this->assign('feedback','<div class="warning">'.$feedback.'</div>');
 				}
 				
-				$this->display('team/set_teamavatar');
+				$this->display();
 			}
 			
 		}else{
 			$team = $this->team_service->getTeamInfo(intval($this->_teamid),false);
 			
 			$this->assign('default_avatar',$team['basic']['avatar_big']);
-			$this->display('team/set_teamavatar');
+			$this->display();
 		}
 		
 	}
@@ -434,7 +434,7 @@ class Team extends Ydzj_Controller {
 			 * 当前用户使用创建篮球队或者是管理者
 			 */
 			
-			$this->display('team/order_game');
+			$this->display();
 		}
 		
 		
@@ -554,7 +554,7 @@ class Team extends Ydzj_Controller {
 			if($isCreateOk){
 				redirect('team/detail/'.$teamid);
 			}else{
-				$this->display('team/create_team');
+				$this->display();
 			}
 			
 		}else{

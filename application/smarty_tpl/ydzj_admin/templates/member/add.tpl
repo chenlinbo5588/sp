@@ -1,6 +1,5 @@
 {include file="common/main_header.tpl"}
 {config_load file="member.conf"}
-<div class="page">
   <div class="fixed-bar">
     <div class="item-title">
       <h3>{#title#}</h3>
@@ -130,7 +129,6 @@
       </tfoot>
     </table>
   </form>
-</div>
 {include file="member/member_common.tpl"}
 <script type="text/javascript">
 $(function(){

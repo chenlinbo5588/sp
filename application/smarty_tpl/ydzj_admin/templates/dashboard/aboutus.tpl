@@ -1,5 +1,4 @@
 {include file="common/main_header.tpl"}
-<div class="page">
   <table class="table tb-type2">
     <thead>
       <tr class="space">
@@ -112,5 +111,4 @@
       </tr>
     </tfoot>
   </table>
-</div>
 {include file="common/main_footer.tpl"}

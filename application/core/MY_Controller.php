@@ -161,6 +161,20 @@ class MY_Controller extends CI_Controller {
     }
     
     public function display($viewname = ''){
+    	if($viewname == ''){
+    		$paramAr = $this->uri->segment_array();
+    		
+    		//print_r($paramAr);
+    		if($paramAr[1] == 'admin'){
+    			$viewname = empty($paramAr[2]) ? 'index' :  $paramAr[2];
+    			$viewname .=  '/'. (empty($paramAr[3]) ? 'index' :  $paramAr[3]);
+    		}else{
+    			$viewname = empty($paramAr[1]) ? 'index' :  $paramAr[1];
+    			$viewname .=  '/'. (empty($paramAr[2]) ? 'index' :  $paramAr[2]);
+    		}
+    		
+    	}
+    	
     	$this->_smarty->assign($this->_seo);
     	$this->_smarty->display($this->_smarty->getTemplateDir(0).$viewname.'.tpl');
     }

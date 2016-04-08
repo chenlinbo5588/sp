@@ -55,7 +55,7 @@ class Stadium extends Ydzj_Controller {
 		
 		$this->assign('cityLevel',$cityInfo['level']);
 		$this->assign('list',$list);
-		$this->display('stadium/index');
+		$this->display();
 	}
 	
 	
