@@ -7,8 +7,8 @@
 <meta name="description" content="{$SEO_description}" />
 <meta name="keywords" content="{$SEO_keywords}" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,minimal-ui">
-<link rel="stylesheet" href="{base_url('css/site.css')}"/>
-<script type="text/javascript" src="{js_url('js/jquery.js')}" ></script>
+<link rel="stylesheet" href="{resource_url('css/site.css')}"/>
+<script type="text/javascript" src="{resource_url('js/jquery.js')}"></script>
 <script>
 var cookiedomain = "",
     cookiepath = "{config_item('cookie_path')}",
@@ -16,9 +16,9 @@ var cookiedomain = "",
     formhash = "{$formhash}",
     SITEURL = '{base_url()}',
     cityUrl = "{site_url('district/index/')}",
-    LOADING_IMAGE = "{base_url('img/loading/loading.gif')}";
+    LOADING_IMAGE = "{resource_url('img/loading/loading.gif')}";
 </script>
-<script type="text/javascript" src="{js_url('js/common.js')}"></script>
+<script type="text/javascript" src="{resource_url('js/common.js')}"></script>
 </head>
 <body>
    <div id="wrap">

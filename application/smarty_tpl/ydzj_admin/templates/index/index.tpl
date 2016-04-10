@@ -3,13 +3,13 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html;" charset="UTF-8">
 <title>{config_item('site_name')}-管理中心</title>
-<link href="{base_url('css/skin_0.css')}" rel="stylesheet" type="text/css" id="cssfile"/>
-<script src="{base_url('js/jquery-1.11.3.js')}" type="text/javascript"></script>
-<script type="text/javascript" src="{base_url('js/jquery.cookie.js')}"></script>
+<link href="{resource_url('css/skin_0.css')}" rel="stylesheet" type="text/css" id="cssfile"/>
+<script src="{resource_url('js/jquery-1.11.3.js')}" type="text/javascript"></script>
+<script type="text/javascript" src="{resource_url('js/jquery.cookie.js')}"></script>
 <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!--[if lt IE 9]>
-      <script src="{base_url('js/html5shiv.js')}"></script>
-      <script src="{base_url('js/respond.min.js')}"></script>
+      <script src="{resource_url('js/html5shiv.js')}"></script>
+      <script src="{resource_url('js/respond.min.js')}"></script>
 <![endif]-->
 
 <script>
@@ -164,16 +164,16 @@ $(function(){
     var $li =$("#skin li");   
         $li.click(function(){   
         $("#"+this.id).addClass("selected").siblings().removeClass("selected");
-        $("#cssfile").attr("href","{base_url('css')}/"+ (this.id) +".css");   
+        $("#cssfile").attr("href","{resource_url('css')}/"+ (this.id) +".css");   
         $.cookie( "MyCssSkin" ,  this.id , { path: '/', expires: 10 });  
 
-        $('iframe').contents().find('#cssfile2').attr("href","{base_url('css')}/"+ (this.id) +".css"); 
+        $('iframe').contents().find('#cssfile2').attr("href","{resource_url('css')}/"+ (this.id) +".css"); 
     });   
 
     var cookie_skin = $.cookie( "MyCssSkin");   
     if (cookie_skin) {   
         $("#"+cookie_skin).addClass("selected").siblings().removeClass("selected");
-        $("#cssfile").attr("href","{base_url('css')}/"+ cookie_skin +".css"); 
+        $("#cssfile").attr("href","{resource_url('css')}/"+ cookie_skin +".css"); 
         $.cookie( "MyCssSkin" ,  cookie_skin  , { path: '/', expires: 10 }); 
     }   
 });
@@ -193,11 +193,8 @@ $(function(){
 	        <dd><a href="javascript:void(0)" onclick="openItem('base,setting,setting')">站点设置</a></dd>
 	        <dd><a href="javascript:void(0)" onclick="openItem('param,upload,setting')">上传设置</a></dd>
 	        <dd><a href="javascript:void(0)" onclick="openItem('seo,setting,setting')">SEO设置</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('email,setting,setting')">邮件通知</a></dd>
+	        <dd><a href="javascript:void(0)" onclick="openItem('email,message,setting')">邮件通知</a></dd>
 	        <dd><a href="javascript:void(0)" onclick="openItem('payment,setting,setting')">支付方式</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('authority,setting,setting')">权限设置</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('express,setting,setting')">快递公司</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('area,setting,setting')">配送地区</a></dd>
 	        <dd><a href="javascript:void(0)" onclick="openItem('cache,setting,setting')">清理缓存</a></dd>
 	        <dd><a href="javascript:void(0)" onclick="openItem('perform,setting,setting')">性能优化</a></dd>
 	        <dd><a href="javascript:void(0)" onclick="openItem('search,setting,setting')">搜索设置</a></dd>
@@ -289,6 +286,17 @@ $(function(){
 	        <dd><a href="javascript:void(0)" onclick="openItem('index,tag,cms')">标签管理</a></dd>
 	        <dd><a href="javascript:void(0)" onclick="openItem('index,comment,cms')">评论管理</a></dd>
 	    </dl>
+	    <dl>    
+	        <dt>权限</dt>
+	        <dd><a href="javascript:void(0)" onclick="openItem('setting,cms,cms')">CMS管理</a></dd>
+	        <dd><a href="javascript:void(0)" onclick="openItem('index,cms_article,cms')">文章管理</a></dd>
+	        <dd><a href="javascript:void(0)" onclick="openItem('category,cms_article,cms')">文章分类</a></dd>
+	        <dd><a href="javascript:void(0)" onclick="openItem('index,magazine,cms')">画报管理</a></dd>
+	        <dd><a href="javascript:void(0)" onclick="openItem('category,magazine,cms')">画报分类</a></dd>
+	        <dd><a href="javascript:void(0)" onclick="openItem('index,special,cms')">专题管理</a></dd>
+	        <dd><a href="javascript:void(0)" onclick="openItem('index,tag,cms')">标签管理</a></dd>
+	        <dd><a href="javascript:void(0)" onclick="openItem('index,comment,cms')">评论管理</a></dd>
+	    </dl>
     </div>
     
 </div>
@@ -366,9 +374,8 @@ $(function(){
                     <li><a href="javascript:void(0);" id="base_setting" onclick="openItem('base,setting,setting');">站点设置</a></li>
                     <li><a href="javascript:void(0);" id="param_upload" onclick="openItem('param,upload,setting');">上传设置</a></li>
                     <li><a href="javascript:void(0);" id="seo_setting" onclick="openItem('seo,setting,setting');">SEO设置</a></li>
-                    <li><a href="javascript:void(0);" id="email_setting" onclick="openItem('email,setting,setting');">消息通知</a></li>
-                    <li><a href="javascript:void(0);" id="payment_setting" onclick="openItem('payment,setting,setting');">支付方式</a></li>
-                    <li><a href="javascript:void(0);" id="authority_setting" onclick="openItem('authority,setting,setting');">权限设置</a></li>
+                    <li><a href="javascript:void(0);" id="email_message" onclick="openItem('email,message,setting');">消息通知</a></li>
+                    <li><a href="javascript:void(0);" id="system_payment" onclick="openItem('system,payment,setting');">支付方式</a></li>
                     <li><a href="javascript:void(0);" id="express_setting" onclick="openItem('express,setting,setting');">快递公司</a></li>
                     <li><a href="javascript:void(0);" id="area_setting" onclick="openItem('area,setting,setting');">配送地区</a></li>
                     <li><a href="javascript:void(0);" id="cache_setting" onclick="openItem('cache,setting,setting');">清理缓存</a></li>

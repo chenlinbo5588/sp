@@ -44,11 +44,11 @@
     <div class="row"><label class="side_lb"></label>球队合影照片<em class="tip">JPG</em>格式,大小不超过<em class="tip">4MB</em></div>
     <div class="row"><label class="side_lb"></label>分辨率最小<em class="tip">800x800</em> <a id="seeSample" href="javascript:void(0)">查看合影范例</a></div>
     <div class="row" style="display:none;" id="samplWrap">
-        <img data-src="{base_url('img/team/team_sample.jpg')}"/>
+        <img data-src="{resource_url('img/team/team_sample.jpg')}"/>
     </div>
     <div class="row img_preview">
         {if $team_logo}
-        <img src="{base_url($team_logo)}"/>
+        <img src="{resource_url($team_logo)}"/>
         {/if}
     </div>
     <div id="submitFixedWrap" >
@@ -56,6 +56,6 @@
     </div>
 </div>
 </form>
-<script src="{base_url('js/team/team.js')}"></script>
+<script src="{resource_url('js/team/team.js')}"></script>
 
 {include file="common/footer.tpl"}

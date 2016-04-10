@@ -49,7 +49,7 @@
             <li class="member manage clearfix">
             	<div class="delmask" {if set_value('kick['|cat:$item['id']|cat:']')}style="width:100%;height:100%;display:block;"{/if}>已标记删除,轻触取消</div>
                 <div class="headerImg pd5">
-                   <a href="{site_url('user/info/')}/{$item['uid']}" title="{$item['nickname']|escape}"><img src="{base_url($item['avatar_middle'])}"/></a>
+                   <a href="{site_url('user/info/')}/{$item['uid']}" title="{$item['nickname']|escape}"><img src="{resource_url($item['avatar_middle'])}"/></a>
                    <strong>昵称:{mask_mobile($item['nickname'])|escape}</strong>
                    <p>真名:{$item['username']|escape}</p>
                    <p>位置:{$item['position']|escape}</p>
@@ -84,7 +84,7 @@
        {else}
            {foreach from=$team['members'] item=item}
             <li class="member">
-                <a href="{site_url('user/info/')}/{$item['uid']}" title="{$item['nickname']|escape}"><img src="{base_url($item['avatar_middle'])}"/></a>
+                <a href="{site_url('user/info/')}/{$item['uid']}" title="{$item['nickname']|escape}"><img src="{resource_url($item['avatar_middle'])}"/></a>
                 <div>[{if empty($item['position'])}未知{else}{$item['position']}{/if}]</div>
                 <div>{mask_mobile($item['nickname'])|escape}</div>
             </li>
@@ -171,7 +171,7 @@ var errorInputKey = [];
 errorInputKey.push("{$ek}");
 {/foreach}
 </script>
-<script src="{base_url('js/team/team_manage.js')}" type="text/javascript"></script>
+<script src="{resource_url('js/team/team_manage.js')}" type="text/javascript"></script>
 {else}
 <div class="row" id="submitFixedWrap" >
     {if $canManager}

@@ -88,7 +88,7 @@
           <td class="vatop rowform">
             <input type="hidden" name="avatar_id" value=""/>
             <span class="type-file-show">
-            <img class="show_image" src="{base_url('img/preview.png')}">
+            <img class="show_image" src="{resource_url('img/preview.png')}">
             <div class="type-file-preview" style="display: none;"><img id="view_img"></div>
             </span>
             <span class="type-file-box">

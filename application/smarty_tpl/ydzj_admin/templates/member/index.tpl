@@ -147,7 +147,7 @@
           </td>
           <td class="align-center w120">
             {if $item['inviter']}
-            <div class=""><a href="{admin_site_url('member/edit')}/{$item['inviter']}"><img src="{base_url($inviterInfo[$item['inviter']]['avatar_small'])}" /></a></div>
+            <div class=""><a href="{admin_site_url('member/edit')}/{$item['inviter']}"><img src="{resource_url($inviterInfo[$item['inviter']]['avatar_small'])}" /></a></div>
             <p>{$inviterInfo[$item['inviter']]['mobile']}</p>
             {/if}
           </td>

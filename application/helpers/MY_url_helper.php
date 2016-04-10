@@ -14,7 +14,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 // ------------------------------------------------------------------------
 
-if ( ! function_exists('js_url'))
+
+if ( ! function_exists('resource_url'))
 {
 	/**
 	 * Site URL
@@ -26,30 +27,12 @@ if ( ! function_exists('js_url'))
 	 * @param	string	$protocol
 	 * @return	string
 	 */
-	function js_url($uri = '', $protocol = NULL)
+	function resource_url($uri = '', $protocol = NULL)
 	{
-		return get_instance()->config->base_url($uri, $protocol);
+		return get_instance()->config->base_url('static/'.$uri, $protocol);
 	}
 }
 
-
-if ( ! function_exists('css_url'))
-{
-	/**
-	 * Site URL
-	 *
-	 * Create a local URL based on your basepath. Segments can be passed via the
-	 * first parameter either as a string or an array.
-	 *
-	 * @param	string	$uri
-	 * @param	string	$protocol
-	 * @return	string
-	 */
-	function css_url($uri = '', $protocol = NULL)
-	{
-		return get_instance()->config->base_url($uri, $protocol);
-	}
-}
 
 
 if ( ! function_exists('admin_site_url'))

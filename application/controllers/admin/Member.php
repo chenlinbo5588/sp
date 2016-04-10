@@ -289,7 +289,7 @@ class Member extends Ydzj_Admin_Controller {
 			}
 		}
 		
-		$this->display('member/add');
+		$this->display();
 		
 		
 	}
@@ -375,7 +375,7 @@ class Member extends Ydzj_Admin_Controller {
 		}
 		
 		$this->assign('info',$info);
-		$this->display('member/edit');
+		$this->display();
 	}
 	
 	
@@ -427,7 +427,7 @@ class Member extends Ydzj_Admin_Controller {
 			
 			$this->assign('image_width',$width);
 			$this->assign('image_height',$height);
-			$this->display('member/pic_cut');
+			$this->display();
 		}
 		
 	}

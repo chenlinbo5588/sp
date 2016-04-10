@@ -21,7 +21,7 @@
             <input type='button' name='button' id='button' value='' class='type-file-button' />
         </div>
         <div id="wait_loading" style="text-align:center;display:none;">
-	        <div><img class="nature" src="{base_url('img/loading/loading.gif')}"/></div>
+	        <div><img class="nature" src="{resource_url('img/loading/loading.gif')}"/></div>
 	        <div>正在上传,请稍等..</div>
 	    </div>
 	    {$avatar_error}
@@ -32,9 +32,9 @@
     </div>
     </form>
 </div>
-<link href="{css_url('js/jquery.Jcrop/jquery.Jcrop.min.css')}" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="{js_url('js/ajaxfileupload/ajaxfileupload.js')}"></script>
-<script type="text/javascript" src="{js_url('js/jquery.Jcrop/jquery.Jcrop.js')}"></script>
+<link href="{resource_url('js/jquery.Jcrop/jquery.Jcrop.min.css')}" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="{resource_url('js/ajaxfileupload/ajaxfileupload.js')}"></script>
+<script type="text/javascript" src="{resource_url('js/jquery.Jcrop/jquery.Jcrop.js')}"></script>
 <script>
 
 function showPreview(coords)

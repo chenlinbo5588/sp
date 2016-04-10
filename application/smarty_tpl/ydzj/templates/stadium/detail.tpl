@@ -1,6 +1,6 @@
 {include file="common/header.tpl"}
 {$feedback}
-<link rel="stylesheet" href="{base_url('css/swiper/swiper.min.css')}">
+<link rel="stylesheet" href="{resource_url('css/swiper/swiper.min.css')}">
 <div id="stadiumDetail" {if $inManageMode}class="handle_area"{/if}>
 {if $inManageMode}
 {include file="common/baidu_map.tpl"}
@@ -135,7 +135,7 @@
     {/if}
     <div class="row img_preview">
         {if $fileUpload['other_img'][$item]['preview']}
-        <img class="nature" src="{base_url($fileUpload['other_img'][$item]['preview'])}"/>
+        <img class="nature" src="{resource_url($fileUpload['other_img'][$item]['preview'])}"/>
         <a href="javascript:void(0)" class="link_btn grayed opTrash" data-id="url{$item}">删除照片</a>
         {/if}
     </div>
@@ -152,7 +152,7 @@
 	</div>
 	</form>
 	<script>
-	var stadiumPic = "{base_url('img/basketball.png')}";
+	var stadiumPic = "{resource_url('img/basketball.png')}";
 	{if $inPost}
 		{if $smarty.post['longitude']}
 	var longitude = "{$smarty.post['longitude']}";
@@ -167,13 +167,13 @@
 	var hash = "cover_error";
 	{/if}
 	</script>
-	<script src="{base_url('js/stadium/stadium.js')}" type="text/javascript"></script>
+	<script src="{resource_url('js/stadium/stadium.js')}" type="text/javascript"></script>
 {else}
     
     <div class="swiper-container">
         <div class="swiper-wrapper">
             {foreach from=$stadium['photos'] item=item}
-            <div class="swiper-slide"><img src="{base_url($item['avatar_big'])}" alt="{$stadium['basic']['title']} photo"/></div>
+            <div class="swiper-slide"><img src="{resource_url($item['avatar_big'])}" alt="{$stadium['basic']['title']} photo"/></div>
             {/foreach}
         </div>
         <!-- Add Pagination -->
@@ -240,7 +240,7 @@
         </tbody>
     </table>
 
-	<script src="{base_url('js/swiper/swiper.min.js')}"></script>
+	<script src="{resource_url('js/swiper/swiper.min.js')}"></script>
 	<script>
 	var swiper = new Swiper('.swiper-container', {
 	    pagination: '.swiper-pagination',

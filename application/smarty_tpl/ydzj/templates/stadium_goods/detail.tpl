@@ -1,6 +1,6 @@
 {include file="common/header.tpl"}
 {$feedback}
-<link rel="stylesheet" href="{base_url('css/swiper/swiper.min.css')}">
+<link rel="stylesheet" href="{resource_url('css/swiper/swiper.min.css')}">
 
 
 <div id="stadiumDetail" {if $inManageMode}class="handle_area"{/if}>
@@ -104,7 +104,7 @@
     <div class="row form_error" id="tip_img{$item}">{$img_error0}</div>
     <a name="cover_error"></a>
     {/if}
-    <div class="row img_preview">{if $fileUpload['other_img'][$item]['preview']}<img class="nature" src="{base_url($fileUpload['other_img'][$item]['preview'])}"/>{/if}</div>
+    <div class="row img_preview">{if $fileUpload['other_img'][$item]['preview']}<img class="nature" src="{resource_url($fileUpload['other_img'][$item]['preview'])}"/>{/if}</div>
     {/foreach}
 	
 	<div class="row" id="submitFixedWrap" >
@@ -119,7 +119,7 @@
 	</form>
 	
 	<script>
-	var stadiumPic = "{base_url('img/basketball.png')}";
+	var stadiumPic = "{resource_url('img/basketball.png')}";
 	{if $smarty.post['longitude']}
 	var longitude = "{$smarty.post['longitude']}";
 	var latitude = "{$smarty.post['latitude']}";
@@ -129,13 +129,13 @@
 	{/if}
 	
 	</script>
-	<script src="{base_url('js/stadium/stadium.js')}" type="text/javascript"></script>
+	<script src="{resource_url('js/stadium/stadium.js')}" type="text/javascript"></script>
 {else}
 
     <div class="swiper-container">
         <div class="swiper-wrapper">
             {foreach from=$stadium['photos'] item=item}
-            <div class="swiper-slide"><img src="{base_url($item['avatar_big'])}" alt="{$stadium['basic']['title']} photo"/></div>
+            <div class="swiper-slide"><img src="{resource_url($item['avatar_big'])}" alt="{$stadium['basic']['title']} photo"/></div>
             {/foreach}
         </div>
         <!-- Add Pagination -->
@@ -204,7 +204,7 @@
         </tbody>
     </table>
 
-	<script src="{base_url('js/swiper/swiper.min.js')}"></script>
+	<script src="{resource_url('js/swiper/swiper.min.js')}"></script>
 	<script>
 	var swiper = new Swiper('.swiper-container', {
 	    pagination: '.swiper-pagination',

@@ -98,7 +98,7 @@
           <td class="vatop rowform">
             <input type="hidden" name="avatar_id" value=""/>
             <span class="type-file-show">
-            <img class="show_image" src="{base_url('img/preview.png')}">
+            <img class="show_image" src="{resource_url('img/preview.png')}">
             <div class="type-file-preview" style="display: none;"><img id="view_img"></div>
             </span>
             <span class="type-file-box">
@@ -160,11 +160,11 @@
       </tfoot>
     </table>
   </form>
-<script type="text/javascript" src="{js_url('js/dialog/dialog.js')}" id="dialog_js"></script>
-<script type="text/javascript" src="{js_url('js/jquery-ui/jquery.ui.js')}"></script>
-<script type="text/javascript" src="{js_url('js/ajaxfileupload/ajaxfileupload.js')}"></script>
-<script type="text/javascript" src="{js_url('js/jquery.Jcrop/jquery.Jcrop.js')}"></script>
-<link href="{css_url('js/jquery.Jcrop/jquery.Jcrop.min.css')}" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="{resource_url('js/dialog/dialog.js')}" id="dialog_js"></script>
+<script type="text/javascript" src="{resource_url('js/jquery-ui/jquery.ui.js')}"></script>
+<script type="text/javascript" src="{resource_url('js/ajaxfileupload/ajaxfileupload.js')}"></script>
+<script type="text/javascript" src="{resource_url('js/jquery.Jcrop/jquery.Jcrop.js')}"></script>
+<link href="{resource_url('js/jquery.Jcrop/jquery.Jcrop.min.css')}" rel="stylesheet" type="text/css"/>
 {include file="member/member_common.tpl"}
 
 {include file="common/main_footer.tpl"}

@@ -112,7 +112,7 @@
           <td class="align-center w120">
             {if $item['leader_uid']}
             <p><strong>队长:&nbsp;</strong><span>{$userInfo[$item['leader_uid']]['nickname']}</span></p>
-            <div class=""><a href="{admin_site_url('member/edit')}/{$item['leader_uid']}"><img src="{base_url($userInfo[$item['leader_uid']]['avatar_small'])}" /></a></div>
+            <div class=""><a href="{admin_site_url('member/edit')}/{$item['leader_uid']}"><img src="{resource_url($userInfo[$item['leader_uid']]['avatar_small'])}" /></a></div>
             <p>{$userInfo[$item['leader_uid']]['mobile']}</p>
             {else}
             未设置队长
@@ -120,7 +120,7 @@
           </td>
           <td class="align-center w120">
             <p><strong>创建人:&nbsp;</strong><span>{$userInfo[$item['owner_uid']]['nickname']}</span></p>
-            <div class=""><a href="{admin_site_url('member/edit')}/{$item['owner_uid']}"><img src="{base_url($userInfo[$item['owner_uid']]['avatar_small'])}" /></a></div>
+            <div class=""><a href="{admin_site_url('member/edit')}/{$item['owner_uid']}"><img src="{resource_url($userInfo[$item['owner_uid']]['avatar_small'])}" /></a></div>
             <p>{$userInfo[$item['owner_uid']]['mobile']}</p>
           </td>
           <td>

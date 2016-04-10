@@ -16,7 +16,7 @@
         </div>
         <div class="row" id="preview">
         	{if $default_avatar}
-        	<img src="{base_url($default_avatar)}"/>
+        	<img src="{resource_url($default_avatar)}"/>
         	{/if}
         </div>
         

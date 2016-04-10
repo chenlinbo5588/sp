@@ -9,8 +9,5 @@ class Order extends Ydzj_Admin_Controller {
 		
 	}
 	
-	public function _remap(){
-		
-		$this->display('setting/upload');
-	}
+	
 }

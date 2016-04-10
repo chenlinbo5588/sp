@@ -11,8 +11,8 @@ class Captcha extends Ydzj_Controller {
     {
         $this->load->helper('captcha');
 		$vals = array(
-	        'img_path'      => ROOTPATH.'/img/captcha/',
-	        'img_url'       => base_url('/img/captcha/'),
+	        'img_path'      => ROOTPATH.'/static/img/captcha/',
+	        'img_url'       => base_url('/static/img/captcha/'),
 	        'img_width'     => 150,
         	'img_height'    => 30,
         	'expiration'    => 180,
@@ -43,7 +43,7 @@ class Captcha extends Ydzj_Controller {
 		header('Cache-control:no-cache');
 		header("ContentType: image/jpeg");
 		
-		echo file_get_contents(ROOTPATH.'/img/captcha/'.$cap['filename']);
+		echo file_get_contents(ROOTPATH.'/static/img/captcha/'.$cap['filename']);
     }
 
 }

@@ -1,15 +1,13 @@
 {include file="common/main_header.tpl"}
   <div class="fixed-bar">
     <div class="item-title">
-      <h3>上传设置</h3>
-   		<ul class="tab-base">
-	   		<li><a href="index.php?act=upload&op=param" ><span>上传参数</span></a></li>
-	   		<li><a class="current"><span>默认图片</span></a></li>
-	   		<li><a href="index.php?act=upload&op=login" ><span>登录主题图片</span></a></li>
-	   		<li><a href="index.php?act=upload&op=tool" ><span>压缩工具</span></a></li>
-	   		<li><a href="index.php?act=upload&op=font" ><span>水印字体</span></a></li>
-   		</ul>
-   	</div>
+        <h3>上传设置</h3>
+     	<ul class="tab-base">
+	     	<li><a href="{admin_site_url('upload/param')}" ><span>上传参数</span></a></li>
+	     	<li><a  class="current"><span>默认图片</span></a></li>
+	     	<li><a  href="{admin_site_url('upload/login')}"><span>登录主题图片</span></a></li>
+     	</ul>
+     </div>
   </div>
   <div class="fixed-empty"></div>
   <form method="post" enctype="multipart/form-data" onsubmit="MySubmit();return false;" name="form1">

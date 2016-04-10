@@ -87,7 +87,7 @@
     {/if}
     <div class="row img_preview" id="url{$item}">
     {if $fileUpload[$item]['preview']}
-    <img class="nature" src="{base_url($fileUpload[$item]['preview'])}"/>
+    <img class="nature" src="{resource_url($fileUpload[$item]['preview'])}"/>
     <a href="javascript:void(0)" class="link_btn grayed opTrash" data-id="url{$item}">删除照片</a>
     {/if}
     </div>
@@ -101,7 +101,7 @@
 </div>
 
 <script>
-var stadiumPic = "{base_url('img/basketball.png')}";
+var stadiumPic = "{resource_url('img/basketball.png')}";
 {if $smarty.post['longitude']}
 var longitude = "{$smarty.post['longitude']}";
 var latitude = "{$smarty.post['latitude']}";
@@ -112,5 +112,5 @@ var hash = "cover_error";
 {/if}
 
 </script>
-<script src="{base_url('js/stadium/stadium.js')}" type="text/javascript"></script>
+<script src="{resource_url('js/stadium/stadium.js')}" type="text/javascript"></script>
 {include file="common/footer.tpl"}

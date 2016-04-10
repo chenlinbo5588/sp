@@ -9,6 +9,11 @@ class Authority extends Ydzj_Admin_Controller {
 	}
 	
 	public function user(){
+		
+		
+		
+		
+		
 		$this->display();
 	}
 	

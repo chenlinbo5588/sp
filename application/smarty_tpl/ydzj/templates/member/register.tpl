@@ -39,5 +39,5 @@
 
 var authCodeURL ="{site_url('api/register/authcode')}";
 </script>
-<script src="{base_url('js/register.js')}" type="text/javascript"></script>
+<script src="{resource_url('js/register.js')}" type="text/javascript"></script>
 {include file="common/footer.tpl"}

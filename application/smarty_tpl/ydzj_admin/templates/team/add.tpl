@@ -122,7 +122,7 @@
             <td></td>
             <td>
                 {if $team_logo}
-		        <img style="width:300px" src="{base_url($team_logo)}"/>
+		        <img style="width:300px" src="{resource_url($team_logo)}"/>
 		        {/if}
             </td>
         </tr>
