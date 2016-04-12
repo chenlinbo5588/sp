@@ -32,6 +32,16 @@ class Ydzj_Controller extends MY_Controller {
 		$this->seo('运动之家','体育运动 体育场馆 查询预定 个人赛事,业余联赛组织', '一个综合性体育运动爱好者聚集地，约朋友出来运动、组织对抗比赛、预约场馆，给您带来一站式体育运动服务，节省您宝贵的时间');
 	}
 	
+	protected function _initLibrary(){
+		parent::_initLibrary();
+		$this->load->model('Member_Model');
+		$this->load->library('Base_Service');
+		
+		$this->base_service->initStaticVars();
+	}
+	
+	
+	
 	public function isLogin(){
 		if($this->_profile && ($this->_reqtime - $this->session->userdata('lastvisit') < 86400)){
 			return true;

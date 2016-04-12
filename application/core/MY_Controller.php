@@ -117,10 +117,9 @@ class MY_Controller extends CI_Controller {
     }
     
     
-    private function _initLibrary(){
-    	$this->load->model('Member_Model');
+    protected function _initLibrary(){
 		$this->load->helper(array('form','directory','file', 'url','string'));
-		$this->load->library(array('user_agent','form_validation','encrypt','Base_Service'));
+		$this->load->library(array('user_agent','form_validation','encrypt','PHPTree'));
     }
     
     
@@ -176,7 +175,7 @@ class MY_Controller extends CI_Controller {
     	}
     	
     	$this->_smarty->assign($this->_seo);
-    	$this->_smarty->display($this->_smarty->getTemplateDir(0).$viewname.'.tpl');
+    	$this->output->set_output($this->_smarty->fetch($this->_smarty->getTemplateDir(0).$viewname.'.tpl'));
     }
     
     public function seoTitle($title){

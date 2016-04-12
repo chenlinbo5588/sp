@@ -49,5 +49,13 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 	public function getAppTemplateDir(){
 		return 'ydzj_admin';
 	}
+	
+	
+	protected function _initLibrary(){
+		parent::_initLibrary();
+		$this->load->library('AdminBase_Service');
+		
+		$this->adminbase_service->initStaticVars();
+	}
 }
 

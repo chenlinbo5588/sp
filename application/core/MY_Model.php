@@ -199,7 +199,7 @@ class MY_Model extends CI_Model {
     /**
      * 更新
      */
-    public function update($param, $where){
+    public function update($param, $where = null){
     	
         $fields = $this->_metaData();
         
@@ -223,7 +223,7 @@ class MY_Model extends CI_Model {
     /**
      * 增加或者 减少 字段数值
      */
-    public function increseOrDecrease($param, $where){
+    public function increseOrDecrease($param, $where = null){
 		foreach($param as $p){
 			$this->db->set($p['key'],$p['value'],false);
 		}
@@ -235,7 +235,7 @@ class MY_Model extends CI_Model {
     	
     }
     
-    public function updateByWhere($data,$where){
+    public function updateByWhere($data,$where = null){
         $this->db->update($this->_tableRealName,$data,$where);
         return $this->db->affected_rows();
     }

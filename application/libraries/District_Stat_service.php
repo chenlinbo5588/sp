@@ -8,13 +8,13 @@ class District_Stat_Service extends Base_Service {
 	public function __construct(){
 		parent::__construct();
 		
-		$this->CI->load->model('District_Stat_Model');
-		$this->_districtStatModel = $this->CI->District_Stat_Model;
+		self::$CI->load->model('District_Stat_Model');
+		$this->_districtStatModel = self::$CI->District_Stat_Model;
 	}
 	
 	
 	public function getDistrictByPid($upid = 0,$field = 'id,name'){
-		return $this->_districtModel->getList(array(
+		return self::$districtModel->getList(array(
 			'select' => $field,
 			'where' => array(
 				'upid' => $upid
@@ -43,7 +43,7 @@ class District_Stat_Service extends Base_Service {
 			$mainCity[] = $d['d2'];
 		}
 		
-		$city = $this->_districtModel->getList(array(
+		$city = self::$districtModel->getList(array(
 			'select' => 'id,name',
 			'where_in' => array(
 				array('key' => 'id', 'value' => $mainCity)

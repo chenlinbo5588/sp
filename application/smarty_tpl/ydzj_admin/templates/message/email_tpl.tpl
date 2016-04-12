@@ -2,7 +2,9 @@
   <div class="fixed-bar">
     <div class="item-title">
       <h3>消息通知</h3>
-      <ul class="tab-base"><li><a  class="current"><span>邮件设置</span></a></li><li><a href="index.php?act=message&op=email_tpl" ><span>邮件模板</span></a></li></ul>    </div>
+      <ul class="tab-base">
+      	<li><a  class="current"><span>邮件设置</span></a></li>
+      	<li><a href="index.php?act=message&op=email_tpl" ><span>邮件模板</span></a></li></ul>    </div>
   </div>
   <div class="fixed-empty"></div>
   <form method="post" id="form_email" name="settingForm">

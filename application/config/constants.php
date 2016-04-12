@@ -89,3 +89,6 @@ define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
 
 define('SMARTY_TPL_PATH',APPPATH.'smarty_tpl/');
 define('EntityPATH',APPPATH.'entity/');
+
+define('FROM_BACKGROUND',1);
+

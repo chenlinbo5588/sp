@@ -9,8 +9,8 @@ class Verify_Service extends Base_Service {
 	public function __construct(){
 		parent::__construct();
 		
-		$this->CI->load->model('VerifyCode_Log_Model');
-		$this->_verifyCodeLogModel = $this->CI->VerifyCode_Log_Model;
+		self::$CI->load->model('VerifyCode_Log_Model');
+		$this->_verifyCodeLogModel = self::$CI->VerifyCode_Log_Model;
 	}
 	
 	/**
@@ -20,7 +20,7 @@ class Verify_Service extends Base_Service {
 		$info = $this->_verifyCodeLogModel->getList(array(
 			'where' => array(
 				'phone' => $phone,
-				'expire_time >=' => $this->CI->input->server('REQUEST_TIME')
+				'expire_time >=' => self::$CI->input->server('REQUEST_TIME')
 			),
 			'order' => 'id DESC',
 			'limit' => 1
@@ -43,8 +43,8 @@ class Verify_Service extends Base_Service {
 		$count = $this->_verifyCodeLogModel->getCount(array(
 			'where' => array(
 				'ip' => $ip,
-				'gmt_create >=' => $this->CI->input->server('REQUEST_TIME') - $seconds,
-				'gmt_create <=' => $this->CI->input->server('REQUEST_TIME')
+				'gmt_create >=' => self::$CI->input->server('REQUEST_TIME') - $seconds,
+				'gmt_create <=' => self::$CI->input->server('REQUEST_TIME')
 			)
 		));
 		
@@ -67,7 +67,7 @@ class Verify_Service extends Base_Service {
 			$param['expire_time'] = time() + $this->_expiredSeconds;
 		}
 		
-		$param['ip'] = $this->CI->input->ip_address();
+		$param['ip'] = self::$CI->input->ip_address();
 		$param['code'] = random_string($type,$length);
 		
 		$id = $this->_verifyCodeLogModel->_add($param);
@@ -104,8 +104,8 @@ class Verify_Service extends Base_Service {
 			'where' => array(
 				'phone' => $phone,
 				'code' => $code,
-				'gmt_create >=' => $this->CI->input->server('REQUEST_TIME') - $this->_expiredSeconds,
-				'gmt_create <=' => $this->CI->input->server('REQUEST_TIME')
+				'gmt_create >=' => self::$CI->input->server('REQUEST_TIME') - $this->_expiredSeconds,
+				'gmt_create <=' => self::$CI->input->server('REQUEST_TIME')
 			)
 		));
 		

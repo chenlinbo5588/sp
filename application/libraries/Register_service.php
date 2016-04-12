@@ -6,7 +6,7 @@ class Register_Service extends Base_Service {
 	public function __construct(){
 		parent::__construct();
 		
-		$this->CI->load->model('Security_Control_Model');
+		self::$CI->load->model('Security_Control_Model');
 	}
 	
 	
@@ -19,7 +19,7 @@ class Register_Service extends Base_Service {
 		
 		$regParam['status'] = -2;
 		
-		$uid = $this->_memberModel->_add(array(
+		$uid = self::$memberModel->_add(array(
 			'nickname' => $regParam['mobile'],
 			'mobile' => $regParam['mobile'],
 			'reg_ip' => $regParam['reg_ip'],
@@ -37,9 +37,9 @@ class Register_Service extends Base_Service {
 	 * 业务逻辑 用统一个 IP 不能 ，在一天只内最多只能注册 3 个
 	 */
 	public function getIpLimit($ip, $time = 86400){
-		$now = $this->CI->input->server('REQUEST_TIME');
+		$now = self::$CI->input->server('REQUEST_TIME');
 		
-		$count = $this->CI->Security_Control_Model->getCount(array(
+		$count = self::$CI->Security_Control_Model->getCount(array(
 			'where' => array(
 				'ip' => $ip,
 				'gmt_create >=' => $now - $time,
@@ -57,8 +57,8 @@ class Register_Service extends Base_Service {
 	public function createMember($regParam){
 		$return = $this->formatArrayReturn();
 		
-		$regParam['reg_ip'] = $this->CI->input->ip_address();
-		$regParam['reg_date'] = $this->CI->input->server('REQUEST_TIME');
+		$regParam['reg_ip'] = self::$CI->input->ip_address();
+		$regParam['reg_date'] = self::$CI->input->server('REQUEST_TIME');
 						
 		
 		if(empty($regParam['aid'])){
@@ -67,11 +67,11 @@ class Register_Service extends Base_Service {
 			$regParam['avatar_small'] = 'img/avatar/'.$avatarIndex.'@small.jpg';
 		}
 		
-		$uid = $this->_memberModel->_add($regParam);
+		$uid = self::$memberModel->_add($regParam);
 		
 		if($uid > 0){
 			$return = $this->successRetun(array('uid' => $uid));
-			$this->CI->Security_Control_Model->_add(array(
+			self::$CI->Security_Control_Model->_add(array(
 				'ip' => $regParam['reg_ip'],
 				'action' => 'register',
 				'extra' => $uid

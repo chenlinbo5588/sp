@@ -192,7 +192,7 @@ $(function(){
 	        <dt>设置</dt>
 	        <dd><a href="javascript:void(0)" onclick="openItem('base,setting,setting')">站点设置</a></dd>
 	        <dd><a href="javascript:void(0)" onclick="openItem('param,upload,setting')">上传设置</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('seo,setting,setting')">SEO设置</a></dd>
+	        <dd><a href="javascript:void(0)" onclick="openItem('seoset,setting,setting')">SEO设置</a></dd>
 	        <dd><a href="javascript:void(0)" onclick="openItem('email,message,setting')">邮件通知</a></dd>
 	        <dd><a href="javascript:void(0)" onclick="openItem('payment,setting,setting')">支付方式</a></dd>
 	        <dd><a href="javascript:void(0)" onclick="openItem('cache,setting,setting')">清理缓存</a></dd>
@@ -373,7 +373,7 @@ $(function(){
                   <ol>
                     <li><a href="javascript:void(0);" id="base_setting" onclick="openItem('base,setting,setting');">站点设置</a></li>
                     <li><a href="javascript:void(0);" id="param_upload" onclick="openItem('param,upload,setting');">上传设置</a></li>
-                    <li><a href="javascript:void(0);" id="seo_setting" onclick="openItem('seo,setting,setting');">SEO设置</a></li>
+                    <li><a href="javascript:void(0);" id="seoset_setting" onclick="openItem('seoset,setting,setting');">SEO设置</a></li>
                     <li><a href="javascript:void(0);" id="email_message" onclick="openItem('email,message,setting');">消息通知</a></li>
                     <li><a href="javascript:void(0);" id="system_payment" onclick="openItem('system,payment,setting');">支付方式</a></li>
                     <li><a href="javascript:void(0);" id="express_setting" onclick="openItem('express,setting,setting');">快递公司</a></li>

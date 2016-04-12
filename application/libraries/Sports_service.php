@@ -13,11 +13,11 @@ class Sports_Service extends Base_Service {
 	public function __construct(){
 		parent::__construct();
 		
-		$this->CI->load->model('Sports_Category_Model');
-		$this->CI->load->model('Sports_Meta_Model');
+		self::$CI->load->model('Sports_Category_Model');
+		self::$CI->load->model('Sports_Meta_Model');
         
-        $this->_sportsCategoryModel = $this->CI->Sports_Category_Model;
-        $this->_sportsMetaModel = $this->CI->Sports_Meta_Model;
+        $this->_sportsCategoryModel = self::$CI->Sports_Category_Model;
+        $this->_sportsMetaModel = self::$CI->Sports_Meta_Model;
         
 	}
 	

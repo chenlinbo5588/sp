@@ -2,23 +2,30 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Base_Service {
-
-	protected $CI ;
-	protected $_memberModel;
-	protected $_districtModel;
-	public $form_validation;
+	
+	public static $CI = null;
+	public static $memberModel = null;
+	public static $districtModel = null;
+	public static $form_validation = null;
+	public static $settingModel = null;
+	
+	
+	public static function initStaticVars(){
+		self::$CI = & get_instance();
+		self::$CI->load->model('Member_Model');
+		self::$CI->load->model('Common_District_Model');
+		self::$CI->load->library('form_validation');
+		self::$CI->load->model('Setting_Model');
+		
+		self::$memberModel = self::$CI->Member_Model;
+		self::$districtModel = self::$CI->Common_District_Model;
+		self::$form_validation = self::$CI->form_validation;
+		self::$settingModel = self::$CI->Setting_Model;
+	}
 	
 	
 	public function __construct(){
-		$this->CI = & get_instance();
-		$this->CI->load->model('Member_Model');
-		$this->CI->load->model('Common_District_Model');
-		$this->CI->load->library('form_validation');
-		
-		$this->_memberModel = $this->CI->Member_Model;
-		$this->_districtModel = $this->CI->Common_District_Model;
-		
-		$this->form_validation = $this->CI->form_validation;
+		//empty here
 	}
     
 	protected function successRetun($data = array()){
@@ -37,7 +44,7 @@ class Base_Service {
 	}
 	
 	public function getCityById($city_id){
-    	return  $this->_districtModel->getFirstByKey($city_id);
+    	return  self::$districtModel->getFirstByKey($city_id);
     }
     
     

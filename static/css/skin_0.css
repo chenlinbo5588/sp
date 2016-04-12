@@ -118,6 +118,11 @@ h6 { font-size:12px;}
     padding: 5px;
 }
 
+
+.tip_error .error {
+	color:white;
+}
+
 .tip_warning {
     background:#FFD500;
     padding:5px;

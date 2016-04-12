@@ -4,60 +4,42 @@
       <h3>上传设置</h3>
       	<ul class="tab-base">
 	      	<li><a class="current"><span>上传参数</span></a></li>
-	      	<li><a href="{admin_site_url('upload/default_thumb')}" ><span>默认图片</span></a></li>
-	      	<li><a href="{admin_site_url('upload/login')}" ><span>登录主题图片</span></a></li>
+	      	<li><a href="{admin_site_url('upload/default_image')}" ><span>默认图片</span></a></li>
       	</ul>
       </div>
   </div>
   <div class="fixed-empty"></div>
-  <form id="form" method="post" enctype="multipart/form-data" name="settingForm">
-    <input type="hidden" name="form_submit" value="ok" />
+  <div class="feedback">{$feedback}</div>
+  {form_open(admin_site_url('upload/param'),'name="settingForm"')}
     <table class="table tb-type2">
       <tbody>
-        <tr class="noborder">
-          <td colspan="2" class="required"><label for="site_name">图片存放类型:</label></td>
-        </tr>
-        <tr class="noborder">
-          <td class="vatop rowform"><ul class="nofloat">
-              <li>
-                <input id="image_dir_type_0" name="image_dir_type" type="radio" style="margin-bottom:6px;" value="1" checked="checked"/>
-                <label for="image_dir_type_0">按照文件名存放 (例:/店铺id/图片)</label>
-              </li>
-              <li>
-                <input id="image_dir_type_1" name="image_dir_type" type="radio" style="margin-bottom:6px;" value="2"/>
-                <label for="image_dir_type_1">按照年份存放 (例:/店铺id/年/图片)</label>
-              </li>
-              <li>
-                <input id="image_dir_type_2" name="image_dir_type" type="radio" style="margin-bottom:6px;" value="3"/>
-                <label for="image_dir_type_2">按照年月存放 (例:/店铺id/年/月/图片)</label>
-              </li>
-              <li>
-                <input id="image_dir_type_3" name="image_dir_type" type="radio" style="margin-bottom:6px;" value="4"/>
-                <label for="image_dir_type_3">按照年月日存放 (例:/店铺id/年/月/日/图片)</label>
-              </li>
-            </ul></td>
-          <td class="vatop tips"></td>
-        </tr>
 		<tr>
           <td colspan="2" class="required"><label for="image_max_filesize">图片文件大小:</label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform">大小:
-            <input id="image_max_filesize" name="image_max_filesize" type="text" class="txt" style="width:30px;" value="1024"/>
+            <input id="image_max_filesize" name="image_max_filesize" type="text" class="txt" style="width:30px;" value="{$currentSetting['image_max_filesize']['value']|escape}"/>
             KB&nbsp;(1024 KB = 1MB)</td>
           <td class="vatop tips">当前服务器环境，最大允许上传2MB 的文件，您的设置请勿超过该值。</td>
         </tr>
 		<tr>
-          <td colspan="2" class="required"><label for="image_allow_ext">图片扩展名:</label></td>
+          <td colspan="2" class="required"><label for="image_allow_ext">前台图片扩展名:</label></td>
         </tr>
         <tr class="noborder">
-          <td class="vatop rowform"><input id="image_allow_ext" name="image_allow_ext" value="gif,jpg,jpeg,bmp,png,swf" class="txt" type="text" /></td>
+          <td class="vatop rowform"><input id="forground_image_allow_ext" name="forground_image_allow_ext" value="{$currentSetting['forground_image_allow_ext']['value']|escape}" class="txt" type="text" /></td>
+          <td class="vatop tips"><span class="vatop rowform">图片扩展名，用于判断上传图片是否为前台允许，多个后缀名间请用半角逗号 "," 隔开。</span></td>
+        </tr>
+        <tr>
+          <td colspan="2" class="required"><label for="image_allow_ext">后台图片扩展名:</label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform"><input id="background_image_allow_ext" name="background_image_allow_ext" value="{$currentSetting['background_image_allow_ext']['value']|escape}" class="txt" type="text" /></td>
           <td class="vatop tips"><span class="vatop rowform">图片扩展名，用于判断上传图片是否为后台允许，多个后缀名间请用半角逗号 "," 隔开。</span></td>
         </tr>
       </tbody>
       <tfoot>
         <tr class="tfoot">
-          <td colspan="2" ><a href="JavaScript:void(0);" class="btn" onclick="document.settingForm.submit()"><span>提交</span></a></td>
+          <td colspan="2" ><input type="submit" name="submit" value="保存" class="msbtn"></td>
         </tr>
       </tfoot>
     </table>

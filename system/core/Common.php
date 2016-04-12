@@ -954,5 +954,12 @@ if ( ! function_exists('getImgPathArray'))
 		
 		return $img;
 	}
+}
 
+function getSuccessTip($message = ''){
+	return "<div class=\"tip_success\">{$message}</div>";
+}
+
+function getErrorTip($message = ''){
+	return "<div class=\"tip_error\">{$message}</div>";
 }

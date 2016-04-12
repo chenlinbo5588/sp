@@ -12,10 +12,10 @@ class Attachment_Service extends Base_Service {
 	public function __construct(){
 		parent::__construct();
 		
-		$this->CI->load->model('Attachment_Model');
-		$this->CI->load->library('image_lib');
+		self::$CI->load->model('Attachment_Model');
+		self::$CI->load->library('image_lib');
 		
-		$this->_attachModel = $this->CI->Attachment_Model;
+		$this->_attachModel = self::$CI->Attachment_Model;
 		$this->_imageSizeConfig = $this->getImageSizeConfig();
 	}
 	
@@ -162,14 +162,14 @@ class Attachment_Service extends Base_Service {
 			
 			$resize = array_merge($resize , $axis);
 			
-			$this->CI->image_lib->initialize($resize);
+			self::$CI->image_lib->initialize($resize);
 			
 			if(!empty($axis)){
 				$action = 'crop';
-				$isOk = $this->CI->image_lib->crop();
+				$isOk = self::$CI->image_lib->crop();
 			}else{
 				$action = 'resize';
-				$isOk = $this->CI->image_lib->resize();
+				$isOk = self::$CI->image_lib->resize();
 			}
 			
 			if(!$isOk){
@@ -197,20 +197,20 @@ class Attachment_Service extends Base_Service {
 		}
 		
 		//print_r($config);
-		$this->CI->load->library('upload', $config);
-		if($this->CI->upload->do_upload($filename)){
-			$fileData = $this->CI->upload->data();
+		self::$CI->load->library('upload', $config);
+		if(self::$CI->upload->do_upload($filename)){
+			$fileData = self::$CI->upload->data();
 			//print_r($fileData);
 			
 			$fileData['file_url'] = $config['file_path'].$fileData['file_name'];
-			$fileData['ip'] = $this->CI->input->ip_address();
+			$fileData['ip'] = self::$CI->input->ip_address();
 			
 			if($this->_uid){
 				$fileData['uid'] = $this->_uid;
 			}
 			
 			$fileData['from_bg'] = $from;
-			$file_id = $this->CI->Attachment_Model->_add($fileData);
+			$file_id = self::$CI->Attachment_Model->_add($fileData);
 			$fileData['id'] = $file_id;
 			
 			//print_r($fileData);
@@ -226,7 +226,7 @@ class Attachment_Service extends Base_Service {
 	 *  显示错误信息
 	 */
 	public function getErrorMsg($open = '<div class="form_error">',$close = '</div>'){
-		return $this->CI->upload->display_errors($open,$close);
+		return self::$CI->upload->display_errors($open,$close);
 	}
 	
 	
@@ -247,7 +247,7 @@ class Attachment_Service extends Base_Service {
 		//$Orientation[$exif[IFD0][Orientation]];
 		//$exif = exif_read_data($fileData['file_url'],0,true);
 		if($fileData){
-			$size = $this->CI->input->post('size');
+			$size = self::$CI->input->post('size');
 			
 			if(empty($size) || !$this->isAllowedSize($size)){
 				$size = 'big';
@@ -258,13 +258,13 @@ class Attachment_Service extends Base_Service {
 			unlink($fileData['full_path']);
 			
 			//上传多次情况下，清理上一次上传的文件
-			if($this->CI->input->post('id')){
-				$this->deleteFiles(array($this->CI->input->post('id')),'all');
+			if(self::$CI->input->post('id')){
+				$this->deleteFiles(array(self::$CI->input->post('id')),'all');
 			}
 			
-			return array('status'=>1,'formhash'=>$this->CI->security->get_csrf_hash(),'id' => $fileData['id'], 'url'=>base_url($fileData['img_big']));
+			return array('status'=>1,'formhash'=>self::$CI->security->get_csrf_hash(),'id' => $fileData['id'], 'url'=>base_url($fileData['img_big']));
 		}else{
-			return array('status'=>0,'formhash'=>$this->CI->security->get_csrf_hash(),'msg'=>$this->getErrorMsg('',''));
+			return array('status'=>0,'formhash'=>self::$CI->security->get_csrf_hash(),'msg'=>$this->getErrorMsg('',''));
 		}
 	}
 	

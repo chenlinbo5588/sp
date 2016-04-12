@@ -12,17 +12,17 @@ class Team_Service extends Base_Service {
 	public function __construct(){
 		parent::__construct();
 		
-		$this->CI->load->model('Team_Model');
-		$this->CI->load->model('Team_Member_Model');
+		self::$CI->load->model('Team_Model');
+		self::$CI->load->model('Team_Member_Model');
 		
-		$this->CI->load->model('Sports_Category_Model');
-		$this->CI->load->model('District_Stat_Model');
+		self::$CI->load->model('Sports_Category_Model');
+		self::$CI->load->model('District_Stat_Model');
 		
 		
-		$this->_teamModel = $this->CI->Team_Model;
-		$this->_teamMemberModel = $this->CI->Team_Member_Model;
-		$this->_sportsCategoryModel = $this->CI->Sports_Category_Model;
-		$this->_districtStatModel = $this->CI->District_Stat_Model;
+		$this->_teamModel = self::$CI->Team_Model;
+		$this->_teamMemberModel = self::$CI->Team_Member_Model;
+		$this->_sportsCategoryModel = self::$CI->Sports_Category_Model;
+		$this->_districtStatModel = self::$CI->District_Stat_Model;
 	}
 	
 	
@@ -96,7 +96,7 @@ class Team_Service extends Base_Service {
 		
 		//teamid + uid + timestamp
 		$text = "{$teamInfo['id']}\t{$userInfo['uid']}\t{$expire}";
-		$encrypted_string = $this->CI->encrypt->encode($text, config_item('encryption_key'));
+		$encrypted_string = self::$CI->encrypt->encode($text, config_item('encryption_key'));
 		
 		return site_url('team/invite/?param='.urlencode($encrypted_string));
 	}
@@ -151,7 +151,7 @@ class Team_Service extends Base_Service {
 	 * 
 	 */
 	public function teamAddRules($userInfo = array()){
-		$this->form_validation->reset_validation();
+		self::$form_validation->reset_validation();
 		
 		$rule = array();
 		
@@ -185,7 +185,7 @@ class Team_Service extends Base_Service {
 			$rule['category_id']['errors']['user_categroy_callbale'] = '对不起,同一个类型的球队最多创建三个';
 		}
 		
-		$this->form_validation->set_rules($rule['category_id']['field'],$rule['category_id']['label'],$rule['category_id']['rules'],$rule['category_id']['errors']);
+		self::$form_validation->set_rules($rule['category_id']['field'],$rule['category_id']['label'],$rule['category_id']['rules'],$rule['category_id']['errors']);
 
 
 		//队伍名称允许相同,因现实情况下确实有可能相同
@@ -193,12 +193,12 @@ class Team_Service extends Base_Service {
 		
 		if($userInfo['d4'] > 0){
 			//获得地区名称
-			$districtName = $this->_districtModel->getById(array(
+			$districtName = self::$districtModel->getById(array(
 				'select' => 'name',
 				'where' => array('id' => $userInfo['d4'])
 			));
 			
-			$this->form_validation->set_rules('title','球队名称', array(
+			self::$form_validation->set_rules('title','球队名称', array(
 					'required',
 					'max_length[4]',
 					array(
@@ -209,15 +209,15 @@ class Team_Service extends Base_Service {
 					)
 				),
 				array(
-					'title_callable' => '%s '.$this->CI->input->post('title').'在'.$districtName['name'].'已经存在'
+					'title_callable' => '%s '.self::$CI->input->post('title').'在'.$districtName['name'].'已经存在'
 				)
 			);
 		}else{
-			$this->form_validation->set_rules('title','球队名称', 'required|max_length[4]');
+			self::$form_validation->set_rules('title','球队名称', 'required|max_length[4]');
 		}
 		
-		$this->form_validation->set_rules('leader','队长设置','required|in_list[1,2]');
-		$this->form_validation->set_rules('joined_type','入队设置','required|in_list[1]');
+		self::$form_validation->set_rules('leader','队长设置','required|in_list[1,2]');
+		self::$form_validation->set_rules('joined_type','入队设置','required|in_list[1]');
 	}
 	
 	
@@ -245,7 +245,7 @@ class Team_Service extends Base_Service {
 		$param['d4'] = $creatorInfo['d4'];
 		
 		$dIDs = array($param['d1'],$param['d2'],$param['d3'],$param['d4']);
-		$dNameList = $this->_districtModel->getList(array(
+		$dNameList = self::$districtModel->getList(array(
 			'select' => 'id,name',
 			'where_in' => array(
 				array('key' => 'id', 'value' => $dIDs)
@@ -303,9 +303,9 @@ class Team_Service extends Base_Service {
 			
 			/*
 			if($param['d4'] > 0){
-				$district = $this->_districtModel->getFirstByKey($param['d4']);
+				$district = self::$districtModel->getFirstByKey($param['d4']);
 			}else{
-				$district = $this->_districtModel->getFirstByKey($param['d3']);
+				$district = self::$districtModel->getFirstByKey($param['d3']);
 			}
 			*/
 			

@@ -11,18 +11,18 @@ class Stadium_Service extends Base_Service {
 	public function __construct(){
 		parent::__construct();
 		
-		$this->CI->load->model('Stadium_Model');
-		$this->CI->load->model('Stadium_Meta_Model');
-		$this->CI->load->model('Stadium_Photos_Model');
-		//$this->CI->load->model('Stadium_Albums_Model');
+		self::$CI->load->model('Stadium_Model');
+		self::$CI->load->model('Stadium_Meta_Model');
+		self::$CI->load->model('Stadium_Photos_Model');
+		//self::$CI->load->model('Stadium_Albums_Model');
 		
-        $this->CI->load->model('Sports_Category_Model');
+        self::$CI->load->model('Sports_Category_Model');
         
-        $this->_stadiumModel = $this->CI->Stadium_Model;
-        $this->_stadiumMetaModel = $this->CI->Stadium_Meta_Model;
-        $this->_stadiumPhotosModel = $this->CI->Stadium_Photos_Model;
-        //$this->_stadiumAlbumsModel = $this->CI->Stadium_Albums_Model;
-        $this->_sportsCategoryModel = $this->CI->Sports_Category_Model;
+        $this->_stadiumModel = self::$CI->Stadium_Model;
+        $this->_stadiumMetaModel = self::$CI->Stadium_Meta_Model;
+        $this->_stadiumPhotosModel = self::$CI->Stadium_Photos_Model;
+        //$this->_stadiumAlbumsModel = self::$CI->Stadium_Albums_Model;
+        $this->_sportsCategoryModel = self::$CI->Sports_Category_Model;
 	}
     
     public function getAllMetaGroups(){
@@ -155,7 +155,7 @@ class Stadium_Service extends Base_Service {
     	}
     	
     	if(is_array($addressInfo)){
-    		$dList = $this->_districtModel->getList(array(
+    		$dList = self::$districtModel->getList(array(
     			'select' => 'id,name,level',
     			'where_in' => array(
     				array('key' => 'name' , 'value' => $addressInfo)

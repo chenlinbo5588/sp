@@ -1,22 +1,18 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Admin_Service extends Base_Service {
-	protected $_adminUserModel;
+class Admin_Service extends AdminBase_Service {
+	
 
 	public function __construct(){
-		
 		parent::__construct();
-		$this->CI->load->model('Adminuser_Model');
-		
-		$this->_adminUserModel = $this->CI->Adminuser_Model;
 	}
     
     /**
 	 * 更新用户信息
 	 */
 	public function updateUserInfo($data,$uid){
-		return $this->_adminUserModel->update($data,array('uid' => $uid));
+		return self::$adminUserModel->update($data,array('uid' => $uid));
 	}
 	
     public function do_adminlogin($param){
@@ -24,7 +20,7 @@ class Admin_Service extends Base_Service {
 		$result = $this->formatArrayReturn();
 		$result['message'] = '登陆失败';
 		
-		$userInfo = $this->_adminUserModel->getFirstByKey($param['email'],'email');
+		$userInfo = self::$adminUserModel->getFirstByKey($param['email'],'email');
 		
 		if(!empty($userInfo)){
 			if($userInfo['password'] == $param['password']){
@@ -45,4 +41,5 @@ class Admin_Service extends Base_Service {
 		
 		return $result;
 	}
+	
 }

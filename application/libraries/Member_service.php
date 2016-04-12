@@ -3,13 +3,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Member_Service extends Base_Service {
 	
-	//private $_memberExt;
 
 	public function __construct(){
 		parent::__construct();
 		
-		//$this->CI->load->model('Member_Ext_Model');
-		//$this->_memberExt = $this->CI->Member_Ext_Model;
 	}
 	
 	
@@ -17,8 +14,8 @@ class Member_Service extends Base_Service {
 	 * 刷新信息
 	 */
 	public function refreshProfile($uid){
-		$this->CI->session->set_userdata(array(
-			'profile' => array('basic' => $this->_memberModel->getUserByUid($uid))
+		self::$CI->session->set_userdata(array(
+			'profile' => array('basic' => self::$memberModel->getUserByUid($uid))
 		));
 	}
 	
@@ -31,7 +28,7 @@ class Member_Service extends Base_Service {
 		$result = $this->formatArrayReturn();
 		$result['message'] = '登陆失败';
 		
-		$userInfo = $this->_memberModel->getFirstByKey($param['mobile'],'mobile');
+		$userInfo = self::$memberModel->getFirstByKey($param['mobile'],'mobile');
 		
 		if(!empty($userInfo)){
 			if($userInfo['password'] == $param['password']){
@@ -60,38 +57,38 @@ class Member_Service extends Base_Service {
 	 * 
 	 */
 	public function getUserInfoById($id){
-		return $this->_memberModel->getFirstByKey($id,'uid');
+		return self::$memberModel->getFirstByKey($id,'uid');
 	}
 	
 	public function getUserInfoByKey($value,$key){
-		return $this->_memberModel->getFirstByKey($value,$key);
+		return self::$memberModel->getFirstByKey($value,$key);
 	}
 	/**
 	 * 
 	 */
 	public function getUserInfoByMobile($mobile){
-		return $this->_memberModel->getFirstByKey($mobile,'mobile');
+		return self::$memberModel->getFirstByKey($mobile,'mobile');
 	}
 	
 	/**
 	 * 获得用户信息
 	 */
 	public function getUserInfoByEmail($email){
-		return $this->_memberModel->getFirstByKey($email,'email');
+		return self::$memberModel->getFirstByKey($email,'email');
 	}
 	
 	/**
 	 * 更新用户信息
 	 */
 	public function updateUserInfo($data,$uid){
-		return $this->_memberModel->update($data,array('uid' => $uid));
+		return self::$memberModel->update($data,array('uid' => $uid));
 	}
 	
 	/**
 	 * 
 	 */
 	public function getListByCondition($condition){
-		return $this->toEasyUseArray($this->_memberModel->getList($condition),'uid');
+		return $this->toEasyUseArray(self::$memberModel->getList($condition),'uid');
 	}
 	
 	/**
@@ -99,7 +96,7 @@ class Member_Service extends Base_Service {
 	 */
 	public function set_city($param){
 		
-		return $this->_memberModel->update(array(
+		return self::$memberModel->update(array(
 			'district_bind' => 1,
 			'd1' => $param['d1'],
 			'd2' => $param['d2'],

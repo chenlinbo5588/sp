@@ -13,11 +13,11 @@ class Common_District_Service extends Base_Service {
 	 * 
 	 */
 	public function getDistrictInfoById($id){
-		return $this->_districtModel->getFirstByKey($id);
+		return self::$districtModel->getFirstByKey($id);
 	}
 	
 	public function getDistrictByPid($upid = 0,$field = 'id,name,upid'){
-		return $this->_districtModel->getList(array(
+		return self::$districtModel->getList(array(
 			'select' => $field,
 			'where' => array(
 				'upid' => $upid
@@ -56,7 +56,7 @@ class Common_District_Service extends Base_Service {
 			return array();
 		}
 		
-		$ds = $this->_districtModel->getList(array(
+		$ds = self::$districtModel->getList(array(
 			'select' => $field,
 			'where_in' => array(
 				array('key' => 'id', 'value' => $ids)
