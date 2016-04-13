@@ -195,7 +195,23 @@ class Setting extends Ydzj_Admin_Controller {
 			$rows = 0;
 			
 			if($_POST['SEO']){
+				foreach($_POST['SEO'] as $key => $value){
+					$selectedGroup = $key;
+					break;
+				}
+			
 				$rows = $this->seo_service->updateSeo($_POST['SEO']);
+			}else{
+				
+				if($this->input->post('category') != '' && $this->input->post('form_name') == 'category'){
+					$selectedGroup = $this->input->post('form_name');
+					
+					$rows = $this->goods_service->getGoodsClassModel()->updateGoodsClassSeoById($this->input->post('category'),array(
+						'gc_title' => $this->input->post('cate_title'),
+						'gc_keywords' => $this->input->post('cate_keywords'),
+						'gc_description' => $this->input->post('cate_description'),
+					));
+				}
 			}
 			
 			if($rows >= 0){
@@ -204,12 +220,10 @@ class Setting extends Ydzj_Admin_Controller {
 				$feedback = getErrorTip('保存失败');
 			}
 			
-			foreach($_POST['SEO'] as $key => $value){
-				$selectedGroup = $key;
-				break;
-			}
+			
 		}
 		
+		$currentSetting = $this->seo_service->getCurrentSeoSetting();
 		$goodsClassHTML = $this->goods_service->getGoodsClassTreeHTML();
 		
 		
@@ -221,12 +235,9 @@ class Setting extends Ydzj_Admin_Controller {
 	
 	
 	public function ajax_category(){
-		
-		
-		$this->seo_service->
-		
-		
-		$this->jsonOutput('获取成功',array());
+		$this->load->library('Goods_Service');
+		$goodsClassInfo = $this->goods_service->getGoodsClassModel()->getGoodsClassById($this->input->get('id'));
+		$this->jsonOutput('获取成功',$goodsClassInfo);
 	}
 	
 	

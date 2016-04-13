@@ -203,6 +203,8 @@ class MY_Model extends CI_Model {
     	
         $fields = $this->_metaData();
         
+        $data = array();
+        
         $now = time();
         
         foreach($param as $key => $value){
@@ -215,8 +217,12 @@ class MY_Model extends CI_Model {
             $data['gmt_modify'] = $now;
         }
         
-        $this->db->update($this->_tableRealName, $data, $where);
-        return $this->db->affected_rows();
+        if($data){
+        	$this->db->update($this->_tableRealName, $data, $where);
+        	return $this->db->affected_rows();
+        }else{
+        	return false;
+        }
     }
     
     

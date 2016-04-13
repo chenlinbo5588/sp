@@ -258,6 +258,7 @@
   </form>
   {form_open(admin_site_url('setting/seoset'),'name="form_category"')}
     <span style="display:none" nctype="hide_tag"><a>{#sitename#}</a><a>{#name#}</a></span>
+    <input type="hidden" name="form_name" value="category"/>
     <table class="table tb-type2">
       <tbody>
         <tr>
@@ -360,11 +361,11 @@ $(function(){
 	$('.tab-base a[nctype="{$selectedGroup}"]').trigger("click");
 	
 	$('#category').bind('change',function(){
-		$.getJSON("{admin_site_url('setting/ajax_category/id')}" +$(this).val(), function(data){
-			if(data){
-				$('#cate_title').val(data.gc_title);
-				$('#cate_keywords').val(data.gc_keywords);
-				$('#cate_description').val(data.gc_description);
+		$.getJSON("{admin_site_url('setting/ajax_category/')}?id=" +$(this).val(), function(json){
+			if(json){
+				$('#cate_title').val(json.data.gc_title);
+				$('#cate_keywords').val(json.data.gc_keywords);
+				$('#cate_description').val(json.data.gc_description);
 			}else{
 				$('#cate_title').val('');
 				$('#cate_keywords').val('');

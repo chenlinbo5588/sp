@@ -24,4 +24,9 @@ class Goods_Service extends Base_Service {
 		));
 	}
 	
+	
+	public function getGoodsClassModel(){
+		return $this->_goodsClassModel;
+	}
+	
 }

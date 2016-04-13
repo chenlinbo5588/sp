@@ -16,5 +16,14 @@ class Goods_Class_Model extends MY_Model {
     	return array_keys(self::$_tableMeta);
     }
     
+    
+    public function getGoodsClassById($id){
+    	return $this->getFirstByKey($id,'gc_id');
+    }
+    
+    
+    public function updateGoodsClassSeoById($goodClassId,$data){
+    	return $this->update($data,array('gc_id' => $goodClassId));
+    }
 
 }

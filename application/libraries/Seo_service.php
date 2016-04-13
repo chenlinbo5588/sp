@@ -26,6 +26,14 @@ class Seo_Service extends Base_Service {
 	}
 	
 	
+	public function getCurrentSeoSetting(){
+		$list = $this->_seoModel->getList();
+		
+		foreach($list as $key => $value){
+			
+			
+		}
+	}
 	
 	
 	public function updateSeo($data){
