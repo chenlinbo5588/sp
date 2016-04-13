@@ -1,11 +1,12 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Admin_Service extends AdminBase_Service {
+class Admin_Service extends Base_Service {
 	
 
 	public function __construct(){
 		parent::__construct();
+		
 	}
     
     /**

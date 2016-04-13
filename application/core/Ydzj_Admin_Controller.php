@@ -51,11 +51,14 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 	}
 	
 	
+	/**
+	 * no need any more
 	protected function _initLibrary(){
 		parent::_initLibrary();
 		$this->load->library('AdminBase_Service');
 		
 		$this->adminbase_service->initStaticVars();
 	}
+	*/
 }
 

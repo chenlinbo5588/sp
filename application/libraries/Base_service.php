@@ -5,22 +5,29 @@ class Base_Service {
 	
 	public static $CI = null;
 	public static $memberModel = null;
+	public static $adminUserModel = null;
 	public static $districtModel = null;
 	public static $form_validation = null;
 	public static $settingModel = null;
 	
 	
 	public static function initStaticVars(){
+		
 		self::$CI = & get_instance();
 		self::$CI->load->model('Member_Model');
+		self::$CI->load->model('Adminuser_Model');
+		
 		self::$CI->load->model('Common_District_Model');
 		self::$CI->load->library('form_validation');
 		self::$CI->load->model('Setting_Model');
 		
 		self::$memberModel = self::$CI->Member_Model;
+		self::$adminUserModel = self::$CI->Adminuser_Model;
+		
 		self::$districtModel = self::$CI->Common_District_Model;
 		self::$form_validation = self::$CI->form_validation;
 		self::$settingModel = self::$CI->Setting_Model;
+		
 	}
 	
 	
@@ -72,4 +79,17 @@ class Base_Service {
 		
 		return $temp;
     }
+    
+    /**
+	 * 更新网站设置
+	 */
+	public function updateSetting($data){
+		return self::$settingModel->batchUpdate($data, 'name');
+	}
+	
+	
+	public function getSettingList($condition){
+		$list = self::$settingModel->getList($condition);
+		return $this->toEasyUseArray($list,'name');
+	}
 }

@@ -18,7 +18,7 @@
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input id="site_name" name="site_name" value="{$currentSetting['site_name']['value']|escape}" class="txt" type="text" /></td>
-          <td class="vatop tips"><span class="vatop rowform">网站名称，将显示在前台顶部欢迎信息等位置</span></td>
+          <td class="vatop tips">{form_error('site_name')}<span class="vatop rowform">网站名称，将显示在前台顶部欢迎信息等位置</span></td>
         </tr>
         <tr>
           <td colspan="2" class="required"><label for="site_logo">网站Logo:</label></td>
@@ -70,7 +70,7 @@
 	              {/foreach}
             	</select>
             </td>
-          <td class="vatop tips"><span class="vatop rowform">设置系统使用的时区，中国为+8</span></td>
+          <td class="vatop tips">{form_error('time_zone')}<span class="vatop rowform">设置系统使用的时区，中国为+8</span></td>
         </tr>   
         <tr>
           <td colspan="2" class="required">站点状态:</td>

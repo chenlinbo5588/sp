@@ -113,6 +113,7 @@ class Member extends Ydzj_Controller {
 	 */
 	public function admin_login(){
 		
+		
 		if($this->isPostRequest()){
 			$this->form_validation->reset_validation();
 			$this->form_validation->set_rules('email','用户名', 'required|valid_email');

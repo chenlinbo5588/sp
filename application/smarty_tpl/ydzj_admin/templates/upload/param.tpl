@@ -20,7 +20,7 @@
           <td class="vatop rowform">大小:
             <input id="image_max_filesize" name="image_max_filesize" type="text" class="txt" style="width:30px;" value="{$currentSetting['image_max_filesize']['value']|escape}"/>
             KB&nbsp;(1024 KB = 1MB)</td>
-          <td class="vatop tips">当前服务器环境，最大允许上传2MB 的文件，您的设置请勿超过该值。</td>
+          <td class="vatop tips">当前服务器环境，最大允许上传{$currentUploadSize} 的文件，您的设置请勿超过该值。</td>
         </tr>
 		<tr>
           <td colspan="2" class="required"><label for="image_allow_ext">前台图片扩展名:</label></td>

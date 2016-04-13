@@ -93,6 +93,8 @@ class Upload extends Ydzj_Admin_Controller {
 		}
 		
 		//print_r($currentSetting);
+		
+		$this->assign('currentUploadSize',ini_get('upload_max_filesize'));
 		$this->assign('currentSetting',$currentSetting);
 		$this->assign('feedback',$feedback);
 		
