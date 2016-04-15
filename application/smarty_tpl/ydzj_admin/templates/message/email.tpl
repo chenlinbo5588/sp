@@ -4,13 +4,13 @@
       <h3>消息通知</h3>
       <ul class="tab-base">
       	<li><a  class="current"><span>邮件设置</span></a></li>
-      	<li><a href="{admin_site_url('message/email_tpl')}"><span>邮件模板</span></a></li>
+      	<li><a href="{admin_site_url('message/email_tpl')}"><span>消息模板</span></a></li>
       </ul>
     </div>
   </div>
   <div class="fixed-empty"></div>
   <div class="feedback">{$feedback}</div>
-  {form_open_multipart(admin_site_url('message/email'),'name="settingForm"')}
+  {form_open(admin_site_url('message/email'),'name="settingForm"')}
     <table class="table tb-type2">
       <tbody>
         <tr class="noborder">
@@ -19,9 +19,9 @@
         <tr class="noborder">
           <td class="vatop rowform onoff"><label for="email_enabled_1" {if $currentSetting['email_enabled']['value'] == 1}class="cb-enable selected"{else}class="cb-enable"{/if} title="开启"><span>开启</span></label>
             <label for="email_enabled_0" {if $currentSetting['email_enabled']['value'] == 1}class="cb-disable"{else}class="cb-disable selected"{/if} title="关闭"><span>关闭</span></label>
-            <input type="radio"  value="1" name="email_enabled" id="email_enabled_1" />
-            <input type="radio" {if $currentSetting['email_enabled']['value'] == 1}checked="checked"{/if} value="0" name="email_enabled" id="email_enabled_0" />
-            <input type="hidden" {if $currentSetting['email_enabled']['value'] == 0}checked="checked"{/if} name="email_type" value="1" /></td>
+            <input type="radio" {if $currentSetting['email_enabled']['value'] == 1}checked="checked"{/if} value="1" name="email_enabled" id="email_enabled_1" />
+            <input type="radio" {if $currentSetting['email_enabled']['value'] == 0}checked="checked"{/if} value="0" name="email_enabled" id="email_enabled_0" />
+            <input type="hidden" name="email_type" value="1" /></td>
           <td class="vatop tips">&nbsp;</td>
         </tr>
         <tr>
@@ -30,8 +30,6 @@
         </tr>
         <tr class="noborder">
           	<td class="vatop rowform onoff">
-          		
-          	
 				<label><input type="radio" checked="checked" value="1" name="email_type" id="email_type_1" />&nbsp;采用其他的SMTP服务</label>&nbsp;
 				<label><input type="radio"  value="0" name="email_type" id="email_type_0" />&nbsp;采用服务器内置的Mail服务</label>&nbsp;
 				<label class="field_notice">如果您选择服务器内置方式则无须填写以下选项</label>
@@ -90,18 +88,19 @@
   </form>
 <script>
 $(document).ready(function(){
-
 	$('#send_test_email').click(function(){
 		$.ajax({
 			type:'POST',
 			dataType:'json',
 			url:'{admin_site_url('message/email_testing')}',
-			data:"email_host="+$('#email_host').val()+'&email_port='+$('#email_port').val()+'&email_addr='+$('#email_addr').val()+'&email_id='+$('#email_id').val()+'&email_pass='+$('#email_pass').val()+'&email_type='+1+'&email_test='+$('#email_test').val(),
+			data:"formhash=" + formhash + "&email_host="+$('#email_host').val()+'&email_port='+$('#email_port').val()+'&email_addr='+$('#email_addr').val()+'&email_id='+$('#email_id').val()+'&email_pass='+$('#email_pass').val()+'&email_type='+1+'&email_test='+$('#email_test').val(),
 			error:function(){
 				alert('测试邮件发送失败，请重新配置邮件服务器');
+				formhash = json.data.formhash;
 			},
-			success:function(html){
-				alert(html.msg);
+			success:function(json){
+				formhash = json.data.formhash;
+				alert(json.message);
 			}
 			
 		});

@@ -12,14 +12,18 @@ class Common extends Ydzj_Admin_Controller {
 	 * 
 	 */
 	public function pic_upload(){
-		$this->load->library('Attachment_Service');
 		
-		$uploadname = $this->input->post('uploadname');
-		if(empty($uploadname)){
-			$uploadname = '_pic';
+		$uploadname = '_pic';
+        if(0 === $_FILES['imgFile']['error']){
+            $uploadname = 'imgFile';
 		}
 		
-		$json = $this->attachment_service->pic_upload($this->_profile['basic']['uid'],$uploadname,1);
+		$this->load->library('Attachment_Service');
+		
+		$json = $this->attachment_service->pic_upload($this->_adminProfile['basic']['uid'],$uploadname,1);
+		
+		@unlink($_FILES[$uploadname]['tmp_name']);
+		
 		
 		exit(json_encode($json));
 	}

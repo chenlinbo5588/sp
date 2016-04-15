@@ -48,13 +48,13 @@
           <td colspan="2" class="required"><label>首页</label></td>
         </tr>
         <tr class="noborder">
-          <td class="w96">title</td><td><input id="SEO[index][title]" name="SEO[index][title]" value="{#sitename#} - Powered by Jay" class="w300" type="text"/></td>
+          <td class="w96">title</td><td><input id="SEO[index][title]" name="SEO[index][title]" value="{$currentSetting['index']['title']|escape}" class="w300" type="text"/></td>
         </tr>
         <tr class="noborder">
-          <td class="w96">keywords</td><td><input id="SEO[index][keywords]" name="SEO[index][keywords]" value="ShopNC,PHP商城系统,ShopNC商城系统,多用户商城系统,电商ERP,电商CRM,电子商务解决方案" class="w300" type="text" maxlength="200" /></td>
+          <td class="w96">keywords</td><td><input id="SEO[index][keywords]" name="SEO[index][keywords]" value="{$currentSetting['index']['keywords']|escape}" class="w300" type="text" maxlength="200" /></td>
         </tr>
         <tr class="noborder">
-          <td class="w96">description</td><td><input id="SEO[index][description]" name="SEO[index][description]" value="ShopNC专注于研发符合时代发展需要的电子商务商城系统，以专业化的服务水平为企业级用户提供B(2B)2C【B2B2C】电子商务平台解决方案，全力打造电商平台专项ERP(CRM)系统、ERP(RFID)系统等，引领中国电子商务行业企业级需求的发展方向。" class="w300" type="text" maxlength="200"/></td>
+          <td class="w96">description</td><td><input id="SEO[index][description]" name="SEO[index][description]" value="{$currentSetting['index']['description']|escape}" class="w300" type="text" maxlength="200"/></td>
         </tr>
       </tbody>
       <tfoot>
@@ -72,25 +72,25 @@
           <td colspan="2" class="required"><label>团购</label></td>
         </tr>
         <tr class="noborder">
-          <td class="w96">title</td><td><input id="SEO[group][title]" name="SEO[group][title]" value="{#sitename#} - 团购" class="w300" type="text"/></td>
+          <td class="w96">title</td><td><input id="SEO[group][title]" name="SEO[group][title]" value="{$currentSetting['group']['title']|escape}" class="w300" type="text"/></td>
         </tr>
         <tr class="noborder">
-          <td class="w96">keywords</td><td><input id="SEO[group][keywords]" name="SEO[group][keywords]" value="ShopNC,{#sitename#}" class="w300" type="text" /></td>
+          <td class="w96">keywords</td><td><input id="SEO[group][keywords]" name="SEO[group][keywords]" value="{$currentSetting['group']['keywords']|escape}" class="w300" type="text" /></td>
         </tr>
         <tr class="noborder">
-          <td class="w96">description</td><td><input id="SEO[group][description]" name="SEO[group][description]" value="ShopNC专注于研发符合时代发展需要的电子商务商城系统，以专业化的服务水平为企业级用户提供B(2B)2C【B2B2C】电子商务平台解决方案，全力打造电商平台专项ERP(CRM)系统、ERP(RFID)系统等，引领中国电子商务行业企业级需求的发展方向。" class="w300" type="text" /></td>
+          <td class="w96">description</td><td><input id="SEO[group][description]" name="SEO[group][description]" value="{$currentSetting['group']['description']|escape}" class="w300" type="text" /></td>
         </tr>
         <tr>
           <td colspan="2" class="required"><label>团购内容</label></td>
         </tr>
         <tr class="noborder">
-          <td class="w96">title</td><td><input id="SEO[group_content][title]" name="SEO[group_content][title]" value="{#sitename#} - {#name#}" class="w300" type="text" /></td>
+          <td class="w96">title</td><td><input id="SEO[group_content][title]" name="SEO[group_content][title]" value="{$currentSetting['group_content']['title']|escape}" class="w300" type="text" /></td>
         </tr>
         <tr class="noborder">
-          <td class="w96">keywords</td><td><input id="SEO[group_content][keywords]" name="SEO[group_content][keywords]" value="ShopNC,{#name#},{#sitename#}" class="w300" type="text" /></td>
+          <td class="w96">keywords</td><td><input id="SEO[group_content][keywords]" name="SEO[group_content][keywords]" value="{$currentSetting['group_content']['keywords']|escape}" class="w300" type="text" /></td>
         </tr>
         <tr class="noborder">
-          <td class="w96">description</td><td><input id="SEO[group_content][description]" name="SEO[group_content][description]" value="ShopNC,{#name#},{#sitename#}" class="w300" type="text" /></td>
+          <td class="w96">description</td><td><input id="SEO[group_content][description]" name="SEO[group_content][description]" value="{$currentSetting['group_content']['description']|escape}" class="w300" type="text" /></td>
         </tr>
       </tbody>
       <tfoot>
@@ -108,25 +108,25 @@
           <td colspan="2" class="required"><label>品牌</label></td>
         </tr>
         <tr class="noborder">
-          <td class="w96">title</td><td><input id="SEO[brand][title]" name="SEO[brand][title]" value="{#sitename#} - 品牌" class="w300" type="text"/></td>
+          <td class="w96">title</td><td><input id="SEO[brand][title]" name="SEO[brand][title]" value="{$currentSetting['brand']['title']|escape}" class="w300" type="text"/></td>
         </tr>
         <tr class="noborder">
-          <td class="w96">keywords</td><td><input id="SEO[brand][keywords]" name="SEO[brand][keywords]" value="ShopNC,{#sitename#}" class="w300" type="text" /></td>
+          <td class="w96">keywords</td><td><input id="SEO[brand][keywords]" name="SEO[brand][keywords]" value="{$currentSetting['brand']['keywords']|escape}" class="w300" type="text" /></td>
         </tr>
         <tr class="noborder">
-          <td class="w96">description</td><td><input id="SEO[brand][description]" name="SEO[brand][description]" value="ShopNC,{#sitename#}" class="w300" type="text" /></td>
+          <td class="w96">description</td><td><input id="SEO[brand][description]" name="SEO[brand][description]" value="{$currentSetting['brand']['description']|escape}" class="w300" type="text" /></td>
         </tr>
         <tr>
           <td colspan="2" class="required"><label>某一品牌商品列表</label></td>
         </tr>
         <tr class="noborder">
-          <td class="w96">title</td><td><input id="SEO[brand_list][title]" name="SEO[brand_list][title]" value="{#sitename#} - {#name#}" class="w300" type="text" /></td>
+          <td class="w96">title</td><td><input id="SEO[brand_list][title]" name="SEO[brand_list][title]" value="{$currentSetting['brand_list']['title']|escape}" class="w300" type="text" /></td>
         </tr>
         <tr class="noborder">
-          <td class="w96">keywords</td><td><input id="SEO[brand_list][keywords]" name="SEO[brand_list][keywords]" value="ShopNC,{#sitename#},{#name#}" class="w300" type="text" /></td>
+          <td class="w96">keywords</td><td><input id="SEO[brand_list][keywords]" name="SEO[brand_list][keywords]" value="{$currentSetting['brand_list']['keywords']|escape}" class="w300" type="text" /></td>
         </tr>
         <tr class="noborder">
-          <td class="w96">description</td><td><input id="SEO[brand_list][description]" name="SEO[brand_list][description]" value="ShopNC,{#sitename#},{#name#}" class="w300" type="text" /></td>
+          <td class="w96">description</td><td><input id="SEO[brand_list][description]" name="SEO[brand_list][description]" value="{$currentSetting['brand_list']['description']|escape}" class="w300" type="text" /></td>
         </tr>
       </tbody>
       <tfoot>
@@ -144,25 +144,25 @@
           <td colspan="2" class="required"><label>积分中心</label></td>
         </tr>
         <tr class="noborder">
-          <td class="w96">title</td><td><input id="SEO[credits][title]" name="SEO[credits][title]" value="{#sitename#} - 积分商城" class="w300" type="text" /></td>
+          <td class="w96">title</td><td><input id="SEO[credits][title]" name="SEO[credits][title]" value="{$currentSetting['credits']['title']|escape}" class="w300" type="text" /></td>
         </tr>
         <tr class="noborder">
-          <td class="w96">keywords</td><td><input id="SEO[credits][keywords]" name="SEO[credits][keywords]" value="ShopNC,{#sitename#}" class="w300" type="text" /></td>
+          <td class="w96">keywords</td><td><input id="SEO[credits][keywords]" name="SEO[credits][keywords]" value="{$currentSetting['credits']['keywords']|escape}" class="w300" type="text" /></td>
         </tr>
         <tr class="noborder">
-          <td class="w96">description</td><td><input id="SEO[point][description]" name="SEO[credits][description]" value="ShopNC,{#sitename#}" class="w300" type="text" /></td>
+          <td class="w96">description</td><td><input id="SEO[point][description]" name="SEO[credits][description]" value="{$currentSetting['credits']['description']|escape}" class="w300" type="text" /></td>
         </tr>
         <tr>
           <td colspan="2" class="required"><label>积分中心商品内容</label></td>
         </tr>
         <tr class="noborder">
-          <td class="w96">title</td><td><input id="SEO[credits_content][title]" name="SEO[credits_content][title]" value="{#sitename#} - {#name#}" class="w300" type="text" /></td>
+          <td class="w96">title</td><td><input id="SEO[credits_content][title]" name="SEO[credits_content][title]" value="{$currentSetting['credits_content']['title']|escape}" class="w300" type="text" /></td>
         </tr>
         <tr class="noborder">
-          <td class="w96">keywords</td><td><input id="SEO[credits_content][title]" name="SEO[credits_content][keywords]" value="ShopNC,{#sitename#},{#key#}" class="w300" type="text" /></td>
+          <td class="w96">keywords</td><td><input id="SEO[credits_content][title]" name="SEO[credits_content][keywords]" value="{$currentSetting['credits_content']['keywords']|escape}" class="w300" type="text" /></td>
         </tr>
         <tr class="noborder">
-          <td class="w96">description</td><td><input id="SEO[credits_content][title]" name="SEO[credits_content][description]" value="ShopNC,{#sitename#},{#description#}" class="w300" type="text" /></td>
+          <td class="w96">description</td><td><input id="SEO[credits_content][title]" name="SEO[credits_content][description]" value="{$currentSetting['credits_content']['description']|escape}" class="w300" type="text" /></td>
         </tr>
       </tbody>
       <tfoot>
@@ -180,25 +180,25 @@
           <td colspan="2" class="required"><label>文章分类列表</label></td>
         </tr>
         <tr class="noborder">
-          <td class="w96">title</td><td><input id="SEO[article][title]" name="SEO[article][title]" value="{#sitename#} - {#article_class#}" class="w300" type="text" /></td>
+          <td class="w96">title</td><td><input id="SEO[article][title]" name="SEO[article][title]" value="{$currentSetting['article']['title']|escape}" class="w300" type="text" /></td>
         </tr>
         <tr class="noborder">
-          <td class="w96">keywords</td><td><input id="SEO[article][keywords]" name="SEO[article][keywords]" value="ShopNC,{#sitename#}" class="w300" type="text" /></td>
+          <td class="w96">keywords</td><td><input id="SEO[article][keywords]" name="SEO[article][keywords]" value="{$currentSetting['article']['keywords']|escape}" class="w300" type="text" /></td>
         </tr>
         <tr class="noborder">
-          <td class="w96">description</td><td><input id="SEO[article][description]" name="SEO[article][description]" value="ShopNC,{#sitename#}" class="w300" type="text" /></td>
+          <td class="w96">description</td><td><input id="SEO[article][description]" name="SEO[article][description]" value="{$currentSetting['article']['description']|escape}" class="w300" type="text" /></td>
         </tr>
         <tr>
           <td colspan="2" class="required"><label>文章内容</label></td>
         </tr>
         <tr class="noborder">
-          <td class="w96">title</td><td><input id="SEO[article_content][title]" name="SEO[article_content][title]" value="{#sitename#} - {#name#}" class="w300" type="text" /></td>
+          <td class="w96">title</td><td><input id="SEO[article_content][title]" name="SEO[article_content][title]" value="{$currentSetting['article_content']['title']|escape}" class="w300" type="text" /></td>
         </tr>
         <tr class="noborder">
-          <td class="w96">keywords</td><td><input id="SEO[article_content][keywords]" name="SEO[article_content][keywords]" value="ShopNC,{#sitename#},{#key#}" class="w300" type="text" /></td>
+          <td class="w96">keywords</td><td><input id="SEO[article_content][keywords]" name="SEO[article_content][keywords]" value="{$currentSetting['article_content']['keywords']|escape}" class="w300" type="text" /></td>
         </tr>
         <tr class="noborder">
-          <td class="w96">description</td><td><input id="SEO[article_content][description]" name="SEO[article_content][description]" value="ShopNC,{#sitename#},{#description#}" class="w300" type="text" /></td>
+          <td class="w96">description</td><td><input id="SEO[article_content][description]" name="SEO[article_content][description]" value="{$currentSetting['article_content']['description']|escape}" class="w300" type="text" /></td>
         </tr>
       </tbody>
       <tfoot>
@@ -216,13 +216,13 @@
           <td colspan="2" class="required"><label>店铺</label></td>
         </tr>
         <tr class="noborder">
-          <td class="w96">title</td><td><input id="SEO[shop][title]" name="SEO[shop][title]" value="{#sitename#} - {#shopname#}" class="w300" type="text" /></td>
+          <td class="w96">title</td><td><input id="SEO[shop][title]" name="SEO[shop][title]" value="{$currentSetting['shop']['title']|escape}" class="w300" type="text" /></td>
         </tr>
         <tr class="noborder">
-          <td class="w96">keywords</td><td><input id="SEO[shop][keywords]" name="SEO[shop][keywords]" value="ShopNC,{#sitename#},{#key#}" class="w300" type="text" /></td>
+          <td class="w96">keywords</td><td><input id="SEO[shop][keywords]" name="SEO[shop][keywords]" value="{$currentSetting['shop']['keywords']|escape}" class="w300" type="text" /></td>
         </tr>
         <tr class="noborder">
-          <td class="w96">description</td><td><input id="SEO[shop][description]" name="SEO[shop][description]" value="ShopNC,{#sitename#},{#description#}" class="w300" type="text" /></td>
+          <td class="w96">description</td><td><input id="SEO[shop][description]" name="SEO[shop][description]" value="{$currentSetting['shop']['description']|escape}" class="w300" type="text" /></td>
         </tr>
       </tbody>
       <tfoot>
@@ -240,13 +240,13 @@
           <td colspan="2" class="required"><label>商品</label></td>
         </tr>
         <tr class="noborder">
-          <td class="w96">title</td><td><input id="SEO[product][title]" name="SEO[product][title]" value="{#name#} - {#sitename#}" class="w300" type="text" /></td>
+          <td class="w96">title</td><td><input id="SEO[product][title]" name="SEO[product][title]" value="{$currentSetting['product']['title']|escape}" class="w300" type="text" /></td>
         </tr>
         <tr class="noborder">
-          <td class="w96">keywords</td><td><input id="SEO[product][keywords]" name="SEO[product][keywords]" value="ShopNC,{#sitename#},{#key#}" class="w300" type="text" /></td>
+          <td class="w96">keywords</td><td><input id="SEO[product][keywords]" name="SEO[product][keywords]" value="{$currentSetting['product']['keywords']|escape}" class="w300" type="text" /></td>
         </tr>
         <tr class="noborder">
-          <td class="w96">description</td><td><input id="SEO[product][desciption]" name="SEO[product][description]" value="ShopNC,{#sitename#},{#description#}" class="w300" type="text" /></td>
+          <td class="w96">description</td><td><input id="SEO[product][desciption]" name="SEO[product][description]" value="{$currentSetting['product']['description']|escape}" class="w300" type="text" /></td>
         </tr>
       </tbody>
       <tfoot>
@@ -299,13 +299,13 @@
           <td colspan="2" class="required"><label>SNS</label></td>
         </tr>
         <tr class="noborder">
-          <td class="w96">title</td><td><input id="SEO[sns][title]" name="SEO[sns][title]" value="看{#name#}怎么淘到好的宝贝-{#sitename#}" class="w300" type="text" /></td>
+          <td class="w96">title</td><td><input id="SEO[sns][title]" name="SEO[sns][title]" value="{$currentSetting['sns']['title']|escape}" class="w300" type="text" /></td>
         </tr>
         <tr class="noborder">
-          <td class="w96">keywords</td><td><input id="SEO[sns][keywords]" name="SEO[sns][keywords]" value="ShopNC,{#sitename#},{#name#}" class="w300" type="text" /></td>
+          <td class="w96">keywords</td><td><input id="SEO[sns][keywords]" name="SEO[sns][keywords]" value="{$currentSetting['sns']['keywords']|escape}" class="w300" type="text" /></td>
         </tr>
         <tr class="noborder">
-          <td class="w96">description</td><td><input id="SEO[sns][desciption]" name="SEO[sns][description]" value="ShopNC,{#sitename#},{#name#}" class="w300" type="text" /></td>
+          <td class="w96">description</td><td><input id="SEO[sns][desciption]" name="SEO[sns][description]" value="{$currentSetting['sns']['description']|escape}" class="w300" type="text" /></td>
         </tr>
       </tbody>
       <tfoot>

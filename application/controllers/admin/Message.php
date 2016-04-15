@@ -4,20 +4,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Message extends Ydzj_Admin_Controller {
 	
+	private $settingKey = null;
+	
+	
 	public function __construct(){
 		parent::__construct();
 		
+		$this->load->library(array('Admin_Service','Message_Service'));
 		
-		$this->load->library(array('Admin_Service'));
-	}
-	
-	
-	
-	public function email(){
-		
-		$feedback = '';
-		
-		$settingKey = array(
+		$this->settingKey = array(
 			'email_enabled',
 			'email_type',
 			'email_host',
@@ -27,10 +22,19 @@ class Message extends Ydzj_Admin_Controller {
 			'email_pass',
 			'email_pass_len'
 		);
+	}
+	
+	
+	
+	public function email(){
+		
+		$feedback = '';
+		
+		
 		
 		$currentSetting = $this->admin_service->getSettingList(array(
 			'where_in' => array(
-				array('key' => 'name' , 'value' => $settingKey)
+				array('key' => 'name' , 'value' => $this->settingKey)
 			)
 		));
 		
@@ -45,7 +49,8 @@ class Message extends Ydzj_Admin_Controller {
 					$this->form_validation->set_rules('email_port','SMTP 端口','required|is_natural_no_zero|less_than[65535]');
 					$this->form_validation->set_rules('email_addr','发信人邮件地址','required|valid_email');
 					$this->form_validation->set_rules('email_id','SMTP 身份验证用户名','required');
-					$this->form_validation->set_rules('email_pass','SMTP 身份验证密码','required');
+					
+					//$this->form_validation->set_rules('email_pass','SMTP 身份验证密码','required');
 				
 					if(!$this->form_validation->run()){
 						$feedback = getErrorTip($this->form_validation->error_string());
@@ -55,11 +60,10 @@ class Message extends Ydzj_Admin_Controller {
 				}
 				
 				
-				foreach($settingKey as $oneKey){
+				foreach($this->settingKey as $oneKey){
 					$temp = $this->input->post($oneKey);
 					
 					if($oneKey == 'email_pass'){
-						
 						if($temp){
 							$temp = $this->encrypt->encode($temp);
 						}else{
@@ -84,7 +88,7 @@ class Message extends Ydzj_Admin_Controller {
 				$feedback = getSuccessTip('保存成功');
 				$currentSetting = $this->admin_service->getSettingList(array(
 					'where_in' => array(
-						array('key' => 'name' , 'value' => $settingKey)
+						array('key' => 'name' , 'value' => $this->settingKey)
 					)
 				));
 				
@@ -102,9 +106,111 @@ class Message extends Ydzj_Admin_Controller {
 		$this->display();
 	}
 	
+	private function _getEmailTpl(){
+		$currentPage = $this->input->get('page') ? $this->input->get('page') : 1;
+		$condition = array(
+			
+			'pager' => array(
+				'page_size' => config_item('page_size'),
+				'current_page' => $currentPage,
+				'call_js' => 'search_page',
+				'form_id' => '#formSearch'
+			)
+		);
+		
+		
+		$keywords = $this->input->post('keywords');
+		if($keywords){
+			$condition['like']['name'] = $keywords;
+		}
+		
+		
+		$list = $this->message_service->getListByCondition($condition);
+		
+		$this->assign('list',$list);
+		$this->assign('page',$list['pager']);
+		$this->assign('currentPage',$currentPage);
+	}
+	
 	
 	public function email_tpl(){
+		
+		$this->_getEmailTpl();
+		
 		$this->display();
+	}
+	
+	
+	public function email_testing(){
+		
+		
+		$this->load->library('email');
+		
+		$config['protocol'] = 'smtp';
+		$config['smtp_host'] = $this->input->post('email_host');
+		$config['smtp_port'] = $this->input->post('email_port');
+		$config['smtp_user'] = $this->input->post('email_id');
+		$config['smtp_pass'] = $this->input->post('email_pass');
+		$config['smtp_timeout'] = 10;
+		$config['charset'] = config_item('charset');
+		
+		$this->email->initialize($config);
+		
+		$emailTitle = config_item('site_name');
+		$emailBody = "你好，这是一封测试邮件，如果您收到该邮件，表示配置已经生效.";
+		
+		/*
+		$this->email->to($this->input->post('email_test'));
+		$this->email->from($this->input->post('email_addr'));
+		$this->email->subject($emailTitle);
+		$this->email->message($emailBody);
+		*/
+		
+		//if($this->ext_email->send($this->input->post('email_test'),$emailTitle,$emailBody,$this->input->post('email_addr'))){
+		if($this->email->send()){
+			$feedback = '成功';
+		}else{
+			$feedback = '失败';
+		}
+		
+		
+		$this->jsonOutput('发送'.$feedback,$this->getFormHash());
+		
+	}
+	
+	
+	public function email_tpl_onoff(){
+		$ids = $this->input->post('del_id');
+		$switchValue = $this->input->post('submit_type');
+		
+		
+		if($this->isPostRequest()){
+			if($ids){
+				$row = $this->message_service->switchMsgTemplateStatus($switchValue,$ids);
+			}
+		}
+		
+		$this->_getEmailTpl();
+		$this->display('message/email_tpl');
+		
+	}
+	
+	
+	public function email_tpl_edit(){
+		
+		$code = $this->input->get('code');
+		
+		
+		if($this->isGetRequest()){
+			
+			
+		}
+		
+		$tplInfo = $this->message_service->getMsgTemplateByCode($code);
+		
+		$this->assign('info',$tplInfo);
+		$this->display();
+		
 	}
 	
 }

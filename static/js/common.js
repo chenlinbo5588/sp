@@ -411,3 +411,6 @@ function showTips( tips, height, time ){
     };
 })(jQuery);
 
+
+}
+

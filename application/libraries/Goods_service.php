@@ -29,4 +29,5 @@ class Goods_Service extends Base_Service {
 		return $this->_goodsClassModel;
 	}
 	
+	
 }

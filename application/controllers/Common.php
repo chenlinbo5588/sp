@@ -5,8 +5,6 @@ class Common extends Ydzj_Controller {
 	
 	public function __construct(){
 		parent::__construct();
-
-
 	}
 	
 	
@@ -16,11 +14,13 @@ class Common extends Ydzj_Controller {
 	 */
 	public function pic_upload(){
 		
-		$this->load->library('Attachment_Service');
-		$uploadname = $this->input->post('uploadname');
-		if(empty($uploadname)){
-			$uploadname = '_pic';
+		$uploadname = '_pic';
+        if(0 === $_FILES['imgFile']['error']){
+            $uploadname = 'imgFile';
 		}
+		
+		$this->load->library('Attachment_Service');
+		
 		
 		$json = $this->attachment_service->pic_upload($this->_profile['basic']['uid'],$uploadname);
 		
