@@ -159,12 +159,11 @@ class Message extends Ydzj_Admin_Controller {
 		$emailTitle = config_item('site_name');
 		$emailBody = "你好，这是一封测试邮件，如果您收到该邮件，表示配置已经生效.";
 		
-		/*
+		
 		$this->email->to($this->input->post('email_test'));
 		$this->email->from($this->input->post('email_addr'));
 		$this->email->subject($emailTitle);
 		$this->email->message($emailBody);
-		*/
 		
 		//if($this->ext_email->send($this->input->post('email_test'),$emailTitle,$emailBody,$this->input->post('email_addr'))){
 		if($this->email->send()){
@@ -173,7 +172,7 @@ class Message extends Ydzj_Admin_Controller {
 			$feedback = '失败';
 		}
 		
-		
+		//file_put_contents('debug.txt',$this->email->print_debugger());
 		$this->jsonOutput('发送'.$feedback,$this->getFormHash());
 		
 	}
@@ -198,16 +197,39 @@ class Message extends Ydzj_Admin_Controller {
 	
 	public function email_tpl_edit(){
 		
-		$code = $this->input->get('code');
+		$code = $this->input->get_post('code');
+		$feedback = '';
 		
-		
-		if($this->isGetRequest()){
+		if($this->isPostRequest()){
 			
+			$this->form_validation->set_rules('code','消息代码','required');
+			$this->form_validation->set_rules('title','标题','required');
+			$this->form_validation->set_rules('content','内容','required');
+			
+			
+			
+			for($i = 0; $i < 1; $i++){
+				
+				if(!$this->form_validation->run()){
+					$feedback = getErrorTip($this->form_validation->error_string());
+					break;
+				}
+				
+				$rows = $this->message_service->updateMsgTemplate($_POST);
+				
+				if($rows < 0){
+					$feedback = getErrorTip('保存失败');
+					break;
+				}
+				
+				$feedback = getSuccessTip('保存成功');
+				
+			}
 			
 		}
 		
 		$tplInfo = $this->message_service->getMsgTemplateByCode($code);
-		
+		$this->assign('feedback',$feedback);
 		$this->assign('info',$tplInfo);
 		$this->display();
 		

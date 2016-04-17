@@ -7925,6 +7925,11 @@ K.extend(KSWFUpload, {
 			upload_start_handler : function(file) {
 				var self = this;
 				var itemDiv = K('div[data-id="' + file.id + '"]', self.bodyDiv);
+				
+				if(typeof(formhash) != "undefined"){
+					self.addPostParam("formhash", formhash);
+				}
+				
 				K('.ke-status > div', itemDiv).hide();
 				K('.ke-progressbar', itemDiv).show();
 			},
@@ -7955,6 +7960,10 @@ K.extend(KSWFUpload, {
 				file.url = data.url;
 				K('.ke-img', itemDiv).attr('src', file.url).attr('data-status', file.filestatus).data('data', data);
 				K('.ke-status > div', itemDiv).hide();
+				
+				if(typeof(data.formhash) != "undefined"){
+					formhash = data.formhash;
+				}
 			}
 		};
 		self.swfu = new SWFUpload(settings);

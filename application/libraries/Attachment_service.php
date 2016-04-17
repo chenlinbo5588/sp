@@ -247,22 +247,13 @@ class Attachment_Service extends Base_Service {
 		//$Orientation[$exif[IFD0][Orientation]];
 		//$exif = exif_read_data($fileData['file_url'],0,true);
 		if($fileData){
-			$size = self::$CI->input->post('size');
-			
-			if(empty($size) || !$this->isAllowedSize($size)){
-				$size = 'big';
-			}
-			
-			$fileData = $this->resize($fileData , array($size => array('quality' => 100)));
-			//删除原上传文件
-			unlink($fileData['full_path']);
 			
 			//上传多次情况下，清理上一次上传的文件
 			if(self::$CI->input->post('id')){
 				$this->deleteFiles(array(self::$CI->input->post('id')),'all');
 			}
 			
-			return array('error' => 0, 'status'=>1,'formhash'=>self::$CI->security->get_csrf_hash(),'id' => $fileData['id'], 'url'=>base_url($fileData['img_big']));
+			return array('error' => 0, 'status'=>1,'formhash'=>self::$CI->security->get_csrf_hash(),'id' => $fileData['id'], 'url'=>base_url($fileData['file_url']));
 		}else{
 			return array('error' => 1, 'status'=>0,'formhash'=>self::$CI->security->get_csrf_hash(),'msg'=>$this->getErrorMsg('',''));
 		}

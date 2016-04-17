@@ -95,11 +95,11 @@ $(document).ready(function(){
 			url:'{admin_site_url('message/email_testing')}',
 			data:"formhash=" + formhash + "&email_host="+$('#email_host').val()+'&email_port='+$('#email_port').val()+'&email_addr='+$('#email_addr').val()+'&email_id='+$('#email_id').val()+'&email_pass='+$('#email_pass').val()+'&email_type='+1+'&email_test='+$('#email_test').val(),
 			error:function(){
+				refreshFormHash(json.data);
 				alert('测试邮件发送失败，请重新配置邮件服务器');
-				formhash = json.data.formhash;
 			},
 			success:function(json){
-				formhash = json.data.formhash;
+				refreshFormHash(json.data);
 				alert(json.message);
 			}
 			

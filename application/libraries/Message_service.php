@@ -26,6 +26,18 @@ class Message_Service extends Base_Service {
 	}
 	
 	
+	
+	public function updateMsgTemplate($param){
+		
+		return $this->_msgTemplateModel->update(array(
+			'title' => $param['title'],
+			'content' => $param['content'],
+		
+		),array('code' => $param['code']));
+		
+	}
+	
+		
 	/**
 	 * 
 	 */

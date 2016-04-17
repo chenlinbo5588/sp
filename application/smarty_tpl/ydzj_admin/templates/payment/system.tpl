@@ -28,37 +28,14 @@
       </tr>
     </thead>
     <tbody>
-            <tr class="hover">
-        <td>货到付款</td>
-        <td class="w25pre align-center">
-          开启中        </td>
-        <td class="w156 align-center"><a href="index.php?act=payment&op=edit&payment_id=1">编辑</a></td>
+      {foreach from=$paymentList item=item}
+      <tr class="hover">
+        <td>{$item['payment_name']|escape}</td>
+        <td class="w25pre align-center">{if $item['payment_state'] == 1}已开启{else}已关闭{/if}</td>
+        <td class="w156 align-center"><a href="{admin_site_url('payment/edit')}?payment_code={$item['payment_code']}">编辑</a></td>
       </tr>
-            <tr class="hover">
-        <td>支付宝</td>
-        <td class="w25pre align-center">
-          开启中        </td>
-        <td class="w156 align-center"><a href="index.php?act=payment&op=edit&payment_id=2">编辑</a></td>
-      </tr>
-            <tr class="hover">
-        <td>财付通</td>
-        <td class="w25pre align-center">
-          开启中        </td>
-        <td class="w156 align-center"><a href="index.php?act=payment&op=edit&payment_id=3">编辑</a></td>
-      </tr>
-            <tr class="hover">
-        <td>网银在线</td>
-        <td class="w25pre align-center">
-          开启中        </td>
-        <td class="w156 align-center"><a href="index.php?act=payment&op=edit&payment_id=4">编辑</a></td>
-      </tr>
-            <tr class="hover">
-        <td>预存款</td>
-        <td class="w25pre align-center">
-          开启中        </td>
-        <td class="w156 align-center"><a href="index.php?act=payment&op=edit&payment_id=5">编辑</a></td>
-      </tr>
-          </tbody>
+      {/foreach}
+    </tbody>
     <tfoot>
       <tr class="tfoot">
         <td colspan="15"></td>

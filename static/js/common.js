@@ -83,6 +83,13 @@ function FormErrorHtml(msg){
 	return '<div class="form_error">' + msg + '</div>';
 }
 
+function refreshFormHash(data){
+	if(typeof(data.formhash) != "undefined"){
+		formhash = data.formhash;
+		$("input[name=formhash]").val(formhash);
+	}
+}
+
 /* 显示Ajax表单 */
 function ajax_form(id, title, url, width, model)
 {
@@ -411,6 +418,4 @@ function showTips( tips, height, time ){
     };
 })(jQuery);
 
-
-}
 

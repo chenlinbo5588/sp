@@ -18,4 +18,6 @@ class MY_Input extends CI_Input {
 		return $this->_fetch_from_array($_COOKIE, $prefix.$index, $xss_clean);
 	}
 	
+	
+	
 }

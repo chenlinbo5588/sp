@@ -9,7 +9,8 @@
     </div>
   </div>
   <div class="fixed-empty"></div>
-  {form_open(admin_site_url('message/email_tpl_onoff'),'name="form1" id="form_templates" onsubmit="return validation(this);"')}
+  {$feedback}
+  {form_open(admin_site_url('message/email_tpl_edit'),'name="form1" id="form_templates" onsubmit="return validation(this);"')}
     <input type="hidden" name="code" value="{$info['code']}" />
     <table class="table tb-type2 nobdb">
       <tbody>
@@ -21,20 +22,23 @@
           <td class="vatop tips"></td>
         </tr>
         <tr>
-          <td colspan="2" class="required"><label class="validation"> 邮件标题:</label></td>
+          <td colspan="2" class="required"><label class="validation">{if $info['type'] == 0}邮件{else}短消息{/if}标题:</label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input type="text" value="{$info['title']}" name="title" class="txt"></td>
-          <td class="vatop tips"></td>
+          <td class="vatop tips">短消息标题没实际作用{form_error('title')}</td>
         </tr>
         <tr>
           <td colspan="2" class="required"><label class="validation" for="link">邮件正文:</label></td>
+        </tr>
+        <tr>
+          <td colspan="2" class="required">{form_error('content')}</td>
         </tr>
         <tr class="noborder">
           <td colspan="2">
           	<textarea id="content" name="content" style="width:700px;height:300px;visibility:hidden;">{$info['content']}</textarea>
 			{include file="common/ke.tpl"}
-			<script>
+			<script type="text/javascript">
 	            var editor1;
 				
 	            KindEditor.ready(function(K) {
@@ -64,7 +68,7 @@
 	                    return false;
 	                }
 	                
-	                if($.trim(editor1.html()) == ''){
+	                if(editor1.isEmpty() == true){
 	                    alert("请输入内容");
 	                    return false;
 	                }
