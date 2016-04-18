@@ -243,6 +243,72 @@ class Setting extends Ydzj_Admin_Controller {
 	}
 	
 	
+	public function express(){
+		$this->load->model('Express_Model');
+		
+		if($this->isPostRequest()){
+			
+			$this->form_validation->set_rules('fieldname','状态字段','required|in_list[isfreq,state]');
+			$this->form_validation->set_rules('enabled','状态','required|in_list[0,1]');
+			
+			if($this->form_validation->run()){
+				
+				$upInfo[$this->input->post('fieldname')] = $this->input->post('enabled');
+				
+				$this->Express_Model->update($upInfo,array('id' => $this->input->post('id')));
+				
+				$this->jsonOutput('保存成功', $this->getFormHash());
+				
+			}else{
+				$this->jsonOutput('保存失败 '.$this->form_validation->error_string(),$this->getFormHash());
+			}
+			
+			
+			
+		}else{
+			$currentPage = $this->input->get('page') ? $this->input->get('page') : 1;
+			$currentLetter = $this->input->get('letter') ? $this->input->get('letter') : '';
+			$letter = $this->input->get('letter') ? $this->input->get('letter') : '';
+			
+			$rangeAZ = range('A','Z');
+			
+			$where = array();
+			if($currentLetter){
+				$where['where']['letter'] = $currentLetter;
+			}
+			
+			
+			$condition = array(
+				'order' => 'id DESC',
+				'pager' => array(
+					'page_size' => config_item('page_size'),
+					'current_page' => $currentPage,
+					'call_js' => 'search_page',
+					'form_id' => '#formSearch'
+				)
+			);
+			
+			$condition = array_merge($condition,$where);
+			
+			
+			$list = $this->Express_Model->getList($condition);
+			
+			$this->assign('charList',$rangeAZ);
+			$this->assign('list',$list);
+			$this->assign('page',$list['pager']);
+			
+			$this->assign('currentPage',$currentPage);
+			$this->assign('letter',$letter);
+			$this->display();
+			
+		}
+		
+	}
+	
+	
+	
+	
+	
 	private function _getTimeZone(){
 		return array(
 		'-12' => 'Pacific/Kwajalein',

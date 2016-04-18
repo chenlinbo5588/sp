@@ -70,7 +70,7 @@ $(function(){
 	
 	$("input[name=jumpPage]").keydown(function(event){
 　　　　 // 注意此处不要用keypress方法，否则不能禁用　Ctrl+V 与　Ctrl+V,具体原因请自行查找keyPress与keyDown区分，十分重要，请细查
-        if ($.browser.msie) {  // 判断浏览器
+        if (/MSIE/.test(navigator.userAgent)) {  // 判断浏览器
             if ( ((event.keyCode > 47) && (event.keyCode < 58)) || ((event.keyCode >= 96) && (event.keyCode <= 105)) || (event.keyCode == 8) ) { 　// 判断键值  
                 return true;  
             } else { 

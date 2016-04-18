@@ -38,10 +38,9 @@
       <tfoot>
       	<tr class="tfoot">
           <td><input type="checkbox" class="checkall" id="checkallBottom" name="chkVal"></td>
-          <td colspan="16"><label for="checkallBottom">全选</label>
-            &nbsp;&nbsp;<a href="JavaScript:void(0);" class="btn" onclick="if(confirm('您确定要删除吗?')){
-            	$('#form_admin').submit();}"><span>删除</span></a>
-            <div class="pagination"> <ul><li><span>首页</span></li><li><span>上一页</span></li><li><span class="currentpage">1</span></li><li><span>下一页</span></li><li><span>末页</span></li></ul> </div></td>
+          <td colspan="16"><label for="checkallBottom">全选</label>&nbsp;&nbsp;<a href="JavaScript:void(0);" class="btn" onclick="if(confirm('您确定要删除吗?')){ $('#form_admin').submit(); } "><span>删除</span></a>
+            	{include file="common/pagination.tpl"}
+           </td>
         </tr>
        </tfoot>
     </table>
