@@ -124,7 +124,7 @@
       </tbody>
       <tfoot>
         <tr class="tfoot">
-          <td colspan="15"><input type="submit" name="submit" value="保存" class="msbtn"/></td>
+          <td colspan="2"><input type="submit" name="submit" value="保存" class="msbtn"/></td>
         </tr>
       </tfoot>
     </table>

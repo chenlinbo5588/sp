@@ -20,4 +20,19 @@ class Adminuser_Model extends MY_Model {
     	return array_keys(self::$_tableMeta);
     }
     
+    
+    public function checkExists($email){
+		if(!$this->getCount(
+			array(
+				'where' => array('email' => $email)
+			))
+		){
+			return true;
+		}else{
+			return false;
+		}
+		
+	}
+    
+    
 }

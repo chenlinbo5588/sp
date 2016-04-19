@@ -263,8 +263,6 @@ class Setting extends Ydzj_Admin_Controller {
 				$this->jsonOutput('保存失败 '.$this->form_validation->error_string(),$this->getFormHash());
 			}
 			
-			
-			
 		}else{
 			$currentPage = $this->input->get('page') ? $this->input->get('page') : 1;
 			$currentLetter = $this->input->get('letter') ? $this->input->get('letter') : '';
