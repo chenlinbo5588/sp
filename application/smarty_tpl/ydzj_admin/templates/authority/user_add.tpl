@@ -53,5 +53,4 @@
       </tfoot>
     </table>
   </form>
-<script>
 {include file="common/main_footer.tpl"}

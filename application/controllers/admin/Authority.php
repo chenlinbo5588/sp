@@ -89,9 +89,17 @@ class Authority extends Ydzj_Admin_Controller {
 	public function role_add(){
 		
 		
+		$this->load->model('Fn_Model');
+		$list = $this->Fn_Model->getList();
+		
+		$fnTree = $this->phptree->makeTree($list,array(
+			'primary_key' => 'id',
+			'parent_key' => 'parent_id',
+			'expanded' => true
+		));
 		
 		
-		
+		$this->assign('fnTree',$fnTree);
 		
 		$this->display();
 	}
