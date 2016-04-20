@@ -142,8 +142,14 @@ $(function(){
                 required : true,
                 phoneChina:true,
                 remote   : {
-                    url :'{admin_site_url('member/check/mobile')}',
-                    type:'get'
+                    url :'{site_url('common/member_check')}',
+                    type:'get',
+                    data:{
+                    	keyword: 'mobile',
+                    	value : function(){
+                            return $('#member_mobile').val();
+                        }
+                    }
                 }
             },
             member_passwd: {

@@ -12,6 +12,7 @@
   
   {form_open(admin_site_url('message/email_tpl'),'id="formSearch" name="formSearch"')}
     <input type="hidden" name="page" value="{$currentPage}"/>
+    <input type="hidden" name="submit_type" id="submit_type" value="" />
     <table class="tb-type1 noborder search">
       <tbody>
         <tr>
@@ -23,10 +24,6 @@
         </tr>
       </tbody>
     </table>
-   </form>
-   
-   {form_open(admin_site_url('message/email_tpl_onoff'),'name="form1"')}
-    <input type="hidden" name="submit_type" id="submit_type" value="" />
     <table class="table tb-type2">
       <thead>
         <tr class="space">
@@ -69,7 +66,7 @@
   </form>
   <script type="text/javascript">
 	function go(){
-		document.form1.submit();
+		document.formSearch.submit();
 	}
   </script>
 {include file="common/main_footer.tpl"}

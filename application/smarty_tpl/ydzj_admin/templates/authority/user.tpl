@@ -31,16 +31,15 @@
           <td class="w24"><input name="del_id[]" type="checkbox" value="{$item['uid']}" {if {$item['uid']} == 1}disabled="disabled"{/if}></td>
           <td>{$item['email']}</td>
           <td class="align-center">{$item['username']}</td>
-          <td class="align-center">{$item['last_login']|date_format:"%Y-%m-%d"}</td>
+          <td class="align-center">{$item['last_login']|date_format:"%Y-%m-%d %H:%M:%S"}</td>
           <td class="align-center">{$item['group_id']}</td>
-          <td class="w150 align-center">超级管理员不可编辑</td>
         </tr>
         {/foreach}
       </tbody>
       <tfoot>
       	<tr class="tfoot">
           <td><input type="checkbox" class="checkall" id="checkallBottom" name="chkVal"></td>
-          <td colspan="16"><label for="checkallBottom">全选</label>&nbsp;&nbsp;<a href="JavaScript:void(0);" class="btn" onclick="if(confirm('您确定要删除吗?')){ $('#form_admin').submit(); } "><span>删除</span></a>
+          <td colspan="5"><label for="checkallBottom">全选</label>&nbsp;&nbsp;<a href="JavaScript:void(0);" class="btn" onclick="if(confirm('您确定要删除吗?')){ $('#form_admin').submit(); } "><span>删除</span></a>
             	{include file="common/pagination.tpl"}
            </td>
         </tr>

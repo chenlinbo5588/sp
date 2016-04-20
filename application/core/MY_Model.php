@@ -256,6 +256,45 @@ class MY_Model extends CI_Model {
     
     
     /**
+     * 校验
+     */
+    public function checkExists($value,$key){
+    	
+		if(!$this->getCount(array('where' => array($key => $value)))){
+			return true;
+		}else{
+			return false;
+		}
+	}
+	
+	public function checkExistsExcludeSelf($value,$key){
+    	
+    	$list = $this->getList(array('where' => array($key => $value)));
+    	
+    	if(count($list) <= 1){
+    		if($list){
+    			
+    			if($list[0][$key] == $value){
+    				// 自己
+    				return true;
+    			}else{
+    				return false;
+    				
+    			}
+    			
+    		}else{
+    			return true;
+    		}
+    		
+    	}else{
+    		
+    		return false;
+    	}
+    	
+	}
+	
+	
+    /**
      * 查询
      */
     public function getFirstByKey($id,$key = 'id'){

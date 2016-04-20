@@ -133,48 +133,7 @@ class Member extends Ydzj_Admin_Controller {
 		$this->display('member/index');
 	}
 	
-	/**
-	 * 验证账户重复性
-	 */
-	public function check(){
-		
-		$urlParam = $this->uri->uri_to_assoc();
-		//print_r($urlParam);
-		$this->load->library('Member_Service');
-		
-		$flag = "false";
-		switch($urlParam['check']){
-			case 'mobile':
-				$mobile = $this->input->get('member_mobile');
-				$info = $this->member_service->getUserInfoByMobile($mobile);
-				
-				if(empty($info)){
-					$flag = "true";
-				}
-				break;
-			case 'nickname':
-				$nickname =  $this->input->get('member_nickname');
-				$info = $this->member_service->getUserInfoByMobile($nickname,'nickname');
-				$id = $this->input->get('member_id');
-				
-				if($info){
-					if($id == $info['uid']){
-						//自己
-						$flag = "true";
-					}
-				}else{
-					$flag = "true";
-				}
-				
-				break;
-			default:
-				break;
-		}
-		
-		echo $flag;
-		
-		
-	}
+	
 	
 	/**
 	 * 

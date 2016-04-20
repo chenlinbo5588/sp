@@ -135,6 +135,17 @@ class Message extends Ydzj_Admin_Controller {
 	
 	public function email_tpl(){
 		
+		
+		$ids = $this->input->post('del_id');
+		$switchValue = $this->input->post('submit_type');
+		
+		
+		if($this->isPostRequest()){
+			if($ids){
+				$row = $this->message_service->switchMsgTemplateStatus($switchValue,$ids);
+			}
+		}
+		
 		$this->_getEmailTpl();
 		
 		$this->display();
@@ -174,23 +185,6 @@ class Message extends Ydzj_Admin_Controller {
 		
 		//file_put_contents('debug.txt',$this->email->print_debugger());
 		$this->jsonOutput('发送'.$feedback,$this->getFormHash());
-		
-	}
-	
-	
-	public function email_tpl_onoff(){
-		$ids = $this->input->post('del_id');
-		$switchValue = $this->input->post('submit_type');
-		
-		
-		if($this->isPostRequest()){
-			if($ids){
-				$row = $this->message_service->switchMsgTemplateStatus($switchValue,$ids);
-			}
-		}
-		
-		$this->_getEmailTpl();
-		$this->display('message/email_tpl');
 		
 	}
 	

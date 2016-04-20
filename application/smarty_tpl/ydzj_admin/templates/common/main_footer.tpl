@@ -1,9 +1,8 @@
 <script>
 {if !empty($feedback)}
 	$(function(){
-	
 		setTimeout(function(){
-			$(".feedback").fadeToggle(2000,"linear");
+			$(".feedback").slideToggle(1000,"linear");
 		},3000);
 		
 	});

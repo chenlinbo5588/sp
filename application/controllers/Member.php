@@ -178,6 +178,8 @@ class Member extends Ydzj_Controller {
 	}
 	
 	
+	
+	
 	/**
 	 * 用户注册
 	 * 

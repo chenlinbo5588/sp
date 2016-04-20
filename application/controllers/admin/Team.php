@@ -132,7 +132,7 @@ class Team extends Ydzj_Admin_Controller {
 				'required',
 				'valid_mobile',
 				array(
-					'mobile_callable',
+					'mobile_callable[mobile]',
 					array(
 						$this->Member_Model,'checkExists'
 					)
