@@ -143,33 +143,30 @@ class Member extends Ydzj_Controller {
 					break;
 				}
 				
-				
 				$this->load->library('Admin_Service');
-					
-				$result = $this->admin_service->do_adminlogin(array(
-					'email' => $this->input->post('email'),
-					'password' => $this->input->post('password')
+				
+				$result = $this->admin_service->do_adminlogin($this->input->post('email'),$this->input->post('password'));
+				
+				if($result['message'] != '成功'){
+					$this->assign('feedback','<div class="form_error">' .$result['message'].'</div>');
+					break;
+				}
+				
+				$this->session->set_userdata(array(
+					'manage_profile' => $result['data'],
+					'lastvisit' => $this->_reqtime
 				));
 				
+				$this->admin_service->updateUserInfo(
+					array(
+						'sid' => $this->session->session_id,
+						'last_login' => $this->_reqtime,
+						'last_loginip' => $this->input->ip_address()
+					),
+					$result['data']['basic']['uid']);
 				
-				if($result['code'] == 'success'){
-					$this->session->set_userdata(array(
-						'manage_profile' => $result['data'],
-						'lastvisit' => $this->_reqtime
-					));
-					
-					$this->admin_service->updateUserInfo(
-						array(
-							'sid' => $this->session->session_id,
-							'last_login' => $this->_reqtime,
-							'last_loginip' => $this->input->ip_address()
-						),
-						$result['data']['basic']['uid']);
-					
-					redirect(admin_site_url('index'));
-				}else{
-					$this->assign('feedback',$result['message']);
-				}
+				redirect(admin_site_url('index'));
+				
 			}
 		}
 		

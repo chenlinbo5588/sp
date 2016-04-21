@@ -555,7 +555,7 @@ $(function(){
               <dl>
                 <dd>
                   <ol>
-                    <li><a href="JavaScript:void(0);" id="user_authority" onclick="openItem('user,authority,authority');">用户管理</a></li>
+                    <li><a href="JavaScript:void(0);" id="user_authority" onclick="openItem('user,authority,authority');">管理员管理</a></li>
                     <li><a href="JavaScript:void(0);" id="role_authority" onclick="openItem('role,authority,authority');">角色管理</a></li>
                     <li><a href="JavaScript:void(0);" id="menu_authority" onclick="openItem('menu,authority,authority');">菜单管理</a></li>
                   </ol>

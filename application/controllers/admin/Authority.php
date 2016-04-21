@@ -11,7 +11,7 @@ class Authority extends Ydzj_Admin_Controller {
 	}
 	
 	public function user(){
-		$currentPage = $this->input->get('page') ? $this->input->get('page') : 1;
+		$currentPage = $this->input->get_post('page') ? $this->input->get_post('page') : 1;
 		
 		$condition = array(
 			'order' => 'uid DESC',
@@ -38,8 +38,44 @@ class Authority extends Ydzj_Admin_Controller {
 			$condition['where']['uid !='] = WEBSITE_FOUNDER;
 		}
 		
-		$list = $this->Adminuser_Model->getList($condition);
 		
+		
+		
+		//update status
+		if($this->isPostRequest()){
+			$switchType = $this->input->post('submit_type');
+			for($i = 0; $i < 1; $i++){
+				
+				if(!in_array($switchType,array('开启','关闭'))){
+					break;
+				}
+				
+				
+				$ids = $this->input->post('del_id');
+				
+				
+				if(empty($ids)){
+					break;
+				}
+				
+				$updateData = array();
+				
+				foreach($ids as $id){
+					
+					$updateData[] = array(
+						'uid' => $id,
+						'status' => $switchType
+					);
+				}
+				
+				$this->Adminuser_Model->batchUpdate($updateData,'uid');
+				
+			}
+			
+		}
+		
+		
+		$list = $this->Adminuser_Model->getList($condition);
 		
 		
 		$roles = array();
@@ -82,7 +118,7 @@ class Authority extends Ydzj_Admin_Controller {
 		
 		$this->form_validation->set_rules('admin_password','密码','required|min_length[6]|max_length[12]|alpha_dash');
 		$this->form_validation->set_rules('admin_rpassword','确认密码','required|matches[admin_password]');
-		$this->form_validation->set_rules('group_id','权限组','required|is_natural_no_zero');
+		
 		
 	}
 	
@@ -96,10 +132,8 @@ class Authority extends Ydzj_Admin_Controller {
 		if($this->isPostRequest()){
 			$this->form_validation->set_rules('email','登陆名',"required|valid_email|is_unique[{$this->Adminuser_Model->_tableRealName}.email]");
 			$this->form_validation->set_rules('username','真实名称',"required|is_unique[{$this->Adminuser_Model->_tableRealName}.username]");
-			
-			
-			
 			$this->_getUserRules();
+			$this->form_validation->set_rules('group_id','权限组','required|is_natural');
 			
 			for($i = 0; $i < 1; $i++){
 				
@@ -136,31 +170,40 @@ class Authority extends Ydzj_Admin_Controller {
 	public function user_edit(){
 		
 		$feedback = '';
-		$id = $this->input->get_post('id');
+		$id = $this->input->get_post('uid');
 		$roleList = $this->Role_Model->getList();
 		
 		if($this->isPostRequest()){
-			$this->form_validation->set_rules('email','登陆名',"required|valid_email|is_unique_not_self[{$this->Adminuser_Model->_tableRealName}.email.id.{$id}]");
-			$this->form_validation->set_rules('username','真实名称',"required|is_unique_not_self[{$this->Adminuser_Model->_tableRealName}.username.id.{$id}]");
+			$this->form_validation->set_rules('email','登陆名',"required|valid_email|is_unique_not_self[{$this->Adminuser_Model->_tableRealName}.email.uid.{$id}]");
+			$this->form_validation->set_rules('username','真实名称',"required|is_unique_not_self[{$this->Adminuser_Model->_tableRealName}.username.uid.{$id}]");
 			
-			$this->_getUserRules();
+			if($this->input->post('admin_password')){
+				$this->_getUserRules();
+			}
+			
+			$this->form_validation->set_rules('group_id','权限组','required|is_natural');
+			
 			
 			for($i = 0; $i < 1; $i++){
 				
 				$info = array(
+					'uid' => $id,
 					'email' => $this->input->post('email'),
 					'username' => $this->input->post('username'),
-					'group_id' => $this->input->post('group_id'),
+					'group_id' => $this->input->post('group_id')
 				);
-				
-				$info['password'] = $this->_getEncodePassword($this->input->post('admin_rpassword'),$info['email']);
 				
 				if(!$this->form_validation->run()){
 					$feedback = $this->form_validation->error_string();
 					break;
 				}
 				
-				if($this->Adminuser_Model->_add($info) < 0){
+				if($this->input->post('admin_password')){
+					$info['password'] = $this->_getEncodePassword($this->input->post('admin_password'),$info['email']);
+				}
+				
+				
+				if($this->Adminuser_Model->update($info,array('uid' => $id)) < 0){
 					$feedback = getErrorTip('建立失败');
 					break;
 				}
@@ -200,6 +243,38 @@ class Authority extends Ydzj_Admin_Controller {
 		$keywords = $this->input->post('keywords');
 		if($keywords){
 			$condition['like']['name'] = $keywords;
+		}
+		
+		
+		//update status
+		if($this->isPostRequest()){
+			$switchType = $this->input->post('submit_type');
+			for($i = 0; $i < 1; $i++){
+				
+				if(!in_array($switchType,array('开启','关闭'))){
+					break;
+				}
+				
+				$ids = $this->input->post('del_id');
+				
+				if(empty($ids)){
+					break;
+				}
+				
+				$updateData = array();
+				
+				foreach($ids as $id){
+					
+					$updateData[] = array(
+						'id' => $id,
+						'status' => $switchType
+					);
+				}
+				
+				$this->Role_Model->batchUpdate($updateData,'id');
+				
+			}
+			
 		}
 		
 		
@@ -281,7 +356,6 @@ class Authority extends Ydzj_Admin_Controller {
 	
 	
 	private function _getEncodePassword($psw,$email){
-		
 		return $this->encrypt->encode($psw,config_item('encryption_key').md5($email));
 	}
 	

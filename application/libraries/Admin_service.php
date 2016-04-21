@@ -16,31 +16,35 @@ class Admin_Service extends Base_Service {
 		return self::$adminUserModel->update($data,array('uid' => $uid));
 	}
 	
-    public function do_adminlogin($param){
+	
+    public function do_adminlogin($email,$password){
+		$user = self::$adminUserModel->getFirstByKey($email,'email');
+		$message = '失败';
 		
-		$result = $this->formatArrayReturn();
-		$result['message'] = '登陆失败';
-		
-		$userInfo = self::$adminUserModel->getFirstByKey($param['email'],'email');
-		
-		if(!empty($userInfo)){
-			if($userInfo['password'] == $param['password']){
-				unset($userInfo['password']);
-				
-				if($userInfo['freeze'] == 'Y'){
-					$result['message'] = '您的账号已被冻结,请联系网站客服人员';
-				}else{
-					$result = $this->successRetun(array('basic' => $userInfo));
-				}
-				
-			}else{
-				$result['message'] = '密码错误';
+		for($i = 0; $i < 1; $i++){
+			if(empty($user)){
+				$message = '用户名不存在';
+				break;
 			}
-		}else{
-			$result['message'] = '用户不存在';
+			
+			if($user['uid'] != WEBSITE_FOUNDER && $user['status'] == '关闭'){
+				$message = '用户已被冻结';
+				break;
+			}
+			
+			//print_r($user);
+			//echo self::$CI->encrypt->encode($password,config_item('encryption_key').md5($user['email']));
+			
+			if($password != self::$CI->encrypt->decode($user['password'],config_item('encryption_key').md5($user['email']))){
+				$message = '密码不正确';
+				break;
+			}
+			
+			$message = '成功';
 		}
 		
-		return $result;
+		
+		return $this->formatArrayReturn(0,$message,array('basic' => $user));
 	}
 	
 }

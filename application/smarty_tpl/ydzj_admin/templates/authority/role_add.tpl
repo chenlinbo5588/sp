@@ -1,14 +1,10 @@
 {include file="common/main_header.tpl"}
-	<style type="text/css">
-		
-
-	</style>
   <div class="fixed-bar">
     <div class="item-title">
-      <h3>添加角色</h3>
+      <h3>{if $info['id']}维护{else}添加{/if}角色</h3>
       <ul class="tab-base">
       	<li><a href="{admin_site_url('authority/role')}" ><span>角色管理</span></a></li>
-      	<li><a  class="current"><span>{if $info['id']}角色维护{else}添加角色{/if}</span></a></li>
+      	<li><a  class="current"><span>{if $info['id']}维护{else}添加{/if}角色</span></a></li>
       </ul>
     </div>
   </div>
@@ -27,7 +23,7 @@
 	          <td class="required"><label class="validation" for="name">权限组:</label>{form_error('name')}</td>
 	        </tr>
 	        <tr class="noborder">
-	          <td><input type="text" id="name" maxlength="40" value="{$info['name']}" name="name" class="txt"><input type="submit" name="submit" value="保存" class="msbtn"/></td>
+	          <td><input class="w200" type="text" id="name" maxlength="40" value="{$info['name']}" name="name" class="txt">&nbsp;<input type="submit" name="submit" value="保存" class="msbtn"/></td>
 	        </tr>
 	        <tr class="noborder">
 	          <td class="required"><label class="validation">权限组状态:</label>{form_error('status')}</td>

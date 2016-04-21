@@ -34,10 +34,6 @@ class Ydzj_Controller extends MY_Controller {
 	
 	protected function _initLibrary(){
 		parent::_initLibrary();
-		$this->load->model('Member_Model');
-		$this->load->library('Base_Service');
-		
-		$this->base_service->initStaticVars();
 	}
 	
 	

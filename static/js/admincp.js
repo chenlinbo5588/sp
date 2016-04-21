@@ -87,7 +87,7 @@ $(function(){
     $("input.jumpBtn").bind("click",function(e){
     	var btn = $(e.target);
     	var pagerDiv = btn.closest('.pagination');
-    	var formid = pagerDiv.prop('data-formid');
+    	var formid = pagerDiv.attr('data-formid');
     	
     	$(formid).find("input[name=page]").val(btn.closest("strong").find("input[name=jumpPage]").val());
     	$(formid).submit();
