@@ -10,7 +10,7 @@ class Member extends Ydzj_Admin_Controller {
 	public function index(){
 		$this->load->library(array('Member_Service','Common_District_Service'));
 		
-		$currentPage = $this->input->get('page') ? $this->input->get('page') : 1;
+		$currentPage = $this->input->get_post('page') ? $this->input->get_post('page') : 1;
 		$condition = array(
 			'order' => 'uid DESC',
 			'pager' => array(
@@ -27,7 +27,7 @@ class Member extends Ydzj_Admin_Controller {
 		$tempK = '';
 		$searchDk = '';
 		foreach($dkeys as $dk){
-			$tempK = $this->input->get($dk);
+			$tempK = $this->input->get_post($dk);
 			if($tempK){
 				$searchDk = $dk;
 				$ds[$dk] = $tempK ;
@@ -57,12 +57,12 @@ class Member extends Ydzj_Admin_Controller {
 		$search_map['member_state'] = array('avatar_status@0' => '待验证头像','district_bind@0' => '未设置地区','freeze@1' => '已禁止登录');
 		
 		
-		$search['search_field_name'] = $this->input->get('search_field_name');
-		$search['search_field_value'] = $this->input->get('search_field_value');
-		//$search['activity_sort'] = $this->input->get('activity_sort');
-		$search['register_channel'] = $this->input->get('register_channel');
-		$search['register_sort'] = $this->input->get('register_sort');
-		$search['member_state'] = $this->input->get('member_state');
+		$search['search_field_name'] = $this->input->get_post('search_field_name');
+		$search['search_field_value'] = $this->input->get_post('search_field_value');
+		//$search['activity_sort'] = $this->input->get_post('activity_sort');
+		$search['register_channel'] = $this->input->get_post('register_channel');
+		$search['register_sort'] = $this->input->get_post('register_sort');
+		$search['member_state'] = $this->input->get_post('member_state');
 		
 		if(!empty($search['search_field_value']) && in_array($search['search_field_name'], array_keys($search_map['search_field']))){
 			$condition['like'][$search['search_field_name']] = $search['search_field_value'];

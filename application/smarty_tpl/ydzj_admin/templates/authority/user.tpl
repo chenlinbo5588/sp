@@ -9,12 +9,27 @@
      </div>
   </div>
   <div class="fixed-empty"></div>
-  <form method="post" id='form_admin'>
-    <input type="hidden" name="form_submit" value="ok" />
+  {form_open(admin_site_url('authority/user'),'id="form_admin"')}
+  	<input type="hidden" name="page" value="{$currentPage}"/>
+  	<input type="hidden" name="submit_type" id="submit_type" value="" />
+    <table class="tb-type1 noborder search">
+      <tbody>
+        <tr>
+          <td>用户名称</td>
+          <td><input type="text" value="{$smarty.post['username']}" name="username" class="txt"></td>
+          <td>用户邮箱</td>
+          <td><input type="text" value="{$smarty.post['email']}" name="email" class="txt"></td>
+          <td>
+            <input type="submit" class="msbtn" name="tijiao" value="查询"/>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
     <table class="table tb-type2">
       <thead>
         <tr class="space">
-          <th colspan="15" class="nobg">列表</th>
+          <th colspan="6" class="nobg">列表</th>
         </tr>
         <tr class="thead">
           <th><input type="checkbox" class="checkall" id="checkallBottom" name="chkVal"></th>
@@ -28,22 +43,28 @@
       <tbody>
       	{foreach from=$list['data'] item=item}
       	<tr class="hover">
-          <td class="w24"><input name="del_id[]" type="checkbox" value="{$item['uid']}" {if {$item['uid']} == 1}disabled="disabled"{/if}></td>
+          <td class="w24"><input name="del_id[]" group="chkVal" type="checkbox" value="{$item['uid']}"></td>
           <td>{$item['email']}</td>
           <td class="align-center">{$item['username']}</td>
           <td class="align-center">{$item['last_login']|date_format:"%Y-%m-%d %H:%M:%S"}</td>
-          <td class="align-center">{$item['group_id']}</td>
+          <td class="align-center">{$roleList[$item['group_id']]}</td>
+          <td class="align-center"><a href="{admin_site_url('authority/user_edit')}?id={$item['uid']}">编辑</a></td>
         </tr>
         {/foreach}
       </tbody>
       <tfoot>
       	<tr class="tfoot">
-          <td><input type="checkbox" class="checkall" id="checkallBottom" name="chkVal"></td>
-          <td colspan="5"><label for="checkallBottom">全选</label>&nbsp;&nbsp;<a href="JavaScript:void(0);" class="btn" onclick="if(confirm('您确定要删除吗?')){ $('#form_admin').submit(); } "><span>删除</span></a>
+          <td colspan="6">
+          		<a href="javascript:void(0);" class="btn" onclick="$('#submit_type').val('switchON');go();"><span>开启</span></a><a href="javascript:void(0);" class="btn" onclick="$('#submit_type').val('switchOFF');go();"><span>关闭</span></a>
             	{include file="common/pagination.tpl"}
            </td>
         </tr>
        </tfoot>
     </table>
   </form>
+  <script type="text/javascript">
+	function go(){
+		$("#form_admin").submit();
+	}
+  </script>
 {include file="common/main_footer.tpl"}

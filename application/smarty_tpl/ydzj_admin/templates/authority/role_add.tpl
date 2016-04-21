@@ -8,21 +8,26 @@
       <h3>添加角色</h3>
       <ul class="tab-base">
       	<li><a href="{admin_site_url('authority/role')}" ><span>角色管理</span></a></li>
-      	<li><a  class="current"><span>添加角色</span></a></li>
+      	<li><a  class="current"><span>{if $info['id']}角色维护{else}添加角色{/if}</span></a></li>
       </ul>
     </div>
   </div>
   <div class="fixed-empty"></div>
   <div class="feedback">{$feedback}</div>
+  {if $info['id']}
+  {form_open(admin_site_url('authority/role_edit'),'id="add_form"')}
+  {else}
   {form_open(admin_site_url('authority/role_add'),'id="add_form"')}
+  {/if}
+  <input type="hidden" name="id" value="{$info['id']}"/>
   <form id="add_form" method="post">
   	<table class="table tb-type2">
 		<tbody>
 	  		<tr class="noborder">
-	          <td class="required"><label class="validation" for="gname">权限组:</label>{form_error('gname')}</td>
+	          <td class="required"><label class="validation" for="name">权限组:</label>{form_error('name')}</td>
 	        </tr>
 	        <tr class="noborder">
-	          <td><input type="text" id="gname" maxlength="40" value="{set_value('gname')}" name="gname" class="txt"><input type="submit" name="submit" value="保存" class="msbtn"/></td>
+	          <td><input type="text" id="name" maxlength="40" value="{$info['name']}" name="name" class="txt"><input type="submit" name="submit" value="保存" class="msbtn"/></td>
 	        </tr>
 	        <tr class="noborder">
 	          <td class="required"><label class="validation">权限组状态:</label>{form_error('status')}</td>
@@ -30,8 +35,8 @@
 	        <tr class="noborder">
 	          <td>
 	          	<select name="status">
-	          		<option value="开启" {set_select('status','开启')}>开启</option>
-	          		<option value="关闭" {set_select('status','关闭')}>关闭</option>
+	          		<option value="开启" {if $info['status'] == '开启'}selected{/if}>开启</option>
+	          		<option value="关闭" {if $info['status'] == '关闭'}selected{/if}>关闭</option>
 	          	</select>
 	          </td>
 	        </tr>
@@ -47,16 +52,16 @@
       <tbody>
         {foreach from=$fnTree item=topItem}
         <tr class="modelrow">
-          <td class=""><label class="top_fn"><input type="checkbox" name="permission[]" value="{$topItem['url']}"><b>{$topItem['name']}</b></label></td>
+          <td class=""><label class="top_fn"><input type="checkbox" name="permission[]" {if isset($info['permission'][$topItem['url']])}checked{/if} value="{$topItem['url']}"><b>{$topItem['name']}</b></label></td>
           <td class="fnrow">
           	<table class="table">
               <tbody>
               	  {foreach from=$topItem['children'] item=secondItem}
                   <tr>
                   	<td>
-                    	<label class="side_fn"><input type="checkbox" name="permission[]" value="{$secondItem['url']}"><b>{$secondItem['name']}</b>&nbsp;&nbsp;</label>
+                    	<label class="side_fn"><input type="checkbox" name="permission[]" {if isset($info['permission'][$secondItem['url']])}checked{/if} value="{$secondItem['url']}"><b>{$secondItem['name']}</b>&nbsp;&nbsp;</label>
                     	{foreach from=$secondItem['children'] item=subitem}
-                    	<label class="detail_fn"><input type="checkbox" name="permission[]" value="{$subitem['url']}">{$subitem['name']}&nbsp;</label>
+                    	<label class="detail_fn"><input type="checkbox" name="permission[]" {if isset($info['permission'][$subitem['url']])}checked{/if} value="{$subitem['url']}">{$subitem['name']}&nbsp;</label>
                     	{/foreach}
                     </td>
                 </tr>
@@ -106,6 +111,7 @@ $(document).ready(function(){
 	$('#limitAll').click(function(){
 		$(this).parents("table").find("tbody input").prop("checked",$(this).prop("checked"));
 	});
+	
 	
 });
 </script>

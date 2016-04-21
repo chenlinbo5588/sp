@@ -107,7 +107,7 @@ class Message extends Ydzj_Admin_Controller {
 	}
 	
 	private function _getEmailTpl(){
-		$currentPage = $this->input->get('page') ? $this->input->get('page') : 1;
+		$currentPage = $this->input->get_post('page') ? $this->input->get_post('page') : 1;
 		$condition = array(
 			
 			'pager' => array(
@@ -119,7 +119,7 @@ class Message extends Ydzj_Admin_Controller {
 		);
 		
 		
-		$keywords = $this->input->post('keywords');
+		$keywords = $this->input->get_post('keywords');
 		if($keywords){
 			$condition['like']['name'] = $keywords;
 		}

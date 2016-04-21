@@ -54,10 +54,8 @@
       </tbody>
       <tfoot>
         <tr>
-          <td><input type="checkbox" class="checkall" id="checkallBottom"></td>
-          <td colspan="4">
-          	<label for="checkallBottom">全选</label>
-            &nbsp;&nbsp;<a href="javascript:void(0);" class="btn" onclick="$('#submit_type').val('mail_switchON');go();"><span>开启</span></a><a href="javascript:void(0);" class="btn" onclick="$('#submit_type').val('mail_switchOFF');go();"><span>关闭</span></a>
+          <td colspan="5">
+          	<label for="checkallBottom">全选</label>&nbsp;&nbsp;<a href="javascript:void(0);" class="btn" onclick="$('#submit_type').val('mail_switchON');go();"><span>开启</span></a><a href="javascript:void(0);" class="btn" onclick="$('#submit_type').val('mail_switchOFF');go();"><span>关闭</span></a>
             {include file="common/pagination.tpl"}
           </td>
         </tr>

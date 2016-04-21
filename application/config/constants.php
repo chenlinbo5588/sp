@@ -91,4 +91,5 @@ define('SMARTY_TPL_PATH',APPPATH.'smarty_tpl/');
 define('EntityPATH',APPPATH.'entity/');
 
 define('FROM_BACKGROUND',1);
+define('WEBSITE_FOUNDER',1);
 

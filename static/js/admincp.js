@@ -27,13 +27,9 @@ $(function(){
 	
 	// 全选 start
 	$('.checkall').click(function(){
-		$('.checkall').prop('checked',$(this).prop('checked') == 'checked');
-		$('.checkitem').each(function(){
-			$(this).prop('checked',$('.checkall').prop('checked') == 'checked');
-		});
+		var group = $(this).prop("name");
+		$("input[group="+group+"]").prop("checked" , $(this).prop("checked") );
 	});
-
-	
 
 
 	// 可编辑列（input）变色

@@ -3,14 +3,14 @@
     <div class="item-title">
       <h3>角色设置</h3>
       <ul class="tab-base">
-      	<li><a class="current"><span>角色</span></a></li>
+      	<li><a class="current"><span>角色管理</span></a></li>
       	<li><a href="{admin_site_url('authority/role_add')}"><span>添加角色</span></a></li>
       </ul>
      </div>
   </div>
   <div class="fixed-empty"></div>
   
-  {form_open(admin_site_url('authority/role'),'name="formSearch"')}
+  {form_open(admin_site_url('authority/role'),'name="formSearch" id="formSearch"')}
     <input type="hidden" name="page" value="{$currentPage}"/>
     <table class="tb-type1 noborder search">
       <tbody>
