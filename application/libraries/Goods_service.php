@@ -15,8 +15,8 @@ class Goods_Service extends Base_Service {
 	}
 	
 	
-	public function getGoodsClassTreeHTML(){
-		$list = $this->_goodsClassModel->getList();
+	public function getGoodsClassTreeHTML($condition = array()){
+		$list = $this->_goodsClassModel->getList($condition);
 		return self::$CI->phptree->makeTreeForHtml($list,array(
 			'primary_key' => 'gc_id',
 			'parent_key' => 'gc_parent_id',
@@ -29,5 +29,12 @@ class Goods_Service extends Base_Service {
 		return $this->_goodsClassModel;
 	}
 	
-	
+	public function getGoodsClassByParentId($id = 0){
+		$list = $this->_goodsClassModel->getList(array(
+			'where' => array('gc_parent_id' => $id),
+			'order' => 'gc_sort DESC'
+		));
+		
+		return $this->toEasyUseArray($list,'gc_id');
+	}
 }

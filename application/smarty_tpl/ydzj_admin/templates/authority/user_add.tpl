@@ -29,7 +29,7 @@
           <td colspan="2" class="required"><label class="validation" for="username">用户真实名称:</label></td>
         </tr>
         <tr class="noborder">
-          <td class="vatop rowform"><input type="text" id="username" value="{$info['username']}" name="username" class="txt"></td>
+          <td class="vatop rowform"><input type="text" id="username" value="{$info['username']|escape}" name="username" class="txt"></td>
           <td class="vatop tips">请输入用户真实名称 {form_error('username')}</td>
         </tr>
         <tr>

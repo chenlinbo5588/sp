@@ -23,7 +23,7 @@
 	          <td class="required"><label class="validation" for="name">权限组:</label>{form_error('name')}</td>
 	        </tr>
 	        <tr class="noborder">
-	          <td><input class="w200" type="text" id="name" maxlength="40" value="{$info['name']}" name="name" class="txt">&nbsp;<input type="submit" name="submit" value="保存" class="msbtn"/></td>
+	          <td><input class="w200" type="text" id="name" maxlength="40" value="{$info['name']|escape}" name="name" class="txt">&nbsp;<input type="submit" name="submit" value="保存" class="msbtn"/></td>
 	        </tr>
 	        <tr class="noborder">
 	          <td class="required"><label class="validation">权限组状态:</label>{form_error('status')}</td>

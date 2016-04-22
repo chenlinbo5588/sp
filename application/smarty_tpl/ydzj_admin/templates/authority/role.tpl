@@ -41,7 +41,7 @@
       	{foreach from=$list['data'] item=item}
       	<tr class="hover">
       	  <td class="w24"><input name="del_id[]" group="chkVal" type="checkbox" value="{$item['id']}"></td>
-          <td>{$item['name']}</td>
+          <td>{$item['name']|escape}</td>
           <td>{$item['status']}</td>
           <td>{$item['gmt_create']|date_format:"%Y-%m-%d %H:%M:%S"}</td>
           <td class="align-center"><a href="{admin_site_url('authority/role_edit')}?id={$item['id']}">编辑</a></td>

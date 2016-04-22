@@ -165,7 +165,7 @@ class Member extends Ydzj_Controller {
 					),
 					$result['data']['basic']['uid']);
 				
-				redirect(admin_site_url('index'));
+				js_redirect(admin_site_url('index'));
 				
 			}
 		}

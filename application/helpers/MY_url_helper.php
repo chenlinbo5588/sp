@@ -58,3 +58,33 @@ if ( ! function_exists('admin_site_url'))
 		return get_instance()->config->site_url('admin/'.$uri, $protocol);
 	}
 }
+
+
+
+if ( ! function_exists('js_redirect'))
+{
+	/**
+	 * Site URL
+	 *
+	 * Create a local URL based on your basepath. Segments can be passed via the
+	 * first parameter either as a string or an array.
+	 *
+	 * @param	string	$uri
+	 * @param	string	$protocol
+	 * @return	string
+	 */
+	function js_redirect($uri = '')
+	{
+		header("HTTP/1.1 200 OK");
+		
+		if (!preg_match('#^(\w+:)?//#i', $uri))
+		{
+			$uri = site_url($uri);
+		}
+		
+		echo '<script type="text/javascript" >window.top.location.href = "'. $uri .'";</script>';
+	}
+}
+
+
+

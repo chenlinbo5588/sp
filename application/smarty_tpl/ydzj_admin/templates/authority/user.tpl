@@ -46,7 +46,7 @@
       	<tr class="hover">
           <td class="w24"><input name="del_id[]" group="chkVal" type="checkbox" value="{$item['uid']}"></td>
           <td>{$item['email']}</td>
-          <td class="align-center">{$item['username']}</td>
+          <td class="align-center">{$item['username']|escape}</td>
           <td class="align-center">{$item['status']}</td>
           <td class="align-center">{$item['last_login']|date_format:"%Y-%m-%d %H:%M:%S"}</td>
           <td class="align-center">{if $item['group_id'] == 0}无权限组{else}{$roleList[$item['group_id']]}{/if}</td>

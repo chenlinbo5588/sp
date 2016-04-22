@@ -266,12 +266,12 @@
         </tr>
         <tr class="noborder">
           <td class="w96">商品分类</td><td>
-	          <select name="category" id="category">
+          	<select name="category" id="category">
 	          <option value="">请选择...</option>
 	          {foreach from=$goodsClassHTML item=item}
 	          <option value="{$item['gc_id']}">{str_repeat('......',$item['level'])}{$item['level']+1} {$item['gc_name']}</option>
 	          {/foreach}
-	          </select>
+	        </select>
           </td>
         </tr>        
         <tr class="noborder">

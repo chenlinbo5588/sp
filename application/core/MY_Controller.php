@@ -178,6 +178,10 @@ class MY_Controller extends CI_Controller {
     		
     	}
     	
+    	if($this->input->is_ajax_request()){
+    		$viewname = $viewname.'_ajax';
+    	}
+    	
     	$this->_smarty->assign($this->_seo);
     	$this->output->set_output($this->_smarty->fetch($this->_smarty->getTemplateDir(0).$viewname.'.tpl'));
     }
