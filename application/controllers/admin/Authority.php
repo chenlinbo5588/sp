@@ -150,7 +150,7 @@ class Authority extends Ydzj_Admin_Controller {
 				}
 				
 				if($this->Adminuser_Model->_add($info) < 0){
-					$feedback = getErrorTip('建立失败');
+					$feedback = getErrorTip('保存失败');
 					break;
 				}
 				
@@ -204,7 +204,7 @@ class Authority extends Ydzj_Admin_Controller {
 				
 				
 				if($this->Adminuser_Model->update($info,array('uid' => $id)) < 0){
-					$feedback = getErrorTip('建立失败');
+					$feedback = getErrorTip('保存失败');
 					break;
 				}
 				
@@ -330,7 +330,7 @@ class Authority extends Ydzj_Admin_Controller {
 				$info['permission'] = $this->_getEncodePermision($this->input->post('permission'),$this->input->post('name'));
 				
 				if($this->Role_Model->_add($info) < 0){
-					$feedback = getErrorTip('建立失败');
+					$feedback = getErrorTip('保存失败');
 					break;
 				}
 				
@@ -416,7 +416,7 @@ class Authority extends Ydzj_Admin_Controller {
 				$info['permission'] = $this->_getEncodePermision($this->input->post('permission'),$info['name']);
 				
 				if($this->Role_Model->update($info, array('id' => $id)) < 0){
-					$feedback = getErrorTip('建立失败');
+					$feedback = getErrorTip('保存失败');
 					break;
 				}
 				

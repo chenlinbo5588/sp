@@ -10,7 +10,7 @@
     </div>
   </div>
   <div class="fixed-empty"></div>
-  <form method="get" name="formSearch" id="formSearch" action="{admin_site_url('member')}">
+  <form class="formSearch" method="get" name="formSearch" id="formSearch" action="{admin_site_url('member')}">
     <input type="hidden" name="page" value="{$currentPage}"/>
     <table class="tb-type1 noborder search">
       <tbody>
@@ -169,11 +169,4 @@
         </tr>
       </tfoot>
     </table>
-<script>
-$(function(){
-    $("input[type=submit]").click(function(){
-        $("#formSearch input[name=page]").val(1);
-    });
-});
-</script>
 {include file="common/main_footer.tpl"}

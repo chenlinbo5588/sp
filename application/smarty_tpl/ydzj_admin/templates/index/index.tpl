@@ -227,7 +227,7 @@ $(function(){
 	    <dl>    
 	        <dt>商品</dt>
 	        <dd><a href="javascript:void(0)" onclick="openItem('category,goods,goods')">分类管理</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('brand,goods,goods')">品牌管理</a></dd>
+	        <dd><a href="javascript:void(0)" onclick="openItem('index,brand,goods')">品牌管理</a></dd>
 	        <dd><a href="javascript:void(0)" onclick="openItem('index,goods,goods')">商品管理</a></dd>
 	        <dd><a href="javascript:void(0)" onclick="openItem('type,goods,goods')">类型管理</a></dd>
 	        <dd><a href="javascript:void(0)" onclick="openItem('spec,goods,goods')">规格管理</a></dd>
@@ -438,8 +438,8 @@ $(function(){
               <dl>
                 <dd>
                   <ol>
-                    <li><a href="javascript:void(0);" id="category_goods" onclick="openItem('category,goods,goods');">分类管理</a></li>
-                    <li><a href="javascript:void(0);" id="brand_goods" onclick="openItem('brand,goods,goods');">品牌管理</a></li>
+                    <li><a href="javascript:void(0);" id="category_goods_class" onclick="openItem('category,goods_class,goods');">分类管理</a></li>
+                    <li><a href="javascript:void(0);" id="index_brand" onclick="openItem('index,brand,goods');">品牌管理</a></li>
                     <li><a href="javascript:void(0);" id="index_goods" onclick="openItem('index,goods,goods');">商品管理</a></li>
                     <li><a href="javascript:void(0);" id="type_goods" onclick="openItem('type,goods,goods');">类型管理</a></li>
                     <li><a href="javascript:void(0);" id="spec_goods" onclick="openItem('spec,goods,goods');">规格管理</a></li>

@@ -1,7 +1,5 @@
-{foreach from=$list item=item}
-<tr class="hover edit row{$parentId} row{$item['gc_parent_id']}">
+{foreach from=$list item=item}<tr class="hover edit row{$parentId} row{$item['gc_parent_id']}" id="row{$item['gc_id']}">
 	<td class="w36">
-		<input type="checkbox" name="check_gc_id[]" value="{$item['gc_id']}" class="checkitem">
 		{if $deep != 2}
 		<img fieldid="{$item['gc_id']}" status="open" nc_type="flex" src="{resource_url('img/tv-expandable.gif')}"/>
 		{/if}
@@ -17,11 +15,10 @@
 		<img fieldid="{$item['gc_id']}" status="open" nc_type="flex" src="{resource_url('img/tv-item1.gif')}">
 		{/if}
 		<span title="可编辑下级分类名称" class="editable tooltip">{$item['gc_name']|escape}</span>
-		{if $deep != 2}<a class="btn-add-nofloat marginleft" href="{admin_site_url('goods/category_add')}?gc_parent_id={$item['gc_id']}"><span>新增下级</span></a>{/if}
+		{if $deep != 2}<a class="btn-add-nofloat marginleft" href="{admin_site_url('goods_class/add')}?gc_parent_id={$item['gc_id']}"><span>新增下级</span></a>{/if}
 	</td>
 	<td>{$item['type_name']|escape}</td>
 	<td class="w84">
-		<a href="{admin_site_url('goods/category')}?gc_id={$item['gc_id']}">编辑</a> | <a href="javascript:void(0);" data-id="{$item['gc_id']}">删除</a>
+		<a href="{admin_site_url('goods_class/edit')}?gc_id={$item['gc_id']}">编辑</a> | <a class="delete" href="javascript:void(0);" data-id="{$item['gc_id']}">删除</a>
 	</td>
-</tr>
-{/foreach}
+</tr>{/foreach}

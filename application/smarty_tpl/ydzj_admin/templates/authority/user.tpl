@@ -9,7 +9,7 @@
      </div>
   </div>
   <div class="fixed-empty"></div>
-  {form_open(admin_site_url('authority/user'),'id="formSearch"')}
+  {form_open(admin_site_url('authority/user'),'id="formSearch" class="formSearch"')}
   	<input type="hidden" name="page" value="{$currentPage}"/>
   	<input type="hidden" name="submit_type" id="submit_type" value="" />
     <table class="tb-type1 noborder search">

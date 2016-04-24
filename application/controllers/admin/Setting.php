@@ -246,7 +246,7 @@ class Setting extends Ydzj_Admin_Controller {
 	public function express(){
 		$this->load->model('Express_Model');
 		
-		if($this->isPostRequest()){
+		if($this->input->is_ajax_request() && $this->isPostRequest()){
 			
 			$this->form_validation->set_rules('fieldname','状态字段','required|in_list[isfreq,state]');
 			$this->form_validation->set_rules('enabled','状态','required|in_list[0,1]');

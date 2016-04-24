@@ -115,3 +115,84 @@ function search_page(page,formid){
     $("input[name=page]",form).val(page);
     form.submit();
 }
+
+/**
+ * 删除功能逻辑
+ * @param postdata
+ * @param url
+ * @returns
+ */
+function doDelete(postdata,url){
+	$.ajax({
+		type:"POST",
+		url:url,
+		data: postdata,
+		success:function(json){
+			alert(json.message);
+			refreshFormHash(json.data);
+			for(var i = 0; i < postdata['id'].length; i++){
+				$("#row" + postdata['id'][i]).remove();
+			}
+			
+		},
+		error:function(event,request, settings){
+			alert("删除出错");
+		}
+	});
+}
+
+
+function bindDeleteEvent(){
+	$("a.delete").bind("click",function(){
+  		var url = $(this).attr("data-url");
+  		doDelete({ "formhash" : formhash , "id": [$(this).attr("data-id")] } ,url);
+  	});
+  	
+  	$("#deleteBtn").bind("click",function(){
+  		var ids = [];
+  		var url = $(this).attr("data-url");
+  		
+  		var checkboxName = $(this).attr('data-checkbox');
+  		
+  		$("input[name='" + checkboxName + "']:checked").each(function(){
+  			ids.push($(this).val());
+  		});
+  		
+  		if(ids.length == 0){
+  			alert("请先勾选");
+  		}else{
+  			doDelete({ "formhash" : formhash ,"id": ids }, url);
+  		}
+  		
+  	});
+}
+
+
+function bindOnOffEvent(){
+	$(".yes-onoff a").bind("click",function(){
+		var fieldname = $(this).attr('data-fieldname');
+		var enabled = 0;
+		var expressId = $(this).attr('data-id');
+		var that = $(this);
+		var url = $(this).attr('data-url');
+		
+		if($(this).hasClass("enabled")){
+			enabled = 0;
+		}else{
+			enabled = 1;
+		}
+		
+		$.post(url ,{ formhash : formhash , fieldname : fieldname, enabled : enabled , id : expressId } , function(json){
+			if(json.message = '保存成功'){
+				if(that.hasClass("enabled")){
+					that.removeClass("enabled").addClass("disabled");
+				}else{
+					that.removeClass("disabled").addClass("enabled");
+				}
+			}
+			
+			refreshFormHash(json.data);
+		} , 'json');
+	});
+	
+}

@@ -300,6 +300,12 @@ class MY_Model extends CI_Model {
     }
     
     
+    public function execSQL($sql){
+    	$this->db->query($sql);
+    	
+    	return $this->db->affected_rows();
+    }
+    
     /**
      * 直接查询
      */

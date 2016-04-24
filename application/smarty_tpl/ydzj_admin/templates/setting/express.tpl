@@ -52,16 +52,16 @@
 		  </thead>
 		  <tbody>
 		  	{foreach from=$list['data'] item=item}
-		  	<tr class="hover" id="{$item['id']}">
+		  	<tr class="hover">
 			     <td></td>
 			     <td>{$item['name']}</td>
 			     <td>{$item['letter']}</td>
 			     <td>{$item['url']}</td>
 			     <td class="align-center yes-onoff">
-			      	<a href="JavaScript:void(0);" class="{if $item['isfreq'] == 1}enabled{else}disabled{/if}" data-fieldname="isfreq">&nbsp;</a>
+			      	<a href="JavaScript:void(0);" data-url="{admin_site_url('setting/express')}" data-id="{$item['id']}" class="{if $item['isfreq'] == 1}enabled{else}disabled{/if}" data-fieldname="isfreq">&nbsp;</a>
 			     </td>     
 			     <td class="align-center yes-onoff">
-			      	<a href="JavaScript:void(0);" class="{if $item['state'] == 1}enabled{else}disabled{/if}" data-fieldname="state">&nbsp;</a>
+			      	<a href="JavaScript:void(0);" data-url="{admin_site_url('setting/express')}" data-id="{$item['id']}" class="{if $item['state'] == 1}enabled{else}disabled{/if}" data-fieldname="state">&nbsp;</a>
 			     </td>
 			</tr>
 			{/foreach}
@@ -76,31 +76,7 @@
    </div>
 <script>
 	$(function(){
-		$(".yes-onoff a").bind("click",function(){
-			var fieldname = $(this).attr('data-fieldname');
-			var enabled = 0;
-			var expressId = $(this).parents("tr").attr("id");
-			var that = $(this);
-			
-			if($(this).hasClass("enabled")){
-				enabled = 0;
-			}else{
-				enabled = 1;
-			}
-			
-			$.post("{admin_site_url('setting/express')}",{ formhash : formhash , fieldname : fieldname, enabled : enabled , id : expressId } , function(json){
-				if(json.message = '保存成功'){
-					if(that.hasClass("enabled")){
-						that.removeClass("enabled").addClass("disabled");
-					}else{
-						that.removeClass("disabled").addClass("enabled");
-					}
-				}
-				
-				refreshFormHash(json.data);
-			} , 'json');
-		});
-		
+		bindOnOffEvent();
 	});
 
 </script>
