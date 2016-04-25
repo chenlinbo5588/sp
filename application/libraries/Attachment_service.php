@@ -209,6 +209,11 @@ class Attachment_Service extends Base_Service {
 				$fileData['uid'] = $this->_uid;
 			}
 			
+			
+			$fileData['image_width'] = $fileData['image_width'] ? $fileData['image_width'] : 0;
+			$fileData['image_height'] = $fileData['image_height'] ? $fileData['image_height'] : 0;
+			
+			
 			$fileData['from_bg'] = $from;
 			$file_id = self::$CI->Attachment_Model->_add($fileData);
 			$fileData['id'] = $file_id;
@@ -240,6 +245,7 @@ class Attachment_Service extends Base_Service {
 	 * @param datatype $fromBg description
 	 */
 	public function pic_upload($uid,$uploadName , $fromBg = 0){
+		
 		$this->setUid($uid);
 		
 		$fileData = $this->addImageAttachment($uploadName,array(),$fromBg);

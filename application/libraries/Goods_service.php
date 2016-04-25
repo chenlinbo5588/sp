@@ -4,16 +4,20 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Goods_Service extends Base_Service {
 	
+	private $_goodsModel = null;
 	private $_goodsClassModel = null;
 	private $_goodsClassTagModel = null;
+	private $_brandModel = null;
 
 	public function __construct(){
 		parent::__construct();
 		
-		self::$CI->load->model(array('Goods_Class_Model','Goods_Class_Tag_Model'));
+		self::$CI->load->model(array('Goods_Model', 'Goods_Class_Model','Goods_Class_Tag_Model','Brand_Model'));
+		
+		$this->_goodsModel = self::$CI->Goods_Model;
 		$this->_goodsClassModel = self::$CI->Goods_Class_Model;
 		$this->_goodsClassTagModel = self::$CI->Goods_Class_Tag_Model;
-		
+		$this->_brandModel = self::$CI->Brand_Model;
 	}
 	
 	
@@ -33,7 +37,51 @@ class Goods_Service extends Base_Service {
 	}
 	
 	
-	public function getGoodsClassDeepById($id){
+	/**
+	 * 获得所所有的子孙
+	 */
+	public function getAllChildGoodsClassByPid($id,$field = 'gc_id',$maxDeep = 3){
+		
+		$list = $this->_goodsClassModel->getList(array(
+			'select' => $field,
+			'where' => array('gc_parent_id' => $id)
+		));
+		
+		$deep = 0;
+		
+		$allIds = array();
+		
+		while($list){
+			$ids = array();
+			foreach($list as $item){
+				$ids[] = $item['gc_id'];
+				$allIds[] = $item['gc_id'];
+			}
+			
+			if($ids){
+				$list = $this->_goodsClassModel->getList(array(
+					'select' => $field,
+					'where_in' => array(
+						array('key' => 'gc_parent_id', 'value' => $ids)
+					)
+				));
+			}else{
+				$canQuit = true;
+			}
+			
+			$deep++;
+			
+			if($deep >= $maxDeep){
+				break;
+			}
+		}
+		
+		return $allIds;
+	}
+	
+	
+	
+	public function getGoodsClassDeepById($id,$maxDeep = 5){
 		$info = $this->_goodsClassModel->getFirstByKey($id,'gc_id');
 		
 		//默认一级
@@ -43,8 +91,8 @@ class Goods_Service extends Base_Service {
 			$deep++;
 			$info = $this->_goodsClassModel->getFirstByKey($info['gc_parent_id'],'gc_id');
 			
-			//防止无限循环
-			if($deep >= 5){
+			//防止无限循环,最多5级
+			if($deep >= $maxDeep){
 				break;
 			}
 		}

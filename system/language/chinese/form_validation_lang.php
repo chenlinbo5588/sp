@@ -74,3 +74,4 @@ $lang['form_validation_valid_mobile']					= '{field}必须是一个有效的手�
 $lang['form_validation_valid_telephone']				= '{field}必须是一个有效的固定电话号码.';
 $lang['form_validation_is_unique_by_status'] 			= '{field}已被占用 .';
 $lang['form_validation_is_unique_not_self'] 			= '{field}已被占用.';
+$lang['form_validation_in_db_list']		= '{field}无效';

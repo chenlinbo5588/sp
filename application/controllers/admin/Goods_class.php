@@ -84,12 +84,13 @@ class Goods_Class extends Ydzj_Admin_Controller {
 					break;
 				}
 				
-				if($this->Goods_Class_Model->_add($info) < 0){
+				if(($newid = $this->Goods_Class_Model->_add($info)) < 0){
 					$feedback = getErrorTip('保存失败');
 					break;
 				}
 				
 				$feedback = getSuccessTip('保存成功');
+				$info = $this->Goods_Class_Model->getFirstByKey($newid,'gc_id');
 			}
 		}
 		

@@ -9,6 +9,14 @@ class MY_Form_validation extends CI_Form_validation {
 		return $query->num_rows() === 0;
     }
     
+    
+    public function in_db_list($str,$fields){
+        list($table, $field)=explode('.', $fields);
+		$query = $this->CI->db->get_where($table, array($field => $str));
+		
+		return $query->num_rows() === 1;
+    }
+    
     /**
      * sp_member.nickname.uid.182
      */

@@ -24,9 +24,12 @@
           <td colspan="2" class="required"><label for="site_logo">网站Logo:</label></td>
         </tr>
         <tr class="noborder">
-          <td class="vatop rowform"><span class="type-file-show"><img class="show_image" src="{resource_url('img/preview.png')}">
-            <div class="type-file-preview">{if !empty($currentSetting['site_logo'])}<img src="{base_url($currentSetting['site_logo']['value'])}">{/if}</div>
-            </span><span class="type-file-box"><input type='text' name='textfield' id='textfield1' class='type-file-text' /><input type='button' name='button' id='button1' value='' class='type-file-button' />
+          <td class="vatop rowform">
+          	<span class="type-file-show">
+          		<img class="show_image" src="{resource_url('img/preview.png')}">
+          		<div class="type-file-preview">{if !empty($currentSetting['site_logo'])}<img src="{base_url($currentSetting['site_logo']['value'])}">{/if}</div>
+            </span>
+            <span class="type-file-box"><input type='text' name='textfield' id='textfield1' class='type-file-text' /><input type='button' name='button' id='button1' value='' class='type-file-button' />
             <input name="site_logo" type="file" class="type-file-file" id="site_logo" size="30" hidefocus="true" nc_type="change_site_logo">
             </span></td>
           <td class="vatop tips"><span class="vatop rowform">180px * 50px</span></td>

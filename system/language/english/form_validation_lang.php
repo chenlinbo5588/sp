@@ -73,3 +73,4 @@ $lang['form_validation_valid_mobile']					= 'The {field} field must be a valid C
 $lang['form_validation_valid_telephone']				= 'The {field} field must be a valid Chinese Telephone No.';
 $lang['form_validation_is_unique_by_status'] 			= 'The {field} field must contain a unique value.';
 $lang['form_validation_is_unique_not_self'] 			= 'The {field} field must contain a unique value.';
+$lang['form_validation_in_db_list']		= '{field} invalid';

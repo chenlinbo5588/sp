@@ -103,13 +103,13 @@ class Brand extends Ydzj_Admin_Controller {
 	
 	
 	private function _prepareBrandData(){
-				
-		$fileInfo = $this->attachment_service->addImageAttachment('_pic');
+		$fileInfo = $this->attachment_service->addImageAttachment('brand_logo',array(),FROM_BACKGROUND);
 		
+		//print_r($fileInfo);
 		$info = array(
 			'brand_name' => $this->input->post('brand_name'),
-			'class_id' => $this->input->post('class_id'),
-			'brand_sort' => $this->input->post('brand_sort')
+			'class_id' => $this->input->post('class_id') ? $this->input->post('class_id') : 0,
+			'brand_sort' => $this->input->post('brand_sort') ? $this->input->post('brand_sort') : 255
 		);
 		
 		
@@ -120,7 +120,7 @@ class Brand extends Ydzj_Admin_Controller {
 		if($fileInfo){
 			$info['brand_pic'] = $fileInfo['file_url'];
 			
-			$originalPic = $this->input->post('brand_pic');
+			$originalPic = $this->input->post('old_pic');
 			
 			if($originalPic){
 				$this->attachment_service->deleteByFileUrl($originalPic);
@@ -137,12 +137,11 @@ class Brand extends Ydzj_Admin_Controller {
 	}
 	
 	
-	
 	public function add(){
 		$feedback = '';
-		
 		$treelist = $this->goods_service->getGoodsClassTreeHTML();
 		
+		//print_r($_FILES);
 		if($this->isPostRequest()){
 			$this->_getRules();
 			
@@ -155,12 +154,13 @@ class Brand extends Ydzj_Admin_Controller {
 					break;
 				}
 				
-				if($this->Brand_Model->_add($info) < 0){
+				if(($newid =$this->Brand_Model->_add($info)) < 0){
 					$feedback = getErrorTip('保存失败');
 					break;
 				}
 				
 				$feedback = getSuccessTip('保存成功');
+				$info = $this->Brand_Model->getFirstByKey($newid,'brand_id');
 				
 			}
 		}
@@ -189,11 +189,13 @@ class Brand extends Ydzj_Admin_Controller {
 			for($i = 0; $i < 1; $i++){
 				
 				$info = $this->_prepareBrandData();
+				$info['brand_id'] = $id;
 				
 				if(!$this->form_validation->run()){
 					$feedback = $this->form_validation->error_string();
 					break;
 				}
+				
 				
 				
 				if($this->Brand_Model->update($info,array('brand_id' => $id)) < 0){

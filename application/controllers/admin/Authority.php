@@ -149,13 +149,13 @@ class Authority extends Ydzj_Admin_Controller {
 					break;
 				}
 				
-				if($this->Adminuser_Model->_add($info) < 0){
+				if(($newid = $this->Adminuser_Model->_add($info)) < 0){
 					$feedback = getErrorTip('保存失败');
 					break;
 				}
 				
 				$feedback = getSuccessTip('保存成功');
-				
+				$info = $this->Adminuser_Model->getFirstByKey($newid,'uid');
 			}
 		}
 		
@@ -329,12 +329,13 @@ class Authority extends Ydzj_Admin_Controller {
 				
 				$info['permission'] = $this->_getEncodePermision($this->input->post('permission'),$this->input->post('name'));
 				
-				if($this->Role_Model->_add($info) < 0){
+				if(($newid = $this->Role_Model->_add($info)) < 0){
 					$feedback = getErrorTip('保存失败');
 					break;
 				}
 				
 				$feedback = getSuccessTip('保存成功');
+				$info = $this->_refreshRoleInfo($newid);
 			}
 		}
 		

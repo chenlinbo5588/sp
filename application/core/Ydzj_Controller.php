@@ -26,6 +26,7 @@ class Ydzj_Controller extends MY_Controller {
 		
 		if($this->isLogin()){
 			$this->assign('profile',$this->session->userdata('profile'));
+			$this->attachment_service->setUid($this->_profile['basic']['uid']);
 		}
 		
 		//$this->initEmail();

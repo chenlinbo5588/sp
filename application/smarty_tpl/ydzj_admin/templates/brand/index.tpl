@@ -18,8 +18,6 @@
 	          <td><input class="txt" name="search_brand_name" id="search_brand_name" value="{$smarty.post['search_brand_name']|escape}" type="text"></td>
 	          <th><label for="search_brand_class">所属分类</label></th>
 	          <td><input class="txt" name="search_brand_class" id="search_brand_class" value="{$smarty.post['search_brand_class']|escape}" type="text"></td>
-	          <th><label for="search_brand_apply">所属分类</label></th>
-	          <td><select name="search_brand_apply"><option value="全部">全部</option><option value="0">申请中</option><option {if $smarty.post['search_brand_apply'] == 1}selected{/if}>通过</option></select></td>
 	          <td><input type="submit" class="msbtn" name="tijiao" value="查询"/></td>
 	        </tr>
 	    </tbody>
