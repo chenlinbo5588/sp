@@ -4,7 +4,7 @@
       <h3>商品分类</h3>
       <ul class="tab-base">
       	<li><a href="{admin_site_url('goods_class/category')}"><span>管理</span></a></li>
-      	<li><a class="current"><span>新增</span></a></li>
+      	<li><a class="current"><span>{if $info['gc_id']}编辑{else}新增{/if}</span></a></li>
       	<li><a href="{admin_site_url('goods_class/export')}"><span>导出</span></a></li>
       	<li><a href="{admin_site_url('goods_class/import')}"><span>导入</span></a></li>
       	<li><a href="{admin_site_url('goods_class/tag')}"><span>TAG管理</span></a></li>
@@ -48,7 +48,7 @@
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input type="text" value="{$info['gc_sort']}" name="gc_sort" id="gc_sort" class="txt"></td>
-          <td class="vatop tips">数字范围为0~255，数字越小越靠前</td>
+          <td class="vatop tips">{form_error('gc_sort')} 数字范围为0~255，数字越小越靠前</td>
         </tr>
       </tbody>
       <tfoot>

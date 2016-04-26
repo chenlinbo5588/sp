@@ -4,7 +4,7 @@
       <h3>品牌</h3>
       <ul class="tab-base">
       	<li><a href="{admin_site_url('goods/index')}"><span>管理</span></a></li>
-      	<li><a class="current"><span>新增</span></a></li>
+      	<li><a class="current"><span>{if $info['goods_id']}编辑{else}新增{/if}</span></a></li>
       </ul>
     </div>
   </div>

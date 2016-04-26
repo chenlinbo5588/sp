@@ -4,7 +4,7 @@
       <h3>品牌</h3>
       <ul class="tab-base">
       	<li><a href="{admin_site_url('brand/index')}"><span>管理</span></a></li>
-      	<li><a class="current"><span>新增</span></a></li>
+      	<li><a class="current"><span>{if $info['brand_id']}编辑{else}新增{/if}</span></a></li>
       </ul>
     </div>
   </div>
@@ -63,14 +63,14 @@
             <label for="brand_recommend0" {if $info['brand_recommend']}class="cb-disable"{else}class="cb-disable selected"{/if}><span>否</span></label>
             <input id="brand_recommend1" name="brand_recommend" {if $info['brand_recommend']}checked{/if} value="1" type="radio">
             <input id="brand_recommend0" name="brand_recommend" {if $info['brand_recommend'] == 0}checked{/if} value="0" type="radio"></td>
-          <td class="vatop tips">选择被推荐的图片将在所有品牌列表页“推荐品牌”位置展现。</td>
+          <td class="vatop tips">{form_error('brand_recommend')} 选择被推荐的图片将在所有品牌列表页“推荐品牌”位置展现。</td>
         </tr>
         <tr>
           <td colspan="2" class="required"><label>排序:</label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input type="text" value="{if $info['brand_sort']}{$info['brand_sort']}{else}255{/if}" name="brand_sort" id="brand_sort" class="txt"></td>
-          <td class="vatop tips">数字范围为0~255，数字越小越靠前</td>
+          <td class="vatop tips">{form_error('brand_sort')} 数字范围为0~255，数字越小越靠前</td>
         </tr>
       </tbody>
       <tfoot>

@@ -4,7 +4,7 @@
       <h3>{if $info['uid']}维护{else}添加{/if}管理员</h3>
       <ul class="tab-base">
       	<li><a href="{admin_site_url('authority/user')}"><span>管理员</span></a></li>
-      	<li><a class="current" ><span>{if $info['id']}维护{else}添加{/if}管理员</span></a></li>
+      	<li><a class="current" ><span>{if $info['uid']}编辑{else}添加{/if}管理员</span></a></li>
       </ul>
      </div>
   </div>

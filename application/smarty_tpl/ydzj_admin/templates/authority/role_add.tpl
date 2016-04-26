@@ -4,7 +4,7 @@
       <h3>{if $info['id']}维护{else}添加{/if}角色</h3>
       <ul class="tab-base">
       	<li><a href="{admin_site_url('authority/role')}" ><span>角色管理</span></a></li>
-      	<li><a  class="current"><span>{if $info['id']}维护{else}添加{/if}角色</span></a></li>
+      	<li><a  class="current"><span>{if $info['id']}编辑{else}添加{/if}角色</span></a></li>
       </ul>
     </div>
   </div>

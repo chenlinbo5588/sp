@@ -73,6 +73,11 @@ class Brand extends Ydzj_Admin_Controller {
 	
 	private function _getRules(){
 		$this->form_validation->set_rules('brand_name','品牌名称','required');
+		$this->form_validation->set_rules('brand_recommend','是否推线','required|in_list[0,1]');
+		
+		if($this->input->post('brand_sort')){
+			$this->form_validation->set_rules('brand_sort','排序',"is_natural|less_than[256]");
+		}
 		
 	}
 	

@@ -104,7 +104,7 @@ class Goods_Service extends Base_Service {
 	
 	public function deleteGoodsClass($delId){
 		
-		$list = $this->Goods_Class_Model->getList(array(
+		$list = $this->_goodsClassModel->getList(array(
 			'where' => array('gc_parent_id' => $delId)
 		));
 		
@@ -120,13 +120,13 @@ class Goods_Service extends Base_Service {
 				$hasData = false;
 			}else{
 				
-				$this->Goods_Class_Model->deleteByCondition(array(
+				$this->_goodsClassModel->deleteByCondition(array(
 					'where_in' => array(
 						array('key' => 'gc_id', 'value' => $ids)
 					)
 				));
 				
-				$list = $this->Goods_Class_Model->getList(array(
+				$list = $this->_goodsClassModel->getList(array(
 					'where_in' => array(
 						array('key' => 'gc_parent_id', 'value' => $ids)
 					)
@@ -134,7 +134,7 @@ class Goods_Service extends Base_Service {
 			}
 		}
 		
-		$this->Goods_Class_Model->delete(array('gc_id' => $delId));
+		$this->_goodsClassModel->deleteByWhere(array('gc_id' => $delId));
 		
 	}
 	

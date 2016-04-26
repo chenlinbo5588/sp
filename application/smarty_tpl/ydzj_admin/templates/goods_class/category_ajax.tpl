@@ -17,7 +17,7 @@
 		<span title="可编辑下级分类名称" class="editable tooltip">{$item['gc_name']|escape}</span>
 		{if $deep != 2}<a class="btn-add-nofloat marginleft" href="{admin_site_url('goods_class/add')}?gc_parent_id={$item['gc_id']}"><span>新增下级</span></a>{/if}
 	</td>
-	<td>{$item['type_name']|escape}</td>
+	<td></td>
 	<td class="w84">
 		<a href="{admin_site_url('goods_class/edit')}?gc_id={$item['gc_id']}">编辑</a> | <a class="delete" href="javascript:void(0);" data-id="{$item['gc_id']}">删除</a>
 	</td>

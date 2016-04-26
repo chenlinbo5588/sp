@@ -1,13 +1,10 @@
 {include file="common/main_header.tpl"}
   <div class="fixed-bar">
     <div class="item-title">
-      <h3>商品分类</h3>
+      <h3>文章分类</h3>
       <ul class="tab-base">
       	<li><a class="current"><span>管理</span></a></li>
-      	<li><a href="{admin_site_url('goods_class/add')}"><span>新增</span></a></li>
-      	<li><a href="{admin_site_url('goods_class/export')}"><span>导出</span></a></li>
-      	<li><a href="{admin_site_url('goods_class/import')}"><span>导入</span></a></li>
-      	<li><a href="{admin_site_url('goods_class/tag')}"><span>TAG管理</span></a></li>
+      	<li><a href="{admin_site_url('article_class/add')}"><span>新增</span></a></li>
       </ul>
     </div>
   </div>
@@ -20,15 +17,14 @@
       <tr>
         <td>
           <ul>
-            <li>当添加商品时可选择商品分类，用户可根据分类查询商品列表</li>
+            <li>当添加文章时可选择文章分类，用户可根据分类查询文章列表</li>
             <li>点击分类名前“+”符号，显示当前分类的下级分类</li>
-            {*<li><a>对分类作任何更改后，都需要到 设置 -> 清理缓存 清理商品分类，新的设置才会生效</a></li>*}
           </ul>
         </td>
       </tr>
     </tbody>
   </table>
-  {form_open(admin_site_url('goods_class/category'),'id="searchForm"')}
+  {form_open(admin_site_url('article_class/category'),'id="searchForm"')}
     <input type="hidden" name="submit_type" id="submit_type" value="" />
     <table class="table tb-type2" id="listtable">
       <thead>
@@ -42,17 +38,17 @@
       </thead>
       <tbody>
       	{foreach from=$list item=item}
-      	<tr class="hover edit" id="row{$item['gc_id']}">
+      	<tr class="hover edit" id="row{$item['ac_id']}">
           <td class="w48">
-          	<img fieldid="{$item['gc_id']}" status="open" nc_type="flex" src="{resource_url('img/tv-expandable.gif')}">
+          	<img fieldid="{$item['ac_id']}" status="open" nc_type="flex" src="{resource_url('img/tv-expandable.gif')}">
           </td>
-          <td class="w48 sort"><span class="editable ">{$item['gc_sort']}</span></td>
-          <td class="w50pre name">
-          	<span title="可编辑" class="editable ">{$item['gc_name']|escape}</span>
-          	<a class="btn-add-nofloat marginleft" href="{admin_site_url('goods_class/add')}?gc_parent_id={$item['gc_id']}"><span>新增下级</span></a>
+          <td class="w48 sort"><span class="editable ">{$item['ac_sort']}</span></td>
+          <td class="name">
+          	<span title="可编辑" class="editable ">{$item['ac_name']|escape}</span>
+          	<a class="btn-add-nofloat marginleft" href="{admin_site_url('article_class/add')}?ac_parent_id={$item['ac_id']}"><span>新增下级</span></a>
           </td>
           <td></td>
-          <td class="w84"><a href="{admin_site_url('goods_class/edit')}?gc_id={$item['gc_id']}">编辑</a> | <a class="delete" href="javascript:void(0);" data-id="{$item['gc_id']}">删除</a></td>
+          <td class="w84"><a href="{admin_site_url('article_class/edit')}?ac_id={$item['ac_id']}">编辑</a> | <a class="delete" href="javascript:void(0);" data-id="{$item['ac_id']}">删除</a></td>
         </tr>
         {/foreach}
       </tbody>
@@ -65,10 +61,10 @@
   		if(confirm('删除该分类将会同时删除该分类的所有下级分类，您确定要删除吗')){
   			var id = $(this).attr("data-id");
   			$.ajax({
-  				type:'POST',
-  				url: '{admin_site_url('goods_class/delete')}',
+  				type:"POST",
+  				url: '{admin_site_url('article_class/delete')}',
   				dataType:'json',
-  				data :{ formhash : formhash ,del_id : id },
+  				data :{ formhash : formhash , del_id : id },
   				success:function(json){
   					$("#row" + id).remove();
   					$(".row" + id).remove();
@@ -77,10 +73,10 @@
   				error:function(){
   					alert("删除出错");
   				}
-  			});
+  			})
   				
   		}
-  	});
+  	})
   	
   	$("#listtable").delegate("img[nc_type='flex']", "click",function(){
 		var status = $(this).attr('status');
@@ -91,9 +87,8 @@
 			$(this).attr('status','none');
 		}
 		
-		//ajax
 		$.ajax({
-			url: '{admin_site_url('goods_class/category')}?gc_parent_id='+id,
+			url: '{admin_site_url('article_class/category')}?ac_parent_id='+id,
 			success: function(html){
 				if($.trim(html) != ''){
 					$(html).insertAfter(pr);
@@ -112,9 +107,7 @@
 			$(this).attr('src',$(this).attr('src').replace("tv-collapsable","tv-expandable"));
 			$(this).attr('status','open');
 		}
-	});
-	
-  });
-  
+	})
+  })
   </script>
 {include file="common/main_footer.tpl"}

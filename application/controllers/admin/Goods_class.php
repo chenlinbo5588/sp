@@ -45,14 +45,9 @@ class Goods_Class extends Ydzj_Admin_Controller {
 			$this->goods_service->deleteGoodsClass($delId);
 			$this->jsonOutput('成功',$this->getFormHash());
 		}else{
-			
 			$this->jsonOutput('请求非法',$this->getFormHash());
 		}
-		
 	}
-	
-	
-	
 	
 	
 	public function add(){
@@ -68,15 +63,15 @@ class Goods_Class extends Ydzj_Admin_Controller {
 		}
 		
 		if($this->isPostRequest()){
-			$this->form_validation->set_rules('gc_name','分类名称',"required");
 			
+			$this->_getRules('add');
 			
 			for($i = 0; $i < 1; $i++){
 				
 				$info = array(
 					'gc_name' => $this->input->post('gc_name'),
-					'gc_parent_id' => $this->input->post('gc_parent_id'),
-					'gc_sort' => $this->input->post('gc_sort') ? $this->input->post('gc_sort') : 0
+					'gc_parent_id' => $this->input->post('gc_parent_id') ? $this->input->post('gc_parent_id') : 0,
+					'gc_sort' => $this->input->post('gc_sort') ? $this->input->post('gc_sort') : 255
 				);
 				
 				if(!$this->form_validation->run()){
@@ -104,15 +99,22 @@ class Goods_Class extends Ydzj_Admin_Controller {
 	}
 	
 	
-	public function checkpid($pid){
+	public function checkpid($pid,$extra = ''){
 		//不能是自己，也不能是其下级分类
+		
 		$currentGcId = $this->input->post('gc_id');
 		
 		$deep = $this->goods_service->getGoodsClassDeepById($pid);
 		
+		
 		if($deep >=3){
 			$this->form_validation->set_message('checkpid','父级只能是一级分类或者二级分类');
 			return false;
+		}
+		
+		if($extra == 'add'){
+			//如果是增加的不需要再网后面继续执行了
+			return true;
 		}
 		
 		
@@ -155,6 +157,21 @@ class Goods_Class extends Ydzj_Admin_Controller {
 	}
 	
 	
+	private function _getRules($action = 'add'){
+		
+		$this->form_validation->set_rules('gc_name','分类名称',"required");
+		
+		if($this->input->post('gc_parent_id')){
+			$this->form_validation->set_rules('gc_parent_id','上级分类', "in_db_list[{$this->Goods_Class_Model->_tableRealName}.gc_id]|callback_checkpid[{$action}]");
+		}
+			
+		if($this->input->post('gc_sort')){
+			$this->form_validation->set_rules('gc_sort','排序',"is_natural|less_than[256]");
+		}
+		
+	}
+	
+	
 	public function edit(){
 		
 		$feedback = '';
@@ -166,17 +183,15 @@ class Goods_Class extends Ydzj_Admin_Controller {
 		
 		
 		if($this->isPostRequest()){
-			$this->form_validation->set_rules('gc_name','分类名称',"required");
-			$this->form_validation->set_rules('gc_parent_id','上级分类', 'callback_checkpid');
 			
-			
+			$this->_getRules('edit');
 			for($i = 0; $i < 1; $i++){
 				
 				$info = array(
 					'gc_id' => $gc_id,
 					'gc_name' => $this->input->post('gc_name'),
-					'gc_parent_id' => $this->input->post('gc_parent_id'),
-					'gc_sort' => $this->input->post('gc_sort') ? $this->input->post('gc_sort') : 0
+					'gc_parent_id' => $this->input->post('gc_parent_id') ? $this->input->post('gc_parent_id') : 0,
+					'gc_sort' => $this->input->post('gc_sort') ? $this->input->post('gc_sort') : 255
 				);
 				
 				if(!$this->form_validation->run()){

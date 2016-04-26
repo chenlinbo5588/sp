@@ -245,10 +245,12 @@ $(function(){
 	    </dl>
 	    <dl>    
 	        <dt>网站</dt>
-	        <dd><a href="javascript:void(0)" onclick="openItem('category,article,website')">文章分类</a></dd>
+	        <dd><a href="javascript:void(0)" onclick="openItem('category,article_class,website')">文章分类</a></dd>
 	        <dd><a href="javascript:void(0)" onclick="openItem('index,article,website')">文章管理</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('adv,website,website')">广告管理</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('rec_list,website,website')">推荐位</a></dd>
+	        <dd><a href="javascript:void(0)" onclick="openItem('index,comment,website')">评论管理</a></dd>
+	        <dd><a href="javascript:void(0)" onclick="openItem('index,tag,website')">标签管理</a></dd>
+	        <dd><a href="javascript:void(0)" onclick="openItem('index,recommend,website')">推荐位</a></dd>
+	        <dd><a href="javascript:void(0)" onclick="openItem('index,adv,website')">广告管理</a></dd>
 	    </dl>
 	    <dl>    
 	        <dt>运营</dt>
@@ -289,13 +291,9 @@ $(function(){
 	    <dl>    
 	        <dt>权限</dt>
 	        <dd><a href="javascript:void(0)" onclick="openItem('setting,cms,cms')">CMS管理</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('index,cms_article,cms')">文章管理</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('category,cms_article,cms')">文章分类</a></dd>
 	        <dd><a href="javascript:void(0)" onclick="openItem('index,magazine,cms')">画报管理</a></dd>
 	        <dd><a href="javascript:void(0)" onclick="openItem('category,magazine,cms')">画报分类</a></dd>
 	        <dd><a href="javascript:void(0)" onclick="openItem('index,special,cms')">专题管理</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('index,tag,cms')">标签管理</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('index,comment,cms')">评论管理</a></dd>
 	    </dl>
     </div>
     
@@ -472,10 +470,12 @@ $(function(){
               <dl>
                 <dd>
                   <ol>
-                    <li><a href="javascript:void(0);" id="category_article" onclick="openItem('category,article,website');">文章分类</a></li>
+                    <li><a href="javascript:void(0);" id="category_article_class" onclick="openItem('category,article_class,website');">文章分类</a></li>
                     <li><a href="javascript:void(0);" id="index_article" onclick="openItem('index,article,website');">文章管理</a></li>
-                    <li><a href="javascript:void(0);" id="adv_website" onclick="openItem('adv,website,website');">广告管理</a></li>
-                    <li><a href="javascript:void(0);" id="rec_list_website" onclick="openItem('rec_list,website,website');">推荐位</a></li>
+                    <li><a href="JavaScript:void(0);" id="index_tag" onclick="openItem('index,tag,website');">标签管理</a></li>
+                    <li><a href="JavaScript:void(0);" id="index_comment" onclick="openItem('index,comment,website');">评论管理</a></li>
+                    <li><a href="javascript:void(0);" id="index_adv" onclick="openItem('index,adv,website');">广告管理</a></li>
+                    <li><a href="javascript:void(0);" id="index_recommend" onclick="openItem('index,recommend,website');">推荐位</a></li>
                   </ol>
                 </dd>
               </dl>
@@ -542,8 +542,7 @@ $(function(){
                     <li><a href="JavaScript:void(0);" id="index_magazine" onclick="openItem('index,magazine,cms');">画报管理</a></li>
                     <li><a href="JavaScript:void(0);" id="category_magazine" onclick="openItem('category,magazine,cms');">画报分类</a></li>
                     <li><a href="JavaScript:void(0);" id="index_special" onclick="openItem('index,special,cms');">专题管理</a></li>
-                    <li><a href="JavaScript:void(0);" id="index_tag" onclick="openItem('index,tag,cms');">标签管理</a></li>
-                    <li><a href="JavaScript:void(0);" id="index_comment" onclick="openItem('index,comment,cms');">评论管理</a></li>
+                    
                   </ol>
                 </dd>
               </dl>
