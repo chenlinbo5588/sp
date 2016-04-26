@@ -7,15 +7,14 @@ class Goods extends Ydzj_Admin_Controller {
 	public function __construct(){
 		parent::__construct();
 		
-		$this->load->model(array('Goods_Model'));
 		$this->load->library(array('Goods_service','Attachment_Service'));
 	}
 	
 	
 	
 	public function index(){
-		$searchMap['goods_state'] = array('-1' => '未发布','1' => '正常');
-		$searchMap['goods_verify'] = array('-1' => '未通过','1' => '通过');
+		$searchMap['goods_state'] = array('0' => '未发布','1' => '正常');
+		$searchMap['goods_verify'] = array('0' => '未通过','1' => '通过');
 		
 		$brandList = $this->Brand_Model->getList();
 		$brandList = $this->goods_service->toEasyUseArray($brandList,'brand_id');
@@ -163,7 +162,10 @@ class Goods extends Ydzj_Admin_Controller {
 					break;
 				}
 				
-				//$info['goods_public'] = $this->input->server('REQUEST_TIME');
+				if($this->input->post('goods_state') == 1){
+					$info['public_time'] = $this->input->server('REQUEST_TIME');
+				}
+				
 				
 				if(($newid = $this->Goods_Model->_add($info)) < 0){
 					$feedback = getErrorTip('保存失败');
@@ -216,6 +218,12 @@ class Goods extends Ydzj_Admin_Controller {
 					$feedback = $this->form_validation->error_string();
 					break;
 				}
+				
+				
+				if($this->input->post('goods_state') == 1){
+					$info['public_time'] = $this->input->server('REQUEST_TIME');
+				}
+				
 				
 				if($this->Goods_Model->update($info,array('goods_id' => $id)) < 0){
 					$feedback = getErrorTip('保存失败');

@@ -4,54 +4,44 @@
       <h3>品牌</h3>
       <ul class="tab-base">
       	<li><a href="{admin_site_url('goods/index')}"><span>管理</span></a></li>
-      	<li><a class="current"><span>{if $info['goods_id']}编辑{else}新增{/if}</span></a></li>
+      	<li><a class="current"><span>{if $info['article_id']}编辑{else}新增{/if}</span></a></li>
       </ul>
     </div>
   </div>
   <div class="fixed-empty"></div>
   <div class="feedback">{$feedback}</div>
-  {if $info['goods_id']}
-  {form_open_multipart(admin_site_url('goods/edit'),'id="goods_form"')}
+  {if $info['article_id']}
+  {form_open_multipart(admin_site_url('article/edit'),'id="goods_form"')}
   {else}
-  {form_open_multipart(admin_site_url('goods/add'),'id="goods_form"')}
+  {form_open_multipart(admin_site_url('article/add'),'id="goods_form"')}
   {/if}
-  	<input type="hidden" name="goods_id" value="{$info['goods_id']}"/>
+  	<input type="hidden" name="article_id" value="{$info['article_id']}"/>
     <table class="table tb-type2">
       <tbody>
         <tr class="noborder">
-          <td colspan="2" class="required"><label class="validation" for="goods_name">商品名称:</label></td>
+          <td colspan="2" class="required"><label class="validation" for="article_title">商品名称:</label></td>
         </tr>
         <tr class="noborder">
-          <td class="vatop rowform"><input type="text" value="{$info['goods_name']|escape}" name="goods_name" id="goods_name" maxlength="20" class="txt"></td>
-          <td class="vatop tips">{form_error('goods_name')}</td>
+          <td class="vatop rowform"><input type="text" value="{$info['article_title']|escape}" name="article_title" id="article_title" maxlength="20" class="txt"></td>
+          <td class="vatop tips">{form_error('article_title')}</td>
         </tr>
         <tr>
           <td colspan="2" class="required"><label for="brandId">品牌:</label></td>
         </tr>
-        <tr class="noborder">
-          <td class="vatop rowform">
-          	<select name="brand_id" id="brandId">
-	          <option value="">请选择...</option>
-	          {foreach from=$brandList item=item}
-	          <option {if $info['brand_id'] == $item['brand_id']}selected{/if} value="{$item['brand_id']}">{$item['brand_name']}</option>
-	          {/foreach}
-	        </select>
-          </td>
-          <td class="vatop tips">{form_error('brand_id')} 商品的品牌</td>
-        </tr>
+        
         <tr>
           <td colspan="2" class="required"><label for="goodsClassId">所属分类:</label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform">
-          	<select name="gc_id" id="goodsClassId">
+          	<select name="ac_id" id="articleClassId">
 	          <option value="">请选择...</option>
-	          {foreach from=$goodsClassList item=item}
-	          <option {if $info['gc_id'] == $item['gc_id']}selected{/if} value="{$item['gc_id']}">{str_repeat('......',$item['level'])}{$item['level']+1} {$item['gc_name']}</option>
+	          {foreach from=$articleClassList item=item}
+	          <option {if $info['ac_id'] == $item['ac_id']}selected{/if} value="{$item['ac_id']}">{str_repeat('......',$item['level'])}{$item['level']+1} {$item['ac_name']}</option>
 	          {/foreach}
 	        </select>
           </td>
-          <td class="vatop tips">{form_error('class_id')} 商品的分类</td>
+          <td class="vatop tips">{form_error('ac_id')} 商品的分类</td>
         </tr>
         <tr>
           <td colspan="2" class="required">商品主图: </td>
@@ -68,19 +58,18 @@
             </span></td>
           <td class="vatop tips"><span class="vatop rowform">上传商品默认主图，如多规格值时将默认使用该图或分规格上传各规格主图；支持jpg、gif、png格式上传或从图片空间中选择，建议使用尺寸800x800像素以上、大小不超过1M的正方形图片，上传后的图片将会自动保存在图片空间的默认分类中。</span></td>
         </tr>
-        
         <tr>
-          <td colspan="2" class="required">商品描述: {form_error('goods_intro')}</td>
+          <td colspan="2" class="required">文字内容: {form_error('article_content')}</td>
         </tr>
         <tr>
-        	<td colspan="2" ><textarea id="goods_intro" name="goods_intro" style="width:100%;height:480px;visibility:hidden;">{$info['goods_intro']}</textarea></td>
+        	<td colspan="2" ><textarea id="goods_intro" name="goods_intro" style="width:100%;height:480px;visibility:hidden;">{$info['article_content']}</textarea></td>
         	{include file="common/ke.tpl"}
 			<script type="text/javascript">
 	            var editor1;
 				
 	            KindEditor.ready(function(K) {
-	                editor1 = K.create('textarea[name="goods_intro"]', {
-	                    uploadJson : '{admin_site_url("common/pic_upload")}?mod=goods',
+	                editor1 = K.create('textarea[name="article_content"]', {
+	                    uploadJson : '{admin_site_url("common/pic_upload")}?mod=article',
 	                    extraFileUploadParams:{ formhash: formhash },
 	                    allowImageUpload : true,
 	                    allowFlashUpload : false,

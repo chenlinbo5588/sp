@@ -9,5 +9,7 @@ $entity = array(
 'article_sort' => 'tinyint',
 'article_title' => 'varchar',
 'article_content' => 'text',
-'article_time' => 'int'
+'article_time' => 'int',
+'gmt_create' => 'int',
+'gmt_modify' => 'int'
 );
