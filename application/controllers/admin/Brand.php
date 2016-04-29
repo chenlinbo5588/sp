@@ -210,8 +210,6 @@ class Brand extends Ydzj_Admin_Controller {
 				
 				$feedback = getSuccessTip('保存成功');
 			}
-		}else{
-			$info = $this->Brand_Model->getFirstByKey($id,'brand_id');
 		}
 		
 		$this->assign('info',$info);

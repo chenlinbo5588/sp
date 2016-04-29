@@ -121,7 +121,6 @@
 <script>
 $(function(){
     bindDeleteEvent();
-    //bindOnOffEvent();
 });
 </script>
 

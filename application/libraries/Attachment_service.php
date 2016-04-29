@@ -247,7 +247,6 @@ class Attachment_Service extends Base_Service {
 	public function pic_upload($uid,$uploadName , $fromBg = 0){
 		
 		$this->setUid($uid);
-		
 		$fileData = $this->addImageAttachment($uploadName,array(),$fromBg);
 		
 		//$Orientation[$exif[IFD0][Orientation]];

@@ -20,7 +20,7 @@ class Article extends Ydzj_Admin_Controller {
 	
 		$condition = array(
 			'where' => array(),
-			'order' => 'v DESC',
+			'order' => 'article_id DESC',
 			'pager' => array(
 				'page_size' => config_item('page_size'),
 				'current_page' => $currentPage,
@@ -30,44 +30,27 @@ class Article extends Ydzj_Admin_Controller {
 		);
 		
 		
-		$goodsName = $this->input->get_post('search_goods_name');
-		$goodsVerify = $this->input->get_post('goods_verify') ? $this->input->get_post('goods_verify') : 0;
-		$goodsState = $this->input->get_post('goods_state') ? $this->input->get_post('goods_state') : 0;
-		$goodsClassId = $this->input->get_post('gc_id') ? $this->input->get_post('gc_id') : 0;
+		$search_article_title = $this->input->get_post('search_article_title');
+		$articleClassId = $this->input->get_post('ac_id') ? $this->input->get_post('ac_id') : 0;
 		
 		
-		if($goodsName){
-			$condition['like']['goods_name'] = $goodsName;
+		if($search_article_title){
+			$condition['like']['article_title'] = $search_article_title;
 		}
 		
-		if($goodsVerify != '全部'){
-			$condition['where']['goods_verify'] = $goodsVerify;
+		if($articleClassId){
+			$articleClassIdList = $this->article_service->getAllChildArticleClassByPid($articleClassId);
+			$articleClassIdList[] = $articleClassId;
+			$condition['where_in'][] = array('key' => 'ac_id', 'value' => $articleClassIdList);
 		}
-		
-		if($goodsState != '全部'){
-			$condition['where']['goods_state'] = $goodsState;
-		}
-		
-		
-		if($goodsClassId){
-			$goodsClassIdList = $this->goods_service->getAllChildGoodsClassByPid($goodsClassId);
-			$goodsClassIdList[] = $goodsClassId;
-			
-			$condition['where_in'][] = array('key' => 'gc_id', 'value' => $goodsClassIdList);
-			
-		}
-		
 		
 		//print_r($condition);
+		$list = $this->Article_Model->getList($condition);
 		
-		$list = $this->Goods_Model->getList($condition);
-		
-		$this->assign('brandList',$brandList);
-		$this->assign('goodsClassList',$treelist);
+		$this->assign('articleClassList',$treelist);
 		$this->assign('list',$list);
 		$this->assign('page',$list['pager']);
 		$this->assign('currentPage',$currentPage);
-		$this->assign('searchMap',$searchMap);
 		
 		$this->display();
 	}
@@ -76,12 +59,22 @@ class Article extends Ydzj_Admin_Controller {
 	
 	
 	private function _getRules(){
-		$this->form_validation->set_rules('goods_name','商品名称','required|max_length[60]');
-		$this->form_validation->set_rules('gc_id','商品分类',"required|in_db_list[{$this->Goods_Class_Model->_tableRealName}.gc_id]");
-		$this->form_validation->set_rules('goods_intro','商品简介','required');
-		$this->form_validation->set_rules('goods_recommend','是否推荐','required|in_list[0,1]');
-		$this->form_validation->set_rules('goods_verify','是否审核','required|in_list[0,1]');
-		$this->form_validation->set_rules('goods_state','是否发布','required|in_list[0,1]');
+		$this->form_validation->set_rules('article_title','文章标题','required|max_length[80]');
+		$this->form_validation->set_rules('article_content','文章内容','required');
+		$this->form_validation->set_rules('ac_id','文章分类',"required|in_db_list[{$this->Article_Class_Model->_tableRealName}.ac_id]");
+		
+		if($this->input->post('article_url')){
+			$this->form_validation->set_rules('article_url','链接','required|valid_url');
+		}
+		
+		$this->form_validation->set_rules('article_show','是否显示','required|in_list[0,1]');
+		
+		
+		if($this->input->post('article_sort')){
+			$this->form_validation->set_rules('article_sort','排序',"is_natural|less_than[256]");
+		}
+		
+		
 	}
 	
 	
@@ -96,9 +89,9 @@ class Article extends Ydzj_Admin_Controller {
 				$ids = (array)$ids;
 			}
 			
-			$this->Goods_Model->deleteByCondition(array(
+			$this->Article_Model->deleteByCondition(array(
 				'where_in' => array(
-					array('key' => 'goods_id','value' => $ids)
+					array('key' => 'article_id','value' => $ids)
 				)
 			));
 			
@@ -111,29 +104,16 @@ class Article extends Ydzj_Admin_Controller {
 	
 	
 	private function _prepareGoodsData(){
-		$fileInfo = $this->attachment_service->addImageAttachment('goods_pic',array(),FROM_BACKGROUND);
 		
-		//print_r($fileInfo);
 		$info = array(
-			'goods_name' => $this->input->post('goods_name'),
-			'gc_id' => $this->input->post('gc_id') ? $this->input->post('gc_id') : 0,
-			'brand_id' => $this->input->post('brand_id') ? $this->input->post('brand_id') : 0,
+			'article_title' => $this->input->post('article_title'),
+			'article_content' => $this->input->post('article_content'),
+			'ac_id' => $this->input->post('ac_id') ? $this->input->post('ac_id') : 0,
+			'article_url' => $this->input->post('article_url') ? $this->input->post('article_url') : '',
 			'goods_intro' => $this->input->post('goods_intro') ? $this->input->post('goods_intro') : '',
-			'goods_recommend' => $this->input->post('goods_recommend'),
-			'goods_verify' => $this->input->post('goods_verify'),
-			'goods_state' => $this->input->post('goods_state'),
-			
+			'article_show' => $this->input->post('article_show'),
+			'article_sort' => $this->input->post('article_sort') ? $this->input->post('article_sort') : 255,
 		);
-		
-		if($fileInfo){
-			$info['goods_pic'] = $fileInfo['file_url'];
-			
-			$originalPic = $this->input->post('old_pic');
-			
-			if($originalPic){
-				$this->attachment_service->deleteByFileUrl($originalPic);
-			}
-		}
 		
 		
 		return $info;
@@ -143,8 +123,7 @@ class Article extends Ydzj_Admin_Controller {
 	public function add(){
 		$feedback = '';
 		
-		$treelist = $this->goods_service->getGoodsClassTreeHTML();
-		$brandList = $this->Brand_Model->getList();
+		$treelist = $this->article_service->getArticleClassTreeHTML();
 		
 		if($this->isPostRequest()){
 			$this->_getRules();
@@ -158,9 +137,7 @@ class Article extends Ydzj_Admin_Controller {
 					break;
 				}
 				
-				//$info['goods_public'] = $this->input->server('REQUEST_TIME');
-				
-				if(($newid = $this->Goods_Model->_add($info)) < 0){
+				if(($newid = $this->Article_Model->_add($info)) < 0){
 					$feedback = getErrorTip('保存失败');
 					break;
 				}
@@ -168,16 +145,14 @@ class Article extends Ydzj_Admin_Controller {
 				$feedback = getSuccessTip('保存成功');
 				
 				
-				$info = $this->Goods_Model->getFirstByKey($newid,'goods_id');
+				$info = $this->Article_Model->getFirstByKey($newid,'article_id');
 			}
 		}
 		
 		
 		$this->assign('info',$info);
 		$this->assign('feedback',$feedback);
-		
-		$this->assign('brandList',$brandList);
-		$this->assign('goodsClassList',$treelist);
+		$this->assign('articleClassList',$treelist);
 		$this->display();
 	}
 	
@@ -185,49 +160,38 @@ class Article extends Ydzj_Admin_Controller {
 	public function edit(){
 		
 		$feedback = '';
-		$id = $this->input->get_post('goods_id');
+		$id = $this->input->get_post('article_id');
 		
-		$treelist = $this->goods_service->getGoodsClassTreeHTML();
-		$brandList = $this->Brand_Model->getList();
+		$treelist = $this->article_service->getArticleClassTreeHTML();
 		
-		$info = $this->Goods_Model->getFirstByKey($id,'goods_id');
+		$info = $this->Article_Model->getFirstByKey($id,'article_id');
 		
 		if($this->isPostRequest()){
-			
 			$this->_getRules();
 			
 			for($i = 0; $i < 1; $i++){
 				
-				$postInfo = $this->_prepareGoodsData();
-				
-				if(empty($postInfo['goods_pic']) && !empty($info['goods_pic'])){
-					$postInfo['goods_pic'] = $info['goods_pic'];
-				}
-				
-				$info = $postInfo;
-				$info['goods_id'] = $id;
+				$info = $this->_prepareGoodsData();
+				$info['article_id'] = $id;
 				
 				if(!$this->form_validation->run()){
 					$feedback = $this->form_validation->error_string();
 					break;
 				}
 				
-				if($this->Goods_Model->update($info,array('goods_id' => $id)) < 0){
+				if($this->Article_Model->update($info,array('article_id' => $id)) < 0){
 					$feedback = getErrorTip('保存失败');
 					break;
 				}
 				
 				$feedback = getSuccessTip('保存成功');
 			}
-		}else{
-			$info = $this->Goods_Model->getFirstByKey($id,'goods_id');
 		}
 		
 		$this->assign('info',$info);
 		$this->assign('feedback',$feedback);
-		$this->assign('brandList',$brandList);
-		$this->assign('goodsClassList',$treelist);
-		$this->display('goods/add');
+		$this->assign('articleClassList',$treelist);
+		$this->display('article/add');
 	}
 	
 }

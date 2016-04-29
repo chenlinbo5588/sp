@@ -14,8 +14,8 @@
     <table class="tb-type1 noborder search">
       <tbody>
         <tr>
-          <th><label for="search_article_name">文章名称</label></th>
-          <td><input type="text" value="{$smarty.post['search_article_name']|escape}" name="search_article_name" id="search_article_name" class="txt"></td>
+          <th><label for="search_article_title">文章名称</label></th>
+          <td><input type="text" value="{$smarty.post['search_article_title']|escape}" name="search_article_title" id="search_article_title" class="txt"></td>
           <th><label>文章分类</label></th>
           <td>
         	<select name="ac_id" id="articleClassId">
@@ -25,10 +25,10 @@
 	          {/foreach}
 	        </select>
           </td>
+          <td><input type="submit" class="msbtn" name="tijiao" value="查询"/></td>
         </tr>
       </tbody>
-    </table>
-  </form>
+   </table>
   <table class="table tb-type2" id="prompt">
     <tbody>
       <tr class="space odd">
@@ -48,33 +48,28 @@
       <thead>
         <tr class="thead">
           <th class="w24"></th>
-          <th colspan="2">商品名称</th>
-          <th>品牌&分类</th>
-          <th class="align-center">商品状态</th>
-          <th class="align-center">审核状态</th>
-          <th class="align-center">操作 </th>
+          <th class="w48">排序</th>
+          <th>标题</th>
+          <th>文章分类</th>
+          <th class="align-center">显示</th>
+          <th class="align-center">添加时间</th>
+          <th class="w60 align-center">操作</th>
         </tr>
       </thead>
       <tbody>
       	{foreach from=$list['data'] item=item}
       	<tr class="hover edit" id="row{$item['article_id']}">
           <td><input type="checkbox" name="id[]" group="chkVal" value="{$item['article_id']}" class="checkitem"></td>
-          <td class="w60 picture"><img class="size-56x56" src="{resource_url($item['article_pic'])}"/></td>
-          <td class="article-name w270">
-          	<p><span>{$item['article_name']|escape}</span></p>
-            {*<p class="store">所属店铺:官方店铺</p>*}
-         </td>
-         <td>
-          	<p>{$brandList[$item['brand_id']]['brand_name']}</p>
-            <p>{$articleClassList[$item['gc_id']]['gc_name']}</p>
-          </td>
-          <td class="align-center">{$searchMap['article_state'][$item['article_state']]}</td>
-          <td class="align-center">{$searchMap['article_verify'][$item['article_verify']]}</td>
+          <td>{$item['article_sort']}</td>
+          <td>{$item['article_title']|escape}</td>
+          <td>{$articleClassList[$item['ac_id']]['ac_name']}</td>
+          <td class="align-center">{$item['article_show']}</td>
+          <td class="nowrap align-center">{$item['gmt_create']|date_format:"%Y-%m-%d %H:%M:%S"}</td>
           <td class="align-center">
           	<p><a href="{site_url('article/detail')}?article_id={$item['article_id']}" target="_blank">查看</a> | <a href="{admin_site_url('article/edit')}?article_id={$item['article_id']}">编辑</a></p>
           </td>
         </tr>
-        {/foreach}
+      	{/foreach}
       </tbody>
       <tfoot>
       	<tr class="tfoot">
@@ -91,7 +86,6 @@
 <script>
 $(function(){
     bindDeleteEvent();
-    //bindOnOffEvent();
 });
 </script>
 

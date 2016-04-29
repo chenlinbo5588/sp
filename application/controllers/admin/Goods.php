@@ -232,8 +232,6 @@ class Goods extends Ydzj_Admin_Controller {
 				
 				$feedback = getSuccessTip('保存成功');
 			}
-		}else{
-			$info = $this->Goods_Model->getFirstByKey($id,'goods_id');
 		}
 		
 		$this->assign('info',$info);

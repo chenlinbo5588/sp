@@ -144,11 +144,14 @@ function doDelete(postdata,url){
 
 function bindDeleteEvent(){
 	$("a.delete").bind("click",function(){
-  		var url = $(this).attr("data-url");
-  		doDelete({ "formhash" : formhash , "id": [$(this).attr("data-id")] } ,url);
+		if(confirm('您确定要删除吗')){
+			var url = $(this).attr("data-url");
+	  		doDelete({ "formhash" : formhash , "id": [$(this).attr("data-id")] } ,url);
+		}
   	});
   	
   	$("#deleteBtn").bind("click",function(){
+  		
   		var ids = [];
   		var url = $(this).attr("data-url");
   		
@@ -161,7 +164,10 @@ function bindDeleteEvent(){
   		if(ids.length == 0){
   			alert("请先勾选");
   		}else{
-  			doDelete({ "formhash" : formhash ,"id": ids }, url);
+  			
+  			if(confirm('您确定要删除吗')){
+  				doDelete({ "formhash" : formhash ,"id": ids }, url);
+  	  		}
   		}
   		
   	});
