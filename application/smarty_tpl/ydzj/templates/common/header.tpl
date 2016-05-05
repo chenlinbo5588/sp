@@ -18,14 +18,12 @@ var cookiedomain = "",
     cityUrl = "{site_url('district/index/')}",
     LOADING_IMAGE = "{resource_url('img/loading/loading.gif')}";
 </script>
+<!--[if lt IE 9]>
+<script type="text/javascript" src="{resource_url('js/html5shiv.js')}"></script>
+<![endif]-->
+<script type="text/javascript" src="{resource_url('js/respond.min.js')}"></script>
 <script type="text/javascript" src="{resource_url('js/common.js')}"></script>
 </head>
 <body>
    <div id="wrap">
-       <header>
-           <div id="topBar" class="clearfix">
-               {$LEFT_BUTTON}
-               <h1>{if $TOP_NAV_TITLE}{$TOP_NAV_TITLE}{else}{$SEO_title|escape}{/if}</h1>
-               {$RIGHT_BUTTON}
-           </div>
-       </header>
+       
