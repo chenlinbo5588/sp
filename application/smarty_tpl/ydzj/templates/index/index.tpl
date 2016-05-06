@@ -114,12 +114,12 @@
        		</ul>
        </div>
    </div>
-    
-   <div id="homeSwiper">
-        <div style="background:url({resource_url('img/1.jpg')}) no-repeat 50% 50%"><a href="http://www.baidu.com" target="_blank">&nbsp;</a></div>
+   
+   <div class="slideshow"  id="homeSwiper">
+	    <div style="background:url({resource_url('img/1.jpg')}) no-repeat 50% 50%"><a href="http://www.baidu.com" target="_blank">&nbsp;</a></div>
         <div style="background:url({resource_url('img/2.jpg')}) no-repeat 50% 50%"><a href="http://www.baidu.com" target="_blank">&nbsp;</a></div>
         <div style="background:url({resource_url('img/3.jpg')}) no-repeat 50% 50%"><a href="http://www.baidu.com" target="_blank">&nbsp;</a></div>
-    </div>
+	</div>
     <div id="homeSwiperPager" class="swiperPager"></div>
    
 	<div class="boxz">
@@ -142,16 +142,15 @@
 					<div class="colPanel" style="padding:0 20px 0 0;">
 						<h3 class="panelTitel">走进标度</h3>
 						<div id="goinSwiper">
-					        <div style="background-image:url({resource_url('img/goin1.jpg')})"></div>
-					        <div style="background-image:url({resource_url('img/goin2.jpg')})"></div>
+					        <div><img src="{resource_url('img/goin1.jpg')}"/></div>
+					        <div><img src="{resource_url('img/goin2.jpg')}"/></div>
 				    	</div>
-				    	<div id="goinSwiperPager" class="swiperPager"></div>
 						<p class="intro" id="goinIntro">介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己。</p>
 					</div>
 				</li>
 				<li class="col fl">
 					<div class="colPanel newslist">
-						<h3 class="panelTitel"><span>新闻动态</span><a class="more" href="/news/list">更多</a></h3>
+						<h3 class="panelTitel"><span>新闻动态</span><a class="more fr" href="/news/list">更多&gt;&gt;</a></h3>
 						<ol class="clearfix">
 							<li><a href="/news/detail/?id=39">2015年越南国际塑胶工业展，秣马厉兵，通佳人准备</a><span>2016-09-09</span></li>
 							<li><a href="/news/detail/?id=39">积极备战2015泰国国际塑胶展</a><span>2016-09-09</span></li>
@@ -166,44 +165,75 @@
 			</ul>
 			
 			<div class="panel1 clearfix" id="starProducts">
-				<h3><strong>热销产品</strong></h3>
+				<h3><strong>推荐产品</strong></h3>
 			</div>
 			<div class="panelContent">
-				<div id="hotProductSwiper">
-		            <div style="background-image:url({resource_url('img/nature1.jpg')})"><a href="/">aaaaa</a></div>
-		            <div style="background-image:url({resource_url('img/nature2.jpg')})"><a href="/">bbbbb</a></div>
-		            <div style="background-image:url({resource_url('img/nature3.jpg')})"><a href="/">ccccc</a></div>
-		            <div style="background-image:url({resource_url('img/nature4.jpg')})"><a href="/">ddddd</a></div>
-		            <div style="background-image:url({resource_url('img/nature5.jpg')})"><a href="/">eeeee</a></div>
-		            <div style="background-image:url({resource_url('img/nature6.jpg')})"><a href="/">eeeee</a></div>
-			    </div>
+				<ul id="hotProductSwiper">
+		            <li><img src="{resource_url('img/nature1.jpg')}" title="Funky nature1"/></li>
+		            <li><img src="{resource_url('img/nature2.jpg')}" title="Funky roots"/></li>
+		            <li><img src="{resource_url('img/nature3.jpg')}" title="Funky roots2"/></li>
+		            <li><img src="{resource_url('img/nature4.jpg')}" title="Funky roots3"/></li>
+		            <li><img src="{resource_url('img/nature5.jpg')}" title="Funky roots4"/></li>
+		            <li><img src="{resource_url('img/nature6.jpg')}" title="Funky roots1"/></li>
+			    </li>
 			</div>
 		</div>
+		
+		
+		<div class="friendLinks">
+			<span>友情链接:</span>
+			<a href="/">百度</a>
+			<a href="/">百度</a>
+			<a href="/">百度</a>
+			<a href="/">百度</a>
+			<a href="/">百度</a>
+			<a href="/">百度</a>
+		</div>
 	</div>
-	<script src="{resource_url('js/jquery.cycle.all.js')}"></script>
+	
+	<script type="text/javascript" src="{resource_url('js/jquery.cycle.all.js')}"></script>
+	<script type="text/javascript" src="{resource_url('js/jquery.bxslider/jquery.bxslider.min.js')}"></script>
+	<script type="text/javascript" src="{resource_url('js/jquery.bxslider/plugins/jquery.easing.1.3.js')}"></script>
+	<link href="{resource_url('js/jquery.bxslider/jquery.bxslider.css')}" rel="stylesheet" />
 	<script>
 		$(function(){
-			$('#homeSwiper').cycle({
-			    fx:     'scrollLeft',
-			    delay:   -4000,
-			    pager:  '#homeSwiperPager'
+			$('#homeSwiper').bxSlider({
+				auto:true,
+				touchEnabled:true,
+				nextSelector: '#none-next',
+  				prevSelector: '#none-prev'
 			});
 			
+			$('#goinSwiper').bxSlider({
+				easing:'swing',
+				useCSS:false,
+				infiniteLoop:true,
+				auto:true,
+				touchEnabled:true,
+				captions: true
+			});
+			
+			/*
 			$('#goinSwiper').cycle({
 			    fx:      'turnUp',
 			    randomizeEffects: false,
 			    delay:   -3000,
 			    pager:  '#goinSwiperPager'
 			});
+			*/
 			
-			
-			$('#hotProductSwiper').cycle({
-				width:'100%',
-				fit: true,
-			    fx:     'scrollLeft',
-			    delay:   -4000
+			$('#hotProductSwiper').bxSlider({
+				responsive:true,
+				infiniteLoop:true,
+				captions: true,
+				touchEnabled:true,
+				slideWidth: 250,
+			    minSlides: 5,
+			    maxSlides: 5,
+			    moveSlides: 1,
+			    slideMargin: 10
 			});
-		
+			
 			
 			$("li.level0").bind("mouseenter",function(){
 				$(this).addClass("current");

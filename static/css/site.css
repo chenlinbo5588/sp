@@ -365,7 +365,14 @@ input[type=text].validation_error {
 /** 页脚和顶部 */
 #footer {
     margin-bottom:80px;
-    text-align:center;
+}
+
+#footer .row1 {
+	background:#dedede;
+}
+
+#footer .row2 {
+	background:#a9abaf;
 }
 
 .type-file-file { position:absolute; top:0px; right:0px; height:25px; width:256px; filter:alpha(opacity:0); opacity: 0; cursor: pointer;}
@@ -402,10 +409,7 @@ input[type=text].validation_error {
 }
 
 
-.panel1 {
-	position:relative;
-	top:1px;
-}
+
 
 .panel1 h3 {
 	float:left;
@@ -440,6 +444,7 @@ input[type=text].validation_error {
 	font-size:15px;
 	background:#e2e2e2;
 	padding: 5px;
+	font-weight: bold;
 }
 
 
@@ -529,10 +534,19 @@ input[type=text].validation_error {
    	height:300px;
 }
 
-#homeSwiper div {
+
+#homeSwiper {
 	width:100%;
+}
+
+#homeSwiper div {
 	height:300px;
 }
+
+.more {
+	font-size:14px;
+}
+
 
 .swiperPager {
 	text-align:center;
@@ -548,16 +562,6 @@ input[type=text].validation_error {
     position: relative;
     top: -25px;
     z-index: 11;
-}
-
-
-#hotProductSwiper {
-    width:100%;
-}
-
-#hotProductSwiper div {
-	width:20%;
-	height: 200px;
 }
 
 
@@ -611,6 +615,8 @@ input[type=text].validation_error {
     text-align:left;
 }
 
+
+
 .newslist {
 	padding: 0 10px;
 	
@@ -622,6 +628,9 @@ input[type=text].validation_error {
 	line-height:30px;
 	overflow:hidden;
 }
+
+
+
 
 .newslist li a {
 	color:#333;
@@ -655,6 +664,8 @@ input[type=text].validation_error {
     background: #fff;
 }
 
+
+
 #starProducts {
 	margin:20px 0 0 0;
 }
@@ -665,6 +676,16 @@ input[type=text].validation_error {
 }
 
 
+.friendLinks {
+	border: 1px solid #dcdcdc;
+	margin:10px 0 ;
+	padding:5px;
+}
+
+.friendLinks a {
+	
+	
+}
 
 @media (max-width: 1024px) {
 	.boxz {
