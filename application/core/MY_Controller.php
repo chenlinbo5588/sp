@@ -7,6 +7,7 @@ class MY_Controller extends CI_Controller {
 	public $_verifyName = 'verify';
 	public $_lastVisit = 'lastvisit';
 	public $_reqtime ;
+	public $_navigation = array();
 	
 	
 	public $_seo = array(
@@ -163,6 +164,23 @@ class MY_Controller extends CI_Controller {
         }
     }
     
+    
+    public function breadcrumb(){
+    	
+    	if($this->_navigation){
+    		
+    		$temp = array();
+    		foreach($this->_navigation as $key => $item){
+    			$temp[] = "<a href=\"{$item}\">{$key}</a>";
+    		}
+    		
+    		return implode('&gt;',$temp);
+    	}else{
+    		return '';
+    	}
+    }
+    
+    
     public function display($viewname = ''){
     	if($viewname == ''){
     		$paramAr = $this->uri->segment_array();
@@ -183,6 +201,8 @@ class MY_Controller extends CI_Controller {
     	}
     	
     	$this->_smarty->assign($this->_seo);
+    	
+    	
     	$this->output->set_output($this->_smarty->fetch($this->_smarty->getTemplateDir(0).$viewname.'.tpl'));
     }
     

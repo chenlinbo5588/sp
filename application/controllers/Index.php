@@ -6,7 +6,6 @@ class Index extends Ydzj_Controller {
 	public function __construct(){
 		parent::__construct();
 		
-		$this->load->library('Team_Service');
 	}
 	
 	/**

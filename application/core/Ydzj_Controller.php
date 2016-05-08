@@ -11,6 +11,7 @@ class Ydzj_Controller extends MY_Controller {
 	
 	public $_profile = array();
 	
+	
 	public function __construct(){
 		parent::__construct();
 		
