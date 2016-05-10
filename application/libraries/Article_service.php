@@ -183,4 +183,16 @@ class Article_Service extends Base_Service {
 		return $this->toEasyUseArray($list,'ac_id');
 	}
 	
+	
+	public function getNextArticleById($aid){
+		
+		
+		
+		
+	}
+	
+	public function getPreArticleById($aid){
+		
+		
+	}
 }

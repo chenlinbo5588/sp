@@ -33,7 +33,7 @@ class News extends Ydzj_Controller {
 			
 			if($sideNavs){
 				foreach($sideNavs as $nav){
-					$this->sideNavs[$nav['ac_name']] = site_url('news/news_list/?id=').$nav['ac_id'];
+					$this->sideNavs[$nav['ac_name']] = site_url('news/news_list/?ac_id=').$nav['ac_id'];
 				}
 			}
 			
@@ -43,30 +43,20 @@ class News extends Ydzj_Controller {
 		$this->assign('sideNavs',$this->sideNavs);
 	}
 	
+	
+	
 	public function news_list()
 	{
 		
 		$keyword = $this->input->get_post('keyword') ? $this->input->get_post('keyword') : '';
 		
-		$currentId = $this->input->get_post('id');
-		if(empty($currentId)){
-			$currentId = $this->topClassId;
-		}
+		$currentAcId = $this->input->get_post('ac_id');
 		
-		if($currentId){
-			$parents = $this->article_service->getParentsById($currentId);
-			
-			if($parents){
-				$parents = array_reverse($parents);
-			}
-			
-			foreach($parents as $pitem){
-				$this->_navigation[$pitem['ac_name']] = site_url('news/news_list?id='.$pitem['ac_id']);
-			}
-		}
+		$this->_breadCrumbLinks($currentAcId);
 		
-		$childIds = $this->article_service->getAllChildArticleClassByPid($currentId);
-		$childIds[] = $currentId;
+		
+		$childIds = $this->article_service->getAllChildArticleClassByPid($currentAcId);
+		$childIds[] = $currentAcId;
 		
 		//print_r($childIds);
 		$currentPage = $this->input->get_post('page') ? $this->input->get_post('page') : 1;
@@ -89,7 +79,7 @@ class News extends Ydzj_Controller {
 				//'call_js' => 'search_page',
 				'form_id' => '#listForm',
 				'anchor' => 'listmao',
-				'base_link' => site_url('news/news_list/?')."id={$currentId}&keyword={$keyword}"
+				'base_link' => site_url('news/news_list/?')."ac_id={$currentAcId}&keyword={$keyword}"
 			)
 		);
 		
@@ -102,9 +92,10 @@ class News extends Ydzj_Controller {
 		if($list['data']){
 			$count = 0;
 			foreach($list['data'] as $key => $newsArtile){
-				$count = preg_match("/<img\s*?src=\"?(.*?)\"?/is",$newsArtile['article_content'],$matchs);
+				$count = preg_match("/<img\s*?src=\"?(.*?)\"?\s+/is",$newsArtile['article_content'],$matchs);
 				
 				if($count){
+					//print_r($matchs);
 					$newsArtile['title_img'] = resource_url($matchs[1]);
 				}else{
 					$newsArtile['title_img'] = resource_url('img/default.jpg');
@@ -122,11 +113,48 @@ class News extends Ydzj_Controller {
 		$this->assign('list',$list);
 		$this->assign('page',$list['pager']);
 		$this->assign('currentPage',$currentPage);
-		$this->assign('currentId',$currentId);
+		$this->assign('currentAcId',$currentAcId);
 		$this->assign('keyword',$keyword);
 		
 		$this->assign('breadcrumb',$this->breadcrumb());
 		$this->display('common/art_list');
+	}
+	
+	
+	private function _breadCrumbLinks($currentAcId){
+		
+		if(empty($currentAcId)){
+			$currentAcId = $this->topClassId;
+		}
+		
+		if($currentAcId){
+			$parents = $this->article_service->getParentsById($currentAcId);
+			if($parents){
+				$parents = array_reverse($parents);
+			}
+			
+			foreach($parents as $pitem){
+				$this->_navigation[$pitem['ac_name']] = site_url('news/news_list?id='.$pitem['ac_id']);
+			}
+		}
+		
+	}
+	
+	
+	
+	public function detail(){
+		
+		$id = $this->input->get_post('id');
+		$info = $this->Article_Model->getFirstById($id,'article_id');
+		
+		$this->_breadCrumbLinks($info['ac_id']);
+		
+		$this->assign('breadcrumb',$this->breadcrumb());
+		
+		$this->assign('info',$info);
+		$this->display('common/art_detail');
+		
+		
 	}
 	
 }

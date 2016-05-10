@@ -2,9 +2,9 @@
 	<div class="linePg">
 		<div class="{$pgClass}"></div>
 		<div class="boxz clearfix mg10">
-			<form id="listForm" name="listForm" action="{site_url('news/news_list')}" method="get">
+			<form id="detailForm" name="detailForm" action="{site_url('news/news_list')}" method="get">
 			<input type="hidden" name="page" value="{$currentPage}"/>
-			<input type="hidden" name="ac_id" value="{$currentAcId}"/>
+			<input type="hidden" name="id" value="{$currentId}"/>
 			<div class="sideNav">
 				<ul class="sideItem">
 					<li class="itemTitle"><h3><a href="{site_url('news/news_list')}">{$sideTitle}</h3></li>
@@ -21,24 +21,8 @@
 			<div class="contentArea">
 				<div class="breadcrumb"><span>您所在的位置:</span>{$breadcrumb}</div>
 				<div class="bd bdlist">
-					<table class="liststyle1">
-					{foreach from=$list['data'] item=item}
-					<tr class="liststyle1Item"><td>
-						<a href="{$item['url']}"><img class="previewPic" src="{$item['title_img']}" alt="{$item['article_title']|escape}"/></a>
-						<div class="previewCont">
-							<div><a href="{$item['url']}">{$item['article_title']|escape}</a></div>
-							<div>发布时间：{$item['gmt_create']|date_format:"%Y-%m-%d"}</div>
-							<div>{$item['digest']}</div>
-						</div>
-					</td></tr>
-					{foreachelse}
-					<tr>
-						<td>没有找到符合得记录</td>
-					</td>
-					{/foreach}
-					</table>
-					{include file="common/pagination.tpl"}
-					<a name="listmao"></a>
+					
+					
 				</div>
 			</div>
 			</form>
