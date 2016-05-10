@@ -15,7 +15,7 @@
 			</span>
 			<div class="fr clearfix">
 				{form_open(site_url('search/index'),'id="searchForm"')}
-				<input type="text" name="searchKey" class="fl" value="" style="width:200px" placeholder="输入产品名称"/><input type="image" name="search" src="{resource_url('img/search_btn.png')}"/>
+				<input type="text" name="searchKey" class="fl" value="" style="width:200px" placeholder="输入产品名称"/><input type="image" name="search" src="{resource_url('img/btns/search_btn.png')}"/>
 				</form>
 			</div>
 		</div>

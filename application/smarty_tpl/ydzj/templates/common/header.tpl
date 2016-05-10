@@ -18,11 +18,12 @@ var cookiedomain = "",
     cityUrl = "{site_url('district/index/')}",
     LOADING_IMAGE = "{resource_url('img/loading/loading.gif')}";
 </script>
+<script type="text/javascript" src="{resource_url('js/common.js')}"></script>
 <!--[if lte IE 9]>
 <script type="text/javascript" src="{resource_url('js/html5shiv.js')}"></script>
 <![endif]-->
 <script type="text/javascript" src="{resource_url('js/respond.min.js')}"></script>
-<script type="text/javascript" src="{resource_url('js/common.js')}"></script>
+
 </head>
 <body {if $bodyClass}class="{$bodyClass}"{/if}>
    <div id="wrap">
@@ -47,9 +48,9 @@ var cookiedomain = "",
        				</ul>
        			</li>
        			<li class="level0">
-       				<a class="link0" href="javascript:void(0)">新闻资讯</a>
+       				<a class="link0" href="{site_url('news/news_list')}">新闻资讯</a>
        				<ul class="sublist">
-       					<li><a class="link1" href="/">企业新闻</a></li>
+       					<li><a class="link1" href="{site_url('news/news_list/')}">企业新闻</a></li>
        					<li><a class="link1" href="/">行业动态</a></li>
        					<li><a class="link1" href="/">促销信息</a></li>
        				</ul>

@@ -90,6 +90,19 @@ function refreshFormHash(data){
 	}
 }
 
+
+/**
+ * 分页
+ * @param page
+ * @returns
+ */
+function search_page(page,formid){
+	var form = $(formid);
+    $("input[name=page]",form).val(page);
+    form.submit();
+}
+
+
 /* 显示Ajax表单 */
 function ajax_form(id, title, url, width, model)
 {
@@ -419,6 +432,38 @@ function showTips( tips, height, time ){
 })(jQuery);
 
 $(function(){
+	
+	$("input[name=jumpPage]").keydown(function(event){
+　　　　 // 注意此处不要用keypress方法，否则不能禁用　Ctrl+V 与　Ctrl+V,具体原因请自行查找keyPress与keyDown区分，十分重要，请细查
+        if (/MSIE/.test(navigator.userAgent)) {  // 判断浏览器
+            if ( ((event.keyCode > 47) && (event.keyCode < 58)) || ((event.keyCode >= 96) && (event.keyCode <= 105)) || (event.keyCode == 8) ) { 　// 判断键值  
+                return true;  
+            } else { 
+                return false;  
+            }
+        } else {  
+            if ( ((event.which > 47) && (event.which < 58)) || ((event.keyCode >= 96) && (event.keyCode <= 105)) || (event.which == 8) || (event.keyCode == 17) ) {  
+                    return true;  
+            } else {  
+                    return false;  
+            }  
+        }}).focus(function() {
+        
+        
+        this.style.imeMode='disabled';   // 禁用输入法,禁止输入中文字符
+    });
+    
+    $("input.jumpBtn").bind("click",function(e){
+    	var btn = $(e.target);
+    	var pagerDiv = btn.closest('.pagination');
+    	var formid = pagerDiv.attr('data-formid');
+    	
+    	$(formid).find("input[name=page]").val(btn.closest("strong").find("input[name=jumpPage]").val());
+    	
+    	$(formid).submit();
+    });
+	    
+	    
 	$("li.level0").bind("mouseenter",function(){
 		$(this).addClass("current");
 		/*

@@ -10,6 +10,7 @@ $entity = array(
 'article_title' => 'varchar',
 'article_content' => 'text',
 'article_time' => 'int',
+'article_click' => 'int',
 'gmt_create' => 'int',
 'gmt_modify' => 'int'
 );

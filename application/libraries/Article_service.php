@@ -6,6 +6,7 @@ class Article_Service extends Base_Service {
 	
 	private $_articleModel = null;
 	private $_articleClassModel = null;
+	private $_parentList = array();
 
 	public function __construct(){
 		parent::__construct();
@@ -15,6 +16,12 @@ class Article_Service extends Base_Service {
 		$this->_articleModel = self::$CI->Article_Model;
 		$this->_articleClassModel = self::$CI->Article_Class_Model;
 	}
+	
+	
+	public function getArticleListByCondition($condition){
+		return $this->_articleModel->getList($condition);
+	}
+	
 	
 	
 	public function getArticleClassTreeHTML(){
@@ -32,6 +39,23 @@ class Article_Service extends Base_Service {
 		
 	}
 	
+	
+	public function getParentsById($id = 0,$field = '*'){
+
+        $condition['select'] = $field;
+        $condition['where'] = array(
+            'ac_id' => $id
+        );
+        
+        $result = $this->_articleClassModel->getById($condition);
+        if($result){
+            $this->_parentList[] = $result;
+            $this->getParentsById($result['ac_parent_id']);
+        }
+        
+        return $this->_parentList;
+    }
+    
 	
 	/**
 	 * 获得所所有的子孙

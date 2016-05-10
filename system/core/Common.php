@@ -872,8 +872,9 @@ function pageArrayGenerator($pagerParam,$total){
     $pageAb = ($currPage-$stepTmp)>0?($currPage-$stepTmp):1;
     $pageAe = ($currPage+$stepTmp)>$pageEnd?($pageEnd):($currPage+$stepTmp);
     
-    return array(
-        'pager'=>array(
+    
+    
+    $temp = array_merge( array(
         	'shortStyle'=> false,
             'pageUnit'=>'条',
             'pageTit'=>'记录',
@@ -887,13 +888,12 @@ function pageArrayGenerator($pagerParam,$total){
             'pageFirstNum'=> 1,
             'pageLastNum'=> $pageEnd,
             'pageAb'=> $pageAb,
-            'pageAe'=> $pageAe,
-            'query_string' => $pagerParam['query_string'],
-            'call_js' => $pagerParam['call_js'],
-            'form_id' => $pagerParam['form_id']
-        )
-
-    );
+            'pageAe'=> $pageAe
+        ),$pagerParam);
+        
+        
+        
+    return array('pager'=> $temp);
 }
 
 /**

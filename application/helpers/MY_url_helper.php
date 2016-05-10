@@ -29,6 +29,10 @@ if ( ! function_exists('resource_url'))
 	 */
 	function resource_url($uri = '', $protocol = NULL)
 	{
+		if(strpos($uri,'http') !== false){
+			return $uri;
+		}
+		
 		if(strpos($uri,'static/') !== false){
 			return get_instance()->config->base_url($uri, $protocol);
 		}else{
