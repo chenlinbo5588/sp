@@ -68,11 +68,7 @@ class Goods_Class extends Ydzj_Admin_Controller {
 			
 			for($i = 0; $i < 1; $i++){
 				
-				$info = array(
-					'gc_name' => $this->input->post('gc_name'),
-					'gc_parent_id' => $this->input->post('gc_parent_id') ? $this->input->post('gc_parent_id') : 0,
-					'gc_sort' => $this->input->post('gc_sort') ? $this->input->post('gc_sort') : 255
-				);
+				$info = $this->_prepareGoodClassData();
 				
 				if(!$this->form_validation->run()){
 					$feedback = $this->form_validation->error_string();
@@ -164,11 +160,31 @@ class Goods_Class extends Ydzj_Admin_Controller {
 		if($this->input->post('gc_parent_id')){
 			$this->form_validation->set_rules('gc_parent_id','上级分类', "in_db_list[{$this->Goods_Class_Model->_tableRealName}.gc_id]|callback_checkpid[{$action}]");
 		}
+		
+		
+		if($this->input->post('gc_pic')){
+			$this->form_validation->set_rules('gc_pic','分类图片',"required|valid_url");
+		}
+		
 			
 		if($this->input->post('gc_sort')){
 			$this->form_validation->set_rules('gc_sort','排序',"is_natural|less_than[256]");
 		}
 		
+	}
+	
+	
+	private function _prepareGoodClassData(){
+		
+		$info = array(
+			'gc_name' => $this->input->post('gc_name'),
+			'gc_parent_id' => $this->input->post('gc_parent_id') ? $this->input->post('gc_parent_id') : 0,
+			'gc_pic_id' => $this->input->post('gc_pic_id') ? $this->input->post('gc_pic_id') : 0,
+			'gc_pic' => $this->input->post('gc_pic') ? $this->input->post('gc_pic') : '',
+			'gc_sort' => $this->input->post('gc_sort') ? $this->input->post('gc_sort') : 255
+		);
+		
+		return $info;
 	}
 	
 	
@@ -187,12 +203,8 @@ class Goods_Class extends Ydzj_Admin_Controller {
 			$this->_getRules('edit');
 			for($i = 0; $i < 1; $i++){
 				
-				$info = array(
-					'gc_id' => $gc_id,
-					'gc_name' => $this->input->post('gc_name'),
-					'gc_parent_id' => $this->input->post('gc_parent_id') ? $this->input->post('gc_parent_id') : 0,
-					'gc_sort' => $this->input->post('gc_sort') ? $this->input->post('gc_sort') : 255
-				);
+				$info = $this->_prepareGoodClassData();
+				$info['gc_id'] = $gc_id;
 				
 				if(!$this->form_validation->run()){
 					$feedback = $this->form_validation->error_string();

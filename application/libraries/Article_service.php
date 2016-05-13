@@ -17,13 +17,6 @@ class Article_Service extends Base_Service {
 		$this->_articleClassModel = self::$CI->Article_Class_Model;
 	}
 	
-	
-	public function getArticleListByCondition($condition){
-		return $this->_articleModel->getList($condition);
-	}
-	
-	
-	
 	public function getArticleClassTreeHTML(){
 		$list = $this->_articleClassModel->getList();
 		
@@ -184,15 +177,34 @@ class Article_Service extends Base_Service {
 	}
 	
 	
-	public function getNextArticleById($aid){
+	public function getNextByArticle($article){
+		$article = $this->_articleModel->getList(array(
+			'where' => array('ac_id' => $article['ac_id'], 'article_id >' => $article['article_id'] , 'article_show' => 1),
+			'order' => 'article_id ASC',
+			'limit' => 1
+		));
 		
-		
-		
-		
+		if($article[0]){
+			return $article[0];
+		}else{
+			return false;
+		}
 	}
 	
-	public function getPreArticleById($aid){
+	public function getPreByArticle($article){
+		$article = $this->_articleModel->getList(array(
+			'where' => array('ac_id' => $article['ac_id'], 'article_id <' => $article['article_id'] , 'article_show' => 1),
+			'order' => 'article_id DESC',
+			'limit' => 1
+		));
 		
+		 //print_r($article);
+		
+		if($article[0]){
+			return $article[0];
+		}else{
+			return false;
+		}
 		
 	}
 }

@@ -49,13 +49,17 @@ class News extends Ydzj_Controller {
 	{
 		
 		$keyword = $this->input->get_post('keyword') ? $this->input->get_post('keyword') : '';
-		
 		$currentAcId = $this->input->get_post('ac_id');
 		
+		
+		if(empty($currentAcId)){
+			$currentAcId = $this->topClassId;
+		}
+		
 		$this->_breadCrumbLinks($currentAcId);
-		
-		
 		$childIds = $this->article_service->getAllChildArticleClassByPid($currentAcId);
+		
+		
 		$childIds[] = $currentAcId;
 		
 		//print_r($childIds);
@@ -87,11 +91,12 @@ class News extends Ydzj_Controller {
 			$condition['like']['article_title'] = $keyword;
 		}
 		
-		$list = $this->article_service->getArticleListByCondition($condition);
+		$list = $this->Article_Model->getList($condition);
 		
 		if($list['data']){
 			$count = 0;
 			foreach($list['data'] as $key => $newsArtile){
+				/*
 				$count = preg_match("/<img\s*?src=\"?(.*?)\"?\s+/is",$newsArtile['article_content'],$matchs);
 				
 				if($count){
@@ -101,8 +106,22 @@ class News extends Ydzj_Controller {
 					$newsArtile['title_img'] = resource_url('img/default.jpg');
 				}
 				
-				$newsArtile['url'] = site_url('news/detail?id=') . $newsArtile['article_id'];
-				$newsArtile['digest'] = cutText(html_entity_decode(strip_tags($newsArtile['article_content'])),120);
+				*/
+				if($newsArtile['article_pic']){
+					$newsArtile['article_pic'] = resource_url($newsArtile['article_pic']);
+				}else{
+					$newsArtile['article_pic'] = resource_url('img/default.jpg');
+				}
+				
+				if(empty($newsArtile['article_url'])){
+					$newsArtile['article_url'] = site_url('news/detail?id=') . $newsArtile['article_id'].'&ac_id='.$newsArtile['ac_id'];
+				}
+				
+				
+				if(empty(trim($newsArtile['article_digest']))){
+					$newsArtile['article_digest'] = cutText(html_entity_decode(strip_tags($newsArtile['article_content'])),120);
+				}
+				
 				$list['data'][$key] = $newsArtile;
 				
 				$count = 0;
@@ -117,7 +136,7 @@ class News extends Ydzj_Controller {
 		$this->assign('keyword',$keyword);
 		
 		$this->assign('breadcrumb',$this->breadcrumb());
-		$this->display('common/art_list');
+		$this->display();
 	}
 	
 	
@@ -145,14 +164,32 @@ class News extends Ydzj_Controller {
 	public function detail(){
 		
 		$id = $this->input->get_post('id');
-		$info = $this->Article_Model->getFirstById($id,'article_id');
-		
-		$this->_breadCrumbLinks($info['ac_id']);
+		$ac_id = $this->input->get_post('ac_id');
+		$info = $this->Article_Model->getFirstByKey($id,'article_id');
+		if($info){
+			$this->_breadCrumbLinks($info['ac_id']);
+			$nextArticle = $this->article_service->getNextByArticle($info);
+			$preArticle = $this->article_service->getPreByArticle($info);
+			if($nextArticle && empty($nextArticle['article_url'])){
+				$nextArticle['article_url'] = site_url('news/detail?id=') . $nextArticle['article_id'].'&ac_id='.$nextArticle['ac_id'];
+			}
+			
+			if($preArticle && empty($preArticle['article_url'])){
+				$preArticle['article_url'] = site_url('news/detail?id=') . $preArticle['article_id'].'&ac_id='.$preArticle['ac_id'];
+			}
+			
+			//print_r($preArticle);
+			
+			$this->assign('nextArticle',$nextArticle);
+			$this->assign('preArticle',$preArticle);
+		}else{
+			$this->_breadCrumbLinks($ac_id);
+		}
 		
 		$this->assign('breadcrumb',$this->breadcrumb());
-		
 		$this->assign('info',$info);
-		$this->display('common/art_detail');
+		
+		$this->display();
 		
 		
 	}

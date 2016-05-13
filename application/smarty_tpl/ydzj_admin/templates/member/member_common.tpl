@@ -1,14 +1,9 @@
-<script type="text/javascript" src="{resource_url('js/dialog/dialog.js')}" id="dialog_js"></script>
-<script type="text/javascript" src="{resource_url('js/jquery-ui/jquery.ui.js')}"></script>
-<script type="text/javascript" src="{resource_url('js/ajaxfileupload/ajaxfileupload.js')}"></script>
-<script type="text/javascript" src="{resource_url('js/jquery.Jcrop/jquery.Jcrop.js')}"></script>
-<link href="{resource_url('js/jquery.Jcrop/jquery.Jcrop.min.css')}" rel="stylesheet" type="text/css"/>
+{include file="common/ajaxfileupload.tpl"}
 <script type="text/javascript">
 
 //裁剪图片后返回接收函数
 function call_back(resp){
-    formhash = resp.formhash;
-    $("input[name=formhash]").val(formhash);
+    refreshFormHash(resp);
     
     $('#member_avatar').val(resp.picname);
     $('#view_img').attr('src',resp.url);
@@ -40,7 +35,7 @@ $(function(){
                 data: { formhash : formhash , id : $("input[name=avatar_id]").val() , size : "big" },
                 success: function (resp, status)
                 {
-                    if (resp.status == 1){
+                    if (resp.error == 0){
                         $("input[name=avatar_id]").val(resp.id);
                         ajax_form('cutpic','裁剪','{admin_site_url("member/pic_cut")}?type=member&x=200&y=200&resize=0&ratio=1&url='+resp.url,800);
                     }else

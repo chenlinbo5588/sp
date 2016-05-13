@@ -83,34 +83,35 @@
   	});
   	
   	$("#listtable").delegate("img[nc_type='flex']", "click",function(){
-		var status = $(this).attr('status');
+  		var obj = $(this);
+		var status = obj.attr('status');
+		
+		console.log(obj);
+		
 		if(status == 'open'){
-			var pr = $(this).parent('td').parent('tr');
-			var id = $(this).attr('fieldid');
-			var obj = $(this);
-			$(this).attr('status','none');
-		}
+			var pr = obj.parent('td').parent('tr');
+			var id = obj.attr('fieldid');
+			obj.attr('status','close');
 		
-		//ajax
-		$.ajax({
-			url: '{admin_site_url('goods_class/category')}?gc_parent_id='+id,
-			success: function(html){
-				if($.trim(html) != ''){
-					$(html).insertAfter(pr);
+			//ajax
+			$.ajax({
+				url: '{admin_site_url('goods_class/category')}?gc_parent_id='+id,
+				success: function(html){
+					if($.trim(html) != ''){
+						$(html).insertAfter(pr);
+					}
+					
+					obj.attr('status','close');
+					obj.attr('src',obj.attr('src').replace("tv-expandable","tv-collapsable"));
+				},
+				error: function(){
+					alert('获取信息失败');
 				}
-				
-				obj.attr('status','close');
-				obj.attr('src',obj.attr('src').replace("tv-expandable","tv-collapsable"));
-			},
-			error: function(){
-				alert('获取信息失败');
-			}
-		});
-		
-		if(status == 'close'){
-			$(".row"+$(this).attr('fieldid')).remove();
-			$(this).attr('src',$(this).attr('src').replace("tv-collapsable","tv-expandable"));
-			$(this).attr('status','open');
+			});
+		} else if(status == 'close'){
+			$(".row"+obj.attr('fieldid')).remove();
+			obj.attr('src',obj.attr('src').replace("tv-collapsable","tv-expandable"));
+			obj.attr('status','open');
 		}
 	});
 	

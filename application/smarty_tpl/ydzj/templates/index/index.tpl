@@ -1,8 +1,8 @@
 {include file="common/header.tpl"}
    <div id="homeSwiper">
-	    <div style="background:url({resource_url('img/1.jpg')}) no-repeat 50% 50%"></div>
-        <div style="background:url({resource_url('img/2.jpg')}) no-repeat 50% 50%"></div>
-        <div style="background:url({resource_url('img/3.jpg')}) no-repeat 50% 50%"></div>
+	    <div style="background:url({resource_url('img/cmp/1.jpg')}) no-repeat 50% 0"></div>
+        <div style="background:url({resource_url('img/cmp/2.jpg')}) no-repeat 50% 0"></div>
+        <div style="background:url({resource_url('img/cmp/3.jpg')}) no-repeat 50% 0"></div>
 	</div>
    
 	<div class="boxz">
@@ -25,15 +25,15 @@
 					<div class="colPanel" style="padding:0 20px 0 0;">
 						<h3 class="panelTitel">走进标度</h3>
 						<div id="goinSwiper">
-					        <div><img src="{resource_url('img/goin1.jpg')}"/></div>
-					        <div><img src="{resource_url('img/goin2.jpg')}"/></div>
+					        <div><img src="{resource_url('img/cmp/goin1.jpg')}"/></div>
+					        <div><img src="{resource_url('img/cmp/goin2.jpg')}"/></div>
 				    	</div>
 						<p class="intro" id="goinIntro">介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己。</p>
 					</div>
 				</li>
 				<li class="col fl">
 					<div class="colPanel newslist">
-						<h3 class="panelTitel"><span>企业新闻</span><a class="more fr" href="/news/list">更多&gt;&gt;</a></h3>
+						<h3 class="panelTitel"><span>企业新闻</span><a class="more fr" href="/news/news_list">更多&gt;&gt;</a></h3>
 						<ol class="clearfix">
 							<li><a href="/news/detail/?id=39">2015年越南国际塑胶工业展，秣马厉兵，通佳人准备</a><span>2016-09-09</span></li>
 							<li><a href="/news/detail/?id=39">积极备战2015泰国国际塑胶展</a><span>2016-09-09</span></li>
@@ -46,7 +46,7 @@
 					</div>
 					
 					<div class="colPanel newslist">
-						<h3 class="panelTitel"><span>行业动态</span><a class="more fr" href="/news/list">更多&gt;&gt;</a></h3>
+						<h3 class="panelTitel"><span>行业动态</span><a class="more fr" href="/news/news_list">更多&gt;&gt;</a></h3>
 						<ol class="clearfix">
 							<li><a href="/news/detail/?id=39">2015年越南国际塑胶工业展，秣马厉兵，通佳人准备</a><span>2016-09-09</span></li>
 							<li><a href="/news/detail/?id=39">积极备战2015泰国国际塑胶展</a><span>2016-09-09</span></li>
@@ -65,12 +65,12 @@
 			</div>
 			<div class="panelContent">
 				<ul id="hotProductSwiper">
-		            <li><a href="/" target="_blank"><img src="{resource_url('img/nature1.jpg')}" title="Funky nature1"/></a></li>
-		            <li><a href="/" target="_blank"><img src="{resource_url('img/nature2.jpg')}" title="Funky roots"/></a></li>
-		            <li><a href="/" target="_blank"><img src="{resource_url('img/nature3.jpg')}" title="Funky roots2"/></a></li>
-		            <li><a href="/" target="_blank"><img src="{resource_url('img/nature4.jpg')}" title="Funky roots3"/></a></li>
-		            <li><a href="/" target="_blank"><img src="{resource_url('img/nature5.jpg')}" title="Funky roots4"/></a></li>
-		            <li><a href="/" target="_blank"><img src="{resource_url('img/nature6.jpg')}" title="Funky roots1"/></a></li>
+		            <li><a href="/" target="_blank"><img src="{resource_url('img/cmp/nature1.jpg')}" title="Funky nature1"/></a></li>
+		            <li><a href="/" target="_blank"><img src="{resource_url('img/cmp/nature2.jpg')}" title="Funky roots"/></a></li>
+		            <li><a href="/" target="_blank"><img src="{resource_url('img/cmp/nature3.jpg')}" title="Funky roots2"/></a></li>
+		            <li><a href="/" target="_blank"><img src="{resource_url('img/cmp/nature4.jpg')}" title="Funky roots3"/></a></li>
+		            <li><a href="/" target="_blank"><img src="{resource_url('img/cmp/nature5.jpg')}" title="Funky roots4"/></a></li>
+		            <li><a href="/" target="_blank"><img src="{resource_url('img/cmp/nature6.jpg')}" title="Funky roots1"/></a></li>
 			    </li>
 			</div>
 		</div>

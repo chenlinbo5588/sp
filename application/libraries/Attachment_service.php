@@ -187,7 +187,7 @@ class Attachment_Service extends Base_Service {
 	 * 添加图片附件信息
 	 * 
 	 */
-	public function addImageAttachment($filename, $moreConfig = array(),$from = 0){
+	public function addImageAttachment($filename, $moreConfig = array(),$from = 0,$mod = ''){
 		
 		//处理照片
 		$config = $this->getImageConfig();
@@ -212,7 +212,7 @@ class Attachment_Service extends Base_Service {
 			
 			$fileData['image_width'] = $fileData['image_width'] ? $fileData['image_width'] : 0;
 			$fileData['image_height'] = $fileData['image_height'] ? $fileData['image_height'] : 0;
-			
+			$fileData['mod'] = $mod;
 			
 			$fileData['from_bg'] = $from;
 			$file_id = self::$CI->Attachment_Model->_add($fileData);
@@ -244,23 +244,24 @@ class Attachment_Service extends Base_Service {
 	 * @param datatype $uploadName 上传名
 	 * @param datatype $fromBg description
 	 */
-	public function pic_upload($uid,$uploadName , $fromBg = 0){
+	public function pic_upload($uid,$uploadName , $fromBg = 0,$mod = ''){
 		
 		$this->setUid($uid);
-		$fileData = $this->addImageAttachment($uploadName,array(),$fromBg);
-		
+		$fileData = $this->addImageAttachment($uploadName,array(),$fromBg,$mod);
 		//$Orientation[$exif[IFD0][Orientation]];
 		//$exif = exif_read_data($fileData['file_url'],0,true);
 		if($fileData){
-			
 			//上传多次情况下，清理上一次上传的文件
+			
+			/*
+			 * 还没有解决，异步上上传后，放弃保存后， 原来的图变被删的问题, 暂时注释
 			if(self::$CI->input->post('id')){
 				$this->deleteFiles(array(self::$CI->input->post('id')),'all');
 			}
-			
-			return array('error' => 0, 'status'=>1,'formhash'=>self::$CI->security->get_csrf_hash(),'id' => $fileData['id'], 'url'=>base_url($fileData['file_url']));
+			*/
+			return array('error' => 0, 'formhash'=>self::$CI->security->get_csrf_hash(),'id' => $fileData['id'], 'url'=>base_url($fileData['file_url']));
 		}else{
-			return array('error' => 1, 'status'=>0,'formhash'=>self::$CI->security->get_csrf_hash(),'msg'=>$this->getErrorMsg('',''));
+			return array('error' => 1, 'formhash'=>self::$CI->security->get_csrf_hash(),'msg'=>$this->getErrorMsg('',''));
 		}
 	}
 	

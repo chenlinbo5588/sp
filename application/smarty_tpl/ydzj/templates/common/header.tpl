@@ -56,10 +56,10 @@ var cookiedomain = "",
        				</ul>
        			</li>
        			<li class="level0">
-       				<a class="link0" href="javascript:void(0)">产品中心</a>
+       				<a class="link0" href="{site_url('product/plist')}">产品中心</a>
        				<ul class="sublist clearfix" id="menuProducts">
        					<li class="level1">
-       						<div><a href="/"><img src="{resource_url('img/product.jpg')}"/><div>系列1</div></a></div>
+       						<div><a href="{site_url('news/news_list')}"><img src="{resource_url('img/cmp/product.jpg')}"/><div>系列1</div></a></div>
        						<ol class="serialProduct">
        							<li><a href="">PE多层气垫膜生产线</a></li>
        							<li><a href="">PE多层气垫膜生产线</a></li>
@@ -70,7 +70,7 @@ var cookiedomain = "",
        						</ol>
        					</li>
        					<li class="level1">
-       						<div><a href="/"><img src="{resource_url('img/product.jpg')}"/><div>系列1</div></a></div>
+       						<div><a href="/"><img src="{resource_url('img/cmp/product.jpg')}"/><div>系列1</div></a></div>
        						<ol class="serialProduct">
        							<li><a href="">PE多层气垫膜生产线</a></li>
        							<li><a href="">PE多层气垫膜生产线</a></li>
@@ -81,7 +81,7 @@ var cookiedomain = "",
        						</ol>
        					</li>
        					<li class="level1">
-       						<div><a href="/"><img src="{resource_url('img/product.jpg')}"/><div>系列1</div></a></div>
+       						<div><a href="/"><img src="{resource_url('img/cmp/product.jpg')}"/><div>系列1</div></a></div>
        						<ol class="serialProduct">
        							<li><a href="">PE多层气dd垫膜生产线</a></li>
        							<li><a href="">PE多层气垫dsd膜生产线</a></li>
@@ -92,7 +92,7 @@ var cookiedomain = "",
        						</ol>
        					</li>
        					<li class="level1">
-       						<div><a href="/"><img src="{resource_url('img/product.jpg')}"/><div>系列1</div></a></div>
+       						<div><a href="/"><img src="{resource_url('img/cmp/product.jpg')}"/><div>系列1</div></a></div>
        						<ol class="serialProduct">
        							<li><a href="">PE多层气垫膜生产线</a></li>
        							<li><a href="">PE多层气垫膜生产线</a></li>
@@ -103,7 +103,7 @@ var cookiedomain = "",
        						</ol>
        					</li>
        					<li class="level1">
-       						<div><a href="/"><img src="{resource_url('img/product.jpg')}"/><div>系列1</div></a></div>
+       						<div><a href="/"><img src="{resource_url('img/cmp/product.jpg')}"/><div>系列1</div></a></div>
        						<ol class="serialProduct">
        							<li><a href="">PE多层d气垫膜生产线</a></li>
        							<li><a href="">PE多层气ss垫膜生产线</a></li>

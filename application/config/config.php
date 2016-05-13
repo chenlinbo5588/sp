@@ -28,7 +28,7 @@ $config['base_url'] = '';
 | Config this to your website name
 |
 */
-$config['site_name'] = '52运动之家';
+$config['site_name'] = '标度';
 
 /*
 |--------------------------------------------------------------------------

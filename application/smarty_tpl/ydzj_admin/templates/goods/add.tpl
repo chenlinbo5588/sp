@@ -25,6 +25,9 @@
           <td class="vatop rowform"><input type="text" value="{$info['goods_name']|escape}" name="goods_name" id="goods_name" maxlength="20" class="txt"></td>
           <td class="vatop tips">{form_error('goods_name')}</td>
         </tr>
+        <tr class="noborder">
+          <td colspan="2" class="required"><label class="validation" for="goods_name">商品代码:{$info['goods_code']}</label></td>
+        </tr>
         <tr>
           <td colspan="2" class="required"><label for="brandId">品牌:</label></td>
         </tr>
@@ -66,9 +69,20 @@
             <span class="type-file-box"><input type='text' name='goods_pic_txt' value="{if $info['goods_pic']}{$info['goods_pic']}{/if}" id='goods_pic_txt' class='type-file-text' /><input type='button' name='button' id='button1' value='' class='type-file-button' />
             <input name="goods_pic" type="file" class="type-file-file" id="goods_pic" size="30" hidefocus="true" nc_type="change_brand_logo">
             </span></td>
-          <td class="vatop tips"><span class="vatop rowform">上传商品默认主图，如多规格值时将默认使用该图或分规格上传各规格主图；支持jpg、gif、png格式上传或从图片空间中选择，建议使用尺寸800x800像素以上、大小不超过1M的正方形图片，上传后的图片将会自动保存在图片空间的默认分类中。</span></td>
+          <td class="vatop tips"><span class="vatop rowform">上传商品默认主图，如多规格值时将默认使用该图或分规格上传各规格主图；支持jpg，建议使用尺寸800x800像素以上、大小不超过1M的正方形图片，上传后的图片将会自动保存在图片空间的默认分类中。</span></td>
         </tr>
-        
+       	<tr>
+          <td colspan="2" class="required">商品展示图片上传(用于显示在详情页面):</td>
+        </tr>
+        <tr class="noborder">
+          <td colspan="2" id="divComUploadContainer"><input type="file" multiple="multiple" id="fileupload" name="fileupload" /></td>
+        </tr>
+        <tr>
+       		<td colspan="2">
+       			<ul id="thumbnails" class="thumblists">
+       			</ul>
+       		</td>
+       	</tr>
         <tr>
           <td colspan="2" class="required"><label class="validation">商品描述: </label>{form_error('goods_intro')}</td>
         </tr>
@@ -138,11 +152,55 @@
       </tfoot>
     </table>
   </form>
+  {include file="common/fileupload.tpl"}
   <script type="text/javascript">
+  	function insert_editor(file_path){
+		editor1.insertHtml('<img src="'+ file_path + '" alt="'+ file_path + '"/>');
+	}
+	
+	function del_file_upload(file_id)
+	{
+	    if(!window.confirm('您确定要删除吗?')){
+	        return;
+	    }
+	    
+	    $.getJSON('{admin_site_url("goods/delimg")}?mod=goods&file_id=' + file_id + "&goods_id=" + $("input[name=goods_id]").val(), function(result){
+	    	refreshFormHash(result.data);
+	    	
+	        if(result){
+	            $('#' + file_id).remove();
+	        }else{
+	            alert('删除失败');
+	        }
+	    });
+	}
+	
 	$(function(){
 		$("#goods_pic").change(function(){
 			$("#goods_pic_txt").val($(this).val());
 		});
+		
+		// 图片上传
+	    $('#fileupload').each(function(){
+	        $(this).fileupload({
+	            dataType: 'json',
+	            url: '{admin_site_url("goods/addimg")}?mod=goods',
+	            done: function (e,data) {
+	            	refreshFormHash(data.result);
+	            	
+	                if(data.result.error == 0){
+	                	add_uploadedfile(data.result);
+	                }
+	            }
+	        });
+	    });
+	    
+	    function add_uploadedfile(file_data)
+		{
+		    var newImg = '<li id="' + file_data.id + '" class="picture"><input type="hidden" name="file_id[]" value="' + file_data.id + '" /><div class="size-64x64"><span class="thumb"><i></i><img src="' + file_data.url + '" alt="" width="64px" height="64px"/></span></div><p><span><a href="javascript:insert_editor(\'' + file_data.url + '\');">插入</a></span><span><a href="javascript:del_file_upload(\'' + file_data.id + '\');">删除</a></span></p></li>';
+		    $('#thumbnails').prepend(newImg);
+		}
 	})
- </script>
+  </script>
+ 
 {include file="common/main_footer.tpl"}

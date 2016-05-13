@@ -2,7 +2,7 @@
     		<div class="row1">
     			<div class="boxz clearfix" style="">
     				<div class="fr">
-    					<img src="{resource_url('img/ma.png')}" style="width:120px;height:120px;"/>
+    					<img src="{resource_url('img/cmp/ma.png')}" style="width:120px;height:120px;"/>
     					<br/><span>扫描二维码:访问手机版</span>
     				</div>
     				<table>

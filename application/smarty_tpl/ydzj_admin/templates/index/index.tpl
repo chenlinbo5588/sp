@@ -302,14 +302,14 @@ $(function(){
   <tbody>
     <tr>
       <td colspan="2" height="90" class="mainhd"><div class="layout-header"> <!-- Title/Logo - can use text instead of image -->
-          <div id="title"><a href="javascript:void(0);">52运动之家-管理中心</a></div>
+          <div id="title"><a href="javascript:void(0);">{config_item('site_name')}-管理中心</a></div>
 	          <!-- Top navigation -->
 	          <div id="topnav" class="top-nav">
 	            <ul>
 	              <li class="adminid" title="您好:{$manage_profile['basic']['username']|escape}">您好&nbsp;:&nbsp;<strong>{$manage_profile['basic']['username']|escape}</strong></li>
 	              <li><a href="{admin_site_url('index/modifypw')}" target="workspace" ><span>修改密码</span></a></li>
 	              <li><a href="{admin_site_url('index/logout')}" title="退出"><span>退出</span></a></li>
-	              <li><a href="{site_url('index')}" target="_blank" title="52运动之家"><span>52运动之家</span></a></li>
+	              <li><a href="{site_url('index')}" target="_blank" title="{config_item('site_name')}"><span>{config_item('site_name')}</span></a></li>
 	            </ul>
 	          </div>
 	          <!-- End of Top navigation --> 

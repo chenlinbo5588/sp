@@ -64,8 +64,10 @@ class Article extends Ydzj_Admin_Controller {
 		$this->form_validation->set_rules('ac_id','文章分类',"required|in_db_list[{$this->Article_Class_Model->_tableRealName}.ac_id]");
 		
 		if($this->input->post('article_url')){
+			
 			$this->form_validation->set_rules('article_url','链接','required|valid_url');
 		}
+		
 		
 		$this->form_validation->set_rules('article_show','是否显示','required|in_list[0,1]');
 		
@@ -74,6 +76,17 @@ class Article extends Ydzj_Admin_Controller {
 			$this->form_validation->set_rules('article_sort','排序',"is_natural|less_than[256]");
 		}
 		
+		if($this->input->post('article_pic')){
+			$this->form_validation->set_rules('article_pic','文章封面',"required|valid_url");
+		}
+		
+		if($this->input->post('article_author')){
+			$this->form_validation->set_rules('article_author','文章作者',"required|max_length[30]");
+		}
+		
+		if($this->input->post('article_digest')){
+			$this->form_validation->set_rules('article_digest','文章摘要',"required|max_length[200]");
+		}
 		
 	}
 	
@@ -103,18 +116,34 @@ class Article extends Ydzj_Admin_Controller {
 	}
 	
 	
-	private function _prepareGoodsData(){
+	private function _prepareArticleData(){
 		
 		$info = array(
 			'article_title' => $this->input->post('article_title'),
 			'article_content' => $this->input->post('article_content'),
 			'ac_id' => $this->input->post('ac_id') ? $this->input->post('ac_id') : 0,
 			'article_url' => $this->input->post('article_url') ? $this->input->post('article_url') : '',
-			'goods_intro' => $this->input->post('goods_intro') ? $this->input->post('goods_intro') : '',
+			'article_pic' => $this->input->post('article_pic') ? $this->input->post('article_pic') : '',
+			'article_pic_id' => $this->input->post('article_pic_id') ? $this->input->post('article_pic_id') : 0,
 			'article_show' => $this->input->post('article_show'),
 			'article_sort' => $this->input->post('article_sort') ? $this->input->post('article_sort') : 255,
+			
 		);
 		
+		if(empty($this->input->post('article_author'))){
+			$info['article_author'] = $this->_adminProfile['basic']['username'];
+		}else{
+			$info['article_author'] = $this->input->post('article_author');
+		}
+		
+		if(empty($this->input->post('article_digest'))){
+			$info['article_digest'] = cutText(html_entity_decode(strip_tags($info['article_content'])),120);
+		}else{
+			$info['article_digest'] = cutText(html_entity_decode(strip_tags($this->input->post('article_digest'))),120);
+		}
+		
+		$info['article_time'] = $this->input->server('REQUEST_TIME');
+		$info['uid'] = $this->_adminProfile['basic']['uid'];
 		
 		return $info;
 	}
@@ -130,7 +159,7 @@ class Article extends Ydzj_Admin_Controller {
 			
 			for($i = 0; $i < 1; $i++){
 				
-				$info = $this->_prepareGoodsData();
+				$info = $this->_prepareArticleData();
 				
 				if(!$this->form_validation->run()){
 					$feedback = $this->form_validation->error_string();
@@ -147,6 +176,10 @@ class Article extends Ydzj_Admin_Controller {
 				
 				$info = $this->Article_Model->getFirstByKey($newid,'article_id');
 			}
+		}else{
+			$info['uid'] = $this->_adminProfile['basic']['uid'];
+			$info['article_show'] = 1;
+			$info['article_author'] = $this->_adminProfile['basic']['username'];
 		}
 		
 		
@@ -171,7 +204,7 @@ class Article extends Ydzj_Admin_Controller {
 			
 			for($i = 0; $i < 1; $i++){
 				
-				$info = $this->_prepareGoodsData();
+				$info = $this->_prepareArticleData();
 				$info['article_id'] = $id;
 				
 				if(!$this->form_validation->run()){

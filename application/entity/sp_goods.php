@@ -5,6 +5,7 @@ $entity = array(
 'goods_id' => 'int',
 'goods_commonid' => 'int',
 'goods_name' => 'varchar',
+'goods_code' => 'varchar',
 'store_id' => 'int',
 'store_name' => 'varchar',
 'gc_id' => 'int',

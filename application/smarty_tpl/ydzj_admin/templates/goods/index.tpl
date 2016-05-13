@@ -21,7 +21,7 @@
           	<select name="goods_verify">
               <option value="全部">请选择...</option>
               {foreach from=$searchMap['goods_verify'] item=item key=key}
-              <option value="{$key}" {if $smarty.post['goods_verify'] == $key}selected{/if}>{$item}</option>
+              <option value="{$key}" {if $smarty.post['goods_verify'] == $key}selected{/if}>{$key}</option>
               {/foreach}
             </select>
           </td>
@@ -30,7 +30,7 @@
           	<select name="goods_state">
               <option value="全部">请选择...</option>
               {foreach from=$searchMap['goods_state'] item=item key=key}
-              <option value="{$key}" {if $smarty.post['goods_state'] == $key}selected{/if}>{$item}</option>
+              <option value="{$key}" {if $smarty.post['goods_state'] == $key}selected{/if}>{$key}</option>
               {/foreach}
             </select>
           </td>
@@ -79,6 +79,7 @@
         <tr class="thead">
           <th class="w24"></th>
           <th colspan="2">商品名称</th>
+          <th>商品代码</th>
           <th>品牌&分类</th>
           <th class="align-center">商品状态</th>
           <th class="align-center">审核状态</th>
@@ -90,10 +91,12 @@
       	<tr class="hover edit" id="row{$item['goods_id']}">
           <td><input type="checkbox" name="id[]" group="chkVal" value="{$item['goods_id']}" class="checkitem"></td>
           <td class="w60 picture"><img class="size-56x56" src="{resource_url($item['goods_pic'])}"/></td>
+          
           <td class="goods-name w270">
           	<p><span>{$item['goods_name']|escape}</span></p>
             {*<p class="store">所属店铺:官方店铺</p>*}
          </td>
+         <td>{$item['goods_code']|escape}</td>
          <td>
           	<p>{$brandList[$item['brand_id']]['brand_name']}</p>
             <p>{$goodsClassList[$item['gc_id']]['gc_name']}</p>

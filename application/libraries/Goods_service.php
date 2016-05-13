@@ -7,18 +7,38 @@ class Goods_Service extends Base_Service {
 	private $_goodsModel = null;
 	private $_goodsClassModel = null;
 	private $_goodsClassTagModel = null;
+	private $_goodsImagesModel = null;
+	
 	private $_brandModel = null;
+	private $_parentList = array();
 
 	public function __construct(){
 		parent::__construct();
 		
-		self::$CI->load->model(array('Goods_Model', 'Goods_Class_Model','Goods_Class_Tag_Model','Brand_Model'));
+		self::$CI->load->model(array('Goods_Model', 'Goods_Class_Model','Goods_Class_Tag_Model','Brand_Model','Goods_Images_Model'));
 		
 		$this->_goodsModel = self::$CI->Goods_Model;
 		$this->_goodsClassModel = self::$CI->Goods_Class_Model;
 		$this->_goodsClassTagModel = self::$CI->Goods_Class_Tag_Model;
 		$this->_brandModel = self::$CI->Brand_Model;
+		$this->_goodsImagesModel = self::$CI->Goods_Images_Model;
 	}
+	
+	public function getParentsById($id = 0,$field = '*'){
+
+        $condition['select'] = $field;
+        $condition['where'] = array(
+            'gc_id' => $id
+        );
+        
+        $result = $this->_goodsClassModel->getById($condition);
+        if($result){
+            $this->_parentList[] = $result;
+            $this->getParentsById($result['gc_parent_id']);
+        }
+        
+        return $this->_parentList;
+    }
 	
 	
 	public function getGoodsClassTreeHTML(){
@@ -238,6 +258,36 @@ class Goods_Service extends Base_Service {
 				array('key' => 'gc_tag_id', 'value' => $ids)
 			)
 		));
+		
+	}
+	
+	public function getNextByProduct($info){
+		$product = $this->_goodsModel->getList(array(
+			'where' => array('gc_id' => $info['gc_id'], 'goods_id >' => $info['goods_id'] , 'goods_verify' => 1, 'goods_state' => 1),
+			'order' => 'goods_id ASC',
+			'limit' => 1
+		));
+		
+		if($product[0]){
+			return $product[0];
+		}else{
+			return false;
+		}
+	}
+	
+	public function getPreByProduct($info){
+		$product = $this->_goodsModel->getList(array(
+			'where' => array('gc_id' => $info['gc_id'], 'goods_id <' => $info['goods_id'] , 'goods_verify' => 1, 'goods_state' => 1),
+			'order' => 'goods_id DESC',
+			'limit' => 1
+		));
+		
+		
+		if($product[0]){
+			return $product[0];
+		}else{
+			return false;
+		}
 		
 	}
 }

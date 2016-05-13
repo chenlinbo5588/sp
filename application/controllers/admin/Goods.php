@@ -8,13 +8,14 @@ class Goods extends Ydzj_Admin_Controller {
 		parent::__construct();
 		
 		$this->load->library(array('Goods_service','Attachment_Service'));
+		$this->attachment_service->setUid($this->_adminProfile['basic']['uid']);
 	}
 	
 	
 	
 	public function index(){
-		$searchMap['goods_state'] = array('0' => '未发布','1' => '正常');
-		$searchMap['goods_verify'] = array('0' => '未通过','1' => '通过');
+		$searchMap['goods_state'] = array('未发布' => '0','正常' => '1');
+		$searchMap['goods_verify'] = array('未通过' => '0','通过' => '1');
 		
 		$brandList = $this->Brand_Model->getList();
 		$brandList = $this->goods_service->toEasyUseArray($brandList,'brand_id');
@@ -24,7 +25,7 @@ class Goods extends Ydzj_Admin_Controller {
 	
 		$condition = array(
 			'where' => array(),
-			'order' => 'brand_id DESC',
+			'order' => 'goods_id DESC',
 			'pager' => array(
 				'page_size' => config_item('page_size'),
 				'current_page' => $currentPage,
@@ -35,22 +36,24 @@ class Goods extends Ydzj_Admin_Controller {
 		
 		
 		$goodsName = $this->input->get_post('search_goods_name');
-		$goodsVerify = $this->input->get_post('goods_verify') ? $this->input->get_post('goods_verify') : 0;
-		$goodsState = $this->input->get_post('goods_state') ? $this->input->get_post('goods_state') : 0;
-		$goodsClassId = $this->input->get_post('gc_id') ? $this->input->get_post('gc_id') : 0;
+		$goodsVerify = $this->input->get_post('goods_verify') ? $this->input->get_post('goods_verify') : '';
 		
+		$goodsState = $this->input->get_post('goods_state') ? $this->input->get_post('goods_state') : '';
+		$goodsClassId = $this->input->get_post('gc_id') ? $this->input->get_post('gc_id') : 0;
 		
 		if($goodsName){
 			$condition['like']['goods_name'] = $goodsName;
 		}
 		
-		if($goodsVerify != '全部'){
-			$condition['where']['goods_verify'] = $goodsVerify;
+		
+		if($searchMap[$goodsVerify]){
+			$condition['where']['goods_verify'] = $searchMap[$goodsVerify];
 		}
 		
-		if($goodsState != '全部'){
-			$condition['where']['goods_state'] = $goodsState;
+		if($searchMap[$goodsState]){
+			$condition['where']['goods_state'] = $searchMap[$goodsState];
 		}
+		
 		
 		
 		if($goodsClassId){
@@ -115,7 +118,9 @@ class Goods extends Ydzj_Admin_Controller {
 	
 	
 	private function _prepareGoodsData(){
-		$fileInfo = $this->attachment_service->addImageAttachment('goods_pic',array(),FROM_BACKGROUND);
+		
+		
+		$fileInfo = $this->attachment_service->addImageAttachment('goods_pic',array(),FROM_BACKGROUND,'goods');
 		
 		//print_r($fileInfo);
 		$info = array(
@@ -131,12 +136,6 @@ class Goods extends Ydzj_Admin_Controller {
 		
 		if($fileInfo){
 			$info['goods_pic'] = $fileInfo['file_url'];
-			
-			$originalPic = $this->input->post('old_pic');
-			
-			if($originalPic){
-				$this->attachment_service->deleteByFileUrl($originalPic);
-			}
 		}
 		
 		
@@ -166,14 +165,41 @@ class Goods extends Ydzj_Admin_Controller {
 					$info['public_time'] = $this->input->server('REQUEST_TIME');
 				}
 				
+				$info['goods_code'] = $info['gc_id'] . '-' . strtolower(substr(md5($info['goods_name']),0,6));
 				
 				if(($newid = $this->Goods_Model->_add($info)) < 0){
 					$feedback = getErrorTip('保存失败');
 					break;
 				}
 				
-				$feedback = getSuccessTip('保存成功');
 				
+				$file_ids = $this->input->post('file_id');
+				
+				if($file_ids){
+					$fileList = $this->Attachment_Model->getList(array(
+						'select' => 'id,file_url',
+						'where_in' => array(
+							array('key' => 'id', 'value' => $file_ids)
+						)
+					));
+					
+					$insData = array();
+					
+					foreach($fileList as $fileInfo){
+						$insData[] = array(
+							'goods_id' => $newid,
+							'goods_image_aid' => $fileInfo['id'],
+							'goods_image' => $fileInfo['file_url'],
+							'uid' => $this->_adminProfile['basic']['uid'],
+							'gmt_create' => $this->input->server('REQUEST_TIME'),
+							'gmt_modify' => $this->input->server('REQUEST_TIME'),
+						);
+					}
+					
+					$this->Goods_Images_Model->batchInsert($insData);
+				}
+				
+				$feedback = getSuccessTip('保存成功');
 				
 				$info = $this->Goods_Model->getFirstByKey($newid,'goods_id');
 			}
@@ -186,6 +212,66 @@ class Goods extends Ydzj_Admin_Controller {
 		$this->assign('brandList',$brandList);
 		$this->assign('goodsClassList',$treelist);
 		$this->display();
+	}
+	
+	
+	public function addimg(){
+		
+		$json = array('error' => 1, 'formhash'=>$this->security->get_csrf_hash(),'id' => 0,'msg' => '上次失败');
+		
+		$fileData = $this->attachment_service->addImageAttachment('fileupload',array(),FROM_BACKGROUND,'goods');
+		if($fileData){
+			$info = array(
+				'goods_id' => $this->input->post('goods_id') ? $this->input->post('goods_id') : 0,
+				'goods_image' => $fileData['file_url']
+			);
+			
+			if($info['goods_id']){
+				$imageId = $this->Goods_Images_Model->_add($info);
+				if($imageId){
+					$json['error'] = 0;
+					$json['id'] = $fileData['id'];
+					$json['image_id'] = $imageId;
+					$json['url'] = base_url($fileData['file_url']);
+				}else{
+					$json['error'] = 0;
+					$json['msg'] = '系统异常';
+					$this->attachment_service->deleteByFileUrl($fileData['file_url']);
+				}
+			}else{
+				$json['error'] = 0;
+				$json['id'] = $fileData['id'];
+				$json['url'] = base_url($fileData['file_url']);
+			}
+			
+		}else{
+			$json['msg'] = $this->attachment_service->getErrorMsg('','');
+		}
+		
+		exit(json_encode($json));
+		
+	}
+	
+	
+	public function delimg(){
+		$file_id = $this->input->get_post('file_id');
+		$goods_id = $this->input->get_post('goods_id');
+		
+		if($goods_id){
+			//如果在商品编辑页面
+			$this->Goods_Images_Model->deleteByCondition(array(
+				'goods_image_aid' => $file_id,
+				'goods_id' => $goods_id,
+				'uid' => $this->_adminProfile['basic']['uid']
+			));
+		}
+		
+		if($file_id){
+			//文件删除，记录不删除
+			$this->attachment_service->deleteFiles($file_id,'all',FROM_BACKGROUND);
+		}
+		
+		$this->jsonOutput('成功',$this->getFormHash());
 	}
 	
 	
@@ -224,10 +310,14 @@ class Goods extends Ydzj_Admin_Controller {
 					$info['public_time'] = $this->input->server('REQUEST_TIME');
 				}
 				
-				
 				if($this->Goods_Model->update($info,array('goods_id' => $id)) < 0){
 					$feedback = getErrorTip('保存失败');
 					break;
+				}
+				
+				$originalPic = $this->input->post('old_pic');
+				if($originalPic){
+					$this->attachment_service->deleteByFileUrl($originalPic);
 				}
 				
 				$feedback = getSuccessTip('保存成功');

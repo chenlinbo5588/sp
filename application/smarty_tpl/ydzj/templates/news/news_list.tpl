@@ -5,30 +5,19 @@
 			<form id="listForm" name="listForm" action="{site_url('news/news_list')}" method="get">
 			<input type="hidden" name="page" value="{$currentPage}"/>
 			<input type="hidden" name="ac_id" value="{$currentAcId}"/>
-			<div class="sideNav">
-				<ul class="sideItem">
-					<li class="itemTitle"><h3><a href="{site_url('news/news_list')}">{$sideTitle}</h3></li>
-					{foreach from=$sideNavs item=item key=key}
-					<li><a href="{$item}#listmao">{$key}</a></li>
-					{/foreach}
-				</ul>
-				<div class="search sideItem">
-					<h3 class="itemTitle">新闻搜索</h3>
-					<div><input type="text" name="keyword" value="{$keyword}" placeholder="请输入关键字"/></div>
-					<div><input type="submit" class="orangeBtn btn" name="search" value="查询"/></div>
-				</div>
-			</div>
+			{include file="./news_side.tpl"}
 			<div class="contentArea">
 				<div class="breadcrumb"><span>您所在的位置:</span>{$breadcrumb}</div>
 				<div class="bd bdlist">
+					<a name="listmao"></a>
 					<table class="liststyle1">
 					{foreach from=$list['data'] item=item}
 					<tr class="liststyle1Item"><td>
-						<a href="{$item['url']}"><img class="previewPic" src="{$item['title_img']}" alt="{$item['article_title']|escape}"/></a>
+						<a href="{$item['article_url']}"><img class="previewPic" src="{$item['article_pic']}" alt="{$item['article_title']|escape}"/></a>
 						<div class="previewCont">
-							<div><a href="{$item['url']}">{$item['article_title']|escape}</a></div>
+							<div><a target="_blank" href="{$item['article_url']}">{$item['article_title']|escape}</a></div>
 							<div>发布时间：{$item['gmt_create']|date_format:"%Y-%m-%d"}</div>
-							<div>{$item['digest']}</div>
+							<div>{$item['article_digest']}</div>
 						</div>
 					</td></tr>
 					{foreachelse}
@@ -38,7 +27,6 @@
 					{/foreach}
 					</table>
 					{include file="common/pagination.tpl"}
-					<a name="listmao"></a>
 				</div>
 			</div>
 			</form>

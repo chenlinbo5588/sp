@@ -64,6 +64,24 @@
           <td class="vatop tips">{form_error('article_sort')}</td>
         </tr>
         <tr>
+          <td colspan="2" class="required"><label>文章封面(用于在列表页显示，如果不传则使用默认封面):</label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform">
+            <input type="hidden" name="article_pic_id" value="{$info['article_pic_id']}"/>
+            <span class="type-file-show">
+          		<img class="show_image" src="{resource_url('img/preview.png')}">
+          		<div id="previewArticlePic" class="type-file-preview">{if !empty($info['article_pic'])}<img src="{resource_url($info['article_pic'])}">{else}<img src="{resource_url('img/default.jpg')}">{/if}</div>
+            </span>
+            <span class="type-file-box">
+              <input type='text' name='article_pic' value="{$info['article_pic']}" id='article_pic' class='type-file-text' />
+              <input type='button' name='button' id='button' value='' class='type-file-button' />
+              <input name="_pic" type="file" class="type-file-file" id="_pic" size="30" hidefocus="true" />
+            </span>
+            </td>
+          <td class="vatop tips">支持格式jpg</td>
+        </tr>
+        <tr>
           <td colspan="2" class="required"><label class="validation">文章内容:</label>{form_error('article_content')}</td>
         </tr>
         <tr>
@@ -93,6 +111,20 @@
 	            });
 	        </script>
         </tr>
+        <tr>
+          <td colspan="2" class="required"><label>文章作者:</label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform"><input type="text" name="article_author" value="{$info['article_author']|escape}"/></td>
+          <td class="vatop tips">{form_error('article_author')}</td>
+        </tr>
+        <tr>
+          <td colspan="2" class="required"><label>文章摘要(不填默认自动摘录正文内容):</label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform"><textarea name="article_digest" style="width:300px;height:80px;">{$info['article_digest']|escape}</textarea></td>
+          <td class="vatop tips">{form_error('article_digest')}</td>
+        </tr>
       </tbody>
       <tfoot>
         <tr>
@@ -101,11 +133,56 @@
       </tfoot>
     </table>
    </form>
+  {include file="common/ajaxfileupload.tpl"}
   <script type="text/javascript">
 	$(function(){
-		$("#goods_pic").change(function(){
-			$("#goods_pic_txt").val($(this).val());
-		});
+		
+		$('input[class="type-file-file"]').change(uploadChange);
+	    function uploadChange(){
+	        var filepatd=$(this).val();
+	        var extStart=filepatd.lastIndexOf(".");
+	        var ext=filepatd.substring(extStart,filepatd.lengtd).toUpperCase();     
+	        if(ext!=".JPG"&&ext!=".JPEG"){
+	            alert("file type error");
+	            $(this).attr('value','');
+	            return false;
+	        }
+	        if ($(this).val() == '') return false;
+	        ajaxFileUpload();
+	    }
+	    
+	    function ajaxFileUpload()
+	    {
+	        $.ajaxFileUpload
+	        (
+	            {
+	                url:'{admin_site_url("common/pic_upload")}?mod=article',
+	                secureuri:false,
+	                fileElementId:'_pic',
+	                dataType: 'json',
+	                data: { formhash : formhash , id : $("input[name=article_pic_id]").val() },
+	                success: function (resp, status)
+	                {
+	                	refreshFormHash(resp);
+	                	
+	                    if (resp.error == 0){
+	                        $("input[name=article_pic_id]").val(resp.id);
+	                        $("input[name=article_pic]").val(resp.url);
+	                        $("#previewArticlePic img").attr("src",resp.url);
+	                    }else
+	                    {
+	                        alert(resp.msg);
+	                    }
+	                    $('input[class="type-file-file"]').bind('change',uploadChange);
+	                },
+	                error: function (resp, status, e)
+	                {
+	                    alert('upload failed');
+	                    $('input[class="type-file-file"]').bind('change',uploadChange);
+	                }
+	            }
+	        )
+	    }
 	})
  </script>
 {include file="common/main_footer.tpl"}

@@ -72,7 +72,7 @@ $(function(){
         $.ajaxFileUpload
         (
             {
-                url:'{site_url("common/pic_upload")}',
+                url:'{site_url("common/pic_upload")}?mod=avatar',
                 secureuri:false,
                 fileElementId:'_pic',
                 dataType: 'json',
@@ -85,7 +85,7 @@ $(function(){
                     formhash = resp.formhash;
                     $("input[name=formhash]").val(resp.formhash);
                     
-                    if (resp.status == 1){
+                    if (resp.error == 0){
                         $("input[name=avatar_id]").val(resp.id);
                         $("input[name=new_avatar]").val(resp.url);
                         

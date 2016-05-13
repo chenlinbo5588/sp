@@ -81,6 +81,7 @@ img.respond_img {
     width: auto\9; 
     width:100%;
 }
+
 sup { 
     top:-0.5em; 
 } 
@@ -188,6 +189,10 @@ input[type=text]:focus , input[type=password]:focus ,textarea:focus {
 img.nature {
     width:auto;
     height:auto;	
+}
+
+.mute {
+	color:#999;
 }
 
 .btn {
@@ -336,6 +341,13 @@ input[type=text].validation_error {
 .pagination a:hover ,.pagination a.active {background:#0D93BF;color:#fff;cursor:pointer;}
 
 
+.thumblists {}
+.thumblists li { float: left; width:80px; height: 100px; margin-right:10px;}
+.thumblists li.picture div { background:#FFF; float: left;/* if IE7/8/9*/ *text-align: center; display: inline; border: dotted 1px #CBE9F3; float: left; padding: 2px; margin:5px;}
+.thumblists li.picture p { clear:both; line-height: 20px; height:20px; width: 70px; margin: 0 5px;}
+.thumblists li.picture p span { display:inline-block; width: 50%; text-align:center;}
+
+
 /** ajax 加载中样式 **/
 .lightbox {
 	display: none;
@@ -441,9 +453,10 @@ input[type=text].validation_error {
 .type-file-button , input.type-file-button:focus { background: url(../img/sky/bg_position.gif) no-repeat -50px -450px; width: 57px; height: 25px; border: 0; display:inline; float:right;}
 
 
+
+
+
 #topBar {
-	height:71px;
-	position:relative;
 	/*
 	background:#143EB3;
 	-moz-box-shadow:0 0 8px rgba(82, 168, 236, 0.8); 
@@ -518,7 +531,7 @@ input[type=text].validation_error {
 }
 
 #siteLogo {
-	background:url(../img/logo.png) no-repeat left top;
+	background:url(../img/cmp/logo.png) no-repeat left top;
 	width:200px;
 	height:50px;
 }
@@ -541,7 +554,7 @@ input[type=text].validation_error {
 	text-align:center;
 	width:80%;
 	right:0px;
-	top:-19px;
+	top:15px;
 	z-index: 20;
 }
 
@@ -550,9 +563,8 @@ input[type=text].validation_error {
 }
 
 #homeNav .current {
-	background:#ECF0E7;
+	background:#2B4796;
 }
-
 
 #homeNav .current .sublist {
 	display:block;
@@ -573,7 +585,7 @@ input[type=text].validation_error {
     width: 100%;
     font-weight: bold;
     font-size: 16px;
-   	/*color:#fff;*/
+   	color:#fff;
     text-decoration: none;
     height: 40px;
     line-height: 40px;
@@ -582,8 +594,13 @@ input[type=text].validation_error {
     -webkit-border-radius:4px;
 }
 
+
+#homeNav .current a {
+	
+}
+
+
 #homeNav a:hover,#homeNav li.current a.link0 {
-	color:#fff;
 	background:#ED6D00;
 }
 
@@ -736,13 +753,17 @@ input[type=text].validation_error {
 	1border-top:1px solid #fff;
 }
 
-.aboutPg , .newsPg {
-	background:url(../img/about_bg.jpg) no-repeat center center;
+.aboutPg , .newsPg, .productPg {
+	background:url(../img/cmp/about_bg.jpg) no-repeat center center;
 	height:300px;
 }
 
 .newsPg {
-	background:url(../img/new_bg.jpg) no-repeat center center;
+	background:url(../img/cmp/news_bg.jpg) no-repeat center center;
+}
+
+.productPg {
+	background:url(../img/cmp/product_bg.jpg) no-repeat center center;
 }
 
 .breadcrumb {
@@ -804,6 +825,10 @@ input[type=text].validation_error {
 	padding:20px;
 }
 
+table.liststyle1 {
+	width:100%;
+}
+
 .liststyle1 .liststyle1Item, .liststyle1 .liststyle1Item td {
 	padding:10px 0;
 }
@@ -824,6 +849,26 @@ input[type=text].validation_error {
 	float: left;
 }
 
+.productList .previewCont {
+	margin: 0 0 0 210px;
+	
+}
+
+.productList .previewPic {
+	width:200px;
+	height:160px;
+	float: left;
+	border:1px solid #dcdcdc;
+}
+
+.productList .productName {
+	font-size:18px;
+}
+
+.productList .productDetail {
+	padding:3px 0;
+}
+
 .bdlist .pagination {
 	margin:20px 0;
 }
@@ -833,6 +878,46 @@ input[type=text].validation_error {
 	text-align:center;
 	padding:5px 0 ;
 }
+
+.articleHeader  {
+	text-align:center;
+	border-bottom:1px dashed #666;
+	padding:5px 0;
+	
+}
+
+.articleHeader h1 {
+	font-size:18px;
+	margin:5px 0;
+}
+
+.articleHeader em {
+	padding: 0 10px;
+}
+
+.articleContent {
+	margin:15px 0;
+}
+
+.articleContent img { 
+    height: auto; 
+    width: auto\9; 
+    width:100%;
+}
+
+
+
+.errorPage {
+	background: url(../img/error_page_bg.png) no-repeat left center;
+    height: 200px;
+    padding: 0 0 0 38px;
+    line-height: 200px;
+    width: 200px;
+    margin: 0 auto;
+}
+
+
+
 
 
 @media (max-width: 1024px) {
