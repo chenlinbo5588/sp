@@ -262,10 +262,10 @@
     <table class="table tb-type2">
       <tbody>
         <tr>
-          <td colspan="2" class="required"><label>商品分类</label></td>
+          <td colspan="2" class="required"><label>站点</label></td>
         </tr>
         <tr class="noborder">
-          <td class="w96">商品分类</td><td>
+          <td class="w96">站点</td><td>
           	<select name="category" id="category">
 	          <option value="">请选择...</option>
 	          {foreach from=$goodsClassHTML item=item}

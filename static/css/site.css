@@ -159,7 +159,7 @@ input[type=checkbox],input[type=radio] {
 }
 
 input[type=text]:focus , input[type=password]:focus ,textarea:focus {
-    border:1px solid #1AA169;
+    1border:1px solid #1AA169;
 }
 
 input[type=text].noround, input[type=password].noround {
@@ -169,13 +169,14 @@ input[type=text].noround, input[type=password].noround {
     -o-border-radius:0px;
 }
 
-input[type=button] {
+input[type=button],input[type=submit] {
 	cursor:pointer;
+	-webkit-appearance: none;
 	border-radius:0px;
 	-webkit-border-radius:0px;
     -moz-border-radius:0px;
     -o-border-radius:0px;
-}
+} 
 
 .disabled {
 	background:#d0d0d0;

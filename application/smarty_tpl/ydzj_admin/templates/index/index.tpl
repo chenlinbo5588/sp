@@ -329,8 +329,8 @@ $(function(){
 					<li><a class="link" id="nav_operation" href="javascript:;" onclick="openItem('operation');"><span>运营</span></a></li>
 					<li><a class="link" id="nav_stat" href="javascript:;" onclick="openItem('stat');"><span>统计</span></a></li>
 					<li><a class="link" id="nav_weixin" href="javascript:;" onclick="openItem('weixin');"><span>微信营销</span></a></li>
-					<li><a class="link" id="nav_cms" href="javascript:;" onclick="openItem('cms');"><span>CMS</span></a></li>
-					<li><a class="link" id="nav_authority" href="javascript:;" onclick="openItem('authority');"><span>权限</span></a></li>*}
+					<li><a class="link" id="nav_cms" href="javascript:;" onclick="openItem('cms');"><span>CMS</span></a></li>*}
+					<li><a class="link" id="nav_authority" href="javascript:;" onclick="openItem('authority');"><span>权限</span></a></li>
 	            </ul>
 	          </nav>
 	          <div class="loca"><strong>您的位置:</strong>
@@ -340,10 +340,10 @@ $(function(){
 	            <ul id="skin" class="skin"><span>换肤</span>
 	              <li id="skin_0" class="" title="默认风格"></li>
 	            </ul>
-	            <div class="sitemap"><a id="siteMapBtn" href="#rhis" onclick="showBg('dialog','dialog_content');"><span>管理地图</span></a></div>
+	            {*<div class="sitemap"><a id="siteMapBtn" href="#rhis" onclick="showBg('dialog','dialog_content');"><span>管理地图</span></a></div>*}
 	            <div class="toolmenu"><span class="bar-btn"></span>
 	              <ul class="bar-list">
-	                <li><a onclick="openItem('clear,cache,setting');" href="javascript:void(0)">更新站点缓存</a></li>
+	                {*<li><a onclick="openItem('clear,cache,setting');" href="javascript:void(0)">更新站点缓存</a></li>*}
 	                <li><a href="{site_url('admin')}" id="iframe_refresh">刷新管理中心</a></li>
 	              </ul>
 	            </div>
@@ -392,10 +392,10 @@ $(function(){
                 <dd>
                   <ol>
                     <li><a href="javascript:void(0);" id="index_member" onclick="openItem('index,member,member');">会员管理</a></li>
-                    <li><a href="javascript:void(0);" id="notice_member" onclick="openItem('notice,member,member');">会员通知</a></li>
+                    {*<li><a href="javascript:void(0);" id="notice_member" onclick="openItem('notice,member,member');">会员通知</a></li>
                     <li><a href="javascript:void(0);" id="credits_member" onclick="openItem('credits,member,member');">积分管理</a></li>
                     <li><a href="javascript:void(0);" id="album_member" onclick="openItem('album,member,member');">会员相册</a></li>
-                    <li><a href="javascript:void(0);" id="tag_member" onclick="openItem('tag,member,member');">会员标签</a></li>
+                    <li><a href="javascript:void(0);" id="tag_member" onclick="openItem('tag,member,member');">会员标签</a></li>*}
                   </ol>
                 </dd>
               </dl>
@@ -437,12 +437,12 @@ $(function(){
               <dl>
                 <dd>
                   <ol>
-                    <li><a href="javascript:void(0);" id="category_goods_class" onclick="openItem('category,goods_class,goods');">分类管理</a></li>
-                    <li><a href="javascript:void(0);" id="index_brand" onclick="openItem('index,brand,goods');">品牌管理</a></li>
+                    <li><a href="javascript:void(0);" id="category_goods_class" onclick="openItem('category,goods_class,goods');">站点管理</a></li>
+                    {*<li><a href="javascript:void(0);" id="index_brand" onclick="openItem('index,brand,goods');">品牌管理</a></li>
                     <li><a href="javascript:void(0);" id="index_goods" onclick="openItem('index,goods,goods');">商品管理</a></li>
                     <li><a href="javascript:void(0);" id="type_goods" onclick="openItem('type,goods,goods');">类型管理</a></li>
                     <li><a href="javascript:void(0);" id="spec_goods" onclick="openItem('spec,goods,goods');">规格管理</a></li>
-                    <li><a href="javascript:void(0);" id="album_goods" onclick="openItem('album,goods,goods');">图片空间</a></li>
+                    <li><a href="javascript:void(0);" id="album_goods" onclick="openItem('album,goods,goods');">图片空间</a></li>*}
                   </ol>
                 </dd>
               </dl>

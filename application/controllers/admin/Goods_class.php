@@ -155,15 +155,16 @@ class Goods_Class extends Ydzj_Admin_Controller {
 	
 	private function _getRules($action = 'add'){
 		
-		$this->form_validation->set_rules('gc_name','分类名称',"required");
+		$this->form_validation->set_rules('gc_name','站点名称',"required");
+		$this->form_validation->set_rules('gc_url','站点网址',"required|valid_url");
 		
 		if($this->input->post('gc_parent_id')){
-			$this->form_validation->set_rules('gc_parent_id','上级分类', "in_db_list[{$this->Goods_Class_Model->_tableRealName}.gc_id]|callback_checkpid[{$action}]");
+			$this->form_validation->set_rules('gc_parent_id','上级站点', "in_db_list[{$this->Goods_Class_Model->_tableRealName}.gc_id]|callback_checkpid[{$action}]");
 		}
 		
 		
 		if($this->input->post('gc_pic')){
-			$this->form_validation->set_rules('gc_pic','分类图片',"required|valid_url");
+			$this->form_validation->set_rules('gc_pic','站点图片',"required|valid_url");
 		}
 		
 			
@@ -178,6 +179,7 @@ class Goods_Class extends Ydzj_Admin_Controller {
 		
 		$info = array(
 			'gc_name' => $this->input->post('gc_name'),
+			'gc_url' => $this->input->post('gc_url'),
 			'gc_parent_id' => $this->input->post('gc_parent_id') ? $this->input->post('gc_parent_id') : 0,
 			'gc_pic_id' => $this->input->post('gc_pic_id') ? $this->input->post('gc_pic_id') : 0,
 			'gc_pic' => $this->input->post('gc_pic') ? $this->input->post('gc_pic') : '',

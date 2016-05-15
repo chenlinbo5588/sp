@@ -10,11 +10,14 @@ class Captcha extends Ydzj_Controller {
     public function index()
     {
         $this->load->helper('captcha');
+        
+        
+        
 		$vals = array(
 	        'img_path'      => ROOTPATH.'/static/img/captcha/',
 	        'img_url'       => base_url('/static/img/captcha/'),
-	        'img_width'     => 150,
-        	'img_height'    => 30,
+	        'img_width'     => $this->input->get('w') ? $this->input->get('w') : 150,
+        	'img_height'    => $this->input->get('h') ? $this->input->get('h') : 30,
         	'expiration'    => 180,
         	'word_length'   => 4,
         	'font_size'     => 16,

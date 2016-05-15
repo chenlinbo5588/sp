@@ -5,7 +5,7 @@
       <h3>{#title#}</h3>
       <ul class="tab-base">
         <li><a href="javascript:void(0);" class="current"><span>{#manage#}</span></a></li>
-        <li><a href="{admin_site_url('member/add')}" ><span>{#add#}</span></a></li>
+        {*<li><a href="{admin_site_url('member/add')}" ><span>{#add#}</span></a></li>*}
       </ul>
     </div>
   </div>
@@ -60,7 +60,6 @@
               {/foreach}
             </select>
          </td>
-         
          <td><select name="register_sort">
               <option  value="">{#register_time#}</option>
               {foreach from=$search_map['register_sort'] key=key item=item}
@@ -68,13 +67,6 @@
               {/foreach}
             </select>
          </td>
-         <td><select name="member_state" >
-              <option  value="">{#member_state#}</option>
-              {foreach from=$search_map['member_state'] key=key item=item}
-              <option  value="{$key}" {if $smarty.get['member_state'] == $key}selected{/if}>{$item}</option>
-              {/foreach}
-            </select>
-          </td>
           <td>
             <input type="submit" class="msbtn" name="tijiao" value="查询"/>
           </td>
@@ -103,13 +95,10 @@
         <tr class="thead">
           <th>&nbsp;</th>
           <th colspan="2">会员</th>
-          <th>最后登录</th>
-          <th class="align-center">邀请人</th>
+          <th>注册渠道</th>
           <th>地区</th>
-          <th>积分</th>
+          <th>邀请人</th>
           <th>状态</th>
-          <th class="align-center">发表言论</th>
-          <th class="align-center">登录</th>
           <th class="align-center">操作</th>
         </tr>
       </thead>
@@ -118,13 +107,14 @@
         <tr class="hover member">
           <td class="w24"></td>
           <td class="w120 picture">
-            <div class=""><span class="thumb"><i></i><img src="{base_url($item['avatar_small'])}"  data-avatar="{$item['avatar_middle']}" /></span></div></td>
+            <div class=""><span class="thumb"><i></i><img src="{resource_url('img/nophoto.gif')}"/></span></div></td>
           <td>
-            <p class="name"><strong>账号:&nbsp;{$item['mobile']|escape}</strong></p>
-            <p><strong>昵称:&nbsp;</strong><span>{$item['nickname']|escape}</span></p>
-            <p><strong>性别:&nbsp;</strong><span>{if $item['sex'] == 'M'}男{elseif $item['sex'] == 'F'}女{else}保密{/if}</span><span>(真实姓名: {$item['username']|escape})</span></p>
+            <p class="name"><strong>手机号码:{$item['mobile']|escape}</strong></p>
+            <p><strong>名称:&nbsp;</strong><span>{$item['username']|escape}</span></p>
+            <p><strong>性别:&nbsp;</strong><span>{if $item['sex'] == 'M'}男{elseif $item['sex'] == 'F'}女{else}保密{/if}</span></p>
             <p class="smallfont">注册时间:&nbsp;{$item['reg_date']|date_format:"%Y-%m-%d %H:%M:%S"}</p>
             <p class="smallfont">注册IP:&nbsp;{$item['reg_ip']}</p>
+            <p class="smallfont">注册渠道:&nbsp;{$item['channel_name']}</p>
             <div class="im">
                 {if $item['email'] != ''}
                 <span class="email">
@@ -142,8 +132,7 @@
             </div>
           </td>
           <td>
-            <p>{if $item['last_login']}{$item['last_login']|date_format:"%Y-%m-%d %H:%M:%S"}</p>
-            <p>{$item['last_loginip']}{/if}</p>
+            <p><span>{$item['channel_name']|escape}</span></p>
           </td>
           <td class="align-center w120">
             {if $item['inviter']}
@@ -154,11 +143,8 @@
           <td>
            {$memberDs[$item['d1']]['name']}{$memberDs[$item['d2']]['name']}{$memberDs[$item['d3']]['name']}{$memberDs[$item['d4']]['name']}
           </td>
-          <td>{$item['credits']}</td>
-          <td>{$item['status']}</td>
-          <td class="align-center">{if $item['allowtalk'] == 'N'}禁止{else}允许{/if}</td>
-          <td class="align-center">{if $item['freeze'] == 'Y'}禁止{else}允许{/if}</td>
-          <td class="align-center"><a href="{admin_site_url('member/edit')}/{$item['uid']}">编辑</a> | <a href="index.php?act=notice&op=notice&member_name=c2hvcG5j">通知</a></td>
+          <td>{if $item['status'] == 0}注册完成{else}注册未提交{/if}</td>
+          <td class="align-center"><a href="{admin_site_url('member/edit')}/{$item['uid']}">编辑</a></td>
         </tr>
       {/foreach}
       </tbody>

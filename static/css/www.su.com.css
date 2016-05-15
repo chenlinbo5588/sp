@@ -5,6 +5,12 @@
 	margin:0 0 10px 0;
 }
 
+
+img.responed {
+	display: block;
+}
+
+
 #regbg div {
 	margin:5px 0;
 	position: relative;
@@ -45,6 +51,7 @@
     -webkit-border-radius:0px;
     -moz-border-radius:0px;
     -o-border-radius:0px;
+    -webkit-appearance:none;
 }
 
 #reg .sb {
@@ -68,8 +75,5 @@ form label.error {
 }
 
 @media (max-width: 720px) {
-	.introlist li {
-		height:200px;
-	}
 	
 }

@@ -13,3 +13,4 @@ $config['site_domain'] = $_SERVER['SERVER_NAME'];
 $config['page_size'] = 10;
 
 $config['SMS_apikey'] = 'cb287ff419c6a8adba5d452feed76a03';
+$config['dest_website'] = 'http://zhibo.ddy168.com';

@@ -5,28 +5,38 @@ class Index extends Ydzj_Controller {
 	
 	public function __construct(){
 		parent::__construct();
+		$this->load->library(array('Register_Service'));
+		
 		
 	}
+	
+	//渠道
+	private function _getCurrentServerName(){
+		$currentHost = $this->input->server('HTTP_HOST');
+		//$currentHost = 'www.txcf188.com';
+		$currentHost = 's1.txcf188.com';
+		//$currentHost = 's2.txcf188.com';
+		
+		return $currentHost;
+	}
+	
+	
 	
 	/**
 	 * 首页
 	 */
 	public function index()
 	{
-		//渠道
-		$currentHost = $this->input->server('HTTP_HOST');
-		$this->assign('cssName','css/'.$currentHost.'.css');
-		
 		$registerOk = false;
+		$currentHost = $this->_getCurrentServerName();
+		
+		$inviter = $this->input->get_post('inviter');
+		$inviteFrom = $this->input->get_post('inviteFrom');
+		
+		$this->assign('inviter', $inviter);
+		$this->assign('inviteFrom',$inviteFrom);
 		
 		if($this->isPostRequest()){
-			$inviter = $this->input->post('inviter');
-			$inviteFrom = $this->input->post('inviteFrom');
-			
-			$this->assign('inviter', $inviter);
-			$this->assign('inviteFrom',$inviteFrom);
-			
-			
 			$this->form_validation->reset_validation();
 			
 			/*
@@ -67,7 +77,7 @@ class Index extends Ydzj_Controller {
 			
 			if($this->form_validation->run() !== FALSE){
 				
-				$this->load->library(array('Member_Service','Register_Service'));
+				
 				
 				$todayRegistered = $this->register_service->getIpLimit($this->input->ip_address());
 				
@@ -88,14 +98,15 @@ class Index extends Ydzj_Controller {
 					$result = $this->register_service->createMember($addParam,true);
 				
 					if($result['code'] == 'success'){
+						/*
 						$userInfo = $this->member_service->getUserInfoByMobile($this->input->post('mobile'));
 						//$this->_rememberLoginName($this->input->post('mobile'));
 						
 						$this->session->set_userdata(array(
 							'profile' => $userInfo
 						));
-						
-						redirect('http://zhibo.ddy168.com');
+						*/
+						redirect(config_item('dest_website'));
 						
 						$registerOk = true;
 					}else{
@@ -106,15 +117,123 @@ class Index extends Ydzj_Controller {
 					$this->assign('feedback','很抱歉，您今日注册数量已经用完');
 				}
 			}
-		
-		}else{
-			$this->assign('inviter', $this->input->get('inviter'));
-			$this->assign('inviteFrom',$this->input->server('HTTP_REFERER'));
 		}
-		
-		
 		
 		$this->display('index/'.$currentHost);
 	}
+	
+	
+	public function site1(){
+		
+		$currentHost = $this->_getCurrentServerName();
+		
+		$inviter = $this->input->get_post('inviter');
+		$inviteFrom = $this->input->get_post('inviteFrom');
+		
+		$this->assign('inviter', $inviter);
+		$this->assign('inviteFrom',$inviteFrom);
+		
+		
+		if($this->isPostRequest()){
+			$this->form_validation->set_rules('mobile','手机号','required|valid_mobile');
+			
+			
+			for($i = 0; $i < 1; $i++){
+				
+				if(!$this->form_validation->run()){
+					
+					break;
+				}
+				
+				$addParam = array(
+					'mobile' => $this->input->post('mobile'),
+					'username' => '',
+					'inviter' => empty($inviter) == true ? 0 : intval($inviter),
+					'status' => 0,
+					'channel_name' => $currentHost,
+					'channel_orig' => $inviteFrom
+				);
+				
+				//check
+				$result = $this->register_service->createMember($addParam,true);
+				
+				if($result['code'] == 'success'){
+					redirect(config_item('dest_website'));
+				}else{
+					$this->assign('feedback',$result['message']);
+				}
+				
+			}
+			
+		}
+		
+		$this->display('index/'.$currentHost);
+		
+	}
+	
+	
+	
+	public function site2(){
+		
+		$currentHost = $this->_getCurrentServerName();
+		
+		$inviter = $this->input->get_post('inviter');
+		$inviteFrom = $this->input->get_post('inviteFrom');
+		
+		$this->assign('inviter', $inviter);
+		$this->assign('inviteFrom',$inviteFrom);
+		
+		
+		if($this->isPostRequest()){
+			$this->form_validation->set_rules('mobile','手机号','required|valid_mobile');
+			for($i = 0; $i < 1; $i++){
+				
+				if(!$this->form_validation->run()){
+					break;
+				}
+				
+				
+				$this->load->model('Captcha_Model');
+				$captcha = $this->Captcha_Model->getList(array(
+					'where' => array(
+						'ip_address' => $this->input->ip_address(),
+						'captcha_time >' => $this->input->server('REQUEST_TIME') - 7200
+					),
+					'limit' => 1,
+					'order' => 'captcha_id DESC'
+				));
+				
+				//print_r($captcha);
+				if(strtolower($captcha[0]['word']) != strtolower($this->input->post('auth_code')) ){
+					$this->assign('feedback','<label for="authcode_text" class="error">验证码错误</label>');
+					break;
+				}
+				
+				$addParam = array(
+					'mobile' => $this->input->post('mobile'),
+					'username' => '',
+					'inviter' => empty($inviter) == true ? 0 : intval($inviter),
+					'status' => 0,
+					'channel_name' => $currentHost,
+					'channel_orig' => $inviteFrom
+				);
+				
+				//check
+				$result = $this->register_service->createMember($addParam,true);
+				
+				if($result['code'] == 'success'){
+					redirect(config_item('dest_website'));
+				}else{
+					$this->assign('feedback',$result['message']);
+				}
+				
+			}
+			
+		}
+		
+		$this->display('index/'.$currentHost);
+		
+	}
+	
 	
 }

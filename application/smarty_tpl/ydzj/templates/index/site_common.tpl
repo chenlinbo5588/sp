@@ -7,7 +7,7 @@
 <meta name="description" content="{$SEO_description}" />
 <meta name="keywords" content="{$SEO_keywords}" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,minimal-ui">
-<link rel="stylesheet" href="{resource_url('css/site.css')}"/>
+<link rel="stylesheet" href="{resource_url('css/site.css')}?v=1.1"/>
 <script type="text/javascript" src="{resource_url('js/jquery.js')}"></script>
 <script>
 var cookiedomain = "",
@@ -23,7 +23,5 @@ var cookiedomain = "",
 <script type="text/javascript" src="{resource_url('js/html5shiv.js')}"></script>
 <![endif]-->
 <script type="text/javascript" src="{resource_url('js/respond.min.js')}"></script>
-
 </head>
 <body {if $bodyClass}class="{$bodyClass}"{/if}>
-   <div id="wrap">

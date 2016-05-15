@@ -48,6 +48,10 @@ class Register extends MY_Controller {
 				$phoneNo = $this->input->post('phoneNo');
 				$userName = $this->input->post('username');
 				
+				if(empty($userName)){
+					$userName = '';
+				}
+				
 				$rt = array(
 					'code' => 'failed',
 					'message' => '请求失败'
