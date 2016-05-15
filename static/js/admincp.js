@@ -69,13 +69,6 @@ $(function(){
     
     districtSelect('bind');
     
-    $.validator.addMethod("phoneChina",function(value,element,params){  
-    	if(regMobile.test(value)){
-    		return true;
-    	}else{
-    		return false;
-    	}
-    },"必须是有效的手机号码");
 });
 
 

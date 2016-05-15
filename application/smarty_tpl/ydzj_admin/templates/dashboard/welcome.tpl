@@ -18,6 +18,7 @@
         </ul>
       </dd>
     </dl>
+    {*
     <dl class="shop">
       <dt>
         <div class="ico"><i></i><sub title="新增场馆数"><span><em id="statistics_store"></em></span></sub></div>
@@ -119,6 +120,7 @@
         </ul>
       </dd>
     </dl>
+    *}
     <dl class="system">
       <dt>
         <div class="ico"><i></i><a id="UPDATE" style="visibility:hidden;" title="" target="_blank" href="javascript:void(0);"><sub><span>new</em></span></sub></a></div>

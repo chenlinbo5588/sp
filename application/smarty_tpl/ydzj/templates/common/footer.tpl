@@ -24,7 +24,6 @@
     				<div>百度统计代码</div>
 		        </div>
     		</div>
-    		
     	</div>
     </div><!-- //end of wrap -->
 </body>

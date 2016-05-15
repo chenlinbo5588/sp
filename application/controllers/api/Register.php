@@ -43,10 +43,10 @@ class Register extends MY_Controller {
 					break;
 				}
 				
-				
-				$this->load->library('Verify_Service');
+				$this->load->library(array('Verify_Service','Register_Service'));
 				
 				$phoneNo = $this->input->post('phoneNo');
+				$userName = $this->input->post('username');
 				
 				$rt = array(
 					'code' => 'failed',
@@ -55,11 +55,11 @@ class Register extends MY_Controller {
 				
 				
 				/**
-				 * 记录该 ip,同一个IP 60秒内请求手机验证码不能大于3次
+				 * 记录该 ip,同一个IP 60秒内请求手机验证码不能大于10次
 				 */
 				$count = $this->verify_service->getIpCount($this->input->ip_address());
-				if($count > 3){
-					$rt['message'] = "攻击行为，请求失败";
+				if($count > 10){
+					$rt['message'] = "请求过于频繁";
 					break;
 				}
 				
@@ -72,22 +72,35 @@ class Register extends MY_Controller {
 					/**
 					 * 再检查 在验证码有效期内，同一个Ip ，同一个号码只能, 不能超过3次
 					 */
-					if($codeInfo['send_normal'] >= 3){
-						$rt['message'] = "攻击行为，请求失败";
+					if($codeInfo['send_normal'] >= 10){
+						$rt['message'] = "请求过于频繁";
 						break;
 					}
 				}
 				
 				$rt['code'] = 'success';
 				
-				$this->load->library('ShortMessage_Service');
-				if($this->shortmessage_service->sendMessage($phoneNo)){
+				$this->load->library('Notify_service');
+				$sendResp = $this->notify_service->sendSMS($phoneNo,$codeInfo['code']);
+				
+				
+				//这里已经创建了记录
+				$result = $this->register_service->createMember(array(
+					'mobile' => $phoneNo,
+					'username' => $userName,
+					'status' => -2
+				));
+				
+				if(!empty($sendResp) && $sendResp['code'] == 0){
 					$this->verify_service->updateSendFlag(array(
-			    		array('key' => 'send_normal' , 'value' => 'send_normal + 1')
+			    		array('key' => 'send_normal' , 'value' => 'send_normal + 1'),
+			    		array('key' => 'send_count' , 'value' => 'send_count + 1')
 			    	),array('id' => $codeInfo['id']));
+			    	
 				}else{
 					$this->verify_service->updateSendFlag(array(
-			    		array('key' => 'send_fail' , 'value' => 'send_fail + 1')
+			    		array('key' => 'send_fail' , 'value' => 'send_fail + 1'),
+			    		array('key' => 'send_count' , 'value' => 'send_count + 1')
 			    	),array('id' => $codeInfo['id']));
 				}
 			}
@@ -145,8 +158,7 @@ class Register extends MY_Controller {
 					)
 				);
 				
-				$this->load->library('Register_Service');
-				$this->load->library('Verify_Service');
+				$this->load->library(array('Verify_Service','Register_Service'));
 				
 				$phoneNo = $this->input->post('phoneNo');
 				

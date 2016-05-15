@@ -10,3 +10,6 @@ $config['site_domain'] = $_SERVER['SERVER_NAME'];
 
 //$config['csrf_protection'] = FALSE;
 $config['page_size'] = 4;
+
+
+$config['SMS_apikey'] = 'cb287ff419c6a8adba5d452feed76a03';

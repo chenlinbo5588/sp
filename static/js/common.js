@@ -433,6 +433,14 @@ function showTips( tips, height, time ){
 
 $(function(){
 	
+	$.validator.addMethod("phoneChina",function(value,element,params){  
+    	if(regMobile.test(value)){
+    		return true;
+    	}else{
+    		return false;
+    	}
+    },"必须是有效的手机号码");
+	
 	$("input[name=jumpPage]").keydown(function(event){
 　　　　 // 注意此处不要用keypress方法，否则不能禁用　Ctrl+V 与　Ctrl+V,具体原因请自行查找keyPress与keyDown区分，十分重要，请细查
         if (/MSIE/.test(navigator.userAgent)) {  // 判断浏览器

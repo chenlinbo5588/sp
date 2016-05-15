@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 
 /**
- * 运动之家 管理控制器
+ * 管理控制器
  * 
  * 
  */

@@ -54,31 +54,33 @@ class Register_Service extends Base_Service {
 	/**
 	 * 创建会员
 	 */
-	public function createMember($regParam){
+	public function createMember($regParam,$doUpdate = false){
 		$return = $this->formatArrayReturn();
+		
+		$memberInfo = self::$memberModel->getFirstByKey($regParam['mobile'],'mobile');
 		
 		$regParam['reg_ip'] = self::$CI->input->ip_address();
 		$regParam['reg_date'] = self::$CI->input->server('REQUEST_TIME');
-						
-		
-		if(empty($regParam['aid'])){
-			$avatarIndex = rand(1,3);
-			$regParam['avatar_middle'] = 'img/avatar/'.$avatarIndex.'@middle.jpg';
-			$regParam['avatar_small'] = 'img/avatar/'.$avatarIndex.'@small.jpg';
-		}
-		
-		$uid = self::$memberModel->_add($regParam);
-		
-		if($uid > 0){
-			$return = $this->successRetun(array('uid' => $uid));
+			
+		if(empty($memberInfo)){
+			
+			$uid = self::$memberModel->_add($regParam);
+			
 			self::$CI->Security_Control_Model->_add(array(
 				'ip' => $regParam['reg_ip'],
 				'action' => 'register',
 				'extra' => $uid
 			));
+			
+			return $this->successRetun(array('uid' => $uid));
+		}else{
+			
+			if($doUpdate){
+				$rows = self::$memberModel->update($regParam,array('mobile' => $regParam['mobile']));
+			}
+			
+			return $this->successRetun(array('uid' => $memberInfo['uid']));
 		}
-		
-		return $return;
 		
 	}
 	

@@ -33,6 +33,7 @@ if ( ! function_exists('resource_url'))
 			return $uri;
 		}
 		
+		
 		if(strpos($uri,'static/') !== false){
 			return get_instance()->config->base_url($uri, $protocol);
 		}else{

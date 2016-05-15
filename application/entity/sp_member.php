@@ -3,8 +3,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 $entity = array(
 'uid' => 'mediumint',
-'email' => 'char',
-'username' => 'char',
+'email' => 'varchar',
+'username' => 'varchar',
 'password' => 'char',
 'status' => 'tinyint',
 'mobile' => 'char',
@@ -35,6 +35,8 @@ $entity = array(
 'd3' => 'mediumint',
 'd4' => 'mediumint',
 'channel' => 'smallint',
+'channel_name' => 'varchar',
+'channel_orig' => 'text',
 'allowtalk' => 'char',
 'freeze' => 'char',
 'gmt_create' => 'int',

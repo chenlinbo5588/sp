@@ -51,6 +51,12 @@ class Weixin_Api {
 			$param['header'] = true;
 		}
 		@curl_setopt($curl, CURLOPT_HEADER, $param['header']);
+		
+		
+		if($param['moreheader']){
+			@curl_setopt($curl, CURLOPT_HTTPHEADER, $param['moreheader']);
+		}
+		
         //curl_setopt($curl, CURLOPT_USERAGENT, array_rand($useragent));
         /*
 		 * 处理302

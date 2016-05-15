@@ -28,7 +28,7 @@ $config['base_url'] = '';
 | Config this to your website name
 |
 */
-$config['site_name'] = '标度';
+$config['site_name'] = '江苏点点赢';
 
 /*
 |--------------------------------------------------------------------------

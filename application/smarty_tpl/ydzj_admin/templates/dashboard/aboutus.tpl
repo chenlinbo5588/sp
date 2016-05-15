@@ -67,48 +67,4 @@
       </tr>
     </tfoot>
   </table>
-  <table class="table tb-type2">
-    <thead>
-      <tr class="space">
-        <th colspan="10" class="nobg big">贡献者</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td class="w12"></td>
-        <td><strong>非常感谢我们的贡献者</strong></td>
-      </tr>
-      <tr class="noborder">
-        <td></td>
-        <td><a href="{site_url('index')}" target="_blank">胡崇波，舒建东</a></td>
-      </tr>
-    </tbody>
-    <tfoot>
-      <tr class="tfoot">
-        <td colspan="10"></td>
-      </tr>
-    </tfoot>
-  </table>
-  <table class="table tb-type2">
-    <thead>
-      <tr class="space">
-        <th colspan="10" class="nobg big">相关声明</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td class="w12"></td>
-        <td><a href="{site_url('index')}" target="_blank">慈溪市{config_item('site_name')}有限公司</a>&nbsp;拥有&nbsp;<a href="{site_url('index')}" target="_blank">{config_item('site_name')}</a>&nbsp;的所有版权</td>
-      </tr>
-      <tr class="noborder">
-        <td></td>
-        <td>本项目引用了以下开源项目&nbsp;:&nbsp;&nbsp;jQuery,kindeditor等.&nbsp;原作者拥有其所有版权</td>
-      </tr>
-    </tbody>
-    <tfoot>
-      <tr class="tfoot">
-        <td colspan="10"></td>
-      </tr>
-    </tfoot>
-  </table>
 {include file="common/main_footer.tpl"}

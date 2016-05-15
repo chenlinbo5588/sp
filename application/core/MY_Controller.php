@@ -131,7 +131,7 @@ class MY_Controller extends CI_Controller {
     private function _security(){
     	
     	$this->assign('formhash',$this->security->get_csrf_hash());
-    	/*
+    	
     	if($this->input->cookie($this->_lastVisit) != ''){
 			$elapsed_time = number_format(microtime(TRUE) -  $this->input->cookie($this->_lastVisit), 2);
 			if($elapsed_time < 0.2){
@@ -145,6 +145,7 @@ class MY_Controller extends CI_Controller {
 		
 		$this->input->set_cookie($this->_lastVisit,microtime(TRUE),time() + 86400);
 		
+		/*
 		if($this->isPostRequest() && !$this->_checkVerify()){
 			if($this->input->is_ajax_request() || $this->_inApp == true){
 				$this->responseJSON('请求失效');
