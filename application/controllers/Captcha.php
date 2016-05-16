@@ -41,6 +41,8 @@ class Captcha extends Ydzj_Controller {
 		
 		$this->Captcha_Model->_add($data);
 		
+		//使用 Session 的存储方式,防止ip 取值不正确导致验证码错误的问题
+		$this->session->set_userdata('captcha', $cap['word']);
 		
 		header('Pragma:no-cache');
 		header('Cache-control:no-cache');

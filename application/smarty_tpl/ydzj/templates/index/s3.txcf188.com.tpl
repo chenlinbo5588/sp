@@ -109,16 +109,18 @@ form label.error {
 </style>
 	<div id="wrap">
 		<div>
+			<div class="hide">0基础K线从入门到精通 抄底逃顶</div>
    			<img class="responed" src="{resource_url('img/pg4/pic1.png')}"/>
    		</div>
    		<div>
+   			<div class="hide">技术指标完美猎杀 菜鸟也能变高手</div>
    			<img class="responed" src="{resource_url('img/pg4/pic2.png')}"/>
    		</div>
    		<div>
    			<img class="responed" src="{resource_url('img/pg4/pic3.png')}"/>
    		</div>
    		<div class="cv">
-   			<a href="http://jq.qq.com/?_wv=1027&k=2FKSrRM" target="_blank">大宗商品交易Vip指导群</a>
+   			<div class="hide">K线组合发信号 高抛低吸制胜千里</div>
    			<img class="responed" src="{resource_url('img/pg4/pic4.png')}"/>
    		</div>
    		<div>
@@ -128,36 +130,32 @@ form label.error {
    			<img class="responed" src="{resource_url('img/pg4/pic6.png')}"/>
    		</div>
 		<div>
-			<div class="hide">沥青投资4大优势</div>
    			<img class="responed" src="{resource_url('img/pg4/pic7.png')}"/>
    		</div>
    		<div>
-   			<div class="hide">33倍杠杆，杠杆交易，10-100灵活可控，降低交易成本</div>
    			<img class="responed" src="{resource_url('img/pg4/pic8.png')}"/>
    		</div>
    		<div>
-   			<div class="hide">每日可多次交易，提供资金利用率，较少风险</div>
    			<img class="responed" src="{resource_url('img/pg4/pic9.png')}"/>
    		</div>
    		<div>
-   			<div class="hide">22小时不间断交易，方便客户抓住交易机会</div>
    			<img class="responed" src="{resource_url('img/pg4/pic10.png')}"/>
    		</div>
    		<div>
-   			<div class="hide">双向交易，涨跌均可获利,大大增加获利几率</div>
    			<img class="responed" src="{resource_url('img/pg4/pic11.png')}"/>
    		</div>
    		<div id="regbg">
+   			<div class="hide">免费体验，入市首选指标 《K线入门宝典》</div>
    			<div id="reg">
    				<a name="md">&nbsp;</a>
-	   			{form_open(site_url('index/site3'|cat:'#md'),'id="registerForm"')}
+	   			{form_open(site_url('index/index'|cat:'#md'),'id="registerForm"')}
 		        {include file="./site_form_hidden.tpl"}
 	   			<div class="username clearfix"><label class="side_lb">姓名</label><input type="text" class="txt noround" autocomplete="off" name="username" value="{set_value('username')}" placeholder="请输入用户名称"/></div>
-	   			<div class="tiparea"></div>
+	   			<div class="tiparea">{form_error('username')}</div>
 	   			<div class="mobile clearfix"><label class="side_lb">手机号码</label><input type="text" class="txt noround" autocomplete="off" name="mobile" id="mobile" value="{set_value('mobile')}" placeholder="请输入您的手机号码"/></div>
-	   			<div class="tiparea"></div>
-	   			<div class="auth_code clearfix"><label class="side_lb">验证码</label><input type="text" class="txt noround" name="auth_code" autocomplete="off" value="" placeholder="请输入您的验证码"/><img class="nature t4" id="authImg" src="{site_url('captcha')}?w=100&h=37" title="点击图片刷新"/></div>
-	   			<div class="tiparea"></div>
+	   			<div class="tiparea">{form_error('mobile')}</div>
+	   			<div class="auth_code clearfix"><label class="side_lb">验证码</label><input type="text" class="txt noround" id="authcode_text" name="auth_code" autocomplete="off" value="" placeholder="请输入您的验证码"/><img class="nature t4" id="authImg" src="{site_url('captcha')}?w=100&h=37" title="点击图片刷新"/></div>
+	   			<div class="tiparea">{form_error('auth_code')}</div>
 	   			<div class="refresh"><a href="javascript:void(0);">看不清，点击验证码刷新</a></div>
 	   			<div class="btn2 clearfix"><div class="lf"></div><input class="t4" type="submit" name="tj" value="我要体验"/><div class="rf"></div></div>
 	   		</div>
