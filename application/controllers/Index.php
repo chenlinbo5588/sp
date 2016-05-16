@@ -14,8 +14,10 @@ class Index extends Ydzj_Controller {
 	private function _getCurrentServerName(){
 		$currentHost = $this->input->server('HTTP_HOST');
 		//$currentHost = 'www.txcf188.com';
-		$currentHost = 's1.txcf188.com';
-		//$currentHost = 's2.txcf188.com';
+		//$currentHost = 's1.txcf188.com';
+		$currentHost = 's2.txcf188.com';
+		
+		//$this->assign('currentHost',$currentHost);
 		
 		return $currentHost;
 	}
@@ -76,11 +78,7 @@ class Index extends Ydzj_Controller {
 			
 			
 			if($this->form_validation->run() !== FALSE){
-				
-				
-				
 				$todayRegistered = $this->register_service->getIpLimit($this->input->ip_address());
-				
 				// 最多10 次
 				if($todayRegistered < 10){
 					
@@ -106,9 +104,9 @@ class Index extends Ydzj_Controller {
 							'profile' => $userInfo
 						));
 						*/
-						redirect(config_item('dest_website'));
-						
+						//redirect(config_item('dest_website'));
 						$registerOk = true;
+						
 					}else{
 						
 						$this->assign('feedback',$result['message']);
@@ -118,7 +116,8 @@ class Index extends Ydzj_Controller {
 				}
 			}
 		}
-		
+		//$registerOk = true;
+		$this->assign('registerOk',$registerOk);
 		$this->display('index/'.$currentHost);
 	}
 	
@@ -126,6 +125,9 @@ class Index extends Ydzj_Controller {
 	public function site1(){
 		
 		$currentHost = $this->_getCurrentServerName();
+		
+		
+		$registerOk = false;
 		
 		$inviter = $this->input->get_post('inviter');
 		$inviteFrom = $this->input->get_post('inviteFrom');
@@ -141,7 +143,6 @@ class Index extends Ydzj_Controller {
 			for($i = 0; $i < 1; $i++){
 				
 				if(!$this->form_validation->run()){
-					
 					break;
 				}
 				
@@ -158,15 +159,17 @@ class Index extends Ydzj_Controller {
 				$result = $this->register_service->createMember($addParam,true);
 				
 				if($result['code'] == 'success'){
-					redirect(config_item('dest_website'));
+					//redirect(config_item('dest_website'));
+					$registerOk = true;
+					$this->assign('feedback','注册成功');
 				}else{
 					$this->assign('feedback',$result['message']);
 				}
 				
 			}
-			
 		}
 		
+		$this->assign('registerOk',$registerOk);
 		$this->display('index/'.$currentHost);
 		
 	}
@@ -177,6 +180,7 @@ class Index extends Ydzj_Controller {
 		
 		$currentHost = $this->_getCurrentServerName();
 		
+		$registerOk = false;
 		$inviter = $this->input->get_post('inviter');
 		$inviteFrom = $this->input->get_post('inviteFrom');
 		
@@ -191,7 +195,6 @@ class Index extends Ydzj_Controller {
 				if(!$this->form_validation->run()){
 					break;
 				}
-				
 				
 				$this->load->model('Captcha_Model');
 				$captcha = $this->Captcha_Model->getList(array(
@@ -222,7 +225,9 @@ class Index extends Ydzj_Controller {
 				$result = $this->register_service->createMember($addParam,true);
 				
 				if($result['code'] == 'success'){
-					redirect(config_item('dest_website'));
+					//redirect(config_item('dest_website'));
+					
+					$registerOk = true;
 				}else{
 					$this->assign('feedback',$result['message']);
 				}
@@ -231,6 +236,7 @@ class Index extends Ydzj_Controller {
 			
 		}
 		
+		$this->assign('registerOk',$registerOk);
 		$this->display('index/'.$currentHost);
 		
 	}

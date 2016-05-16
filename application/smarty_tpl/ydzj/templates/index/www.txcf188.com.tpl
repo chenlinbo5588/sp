@@ -103,8 +103,25 @@ form label.error {
    		</div>
    		
 	</div><!-- //end of wrap -->
+	<div id="dlg"></div>
+	{*<script type="text/javascript" src="{resource_url('js/dialog/dialog.js')}" id="dialog_js"></script>
+	<script type="text/javascript" src="{resource_url('js/jquery-ui/jquery.ui.js')}"></script>*}
 	<script type="text/javascript">
 	var authCodeURL ="{site_url('api/register/authcode')}";
+	{if $registerOk}
+	$(function(){
+		alert("注册成功");
+		{*
+		var d = DialogManager.create("dlg");
+	    d.setTitle("提示");
+	    d.setContents("注册成功");
+	    d.setWidth('100px');
+	    //d.setHeight(150);
+	    d.show('center',true);
+		*}
+		location.href="{config_item('dest_website')}";
+	});
+	{/if}
 	</script>
 	<script type="text/javascript" src="{resource_url('js/jquery.validation.min.js')}"></script>
 	<script type="text/javascript" src="{resource_url('js/register.js')}"></script>

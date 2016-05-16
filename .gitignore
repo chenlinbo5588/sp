@@ -24,5 +24,6 @@ readme.rst
 /nbproject/private/
 /nbproject/
 
+web.config
 proxy.sqlite
 proxy_log.log

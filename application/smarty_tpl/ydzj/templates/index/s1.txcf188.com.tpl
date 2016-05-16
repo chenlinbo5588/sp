@@ -127,6 +127,8 @@ img.responed {
 	<script type="text/javascript" src="{resource_url('js/jquery.validation.min.js')}"></script>
 	<script>
 	$(function(){
+		{include file="./site_alert.tpl"}
+		
 		$('#registerForm1').validate({
 	        errorPlacement: function(error, element){
 	        	//console.log(error);

@@ -1,6 +1,5 @@
 {include file="./site_common.tpl"}
 <style type="text/css">
-
 img.responed {
 	display: block;
 }
@@ -66,6 +65,14 @@ img.responed {
     -webkit-appearance: none;
 }
 
+.cv a {
+	display: block;
+    height: 210px;
+    text-indent: -1000em;
+    position: absolute;
+    width: 100%;
+}
+
 </style>
 	<div id="wrap">
 		<div>
@@ -77,7 +84,8 @@ img.responed {
    		<div>
    			<img class="responed" src="{resource_url('img/pg3/pic3.jpg')}"/>
    		</div>
-   		<div>
+   		<div class="cv">
+   			<a href="http://jq.qq.com/?_wv=1027&k=2FKSrRM" target="_blank">大宗商品交易Vip指导群</a>
    			<img class="responed" src="{resource_url('img/pg3/pic4.jpg')}"/>
    		</div>
    		<div>
@@ -122,7 +130,8 @@ img.responed {
    			</div>
    			</form>
    		</div>
-   		<div>
+   		<div class="cv">
+   			<a href="http://jq.qq.com/?_wv=1027&k=2FKSrRM" target="_blank">大宗商品交易Vip指导群</a>
    			<img class="responed" src="{resource_url('img/pg3/pic13.jpg')}"/>
    		</div>
    		<div>
@@ -138,6 +147,8 @@ img.responed {
 	<script>
 	var imgUrl = "{site_url('captcha')}?w=80&h=35";
 	$(function(){
+		{include file="./site_alert.tpl"}
+		
 		$("img.t3").bind("click",function(){
 			$(this).attr("src",imgUrl + "&t=" + Math.random());
 		});
@@ -171,8 +182,6 @@ img.responed {
 	            }
 	        }
 	    });
-		
-	
 	});	
 	</script>
 </body>
