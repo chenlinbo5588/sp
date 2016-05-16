@@ -1,11 +1,8 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-
 /**
  * 运动之家 管理控制器
- * 
- * 
  */
 class Ydzj_Admin_Controller extends Ydzj_Controller {
 	
@@ -16,6 +13,12 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 		
 		$this->form_validation->set_error_delimiters('<label class="error">','</label>');
 		
+		$this->_initAdminLogin();
+	}
+	
+	private function _initAdminLogin(){
+		
+		//print_r($this->session->all_userdata());
 		$this->_adminProfile = $this->session->userdata('manage_profile');
 		
 		if(empty($this->_adminProfile)){
@@ -31,10 +34,7 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 		}else{
 			$this->assign('manage_profile',$this->_adminProfile);
 		}
-		
-		//print_r($this->session->all_userdata());
 	}
-	
 	
 	public function isLogin(){
 		
@@ -49,7 +49,6 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 	public function getAppTemplateDir(){
 		return 'ydzj_admin';
 	}
-	
 	
 }
 

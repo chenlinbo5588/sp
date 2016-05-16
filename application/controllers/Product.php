@@ -135,11 +135,20 @@ class Product extends Ydzj_Controller {
 		$id = $this->input->get_post('id');
 		$gc_id = $this->input->get_post('gc_id');
 		$info = $this->Goods_Model->getFirstByKey($id,'goods_id');
+		
+		
 		if($info){
+			
+			$currentFiles = $this->Goods_Images_Model->getList(array(
+				'select' => 'goods_image_aid,goods_image',
+				'where' => array('goods_id' => $id)
+			));
+			
 			$this->_breadCrumbLinks($info['gc_id']);
 			$nextProduct = $this->goods_service->getNextByProduct($info);
 			$preProduct = $this->goods_service->getPreByProduct($info);
 			
+			$this->assign('imgList',$currentFiles);
 			$this->assign('nextProduct',$nextProduct);
 			$this->assign('preProduct',$preProduct);
 		}else{

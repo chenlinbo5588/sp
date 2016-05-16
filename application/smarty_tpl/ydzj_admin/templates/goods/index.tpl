@@ -90,7 +90,7 @@
       	{foreach from=$list['data'] item=item}
       	<tr class="hover edit" id="row{$item['goods_id']}">
           <td><input type="checkbox" name="id[]" group="chkVal" value="{$item['goods_id']}" class="checkitem"></td>
-          <td class="w60 picture"><img class="size-56x56" src="{resource_url($item['goods_pic'])}"/></td>
+          <td class="w60 picture"><img class="size-56x56" src="{if $item['goods_pic']}{resource_url($item['goods_pic'])}{else}{resource_url('img/default.jpg')}{/if}"/></td>
           
           <td class="goods-name w270">
           	<p><span>{$item['goods_name']|escape}</span></p>

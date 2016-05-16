@@ -15,8 +15,26 @@ class Ydzj_Controller extends MY_Controller {
 	public function __construct(){
 		parent::__construct();
 		
+		$this->load->library('Seo_Service');
 		$this->form_validation->set_error_delimiters('<div class="form_error">','</div>');
 		
+		$this->_initLogin();
+		$this->_initSetting();
+		$this->_initSeo();
+	}
+	
+	
+	
+	
+	protected function _initLibrary(){
+		parent::_initLibrary();
+	}
+	
+	private function _initSetting(){
+		$settingList = $this->base_service->getSettingList();
+	}
+	
+	private function _initLogin(){
 		
 		$this->session->set_userdata(array('lastvisit' => $this->_reqtime));
 		$this->_profile = $this->session->userdata('profile');
@@ -29,13 +47,19 @@ class Ydzj_Controller extends MY_Controller {
 			$this->assign('profile',$this->session->userdata('profile'));
 			$this->attachment_service->setUid($this->_profile['basic']['uid']);
 		}
-		
-		//$this->initEmail();
-		$this->seo('运动之家','体育运动 体育场馆 查询预定 个人赛事,业余联赛组织', '一个综合性体育运动爱好者聚集地，约朋友出来运动、组织对抗比赛、预约场馆，给您带来一站式体育运动服务，节省您宝贵的时间');
 	}
 	
-	protected function _initLibrary(){
-		parent::_initLibrary();
+	
+	private function _initSeo(){
+		$seoList = $this->cache->file->get(CACHE_KEY_SEO);
+		
+		if(empty($seoList)){
+			$seoList = $this->seo_service->getCurrentSeoSetting();
+			$this->cache->file->save(CACHE_KEY_SEO, $seoList, CACHE_ONE_DAY);
+		}
+		
+		
+		$this->seo($seoList['index']['title'],$seoList['index']['keywords'], $seoList['index']['description']);
 	}
 	
 	

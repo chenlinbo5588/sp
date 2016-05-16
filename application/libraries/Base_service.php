@@ -88,7 +88,7 @@ class Base_Service {
 	}
 	
 	
-	public function getSettingList($condition){
+	public function getSettingList($condition = array()){
 		$list = self::$settingModel->getList($condition);
 		return $this->toEasyUseArray($list,'name');
 	}

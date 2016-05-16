@@ -72,7 +72,7 @@
           <td class="vatop tips"><span class="vatop rowform">上传商品默认主图，如多规格值时将默认使用该图或分规格上传各规格主图；支持jpg，建议使用尺寸800x800像素以上、大小不超过1M的正方形图片，上传后的图片将会自动保存在图片空间的默认分类中。</span></td>
         </tr>
        	<tr>
-          <td colspan="2" class="required">商品展示图片上传(用于显示在详情页面):</td>
+          <td colspan="2" class="required">商品展示图片上传(JPG格式 , 用于显示在详情页面):</td>
         </tr>
         <tr class="noborder">
           <td colspan="2" id="divComUploadContainer"><input type="file" multiple="multiple" id="fileupload" name="fileupload" /></td>
@@ -80,6 +80,9 @@
         <tr>
        		<td colspan="2">
        			<ul id="thumbnails" class="thumblists">
+       			{foreach from=$fileList item=item}
+       			<li id="{$item['id']}" class="picture"><input type="hidden" name="file_id[]" value="{$item['id']}" /><div class="size-64x64"><span class="thumb"><i></i><img src="{resource_url($item['file_url'])}" alt="" width="64px" height="64px"/></span></div><p><span><a href="javascript:insert_editor('{resource_url($item['file_url'])}');">插入</a></span><span><a href="javascript:del_file_upload('{$item['id']}');">删除</a></span></p></li>
+       			{/foreach}
        			</ul>
        		</td>
        	</tr>

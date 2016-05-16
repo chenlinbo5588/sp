@@ -9,7 +9,17 @@
 				<div class="bd bdlist">
 					{if $info}
 					<div class="productAlbum">
+						<ul class="bxslider">
+						  {foreach from=$imgList item=item}
+						  <li><img src="{resource_url($item['goods_image'])}" /></li>
+						  {/foreach}
+						</ul>
 						
+						<div id="bx-pager">
+						  {foreach from=$imgList item=item}
+						  <a data-slide-index="0" href=""><img src="/images/thumbs/tree_root.jpg" /></a>
+						  {/foreach}
+						</div>
 					</div>
 					<div class="productHeader">
 						<div><em class="mute">产品名称:</em><strong>{$info['goods_name']|escape}</strong></div>

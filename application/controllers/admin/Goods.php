@@ -143,6 +143,28 @@ class Goods extends Ydzj_Admin_Controller {
 	}
 	
 	
+	
+	private function _getFileList(){
+		$file_ids = $this->input->post('file_id');
+		
+		$fileList = array();
+		
+		if($file_ids){
+			$fileList = $this->Attachment_Model->getList(array(
+				'select' => 'id,file_url',
+				'where_in' => array(
+					array('key' => 'id', 'value' => $file_ids)
+				),
+				'order' => 'id DESC'
+			));
+			
+			
+		}
+		
+		return $fileList;
+		
+	}
+	
 	public function add(){
 		$feedback = '';
 		
@@ -155,6 +177,9 @@ class Goods extends Ydzj_Admin_Controller {
 			for($i = 0; $i < 1; $i++){
 				
 				$info = $this->_prepareGoodsData();
+				$fileList = $this->_getFileList();
+				
+				$this->assign('fileList',$fileList);
 				
 				if(!$this->form_validation->run()){
 					$feedback = $this->form_validation->error_string();
@@ -173,16 +198,8 @@ class Goods extends Ydzj_Admin_Controller {
 				}
 				
 				
-				$file_ids = $this->input->post('file_id');
 				
-				if($file_ids){
-					$fileList = $this->Attachment_Model->getList(array(
-						'select' => 'id,file_url',
-						'where_in' => array(
-							array('key' => 'id', 'value' => $file_ids)
-						)
-					));
-					
+				if($fileList){
 					$insData = array();
 					
 					foreach($fileList as $fileInfo){
@@ -260,14 +277,16 @@ class Goods extends Ydzj_Admin_Controller {
 		if($goods_id){
 			//如果在商品编辑页面
 			$this->Goods_Images_Model->deleteByCondition(array(
-				'goods_image_aid' => $file_id,
-				'goods_id' => $goods_id,
-				'uid' => $this->_adminProfile['basic']['uid']
+				'where' => array(
+					'goods_image_aid' => $file_id,
+					'goods_id' => $goods_id,
+					'uid' => $this->_adminProfile['basic']['uid']
+				)
 			));
 		}
 		
 		if($file_id){
-			//文件删除，记录不删除
+			//文件删除，数据库记录不删除
 			$this->attachment_service->deleteFiles($file_id,'all',FROM_BACKGROUND);
 		}
 		
@@ -285,6 +304,8 @@ class Goods extends Ydzj_Admin_Controller {
 		
 		$info = $this->Goods_Model->getFirstByKey($id,'goods_id');
 		
+		$fileList = array();
+		
 		if($this->isPostRequest()){
 			
 			$this->_getRules();
@@ -292,7 +313,8 @@ class Goods extends Ydzj_Admin_Controller {
 			for($i = 0; $i < 1; $i++){
 				
 				$postInfo = $this->_prepareGoodsData();
-				
+				$fileList = $this->_getFileList();
+				//没有新上次文件
 				if(empty($postInfo['goods_pic']) && !empty($info['goods_pic'])){
 					$postInfo['goods_pic'] = $info['goods_pic'];
 				}
@@ -322,7 +344,23 @@ class Goods extends Ydzj_Admin_Controller {
 				
 				$feedback = getSuccessTip('保存成功');
 			}
+		}else{
+			
+			$currentFiles = $this->Goods_Images_Model->getList(array(
+				'select' => 'goods_image_aid,goods_image',
+				'where' => array('goods_id' => $id)
+			));
+			
+			
+			foreach($currentFiles as $item){
+				$fileList[] = array(
+					'id' => $item['goods_image_aid'],
+					'file_url' => $item['goods_image']
+				);
+			}
 		}
+		
+		$this->assign('fileList',$fileList);
 		
 		$this->assign('info',$info);
 		$this->assign('feedback',$feedback);
