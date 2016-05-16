@@ -1,7 +1,29 @@
 {include file="common/header.tpl"}
+<style type="text/css">
+
+.handle_area .formtitle {
+	text-align:center;
+}
+
+.handle_area .side_lb {
+	float:left;
+	display:block;
+	width:23%;
+}
+
+.handle_area .at_txt {
+	width:67%;
+}
+
+#adminLogin {
+	width:80%;
+	margin:0 auto;
+}
+</style>
 {if !$manage_profile}
-<div class="handle_area">
+<div class="handle_area" id="adminLogin">
     <div class="feedback">{$feedback}</div>
+    <h1 class="formtitle">管理后台登陆</h1>
     {form_open(site_url('member/admin_login'))}
         <input type="hidden" name="returnUrl" value="{$returnUrl}"/>
         <div class="row">
@@ -17,13 +39,24 @@
         </div>
         {form_error('auth_code')}
         <div class="row">
-            <label class="side_lb" for="authcode_text"></label>
-            <img class="nature" src="{site_url('captcha')}" title="点击图片刷新"/>
+            <label class="side_lb" for="authcode_text">&nbsp;</label>
+            <img id="authImg" class="nature" src="{site_url('captcha')}" title="点击图片刷新"/>&nbsp;<a href="javascript:void(0)" id="refreshBtn">看不请,点击刷新验证码</a>
         </div>
         
         <div class="row"><input class="master_btn" type="submit" name="login" value="登陆"/></div>
         {*<div class="row center"><a href="{site_url('member/login')}" title="去前台登陆">去前台登陆</a>*}
     </form>
+    
+    <script>
+	var imgUrl = "{site_url('captcha')}";
+	$(function(){
+	
+		$("#refreshBtn").bind("click",function(){
+			$("#authImg").attr("src",imgUrl + "?t=" + Math.random());
+		});
+		
+	});
+	</script>
 </div>
 {else}
 

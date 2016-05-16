@@ -79,8 +79,7 @@ form label.error {
    		<div id="regbg">
    			<div id="reg">
 	   			{form_open(site_url('index/index'),'id="registerForm"')}
-		        <input type="hidden" name="inviter" value="{$inviter}"/>
-		        <input type="hidden" name="inviteFrom" value="{$inviteFrom}"/>
+		        {include file="./site_form_hidden.tpl"}
 	   			<div class="username"><input type="text" class="txt noround" autocomplete="off" name="username" value="{set_value('username')}" placeholder="请输入用户名称"/></div>
 	   			<div class="mobile"><input type="text" class="txt noround" autocomplete="off" name="mobile" id="mobile" value="{set_value('mobile')}" placeholder="请输入您的手机号码"/></div>
 	   			<div class="auth_code"><input type="text" class="txt noround" name="auth_code" autocomplete="off" value="" style="width:70%" placeholder="请输入您的验证码"/><input type="button" class="getCode noround" name="authCodeBtn" value="获取验证码"/></div>
@@ -101,29 +100,11 @@ form label.error {
    			{include file="./site_f2.tpl"}
    			<div><img class="responed" src="{resource_url('img/pg1/bt_2.jpg')}"/></div>
    		</div>
-   		
 	</div><!-- //end of wrap -->
-	<div id="dlg"></div>
-	{*<script type="text/javascript" src="{resource_url('js/dialog/dialog.js')}" id="dialog_js"></script>
-	<script type="text/javascript" src="{resource_url('js/jquery-ui/jquery.ui.js')}"></script>*}
 	<script type="text/javascript">
 	var authCodeURL ="{site_url('api/register/authcode')}";
-	{if $registerOk}
-	$(function(){
-		alert("注册成功");
-		{*
-		var d = DialogManager.create("dlg");
-	    d.setTitle("提示");
-	    d.setContents("注册成功");
-	    d.setWidth('100px');
-	    //d.setHeight(150);
-	    d.show('center',true);
-		*}
-		location.href="{config_item('dest_website')}";
-	});
-	{/if}
+	{include file="./site_alert.tpl"}
 	</script>
-	<script type="text/javascript" src="{resource_url('js/jquery.validation.min.js')}"></script>
 	<script type="text/javascript" src="{resource_url('js/register.js')}"></script>
 </body>
 </html>

@@ -1,3 +1,6 @@
+var jumpUrl = {json_encode($jumUrl)};
+
+{if !empty($feedback)}alert("{$feedback}");{/if}
 {if $registerOk}
-		alert("注册成功\n请加QQ群 4006222066");
-		{/if}
+		location.href= jumpUrl['{$jumUrlType}'];
+{/if}

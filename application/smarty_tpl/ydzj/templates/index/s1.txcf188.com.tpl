@@ -97,6 +97,7 @@ img.responed {
    			<a name="md1">&nbsp;</a>
    			<div class="hide">免费申请模拟账户，领取50万操盘资金</div>
 			{form_open(site_url('index/site1'|cat:'#md1'),'id="registerForm1"')}
+			{include file="./site_form_hidden.tpl"}
 			<input class="t1" type="text" name="mobile" value="{set_value('mobile')}" placeholder="请输入您的手机号码"/>
 			<input class="t2" type="submit" name="tj" value="模拟开户"/>
 			<div class="tiparea">{form_error('mobile')}</div>
@@ -110,6 +111,7 @@ img.responed {
    			<a name="md2">&nbsp;</a>
    			<div class="hide">您已等不急，跃跃欲试，马上开了实盘账户</div>
 			{form_open(site_url('index/site1'|cat:'#md2'),'id="registerForm2"')}
+			{include file="./site_form_hidden.tpl"}
 			<input class="t1" type="text" name="mobile" value="{set_value('mobile')}" placeholder="请输入您的手机号码"/>
 			<input class="t2" type="submit" name="tj" value="实盘开户"/>
 			<div class="tiparea">{form_error('mobile')}</div>
@@ -124,7 +126,6 @@ img.responed {
    			<div><img class="responed" src="{resource_url('img/pg2/pic13.jpg')}"/></div>
    		</div>
 	</div><!-- //end of wrap -->
-	<script type="text/javascript" src="{resource_url('js/jquery.validation.min.js')}"></script>
 	<script>
 	$(function(){
 		{include file="./site_alert.tpl"}

@@ -120,12 +120,14 @@ img.responed {
    		<div class="handler">
    			<a name="md">&nbsp;</a>
    			{form_open(site_url('index/site2'|cat:'#md'),'id="registerForm"')}
+   			{include file="./site_form_hidden.tpl"}
    			<div class="fromdiv" >
    				<h3>模拟交易,不投入资金,没有风险</h3>
    				<input class="t1" type="text" name="mobile" value="{set_value('mobile')}" placeholder="请输入您的手机号码"/>
-   				<input class="t2" id="authcode_text" class="at_txt" type="text" name="auth_code" value="{set_value('auth_code')}" placeholder="请输入4位验证码"/>
-   				<img class="nature t3" src="{site_url('captcha')}?w=80&h=35" title="点击图片刷新"/>
+   				<input class="t2" id="authcode_text" class="at_txt" type="text" name="auth_code" value="" placeholder="请输入4位验证码"/>
+   				<img class="nature t3" id="authImg" src="{site_url('captcha')}?w=100&h=35" title="点击图片刷新"/>
    				<div class="tiparea">{form_error('mobile')}{$feedback}</div>
+   				<div class="refresh"><a href="javascript:void(0);">看不清，点击验证码刷新</a></div>
    				<div><input class="t4" type="submit" name="tj" value="免费申请模拟账户"/></div>
    			</div>
    			</form>
@@ -143,14 +145,13 @@ img.responed {
    			<div><img class="responed" src="{resource_url('img/pg3/pic15.jpg')}"/></div>
    		</div>
 	</div><!-- //end of wrap -->
-	<script type="text/javascript" src="{resource_url('js/jquery.validation.min.js')}"></script>
 	<script>
-	var imgUrl = "{site_url('captcha')}?w=80&h=35";
+	var imgUrl = "{site_url('captcha')}?w=100&h=35";
 	$(function(){
 		{include file="./site_alert.tpl"}
 		
-		$("img.t3").bind("click",function(){
-			$(this).attr("src",imgUrl + "&t=" + Math.random());
+		$("img.t3,.refresh").bind("click",function(){
+			$("#authImg").attr("src",imgUrl + "&t=" + Math.random());
 		});
 		
 		$('#registerForm').validate({

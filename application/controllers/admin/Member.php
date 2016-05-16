@@ -42,7 +42,7 @@ class Member extends Ydzj_Admin_Controller {
 			$this->assign('ds',$this->common_district_service->prepareCityData($ds));
 		}
 		
-		$search_map['search_field'] = array('mobile' => '账号','email' => '电子邮箱','username' => '真实姓名');
+		$search_map['search_field'] = array('mobile' => '手机号码','email' => '电子邮箱','username' => '用户姓名');
 		
 		/*
 		$search_map['activity_sort'] = array(

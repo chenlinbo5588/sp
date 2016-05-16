@@ -13,5 +13,6 @@ $entity = array(
 'gc_sort' => 'tinyint',
 'gc_title' => 'varchar',
 'gc_keywords' => 'varchar',
-'gc_description' => 'varchar'
+'gc_description' => 'varchar',
+'gc_stat_code' => 'text'
 );

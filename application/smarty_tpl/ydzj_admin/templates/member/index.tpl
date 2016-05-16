@@ -94,10 +94,14 @@
       <thead>
         <tr class="thead">
           <th>&nbsp;</th>
-          <th colspan="2">会员</th>
-          <th>注册渠道</th>
-          <th>地区</th>
-          <th>邀请人</th>
+          <th>会员</th>
+          <th>手机号码</th>
+          <th>用户名称</th>
+          <th>来源渠道代码</th>
+          <th>注册来源域名</th>
+          <th>点击来源地址</th>
+          <th>注册时间</th>
+          <th>注册IP</th>
           <th>状态</th>
           <th class="align-center">操作</th>
         </tr>
@@ -107,41 +111,22 @@
         <tr class="hover member">
           <td class="w24"></td>
           <td class="w120 picture">
-            <div class=""><span class="thumb"><i></i><img src="{resource_url('img/nophoto.gif')}"/></span></div></td>
+            <div class=""><span class="thumb"><i></i><img src="{resource_url('img/nophoto.gif')}"/></span></div>
+          </td>
+          <td><strong>{$item['mobile']|escape}</strong></td>
+          <td>{if $item['username']}{$item['username']}{else}未填写{/if}</td>
           <td>
-            <p class="name"><strong>手机号码:{$item['mobile']|escape}</strong></p>
-            <p><strong>名称:&nbsp;</strong><span>{$item['username']|escape}</span></p>
-            <p><strong>性别:&nbsp;</strong><span>{if $item['sex'] == 'M'}男{elseif $item['sex'] == 'F'}女{else}保密{/if}</span></p>
-            <p class="smallfont">注册时间:&nbsp;{$item['reg_date']|date_format:"%Y-%m-%d %H:%M:%S"}</p>
-            <p class="smallfont">注册IP:&nbsp;{$item['reg_ip']}</p>
-            <p class="smallfont">注册渠道:&nbsp;{$item['channel_name']}</p>
-            <div class="im">
-                {if $item['email'] != ''}
-                <span class="email">
-                    <a href="mailto:{$item['email']}" class="yes" title="电子邮箱:{$item['email']|escape}">{$item['email']}</a>
-                </span>
-                {/if}
-                {if $item['qq'] != ''}
-                <span class="qq">
-                    <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin={$item['qq']}&site=qq&menu=yes" class="yes"  title="QQ: {$item['qq']|escape}">&nbsp;</a>
-                </span>
-                {/if}
-                {if $item['weixin'] != ''}
-                <span class="weixin"><a href="javascript:void(0)" title="{$item['weixin']|escape}">{$item['weixin']|escape}</a></span>
-                {/if}
-            </div>
+          	<span>{$item['channel_code']|escape}</span>
           </td>
           <td>
-            <p><span>{$item['channel_name']|escape}</span></p>
+          	<span>{$item['channel_name']|escape}</span>
           </td>
-          <td class="align-center w120">
-            {if $item['inviter']}
-            <div class=""><a href="{admin_site_url('member/edit')}/{$item['inviter']}"><img src="{resource_url($inviterInfo[$item['inviter']]['avatar_small'])}" /></a></div>
-            <p>{$inviterInfo[$item['inviter']]['mobile']}</p>
-            {/if}
+          <td>{$item['reg_orig']|escape}</td>
+          <td>
+            <p class="smallfont">{$item['reg_date']|date_format:"%Y-%m-%d %H:%M:%S"}</p>
           </td>
           <td>
-           {$memberDs[$item['d1']]['name']}{$memberDs[$item['d2']]['name']}{$memberDs[$item['d3']]['name']}{$memberDs[$item['d4']]['name']}
+            <p class="smallfont">{$item['reg_ip']}</p>
           </td>
           <td>{if $item['status'] == 0}注册完成{else}注册未提交{/if}</td>
           <td class="align-center"><a href="{admin_site_url('member/edit')}/{$item['uid']}">编辑</a></td>
