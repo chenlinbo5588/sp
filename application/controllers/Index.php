@@ -85,6 +85,8 @@ class Index extends Ydzj_Controller {
 		//$currentHost = 's5.txcf188.com';
 		//$currentHost = 's6.txcf188.com';
 		//$currentHost = 's7.txcf188.com';
+		//$currentHost = 's8.txcf188.com';
+		//$currentHost = 's9.txcf188.com';
 		
 		$this->assign('currentHost',$currentHost);
 		

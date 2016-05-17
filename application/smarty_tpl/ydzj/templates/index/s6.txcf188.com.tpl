@@ -23,6 +23,18 @@ img.responed {
 	display: block;
 }
 
+.achors {
+	position:relative;
+}
+
+.achors a {
+	position:absolute;
+	right:0;
+	top:0;
+	height:80px;
+	width:50%;
+}
+
 #reg {
 	margin: 0 auto;
 	padding:0 10px;
@@ -106,7 +118,7 @@ form label.error {
 
 
 .cv {
-	margin-top:20px;
+	margin-top:15px;
 }
 
 .fillcol {
@@ -119,7 +131,10 @@ form label.error {
 		<div>
    			<img class="responed" src="{resource_url('img/pg7/pic1.png')}"/>
    			<img class="responed" src="{resource_url('img/pg7/pic2.png')}"/>
+   		</div>
+   		<div class="achors">
    			<img class="responed" src="{resource_url('img/pg7/pic3.png')}"/>
+   			<a href="{$jumUrl['download1']}">&nbsp;</a>
    		</div>
    		<div class="formdiv">
 	   		<div id="regbg">
@@ -154,9 +169,9 @@ form label.error {
    		<div>
    			<img class="responed" src="{resource_url('img/pg7/pic8.png')}"/>
    		</div>
-   		<div class="cv">
+   		<div>
    			{include file="./site_f1.tpl"}
-   			<img class="responed" src="{resource_url('img/pg7/pic9.png')}"/>
+   			<div><img class="responed" src="{resource_url('img/pg7/pic9.png')}"/></div>
    		</div>
    		<div>
    			{include file="./site_f2.tpl"}
@@ -169,8 +184,6 @@ form label.error {
 	$(function(){
 		$('#registerForm').validate({
 	        errorPlacement: function(error, element){
-	        	//console.log(error);
-	        	//console.log(element);
 	        	error.appendTo(element.parent().next(".tiparea"));
 	        },
 	        rules : {
@@ -181,19 +194,7 @@ form label.error {
 	        	},
 	        	mobile: {
 	                required : true,
-	                phoneChina:true,
-	                /*
-	                remote   : {
-	                    url :'{site_url('common/member_check')}',
-	                    type:'get',
-	                    data:{
-	                    	keyword: 'mobile',
-	                    	value : function(){
-	                            return $('#member_mobile').val();
-	                        }
-	                    }
-	                }
-	                */
+	                phoneChina:true
 	            },
 	            auth_code : {
 	            	required:true,
@@ -209,8 +210,7 @@ form label.error {
 	                maxlength: '最多输入20个字符'
 	        	},
 	        	mobile: {
-	                required : '手机号码不能为空',
-	                /*remote   : '手机号码已经被注册，请您更换一个'*/
+	                required : '手机号码不能为空'
 	            },
 	            auth_code : {
 	            	required : '请输入6位数字验证码',

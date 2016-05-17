@@ -116,8 +116,6 @@ form label.error {
 	$(function(){
 		$('#registerForm').validate({
 	        errorPlacement: function(error, element){
-	        	//console.log(error);
-	        	//console.log(element);
 	        	error.appendTo(element.parent().next(".tiparea"));
 	        },
 	        rules : {
@@ -128,19 +126,7 @@ form label.error {
 	        	},
 	        	mobile: {
 	                required : true,
-	                phoneChina:true,
-	                /*
-	                remote   : {
-	                    url :'{site_url('common/member_check')}',
-	                    type:'get',
-	                    data:{
-	                    	keyword: 'mobile',
-	                    	value : function(){
-	                            return $('#member_mobile').val();
-	                        }
-	                    }
-	                }
-	                */
+	                phoneChina:true
 	            },
 	            auth_code : {
 	            	required:true,
@@ -156,8 +142,7 @@ form label.error {
 	                maxlength: '最多输入20个字符'
 	        	},
 	        	mobile: {
-	                required : '手机号码不能为空',
-	                /*remote   : '手机号码已经被注册，请您更换一个'*/
+	                required : '手机号码不能为空'
 	            },
 	            auth_code : {
 	            	required : '请输入6位数字验证码',

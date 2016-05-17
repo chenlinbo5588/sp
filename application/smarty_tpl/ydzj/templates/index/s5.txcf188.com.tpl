@@ -136,7 +136,7 @@ form label.error {
    		</div>
    		<div>
    			{include file="./site_f1.tpl"}
-   			<img class="responed" src="{resource_url('img/pg6/pic10.jpg')}"/>
+   			<div><img class="responed" src="{resource_url('img/pg6/pic10.jpg')}"/></div>
    		</div>
    		<div>
    			{include file="./site_f2.tpl"}
