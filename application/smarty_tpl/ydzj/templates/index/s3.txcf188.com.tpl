@@ -1,9 +1,14 @@
 {include file="./site_common.tpl"}
 <style type="text/css">
 
+body {
+	background:#5e605f;
+}
+
+
 #regbg {
 	background:#084355;
-	padding: 20px 0;
+	padding: 10px 0 20px;
 }
 
 img.responed {
@@ -26,7 +31,7 @@ form label.error {
 }
 
 .username ,.mobile, .auth_code {
-	margin:2px 0;
+	margin:5px 0;
 }
 
 

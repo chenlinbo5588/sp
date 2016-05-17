@@ -55,7 +55,7 @@ $(function(){
         errorPlacement: function(error, element){
         	//console.log(error);
         	//console.log(element);
-            error.appendTo(element.parent());
+        	error.appendTo(element.parent().next(".tiparea"));
         },
         rules : {
         	username : {

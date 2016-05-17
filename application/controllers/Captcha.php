@@ -31,6 +31,8 @@ class Captcha extends Ydzj_Controller {
 		        'word'          => $cap['word']
 		);
 		
+		/*
+		 * 使用session 存储了 不使用 db 存储
 		$this->load->model('Captcha_Model');
 		
 		//清空数据
@@ -40,6 +42,7 @@ class Captcha extends Ydzj_Controller {
 		));
 		
 		$this->Captcha_Model->_add($data);
+		*/
 		
 		//使用 Session 的存储方式,防止ip 取值不正确导致验证码错误的问题
 		$this->session->set_userdata('captcha', $cap['word']);

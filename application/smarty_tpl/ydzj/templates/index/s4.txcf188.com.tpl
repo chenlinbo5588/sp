@@ -1,6 +1,11 @@
 {include file="./site_common.tpl"}
 <style type="text/css">
 
+body {
+	background:#c0c0c0;
+}
+
+
 .formdiv {
 	position:relative;
 }
@@ -32,7 +37,7 @@ form label.error {
 }
 
 .username ,.mobile, .auth_code {
-	margin:2px 0;
+	margin:5px 0;
 }
 
 
@@ -98,8 +103,21 @@ form label.error {
 
 .fillcol {
 	background:#c0eaff;
-	height:160px;
+	height:100px;
 }
+
+@media (min-width: 1024px) {
+	.fillcol {
+		height:100px;
+	}
+}
+
+@media (max-width: 640px) {
+	.fillcol {
+		height:160px;
+	}
+}
+
 
 </style>
 	<div id="wrap">

@@ -1,5 +1,8 @@
 {include file="./site_common.tpl"}
 <style type="text/css">
+body {
+	background:#686868;
+}
 
 img.responed {
 	display: block;

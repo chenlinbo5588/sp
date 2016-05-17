@@ -58,6 +58,11 @@ class Index extends Ydzj_Controller {
 					'registeOkText' => 'registerOk_text2',
 					'jumUrlType' => 'qqchat',
 					'rules' => array( 'mobile','auth_code'),
+				),
+			's6.txcf188.com' => array(
+					'registeOkText' => 'registerOk_text2',
+					'jumUrlType' => 'qqchat',
+					'rules' => array('username', 'mobile','mobile_auth_code'),
 				)
 		);
 		
@@ -73,6 +78,7 @@ class Index extends Ydzj_Controller {
 		//$currentHost = 's3.txcf188.com';
 		//$currentHost = 's4.txcf188.com';
 		//$currentHost = 's5.txcf188.com';
+		//$currentHost = 's6.txcf188.com';
 		
 		$this->assign('currentHost',$currentHost);
 		

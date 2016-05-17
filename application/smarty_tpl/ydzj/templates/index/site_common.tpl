@@ -10,6 +10,13 @@
 <link rel="stylesheet" href="{resource_url('css/site.css')}?v=1.1"/>
 <script type="text/javascript" src="{resource_url('js/jquery.js')}"></script>
 <script type="text/javascript" src="{resource_url('js/jquery.validation.min.js')}"></script>
+<style type="text/css">
+#wrap {
+    width: 100%;
+    max-width: 640px;
+    margin: 0 auto;
+}
+</style>
 <script>
 var cookiedomain = "",
     cookiepath = "{config_item('cookie_path')}",

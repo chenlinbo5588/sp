@@ -1,5 +1,10 @@
 {include file="./site_common.tpl"}
 <style type="text/css">
+body {
+	background:#686868;
+}
+
+
 #regbg {
 	background:#e9e9e9;
 	position: relative;
@@ -81,8 +86,11 @@ form label.error {
 	   			{form_open(site_url('index/index'),'id="registerForm"')}
 		        {include file="./site_form_hidden.tpl"}
 	   			<div class="username"><input type="text" class="txt noround" autocomplete="off" name="username" value="{set_value('username')}" placeholder="请输入用户名称"/>{form_error('username')}</div>
+	   			<div class="tiparea"></div>
 	   			<div class="mobile"><input type="text" class="txt noround" autocomplete="off" name="mobile" id="mobile" value="{set_value('mobile')}" placeholder="请输入您的手机号码"/>{form_error('mobile')}</div>
+	   			<div class="tiparea"></div>
 	   			<div class="auth_code"><input type="text" class="txt noround" name="auth_code" autocomplete="off" value="" style="width:70%" placeholder="请输入您的验证码"/><input type="button" class="getCode noround" name="authCodeBtn" value="获取验证码"/>{form_error('auth_code')}</div>
+	   			<div class="tiparea"></div>
 	   			<div class="sb"><input class="txt" type="submit" value="免费注册" src="{resource_url('img/pg1/reg_btn.jpg')}" /></div>
 	   		</div>
    		</div>
@@ -105,6 +113,6 @@ form label.error {
 	var authCodeURL ="{site_url('api/register/authcode')}";
 	{include file="./site_alert.tpl"}
 	</script>
-	<script type="text/javascript" src="{resource_url('js/register.js')}"></script>
+	<script type="text/javascript" src="{resource_url('js/register.js')}?v=1.0"></script>
 </body>
 </html>

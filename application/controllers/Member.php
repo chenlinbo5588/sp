@@ -96,6 +96,15 @@ class Member extends Ydzj_Controller {
 	}
 	
 	
+	public function validateCaptcha($code){
+		if(strtolower($code) != strtolower($this->session->userdata('captcha')) ){
+			$this->form_validation->set_message('validateCaptcha', '验证码错误');
+			return false;
+		}else{
+			return true;
+		}
+	}
+	
 	
 	/**
 	 * 管理后台登陆
@@ -107,7 +116,7 @@ class Member extends Ydzj_Controller {
 			$this->form_validation->reset_validation();
 			$this->form_validation->set_rules('email','用户名', 'required|valid_email');
 			$this->form_validation->set_rules('password','密码','required|alpha_numeric');
-			
+			$this->form_validation->set_rules('auth_code','验证码', 'required|callback_validateCaptcha');
 			
 			for($i = 0; $i < 1; $i++){
 				
@@ -115,6 +124,7 @@ class Member extends Ydzj_Controller {
 					break;
 				}
 				
+				/*
 				$this->load->model('Captcha_Model');
 				$captcha = $this->Captcha_Model->getList(array(
 					'where' => array(
@@ -131,6 +141,7 @@ class Member extends Ydzj_Controller {
 					$this->assign('feedback','<div class="form_error">验证码错误</div>');
 					break;
 				}
+				*/
 				
 				$this->load->library('Admin_Service');
 				

@@ -1,6 +1,10 @@
 {include file="./site_common.tpl"}
 <style type="text/css">
 
+body {
+	background:#a60000;
+}
+
 .formdiv {
 	position:relative;
 }
@@ -32,7 +36,7 @@ form label.error {
 }
 
 .username ,.mobile, .auth_code {
-	margin:2px 0;
+	margin:5px 0;
 }
 
 
@@ -42,7 +46,7 @@ form label.error {
 	line-height:35px;
 	display:block;
 	width:15%;
-	color:#0D0D0D;
+	color:#fff;
 }
 
 .username .txt,.mobile .txt , .auth_code .txt {
