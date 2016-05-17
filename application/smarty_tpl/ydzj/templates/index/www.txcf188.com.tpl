@@ -92,6 +92,7 @@ form label.error {
 	   			<div class="auth_code"><input type="text" class="txt noround" name="auth_code" autocomplete="off" value="" style="width:70%" placeholder="请输入您的验证码"/><input type="button" class="getCode noround" name="authCodeBtn" value="获取验证码"/></div>
 	   			<div class="tiparea">{form_error('auth_code')}</div>
 	   			<div class="sb"><input class="txt" type="submit" value="免费注册" src="{resource_url('img/pg1/reg_btn.jpg')}" /></div>
+	   			</form>
 	   		</div>
    		</div>
    		<div>
@@ -112,7 +113,63 @@ form label.error {
 	<script type="text/javascript">
 	var authCodeURL ="{site_url('api/register/authcode')}";
 	{include file="./site_alert.tpl"}
+	$(function(){
+		$('#registerForm').validate({
+	        errorPlacement: function(error, element){
+	        	//console.log(error);
+	        	//console.log(element);
+	        	error.appendTo(element.parent().next(".tiparea"));
+	        },
+	        rules : {
+	        	username : {
+	        		required : true,
+	        		minlength: 1,
+	                maxlength: 20
+	        	},
+	        	mobile: {
+	                required : true,
+	                phoneChina:true,
+	                /*
+	                remote   : {
+	                    url :'{site_url('common/member_check')}',
+	                    type:'get',
+	                    data:{
+	                    	keyword: 'mobile',
+	                    	value : function(){
+	                            return $('#member_mobile').val();
+	                        }
+	                    }
+	                }
+	                */
+	            },
+	            auth_code : {
+	            	required:true,
+	                digits: true,
+	                minlength: 6,
+	                maxlength: 6
+	            }
+	        },
+	        messages : {
+	        	username : {
+	        		required : '请输入用户名称',
+	        		minlength: '最少输入1个字符',
+	                maxlength: '最多输入20个字符'
+	        	},
+	        	mobile: {
+	                required : '手机号码不能为空',
+	                /*remote   : '手机号码已经被注册，请您更换一个'*/
+	            },
+	            auth_code : {
+	            	required : '请输入6位数字验证码',
+	                digits: '请输入6位数字验证码',
+	                minlength: '请输入6位数字验证码',
+	                maxlength: '请输入6位数字验证码'
+	            }
+	        }
+	    });
+	});
+	
 	</script>
-	<script type="text/javascript" src="{resource_url('js/register.js')}?v=1.0"></script>
+	<script type="text/javascript" src="{resource_url('js/register.js')}?v=1.1"></script>
 </body>
 </html>

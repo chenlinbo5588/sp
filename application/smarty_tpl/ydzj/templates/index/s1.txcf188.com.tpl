@@ -18,10 +18,6 @@ img.responed {
 	text-align:center;
 }
 
-.fromdiv input {
-}
-
-
 .t2 {
 	background:#be0701;
 	color:#cb3232;

@@ -22,7 +22,7 @@ img.responed {
 
 #reg {
 	margin: 0 auto;
-	width:95%;
+	padding:0 10px;
 }
 
 

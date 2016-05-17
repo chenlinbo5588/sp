@@ -17,7 +17,7 @@ img.responed {
 
 #reg {
 	margin: 0 auto;
-	width:95%;
+	padding:0 10px;
 }
 
 
@@ -25,13 +25,13 @@ form label.error {
 	padding-left:0px;
    margin-left:0px;
 	background:none;
-	    display: block;
+	display: block;
     width: 100%;
     text-align: center;
 }
 
 .username ,.mobile, .auth_code {
-	margin:5px 0;
+	margin:5px 0 10px 0;
 }
 
 
@@ -163,6 +163,7 @@ form label.error {
 	   			<div class="tiparea">{form_error('auth_code')}</div>
 	   			<div class="refresh"><a href="javascript:void(0);">看不清，点击验证码刷新</a></div>
 	   			<div class="btn2 clearfix"><div class="lf"></div><input class="t4" type="submit" name="tj" value="我要体验"/><div class="rf"></div></div>
+	   			</form>
 	   		</div>
    		</div>
    		

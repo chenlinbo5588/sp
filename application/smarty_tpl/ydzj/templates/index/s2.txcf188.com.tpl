@@ -79,6 +79,10 @@ img.responed {
     width: 100%;
 }
 
+form label.error {
+	display:inline;
+}
+
 </style>
 	<div id="wrap">
 		<div>

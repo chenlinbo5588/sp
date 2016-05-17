@@ -21,15 +21,15 @@ img.responed {
 
 #reg {
 	margin: 0 auto;
-	width:95%;
+	padding:0 10px;
 }
 
 
 form label.error {
 	padding-left:0px;
-   margin-left:0px;
+	margin-left:0px;
 	background:none;
-	    display: block;
+	display: block;
     width: 100%;
     text-align: center;
 }
@@ -138,6 +138,7 @@ form label.error {
 		   			<div class="tiparea"></div>
 		   			<div class="refresh"><a href="javascript:void(0);">看不清，点击验证码刷新</a></div>
 		   			<div class="btn2 clearfix"><input class="t4" type="submit" name="tj" value="免费申请账号"/></div>
+		   			</form>
 		   		</div>
 	   		</div>
 	   	</div>

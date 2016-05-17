@@ -9,8 +9,9 @@ body {
 .formdiv {
 	position:relative;
 }
+
 #wrap {
-	background:#001d3a;
+
 }
 
 #regbg {
@@ -24,6 +25,7 @@ img.responed {
 
 #reg {
 	margin: 0 auto;
+	padding:0 10px;
 }
 
 
@@ -37,7 +39,7 @@ form label.error {
 }
 
 .username ,.mobile, .auth_code {
-	margin:5px 0;
+	margin:5px 0 10px 0;
 }
 
 
@@ -121,7 +123,7 @@ form label.error {
    		</div>
    		<div class="formdiv">
 	   		<div id="regbg">
-	   			<div class="hide">免费体验，入市首选指标 《K线入门宝典》</div>
+	   			<div class="hide"></div>
 	   			<div id="reg">
 	   				<a name="md">&nbsp;</a>
 		   			{form_open(site_url('index/index'|cat:'#md'),'id="registerForm"')}
@@ -133,6 +135,7 @@ form label.error {
 		   			<div class="auth_code clearfix"><label class="side_lb">验证码</label><input type="text" class="txt noround" name="auth_code" autocomplete="off" value="" placeholder="请输入您的验证码"/><input type="button" class="getCode noround" name="authCodeBtn" value="获取验证码"/></div>
 		   			<div class="tiparea">{form_error('auth_code')}</div>
 		   			<div class="btn2 clearfix"><input class="t4" type="submit" name="tj" value="点击下载"/></div>
+		   			</form>
 		   		</div>
 	   		</div>
 	   	</div>
@@ -163,7 +166,62 @@ form label.error {
 	<script type="text/javascript">
 	var authCodeURL ="{site_url('api/register/authcode')}";
 	{include file="./site_alert.tpl"}
+	$(function(){
+		$('#registerForm').validate({
+	        errorPlacement: function(error, element){
+	        	//console.log(error);
+	        	//console.log(element);
+	        	error.appendTo(element.parent().next(".tiparea"));
+	        },
+	        rules : {
+	        	username : {
+	        		required : true,
+	        		minlength: 1,
+	                maxlength: 20
+	        	},
+	        	mobile: {
+	                required : true,
+	                phoneChina:true,
+	                /*
+	                remote   : {
+	                    url :'{site_url('common/member_check')}',
+	                    type:'get',
+	                    data:{
+	                    	keyword: 'mobile',
+	                    	value : function(){
+	                            return $('#member_mobile').val();
+	                        }
+	                    }
+	                }
+	                */
+	            },
+	            auth_code : {
+	            	required:true,
+	                digits: true,
+	                minlength: 6,
+	                maxlength: 6
+	            }
+	        },
+	        messages : {
+	        	username : {
+	        		required : '请输入用户名称',
+	        		minlength: '最少输入1个字符',
+	                maxlength: '最多输入20个字符'
+	        	},
+	        	mobile: {
+	                required : '手机号码不能为空',
+	                /*remote   : '手机号码已经被注册，请您更换一个'*/
+	            },
+	            auth_code : {
+	            	required : '请输入6位数字验证码',
+	                digits: '请输入6位数字验证码',
+	                minlength: '请输入6位数字验证码',
+	                maxlength: '请输入6位数字验证码'
+	            }
+	        }
+	    });
+	});
 	</script>
-	<script type="text/javascript" src="{resource_url('js/register.js')}?v=1.0"></script>
+	<script type="text/javascript" src="{resource_url('js/register.js')}?v=1.1"></script>
 </body>
 </html>

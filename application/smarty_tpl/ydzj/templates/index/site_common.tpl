@@ -16,7 +16,21 @@
     max-width: 640px;
     margin: 0 auto;
 }
+
+#wrap2 {
+	width: 100%;
+    max-width: 1300px;
+    margin: 0 auto;
+}
+
+form label.error {
+	display: block;
+    width: 100%;
+    text-align:left;
+}
+
 </style>
+
 <script>
 var cookiedomain = "",
     cookiepath = "{config_item('cookie_path')}",
