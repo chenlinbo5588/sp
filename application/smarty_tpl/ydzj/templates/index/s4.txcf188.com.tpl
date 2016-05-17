@@ -7,14 +7,12 @@ body {
 
 
 .formdiv {
-	position:relative;
 }
 
 #regbg {
 	padding: 20px 0;
-	position: absolute;
     width: 100%;
-    top:0px;
+    background:#c0eaff;
 }
 
 img.responed {
@@ -101,62 +99,31 @@ form label.error {
 
 
 
-.fillcol {
-	background:#c0eaff;
-	height:100px;
-}
-
-@media (min-width: 1024px) {
-	.fillcol {
-		height:100px;
-	}
-}
-
-@media (max-width: 640px) {
-	.fillcol {
-		height:160px;
-	}
-}
-
-
 </style>
 	<div id="wrap">
 		<div>
 			<div class="hide">0佣金 33倍高收益 就在赢金财经</div>
-   			<img class="responed" src="{resource_url('img/pg5/pic1.jpg')}"/>
+   			<img class="responed" src="{resource_url('img/pg5/pic1.png')}"/>
    		</div>
    		<div>
    			<div class="hide">好产品 大优惠 强平台 盈利更有保障</div>
-   			<img class="responed" src="{resource_url('img/pg5/pic2.jpg')}"/>
+   			<img class="responed" src="{resource_url('img/pg5/pic2.png')}"/>
    		</div>
    		<div>
-   			<img class="responed" src="{resource_url('img/pg5/pic3.jpg')}"/>
+   			<img class="responed" src="{resource_url('img/pg5/pic3.png')}"/>
    		</div>
    		<div class="cv">
    			<div class="hide">贵金属/白银投资 0佣金 0手续费 22小时可交易 33倍高杠杆 涨跌双向交易</div>
-   			<img class="responed" src="{resource_url('img/pg5/pic4.jpg')}"/>
+   			<img class="responed" src="{resource_url('img/pg5/pic4.png')}"/>
    		</div>
    		<div>
    			<div class="hide">贵金属/白银投资 0元免费开户 立送200美金</div>
-   			<img class="responed" src="{resource_url('img/pg5/pic5.jpg')}"/>
+   			<img class="responed" src="{resource_url('img/pg5/pic5.png')}"/>
    		</div>
    		<div>
-   			<img class="responed" src="{resource_url('img/pg5/pic6.jpg')}"/>
-   		</div>
-		<div>
-   			<img class="responed" src="{resource_url('img/pg5/pic7.jpg')}"/>
-   		</div>
-   		<div>
-   			<img class="responed" src="{resource_url('img/pg5/pic8.jpg')}"/>
-   		</div>
-   		<div>
-   			<img class="responed" src="{resource_url('img/pg5/pic9.jpg')}"/>
-   		</div>
-   		<div>
-   			<img class="responed" src="{resource_url('img/pg5/pic10.jpg')}"/>
+   			<img class="responed" src="{resource_url('img/pg5/pic6.png')}"/>
    		</div>
    		<div class="formdiv">
-   			<img class="responed" src="{resource_url('img/pg5/pic11.jpg')}"/>
 	   		<div id="regbg">
 	   			<div class="hide">免费体验，入市首选指标 《K线入门宝典》</div>
 	   			<div id="reg">
@@ -174,7 +141,6 @@ form label.error {
 		   		</div>
 	   		</div>
 	   	</div>
-	   	<div class="fillcol"></div>
    		<div>
    			{include file="./site_f2.tpl"}
    			<div><img class="responed" src="{resource_url('img/pg5/pic12.jpg')}"/></div>

@@ -60,8 +60,8 @@ class Index extends Ydzj_Controller {
 					'rules' => array( 'mobile','auth_code'),
 				),
 			's6.txcf188.com' => array(
-					'registeOkText' => 'registerOk_text2',
-					'jumUrlType' => 'qqchat',
+					'registeOkText' => 'registerOk_text1',
+					'jumUrlType' => 'website',
 					'rules' => array('username', 'mobile','mobile_auth_code'),
 				)
 		);
