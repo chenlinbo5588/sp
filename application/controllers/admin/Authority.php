@@ -126,6 +126,7 @@ class Authority extends Ydzj_Admin_Controller {
 	
 	public function user_add(){
 		$feedback = '';
+		$this->assign('action','add');
 		
 		$roleList = $this->Role_Model->getList();
 		
@@ -149,6 +150,10 @@ class Authority extends Ydzj_Admin_Controller {
 					break;
 				}
 				
+				$info['password'] = $this->_getEncodePassword($info['admin_password'],$info['email']);
+				
+				$info = array_merge($info,$this->addWhoHasOperated('add'));
+				
 				if(($newid = $this->Adminuser_Model->_add($info)) < 0){
 					$feedback = getErrorTip('保存失败');
 					break;
@@ -168,6 +173,8 @@ class Authority extends Ydzj_Admin_Controller {
 	
 	
 	public function user_edit(){
+		
+		$this->assign('action','edit');
 		
 		$feedback = '';
 		$id = $this->input->get_post('uid');
@@ -198,10 +205,11 @@ class Authority extends Ydzj_Admin_Controller {
 					break;
 				}
 				
-				if($this->input->post('admin_password')){
-					$info['password'] = $this->_getEncodePassword($this->input->post('admin_password'),$info['email']);
-				}
 				
+				$info['password'] = $this->_getEncodePassword($this->input->post('admin_password'),$info['email']);
+				
+				
+				$info = array_merge($info,$this->addWhoHasOperated('edit'));
 				
 				if($this->Adminuser_Model->update($info,array('uid' => $id)) < 0){
 					$feedback = getErrorTip('保存失败');
@@ -302,6 +310,8 @@ class Authority extends Ydzj_Admin_Controller {
 	public function role_add(){
 		$feedback = '';
 		
+		$this->assign('action','add');
+		
 		if($this->isPostRequest()){
 			
 			
@@ -328,6 +338,9 @@ class Authority extends Ydzj_Admin_Controller {
 				}
 				
 				$info['permission'] = $this->_getEncodePermision($this->input->post('permission'),$this->input->post('name'));
+				
+				
+				$info = array_merge($info,$this->addWhoHasOperated('add'));
 				
 				if(($newid = $this->Role_Model->_add($info)) < 0){
 					$feedback = getErrorTip('保存失败');
@@ -387,6 +400,8 @@ class Authority extends Ydzj_Admin_Controller {
 	
 	public function role_edit(){
 		
+		$this->assign('action','edit');
+		
 		$id = $this->input->get_post('id');
 		
 		if($this->isPostRequest()){
@@ -415,6 +430,9 @@ class Authority extends Ydzj_Admin_Controller {
 				//unset($info['id']);
 				
 				$info['permission'] = $this->_getEncodePermision($this->input->post('permission'),$info['name']);
+				
+				
+				$info = array_merge($info,$this->addWhoHasOperated('edit'));
 				
 				if($this->Role_Model->update($info, array('id' => $id)) < 0){
 					$feedback = getErrorTip('保存失败');

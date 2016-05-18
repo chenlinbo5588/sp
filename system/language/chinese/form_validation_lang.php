@@ -69,6 +69,7 @@ $lang['form_validation_in_list']		= '{field}必须为{param}其中之一';
 
 
 //custome method
+$lang['form_validation_valid_starthttp']						= '{field}必须以http:// 或 https:// 开头.';
 $lang['form_validation_valid_date']						= '{field}必须是一个有效的日期.';
 $lang['form_validation_valid_mobile']					= '{field}必须是一个有效的手机号码.';
 $lang['form_validation_valid_telephone']				= '{field}必须是一个有效的固定电话号码.';

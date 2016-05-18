@@ -2,9 +2,9 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 $entity = array(
-'uid' => 'mediumint',
+'uid' => 'int',
 'email' => 'char',
-'username' => 'char',
+'username' => 'varchar',
 'password' => 'char',
 'status' => 'varchar',
 'mobile' => 'char',
@@ -22,6 +22,10 @@ $entity = array(
 'newpm' => 'smallint',
 'newprompt' => 'smallint',
 'freeze' => 'tinyint',
+'add_uid' => 'int',
+'edit_uid' => 'int',
+'add_username' => 'varchar',
+'edit_username' => 'varchar',
 'gmt_create' => 'int',
 'gmt_modify' => 'int'
 );

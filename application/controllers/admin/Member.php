@@ -8,7 +8,6 @@ class Member extends Ydzj_Admin_Controller {
 	}
 	
 	public function index(){
-		$this->load->library(array('Member_Service','Common_District_Service'));
 		
 		$currentPage = $this->input->get_post('page') ? $this->input->get_post('page') : 1;
 		$condition = array(
@@ -19,118 +18,26 @@ class Member extends Ydzj_Admin_Controller {
 				'call_js' => 'search_page',
 				'form_id' => '#formSearch'
 			)
-			
 		);
-		
-		$ds = array();
-		$dkeys = array('d1','d2','d3','d4');
-		$tempK = '';
-		$searchDk = '';
-		foreach($dkeys as $dk){
-			$tempK = $this->input->get_post($dk);
-			if($tempK){
-				$searchDk = $dk;
-				$ds[$dk] = $tempK ;
-			}
-		}
-		
-		if(empty($ds)){
-			$this->assign('ds',$this->common_district_service->prepareCityData());
-		}else{
-			$condition['where'][$searchDk] = $ds[$searchDk];
-			
-			$this->assign('ds',$this->common_district_service->prepareCityData($ds));
-		}
 		
 		$search_map['search_field'] = array('mobile' => '手机号码','email' => '电子邮箱','username' => '用户姓名');
 		
-		/*
-		$search_map['activity_sort'] = array(
-				'-30 minutes' => '最近30分钟内活跃','-2 hours' => '最近2小时内活跃',
-				'-6 hours' => '最近6小时内活跃', '-12 hours' => '最近12小时内活跃',  
-				'-1 days' => '最近1天内活跃' , '-3 days' => '最近3天内活跃' , 
-				'-7 days' => '最近7天内活跃' ,'-15 days' => '最近15天内活跃');
-		*/
 		
-		$search_map['register_channel'] = array('1' => '手机网页版','2' => '后台管理中心' ,'3' => 'PC网页版','4' => 'iOS客户端','5' => 'Android客户端');
-		$search_map['register_sort'] = array('uid DESC' => '按时间倒序','uid ASC' => '按时间顺序');
-		$search_map['member_state'] = array('avatar_status@0' => '待验证头像','district_bind@0' => '未设置地区','freeze@1' => '已禁止登录');
-		
-		
-		$search['search_field_name'] = $this->input->get_post('search_field_name');
-		$search['search_field_value'] = $this->input->get_post('search_field_value');
-		//$search['activity_sort'] = $this->input->get_post('activity_sort');
-		$search['register_channel'] = $this->input->get_post('register_channel');
-		$search['register_sort'] = $this->input->get_post('register_sort');
-		$search['member_state'] = $this->input->get_post('member_state');
-		
-		if(!empty($search['search_field_value']) && in_array($search['search_field_name'], array_keys($search_map['search_field']))){
-			$condition['like'][$search['search_field_name']] = $search['search_field_value'];
-		}
-		
-		/*
-		if(in_array($search['activity_sort'], array_keys($search_map['activity_sort']))){
-			$condition['where']['last_activity >='] = strtotime($search['activity_sort']);
-		}
-		*/
-		if(in_array($search['register_channel'], array_keys($search_map['register_channel']))){
-			$condition['where']['channel'] = $search['register_channel'];
-		}
-		
-		if(in_array($search['register_sort'], array_keys($search_map['register_sort']))){
-			$condition['order'] = $search['register_sort'];
-		}
-		
-		if(in_array($search['member_state'], array_keys($search_map['member_state']))){
-			$statArray = explode('@',$search['member_state']);
-			$condition['where'][$statArray[0]] = $statArray[1];
-		}
-		
-		$list = $this->member_service->getListByCondition($condition);
-		
-		//邀请人和地区名称
-		$dqList = array();
-		$inviterList = array();
-		foreach($list['data'] as $member){
-			if($member['d1']){
-				$dqList[] = $member['d1'];
-			}
-			if($member['d2']){
-				$dqList[] = $member['d2'];
-			}
-			
-			if($member['d3']){
-				$dqList[] = $member['d3'];
-			}
-			
-			if($member['d4']){
-				$dqList[] = $member['d4'];
-			}
-			
-			if($member['inviter']){
-				$inviterList[] = $member['inviter'];
+		foreach($search_map['search_field'] as $key => $value){
+			$v = trim($this->input->get_post($key));
+			if(!empty($v)){
+				$condition['like'][$key] = $v;
 			}
 		}
 		
-		if($inviterList){
-			$this->assign('inviterInfo',$this->member_service->getListByCondition(array(
-				'select' => 'uid,mobile,avatar_middle,avatar_small',
-				'where_in' => array(
-					array('key' => 'uid' ,'value' => $inviterList )
-				)
-			)));
-		}
 		
+		$list = $this->Member_Model->getList($condition);
 		$this->assign('list',$list);
 		$this->assign('page',$list['pager']);
 		$this->assign('currentPage',$currentPage);
 		
-		
 		$this->assign('search_map',$search_map);
-		$this->assign('memberDs',$this->common_district_service->getDistrictByIds($dqList));
-		//$this->assign('d1',$this->common_district_service->getDistrictByPid(0));
-		
-		$this->display('member/index');
+		$this->display();
 	}
 	
 	
@@ -157,131 +64,84 @@ class Member extends Ydzj_Admin_Controller {
 	}
 	
 	
-	
 	/**
 	 * 验证规则
 	 */
-	private function _addRules(){
+	private function _addRules($action){
 		
-		
-		$param['email'] = $this->input->post('member_email');
-		if($param['email']){
-			$this->form_validation->set_rules('member_email','电子邮箱','valid_email');
-		}
-		
-		$param['username'] = $this->input->post('member_username');
+		$param['username'] = $this->input->post('username');
 		if($param['username']){
-			$this->form_validation->set_rules('member_username','真实名称','min_length[1]|max_length[6]');
+			$this->form_validation->set_rules('username','真实名称','min_length[1]|max_length[6]');
+		}else{
+			$param['username'] = '';
 		}
 		
-		$param['member_qq'] = $this->input->post('member_qq');
-		
-		if($param['member_qq']){
-			$this->form_validation->set_rules('member_qq','QQ','regex_match[/^\d+$/]');
+		$param['email'] = $this->input->post('email');
+		if($param['email']){
+			$this->form_validation->set_rules('email','电子邮箱','valid_email');
+		}else{
+			$param['email'] = '';
 		}
 		
-		$param['member_weixin'] = $this->input->post('member_weixin');
+		$param['qq'] = $this->input->post('qq');
+		if($param['qq']){
+			$this->form_validation->set_rules('qq','QQ','regex_match[/^\d+$/]');
+		}else{
+			$param['qq'] = '';
+		}
 		
-		if($param['member_weixin']){
+		$param['sex'] = $this->input->post('sex');
+		if(empty($param['sex'])){
+			$param['sex'] = 'M';
+		}
+		
+		$param['weixin'] = $this->input->post('weixin');
+		
+		if($param['weixin']){
 			$this->form_validation->set_rules('member_weixin','微信号','alpha_dash|min_length[6]|max_length[20]');
+		}else{
+			$param['weixin'] = '';
 		}
 		
-		$this->form_validation->set_rules('allowtalk','允许发表言论','required|in_list[N,Y]');
-		$this->form_validation->set_rules('memberstate','允许登录','required|in_list[N,Y]');
+		
+		$param = array_merge($param,$this->addWhoHasOperated($action));
+		
+		return $param;
 	}
 	
 	
 	/**
-	 * 后台创建用户
+	 * 信息浏览
 	 */
-	public function add(){
+	public function detail(){
+		$uid = $this->input->get_post('uid');
+		$info = $this->Member_Model->getFirstByKey($uid,'uid');
 		
-		if($this->isPostRequest()){
-			
-			$this->_setMobileRule('member_mobile');
-			$this->form_validation->set_rules('member_passwd','密码','required|alpha_dash|min_length[6]|max_length[12]');
-			$this->form_validation->set_rules('member_passwd2','密码确认','required|matches[member_passwd]');
-			
-			$this->_addRules();
-			
-			
-			for($i = 0 ; $i < 1; $i++){
-				if(!$this->form_validation->run()){
-					break;
-				}
-				
-				$aid = $this->input->post('avatar_id');
-				if($aid){
-					$member_avatar = $this->input->post('member_avatar');
-					$avatar = getImgPathArray($member_avatar,array('middle','small'));
-					$avatar['aid'] = $aid;
-				}
-				
-				$addParam = array(
-					'mobile' => $this->input->post('member_mobile'),
-					'nickname' => $this->input->post('member_mobile'),
-					'password' => $this->input->post('member_passwd'),
-					'qq' => $this->input->post('member_qq'),
-					'weixin' => $this->input->post('member_weixin'),
-					'email' => $this->input->post('member_email'),
-					'username' => $this->input->post('member_username'),
-					'sex' => $this->input->post('member_sex'),
-					'allowtalk' => $this->input->post('allowtalk'),
-					'freeze' => $this->input->post('memberstate'),
-					'status' => 0,
-					'channel' => 1	//1 标志直接后台增加
-				);
-				
-				if($avatar){
-					$addParam = array_merge($addParam,$avatar);
-				}
-				
-				//print_r($addParam);
-				$this->load->library('Register_Service');
-				$result = $this->register_service->createMember($addParam);
-				
-				if($result['code'] == 'success'){
-					$this->assign('feedback','<div class="tip_success">添加成功</div>');
-				}else{
-					$this->assign('feedback','<div class="tip_error">添加失败</div>');
-				}
-			}
-		}
-		
-		$this->display();
-		
-		
+		$this->assign('action','detail');
+		$this->assign('info',$info);
+		$this->display('member/edit');
 	}
+	
 	
 	/**
 	 * 编辑
 	 */
 	public function edit(){
+		$this->assign('action','edit');
 		
-		$urlParam = $this->uri->uri_to_assoc();
-		$this->assign('id',$urlParam['edit']);
+		$uid = $this->input->get_post('uid');
+		$this->assign('uid',$uid);
 		
-		$this->load->library('Member_Service');
-		$info = $this->member_service->getUserInfoById($urlParam['edit']);
+		$info = $this->Member_Model->getFirstByKey($uid,'uid');
 		
 		//print_r($urlParam);
 		
-		if(!empty($urlParam['edit']) && $this->isPostRequest()){
-			$this->assign('inpost',true);
+		if(!empty($uid) && $this->isPostRequest()){
 			
-			$this->form_validation->set_rules('member_nickname','昵称','min_length[3]|max_length[30]|is_unique_not_self['.$this->Member_Model->getTableRealName().'.nickname.uid.'.$urlParam['edit'].']');
+			$this->form_validation->set_rules('mobile','手机号码','required|valid_mobile|is_unique_not_self['.$this->Member_Model->getTableRealName().'.mobile.uid.'.$uid.']');
 			
-			$password = $this->input->post('member_passwd');
-			$password2 =  $this->input->post('member_passwd2');
-			
-			if($password || $password2){
-				$this->form_validation->set_rules('member_passwd','密码','alpha_dash|min_length[6]|max_length[12]');
-				$this->form_validation->set_rules('member_passwd2','密码确认','matches[member_passwd]');
-			}
-			
-			
-			
-			$this->_addRules();
+			$extraParam = $this->_addRules('edit');
+			$info = array_merge($info,$extraParam);
 			
 			for($i = 0 ; $i < 1; $i++){
 				if(!$this->form_validation->run()){
@@ -289,42 +149,12 @@ class Member extends Ydzj_Admin_Controller {
 					break;
 				}
 				
-				$updateData = array(
-					'nickname' => $this->input->post('member_nickname'),
-					'qq' => $this->input->post('member_qq'),
-					'weixin' => $this->input->post('member_weixin'),
-					'email' => $this->input->post('member_email'),
-					'username' => $this->input->post('member_username'),
-					'sex' => $this->input->post('member_sex'),
-					'allowtalk' => $this->input->post('allowtalk'),
-					'freeze' => $this->input->post('memberstate'),
-				);
-				
-				$aid = $this->input->post('avatar_id');
-				
-				if($aid){
-					$member_avatar = $this->input->post('member_avatar');
-					$avatar = getImgPathArray($member_avatar,array('middle','small'));
-					$avatar['aid'] = $aid;
-					$updateData = array_merge($updateData,$avatar);
-				}
-				
-				if($password){
-					$updateData['password'] = $password;
-				}
-				
-				//print_r($updateData);
-				$this->load->library('Member_Service');
-				$flag = $this->member_service->updateUserInfo($updateData,$urlParam['edit']);
+				$flag = $this->Member_Model->update($extraParam,array(
+					'uid' => $uid
+				));
 				
 				if($flag >= 0){
-					if($aid && $info['aid']){
-						//传新的图片
-						$this->load->library('Attachment_Service');
-						$this->attachment_service->deleteByFileUrl(array($info['avatar_middle'],$info['avatar_small']));
-					}
-					
-					$info = $this->member_service->getUserInfoById($urlParam['edit']);
+					$info = $this->Member_Model->getFirstByKey($uid,'uid');
 					$this->assign('feedback','<div class="tip_success">保存成功</div>');
 				}else{
 					$this->assign('feedback','<div class="tip_error">保存失败</div>');

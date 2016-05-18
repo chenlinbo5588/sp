@@ -68,6 +68,7 @@ $lang['form_validation_error_message_not_set']	= 'Unable to access an error mess
 $lang['form_validation_in_list']		= 'The {field} field must be one of: {param}.';
 
 //custome method
+$lang['form_validation_valid_starthttp']						= '{field} must start with http:// or  https:// .';
 $lang['form_validation_valid_date']						= 'The {field} field must contain a valid Date.';
 $lang['form_validation_valid_mobile']					= 'The {field} field must be a valid Chinese Mobile.';
 $lang['form_validation_valid_telephone']				= 'The {field} field must be a valid Chinese Telephone No.';

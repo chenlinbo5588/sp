@@ -6,21 +6,44 @@ class Index extends Ydzj_Controller {
 	
 	private $_regLimit = 10;
 	
+	// 用于前台验证,手动配置
 	private $_siteList = array();
 	
+	// 用于获得渠道代码对应的名称
+	private $_wordList = array();
 	
 	
 	public function __construct(){
 		parent::__construct();
 		$this->load->library(array('Register_Service','Verify_Service'));
-		$this->load->model('Captcha_Model');
-		
+		$this->load->model(array('Market_Words_Model'));
 		$this->_regLimit = config_item('maxRegisterIpLimit');
 		
-		
 		$this->_getSiteConfig();
+		$this->_getChannelConfig();
 	}
 	
+	private function _getChannelConfig(){
+		
+		
+		$wordsList = array();
+		$wordsList = $this->cache->get(Cache_Key_WordList);
+		
+		if(empty($wordsList)){
+			$channelList = $this->Market_Words_Model->getList(array(
+				'select' => 'word_name,word_code'
+			));
+			
+			foreach($channelList as $key => $item){
+				$wordsList[$item['word_code']] = $item['word_name'];
+			}
+			
+			$this->cache->file->save(Cache_Key_WordList,$wordsList, 86400);
+		}
+		
+		$this->_wordList = $wordsList;
+		
+	}
 	
 	
 	private function _getSiteConfig(){
@@ -115,13 +138,20 @@ class Index extends Ydzj_Controller {
 		$this->assign('refer',$inviteFrom);
 		
 		
-		return array(
+		$d = array(
 			'channel' => 1,//手机网页版
 			'inviter' => $inviter ? intval($inviter) : 0,
 			'reg_orig' => empty($inviteFrom) != true ? $inviteFrom : '',
-			'channel_name' => $this->input->server('HTTP_HOST'),
-			'channel_code' => empty($channel_code) != true ? $channel_code : ''
+			'reg_domain' => $this->input->server('HTTP_HOST'),
+			'channel_code' => empty($channel_code) != true ? $channel_code : '',
+			'channel_name' => ''
 		);
+		
+		if($this->_wordList[$d['channel_code']]){
+			$d['channel_name'] = $this->_wordList[$d['channel_code']];
+		}
+		
+		return $d;
 	}
 	
 	
@@ -243,8 +273,8 @@ class Index extends Ydzj_Controller {
 				
 				
 				$addParam = array(
-					'mobile' => $this->input->post('mobile'),
-					'username' => $this->input->post('username') ? $this->input->post('username') : '' , 
+					'mobile' => trim($this->input->post('mobile')),
+					'username' => trim($this->input->post('username')) ? trim($this->input->post('username')) : '未提供' , 
 					//正常提交
 					'status' => 0,
 				);

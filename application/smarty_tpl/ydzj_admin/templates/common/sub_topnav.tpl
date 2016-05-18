@@ -1,0 +1,2 @@
+      	<li><a href="javascript:void(0);" class="current"><span>{if $action == 'edit'}编辑{elseif $action == 'add'}添加{elseif $action == 'detail'}详情{/if}</span></a></li>
+		<li><a class="goback" href="javascript:history.go(-1);">&lt;&lt;返回</a></li>

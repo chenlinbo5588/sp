@@ -1,10 +1,10 @@
 {include file="common/main_header.tpl"}
   <div class="fixed-bar">
     <div class="item-title">
-      <h3>角色管理</h3>
+      <h3>权限组</h3>
       <ul class="tab-base">
-      	<li><a class="current"><span>角色管理</span></a></li>
-      	<li><a href="{admin_site_url('authority/role_add')}"><span>添加角色</span></a></li>
+      	<li><a class="current"><span>列表</span></a></li>
+      	<li><a href="{admin_site_url('authority/role_add')}"><span>添加</span></a></li>
       </ul>
      </div>
   </div>
@@ -30,7 +30,7 @@
           <th colspan="5" class="nobg">列表</th>
         </tr>
         <tr class="thead">
-          <th></th>
+          <th>序号</th>
           <th>角色</th>
           <th>状态</th>
           <th>创建时间</th>
@@ -40,7 +40,8 @@
       <tbody>
       	{foreach from=$list['data'] item=item}
       	<tr class="hover">
-      	  <td class="w24"><input name="del_id[]" group="chkVal" type="checkbox" value="{$item['id']}"></td>
+      	  {*<td class="w24"><input name="del_id[]" group="chkVal" type="checkbox" value="{$item['id']}"></td>*}
+      	  <td>{$item['id']}</td>
           <td>{$item['name']|escape}</td>
           <td>{$item['status']}</td>
           <td>{$item['gmt_create']|date_format:"%Y-%m-%d %H:%M:%S"}</td>
@@ -55,9 +56,9 @@
       <tfoot>
       	<tr>
       		<td colspan="5">
-      			<label><input type="checkbox" class="checkall" name="chkVal">全选</label>&nbsp;
+      			{*<label><input type="checkbox" class="checkall" name="chkVal">全选</label>&nbsp;
           		<a href="javascript:void(0);" class="btn" onclick="$('#submit_type').val('开启');go();"><span>开启</span></a>
-          		<a href="javascript:void(0);" class="btn" onclick="$('#submit_type').val('关闭');go();"><span>关闭</span></a>
+          		<a href="javascript:void(0);" class="btn" onclick="$('#submit_type').val('关闭');go();"><span>关闭</span></a>*}
           		{include file="common/pagination.tpl"}
           	</td>
       	</tr>

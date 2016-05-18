@@ -16,9 +16,13 @@
 }
 
 #adminLogin {
-	width:80%;
+	width:100%%;
+	max-width:640px;
 	margin:0 auto;
 }
+
+
+
 </style>
 {if !$manage_profile}
 <div class="handle_area" id="adminLogin">

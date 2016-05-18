@@ -1,10 +1,10 @@
 {include file="common/main_header.tpl"}
   <div class="fixed-bar">
     <div class="item-title">
-      <h3>{if $info['id']}维护{else}添加{/if}角色</h3>
+      <h3>权限组</h3>
       <ul class="tab-base">
-      	<li><a href="{admin_site_url('authority/role')}" ><span>角色管理</span></a></li>
-      	<li><a  class="current"><span>{if $info['id']}编辑{else}添加{/if}角色</span></a></li>
+      	<li><a href="{admin_site_url('authority/role')}" ><span>列表</span></a></li>
+      	{include file="common/sub_topnav.tpl"}
       </ul>
     </div>
   </div>

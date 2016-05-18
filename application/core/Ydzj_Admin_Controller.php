@@ -51,5 +51,14 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 	}
 	
 	
+	/**
+	 * 记录谁操作得
+	 */
+	public function addWhoHasOperated($action = 'add'){
+		return array(
+			"{$action}_uid" => $this->_adminProfile['basic']['uid'],
+			"{$action}_username" => $this->_adminProfile['basic']['username']
+		);
+	}
 }
 

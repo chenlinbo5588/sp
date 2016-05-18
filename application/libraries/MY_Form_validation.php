@@ -52,6 +52,14 @@ class MY_Form_validation extends CI_Form_validation {
         }
     }
     
+    public function valid_starthttp($val){
+        if(preg_match("/^https?:\/\//",$val)){   
+            return true;
+        }else{
+            return false;
+        }
+    }
+    
     
     public function valid_telephone($telno){
        if(preg_match("/^(((\d{3}))|(\d{3}-))?((0\d{2,3})|0\d{2,3}-)?[1-9]\d{6,8}$/",$telno)){
@@ -93,6 +101,7 @@ class MY_Form_validation extends CI_Form_validation {
 	{
         return ( ! preg_match("/^([-0-9_-])+$/i", $str)) ? FALSE : TRUE;
 	}
+	
 	
 	
 

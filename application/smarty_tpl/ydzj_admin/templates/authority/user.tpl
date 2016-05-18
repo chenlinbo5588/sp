@@ -1,10 +1,10 @@
 {include file="common/main_header.tpl"}
   <div class="fixed-bar">
     <div class="item-title">
-      <h3>管理员管理</h3>
+      <h3>管理员</h3>
       <ul class="tab-base">
-      	<li><a class="current"><span>管理员</span></a></li>
-      	<li><a href="{admin_site_url('authority/user_add')}"><span>添加管理员</span></a></li>
+      	<li><a class="current"><span>列表</span></a></li>
+      	<li><a href="{admin_site_url('authority/user_add')}"><span>添加</span></a></li>
       </ul>
      </div>
   </div>

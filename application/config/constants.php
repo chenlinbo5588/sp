@@ -93,3 +93,6 @@ define('EntityPATH',APPPATH.'entity/');
 define('FROM_BACKGROUND',1);
 define('WEBSITE_FOUNDER',1);
 
+
+define('Cache_Key_WordList','wordslist');
+

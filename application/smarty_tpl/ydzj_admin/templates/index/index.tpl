@@ -184,119 +184,6 @@ $(function(){
 <body style="margin: 0px;" scroll="no">
 <div id="pagemask"></div>
 <div id="dialog" style="display:none">
-  <div class="title">
-    <h3>管理中心导航</h3>
-    <span><a href="javascript:void(0);" onclick="closeBg();">关闭</a></span> </div>
-    <div class="content clearfix">
-	    <dl>    
-	        <dt>设置</dt>
-	        <dd><a href="javascript:void(0)" onclick="openItem('base,setting,setting')">站点设置</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('seoset,setting,setting')">SEO设置</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('email,message,setting')">邮件通知</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('cache,setting,setting')">清理缓存</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('perform,setting,setting')">性能优化</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('log,setting,setting')">操作日志</a></dd>
-	    </dl>
-	    <dl>    
-            <dt>会员</dt>
-            <dd><a href="javascript:void(0)" onclick="openItem('index,member,member')">会员管理</a></dd>
-            {*<dd><a href="javascript:void(0)" onclick="openItem('notify,member,member')">会员通知</a></dd>
-            <dd><a href="javascript:void(0)" onclick="openItem('credits,member,member')">积分管理</a></dd>
-            <dd><a href="javascript:void(0)" onclick="openItem('album,member,member')">会员相册</a></dd>
-            <dd><a href="javascript:void(0)" onclick="openItem('tag,member,member')">会员标签</a></dd>*}
-        </dl>
-        {*
-        <dl>    
-            <dt>队伍</dt>
-            <dd><a href="javascript:void(0)" onclick="openItem('setting,team,team')">队伍设置</a></dd>
-            <dd><a href="javascript:void(0)" onclick="openItem('level,team,team')">队伍头衔设置</a></dd>
-            <dd><a href="javascript:void(0)" onclick="openItem('category,team,team')">队伍分类管理</a></dd>
-            <dd><a href="javascript:void(0)" onclick="openItem('index,team,team')">队伍管理</a></dd>
-            <dd><a href="javascript:void(0)" onclick="openItem('member_list,team,team')">队伍成员管理</a></dd>
-            <dd><a href="javascript:void(0)" onclick="openItem('inform,team,team')">队伍举报管理</a></dd>
-            <dd><a href="javascript:void(0)" onclick="openItem('adv,team,team')">队伍首页广告</a></dd>
-            <dd><a href="javascript:void(0)" onclick="openItem('cache,team,team')">更新队伍缓存</a></dd>
-        </dl>
-        <dl>    
-            <dt>场馆</dt>
-            <dd><a href="javascript:void(0)" onclick="openItem('setting,stadium,stadium')">场馆等级</a></dd>
-            <dd><a href="javascript:void(0)" onclick="openItem('index,stadium,stadium')">场馆管理</a></dd>
-        </dl>
-        *}
-	    <dl>    
-	        <dt>商品</dt>
-	        <dd><a href="javascript:void(0)" onclick="openItem('category,goods,goods')">分类管理</a></dd>
-	        {*<dd><a href="javascript:void(0)" onclick="openItem('index,brand,goods')">品牌管理</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('index,goods,goods')">商品管理</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('type,goods,goods')">类型管理</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('spec,goods,goods')">规格管理</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('album,goods,goods')">图片空间</a></dd>*}
-	    </dl>
-	    {*
-	    <dl>    
-	        <dt>交易</dt>
-	        <dd><a href="javascript:void(0)" onclick="openItem('index,order,trade')">订单管理</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('refund,order,trade')">退款管理</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('returned,order,trade')">退货管理</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('consulting,trade,trade')">咨询管理</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('inform,trade,trade')">举报管理</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('evaluate,trade,trade')">评价管理</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('complain,trade,trade')">投诉管理</a></dd>
-	    </dl>
-	    <dl>    
-	        <dt>网站</dt>
-	        <dd><a href="javascript:void(0)" onclick="openItem('category,article_class,website')">文章分类</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('index,article,website')">文章管理</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('index,comment,website')">评论管理</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('index,tag,website')">标签管理</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('index,recommend,website')">推荐位</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('index,adv,website')">广告管理</a></dd>
-	    </dl>
-	    <dl>    
-	        <dt>运营</dt>
-	        <dd><a href="javascript:void(0)" onclick="openItem('setting,operation,operation')">基本设置</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('groupbuy,operation,operation')">团购管理</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('zk,operation,operation')">限时折扣</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('mansong,operation,operation')">满即送</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('bundling,operation,operation')">优惠套装</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('voucher,operation,operation')">代金券</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('bill,operation,operation')">结算管理</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('activity,operation,operation')">活动管理</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('pointprod,operation,operation')">兑换礼品</a></dd>
-	    </dl>
-	    <dl>    
-	        <dt>统计</dt>
-	        <dd><a href="javascript:void(0)" onclick="openItem('member,stat,stat')">会员统计</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('statdium,stat,stat')">店铺统计</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('trade,stat,stat')">销量分析</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('marketing,stat,stat')">营销分析</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('aftersale,stat,stat')">售后分析</a></dd>
-	    </dl>
-	    <dl>    
-	        <dt>微信营销</dt>
-	        <dd><a href="javascript:void(0)" onclick="openItem('article,weixin,weixin')">微信文章管理</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('adv,weixin,weixin')">微信广告管理</a></dd>
-	    </dl>
-	    <dl>    
-	        <dt>CMS</dt>
-	        <dd><a href="javascript:void(0)" onclick="openItem('setting,cms,cms')">CMS管理</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('index,cms_article,cms')">文章管理</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('category,cms_article,cms')">文章分类</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('index,magazine,cms')">画报管理</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('category,magazine,cms')">画报分类</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('index,special,cms')">专题管理</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('index,tag,cms')">标签管理</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('index,comment,cms')">评论管理</a></dd>
-	    </dl>
-	    <dl>    
-	        <dt>权限</dt>
-	        <dd><a href="javascript:void(0)" onclick="openItem('setting,cms,cms')">CMS管理</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('index,magazine,cms')">画报管理</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('category,magazine,cms')">画报分类</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('index,special,cms')">专题管理</a></dd>
-	    </dl>*}
-    </div>
-    
 </div>
 <table style="width: 100%;" id="frametable" height="100%" width="100%" cellpadding="0" cellspacing="0">
   <tbody>
@@ -316,21 +203,12 @@ $(function(){
 	          <!-- Main navigation -->
 	          <nav id="nav" class="main-nav">
 	            <ul>
-	                <li><a class="link actived" id="nav_dashboard" href="javascript:;" onclick="openItem('dashboard');"><span>控制台</span></a></li>
-					<li><a class="link" id="nav_setting" href="javascript:;" onclick="openItem('setting');"><span>设置</span></a></li>
-					<li><a class="link" id="nav_member" href="javascript:;" onclick="openItem('member');"><span>会员</span></a></li>
-					{*<li><a class="link" id="nav_team" href="javascript:;" onclick="openItem('team');"><span>队伍</span></a></li>
-					<li><a class="link" id="nav_stadium" href="javascript:;" onclick="openItem('stadium');"><span>场馆</span></a></li>
-					<li><a class="link" id="nav_game" href="javascript:;" onclick="openItem('game');"><span>赛事</span></a></li>*}
-					<li><a class="link" id="nav_goods" href="javascript:;" onclick="openItem('goods');"><span>站点</span></a></li>
-					{*
-					<li><a class="link" id="nav_trade" href="javascript:;" onclick="openItem('trade');"><span>交易</span></a></li>
-					<li><a class="link" id="nav_website" href="javascript:;" onclick="openItem('website');"><span>网站</span></a></li>
-					<li><a class="link" id="nav_operation" href="javascript:;" onclick="openItem('operation');"><span>运营</span></a></li>
-					<li><a class="link" id="nav_stat" href="javascript:;" onclick="openItem('stat');"><span>统计</span></a></li>
-					<li><a class="link" id="nav_weixin" href="javascript:;" onclick="openItem('weixin');"><span>微信营销</span></a></li>
-					<li><a class="link" id="nav_cms" href="javascript:;" onclick="openItem('cms');"><span>CMS</span></a></li>*}
-					<li><a class="link" id="nav_authority" href="javascript:;" onclick="openItem('authority');"><span>权限</span></a></li>
+	                <li><a class="link actived" id="nav_dashboard" href="javascript:void(0);" onclick="openItem('dashboard');"><span>控制台</span></a></li>
+					<li><a class="link" id="nav_setting" href="javascript:void(0);" onclick="openItem('setting');"><span>设置</span></a></li>
+					<li><a class="link" id="nav_member" href="javascript:void(0);" onclick="openItem('member');"><span>会员资料</span></a></li>
+					<li><a class="link" id="nav_website" href="javascript:void(0);" onclick="openItem('website');"><span>站点管理</span></a></li>
+					<li><a class="link" id="nav_words" href="javascript:void(0);" onclick="openItem('words');"><span>关键词管理</span></a></li>
+					<li><a class="link" id="nav_authority" href="javascript:void(0);" onclick="openItem('authority');"><span>权限</span></a></li>
 	            </ul>
 	          </nav>
 	          <div class="loca"><strong>您的位置:</strong>
@@ -343,7 +221,7 @@ $(function(){
 	            {*<div class="sitemap"><a id="siteMapBtn" href="#rhis" onclick="showBg('dialog','dialog_content');"><span>管理地图</span></a></div>*}
 	            <div class="toolmenu"><span class="bar-btn"></span>
 	              <ul class="bar-list">
-	                {*<li><a onclick="openItem('clear,cache,setting');" href="javascript:void(0)">更新站点缓存</a></li>*}
+	              {*<li><a onclick="openItem('clear,cache,setting');" href="javascript:void(0)">更新站点缓存</a></li>*}
 	                <li><a href="{site_url('admin')}" id="iframe_refresh">刷新管理中心</a></li>
 	              </ul>
 	            </div>
@@ -391,172 +269,42 @@ $(function(){
               <dl>
                 <dd>
                   <ol>
-                    <li><a href="javascript:void(0);" id="index_member" onclick="openItem('index,member,member');">会员管理</a></li>
-                    {*<li><a href="javascript:void(0);" id="notice_member" onclick="openItem('notice,member,member');">会员通知</a></li>
-                    <li><a href="javascript:void(0);" id="credits_member" onclick="openItem('credits,member,member');">积分管理</a></li>
-                    <li><a href="javascript:void(0);" id="album_member" onclick="openItem('album,member,member');">会员相册</a></li>
-                    <li><a href="javascript:void(0);" id="tag_member" onclick="openItem('tag,member,member');">会员标签</a></li>*}
+                    <li><a href="javascript:void(0);" id="index_member" onclick="openItem('index,member,member');">会员资料</a></li>
                   </ol>
                 </dd>
               </dl>
             </li>
           </ul>
-          <ul id="sort_team">
-            <li>
-              <dl>
-                <dd>
-                  <ol>
-                    <li><a href="JavaScript:void(0);" id="index_team" onclick="openItem('index,team,team');">队伍管理</a></li>
-                    <li><a href="JavaScript:void(0);" id="category_team" onclick="openItem('category,team,team');">队伍分类管理</a></li>
-                    <li><a href="JavaScript:void(0);" id="level_team" onclick="openItem('level,team,team');">队伍头衔设置</a></li>
-                    <li><a href="JavaScript:void(0);" id="member_list_team" onclick="openItem('member_list,team,team');">队伍成员管理</a></li>
-                    <li><a href="JavaScript:void(0);" id="inform_team" onclick="openItem('inform,team,team');">队伍举报管理</a></li>
-                    <li><a href="JavaScript:void(0);" id="setting_team" onclick="openItem('setting,team,team');">队伍设置</a></li>
-                    <li><a href="JavaScript:void(0);" id="adv_team" onclick="openItem('adv,team,team');">队伍首页广告</a></li>
-                    <li><a href="JavaScript:void(0);" id="cache_team" onclick="openItem('cache,team,team');">更新队伍缓存</a></li>
-                  </ol>
-                </dd>
-              </dl>
-            </li>
-          </ul>
-          
-          <ul id="sort_stadium">
-            <li>
-              <dl>
-                <dd>
-                  <ol>
-                    <li><a href="javascript:void(0);" id="setting_stadium" onclick="openItem('setting,stadium,stadium');">场馆设置</a></li>
-                    <li><a href="javascript:void(0);" id="index_stadium" onclick="openItem('index,stadium,stadium');">场馆管理</a></li>
-                  </ol>
-                </dd>
-              </dl>
-            </li>
-          </ul>
-          <ul id="sort_goods">
-            <li>
-              <dl>
-                <dd>
-                  <ol>
-                    <li><a href="javascript:void(0);" id="category_goods_class" onclick="openItem('category,goods_class,goods');">站点管理</a></li>
-                    {*<li><a href="javascript:void(0);" id="index_brand" onclick="openItem('index,brand,goods');">品牌管理</a></li>
-                    <li><a href="javascript:void(0);" id="index_goods" onclick="openItem('index,goods,goods');">商品管理</a></li>
-                    <li><a href="javascript:void(0);" id="type_goods" onclick="openItem('type,goods,goods');">类型管理</a></li>
-                    <li><a href="javascript:void(0);" id="spec_goods" onclick="openItem('spec,goods,goods');">规格管理</a></li>
-                    <li><a href="javascript:void(0);" id="album_goods" onclick="openItem('album,goods,goods');">图片空间</a></li>*}
-                  </ol>
-                </dd>
-              </dl>
-            </li>
-          </ul>
-          <ul id="sort_trade">
-            <li>
-              <dl>
-                <dd>
-                  <ol>
-                    <li><a href="javascript:void(0);" id="index_order" onclick="openItem('index,order,trade');">订单管理</a></li>
-                    <li><a href="javascript:void(0);" id="refund_order" onclick="openItem('refund,order,trade');">退款管理</a></li>
-                    <li><a href="javascript:void(0);" id="returned_order" onclick="openItem('returned,order,trade');">退货管理</a></li>
-                    <li><a href="javascript:void(0);" id="consulting_trade" onclick="openItem('consulting,trade,trade');">咨询管理</a></li>
-                    <li><a href="javascript:void(0);" id="inform_trade" onclick="openItem('inform,trade,trade');">举报管理</a></li>
-                    <li><a href="javascript:void(0);" id="evaluate_trade" onclick="openItem('evaluate,trade,trade');">评价管理</a></li>
-                    <li><a href="javascript:void(0);" id="complain_trade" onclick="openItem('complain,trade,trade');">投诉管理</a></li>
-                  </ol>
-                </dd>
-              </dl>
-            </li>
-          </ul>
-
           <ul id="sort_website">
             <li>
               <dl>
                 <dd>
                   <ol>
-                    <li><a href="javascript:void(0);" id="category_article_class" onclick="openItem('category,article_class,website');">文章分类</a></li>
-                    <li><a href="javascript:void(0);" id="index_article" onclick="openItem('index,article,website');">文章管理</a></li>
-                    <li><a href="JavaScript:void(0);" id="index_tag" onclick="openItem('index,tag,website');">标签管理</a></li>
-                    <li><a href="JavaScript:void(0);" id="index_comment" onclick="openItem('index,comment,website');">评论管理</a></li>
-                    <li><a href="javascript:void(0);" id="index_adv" onclick="openItem('index,adv,website');">广告管理</a></li>
-                    <li><a href="javascript:void(0);" id="index_recommend" onclick="openItem('index,recommend,website');">推荐位</a></li>
-                  </ol>
-                </dd>
-              </dl>
-            </li>
-          </ul>
-
-          <ul id="sort_operation">
-            <li>
-              <dl>
-                <dd>
-                  <ol>
-                    <li><a href="javascript:void(0);" id="setting_operation" onclick="openItem('setting,operation,operation');">基本设置</a></li>
-                    <li><a href="javascript:void(0);" id="groupbuy_operation" onclick="openItem('groupbuy,operation,operation');">团购管理</a></li>
-                    <li><a href="javascript:void(0);" id="zk_operation" onclick="openItem('zk,operation,operation');">限时折扣</a></li>
-                    <li><a href="javascript:void(0);" id="mansong_operation" onclick="openItem('mansong,operation,operation');">满即送</a></li>
-                    <li><a href="javascript:void(0);" id="bundling_operation" onclick="openItem('bundling,operation,operation');">优惠套装</a></li>
-                    <li><a href="javascript:void(0);" id="voucher_operation" onclick="openItem('voucher,operation,operation');">代金券</a></li>
-                    <li><a href="javascript:void(0);" id="bill_operation" onclick="openItem('bill,operation,operation');">结算管理</a></li>
-                    <li><a href="javascript:void(0);" id="activity_operation" onclick="openItem('activity,operation,operation');">活动管理</a></li>
-                    <li><a href="javascript:void(0);" id="pointprod_operation" onclick="openItem('pointprod,operation,operation');">兑换礼品</a></li>
-                  </ol>
-                </dd>
-              </dl>
-            </li>
-          </ul>
-
-          <ul id="sort_stat">
-            <li>
-              <dl>
-                <dd>
-                  <ol>
-                    <li><a href="javascript:void(0);" id="newmember_stat" onclick="openItem('newmember,stat,stat');">会员统计</a></li>
-                    <li><a href="javascript:void(0);" id="newstadium_stat" onclick="openItem('newstadium,stat,stat');">场馆统计</a></li>
-                    <li><a href="javascript:void(0);" id="newteam_stat" onclick="openItem('newteam,stat,stat');">队伍统计</a></li>
-                    <li><a href="javascript:void(0);" id="game_stat" onclick="openItem('game,stat,stat');">比赛统计</a></li>
-                    <li><a href="javascript:void(0);" id="marketing_stat" onclick="openItem('marketing,stat,stat');">营销分析</a></li>
-                    <li><a href="javascript:void(0);" id="refund_stat" onclick="openItem('refund,stat,stat');">退款分析</a></li>
-                  </ol>
-                </dd>
-              </dl>
-            </li>
-          </ul>
-          <ul id="sort_weixin">
-            <li>
-              <dl>
-                <dd>
-                  <ol>
-                    <li><a href="javascript:void(0);" id="article_weixin" onclick="openItem('article,weixin,weixin');">微信文章管理</a></li>
-                    <li><a href="javascript:void(0);" id="adv_weixin" onclick="openItem('adv,weixin,weixin');">微信广告管理</a></li>
-                  </ol>
-                </dd>
-              </dl>
-            </li>
-          </ul>
-
-          <ul id="sort_cms">
-            <li>
-              <dl>
-                <dd>
-                  <ol>
-                    <li><a href="JavaScript:void(0);" id="setting_cms" onclick="openItem('setting,cms,cms');">CMS设置</a></li>
-                    <li><a href="JavaScript:void(0);" id="index_cms_article" onclick="openItem('index,cms_article,cms');">文章管理</a></li>
-                    <li><a href="JavaScript:void(0);" id="category_cms_article" onclick="openItem('category,cms_article,cms');">文章分类</a></li>
-                    <li><a href="JavaScript:void(0);" id="index_magazine" onclick="openItem('index,magazine,cms');">画报管理</a></li>
-                    <li><a href="JavaScript:void(0);" id="category_magazine" onclick="openItem('category,magazine,cms');">画报分类</a></li>
-                    <li><a href="JavaScript:void(0);" id="index_special" onclick="openItem('index,special,cms');">专题管理</a></li>
+                    <li><a href="javascript:void(0);" id="index_website" onclick="openItem('index,website,website');">站点管理</a></li>
                     
                   </ol>
                 </dd>
               </dl>
             </li>
           </ul>
-          
+          <ul id="sort_words">
+            <li>
+              <dl>
+                <dd>
+                  <ol>
+                    <li><a href="javascript:void(0);" id="index_market_words" onclick="openItem('index,market_words,words');">关键词管理</a></li>
+                  </ol>
+                </dd>
+              </dl>
+            </li>
+          </ul>
           <ul id="sort_authority">
             <li>
               <dl>
                 <dd>
                   <ol>
                     <li><a href="JavaScript:void(0);" id="user_authority" onclick="openItem('user,authority,authority');">管理员管理</a></li>
-                    <li><a href="JavaScript:void(0);" id="role_authority" onclick="openItem('role,authority,authority');">角色管理</a></li>
+                    <li><a href="JavaScript:void(0);" id="role_authority" onclick="openItem('role,authority,authority');">权限组管理</a></li>
                   </ol>
                 </dd>
               </dl>
@@ -564,8 +312,8 @@ $(function(){
           </ul>
         </div>
         <div class="copyright">
-            <p>Powered By <em><a href="{site_url('index')}" target="_blank"><span class="vol"><font class="b">52</font><font class="o">运动之家</font></span></a></em></p>
-            <p>&copy;2010-{$smarty.now|date_format:"%Y"} <a href="{site_url('index')}" target="_blank">52运动之家 Inc.</a></p>
+            <p>Powered By <em><a href="{site_url('index')}" target="_blank"><span class="vol"><font class="b">Jay</font></span></a></em></p>
+            <p>&copy;2010-{$smarty.now|date_format:"%Y"} </p>
         </div>
       </td>
       <td valign="top" width="100%">

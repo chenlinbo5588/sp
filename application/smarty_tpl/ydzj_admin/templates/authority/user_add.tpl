@@ -1,10 +1,10 @@
 {include file="common/main_header.tpl"}
   <div class="fixed-bar">
     <div class="item-title">
-      <h3>{if $info['uid']}维护{else}添加{/if}管理员</h3>
+      <h3>管理员</h3>
       <ul class="tab-base">
-      	<li><a href="{admin_site_url('authority/user')}"><span>管理员</span></a></li>
-      	<li><a class="current" ><span>{if $info['uid']}编辑{else}添加{/if}管理员</span></a></li>
+      	<li><a href="{admin_site_url('authority/user')}"><span>列表</span></a></li>
+      	{include file="common/sub_topnav.tpl"}
       </ul>
      </div>
   </div>
@@ -23,7 +23,7 @@
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input type="text" id="email" value="{$info['email']}" name="email" class="txt"></td>
-          <td class="vatop tips">请输入登录名 {form_error('email')}</td>
+          <td class="vatop tips">请输入邮箱登录名 {form_error('email')}</td>
         </tr>
         <tr class="noborder">
           <td colspan="2" class="required"><label class="validation" for="username">用户真实名称:</label></td>
@@ -37,7 +37,7 @@
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input type="password" id="admin_password" name="admin_password" class="txt"></td>
-          <td class="vatop tips">请输入密码 {form_error('admin_password')}</td>
+          <td class="vatop tips">请输入密码 最少六位 只能包含英文字母、数字、下划线、破折号 {form_error('admin_password')}</td>
         </tr>
         <tr>
           <td colspan="2" class="required"><label class="validation" for="admin_rpassword">确认密码:</label></td>
