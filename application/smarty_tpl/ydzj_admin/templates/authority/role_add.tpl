@@ -36,6 +36,12 @@
 	          	</select>
 	          </td>
 	        </tr>
+	        <tr>
+	          <td class="required" colspan="2"><label class="validation" for="websites">可访问数据范围:</label></td>
+	        </tr>
+	        <tr>
+	        	<td>{include file="./website.tpl"}</td>
+	        </tr>
 	    </tbody>
   	</table>
     <table class="table tb-type2">
@@ -68,6 +74,8 @@
         </tr>
         {/foreach}
       </tbody>
+      
+      
   </form>
 <script>
 

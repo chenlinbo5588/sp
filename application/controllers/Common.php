@@ -7,6 +7,11 @@ class Common extends Ydzj_Controller {
 		parent::__construct();
 	}
 	
+	public function nopermission(){
+		
+		$this->display();
+	}
+	
 	
 	/**
 	 * 图片上传

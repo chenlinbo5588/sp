@@ -2,37 +2,22 @@
 <style type="text/css">
 
 body {
-	background:#001d3a;
+	background:#a60000;
 }
-
 
 .formdiv {
 	position:relative;
 }
 
-#wrap {
-
-}
-
 #regbg {
 	padding: 20px 0;
+	position: absolute;
     width: 100%;
+    top:0px;
 }
 
 img.responed {
 	display: block;
-}
-
-.achors {
-	position:relative;
-}
-
-.achors a {
-	position:absolute;
-	right:0;
-	top:0;
-	height:80px;
-	width:50%;
 }
 
 #reg {
@@ -43,15 +28,15 @@ img.responed {
 
 form label.error {
 	padding-left:0px;
-    margin-left:0px;
+   margin-left:0px;
 	background:none;
-	display: block;
+	    display: block;
     width: 100%;
     text-align: center;
 }
 
 .username ,.mobile, .auth_code {
-	margin:5px 0 10px 0;
+	margin:5px 0;
 }
 
 
@@ -61,7 +46,7 @@ form label.error {
 	line-height:35px;
 	display:block;
 	width:15%;
-	color:#FFFFFF;
+	color:#fff;
 }
 
 .username .txt,.mobile .txt , .auth_code .txt {
@@ -78,14 +63,11 @@ form label.error {
 .auth_code .txt {
 	
 }
-.auth_code .getCode {
-	width:100px;
-	height:37px;
+.auth_code img {
 	position:absolute;
 	margin-right:0;
 	right:0;
 	top:0;
-	border:0;
 }
 
 
@@ -117,9 +99,6 @@ form label.error {
 }
 
 
-.cv {
-	margin-top:15px;
-}
 
 .fillcol {
 	background:#c0eaff;
@@ -129,99 +108,40 @@ form label.error {
 </style>
 	<div id="wrap">
 		<div>
-   			<img class="responed" src="{resource_url('img/pg7/pic1.png')}"/>
-   			<img class="responed" src="{resource_url('img/pg7/pic2.png')}"/>
+   			<img class="responed" src="{resource_url('img/pg6/pic1.jpg')}"/>
    		</div>
-   		<div class="achors">
-   			<img class="responed" src="{resource_url('img/pg7/pic3.png')}"/>
-   			<a href="{$jumUrl['download1']}">&nbsp;</a>
+   		<div>
+   			<img class="responed" src="{resource_url('img/pg6/pic2.jpg')}"/>
    		</div>
-   		<div class="formdiv">
-	   		<div id="regbg">
-	   			<div class="hide"></div>
-	   			<div id="reg">
-	   				<a name="md">&nbsp;</a>
-		   			{form_open(site_url('index/index'|cat:'#md'),'id="registerForm"')}
-			        {include file="./site_form_hidden.tpl"}
-		   			<div class="username clearfix"><label class="side_lb">姓名</label><input type="text" class="txt noround" autocomplete="off" name="username" value="{set_value('username')}" placeholder="请输入用户名称"/></div>
-		   			<div class="tiparea">{form_error('username')}</div>
-		   			<div class="mobile clearfix"><label class="side_lb">手机号码</label><input type="text" class="txt noround" autocomplete="off" name="mobile" id="mobile" value="{set_value('mobile')}" placeholder="请输入您的手机号码"/></div>
-		   			<div class="tiparea">{form_error('mobile')}</div>
-		   			<div class="auth_code clearfix"><label class="side_lb">验证码</label><input type="text" class="txt noround" name="auth_code" autocomplete="off" value="" placeholder="请输入您的验证码"/><input type="button" class="getCode noround" name="authCodeBtn" value="获取验证码"/></div>
-		   			<div class="tiparea">{form_error('auth_code')}</div>
-		   			<div class="btn2 clearfix"><input class="t4" type="submit" name="tj" value="点击下载"/></div>
-		   			</form>
-		   		</div>
-	   		</div>
-	   	</div>
+   		<div>
+   			<img class="responed" src="{resource_url('img/pg6/pic3.jpg')}"/>
+   		</div>
    		<div class="cv">
-   			<img class="responed" src="{resource_url('img/pg7/pic4.png')}"/>
+   			<img class="responed" src="{resource_url('img/pg6/pic4.jpg')}"/>
    		</div>
    		<div>
-   			<img class="responed" src="{resource_url('img/pg7/pic5.png')}"/>
+   			<img class="responed" src="{resource_url('img/pg6/pic5.jpg')}"/>
    		</div>
    		<div>
-   			<img class="responed" src="{resource_url('img/pg7/pic6.png')}"/>
+   			<img class="responed" src="{resource_url('img/pg6/pic6.jpg')}"/>
    		</div>
-   		<div  class="cv">
-   			<img class="responed" src="{resource_url('img/pg7/pic7.png')}"/>
+		<div>
+   			<img class="responed" src="{resource_url('img/pg6/pic7.jpg')}"/>
    		</div>
    		<div>
-   			<img class="responed" src="{resource_url('img/pg7/pic8.png')}"/>
+   			<img class="responed" src="{resource_url('img/pg6/pic8.jpg')}"/>
+   		</div>
+   		<div>
+   			<img class="responed" src="{resource_url('img/pg6/pic9.jpg')}"/>
    		</div>
    		<div>
    			{include file="./site_f1.tpl"}
-   			<div><img class="responed" src="{resource_url('img/pg7/pic9.png')}"/></div>
+   			<div><img class="responed" src="{resource_url('img/pg6/pic10.jpg')}"/></div>
    		</div>
    		<div>
    			{include file="./site_f2.tpl"}
-   			<div><img class="responed" src="{resource_url('img/pg7/pic10.png')}"/></div>
+   			<div><img class="responed" src="{resource_url('img/pg6/pic11.jpg')}"/></div>
    		</div>
 	</div><!-- //end of wrap -->
-	<script type="text/javascript">
-	var authCodeURL ="{site_url('api/register/authcode')}";
-	{include file="./site_alert.tpl"}
-	$(function(){
-		$('#registerForm').validate({
-	        errorPlacement: function(error, element){
-	        	error.appendTo(element.parent().next(".tiparea"));
-	        },
-	        rules : {
-	        	username : {
-	        		required : true,
-	        		minlength: 1,
-	                maxlength: 20
-	        	},
-	        	mobile: {
-	                required : true,
-	                phoneChina:true
-	            },
-	            auth_code : {
-	            	required:true,
-	                digits: true,
-	                minlength: 6,
-	                maxlength: 6
-	            }
-	        },
-	        messages : {
-	        	username : {
-	        		required : '请输入用户名称',
-	        		minlength: '最少输入1个字符',
-	                maxlength: '最多输入20个字符'
-	        	},
-	        	mobile: {
-	                required : '手机号码不能为空'
-	            },
-	            auth_code : {
-	            	required : '请输入6位数字验证码',
-	                digits: '请输入6位数字验证码',
-	                minlength: '请输入6位数字验证码',
-	                maxlength: '请输入6位数字验证码'
-	            }
-	        }
-	    });
-	});
-	</script>
-	<script type="text/javascript" src="{resource_url('js/register.js')}?v=1.1"></script>
 </body>
 </html>

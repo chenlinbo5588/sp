@@ -9,13 +9,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 class Ydzj_Admin_Controller extends Ydzj_Controller {
 	
-	public $_adminProfile = array() ;
+	public $_adminProfile = array();
+	private $_permission = array();
 	
 	public function __construct(){
 		parent::__construct();
 		
-		$this->form_validation->set_error_delimiters('<label class="error">','</label>');
 		
+		$this->form_validation->set_error_delimiters('<label class="error">','</label>');
 		$this->_adminProfile = $this->session->userdata('manage_profile');
 		
 		if(empty($this->_adminProfile)){
@@ -24,7 +25,7 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 		
 		if(!$this->isLogin()){
 			if($this->input->is_ajax_request()){
-				$this->responseJSON('您尚未登陆',array('url' => site_url('member/admin_login')));
+				$this->responseJSON('您尚未登陆',array('redirectUrl' => site_url('member/admin_login')));
 			}else{
 				redirect(site_url('member/admin_login'));
 			}
@@ -32,8 +33,55 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 			$this->assign('manage_profile',$this->_adminProfile);
 		}
 		
+		$this->load->Model('Role_Model');
+		
+		$this->_checkPermission();
 		//print_r($this->session->all_userdata());
 	}
+	
+	
+	private function _checkPermission(){
+		//print_r($this->_adminProfile);
+		
+		$currentUri = $this->uri->uri_string();
+		
+		//echo $currentUri;
+		
+		if($this->_adminProfile['basic']['group_id']){
+			$roleInfo = $this->Role_Model->getFirstByKey($this->_adminProfile['basic']['group_id'],'id');
+			$currentPer = $this->encrypt->decode($roleInfo['permission'],config_item('encryption_key').md5($roleInfo['name']));
+			
+			if(trim($currentPer)){
+				$this->_permission = array_flip(explode('|',$currentPer));
+			}
+			//print_r($currentPer);
+		}
+		
+		
+		$this->_permission['admin'] = 1;
+		$this->_permission['admin/index'] = 1;
+		$this->_permission['admin/dashboard/welcome'] = 1;
+		$this->_permission['admin/dashboard/aboutus'] = 1;
+		$this->_permission['admin/index/logout'] = 1;
+		$this->_permission['admin/index/index'] = 1;
+		$this->_permission['admin/index/welcome'] = 1;
+		
+		$this->assign('permission',$this->_permission);
+		
+		
+		if(!isset($this->_permission[$currentUri])){
+			//echo $currentUri;
+			//file_put_contents("deb.txt",$currentUri,FILE_APPEND);
+			if($this->input->is_ajax_request()){
+				$this->responseJSON('没有足够的权限,请联系管理员');
+			}else{
+				redirect(site_url('common/nopermission'));
+			}
+			
+		}
+		
+	}
+	
 	
 	
 	public function isLogin(){

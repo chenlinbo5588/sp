@@ -7,7 +7,7 @@ class Authority extends Ydzj_Admin_Controller {
 	public function __construct(){
 		parent::__construct();
 		
-		$this->load->model(array('Adminuser_Model','Fn_Model','Role_Model'));
+		$this->load->model(array('Adminuser_Model','Fn_Model','Role_Model','Website_Model'));
 	}
 	
 	public function user(){
@@ -116,6 +116,7 @@ class Authority extends Ydzj_Admin_Controller {
 	
 	private function _getUserRules(){
 		
+		$this->form_validation->set_rules('status','权限组状态','required|in_list[开启,关闭]');
 		$this->form_validation->set_rules('admin_password','密码','required|min_length[6]|max_length[12]|alpha_dash');
 		$this->form_validation->set_rules('admin_rpassword','确认密码','required|matches[admin_password]');
 		
@@ -123,12 +124,72 @@ class Authority extends Ydzj_Admin_Controller {
 	}
 	
 	
+	private function _getWebSiteList(){
+		$list = $this->Website_Model->getList();
+		
+		$this->assign('websiteList',$list);
+		return $list;
+		
+	}
+	
+	
+	private function _prepareUserData(){
+		$info = array(
+			'email' => $this->input->post('email'),
+			'username' => $this->input->post('username'),
+			'group_id' => $this->input->post('group_id') ? $this->input->post('group_id') : 0,
+			'password' => $this->input->post('admin_password'),
+			'status' => $this->input->post('status'),
+			'site_ids' => $this->input->post('site_ids'),
+		);
+		
+		if(empty($info['site_ids'])){
+			$info['site_ids'] = array();
+		}
+		
+		
+		return $info;
+	}
+	
+	private function _prepareRoleData(){
+		
+		$info = array(
+			'name' => $this->input->post('name'),
+			'permission' => $this->input->post('permission'),
+			'status' => $this->input->post('status'),
+			'site_ids' => $this->input->post('site_ids'),
+		);
+		
+		if(empty($info['site_ids'])){
+			$info['site_ids'] = array();
+		}
+		
+		
+		if(is_array($this->input->post('permission'))){
+			$info['permission'] = array_flip($this->input->post('permission'));
+			
+		}else{
+			$info['permission'] = array();
+		}
+			
+		
+		return $info;
+	}
+	
+	
+	
+	
+	
+	
 	
 	public function user_add(){
 		$feedback = '';
-		$this->assign('action','add');
+		
+		$action = 'add';
 		
 		$roleList = $this->Role_Model->getList();
+		
+		$this->_getWebSiteList();
 		
 		if($this->isPostRequest()){
 			$this->form_validation->set_rules('email','登陆名',"required|valid_email|is_unique[{$this->Adminuser_Model->_tableRealName}.email]");
@@ -138,12 +199,7 @@ class Authority extends Ydzj_Admin_Controller {
 			
 			for($i = 0; $i < 1; $i++){
 				
-				$info = array(
-					'email' => $this->input->post('email'),
-					'username' => $this->input->post('username'),
-					'group_id' => $this->input->post('group_id'),
-					'password' => $this->input->post('admin_rpassword')
-				);
+				$info = $this->_prepareUserData();
 				
 				if(!$this->form_validation->run()){
 					$feedback = $this->form_validation->error_string();
@@ -151,6 +207,10 @@ class Authority extends Ydzj_Admin_Controller {
 				}
 				
 				$info['password'] = $this->_getEncodePassword($info['admin_password'],$info['email']);
+				
+				//更新前，扁平化
+				$info['site_ids'] = implode(',',$info['site_ids']);
+				
 				
 				$info = array_merge($info,$this->addWhoHasOperated('add'));
 				
@@ -160,11 +220,19 @@ class Authority extends Ydzj_Admin_Controller {
 				}
 				
 				$feedback = getSuccessTip('保存成功');
+				$action = 'edit';
 				$info = $this->Adminuser_Model->getFirstByKey($newid,'uid');
+				$info['site_ids'] = explode(',',$info['site_ids']);
+				
 			}
+		}else{
+			
+			
+			$info['site_ids'] = array();
 		}
 		
 		
+		$this->assign('action',$action);
 		$this->assign('info',$info);
 		$this->assign('feedback',$feedback);
 		$this->assign('roleList',$roleList);
@@ -179,6 +247,9 @@ class Authority extends Ydzj_Admin_Controller {
 		$feedback = '';
 		$id = $this->input->get_post('uid');
 		$roleList = $this->Role_Model->getList();
+		$this->_getWebSiteList();
+		
+		$info = $this->Adminuser_Model->getFirstByKey($id,'uid');
 		
 		if($this->isPostRequest()){
 			$this->form_validation->set_rules('email','登陆名',"required|valid_email|is_unique_not_self[{$this->Adminuser_Model->_tableRealName}.email.uid.{$id}]");
@@ -193,12 +264,8 @@ class Authority extends Ydzj_Admin_Controller {
 			
 			for($i = 0; $i < 1; $i++){
 				
-				$info = array(
-					'uid' => $id,
-					'email' => $this->input->post('email'),
-					'username' => $this->input->post('username'),
-					'group_id' => $this->input->post('group_id')
-				);
+				$info = $this->_prepareUserData();
+				$info['uid'] = $id;
 				
 				if(!$this->form_validation->run()){
 					$feedback = $this->form_validation->error_string();
@@ -206,9 +273,13 @@ class Authority extends Ydzj_Admin_Controller {
 				}
 				
 				
-				$info['password'] = $this->_getEncodePassword($this->input->post('admin_password'),$info['email']);
+				//重新设置密码
+				if($this->input->post('admin_password')){
+					$info['password'] = $this->_getEncodePassword($this->input->post('admin_password'),$info['email']);
+				}
 				
-				
+				//更新前，扁平化
+				$info['site_ids'] = implode(',',$info['site_ids']);
 				$info = array_merge($info,$this->addWhoHasOperated('edit'));
 				
 				if($this->Adminuser_Model->update($info,array('uid' => $id)) < 0){
@@ -217,12 +288,15 @@ class Authority extends Ydzj_Admin_Controller {
 				}
 				
 				$feedback = getSuccessTip('保存成功');
+				
+				$info = $this->Adminuser_Model->getFirstByKey($id,'uid');
+				$info['site_ids'] = explode(',',$info['site_ids']);
 			}
-		}else{
-			$info = $this->Adminuser_Model->getFirstByKey($id,'uid');
 		}
 		
-		
+		if(!is_array($info['site_ids'])){
+			$info['site_ids'] = explode(',',$info['site_ids']);
+		}
 		
 		$this->assign('info',$info);
 		$this->assign('feedback',$feedback);
@@ -310,10 +384,10 @@ class Authority extends Ydzj_Admin_Controller {
 	public function role_add(){
 		$feedback = '';
 		
-		$this->assign('action','add');
+		$action = 'add';
+		$this->_getWebSiteList();
 		
 		if($this->isPostRequest()){
-			
 			
 			$this->form_validation->set_rules('name','权限组名称',"required|is_unique[{$this->Role_Model->_tableRealName}.name]");
 			
@@ -322,11 +396,8 @@ class Authority extends Ydzj_Admin_Controller {
 			
 			for($i = 0; $i < 1; $i++){
 				
-				$info['name'] = $this->input->post('name');
-				$info['status'] = $this->input->post('status');
-				$info['permission'] = $this->input->post('permission');
-					
-					
+				$info = $this->_prepareRoleData();
+				
 				if(!$this->form_validation->run()){
 					$feedback = $this->form_validation->error_string();
 					
@@ -338,7 +409,8 @@ class Authority extends Ydzj_Admin_Controller {
 				}
 				
 				$info['permission'] = $this->_getEncodePermision($this->input->post('permission'),$this->input->post('name'));
-				
+				//更新前，扁平化
+				$info['site_ids'] = implode(',',$info['site_ids']);
 				
 				$info = array_merge($info,$this->addWhoHasOperated('add'));
 				
@@ -347,9 +419,14 @@ class Authority extends Ydzj_Admin_Controller {
 					break;
 				}
 				
+				$action = 'edit';
 				$feedback = getSuccessTip('保存成功');
 				$info = $this->_refreshRoleInfo($newid);
+				
+				
 			}
+		}else{
+			$info['site_ids'] = array();
 		}
 		
 		
@@ -361,6 +438,7 @@ class Authority extends Ydzj_Admin_Controller {
 		));
 		
 		//print_r($fnTree);
+		$this->assign('action',$action);
 		$this->assign('info',$info);
 		$this->assign('feedback',$feedback);
 		$this->assign('fnTree',$fnTree);
@@ -393,6 +471,9 @@ class Authority extends Ydzj_Admin_Controller {
 		$info['permission'] = explode('|',$info['permission']);
 		$info['permission'] = array_flip($info['permission']);
 		
+		
+		$info['site_ids'] = explode(',',$info['site_ids']);
+		
 		return $info;
 	}
 	
@@ -403,6 +484,7 @@ class Authority extends Ydzj_Admin_Controller {
 		$this->assign('action','edit');
 		
 		$id = $this->input->get_post('id');
+		$this->_getWebSiteList();
 		
 		if($this->isPostRequest()){
 			$this->assign('ispost',true);
@@ -410,15 +492,9 @@ class Authority extends Ydzj_Admin_Controller {
 			
 			$this->form_validation->set_rules('name','权限组名称',"required|is_unique_not_self[{$this->Role_Model->_tableRealName}.name.id.{$id}]");
 			
+			
+			$info = $this->_prepareRoleData();
 			$info['id'] = $id;
-			$info['name'] = $this->input->post('name');
-			$info['status'] = $this->input->post('status');
-			if(is_array($this->input->post('permission'))){
-				$info['permission'] = array_flip($this->input->post('permission'));
-				
-			}else{
-				$info['permission'] = array();
-			}
 			
 			
 			for($i = 0; $i < 1; $i++){
@@ -430,7 +506,8 @@ class Authority extends Ydzj_Admin_Controller {
 				//unset($info['id']);
 				
 				$info['permission'] = $this->_getEncodePermision($this->input->post('permission'),$info['name']);
-				
+				//更新前，扁平化
+				$info['site_ids'] = implode(',',$info['site_ids']);
 				
 				$info = array_merge($info,$this->addWhoHasOperated('edit'));
 				

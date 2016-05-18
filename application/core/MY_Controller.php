@@ -246,7 +246,7 @@ class MY_Controller extends CI_Controller {
     /**
      * 设置
      */
-    public function jsonOutput($message = '' , $data = array() , $cacheTime = 0 ){
+    public function jsonOutput($message = '' , $data = array() , $cacheTime = 0){
     	if(!$this->output->_display_cache($this->config,$this->URI)){
 			// 缓存文件不存在或者是已经失效，设置数据
 			$data = array('message' => $message,'data' => $data);

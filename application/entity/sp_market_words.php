@@ -5,6 +5,7 @@ $entity = array(
 'word_id' => 'int',
 'word_name' => 'varchar',
 'word_code' => 'varchar',
+'word_url' => 'varchar',
 'word_sort' => 'tinyint',
 'add_uid' => 'int',
 'add_username' => 'varchar',

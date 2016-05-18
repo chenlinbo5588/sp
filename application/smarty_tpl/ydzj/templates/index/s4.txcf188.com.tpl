@@ -2,17 +2,13 @@
 <style type="text/css">
 
 body {
-	background:#c0c0c0;
+	background:#5e605f;
 }
 
-
-.formdiv {
-}
 
 #regbg {
-	padding: 20px 0;
-    width: 100%;
-    background:#c0eaff;
+	background:#084355;
+	padding: 10px 0 20px;
 }
 
 img.responed {
@@ -27,7 +23,7 @@ img.responed {
 
 form label.error {
 	padding-left:0px;
-	margin-left:0px;
+   margin-left:0px;
 	background:none;
 	display: block;
     width: 100%;
@@ -35,7 +31,7 @@ form label.error {
 }
 
 .username ,.mobile, .auth_code {
-	margin:5px 0;
+	margin:5px 0 10px 0;
 }
 
 
@@ -45,7 +41,7 @@ form label.error {
 	line-height:35px;
 	display:block;
 	width:15%;
-	color:#0D0D0D;
+	color:#fff;
 }
 
 .username .txt,.mobile .txt , .auth_code .txt {
@@ -78,7 +74,7 @@ form label.error {
 	display:block;
 	width:100%;
 	text-align:center;
-	color:#61615D;
+	color:#FFFA14;
 }
 
 .btn2 {
@@ -86,65 +82,98 @@ form label.error {
 }
 
 .btn2 input {
-	background:#d31717;
+	background:url('{resource_url("img/btns/btn2_2.png")}') repeat-x left top;
 	height:34px;
 	line-height:34px;
 	text-align:center;
 	border:0;
-	color:#fff;
+	color:#fe0050;
 	font-size:15px;
 	font-weight:bold;
 	width:100%;
 }
 
+.btn2 .lf , .btn2 .rf {
+	position:absolute;
+	width:3px;
+	height:34px;
+	background:url('{resource_url("img/btns/btn2_1.png")}') no-repeat left top;
+}
 
+.btn2 .lf {
+	left:0;
+	top:0p;x
+}
+
+.btn2 .rf {
+	right:0px;
+	top:0px;
+	background:url('{resource_url("img/btns/btn2_3.png")}') no-repeat left top;
+}
 
 </style>
 	<div id="wrap">
 		<div>
-			<div class="hide">0佣金 33倍高收益 就在赢金财经</div>
-   			<img class="responed" src="{resource_url('img/pg5/pic1.png')}"/>
+			<div class="hide">0基础K线从入门到精通 抄底逃顶</div>
+   			<img class="responed" src="{resource_url('img/pg4/pic1.png')}"/>
    		</div>
    		<div>
-   			<div class="hide">好产品 大优惠 强平台 盈利更有保障</div>
-   			<img class="responed" src="{resource_url('img/pg5/pic2.png')}"/>
+   			<div class="hide">技术指标完美猎杀 菜鸟也能变高手</div>
+   			<img class="responed" src="{resource_url('img/pg4/pic2.png')}"/>
    		</div>
    		<div>
-   			<img class="responed" src="{resource_url('img/pg5/pic3.png')}"/>
+   			<img class="responed" src="{resource_url('img/pg4/pic3.png')}"/>
    		</div>
    		<div class="cv">
-   			<div class="hide">贵金属/白银投资 0佣金 0手续费 22小时可交易 33倍高杠杆 涨跌双向交易</div>
-   			<img class="responed" src="{resource_url('img/pg5/pic4.png')}"/>
+   			<div class="hide">K线组合发信号 高抛低吸制胜千里</div>
+   			<img class="responed" src="{resource_url('img/pg4/pic4.png')}"/>
    		</div>
    		<div>
-   			<div class="hide">贵金属/白银投资 0元免费开户 立送200美金</div>
-   			<img class="responed" src="{resource_url('img/pg5/pic5.png')}"/>
+   			<img class="responed" src="{resource_url('img/pg4/pic5.png')}"/>
    		</div>
    		<div>
-   			<img class="responed" src="{resource_url('img/pg5/pic6.png')}"/>
+   			<img class="responed" src="{resource_url('img/pg4/pic6.png')}"/>
    		</div>
-   		<div class="formdiv">
-	   		<div id="regbg">
-	   			<div class="hide">免费体验，入市首选指标 《K线入门宝典》</div>
-	   			<div id="reg">
-	   				<a name="md">&nbsp;</a>
-		   			{form_open(site_url('index/index'|cat:'#md'),'id="registerForm"')}
-			        {include file="./site_form_hidden.tpl"}
-		   			<div class="username clearfix"><label class="side_lb">姓名</label><input type="text" class="txt noround" autocomplete="off" name="username" value="{set_value('username')}" placeholder="请输入用户名称"/></div>
-		   			<div class="tiparea"></div>
-		   			<div class="mobile clearfix"><label class="side_lb">手机号码</label><input type="text" class="txt noround" autocomplete="off" name="mobile" id="mobile" value="{set_value('mobile')}" placeholder="请输入您的手机号码"/></div>
-		   			<div class="tiparea"></div>
-		   			<div class="auth_code clearfix"><label class="side_lb">验证码</label><input type="text" class="txt noround" name="auth_code" autocomplete="off" value="" placeholder="请输入您的验证码"/><img class="nature t4" id="authImg" src="{site_url('captcha')}?w=100&h=37" title="点击图片刷新"/></div>
-		   			<div class="tiparea"></div>
-		   			<div class="refresh"><a href="javascript:void(0);">看不清，点击验证码刷新</a></div>
-		   			<div class="btn2 clearfix"><input class="t4" type="submit" name="tj" value="免费申请账号"/></div>
-		   			</form>
-		   		</div>
+		<div>
+   			<img class="responed" src="{resource_url('img/pg4/pic7.png')}"/>
+   		</div>
+   		<div>
+   			<img class="responed" src="{resource_url('img/pg4/pic8.png')}"/>
+   		</div>
+   		<div>
+   			<img class="responed" src="{resource_url('img/pg4/pic9.png')}"/>
+   		</div>
+   		<div>
+   			<img class="responed" src="{resource_url('img/pg4/pic10.png')}"/>
+   		</div>
+   		<div>
+   			<img class="responed" src="{resource_url('img/pg4/pic11.png')}"/>
+   		</div>
+   		<div id="regbg">
+   			<div class="hide">免费体验，入市首选指标 《K线入门宝典》</div>
+   			<div id="reg">
+   				<a name="md">&nbsp;</a>
+	   			{form_open(site_url('index/index'|cat:'#md'),'id="registerForm"')}
+		        {include file="./site_form_hidden.tpl"}
+	   			<div class="username clearfix"><label class="side_lb">姓名</label><input type="text" class="txt noround" autocomplete="off" name="username" value="{set_value('username')}" placeholder="请输入用户名称"/></div>
+	   			<div class="tiparea">{form_error('username')}</div>
+	   			<div class="mobile clearfix"><label class="side_lb">手机号码</label><input type="text" class="txt noround" autocomplete="off" name="mobile" id="mobile" value="{set_value('mobile')}" placeholder="请输入您的手机号码"/></div>
+	   			<div class="tiparea">{form_error('mobile')}</div>
+	   			<div class="auth_code clearfix"><label class="side_lb">验证码</label><input type="text" class="txt noround" id="authcode_text" name="auth_code" autocomplete="off" value="" placeholder="请输入您的验证码"/><img class="nature t4" id="authImg" src="{site_url('captcha')}?w=100&h=37" title="点击图片刷新"/></div>
+	   			<div class="tiparea">{form_error('auth_code')}</div>
+	   			<div class="refresh"><a href="javascript:void(0);">看不清，点击验证码刷新</a></div>
+	   			<div class="btn2 clearfix"><div class="lf"></div><input class="t4" type="submit" name="tj" value="我要体验"/><div class="rf"></div></div>
+	   			</form>
 	   		</div>
-	   	</div>
+   		</div>
+   		
+   		<div>
+   			{include file="./site_f1.tpl"}
+   			<div><img class="responed" src="{resource_url('img/pg4/pic13.png')}"/></div>
+   		</div>
    		<div>
    			{include file="./site_f2.tpl"}
-   			<div><img class="responed" src="{resource_url('img/pg5/pic12.jpg')}"/></div>
+   			<div><img class="responed" src="{resource_url('img/pg4/pic14.jpg')}"/></div>
    		</div>
 	</div><!-- //end of wrap -->
 	<script>

@@ -70,7 +70,8 @@ class Website extends Ydzj_Admin_Controller {
 	
 	public function add(){
 		
-		$this->assign('action','add');
+		
+		$action = 'add';
 		
 		$feedback = '';
 		if($this->isPostRequest()){
@@ -92,11 +93,15 @@ class Website extends Ydzj_Admin_Controller {
 				}
 				
 				$feedback = getSuccessTip('保存成功');
+				
+				$action = 'edit';
+				
 				$info = $this->Website_Model->getFirstByKey($newid,'site_id');
 			}
 		}
 		
 		
+		$this->assign('action',$action);
 		$this->assign('info',$info);
 		$this->assign('feedback',$feedback);
 

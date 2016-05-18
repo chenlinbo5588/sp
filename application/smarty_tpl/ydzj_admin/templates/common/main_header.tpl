@@ -27,6 +27,7 @@ if (cookie_skin) {
 </script>
 <script type="text/javascript" src="{resource_url('js/common.js')}"></script>
 <script type="text/javascript" src="{resource_url('js/admincp.js')}"></script>
+<script type="text/javascript" src="{resource_url('js/respond.min.js')}"></script>
 </head>
 <body>
 <div id="append_parent"></div>

@@ -17,4 +17,63 @@ $config['jumUrl'] = array(
 );
 
 
+$config['siteRules'] = array(
+	/*
+	'www.txcf188.com' => array(
+			'registeOkText' => 'registerOk_text1',
+			'jumUrlType' => 'website',
+			'rules' => array('username','mobile','mobile_auth_code'),
+		),
+	*/
+	's1.txcf188.com' => array(
+			'registeOkText' => 'registerOk_text1',
+			'jumUrlType' => 'website',
+			'rules' => array('username','mobile','mobile_auth_code'),
+		),
+	's2.txcf188.com' => array(
+			'registeOkText' => 'registerOk_text2',
+			'jumUrlType' => 'qqchat',
+			'rules' => array('mobile'),
+		),
+	
+	's3.txcf188.com' => array(
+			'registeOkText' => 'registerOk_text3',
+			'jumUrlType' => 'qqgroup',
+			'rules' => array('mobile','auth_code'),
+		),
+	
+	's4.txcf188.com' => array(
+			'registeOkText' => 'registerOk_text2',
+			'jumUrlType' => 'qqchat',
+			'rules' => array('username', 'mobile','auth_code'),
+		),
+		
+	's5.txcf188.com' => array(
+			'registeOkText' => 'registerOk_text2',
+			'jumUrlType' => 'qqchat',
+			'rules' => array( 'mobile','auth_code'),
+		),
+	's6.txcf188.com' => array(
+			'registeOkText' => 'registerOk_text2',
+			'jumUrlType' => 'qqchat',
+			'rules' => array( 'mobile','auth_code'),
+		),
+	's7.txcf188.com' => array(
+			'registeOkText' => 'registerOk_text1',
+			'jumUrlType' => 'download1',
+			'rules' => array('username', 'mobile','mobile_auth_code'),
+		),
+	's8.txcf188.com' => array(
+			'registeOkText' => 'registerOk_text1',
+			'jumUrlType' => 'website',
+			'rules' => array('mobile','mobile_auth_code'),
+		),
+	's9.txcf188.com' => array(
+			'registeOkText' => 'registerOk_text1',
+			'jumUrlType' => 'website',
+			'rules' => array(), //没有验证
+		)
+);
+
+
 

@@ -6,11 +6,13 @@
       <ul class="tab-base">
         <li><a href="javascript:void(0);" class="current"><span>{#manage#}</span></a></li>
         <li><a href="{admin_site_url('market_words/add')}" ><span>{#add#}</span></a></li>
+      	<li><a href="{admin_site_url('market_words/import')}"><span>导入</span></a></li>
+      	<li><a href="{admin_site_url('market_words/export')}"><span>导出</span></a></li>
       </ul>
     </div>
   </div>
   <div class="fixed-empty"></div>
-   <form class="formSearch" method="get" name="formSearch" id="formSearch" action="{admin_site_url('member')}">
+   <form class="formSearch" method="get" name="formSearch" id="formSearch" action="{admin_site_url('market_words')}">
     <input type="hidden" name="page" value="{$currentPage}"/>
     <table class="tb-type1 noborder search">
       <tbody>
@@ -51,7 +53,7 @@
           <th>&nbsp;</th>
           <th>序号</th>
           <th>关键字</th>
-          <th>尾巴代码</th>
+          <th>推广链接</th>
           <th>排序</th>
           <th>创建时间</th>
           <th>最后修改时间</th>
@@ -64,7 +66,7 @@
           <td class="w24">{*<input type="checkbox" name="del_id[]" value="{$item['word_id']}"/>*}</td>
           <td>{$item['word_id']}</td>
           <td>{$item['word_name']|escape}</td>
-          <td>{$item['word_code']|escape}</td>
+          <td>{$item['word_url']|escape}</td>
           <td>{$item['word_sort']}</td>
           <td>{$item['gmt_create']|date_format:"%Y-%m-%d %H:%M:%S"}</td>
           <td>{$item['gmt_modify']|date_format:"%Y-%m-%d %H:%M:%S"}</td>

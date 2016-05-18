@@ -5,6 +5,8 @@
       <h3>{#title#}</h3>
       <ul class="tab-base">
       	<li><a href="{admin_site_url('market_words/index')}" ><span>{#manage#}</span></a></li>
+      	<li><a href="{admin_site_url('market_words/import')}"><span>导入</span></a></li>
+      	<li><a href="{admin_site_url('market_words/export')}"><span>导出</span></a></li>
       	{include file="common/sub_topnav.tpl"}
       </ul>
      </div>
@@ -27,11 +29,11 @@
           <td class="vatop tips">{form_error('word_name')}<span class="vatop rowform">推广关键字</span></td>
         </tr>
         <tr class="noborder">
-          <td colspan="2" class="required"><label class="validation" for="site_url">{#word_code#}:</label></td>
+          <td colspan="2" class="required"><label class="validation" for="site_url">{#word_url#}:</label></td>
         </tr>
         <tr class="noborder">
-          <td class="vatop rowform"><input id="word_code" name="word_code" value="{$info['word_code']|escape}" class="txt" type="text" /></td>
-          <td class="vatop tips">{form_error('word_code')}<span class="vatop rowform">推广尾巴代码，必须唯一 例如 </span><span class="tip-yellowsimple">#PC-gp-cs-xin-00001</span></td>
+          <td class="vatop rowform"><input id="word_url" name="word_url" value="{$info['word_url']|escape}" class="txt" type="text" /></td>
+          <td class="vatop tips">{form_error('word_url')}<span class="vatop rowform">推广链接 请输入http:// 或者 https:// 开头的URL地址 例如 </span><span class="tip-yellowsimple">http://s1.txcf188.com/#PC-gp-cs-xin-00001</span></td>
         </tr>
         <tr>
           <td colspan="2" class="required"><label>排序:</label></td>

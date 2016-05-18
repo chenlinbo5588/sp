@@ -2,7 +2,7 @@
 <style type="text/css">
 
 body {
-	background:#ededed;
+	background:#bababa;
 }
 
 .formdiv {
@@ -126,23 +126,41 @@ form label.error {
 </style>
 	<div id="wrap">
 		<div>
-   			<img class="responed" src="{resource_url('img/pg8/pic1.png')}"/>
-   		</div>
-   		<div class="cv">
-   			<img class="responed" src="{resource_url('img/pg8/pic2.png')}"/>
-   		</div>
-   		<div class="cv">
-   			<img class="responed" src="{resource_url('img/pg8/pic3.png')}"/>
-   		</div>
-   		<div class="cv">
-   			<img class="responed" src="{resource_url('img/pg8/pic4.png')}"/>
-   		</div>
-   		<div class="cv">
-   			<img class="responed" src="{resource_url('img/pg8/pic5.png')}"/>
+			<div class="hidde">贵金属/白银投资 开户立送2000加油卡</div>
+   			<img class="responed" src="{resource_url('img/pg9/pic1.png')}"/>
    		</div>
    		<div>
-   			<img class="responed" src="{resource_url('img/pg8/pic6.png')}"/>
+   			<img class="responed" src="{resource_url('img/pg9/pic2.png')}"/>
    		</div>
+   		<div>
+   			<div class="hide">好产品 大优惠 强平台 盈利更有保障</div>
+   			<img class="responed" src="{resource_url('img/pg9/pic3.png')}"/>
+   		</div>
+   		<div>
+   			<div class="hide">超强抽资利器 业内首家独立开发 全中交大中华去专享</div>
+   			<img class="responed" src="{resource_url('img/pg9/pic4.png')}"/>
+   		</div>
+   		<div>
+   			<img class="responed" src="{resource_url('img/pg9/pic5.png')}"/>
+   		</div>
+   		<div>
+   			<img class="responed" src="{resource_url('img/pg9/pic6.png')}"/>
+   		</div>
+   		<div>
+   			<div class="hide">贵金属/白银投资 0佣金 0手续费 22小时可交易 33倍高杠杆 涨跌双向交易</div>
+   			<img class="responed" src="{resource_url('img/pg9/pic7.png')}"/>
+   		</div>
+   		<div>
+   			<img class="responed" src="{resource_url('img/pg9/pic8.png')}"/>
+   		</div>
+   		<div>
+   			<div class="hide">贵金属/白银投资 0元免费开户 立送200美金</div>
+   			<img class="responed" src="{resource_url('img/pg9/pic9.png')}"/>
+   		</div>
+   		<div>
+   			<img class="responed" src="{resource_url('img/pg9/pic10.png')}"/>
+   		</div>
+   		{*
    		<div class="formdiv">
 	   		<div id="regbg">
 	   			<div class="hide"></div>
@@ -159,53 +177,15 @@ form label.error {
 		   		</div>
 	   		</div>
 	   	</div>
-	</div><!-- //end of wrap -->
-	<div id="wrap2">
-		<div class="cv">
+	   	*}
+	   	<div>
    			{include file="./site_f1.tpl"}
-   			<div><img class="responed" src="{resource_url('img/pg8/pic7.png')}"/></div>
+   			<div><img class="responed" src="{resource_url('img/pg9/pic11.png')}"/></div>
    		</div>
    		<div>
    			{include file="./site_f2.tpl"}
-   			<div><img class="responed" src="{resource_url('img/pg8/pic8.png')}"/></div>
+   			<div><img class="responed" src="{resource_url('img/pg9/pic12.png')}"/></div>
    		</div>
-	</div>
-	<script type="text/javascript">
-	var authCodeURL ="{site_url('api/register/authcode')}";
-	{include file="./site_alert.tpl"}
-	$(function(){
-		$('#registerForm').validate({
-	        errorPlacement: function(error, element){
-	        	//console.log(error);
-	        	//console.log(element);
-	        	error.appendTo(element.parent().next(".tiparea"));
-	        },
-	        rules : {
-	        	mobile: {
-	                required : true,
-	                phoneChina:true,
-	            },
-	            auth_code : {
-	            	required:true,
-	                digits: true,
-	                minlength: 6,
-	                maxlength: 6
-	            }
-	        },
-	        messages : {
-	        	mobile: {
-	                required : '手机号码不能为空',
-	            },
-	            auth_code : {
-	            	required : '请输入6位数字验证码',
-	                digits: '请输入6位数字验证码',
-	                minlength: '请输入6位数字验证码',
-	                maxlength: '请输入6位数字验证码'
-	            }
-	        }
-	    });
-	});
-	</script>
-	<script type="text/javascript" src="{resource_url('js/register.js')}?v=1.1"></script>
+	</div><!-- //end of wrap -->
 </body>
 </html>

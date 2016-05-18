@@ -46,6 +46,17 @@
           <td class="vatop rowform"><input type="password" id="admin_rpassword" name="admin_rpassword" class="txt"></td>
           <td class="vatop tips">请输入确认密码 {form_error('admin_rpassword')}</td>
         </tr>
+        <tr class="noborder">
+          <td class="required"><label class="validation">用户状态:</label>{form_error('status')}</td>
+        </tr>
+        <tr class="noborder">
+          <td>
+          	<select name="status">
+          		<option value="开启" {if $info['status'] == '开启'}selected{/if}>开启</option>
+          		<option value="关闭" {if $info['status'] == '关闭'}selected{/if}>关闭</option>
+          	</select>
+          </td>
+        </tr>
         <tr>
           <td colspan="2"><label for="group_id">权限组:</label></td>
         </tr>
@@ -58,7 +69,13 @@
           	{/foreach}
           	</select>
           </td>
-          <td class="vatop tips">请选择一个权限组，如果还未设置，{form_error('gid')} <a href="{admin_site_url('authority/add_role')}">点击马上设置</a></td>
+          <td class="vatop tips">请选择一个权限组，如果还未设置，{form_error('gid')} <a href="{admin_site_url('authority/role_add')}">点击马上设置</a></td>
+        </tr>
+        <tr>
+          <td colspan="2"><label for="websites">可访问数据范围:</label></td>
+        </tr>
+        <tr>
+        	<td colspan="2">{include file="./website.tpl"}</td>
         </tr>
       </tbody>
       <tfoot>

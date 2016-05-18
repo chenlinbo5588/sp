@@ -30,6 +30,27 @@ $(function(){
 		var group = $(this).prop("name");
 		$("input[group="+group+"]").prop("checked" , $(this).prop("checked") );
 	});
+	
+	
+	//反向
+	$('.rcheckall').click(function(){
+		var group = $(this).prop("name");
+		$("input[group="+group+"]").each(function(index){
+			
+			var checked = $(this).prop("checked");
+			
+			if(checked){
+				$(this).prop("checked",false);
+			}else{
+				$(this).prop("checked",true);
+			}
+			//$(this).prop("checked",!checked);
+			
+		});
+	});
+	
+	
+	
 
 
 	// 可编辑列（input）变色
@@ -87,8 +108,12 @@ function doDelete(postdata,url){
 		success:function(json){
 			alert(json.message);
 			refreshFormHash(json.data);
-			for(var i = 0; i < postdata['id'].length; i++){
-				$("#row" + postdata['id'][i]).remove();
+			var patt1 = new RegExp("成功");
+			
+			if(patt1.test(json.message)){
+				for(var i = 0; i < postdata['id'].length; i++){
+					$("#row" + postdata['id'][i]).remove();
+				}
 			}
 			
 		},

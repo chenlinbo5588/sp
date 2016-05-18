@@ -47,52 +47,7 @@ class Index extends Ydzj_Controller {
 	
 	
 	private function _getSiteConfig(){
-		$this->_siteList = array(
-			'www.txcf188.com' => array(
-					'registeOkText' => 'registerOk_text1',
-					'jumUrlType' => 'website',
-					'rules' => array('username','mobile','mobile_auth_code'),
-				),
-			
-			's1.txcf188.com' => array(
-					'registeOkText' => 'registerOk_text2',
-					'jumUrlType' => 'qqchat',
-					'rules' => array('mobile'),
-				),
-			
-			's2.txcf188.com' => array(
-					'registeOkText' => 'registerOk_text3',
-					'jumUrlType' => 'qqgroup',
-					'rules' => array('mobile','auth_code'),
-				),
-			
-			's3.txcf188.com' => array(
-					'registeOkText' => 'registerOk_text2',
-					'jumUrlType' => 'qqchat',
-					'rules' => array('username', 'mobile','auth_code'),
-				),
-				
-			's4.txcf188.com' => array(
-					'registeOkText' => 'registerOk_text2',
-					'jumUrlType' => 'qqchat',
-					'rules' => array( 'mobile','auth_code'),
-				),
-			's5.txcf188.com' => array(
-					'registeOkText' => 'registerOk_text2',
-					'jumUrlType' => 'qqchat',
-					'rules' => array( 'mobile','auth_code'),
-				),
-			's6.txcf188.com' => array(
-					'registeOkText' => 'registerOk_text1',
-					'jumUrlType' => 'download1',
-					'rules' => array('username', 'mobile','mobile_auth_code'),
-				),
-			's7.txcf188.com' => array(
-					'registeOkText' => 'registerOk_text1',
-					'jumUrlType' => 'website',
-					'rules' => array('mobile','mobile_auth_code'),
-				)
-		);
+		$this->_siteList = config_item('siteRules');
 		
 	}
 	
