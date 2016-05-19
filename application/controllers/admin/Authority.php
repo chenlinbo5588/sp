@@ -114,12 +114,21 @@ class Authority extends Ydzj_Admin_Controller {
 	}
 	
 	
-	private function _getUserRules(){
-		
+	private function _getUserRules($action){
+		$this->form_validation->set_rules('username','真实名称',"required|min_length[1]|max_length[30]");
 		$this->form_validation->set_rules('status','权限组状态','required|in_list[开启,关闭]');
-		$this->form_validation->set_rules('admin_password','密码','required|min_length[6]|max_length[12]|alpha_dash');
-		$this->form_validation->set_rules('admin_rpassword','确认密码','required|matches[admin_password]');
+		$this->form_validation->set_rules('group_id','权限组','required|is_natural');
 		
+		
+		if($action == 'add'){
+			$this->form_validation->set_rules('admin_password','密码','required|min_length[6]|max_length[12]|alpha_dash');
+			$this->form_validation->set_rules('admin_rpassword','确认密码','required|matches[admin_password]');
+		}else{
+			if($this->input->post('admin_password')){
+				$this->form_validation->set_rules('admin_password','密码','required|min_length[6]|max_length[12]|alpha_dash');
+				$this->form_validation->set_rules('admin_rpassword','确认密码','required|matches[admin_password]');
+			}
+		}
 		
 	}
 	
@@ -138,7 +147,7 @@ class Authority extends Ydzj_Admin_Controller {
 			'email' => $this->input->post('email'),
 			'username' => $this->input->post('username'),
 			'group_id' => $this->input->post('group_id') ? $this->input->post('group_id') : 0,
-			'password' => $this->input->post('admin_password'),
+			'password' => $this->input->post('admin_password') ? $this->input->post('admin_password') : '',
 			'status' => $this->input->post('status'),
 			'site_ids' => $this->input->post('site_ids'),
 		);
@@ -193,9 +202,7 @@ class Authority extends Ydzj_Admin_Controller {
 		
 		if($this->isPostRequest()){
 			$this->form_validation->set_rules('email','登陆名',"required|valid_email|is_unique[{$this->Adminuser_Model->_tableRealName}.email]");
-			$this->form_validation->set_rules('username','真实名称',"required|is_unique[{$this->Adminuser_Model->_tableRealName}.username]");
-			$this->_getUserRules();
-			$this->form_validation->set_rules('group_id','权限组','required|is_natural');
+			$this->_getUserRules('add');
 			
 			for($i = 0; $i < 1; $i++){
 				
@@ -253,14 +260,7 @@ class Authority extends Ydzj_Admin_Controller {
 		
 		if($this->isPostRequest()){
 			$this->form_validation->set_rules('email','登陆名',"required|valid_email|is_unique_not_self[{$this->Adminuser_Model->_tableRealName}.email.uid.{$id}]");
-			$this->form_validation->set_rules('username','真实名称',"required|is_unique_not_self[{$this->Adminuser_Model->_tableRealName}.username.uid.{$id}]");
-			
-			if($this->input->post('admin_password')){
-				$this->_getUserRules();
-			}
-			
-			$this->form_validation->set_rules('group_id','权限组','required|is_natural');
-			
+			$this->_getUserRules('edit');
 			
 			for($i = 0; $i < 1; $i++){
 				
@@ -274,8 +274,11 @@ class Authority extends Ydzj_Admin_Controller {
 				
 				
 				//重新设置密码
-				if($this->input->post('admin_password')){
-					$info['password'] = $this->_getEncodePassword($this->input->post('admin_password'),$info['email']);
+				if(trim($info['password'])){
+					$info['password'] = $this->_getEncodePassword($info['password'],$info['email']);
+				}else{
+					//不更新
+					unset($info['password']);
 				}
 				
 				//更新前，扁平化
@@ -448,7 +451,7 @@ class Authority extends Ydzj_Admin_Controller {
 	
 	
 	private function _getEncodePassword($psw,$email){
-		return $this->encrypt->encode($psw,config_item('encryption_key').md5($email));
+		return $this->encrypt->encode(trim($psw),config_item('encryption_key').md5(trim($email)));
 	}
 	
 	private function _getEncodePermision($permisionArray , $name){

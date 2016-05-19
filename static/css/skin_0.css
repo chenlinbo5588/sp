@@ -187,7 +187,8 @@ input[type=checkbox],input[type=radio] {
                 .top-nav li a span { background: #CCEDF9 url(../img/sky/bg_position.gif) no-repeat scroll 0 999%; padding-right: 4px;}
                 .top-nav li a:hover span { background-position: 100% -128px; }
         .top-nav li.adminid { background: url(../img/sky/bg_position.gif) no-repeat scroll -350px -100px; white-space:nowrap; max-width:150px; _width:expression((documentElement.clientWidth >150) ? "150px" : "auto" );/* IE6 */ height:20px; padding: 0 0 0 24px; margin-right:4px; overflow: hidden;}
-
+		.top-nav li.adminid strong {float: right;width: 60px;overflow: hidden;}
+		
 .main-nav { height: 75px; position: absolute; z-index: 1; top: 16px; left: 153px;}
     .main-nav ul { height: 42px; padding-left: 1px; }
         .main-nav ul li { font-size: 14px; font-weight: 700; line-height: 20px; background: url(../img/sky/button_bg.png) no-repeat right -84px; _background-image: url(../img/button_bg_default.gif);/* IE6 */ height: 42px; float: left; display: inline; padding-right: 5px; margin-left: 3px;}
@@ -1570,7 +1571,7 @@ td.trigger i:hover { color: #27A9E3;}
 
 .websitelist li {
 	1width:49%;
-	width: 90px;
+	width: 130px;
     float: left;
     display: block;
     border: 1px solid #DFDADA;

@@ -95,4 +95,5 @@ define('WEBSITE_FOUNDER',1);
 
 
 define('Cache_Key_WordList','wordslist');
+define('Cache_Key_SiteList','sitelist');
 

@@ -20,8 +20,9 @@ class Member extends Ydzj_Admin_Controller {
 			)
 		);
 		
-		$search_map['search_field'] = array('mobile' => '手机号码','email' => '电子邮箱','username' => '用户姓名');
+		$condition = array_merge($condition,$this->getAllowChannelCondition());
 		
+		$search_map['search_field'] = array('username' => '用户名称', 'mobile' => '手机号码','channel_name' => '注册网站名称','reg_origname' => '来源平台名称','channel_word' => '对应关键字');
 		
 		foreach($search_map['search_field'] as $key => $value){
 			$v = trim($this->input->get_post($key));

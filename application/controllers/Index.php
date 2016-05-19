@@ -5,36 +5,67 @@ class Index extends Ydzj_Controller {
 	
 	
 	private $_regLimit = 10;
+	private $_currentHost = '';
 	
 	// 用于前台验证,手动配置
-	private $_siteList = array();
+	private $_siteRulesList = array();
 	
 	// 用于获得渠道代码对应的名称
 	private $_wordList = array();
+	
+	// 用户记录 site id
+	private $_websiteList = array();
 	
 	
 	public function __construct(){
 		parent::__construct();
 		$this->load->library(array('Register_Service','Verify_Service'));
-		$this->load->model(array('Market_Words_Model'));
+		$this->load->model(array('Market_Words_Model','Website_Model'));
 		$this->_regLimit = config_item('maxRegisterIpLimit');
 		
-		$this->_getSiteConfig();
-		$this->_getChannelConfig();
+		$this->_getSiteRulesConfig();
+		$this->_getWebSiteList();
+		$this->_getWordsConfig();
 	}
 	
-	private function _getChannelConfig(){
+	
+	/**
+	 * 获得后台配置的网站列表
+	 */
+	private function _getWebSiteList(){
+		$siteList = $this->cache->get(Cache_Key_SiteList);
+		
+		if(empty($siteList)){
+			$tempList = $this->Website_Model->getList(array(
+				'select' => 'site_id,site_name,site_domain'
+			));
+			
+			foreach($tempList as $key => $item){
+				$siteList[$item['site_domain']] = $item;
+			}
+			
+			$this->cache->file->save(Cache_Key_SiteList,$siteList, 86400);
+		}
+		
+		$this->_websiteList = $siteList;
+		
+	}
+	
+	/**
+	 * 获得关键词列表
+	 */
+	private function _getWordsConfig(){
 		
 		
 		$wordsList = array();
 		$wordsList = $this->cache->get(Cache_Key_WordList);
 		
 		if(empty($wordsList)){
-			$channelList = $this->Market_Words_Model->getList(array(
+			$tempList = $this->Market_Words_Model->getList(array(
 				'select' => 'word_name,word_code'
 			));
 			
-			foreach($channelList as $key => $item){
+			foreach($tempList as $key => $item){
 				$wordsList[$item['word_code']] = $item['word_name'];
 			}
 			
@@ -42,21 +73,20 @@ class Index extends Ydzj_Controller {
 		}
 		
 		$this->_wordList = $wordsList;
-		
 	}
 	
 	
-	private function _getSiteConfig(){
-		$this->_siteList = config_item('siteRules');
-		
+	private function _getSiteRulesConfig(){
+		$this->_siteRulesList = config_item('siteRules');
 	}
 	
 	
 	//渠道
 	private function _getCurrentServerName(){
-		$currentHost = $this->input->server('HTTP_HOST');
+		$this->_currentHost = $this->input->server('HTTP_HOST');
+		
 		//$currentHost = 'www.txcf188.com';
-		//$currentHost = 's1.txcf188.com';
+		//$this->_currentHost = 's1.txcf188.com';
 		//$currentHost = 's2.txcf188.com';
 		//$currentHost = 's3.txcf188.com';
 		//$currentHost = 's4.txcf188.com';
@@ -66,11 +96,14 @@ class Index extends Ydzj_Controller {
 		//$currentHost = 's8.txcf188.com';
 		//$currentHost = 's9.txcf188.com';
 		
-		$this->assign('currentHost',$currentHost);
+		$this->assign('currentHost',$this->_currentHost);
 		
-		return $currentHost;
+		return $this->_currentHost;
 	}
 	
+	
+	
+
 	
 	/**
 	 * 自动获取渠道数据
@@ -94,24 +127,42 @@ class Index extends Ydzj_Controller {
 		
 		
 		$d = array(
-			'channel' => 1,//手机网页版
+			'channel' => 0,
 			'inviter' => $inviter ? intval($inviter) : 0,
 			'reg_orig' => empty($inviteFrom) != true ? $inviteFrom : '',
-			'reg_domain' => $this->input->server('HTTP_HOST'),
+			'reg_origname' => '',
+			'reg_domain' => $this->_currentHost,
 			'channel_code' => empty($channel_code) != true ? $channel_code : '',
+			'channel_word' => '',
 			'channel_name' => ''
 		);
 		
 		if($this->_wordList[$d['channel_code']]){
-			$d['channel_name'] = $this->_wordList[$d['channel_code']];
+			$d['channel_word'] = $this->_wordList[$d['channel_code']];
 		}
+		
+		if($this->_websiteList[$d['reg_domain']]){
+			$d['channel'] = $this->_websiteList[$d['reg_domain']]['site_id'];
+			$d['channel_name'] = $this->_websiteList[$d['reg_domain']]['site_name'];
+		}
+		
+		$referUrl = parse_url($inviteFrom);
+		if($referUrl['host']){
+			$d['reg_origname'] = $referUrl['host'];
+			
+			//如果配置网站，则存储成中文
+			if($this->_websiteList[$referUrl['host']]){
+				$d['reg_origname'] = $this->_websiteList[$referUrl['host']]['site_name'];
+			}
+		}
+		
 		
 		return $d;
 	}
 	
 	
 	private function _setValidationRules($site){
-		$currentConfig = $this->_siteList[$site];
+		$currentConfig = $this->_siteRulesList[$site];
 		
 		foreach($currentConfig['rules'] as $ruleName){
 			switch($ruleName){
@@ -205,28 +256,6 @@ class Index extends Ydzj_Controller {
 				}
 				
 				
-				/*
-				if(in_array('auth_code',$this->_siteList[$currentHost]['rules'])){
-					$this->load->model('Captcha_Model');
-					$captcha = $this->Captcha_Model->getList(array(
-						'where' => array(
-							'ip_address' => $this->input->ip_address(),
-							'captcha_time >' => $this->input->server('REQUEST_TIME') - 7200
-						),
-						'limit' => 1,
-						'order' => 'captcha_id DESC'
-					));
-					
-					//print_r($captcha);
-					if(strtolower($captcha[0]['word']) != strtolower($this->input->post('auth_code')) ){
-						$this->assign('feedback','验证码错误');
-	 					break;
-					}
-					
-				}
-				*/
-				
-				
 				$addParam = array(
 					'mobile' => trim($this->input->post('mobile')),
 					'username' => trim($this->input->post('username')) ? trim($this->input->post('username')) : '未提供' , 
@@ -249,8 +278,8 @@ class Index extends Ydzj_Controller {
 					*/
 					//redirect(config_item('dest_website'));
 					$registerOk = true;
-					$this->assign('feedback',config_item($this->_siteList[$currentHost]['registeOkText']));
-					$this->assign('jumUrlType',$this->_siteList[$currentHost]['jumUrlType']);
+					$this->assign('feedback',config_item($this->_siteRulesList[$currentHost]['registeOkText']));
+					$this->assign('jumUrlType',$this->_siteRulesList[$currentHost]['jumUrlType']);
 					
 				}else{
 					$this->assign('feedback',$result['message']);

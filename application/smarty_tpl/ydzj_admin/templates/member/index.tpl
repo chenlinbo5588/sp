@@ -10,7 +10,7 @@
     </div>
   </div>
   <div class="fixed-empty"></div>
-  <form class="formSearch" method="get" name="formSearch" id="formSearch" action="{admin_site_url('member')}">
+  <form class="formSearch" method="get" name="formSearch" id="formSearch" action="{admin_site_url('member/index')}">
     <input type="hidden" name="page" value="{$currentPage}"/>
     <table class="tb-type1 noborder search">
       <tbody>
@@ -19,17 +19,17 @@
           <td><input type="text" value="{$smarty.get['username']|escape}" name="username" class="txt"></td>
           <td><label>手机号:</label></td>
           <td><input type="text" value="{$smarty.get['mobile']|escape}" name="mobile" class="txt"></td>
-          <td><label>注册来源域名:</label></td>
-          <td><input type="text" value="{$smarty.get['reg_domain']|escape}" name="reg_domain" class="txt"></td>
+          <td><label>注册来源网站名称:</label></td>
+          <td><input type="text" value="{$smarty.get['channel_name']|escape}" name="channel_name" class="txt"></td>
           <td>
             <input type="submit" class="msbtn" name="tijiao" value="查询"/>
           </td>
         </tr>
         <tr>
-          <td><label>点击渠道代码:</label></td>
-          <td><input type="text" value="{$smarty.get['channel_code']|escape}" name="channel_code" class="txt"></td>
+          <td><label>点击来源平台:</label></td>
+          <td><input type="text" value="{$smarty.get['reg_origname']|escape}" name="reg_origname" class="txt"></td>
           <td><label>对应关键词:</label></td>
-          <td><input type="text" value="{$smarty.get['channel_name']|escape}" name="channel_name" class="txt"></td>
+          <td><input type="text" value="{$smarty.get['channel_word']|escape}" name="channel_word" class="txt"></td>
         </tr>
       </tbody>
     </table>
@@ -55,9 +55,8 @@
           <th>序号</th>
           <th>用户名称</th>
           <th>手机号码</th>
-          <th>注册来源域名</th>
-          <th>点击来源地址</th>
-          <th>点击渠道代码</th>
+          <th>注册来源网站名称</th>
+          <th>点击来源平台名称</th>
           <th>对应关键词</th>
           <th>注册时间</th>
           <th>注册IP</th>
@@ -71,10 +70,9 @@
           <td>{$item['uid']}</td>
           <td>{if $item['username']}{$item['username']}{else}未填写{/if}</td>
           <td><strong>{$item['mobile']|escape}</strong></td>
-          <td>{$item['reg_domain']|escape}</td>
-          <td>{$item['reg_orig']|escape}</td>
-          <td><strong>{$item['channel_code']|escape}</strong></td>
           <td>{$item['channel_name']|escape}</td>
+          <td>{$item['reg_origname']|escape}</td>
+          <td>{$item['channel_word']|escape}</td>
           <td>{$item['reg_date']|date_format:"%Y-%m-%d %H:%M:%S"}</td>
           <td>{$item['reg_ip']}</td>
           <td>{if $item['status'] == 0}注册完成{else}注册未提交{/if}</td>
@@ -87,7 +85,7 @@
       </tbody>
       <tfoot class="tfoot">
         <tr>
-          <td colspan="11">
+          <td colspan="10">
             {include file="common/pagination.tpl"}
         </tr>
       </tfoot>

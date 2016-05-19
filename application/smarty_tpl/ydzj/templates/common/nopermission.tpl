@@ -5,7 +5,7 @@
 $(function(){
 
 	setTimeout(function(){
-		top.location.href="{admin_site_url('index/index')}";
+		location.href="{admin_site_url('dashboard/welcome')}";
 	},3000);
 });
 </script>

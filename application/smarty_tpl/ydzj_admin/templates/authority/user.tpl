@@ -32,7 +32,7 @@
           <th colspan="7" class="nobg">列表</th>
         </tr>
         <tr class="thead">
-          <th></th>
+          <th>序号</th>
           <th>登录名</th>
           <th class="align-center">真实名称</th>
           <th class="align-center">状态</th>
@@ -44,7 +44,8 @@
       <tbody>
       	{foreach from=$list['data'] item=item}
       	<tr class="hover">
-          <td class="w24"><input name="del_id[]" group="chkVal" type="checkbox" value="{$item['uid']}"></td>
+          {*<td class="w24"><input name="del_id[]" group="chkVal" type="checkbox" value="{$item['uid']}"></td>*}
+          <td>{$item['uid']}</td>
           <td>{$item['email']}</td>
           <td class="align-center">{$item['username']|escape}</td>
           <td class="align-center">{$item['status']}</td>
@@ -57,9 +58,9 @@
       <tfoot>
       	<tr class="tfoot">
           <td colspan="7">
-          	<label><input type="checkbox" class="checkall" id="checkallBottom" name="chkVal">全选</label>&nbsp;
+          	{*<label><input type="checkbox" class="checkall" id="checkallBottom" name="chkVal">全选</label>&nbsp;
           	<a href="javascript:void(0);" class="btn" onclick="$('#submit_type').val('开启');go();"><span>开启</span></a>
-          	<a href="javascript:void(0);" class="btn" onclick="$('#submit_type').val('关闭');go();"><span>关闭</span></a>
+          	<a href="javascript:void(0);" class="btn" onclick="$('#submit_type').val('关闭');go();"><span>关闭</span></a>*}
           	{include file="common/pagination.tpl"}
            </td>
         </tr>

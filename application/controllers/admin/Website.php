@@ -12,6 +12,7 @@ class Website extends Ydzj_Admin_Controller {
 	public function index(){
 		$currentPage = $this->input->get_post('page') ? $this->input->get_post('page') : 1;
 		$condition = array(
+			//'where' => array('site_status' => 1),
 			'order' => 'site_id DESC',
 			'pager' => array(
 				'page_size' => config_item('page_size'),
@@ -50,11 +51,26 @@ class Website extends Ydzj_Admin_Controller {
 				$delId = (array)$delId;
 			}
 			
+			$affectRows = 0;
+			
+			/*
+			$updateData = array();
+			
+			foreach($delId as $del){
+				$updateData[] = array(
+					'site_id' => $del,
+					'site_status' => 0
+				);
+			}
+			
+			if($updateData){
+				$affectRows = $this->Website_Model->batchUpdate($updateData,'site_id');
+			}
+			*/
 			$affectRows = $this->Website_Model->deleteByCondition(array(
 				'where_in' => array(
 					array('key' => 'site_id' , 'value' => $delId)
 				)
-			
 			));
 			
 			if($affectRows > 0){
@@ -77,6 +93,9 @@ class Website extends Ydzj_Admin_Controller {
 		if($this->isPostRequest()){
 			$this->_getRules('add');
 			
+			$this->form_validation->set_rules('site_url','站点网址',"required|valid_starthttp|valid_url|is_unique[{$this->Website_Model->_tableRealName}.site_url]");
+		
+			
 			for($i = 0; $i < 1; $i++){
 				
 				$info = $this->_prepareData('add');
@@ -93,10 +112,10 @@ class Website extends Ydzj_Admin_Controller {
 				}
 				
 				$feedback = getSuccessTip('保存成功');
-				
 				$action = 'edit';
-				
 				$info = $this->Website_Model->getFirstByKey($newid,'site_id');
+				
+				$this->cache->file->delete(Cache_Key_SiteList);
 			}
 		}
 		
@@ -115,10 +134,8 @@ class Website extends Ydzj_Admin_Controller {
 	private function _getRules($action = 'add'){
 		
 		$this->form_validation->set_rules('site_name','站点名称',"required");
-		$this->form_validation->set_rules('site_url','站点网址',"required|valid_starthttp|valid_url");
 		
 		
-			
 		if($this->input->post('site_sort')){
 			$this->form_validation->set_rules('site_sort','排序',"is_natural|less_than[256]");
 		}
@@ -174,6 +191,7 @@ class Website extends Ydzj_Admin_Controller {
 		
 		
 		if($this->isPostRequest()){
+			$this->form_validation->set_rules('site_url','站点网址',"required|valid_starthttp|valid_url|is_unique_not_self[{$this->Website_Model->_tableRealName}.site_url.site_id.{$site_id}]");
 			
 			$this->_getRules('edit');
 			for($i = 0; $i < 1; $i++){
@@ -190,6 +208,8 @@ class Website extends Ydzj_Admin_Controller {
 					$feedback = getErrorTip('保存失败');
 					break;
 				}
+				
+				$this->cache->file->delete(Cache_Key_SiteList);
 				
 				$feedback = getSuccessTip('保存成功');
 			}

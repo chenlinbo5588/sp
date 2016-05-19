@@ -17,7 +17,7 @@ class Attachment extends Ydzj_Admin_Controller {
     }
     
     public function upload(){
-        
+        die(0);
         $this->load->helper('directory');
         $this->load->helper('file');
         $this->load->helper('number');

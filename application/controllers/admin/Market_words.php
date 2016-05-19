@@ -79,6 +79,9 @@ class Market_words extends Ydzj_Admin_Controller {
 		
 		$feedback = '';
 		if($this->isPostRequest()){
+			
+			
+			$this->form_validation->set_rules('word_url','推广链接',"required|valid_starthttp|valid_url|is_unique[{$this->Market_Words_Model->_tableRealName}.word_url]");
 			$this->_getRules('add');
 			
 			
@@ -116,7 +119,6 @@ class Market_words extends Ydzj_Admin_Controller {
 	private function _getRules($action = 'add'){
 		
 		$this->form_validation->set_rules('word_name','关键字','required|min_length[1]|max_length[100]');
-		$this->form_validation->set_rules('word_url','推广链接','required|valid_starthttp|valid_url');
 		
 		
 		if($this->input->post('word_sort')){
@@ -170,6 +172,7 @@ class Market_words extends Ydzj_Admin_Controller {
 		$info = $this->Market_Words_Model->getFirstByKey($word_id,'word_id');
 		
 		if($this->isPostRequest()){
+			$this->form_validation->set_rules('word_url','推广链接',"required|valid_starthttp|valid_url|is_unique_not_self[{$this->Market_Words_Model->_tableRealName}.word_url.word_id.{$word_id}]");
 			
 			$this->_getRules('edit');
 			
@@ -241,11 +244,18 @@ class Market_words extends Ydzj_Admin_Controller {
 						$insert_array['word_url'] = $tmp_array[1];
 						
 						
-						$url = parse_url($insert_array['word_url']);
-						$insert_array['word_code'] = $url['fragment'] ? $url['fragment'] :'';
-						$insert_array['word_code'] = '#'.$insert_array['word_code'];
+						$this->form_validation->reset_validation();
+						$this->form_validation->set_data($insert_array);
 						
-						$word_id = $this->Market_Words_Model->_add($insert_array);
+						$this->form_validation->set_rules('word_url','推广链接',"required|valid_starthttp|valid_url|is_unique[{$this->Market_Words_Model->_tableRealName}.word_url]");
+						
+						if($this->form_validation->run()){
+							$url = parse_url($insert_array['word_url']);
+							$insert_array['word_code'] = $url['fragment'] ? $url['fragment'] :'';
+							$insert_array['word_code'] = '#'.$insert_array['word_code'];
+							
+							$word_id = $this->Market_Words_Model->_add($insert_array);
+						}
 					}
 				}
 				

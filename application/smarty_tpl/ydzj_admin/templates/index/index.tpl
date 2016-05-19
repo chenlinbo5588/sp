@@ -194,7 +194,7 @@ $(function(){
 	          <div id="topnav" class="top-nav">
 	            <ul>
 	              <li class="adminid" title="您好:{$manage_profile['basic']['username']|escape}">您好&nbsp;:&nbsp;<strong>{$manage_profile['basic']['username']|escape}</strong></li>
-	              <li><a href="{admin_site_url('index/modifypw')}" target="workspace" ><span>修改密码</span></a></li>
+	              <li><a href="{admin_site_url('index/profile')}" target="workspace" ><span>修改密码</span></a></li>
 	              <li><a href="{admin_site_url('index/logout')}" title="退出"><span>退出</span></a></li>
 	              <li><a href="{site_url('index')}" target="_blank" title="{config_item('site_name')}"><span>{config_item('site_name')}</span></a></li>
 	            </ul>
@@ -203,8 +203,8 @@ $(function(){
 	          <!-- Main navigation -->
 	          <nav id="nav" class="main-nav">
 	            <ul>
-	                <li><a class="link actived" id="nav_dashboard" href="javascript:void(0);" onclick="openItem('dashboard');"><span>控制台</span></a></li>
-					<li><a class="link" id="nav_setting" href="javascript:void(0);" onclick="openItem('setting');"><span>设置</span></a></li>
+	                {*<li><a class="link actived" id="nav_dashboard" href="javascript:void(0);" onclick="openItem('dashboard');"><span>控制台</span></a></li>
+					<li><a class="link" id="nav_setting" href="javascript:void(0);" onclick="openItem('setting');"><span>设置</span></a></li>*}
 					<li><a class="link" id="nav_member" href="javascript:void(0);" onclick="openItem('member');"><span>会员资料</span></a></li>
 					<li><a class="link" id="nav_website" href="javascript:void(0);" onclick="openItem('website');"><span>站点管理</span></a></li>
 					<li><a class="link" id="nav_words" href="javascript:void(0);" onclick="openItem('words');"><span>关键词管理</span></a></li>
