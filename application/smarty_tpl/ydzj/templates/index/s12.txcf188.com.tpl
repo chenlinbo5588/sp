@@ -2,11 +2,11 @@
 <style type="text/css">
 
 body {
-	background:#c0c0c0;
+	background:#311804;
 }
 
 #regbg {
-	padding: 20px 0;
+	padding: 0 0 20px 0;
     width: 100%;
     background:#c0eaff;
 }
@@ -98,29 +98,27 @@ form label.error {
 </style>
 	<div id="wrap">
 		<div>
-			<div class="hide">0佣金 33倍高收益 就在赢金财经</div>
-   			<img class="responed" src="{resource_url('img/pg5/pic1.png')}"/>
+			<div class="hide">现货白银投资 赢金财经金属投资服务品牌</div>
+   			<img class="responed" src="{resource_url('img/pg12/pic1.png')}"/>
    		</div>
    		<div>
-   			<div class="hide">好产品 大优惠 强平台 盈利更有保障</div>
-   			<img class="responed" src="{resource_url('img/pg5/pic2.png')}"/>
+   			<div class="hide">5大投资优势 低成本 高收益 多机会 易操作 市场公平</div>
+   			<img class="responed" src="{resource_url('img/pg12/pic2.png')}"/>
    		</div>
    		<div>
-   			<img class="responed" src="{resource_url('img/pg5/pic3.png')}"/>
+   			<div class="hide">平台五大优势 数据同步共享 开户流程优化 交易过程放心 5分钟即可完成 账号系统生成</div>
+   			<img class="responed" src="{resource_url('img/pg12/pic3.png')}"/>
    		</div>
    		<div class="cv">
-   			<div class="hide">贵金属/白银投资 0佣金 0手续费 22小时可交易 33倍高杠杆 涨跌双向交易</div>
-   			<img class="responed" src="{resource_url('img/pg5/pic4.png')}"/>
+   			<img class="responed" src="{resource_url('img/pg12/pic4.png')}"/>
    		</div>
    		<div>
-   			<div class="hide">贵金属/白银投资 0元免费开户 立送200美金</div>
-   			<img class="responed" src="{resource_url('img/pg5/pic5.png')}"/>
+   			<img class="responed" src="{resource_url('img/pg12/pic5.png')}"/>
    		</div>
    		<div>
-   			<img class="responed" src="{resource_url('img/pg5/pic6.png')}"/>
+   			<img class="responed" src="{resource_url('img/pg12/pic6.png')}"/>
    		</div>
    		<div id="regbg">
-   			<div class="hide">免费体验，入市首选指标 《K线入门宝典》</div>
    			<div id="reg">
    				<a name="md">&nbsp;</a>
 	   			{form_open(site_url('index/index'|cat:'#md'),'id="registerForm"')}
@@ -137,7 +135,7 @@ form label.error {
 	   		</div>
 	   	</div>
 	   	<div>
-   			{include file="./site_f1.tpl"}
+   			{include file="./site_f2.tpl"}
    			<div><img class="responed" src="{resource_url('img/pg12/pic7.png')}"/></div>
    		</div>
    		<div>

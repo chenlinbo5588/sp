@@ -85,16 +85,21 @@ class Index extends Ydzj_Controller {
 	private function _getCurrentServerName(){
 		$this->_currentHost = $this->input->server('HTTP_HOST');
 		
-		//$currentHost = 'www.txcf188.com';
+		//$this->_currentHost = 'www.txcf188.com';
 		//$this->_currentHost = 's1.txcf188.com';
-		//$currentHost = 's2.txcf188.com';
-		//$currentHost = 's3.txcf188.com';
-		//$currentHost = 's4.txcf188.com';
-		//$currentHost = 's5.txcf188.com';
-		//$currentHost = 's6.txcf188.com';
-		//$currentHost = 's7.txcf188.com';
-		//$currentHost = 's8.txcf188.com';
-		//$currentHost = 's9.txcf188.com';
+		//$this->_currentHost = 's2.txcf188.com';
+		//$this->_currentHost = 's3.txcf188.com';
+		//$this->_currentHost = 's4.txcf188.com';
+		//$this->_currentHost = 's5.txcf188.com';
+		//$this->_currentHost = 's6.txcf188.com';
+		//$this->_currentHost = 's7.txcf188.com';
+		//$this->_currentHost = 's8.txcf188.com';
+		//$this->_currentHost = 's9.txcf188.com';
+		//$this->_currentHost = 's10.txcf188.com';
+		//$this->_currentHost = 's11.txcf188.com';
+		//$this->_currentHost = 's12.txcf188.com';
+		//$this->_currentHost = 's13.txcf188.com';
+		//$this->_currentHost = 's14.txcf188.com';
 		
 		$this->assign('currentHost',$this->_currentHost);
 		
@@ -206,6 +211,9 @@ class Index extends Ydzj_Controller {
 					break;
 				case 'auth_code':
 					$this->form_validation->set_rules('auth_code','验证码', 'required|callback_validateCaptcha');
+					break;
+				case 'stock':
+					$this->form_validation->set_rules('stock','股票名称或代码', 'required|min_length[1]|max_length[50]');
 					break;
 				default:
 					break;

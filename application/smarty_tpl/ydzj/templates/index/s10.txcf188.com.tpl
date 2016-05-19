@@ -1,7 +1,7 @@
 {include file="./site_common.tpl"}
 <style type="text/css">
 body {
-	background:#686868;
+	background:#800001;
 }
 
 
@@ -9,7 +9,6 @@ body {
 	background:#e9e9e9;
 	position: relative;
 	padding:15px 25px;
-	margin:0 0 10px 0;
 }
 
 img.responed {
@@ -79,7 +78,10 @@ form label.error {
 </style>
 	<div id="wrap">
    		<div>
-   			<img class="responed" src="{resource_url('img/pg1/top1.png')}"/>
+   			<img class="responed" src="{resource_url('img/pg10/pic1.png')}"/>
+   		</div>
+   		<div>
+   			<img class="responed" src="{resource_url('img/pg10/pic2.png')}"/>
    		</div>
    		<div id="regbg">
    			<div id="reg">
@@ -91,23 +93,32 @@ form label.error {
 	   			<div class="tiparea">{form_error('mobile')}</div>
 	   			<div class="auth_code"><input type="text" class="txt noround" name="auth_code" autocomplete="off" value="" style="width:70%" placeholder="请输入您的验证码"/><input type="button" class="getCode noround" name="authCodeBtn" value="获取验证码"/></div>
 	   			<div class="tiparea">{form_error('auth_code')}</div>
-	   			<div class="sb"><input class="txt" type="submit" value="免费注册" src="{resource_url('img/pg1/reg_btn.jpg')}" /></div>
+	   			<div class="sb"><input class="txt" type="submit" value="免费注册" src="{resource_url('img/pg10/reg_btn.jpg')}" /></div>
 	   			</form>
 	   		</div>
    		</div>
    		<div>
-   			<div class="hide">最新行情资讯:专业老师实时解答行情信息，教您一眼看出行情走势波动。</div>
-   			<div class="hide">青西油基础知识:投资学院、投资者教育，帮您解答各种青西油基础知识，了解炒青西油。</div>
-   			<div class="hide">移动端炒青西油:移动端也能炒青西油，随时随地买涨买跌。</div>
-   			<div><img class="responed" src="{resource_url('img/pg1/pc.jpg')}"/></div>
+   			<img class="responed" src="{resource_url('img/pg10/pic3.png')}"/>
+   		</div>
+   		<div>
+   			<img class="responed" src="{resource_url('img/pg10/pic4.png')}"/>
+   		</div>
+   		<div>
+   			<img class="responed" src="{resource_url('img/pg10/pic5.png')}"/>
+   		</div>
+   		<div>
+   			<img class="responed" src="{resource_url('img/pg10/pic6.png')}"/>
+   		</div>
+   		<div>
+   			<img class="responed" src="{resource_url('img/pg10/pic7.png')}"/>
    		</div>
    		<div>
    			{include file="./site_f1.tpl"}
-   			<div><img class="responed" src="{resource_url('img/pg1/bt_1.png')}"/></div>
+   			<div><img class="responed" src="{resource_url('img/pg10/pic8.jpg')}"/></div>
    		</div>
    		<div>
    			{include file="./site_f2.tpl"}
-   			<div><img class="responed" src="{resource_url('img/pg1/bt_2.jpg')}"/></div>
+   			<div><img class="responed" src="{resource_url('img/pg10/pic9.png')}"/></div>
    		</div>
 	</div><!-- //end of wrap -->
 	{include file="./full_validation.tpl"}

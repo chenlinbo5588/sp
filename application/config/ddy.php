@@ -18,13 +18,6 @@ $config['jumUrl'] = array(
 
 
 $config['siteRules'] = array(
-	/*
-	'www.txcf188.com' => array(
-			'registeOkText' => 'registerOk_text1',
-			'jumUrlType' => 'website',
-			'rules' => array('username','mobile','mobile_auth_code'),
-		),
-	*/
 	's1.txcf188.com' => array(
 			'registeOkText' => 'registerOk_text1',
 			'jumUrlType' => 'website',
@@ -72,7 +65,22 @@ $config['siteRules'] = array(
 			'registeOkText' => 'registerOk_text1',
 			'jumUrlType' => 'website',
 			'rules' => array(), //没有验证
-		)
+		),
+	's10.txcf188.com' => array(
+			'registeOkText' => 'registerOk_text1',
+			'jumUrlType' => 'website',
+			'rules' => array('username','mobile','mobile_auth_code'),
+		),
+	's11.txcf188.com' => array(
+			'registeOkText' => 'registerOk_text1',
+			'jumUrlType' => 'download1',
+			'rules' => array('stock','mobile'),
+		),
+	's12.txcf188.com' => array(
+			'registeOkText' => 'registerOk_text2',
+			'jumUrlType' => 'qqchat',
+			'rules' => array( 'mobile','auth_code'),
+		),
 );
 
 

@@ -39,11 +39,11 @@
                 </tr>
                 <tr>
                   <td bgcolor="#EFF8F8">白银</td>
-                  <td bgcolor="#FFFFEC">http://s1.txcf188.com/#PC-gp-cs-xin-00001</td>
+                  <td bgcolor="#EFF8F8">http://s1.txcf188.com/#PC-gp-cs-xin-00001</td>
                 </tr>
                 <tr>
                   <td bgcolor="#EFF8F8">黄金</td>
-                  <td bgcolor="#FFFFEC">http://s1.txcf188.com/#PC-gp-cs-xin-00002</td>
+                  <td bgcolor="#EFF8F8">http://s1.txcf188.com/#PC-gp-cs-xin-00002</td>
                 </tr>
               </tbody>
             </table></td>
