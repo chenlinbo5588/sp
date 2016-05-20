@@ -34,14 +34,12 @@ $(document).ready(function(){
     pagestyle();
     $(window).resize(pagestyle);
     //turn location
-    if($.cookie('now_location_act') != null){
-        openItem($.cookie('now_location_op')+','+$.cookie('now_location_act')+','+$.cookie('now_location_nav'));
-    }else{
-        $('#mainMenu>ul').first().css('display','block');
-        //第一次进入后台时，默认定到欢迎界面
-        $('#welcome_dashboard').addClass('selected');            
-        $('#workspace').attr('src','{admin_site_url("dashboard/welcome")}');
-    }
+    
+    $('#mainMenu>ul').first().css('display','block');
+    //第一次进入后台时，默认定到欢迎界面
+    $('#welcome_dashboard').addClass('selected');            
+    $('#workspace').attr('src','{admin_site_url("dashboard/welcome")}');
+    
     $('#iframe_refresh').click(function(){
         var fr = document.frames ? document.frames("workspace") : document.getElementById("workspace").contentWindow;;
         fr.location.reload();
@@ -91,19 +89,22 @@ function openItem(args){
         
         first_obj = $('#sort_'+nav+'>li>dl>dd>ol>li').first().children('a');
         $(first_obj).addClass('selected');
-        
+        {*
         $.cookie('now_location_nav',nav, { path: '/'});
         $.cookie('now_location_act',act, { path: '/'});
         $.cookie('now_location_op',op, { path: '/'});
+        *}
         
         //crumbs
         $('#crumbs').html('<span>'+$('#nav_'+nav+' > span').html()+'</span><span class="arrow">&nbsp;</span><span>'+$(first_obj).text()+'</span>'); 
     }else{
+    	{*
 	    //左侧菜单事件
 	    //location
 	    $.cookie('now_location_nav',nav,{ path: '/'});
 	    $.cookie('now_location_act',act,{ path: '/'});
 	    $.cookie('now_location_op',op, { path: '/'});
+	    *}
 	    
 	    $('#'+op+ '_' + act).addClass('selected');
 	    //crumbs
@@ -203,12 +204,12 @@ $(function(){
 	          <!-- Main navigation -->
 	          <nav id="nav" class="main-nav">
 	            <ul>
-	                {*<li><a class="link actived" id="nav_dashboard" href="javascript:void(0);" onclick="openItem('dashboard');"><span>控制台</span></a></li>
-					<li><a class="link" id="nav_setting" href="javascript:void(0);" onclick="openItem('setting');"><span>设置</span></a></li>*}
-					<li><a class="link" id="nav_member" href="javascript:void(0);" onclick="openItem('member');"><span>会员资料</span></a></li>
-					<li><a class="link" id="nav_website" href="javascript:void(0);" onclick="openItem('website');"><span>站点管理</span></a></li>
-					<li><a class="link" id="nav_words" href="javascript:void(0);" onclick="openItem('words');"><span>关键词管理</span></a></li>
-					<li><a class="link" id="nav_authority" href="javascript:void(0);" onclick="openItem('authority');"><span>权限</span></a></li>
+	                <li style="display:none;"><a class="link actived" id="nav_dashboard" href="javascript:void(0);" onclick="openItem('dashboard');"><span>控制台</span></a></li>
+					{if isset($permission['nav_setting'])}<li style="display:none;"><a class="link" id="nav_setting" href="javascript:void(0);" onclick="openItem('setting');"><span>设置</span></a></li>{/if}
+					{if isset($permission['nav_member'])}<li><a class="link" id="nav_member" href="javascript:void(0);" onclick="openItem('member');"><span>会员资料</span></a></li>{/if}
+					{if isset($permission['nav_website'])}<li><a class="link" id="nav_website" href="javascript:void(0);" onclick="openItem('website');"><span>站点管理</span></a></li>{/if}
+					{if isset($permission['nav_words'])}<li><a class="link" id="nav_words" href="javascript:void(0);" onclick="openItem('words');"><span>关键词管理</span></a></li>{/if}
+					{if isset($permission['nav_authority'])}<li><a class="link" id="nav_authority" href="javascript:void(0);" onclick="openItem('authority');"><span>权限</span></a></li>{/if}
 	            </ul>
 	          </nav>
 	          <div class="loca"><strong>您的位置:</strong>
@@ -248,10 +249,10 @@ $(function(){
               <dl>
                 <dd>
                   <ol>
-                    <li><a href="javascript:void(0);" id="base_setting" onclick="openItem('base,setting,setting');">站点设置</a></li>
-                    <li><a href="javascript:void(0);" id="param_upload" onclick="openItem('param,upload,setting');">上传设置</a></li>
-                    <li><a href="javascript:void(0);" id="seoset_setting" onclick="openItem('seoset,setting,setting');">SEO设置</a></li>
-                    <li><a href="javascript:void(0);" id="email_message" onclick="openItem('email,message,setting');">消息通知</a></li>
+                    {if isset($permission['admin/setting/base'])}<li><a href="javascript:void(0);" id="base_setting" onclick="openItem('base,setting,setting');">站点设置</a></li>{/if}
+                    {if isset($permission['admin/upload/param'])}<li><a href="javascript:void(0);" id="param_upload" onclick="openItem('param,upload,setting');">上传设置</a></li>{/if}
+                    {if isset($permission['admin/setting/seoset'])}<li><a href="javascript:void(0);" id="seoset_setting" onclick="openItem('seoset,setting,setting');">SEO设置</a></li>{/if}
+                    {if isset($permission['admin/message/email'])}<li><a href="javascript:void(0);" id="email_message" onclick="openItem('email,message,setting');">消息通知</a></li>{/if}
                     {*<li><a href="javascript:void(0);" id="system_payment" onclick="openItem('system,payment,setting');">支付方式</a></li>
                     <li><a href="javascript:void(0);" id="express_setting" onclick="openItem('express,setting,setting');">快递公司</a></li>
                     <li><a href="javascript:void(0);" id="area_setting" onclick="openItem('area,setting,setting');">配送地区</a></li>
@@ -269,7 +270,7 @@ $(function(){
               <dl>
                 <dd>
                   <ol>
-                    <li><a href="javascript:void(0);" id="index_member" onclick="openItem('index,member,member');">会员资料</a></li>
+                    {if isset($permission['admin/member/index'])}<li><a href="javascript:void(0);" id="index_member" onclick="openItem('index,member,member');">会员资料</a></li>{/if}
                   </ol>
                 </dd>
               </dl>
@@ -280,8 +281,7 @@ $(function(){
               <dl>
                 <dd>
                   <ol>
-                    <li><a href="javascript:void(0);" id="index_website" onclick="openItem('index,website,website');">站点管理</a></li>
-                    
+                    {if isset($permission['admin/website/index'])}<li><a href="javascript:void(0);" id="index_website" onclick="openItem('index,website,website');">站点管理</a></li>{/if}
                   </ol>
                 </dd>
               </dl>
@@ -292,7 +292,7 @@ $(function(){
               <dl>
                 <dd>
                   <ol>
-                    <li><a href="javascript:void(0);" id="index_market_words" onclick="openItem('index,market_words,words');">关键词管理</a></li>
+                    {if isset($permission['admin/market_words/index'])}<li><a href="javascript:void(0);" id="index_market_words" onclick="openItem('index,market_words,words');">关键词管理</a></li>{/if}
                   </ol>
                 </dd>
               </dl>
@@ -303,8 +303,8 @@ $(function(){
               <dl>
                 <dd>
                   <ol>
-                    <li><a href="JavaScript:void(0);" id="user_authority" onclick="openItem('user,authority,authority');">管理员管理</a></li>
-                    <li><a href="JavaScript:void(0);" id="role_authority" onclick="openItem('role,authority,authority');">权限组管理</a></li>
+                    {if isset($permission['admin/authority/user'])}<li><a href="JavaScript:void(0);" id="user_authority" onclick="openItem('user,authority,authority');">管理员管理</a></li>{/if}
+                    {if isset($permission['admin/authority/role'])}<li><a href="JavaScript:void(0);" id="role_authority" onclick="openItem('role,authority,authority');">权限组管理</a></li>{/if}
                   </ol>
                 </dd>
               </dl>

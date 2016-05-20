@@ -3,8 +3,8 @@
     <div class="item-title">
       <h3>权限组</h3>
       <ul class="tab-base">
-      	<li><a class="current"><span>列表</span></a></li>
-      	<li><a href="{admin_site_url('authority/role_add')}"><span>添加</span></a></li>
+      	{if isset($permission['admin/authority/role'])}<li><a class="current"><span>列表</span></a></li>{/if}
+      	{if isset($permission['admin/authority/role_add'])}<li><a href="{admin_site_url('authority/role_add')}"><span>添加</span></a></li>{/if}
       </ul>
      </div>
   </div>
@@ -45,7 +45,7 @@
           <td>{$item['name']|escape}</td>
           <td>{$item['status']}</td>
           <td>{$item['gmt_create']|date_format:"%Y-%m-%d %H:%M:%S"}</td>
-          <td class="align-center"><a href="{admin_site_url('authority/role_edit')}?id={$item['id']}">编辑</a></td>
+          <td class="align-center">{if isset($permission['admin/authority/role_edit'])}<a href="{admin_site_url('authority/role_edit')}?id={$item['id']}">编辑</a>{/if}</td>
         </tr>
       	{foreachelse}
       	<tr class="no_data">

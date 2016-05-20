@@ -4,10 +4,10 @@
     <div class="item-title">
       <h3>{#title#}</h3>
       <ul class="tab-base">
-      	<li><a href="{admin_site_url('market_words/index')}" ><span>{#manage#}</span></a></li>
+      	{if isset($permission['admin/market_words/index'])}<li><a href="{admin_site_url('market_words/index')}" ><span>{#manage#}</span></a></li>{/if}
       	{include file="common/sub_topnav.tpl"}
-      	<li><a href="{admin_site_url('market_words/import')}"><span>导入</span></a></li>
-      	<li><a href="{admin_site_url('market_words/export')}"><span>导出</span></a></li>
+      	{if isset($permission['admin/market_words/import'])}<li><a href="{admin_site_url('market_words/import')}"><span>导入</span></a></li>{/if}
+      	{if isset($permission['admin/market_words/export'])}<li><a href="{admin_site_url('market_words/export')}"><span>导出</span></a></li>{/if}
       </ul>
      </div>
   </div>

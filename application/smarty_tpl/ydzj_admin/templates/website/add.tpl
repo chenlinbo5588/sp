@@ -4,7 +4,7 @@
     <div class="item-title">
       <h3>{#title#}</h3>
       <ul class="tab-base">
-      	<li><a href="{admin_site_url('website/index')}" ><span>{#manage#}</span></a></li>
+      	{if isset($permission['admin/website/index'])}<li><a href="{admin_site_url('website/index')}" ><span>{#manage#}</span></a></li>{/if}
       	{include file="common/sub_topnav.tpl"}
       </ul>
      </div>

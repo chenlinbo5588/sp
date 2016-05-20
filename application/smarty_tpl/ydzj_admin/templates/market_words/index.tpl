@@ -4,10 +4,10 @@
     <div class="item-title">
       <h3>{#title#}</h3>
       <ul class="tab-base">
-        <li><a href="javascript:void(0);" class="current"><span>{#manage#}</span></a></li>
-        <li><a href="{admin_site_url('market_words/add')}" ><span>{#add#}</span></a></li>
-      	<li><a href="{admin_site_url('market_words/import')}"><span>导入</span></a></li>
-      	<li><a href="{admin_site_url('market_words/export')}"><span>导出</span></a></li>
+        {if isset($permission['admin/market_words/index'])}<li><a href="javascript:void(0);" class="current"><span>{#manage#}</span></a></li>{/if}
+        {if isset($permission['admin/market_words/add'])}<li><a href="{admin_site_url('market_words/add')}" ><span>{#add#}</span></a></li>{/if}
+      	{if isset($permission['admin/market_words/import'])}<li><a href="{admin_site_url('market_words/import')}"><span>导入</span></a></li>{/if}
+      	{if isset($permission['admin/market_words/export'])}<li><a href="{admin_site_url('market_words/export')}"><span>导出</span></a></li>{/if}
       </ul>
     </div>
   </div>
@@ -71,9 +71,9 @@
           <td>{$item['gmt_create']|date_format:"%Y-%m-%d %H:%M:%S"}</td>
           <td>{$item['gmt_modify']|date_format:"%Y-%m-%d %H:%M:%S"}</td>
           <td class="align-center">
-          	<a href="{admin_site_url('market_words/edit')}?word_id={$item['word_id']}">编辑</a> |
-          	<a href="{admin_site_url('market_words/detail')}?word_id={$item['word_id']}">详情</a> |
-          	<a class="delete" href="javascript:void(0);" data-url="{admin_site_url('market_words/delete')}?word_id={$item['word_id']}" data-id="{$item['word_id']}">删除</a>
+          	{if isset($permission['admin/market_words/edit'])}<a href="{admin_site_url('market_words/edit')}?word_id={$item['word_id']}">编辑</a> | {/if}
+          	{if isset($permission['admin/market_words/detail'])}<a href="{admin_site_url('market_words/detail')}?word_id={$item['word_id']}">详情</a> | {/if}
+          	{if isset($permission['admin/market_words/delete'])}<a class="delete" href="javascript:void(0);" data-url="{admin_site_url('market_words/delete')}?word_id={$item['word_id']}" data-id="{$item['word_id']}">删除</a>{/if}
           </td>
         </tr>
       {/foreach}

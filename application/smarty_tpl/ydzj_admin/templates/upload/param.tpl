@@ -3,8 +3,8 @@
     <div class="item-title">
       <h3>上传设置</h3>
       	<ul class="tab-base">
-	      	<li><a class="current"><span>上传参数</span></a></li>
-	      	<li><a href="{admin_site_url('upload/default_image')}" ><span>默认图片</span></a></li>
+	      	{if isset($permission['admin/upload/param'])}<li><a class="current"><span>上传参数</span></a></li>{/if}
+	      	{if isset($permission['admin/upload/default_image'])}<li><a href="{admin_site_url('upload/default_image')}" ><span>默认图片</span></a></li>{/if}
       	</ul>
       </div>
   </div>

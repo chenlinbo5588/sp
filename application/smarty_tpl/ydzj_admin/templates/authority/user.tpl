@@ -3,8 +3,8 @@
     <div class="item-title">
       <h3>管理员</h3>
       <ul class="tab-base">
-      	<li><a class="current"><span>列表</span></a></li>
-      	<li><a href="{admin_site_url('authority/user_add')}"><span>添加</span></a></li>
+      	{if isset($permission['admin/authority/user'])}<li><a class="current"><span>列表</span></a></li>{/if}
+      	{if isset($permission['admin/authority/user_add'])}<li><a href="{admin_site_url('authority/user_add')}"><span>添加</span></a></li>{/if}
       </ul>
      </div>
   </div>
@@ -51,7 +51,7 @@
           <td class="align-center">{$item['status']}</td>
           <td class="align-center">{$item['last_login']|date_format:"%Y-%m-%d %H:%M:%S"}</td>
           <td class="align-center">{if $item['group_id'] == 0}无权限组{else}{$roleList[$item['group_id']]}{/if}</td>
-          <td class="align-center"><a href="{admin_site_url('authority/user_edit')}?uid={$item['uid']}">编辑</a></td>
+          <td class="align-center">{if isset($permission['admin/authority/user_edit'])}<a href="{admin_site_url('authority/user_edit')}?uid={$item['uid']}">编辑</a>{/if}</td>
         </tr>
         {/foreach}
       </tbody>

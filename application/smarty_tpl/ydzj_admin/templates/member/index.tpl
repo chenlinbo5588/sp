@@ -4,7 +4,7 @@
     <div class="item-title">
       <h3>{#title#}{#manage#}</h3>
       <ul class="tab-base">
-        <li><a href="javascript:void(0);" class="current"><span>{#manage#}</span></a></li>
+        {if isset($permission['admin/member/index'])}<li><a href="javascript:void(0);" class="current"><span>{#manage#}</span></a></li>{/if}
         {*<li><a href="{admin_site_url('member/add')}" ><span>{#add#}</span></a></li>*}
       </ul>
     </div>
@@ -77,8 +77,8 @@
           <td>{$item['reg_ip']}</td>
           <td>{if $item['status'] == 0}注册完成{else}注册未提交{/if}</td>
           <td class="align-center">
-          	<a href="{admin_site_url('member/edit')}?uid={$item['uid']}">编辑</a> | 
-          	<a href="{admin_site_url('member/detail')}?uid={$item['uid']}">详情</a> 
+          	{if isset($permission['admin/member/edit'])}<a href="{admin_site_url('member/edit')}?uid={$item['uid']}">编辑</a> | {/if}
+          	{if isset($permission['admin/member/detail'])}<a href="{admin_site_url('member/detail')}?uid={$item['uid']}">详情</a>{/if} 
           	{*<a class="delete" href="javascript:void(0);" data-id="{$item['uid']}" data-url="{admin_site_url('member/delete')}?uid={$item['uid']}">删除</a>*}</td>
         </tr>
       {/foreach}

@@ -44,7 +44,7 @@
           <td class="w50pre">{$item['name']}</td>
           <td class="align-center power-onoff">{if $item['is_off'] == 1}关闭{else}开启{/if}</td>
           <td class="align-center">{if $item['type'] == 0}邮件{else}短信{/if}</td>
-          <td class="w60 align-center"><a href="{admin_site_url('message/email_tpl_edit')}?code={$item['code']}">编辑</a></td>
+          <td class="w60 align-center">{if isset($permission['admin/message/email_tpl_edit'])}<a href="{admin_site_url('message/email_tpl_edit')}?code={$item['code']}">编辑</a>{/if}</td>
         </tr>
        	{foreachelse}
        	<tr>

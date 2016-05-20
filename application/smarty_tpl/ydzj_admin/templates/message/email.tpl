@@ -3,8 +3,8 @@
     <div class="item-title">
       <h3>消息通知</h3>
       <ul class="tab-base">
-      	<li><a  class="current"><span>邮件设置</span></a></li>
-      	<li><a href="{admin_site_url('message/email_tpl')}"><span>消息模板</span></a></li>
+      	{if isset($permission['admin/message/email'])}<li><a  class="current"><span>邮件设置</span></a></li>{/if}
+      	{if isset($permission['admin/message/email_tpl'])}<li><a href="{admin_site_url('message/email_tpl')}"><span>消息模板</span></a></li>{/if}
       </ul>
     </div>
   </div>

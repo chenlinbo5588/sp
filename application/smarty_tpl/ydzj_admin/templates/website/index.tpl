@@ -4,8 +4,8 @@
     <div class="item-title">
       <h3>{#title#}</h3>
       <ul class="tab-base">
-        <li><a href="javascript:void(0);" class="current"><span>{#manage#}</span></a></li>
-        <li><a href="{admin_site_url('website/add')}" ><span>{#add#}</span></a></li>
+        {if isset($permission['admin/website/index'])}<li><a href="javascript:void(0);" class="current"><span>{#manage#}</span></a></li>{/if}
+        {if isset($permission['admin/website/add'])}<li><a href="{admin_site_url('website/add')}" ><span>{#add#}</span></a></li>{/if}
       </ul>
     </div>
   </div>
@@ -77,9 +77,9 @@
           <td>{$item['gmt_create']|date_format:"%Y-%m-%d %H:%M:%S"}</td>
           <td>{$item['gmt_modify']|date_format:"%Y-%m-%d %H:%M:%S"}</td>
           <td class="align-center">
-          	<a href="{admin_site_url('website/edit')}?site_id={$item['site_id']}">编辑</a> |
-          	<a href="{admin_site_url('website/detail')}?site_id={$item['site_id']}">详情</a> |
-          	<a class="delete" href="javascript:void(0);" data-url="{admin_site_url('website/delete')}?site_id={$item['site_id']}" data-id="{$item['site_id']}">删除</a>
+          	{if isset($permission['admin/website/edit'])}<a href="{admin_site_url('website/edit')}?site_id={$item['site_id']}">编辑</a> | {/if}
+          	{if isset($permission['admin/website/detail'])}<a href="{admin_site_url('website/detail')}?site_id={$item['site_id']}">详情</a> | {/if}
+          	{if isset($permission['admin/website/delete'])}<a class="delete" href="javascript:void(0);" data-url="{admin_site_url('website/delete')}?site_id={$item['site_id']}" data-id="{$item['site_id']}">删除</a>{/if}
           </td>
         </tr>
       {/foreach}

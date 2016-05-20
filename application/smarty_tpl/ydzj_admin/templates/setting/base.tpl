@@ -3,8 +3,8 @@
     <div class="item-title">
       <h3>站点设置</h3>
       <ul class="tab-base">
-      	<li><a class="current"><span>站点设置</span></a></li>
-      	<li><a href="{admin_site_url('setting/dump')}" ><span>防灌水设置</span></a></li>
+      	{if isset($permission['admin/setting/base'])}<li><a class="current"><span>站点设置</span></a></li>{/if}
+      	{if isset($permission['admin/setting/dump'])}<li><a href="{admin_site_url('setting/dump')}" ><span>防灌水设置</span></a></li>{/if}
       </ul>
      </div>
   </div>
