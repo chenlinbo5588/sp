@@ -32,6 +32,17 @@
           <td class="vatop rowform"><input type="text" id="username" value="{$info['username']|escape}" name="username" class="txt"></td>
           <td class="vatop tips">请输入用户真实名称 {form_error('username')}</td>
         </tr>
+        <tr class="noborder">
+          <td class="required"><label class="validation">状态:</label>{form_error('status')}</td>
+        </tr>
+        <tr class="noborder">
+          <td>
+          	<select name="status">
+          		<option value="开启" {if $info['status'] == '开启'}selected{/if}>开启</option>
+          		<option value="关闭" {if $info['status'] == '关闭'}selected{/if}>关闭</option>
+          	</select>
+          </td>
+        </tr>
         <tr>
           <td colspan="2" class="required"><label class="validation" for="admin_password">密码:</label></td>
         </tr>

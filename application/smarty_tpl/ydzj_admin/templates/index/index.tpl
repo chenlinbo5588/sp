@@ -307,7 +307,7 @@ $(function(){
 	          <div id="topnav" class="top-nav">
 	            <ul>
 	              <li class="adminid" title="您好:{$manage_profile['basic']['username']|escape}">您好&nbsp;:&nbsp;<strong>{$manage_profile['basic']['username']|escape}</strong></li>
-	              <li><a href="{admin_site_url('index/modifypw')}" target="workspace" ><span>修改密码</span></a></li>
+	              <li><a href="{admin_site_url('index/profile')}" target="workspace" ><span>修改密码</span></a></li>
 	              <li><a href="{admin_site_url('index/logout')}" title="退出"><span>退出</span></a></li>
 	              <li><a href="{site_url('index')}" target="_blank" title="{config_item('site_name')}"><span>{config_item('site_name')}</span></a></li>
 	            </ul>
@@ -564,8 +564,8 @@ $(function(){
           </ul>
         </div>
         <div class="copyright">
-            <p>Powered By <em><a href="{site_url('index')}" target="_blank"><span class="vol"><font class="b">52</font><font class="o">运动之家</font></span></a></em></p>
-            <p>&copy;2010-{$smarty.now|date_format:"%Y"} <a href="{site_url('index')}" target="_blank">52运动之家 Inc.</a></p>
+            <p>Powered By <em><a href="{site_url('index')}" target="_blank"><span class="vol"><font class="b">{config_item('site_name')}</font></span></a></em></p>
+            <p>&copy;2010-{$smarty.now|date_format:"%Y"} <a href="{site_url('index')}" target="_blank">Jay Inc.</a></p>
         </div>
       </td>
       <td valign="top" width="100%">
