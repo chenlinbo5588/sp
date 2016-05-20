@@ -97,7 +97,7 @@ class Message extends Ydzj_Admin_Controller {
 		}
 		
 		if(!empty($currentSetting['email_pass'])){
-			
+			// empty ，密码不显示，防止泄漏信息
 		}
 		
 		//print_r($currentSetting);
@@ -125,7 +125,7 @@ class Message extends Ydzj_Admin_Controller {
 		}
 		
 		
-		$list = $this->message_service->getListByCondition($condition);
+		$list = $this->Msg_Template_Model->getList($condition);
 		
 		$this->assign('list',$list);
 		$this->assign('page',$list['pager']);
@@ -161,6 +161,9 @@ class Message extends Ydzj_Admin_Controller {
 		$config['smtp_host'] = $this->input->post('email_host');
 		$config['smtp_port'] = $this->input->post('email_port');
 		$config['smtp_user'] = $this->input->post('email_id');
+		
+		//
+		
 		$config['smtp_pass'] = $this->input->post('email_pass');
 		$config['smtp_timeout'] = 10;
 		$config['charset'] = config_item('charset');

@@ -12,8 +12,14 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 		parent::__construct();
 		
 		$this->form_validation->set_error_delimiters('<label class="error">','</label>');
-		
 		$this->_initAdminLogin();
+		//$this->_checkPermission();
+	}
+	
+	
+	protected function _initLibrary(){
+		parent::_initLibrary();
+		$this->load->model('Role_Model');
 	}
 	
 	private function _initAdminLogin(){
@@ -53,11 +59,11 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
         //公共权限
         $this->_permission['admin'] = 1;
         $this->_permission['admin/index'] = 1;
+        $this->_permission['admin/index/index'] = 1;
+        $this->_permission['admin/index/logout'] = 1;
+        $this->_permission['admin/index/nopermission'] = 1;
         $this->_permission['admin/dashboard/welcome'] = 1;
         $this->_permission['admin/dashboard/aboutus'] = 1;
-        $this->_permission['admin/index/logout'] = 1;
-        $this->_permission['admin/index/index'] = 1;
-        $this->_permission['admin/index/welcome'] = 1;
 
         $this->assign('permission',$this->_permission);
         
@@ -66,7 +72,7 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
             if($this->input->is_ajax_request()){
                 $this->responseJSON('没有足够的权限,请联系管理员');
             }else{
-                redirect(site_url('common/nopermission'));
+                redirect(admin_site_url('index/nopermission'));
             }
         }
 
@@ -74,7 +80,6 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
     
 	
 	public function isLogin(){
-		
 		if($this->_adminProfile && ($this->_reqtime - $this->session->userdata('lastvisit') < 86400)){
 			return true;
 		}

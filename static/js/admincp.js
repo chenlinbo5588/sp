@@ -94,10 +94,13 @@ function doDelete(postdata,url){
 		success:function(json){
 			alert(json.message);
 			refreshFormHash(json.data);
-			for(var i = 0; i < postdata['id'].length; i++){
-				$("#row" + postdata['id'][i]).remove();
-			}
 			
+			var patt1 = new RegExp("成功");
+			if(patt1.test(json.message)){
+				for(var i = 0; i < postdata['id'].length; i++){
+					$("#row" + postdata['id'][i]).remove();
+				}
+			}
 		},
 		error:function(event,request, settings){
 			alert("删除出错");

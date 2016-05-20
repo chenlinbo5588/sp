@@ -7,10 +7,8 @@ class Index extends Ydzj_Admin_Controller {
 		parent::__construct();
 	}
 	
-	
-	public function welcome(){
-		
-		$this->display('index/welcome');
+	public function nopermission(){
+		$this->display('common/nopermission');
 	}
 	
 	

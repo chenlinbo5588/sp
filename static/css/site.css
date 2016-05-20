@@ -585,7 +585,7 @@ input[type=text].validation_error {
     width: 100%;
     font-weight: bold;
     font-size: 16px;
-   	color:#fff;
+   	color:#0138B7;
     text-decoration: none;
     height: 40px;
     line-height: 40px;
@@ -600,8 +600,14 @@ input[type=text].validation_error {
 }
 
 
-#homeNav a:hover,#homeNav li.current a.link0 {
+
+#homeNav a:hover, #homeNav li.current a.link1  {
+	color:#fff;
+}
+
+#homeNav li.current a.link0 {
 	background:#ED6D00;
+	color:#fff;
 }
 
 #homeNav .products {
@@ -617,6 +623,7 @@ input[type=text].validation_error {
 }
 
 #homeSwiper div {
+	width:100%;
 	height:300px;
 }
 

@@ -3,6 +3,7 @@
 	    <div style="background:url({resource_url('img/cmp/1.jpg')}) no-repeat 50% 0"></div>
         <div style="background:url({resource_url('img/cmp/2.jpg')}) no-repeat 50% 0"></div>
         <div style="background:url({resource_url('img/cmp/3.jpg')}) no-repeat 50% 0"></div>
+        <div style="background:url({resource_url('img/cmp/4.jpg')}) no-repeat 50% 0"></div>
 	</div>
    
 	<div class="boxz">
@@ -44,7 +45,6 @@
 							<li><a href="/news/detail/?id=39">新闻标题1</a><span>2016-09-09</span></li>
 						</ol>
 					</div>
-					
 					<div class="colPanel newslist">
 						<h3 class="panelTitel"><span>行业动态</span><a class="more fr" href="/news/news_list">更多&gt;&gt;</a></h3>
 						<ol class="clearfix">
@@ -59,7 +59,6 @@
 					</div>
 				</li>
 			</ul>
-			
 			<div class="panel1 clearfix" id="starProducts">
 				<h3><strong>推荐产品</strong></h3>
 			</div>
@@ -90,30 +89,16 @@
 	<link href="{resource_url('js/jquery.bxslider/jquery.bxslider.css')}" rel="stylesheet" />
 	<script>
 		$(function(){
-			$('#homeSwiper').bxSlider({
-				auto:true,
-				infiniteLoop:true,
-				speed:3000,
-				touchEnabled:true,
-				nextSelector: '#none-next',
-  				prevSelector: '#none-prev'
-			});
+			$('#homeSwiper').cycle({ speed : 3000 , timeout: 3000 });
 			
 			$('#goinSwiper').bxSlider({
 				infiniteLoop:true,
 				auto:true,
 				touchEnabled:true,
-				captions: true
+				captions: true,
+				easing: 'easeOutElastic'
 			});
 			
-			/*
-			$('#goinSwiper').cycle({
-			    fx:      'turnUp',
-			    randomizeEffects: false,
-			    delay:   -3000,
-			    pager:  '#goinSwiperPager'
-			});
-			*/
 			
 			$('#hotProductSwiper').bxSlider({
 				responsive:true,
