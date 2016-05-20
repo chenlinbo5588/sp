@@ -23,6 +23,10 @@ class Captcha extends Ydzj_Controller {
         	'font_size'     => 16,
         	'font_path'     => SYSDIR.'/fonts/arial.ttf',
 		);
+		
+		if($this->input->get('type') == 'num'){
+			$vals['word'] = random_string('numeric',4);
+		}
 
 		$cap = create_captcha($vals);
 		$data = array(

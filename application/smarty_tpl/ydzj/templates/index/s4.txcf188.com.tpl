@@ -40,12 +40,12 @@ form label.error {
 	height:35px;
 	line-height:35px;
 	display:block;
-	width:15%;
+	width:19%;
 	color:#fff;
 }
 
 .username .txt,.mobile .txt , .auth_code .txt {
-	width:84%;
+	width:80%;
 	height:35px;
 	line-height:35px;
 	float:right;
@@ -159,7 +159,7 @@ form label.error {
 	   			<div class="tiparea">{form_error('username')}</div>
 	   			<div class="mobile clearfix"><label class="side_lb">手机号码</label><input type="text" class="txt noround" autocomplete="off" name="mobile" id="mobile" value="{set_value('mobile')}" placeholder="请输入您的手机号码"/></div>
 	   			<div class="tiparea">{form_error('mobile')}</div>
-	   			<div class="auth_code clearfix"><label class="side_lb">验证码</label><input type="text" class="txt noround" id="authcode_text" name="auth_code" autocomplete="off" value="" placeholder="请输入您的验证码"/><img class="nature t4" id="authImg" src="{site_url('captcha')}?w=100&h=37" title="点击图片刷新"/></div>
+	   			<div class="auth_code clearfix"><label class="side_lb">验证码</label><input type="text" class="txt noround" id="authcode_text" name="auth_code" autocomplete="off" value="" placeholder="请输入您的验证码"/><img class="nature t4" id="authImg" src="{site_url('captcha')}?w=100&h=37&type=num" title="点击图片刷新"/></div>
 	   			<div class="tiparea">{form_error('auth_code')}</div>
 	   			<div class="refresh"><a href="javascript:void(0);">看不清，点击验证码刷新</a></div>
 	   			<div class="btn2 clearfix"><div class="lf"></div><input class="t4" type="submit" name="tj" value="我要体验"/><div class="rf"></div></div>
@@ -177,7 +177,7 @@ form label.error {
    		</div>
 	</div><!-- //end of wrap -->
 	<script>
-	var imgUrl = "{site_url('captcha')}?w=100&h=37";
+	var imgUrl = "{site_url('captcha')}?w=100&h=37&type=num";
 	$(function(){
 		{include file="./site_alert.tpl"}
 		

@@ -135,7 +135,7 @@ form label.error {
    				<h3>模拟交易,不投入资金,没有风险</h3>
    				<input class="t1" type="text" name="mobile" value="{set_value('mobile')}" placeholder="请输入您的手机号码"/>
    				<input class="t2" id="authcode_text" class="at_txt" type="text" name="auth_code" value="" placeholder="请输入4位验证码"/>
-   				<img class="nature t3" id="authImg" src="{site_url('captcha')}?w=100&h=35" title="点击图片刷新"/>
+   				<img class="nature t3" id="authImg" src="{site_url('captcha')}?w=100&h=35&type=num" title="点击图片刷新"/>
    				<div class="tiparea">{form_error('mobile')}{form_error('auth_code')}{$feedback}</div>
    				<div class="refresh"><a href="javascript:void(0);">看不清，点击验证码刷新</a></div>
    				<div><input class="t4" type="submit" name="tj" value="免费申请模拟账户"/></div>
@@ -156,7 +156,7 @@ form label.error {
    		</div>
 	</div><!-- //end of wrap -->
 	<script>
-	var imgUrl = "{site_url('captcha')}?w=100&h=35";
+	var imgUrl = "{site_url('captcha')}?w=100&h=35&type=num";
 	$(function(){
 		{include file="./site_alert.tpl"}
 		
@@ -165,6 +165,8 @@ form label.error {
 		});
 		
 		$('#registerForm').validate({
+			onkeyup:false,
+			onclick:false,
 	        errorPlacement: function(error, element){
 	        	//console.log(error);
 	        	//console.log(element);
