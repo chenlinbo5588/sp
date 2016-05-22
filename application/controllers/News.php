@@ -4,13 +4,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class News extends Ydzj_Controller {
 	
 	private $sideNavs = null;
-	private $modKey = '新闻资讯';
+	private $modKey = '';
 	private $topClassId = 0;
 	
 	
 	public function __construct(){
 		parent::__construct();
 		$this->assign('pgClass',strtolower(get_class()).'Pg');
+		$this->modKey = $this->input->get_post('catname');
+		
+		if(empty($this->modKey)){
+			$this->modKey = '新闻资讯';
+		}
+		
 		$this->assign('sideTitle',$this->modKey);
 		
 		$this->load->library('Article_service');
@@ -92,21 +98,11 @@ class News extends Ydzj_Controller {
 		}
 		
 		$list = $this->Article_Model->getList($condition);
-		
+		//echo 'aaa';print_r($list);
 		if($list['data']){
-			$count = 0;
 			foreach($list['data'] as $key => $newsArtile){
-				/*
-				$count = preg_match("/<img\s*?src=\"?(.*?)\"?\s+/is",$newsArtile['article_content'],$matchs);
 				
-				if($count){
-					//print_r($matchs);
-					$newsArtile['title_img'] = resource_url($matchs[1]);
-				}else{
-					$newsArtile['title_img'] = resource_url('img/default.jpg');
-				}
 				
-				*/
 				if($newsArtile['article_pic']){
 					$newsArtile['article_pic'] = resource_url($newsArtile['article_pic']);
 				}else{
@@ -117,14 +113,11 @@ class News extends Ydzj_Controller {
 					$newsArtile['article_url'] = site_url('news/detail?id=') . $newsArtile['article_id'].'&ac_id='.$newsArtile['ac_id'];
 				}
 				
-				
-				if(empty(trim($newsArtile['article_digest']))){
+				if(trim($newsArtile['article_digest'])){
 					$newsArtile['article_digest'] = cutText(html_entity_decode(strip_tags($newsArtile['article_content'])),120);
 				}
 				
 				$list['data'][$key] = $newsArtile;
-				
-				$count = 0;
 			}
 		}
 		
@@ -137,6 +130,7 @@ class News extends Ydzj_Controller {
 		
 		$this->assign('breadcrumb',$this->breadcrumb());
 		$this->display();
+		
 	}
 	
 	
@@ -167,6 +161,12 @@ class News extends Ydzj_Controller {
 		$ac_id = $this->input->get_post('ac_id');
 		$info = $this->Article_Model->getFirstByKey($id,'article_id');
 		if($info){
+			
+			if($info['article_click'] == 0){
+				$info['article_click']++;
+			}
+			
+			
 			$this->_breadCrumbLinks($info['ac_id']);
 			$nextArticle = $this->article_service->getNextByArticle($info);
 			$preArticle = $this->article_service->getPreByArticle($info);
@@ -179,9 +179,13 @@ class News extends Ydzj_Controller {
 			}
 			
 			//print_r($preArticle);
-			
 			$this->assign('nextArticle',$nextArticle);
 			$this->assign('preArticle',$preArticle);
+			
+			$this->Article_Model->increseOrDecrease(array(
+				array('key' => 'article_click','value'=> 'article_click + 1')
+			),array('article_id' => $id));
+			
 		}else{
 			$this->_breadCrumbLinks($ac_id);
 		}

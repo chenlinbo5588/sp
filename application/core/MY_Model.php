@@ -230,7 +230,7 @@ class MY_Model extends CI_Model {
      * 增加或者 减少 字段数值
      */
     public function increseOrDecrease($param, $where = null){
-		foreach($param as $p){
+    	foreach($param as $p){
 			$this->db->set($p['key'],$p['value'],false);
 		}
     	

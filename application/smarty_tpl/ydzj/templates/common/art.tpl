@@ -1,4 +1,4 @@
-{include file="common/header.tpl"}
+{include file="common/header_main_nav.tpl"}
 	<div class="linePg">
 		<div class="{$pgClass}"></div>
 		<div class="boxz clearfix mg10">
@@ -12,10 +12,11 @@
 			</div>
 			<div class="contentArea">
 				<div class="breadcrumb">{$breadcrumb}</div>
-				<div class="bd">
+				<div class="bd respond_img" id="articleInfo">
 					{$article['article_content']}
 				</div>
 			</div>
 		</div>
 	</div>
+	
 {include file="common/footer.tpl"}

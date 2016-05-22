@@ -244,7 +244,7 @@ class Goods_Service extends Base_Service {
 	public function getGoodsClassByParentId($id = 0){
 		$list = $this->_goodsClassModel->getList(array(
 			'where' => array('gc_parent_id' => $id),
-			'order' => 'gc_sort DESC'
+			'order' => 'gc_sort ASC'
 		));
 		
 		return $this->toEasyUseArray($list,'gc_id');
@@ -288,6 +288,9 @@ class Goods_Service extends Base_Service {
 		}else{
 			return false;
 		}
-		
 	}
+	
+	
+	
+	
 }

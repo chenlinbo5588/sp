@@ -21,6 +21,7 @@ $entity = array(
 'goods_pic' => 'varchar',
 'goods_state' => 'tinyint',
 'goods_verify' => 'tinyint',
+'goods_sort' => 'tinyint',
 'public_time' => 'int',
 'areaid_1' => 'int',
 'areaid_2' => 'int',

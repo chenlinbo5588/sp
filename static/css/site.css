@@ -76,7 +76,7 @@ sub, sup {
     position:relative; 
     vertical-align:baseline; 
 }
-img.respond_img { 
+img.respond_img, .respond_img img { 
     height: auto; 
     width: auto\9; 
     width:100%;
@@ -462,11 +462,14 @@ input[type=text].validation_error {
 	-moz-box-shadow:0 0 8px rgba(82, 168, 236, 0.8); 
 	-webkit-box-shadow: 0 0 8px rgba(82, 168, 236, 0.8);
 	box-shadow: 0 0 8px rgba(82, 168, 236, 0.8);*/
+	position: relative;
+    z-index: 20;
+    height:60px;
 }
 
 #topBar a {
+	color:#fff;
 }
-
 
 .boxz {
 	width:980px;
@@ -479,8 +482,6 @@ input[type=text].validation_error {
 	margin: 20px 0;
 	
 }
-
-
 
 
 .panel1 h3 {
@@ -531,9 +532,11 @@ input[type=text].validation_error {
 }
 
 #siteLogo {
-	background:url(../img/cmp/logo.png) no-repeat left top;
-	width:200px;
-	height:50px;
+	
+}
+
+#siteContacts {
+	padding-top:10px;
 }
 
 #goinIntro {
@@ -549,12 +552,16 @@ input[type=text].validation_error {
 	color:#333;
 }
 
+#goinIntro p {
+	text-indent:2em;
+}
+
 #homeNav {
 	position:absolute;
 	text-align:center;
 	width:80%;
 	right:0px;
-	top:15px;
+	top:0px;
 	z-index: 20;
 }
 
@@ -589,6 +596,8 @@ input[type=text].validation_error {
     text-decoration: none;
     height: 40px;
     line-height: 40px;
+    white-space: nowrap;
+    overflow: hidden;
     border-radius:4px; 
     -moz-border-radius:4px; 
     -webkit-border-radius:4px;
@@ -599,13 +608,11 @@ input[type=text].validation_error {
 	
 }
 
-
-
 #homeNav a:hover, #homeNav li.current a.link1  {
 	color:#fff;
 }
 
-#homeNav li.current a.link0 {
+#homeNav li.current a.link0, #homeNav .current a.link1:hover {
 	background:#ED6D00;
 	color:#fff;
 }
@@ -620,11 +627,37 @@ input[type=text].validation_error {
 
 #homeSwiper {
 	width:100%;
+	top:-60px;
 }
 
-#homeSwiper div {
+#homeSwiper .sliderItem {
 	width:100%;
-	height:300px;
+	height:500px;
+}
+
+#homeSwiperPager {
+	position:absolute;
+	top:-90px;
+	z-index:20;
+	right:0;
+	display:block;	
+}
+
+#homeSwiperPager a {
+	display: block;
+    float: left;
+    text-align: center;
+    background: #90918B;
+    width: 20px;
+    height: 20px;
+    border: 1px solid #dcdcdc;
+    margin: 0 2px 0 0;
+    color: white;
+    text-decoration:none;
+}
+
+#homeSwiperPager a.activeSlide {
+	background:#FFB082;
 }
 
 .more {
@@ -650,6 +683,7 @@ input[type=text].validation_error {
    	border-radius:4px; 
     -moz-border-radius:4px; 
     -webkit-border-radius:4px;
+    background:#fff;
 }
 
 #menuProducts a {
@@ -660,19 +694,28 @@ input[type=text].validation_error {
 	backgournd:none;
 }
 
-
 #menuProducts li.level1 {
 	width:20%;
 	1border-left: 1px solid #dcdcdc;
 	float:left;
 	white-space: nowrap;
-	background:#fff;
+}
+
+
+
+#menuProducts li.level1:hover {
+	background:none;
+	
+}
+
+#menuProducts li.level1 span {
+	
+	display:block;
 }
 
 #menuProducts li.level1:hover {
 	1background:#f4d74d;
 }
-
 
 #menuProducts ol {
 	padding-left:10px;
@@ -681,8 +724,6 @@ input[type=text].validation_error {
     1border-top: 1px solid #dcdcdc;
     text-align:left;
 }
-
-
 
 .newslist {
 	padding: 0 10px;
@@ -757,20 +798,26 @@ input[type=text].validation_error {
 }
 
 .linePg {
+	position: relative;
+    top: -60px;
 	1border-top:1px solid #fff;
 }
 
-.aboutPg , .newsPg, .productPg {
-	background:url(../img/cmp/about_bg.jpg) no-repeat center center;
+.aboutPg , .newsPg, .productPg , .marketPg {
+	background:url(../img/cmp/2.jpg) no-repeat center center;
 	height:300px;
 }
 
 .newsPg {
-	background:url(../img/cmp/news_bg.jpg) no-repeat center center;
+	background:url(../img/cmp/1.jpg) no-repeat center center;
 }
 
 .productPg {
-	background:url(../img/cmp/product_bg.jpg) no-repeat center center;
+	background:url(../img/cmp/3.jpg) no-repeat center center;
+}
+ 
+.marketPg {
+	background:url(../img/cmp/2.jpg) no-repeat center center;
 }
 
 .breadcrumb {
@@ -831,6 +878,7 @@ input[type=text].validation_error {
 .contentArea .bd {
 	padding:20px;
 }
+
 
 table.liststyle1 {
 	width:100%;
@@ -924,7 +972,28 @@ table.liststyle1 {
 }
 
 
+.productInfo {
+	position:relative;
+}
 
+.productInfo .textDesc {
+	position: absolute;
+    left: 530px;
+    top: 0;
+}
+
+.textDesc div {
+	
+	margin: 5px 0;
+}
+
+.textDesc em {
+	padding: 0 10px 0 0;
+}
+
+.goodscode {
+	color:#f00;
+}
 
 
 @media (max-width: 1024px) {
@@ -933,16 +1002,16 @@ table.liststyle1 {
 	}
 }
 
-
 @media (min-width: 1440px) {
 	.boxz {
 		width:1200px;
 	}
 }
 
-@media (max-width: 720px) {
+@media (max-width: 640px) {
 	.boxz {
 		width:100%;
+		max-width:640px;
 	}
 }
 

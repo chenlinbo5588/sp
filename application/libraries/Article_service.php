@@ -170,7 +170,7 @@ class Article_Service extends Base_Service {
 	public function getArticleClassByParentId($id = 0){
 		$list = $this->_articleClassModel->getList(array(
 			'where' => array('ac_parent_id' => $id),
-			'order' => 'ac_sort DESC'
+			'order' => 'ac_sort ASC'
 		));
 		
 		return $this->toEasyUseArray($list,'ac_id');

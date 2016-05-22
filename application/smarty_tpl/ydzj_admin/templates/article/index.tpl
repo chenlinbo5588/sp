@@ -1,7 +1,8 @@
 {include file="common/main_header.tpl"}
+{config_load file="article.conf"}
   <div class="fixed-bar">
     <div class="item-title">
-      <h3>商品</h3>
+      <h3>{#title#}</h3>
       <ul class="tab-base">
         <li><a href="JavaScript:void(0);" class="current"><span>管理</span></a></li>
         <li><a href="{admin_site_url('article/add')}"><span>新增</span></a></li>

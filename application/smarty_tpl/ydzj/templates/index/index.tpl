@@ -1,12 +1,12 @@
-{include file="common/header.tpl"}
+{include file="common/header_main_nav.tpl"}
    <div id="homeSwiper">
-	    <div style="background:url({resource_url('img/cmp/1.jpg')}) no-repeat 50% 0"></div>
-        <div style="background:url({resource_url('img/cmp/2.jpg')}) no-repeat 50% 0"></div>
-        <div style="background:url({resource_url('img/cmp/3.jpg')}) no-repeat 50% 0"></div>
-        <div style="background:url({resource_url('img/cmp/4.jpg')}) no-repeat 50% 0"></div>
+	    <div class="sliderItem" style="background:url({resource_url('img/cmp/1.jpg')}) no-repeat 50% 0"></div>
+        <div class="sliderItem" style="background:url({resource_url('img/cmp/2.jpg')}) no-repeat 50% 0"></div>
+        <div class="sliderItem" style="background:url({resource_url('img/cmp/3.jpg')}) no-repeat 50% 0"></div>
+        <div class="sliderItem" style="background:url({resource_url('img/cmp/4.jpg')}) no-repeat 50% 0"></div>
 	</div>
-   
-	<div class="boxz">
+	<div class="boxz"><div id="homeSwiperPager"></div></div>
+	<div class="boxz" style="top:-60px;">
 		<div class="searchbar">
 			<span class="hotlink">
 				<strong>热门搜索:　</strong>
@@ -29,7 +29,11 @@
 					        <div><img src="{resource_url('img/cmp/goin1.jpg')}"/></div>
 					        <div><img src="{resource_url('img/cmp/goin2.jpg')}"/></div>
 				    	</div>
-						<p class="intro" id="goinIntro">介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己介绍自己。</p>
+						<div class="intro" id="goinIntro">
+							<p>杭州标度环保技术有限公司，专业生产仪器仪表及精密监测仪器，是一家集科研、生产、销售、售后服务于一体的高新技术企业。</p>
+							<p>公司本着“为客户提供最专业、最快速、最实惠、最简便的检测产品及服务”的宗旨，一直在完善产品功能、检测效果，致力于仪器仪表的研讨及开发，短短几年时间，迅速成为国内极具影响力的仪器仪表生产厂商之一.</p>
+							<p>作为仪器仪表行业的卓越品牌，公司绝大部分产品都已取得相关证书及专利，很多研发成果在国内都属首例。包括便携式COD消解仪、数显糖度计、水质在线监测设备等。不断的发展中，公司产品已遍布全国各地各个行业：环保局、食品饮料制造行业、农业研究所、城市供水、医疗制药、水产养殖、生物工程、工业水处理等。并远销海外，拥有众多满意客户。</p>
+						</div>
 					</div>
 				</li>
 				<li class="col fl">
@@ -63,6 +67,7 @@
 				<h3><strong>推荐产品</strong></h3>
 			</div>
 			<div class="panelContent">
+				
 				<ul id="hotProductSwiper">
 		            <li><a href="/" target="_blank"><img src="{resource_url('img/cmp/nature1.jpg')}" title="Funky nature1"/></a></li>
 		            <li><a href="/" target="_blank"><img src="{resource_url('img/cmp/nature2.jpg')}" title="Funky roots"/></a></li>
@@ -73,7 +78,8 @@
 			    </li>
 			</div>
 		</div>
-		<div class="friendLinks">
+		<div class="friendLinks panelContent">
+			<span>官方店铺:</span>
 			<a href="/">百度</a>
 			<a href="/">百度</a>
 			<a href="/">百度</a>
@@ -84,12 +90,10 @@
 	</div>
 	
 	<script type="text/javascript" src="{resource_url('js/jquery.cycle.all.js')}"></script>
-	<script type="text/javascript" src="{resource_url('js/jquery.bxslider/jquery.bxslider.min.js')}"></script>
-	<script type="text/javascript" src="{resource_url('js/jquery.bxslider/plugins/jquery.easing.1.3.js')}"></script>
-	<link href="{resource_url('js/jquery.bxslider/jquery.bxslider.css')}" rel="stylesheet" />
+	{include file="common/bxslider.tpl"}
 	<script>
 		$(function(){
-			$('#homeSwiper').cycle({ speed : 3000 , timeout: 3000 });
+			$('#homeSwiper').cycle({ speed : 3000 , timeout: 3000 ,pager: "#homeSwiperPager",pauseOnPagerHover:true });
 			
 			$('#goinSwiper').bxSlider({
 				infiniteLoop:true,
@@ -98,7 +102,6 @@
 				captions: true,
 				easing: 'easeOutElastic'
 			});
-			
 			
 			$('#hotProductSwiper').bxSlider({
 				responsive:true,
@@ -112,9 +115,6 @@
 			    moveSlides: 1,
 			    slideMargin: 10
 			});
-			
-			
-			
 		});
 	</script>
 {include file="common/footer.tpl"}

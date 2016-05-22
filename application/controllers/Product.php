@@ -139,10 +139,19 @@ class Product extends Ydzj_Controller {
 		
 		if($info){
 			
+			if($info['goods_click'] == 0){
+				$info['goods_click']++;
+			}
+			
 			$currentFiles = $this->Goods_Images_Model->getList(array(
-				'select' => 'goods_image_aid,goods_image',
+				'select' => 'goods_image',
 				'where' => array('goods_id' => $id)
 			));
+			if(empty($currentFiles)){
+				
+				$currentFiles[] = array('goods_image' => 'img/default.jpg');
+			}
+			
 			
 			$this->_breadCrumbLinks($info['gc_id']);
 			$nextProduct = $this->goods_service->getNextByProduct($info);
@@ -151,12 +160,17 @@ class Product extends Ydzj_Controller {
 			$this->assign('imgList',$currentFiles);
 			$this->assign('nextProduct',$nextProduct);
 			$this->assign('preProduct',$preProduct);
+			
+			$this->Goods_Model->increseOrDecrease(array(
+				array('key' => 'goods_click','value'=> 'goods_click + 1')
+			),array('goods_id' => $id));
 		}else{
 			$this->_breadCrumbLinks($gc_id);
 		}
 		
 		$this->assign('breadcrumb',$this->breadcrumb());
 		$this->assign('info',$info);
+		
 		
 		$this->display();
 		

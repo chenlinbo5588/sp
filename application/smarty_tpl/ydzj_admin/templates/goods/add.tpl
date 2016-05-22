@@ -43,7 +43,7 @@
           <td class="vatop tips">{form_error('brand_id')} 商品的品牌</td>
         </tr>
         <tr>
-          <td colspan="2" class="required"><label for="goodsClassId">所属分类:</label></td>
+          <td colspan="2" class="required"><label class="validation" for="goodsClassId">商品分类:</label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform">
@@ -121,10 +121,10 @@
           <td colspan="2" class="required">是否推荐: </td>
         </tr>
         <tr class="noborder">
-          <td class="vatop rowform onoff"><label for="goods_recommend1" {if $info['goods_recommend']}class="cb-enable selected"{else}class="cb-enable"{/if}><span>是</span></label>
-            <label for="goods_recommend0" {if $info['goods_recommend']}class="cb-disable"{else}class="cb-disable selected"{/if}><span>否</span></label>
-            <input id="goods_recommend1" name="goods_recommend" {if $info['goods_recommend']}checked{/if} value="1" type="radio">
-            <input id="goods_recommend0" name="goods_recommend" {if $info['goods_recommend'] == 0}checked{/if} value="0" type="radio"></td>
+          <td class="vatop rowform onoff"><label for="goods_commend1" {if $info['goods_commend']}class="cb-enable selected"{else}class="cb-enable"{/if}><span>是</span></label>
+            <label for="goods_commend0" {if $info['goods_commend']}class="cb-disable"{else}class="cb-disable selected"{/if}><span>否</span></label>
+            <input id="goods_commend1" name="goods_commend" {if $info['goods_commend']}checked{/if} value="1" type="radio">
+            <input id="goods_commend0" name="goods_commend" {if $info['goods_commend'] == 0}checked{/if} value="0" type="radio"></td>
           <td class="vatop tips">选择被推荐的图片将在所有商品列表页“推荐商品”位置展现。</td>
         </tr>
         <tr>

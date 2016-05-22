@@ -1,7 +1,8 @@
 {include file="common/main_header.tpl"}
+{config_load file="article.conf"}
   <div class="fixed-bar">
     <div class="item-title">
-      <h3>品牌</h3>
+      <h3>{#title#}</h3>
       <ul class="tab-base">
       	<li><a href="{admin_site_url('article/index')}"><span>管理</span></a></li>
       	<li><a class="current"><span>{if $info['article_id']}编辑{else}新增{/if}</span></a></li>

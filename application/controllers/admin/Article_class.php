@@ -131,7 +131,7 @@ class Article_Class extends Ydzj_Admin_Controller {
 				$ids[] = $item['ac_id'];
 			}
 			
-			if(empty($ids)){
+			if($ids){
 				$hasData = false;
 			}else{
 				$list = $this->Article_Class_Model->getList(array(

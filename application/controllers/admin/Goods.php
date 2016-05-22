@@ -86,7 +86,7 @@ class Goods extends Ydzj_Admin_Controller {
 		$this->form_validation->set_rules('goods_name','商品名称','required|max_length[60]');
 		$this->form_validation->set_rules('gc_id','商品分类',"required|in_db_list[{$this->Goods_Class_Model->_tableRealName}.gc_id]");
 		$this->form_validation->set_rules('goods_intro','商品简介','required');
-		$this->form_validation->set_rules('goods_recommend','是否推荐','required|in_list[0,1]');
+		$this->form_validation->set_rules('goods_commend','是否推荐','required|in_list[0,1]');
 		$this->form_validation->set_rules('goods_verify','是否审核','required|in_list[0,1]');
 		$this->form_validation->set_rules('goods_state','是否发布','required|in_list[0,1]');
 	}
@@ -128,7 +128,7 @@ class Goods extends Ydzj_Admin_Controller {
 			'gc_id' => $this->input->post('gc_id') ? $this->input->post('gc_id') : 0,
 			'brand_id' => $this->input->post('brand_id') ? $this->input->post('brand_id') : 0,
 			'goods_intro' => $this->input->post('goods_intro') ? $this->input->post('goods_intro') : '',
-			'goods_recommend' => $this->input->post('goods_recommend'),
+			'goods_commend' => $this->input->post('goods_commend') ? $this->input->post('goods_commend') : 0,
 			'goods_verify' => $this->input->post('goods_verify'),
 			'goods_state' => $this->input->post('goods_state'),
 			
@@ -136,6 +136,7 @@ class Goods extends Ydzj_Admin_Controller {
 		
 		if($fileInfo){
 			$info['goods_pic'] = $fileInfo['file_url'];
+			$info['file_url'] = $fileInfo['file_url'];
 		}
 		
 		
@@ -338,7 +339,8 @@ class Goods extends Ydzj_Admin_Controller {
 				}
 				
 				$originalPic = $this->input->post('old_pic');
-				if($originalPic){
+				if($postInfo['file_url'] && $originalPic){
+					//如果上传了新文件,则删除原文件
 					$this->attachment_service->deleteByFileUrl($originalPic);
 				}
 				

@@ -5,12 +5,8 @@ class Article extends Ydzj_Admin_Controller {
 	
 	public function __construct(){
 		parent::__construct();
-		
 		$this->load->library(array('Article_service','Attachment_Service'));
 	}
-	
-	
-	
 	
 	public function index(){
 		
@@ -28,7 +24,6 @@ class Article extends Ydzj_Admin_Controller {
 				'form_id' => '#formSearch'
 			)
 		);
-		
 		
 		$search_article_title = $this->input->get_post('search_article_title');
 		$articleClassId = $this->input->get_post('ac_id') ? $this->input->get_post('ac_id') : 0;
@@ -54,7 +49,6 @@ class Article extends Ydzj_Admin_Controller {
 		
 		$this->display();
 	}
-	
 	
 	
 	
@@ -92,6 +86,7 @@ class Article extends Ydzj_Admin_Controller {
 	
 	
 	
+	
 	public function delete(){
 		
 		$ids = $this->input->post('id');
@@ -118,6 +113,7 @@ class Article extends Ydzj_Admin_Controller {
 	
 	private function _prepareArticleData(){
 		
+		
 		$info = array(
 			'article_title' => $this->input->post('article_title'),
 			'article_content' => $this->input->post('article_content'),
@@ -130,16 +126,16 @@ class Article extends Ydzj_Admin_Controller {
 			
 		);
 		
-		if(empty($this->input->post('article_author'))){
+		if(trim($this->input->post('article_author'))){
 			$info['article_author'] = $this->_adminProfile['basic']['username'];
 		}else{
 			$info['article_author'] = $this->input->post('article_author');
 		}
 		
-		if(empty($this->input->post('article_digest'))){
-			$info['article_digest'] = cutText(html_entity_decode(strip_tags($info['article_content'])),120);
-		}else{
+		if(trim($this->input->post('article_digest'))){
 			$info['article_digest'] = cutText(html_entity_decode(strip_tags($this->input->post('article_digest'))),120);
+		}else{
+			$info['article_digest'] = cutText(html_entity_decode(strip_tags($info['article_content'])),120);
 		}
 		
 		$info['article_time'] = $this->input->server('REQUEST_TIME');
@@ -147,7 +143,6 @@ class Article extends Ydzj_Admin_Controller {
 		
 		return $info;
 	}
-	
 	
 	public function add(){
 		$feedback = '';
