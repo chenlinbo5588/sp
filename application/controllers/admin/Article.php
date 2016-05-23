@@ -133,9 +133,9 @@ class Article extends Ydzj_Admin_Controller {
 		}
 		
 		if(trim($this->input->post('article_digest'))){
-			$info['article_digest'] = cutText(html_entity_decode(strip_tags($this->input->post('article_digest'))),120);
+			$info['article_digest'] = cutText(trim(html_entity_decode(strip_tags($this->input->post('article_content')))),120);
 		}else{
-			$info['article_digest'] = cutText(html_entity_decode(strip_tags($info['article_content'])),120);
+			$info['article_digest'] = cutText(trim(html_entity_decode(strip_tags($info['article_content']))),120);
 		}
 		
 		$info['article_time'] = $this->input->server('REQUEST_TIME');

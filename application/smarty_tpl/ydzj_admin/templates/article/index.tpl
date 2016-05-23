@@ -15,7 +15,7 @@
     <table class="tb-type1 noborder search">
       <tbody>
         <tr>
-          <th><label for="search_article_title">文章名称</label></th>
+          <th><label for="search_article_title">文章标题</label></th>
           <td><input type="text" value="{$smarty.post['search_article_title']|escape}" name="search_article_title" id="search_article_title" class="txt"></td>
           <th><label>文章分类</label></th>
           <td>

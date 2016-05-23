@@ -963,3 +963,16 @@ function getSuccessTip($message = ''){
 function getErrorTip($message = ''){
 	return "<div class=\"tip_error\">{$message}</div>";
 }
+
+
+function validateAuthCode($val){
+	
+	$ci = & get_instance();
+	$word = $ci->session->userdata('auth_code');
+	if(strtolower($val) == strtolower($word)){
+		return true;
+	}else{
+		$ci->form_validation->set_message('validateAuthCode', '对不起,{field} 输入不正确');
+		return false;
+	}
+}

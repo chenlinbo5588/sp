@@ -67,6 +67,7 @@
       </tr>
     </tfoot>
   </table>
+  {*
   <table class="table tb-type2">
     <thead>
       <tr class="space">
@@ -89,6 +90,7 @@
       </tr>
     </tfoot>
   </table>
+  *}
   <table class="table tb-type2">
     <thead>
       <tr class="space">
@@ -98,7 +100,7 @@
     <tbody>
       <tr>
         <td class="w12"></td>
-        <td><a href="{site_url('index')}" target="_blank">慈溪市{config_item('site_name')}有限公司</a>&nbsp;拥有&nbsp;<a href="{site_url('index')}" target="_blank">{config_item('site_name')}</a>&nbsp;的所有版权</td>
+        <td>网站开发者拥有所有版权</td>
       </tr>
       <tr class="noborder">
         <td></td>

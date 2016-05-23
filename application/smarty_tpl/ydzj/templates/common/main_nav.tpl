@@ -103,20 +103,19 @@
        				</ul>
        			</li>
        			<li class="level0">
-       				<a class="link0" href="javascript:void(0)">服务中心</a>
+       				<a class="link0" href="{site_url('service/customer')}">服务中心</a>
        				<ul class="sublist">
-       					<li><a class="link1" href="/">客户服务</a></li>
+       					<li><a class="link1" href="{site_url('service/customer')}">客户服务</a></li>
        					<li><a class="link1" href="/">产品资料</a></li>
-       					<li><a class="link1" href="/">下载中心</a></li>
        				</ul>
        			</li>
        			<li class="level0">
-       				<a class="link0" href="javascript:void(0)">联系我们</a>
+       				<a class="link0" href="{site_url('contacts/index')}">联系我们</a>
        				<ul class="sublist">
-       					<li><a class="link1" href="/">售后中心</a></li>
-       					<li><a class="link1" href="/">招商电话</a></li>
-       					<li><a class="link1" href="/">投诉建议</a></li>
-       					<li><a class="link1" href="/">在线地图</a></li>
+       					<li><a class="link1" href="{site_url('contacts/customer_service')}">售后中心</a></li>
+       					<li><a class="link1" href="{site_url('contacts/merchants_telephone')}">招商电话</a></li>
+       					<li><a class="link1" href="{site_url('contacts/suggestion')}">投诉建议</a></li>
+       					<li><a class="link1" href="{site_url('contacts/map')}">在线地图</a></li>
        				</ul>
        			</li>
        		</ul>

@@ -803,7 +803,7 @@ input[type=text].validation_error {
 	1border-top:1px solid #fff;
 }
 
-.aboutPg , .newsPg, .productPg , .marketPg {
+.aboutPg , .newsPg, .productPg , .marketPg, .servicePg, .contactsPg {
 	background:url(../img/cmp/2.jpg) no-repeat center center;
 	height:300px;
 }
@@ -993,6 +993,29 @@ table.liststyle1 {
 
 .goodscode {
 	color:#f00;
+}
+
+
+.suggest td {
+	padding: 5px 0;
+	vertical-align:middle;
+}
+
+
+.suggest td em {
+	
+	color:red;
+}
+
+.suggest input {
+	width:200px;
+}
+
+
+.suggest .form_error {
+	background:url(../img/error.gif) no-repeat left center;
+	padding-left: 20px;
+    margin: 0 0 0 5px;
 }
 
 

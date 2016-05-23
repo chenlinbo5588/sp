@@ -4,26 +4,27 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class About extends Ydzj_Controller {
 	
 	private $sideNavs = null;
+	private $modKey = '走进标度';
 	
 	public function __construct(){
 		parent::__construct();
+		
 		$this->assign('pgClass',strtolower(get_class()).'Pg');
-		$this->assign('sideTitle','走进标度');
+		
 		
 		$this->load->model('Article_Model');
 		
-		$this->sideNavs = array(
-			'企业简介' => site_url('about/index'),
-			'公司理念' => site_url('about/thinking'),
-			'企业风采' => site_url('about/moreintro'),
+		$tempAr = config_item('pageConf');
 		
-		);
-		
+		$this->sideNavs = $tempAr[$this->modKey]['sideNav'];
 		$this->assign('sideNavs',$this->sideNavs);
+		
+		$this->assign('sideTitle',$this->modKey);
+		$this->assign('sideTitleUrl',$tempAr[$this->modKey]['url']);
 		
 		$this->_navigation = array(
 			'首页' => site_url('/'),
-			'走进标度' => site_url('about')
+			$this->modKey => $tempAr[$this->modKey]['url']
 		);
 	}
 	
@@ -61,9 +62,6 @@ class About extends Ydzj_Controller {
 	{
 		$key = '企业风采';
 		$this->_getArticleContent($key);
-		
 		$this->display('common/art');
 	}
-	
-
 }

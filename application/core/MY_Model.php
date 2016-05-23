@@ -58,9 +58,6 @@ class MY_Model extends CI_Model {
     public function transOff(){
     	$this->db->trans_off();
     }
-    
-     
-     
      
     /**
      * 计算

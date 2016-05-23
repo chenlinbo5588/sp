@@ -16,7 +16,7 @@ class Ydzj_Controller extends MY_Controller {
 		parent::__construct();
 		
 		$this->load->library('Seo_Service');
-		$this->form_validation->set_error_delimiters('<div class="form_error">','</div>');
+		$this->form_validation->set_error_delimiters('<label class="form_error">','</label>');
 		
 		$this->_initLogin();
 		$this->_initSetting();
@@ -24,10 +24,11 @@ class Ydzj_Controller extends MY_Controller {
 	}
 	
 	
-	
-	
 	protected function _initLibrary(){
 		parent::_initLibrary();
+		
+		//@todo 需要删除，如果是其他网站
+		$this->load->config('boiido');
 	}
 	
 	private function _initSetting(){

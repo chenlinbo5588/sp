@@ -9,14 +9,16 @@ class Dashboard extends Ydzj_Admin_Controller {
 	
 	public function welcome(){
 		
-		$this->display('dashboard/welcome');
+		$this->display('dashboard/aboutus');
+		
+		//$this->display('dashboard/welcome');
 	}
 	
 	
 	
 	public function aboutus(){
 		
-		$this->display('dashboard/aboutus');
+		
 	}
 	
 }

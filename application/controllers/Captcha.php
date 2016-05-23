@@ -10,7 +10,11 @@ class Captcha extends Ydzj_Controller {
     public function index()
     {
         $this->load->helper('captcha');
+        
+        $word = random_string('alnum',4);
+        
 		$vals = array(
+			'word' => $word,
 	        'img_path'      => ROOTPATH.'/static/img/captcha/',
 	        'img_url'       => base_url('/static/img/captcha/'),
 	        'img_width'     => 150,
@@ -22,6 +26,9 @@ class Captcha extends Ydzj_Controller {
 		);
 
 		$cap = create_captcha($vals);
+		$this->session->set_userdata('auth_code', $word);
+		
+		/*
 		$data = array(
 		        'captcha_time'  => $cap['time'],
 		        'ip_address'    => $this->input->ip_address(),
@@ -37,7 +44,7 @@ class Captcha extends Ydzj_Controller {
 		));
 		
 		$this->Captcha_Model->_add($data);
-		
+		*/
 		
 		header('Pragma:no-cache');
 		header('Cache-control:no-cache');

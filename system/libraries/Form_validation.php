@@ -735,8 +735,13 @@ class CI_Form_validation {
 				{
 					if ( ! method_exists($this->CI, $rule))
 					{
-						log_message('debug', 'Unable to find callback validation rule: '.$rule);
-						$result = FALSE;
+						// @todo add by clb, 如果有外面的函数,则使用外面的函数
+						if(function_exists($rule)){
+							$result = $rule($postdata,$param);
+						}else{
+							log_message('debug', 'Unable to find callback validation rule: '.$rule);
+							$result = FALSE;
+						}
 					}
 					else
 					{
@@ -781,7 +786,7 @@ class CI_Form_validation {
 				}
 			}
 			elseif ( ! method_exists($this, $rule))
-			{
+			{echo $rule;
 				// If our own wrapper function doesn't exist we see if a native PHP function does.
 				// Users can use any native PHP function call that has one param.
 				if (function_exists($rule))

@@ -38,7 +38,7 @@
 				</li>
 				<li class="col fl">
 					<div class="colPanel newslist">
-						<h3 class="panelTitel"><span>企业新闻</span><a class="more fr" href="/news/news_list">更多&gt;&gt;</a></h3>
+						<h3 class="panelTitel"><span>企业新闻</span><a class="more fr" href="{site_url('news/news_list?ac_id=15')}">更多&gt;&gt;</a></h3>
 						<ol class="clearfix">
 							<li><a href="/news/detail/?id=39">2015年越南国际塑胶工业展，秣马厉兵，通佳人准备</a><span>2016-09-09</span></li>
 							<li><a href="/news/detail/?id=39">积极备战2015泰国国际塑胶展</a><span>2016-09-09</span></li>
