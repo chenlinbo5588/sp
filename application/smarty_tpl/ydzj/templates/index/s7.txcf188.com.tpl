@@ -88,6 +88,7 @@ form label.error {
 	top:0;
 	border:0;
 	z-index:10;
+	background-color:#A9A7A7;
 }
 
 
