@@ -80,7 +80,7 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 		
 		$this->_allowSites = $temp;
 		
-		if($this->_adminProfile['basic']['uid']){
+		if($this->_adminProfile['basic']['uid'] == WEBSITE_FOUNDER){
 			//没有来源的，防止数据看不到
 			$this->_allowSites[] = 0;
 		}
