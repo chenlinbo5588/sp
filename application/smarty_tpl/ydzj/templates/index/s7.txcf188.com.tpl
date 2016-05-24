@@ -38,6 +38,7 @@ img.responed {
 #reg {
 	margin: 0 auto;
 	padding:0 10px;
+	width:90%;
 }
 
 
@@ -51,7 +52,7 @@ form label.error {
 }
 
 .username ,.mobile, .auth_code {
-	margin:5px 0 10px 0;
+	margin:6px 0;
 }
 
 
@@ -60,12 +61,12 @@ form label.error {
 	height:35px;
 	line-height:35px;
 	display:block;
-	width:15%;
+	width:19%;
 	color:#FFFFFF;
 }
 
 .username .txt,.mobile .txt , .auth_code .txt {
-	width:84%;
+	width:80%;
 	height:35px;
 	line-height:35px;
 	float:right;
@@ -86,6 +87,7 @@ form label.error {
 	right:0;
 	top:0;
 	border:0;
+	z-index:10;
 }
 
 
@@ -140,11 +142,9 @@ form label.error {
 	   		<div id="regbg">
 	   			<div class="hide"></div>
 	   			<div id="reg">
-	   				<a name="md">&nbsp;</a>
+	   				<a name="md"></a>
 		   			{form_open(site_url('index/index'|cat:'#md'),'id="registerForm"')}
 			        {include file="./site_form_hidden.tpl"}
-		   			<div class="username clearfix"><label class="side_lb">姓名</label><input type="text" class="txt noround" autocomplete="off" name="username" value="{set_value('username')}" placeholder="请输入用户名称"/></div>
-		   			<div class="tiparea">{form_error('username')}</div>
 		   			<div class="mobile clearfix"><label class="side_lb">手机号码</label><input type="text" class="txt noround" autocomplete="off" name="mobile" id="mobile" value="{set_value('mobile')}" placeholder="请输入您的手机号码"/></div>
 		   			<div class="tiparea">{form_error('mobile')}</div>
 		   			<div class="auth_code clearfix"><label class="side_lb">验证码</label><input type="text" class="txt noround" name="auth_code" autocomplete="off" value="" placeholder="请输入您的验证码"/><input type="button" class="getCode noround" name="authCodeBtn" value="获取验证码"/></div>
@@ -154,7 +154,7 @@ form label.error {
 		   		</div>
 	   		</div>
 	   	</div>
-   		<div class="cv">
+   		<div>
    			<img class="responed" src="{resource_url('img/pg7/pic4.png')}"/>
    		</div>
    		<div>
@@ -187,11 +187,6 @@ form label.error {
 	        	error.appendTo(element.parent().next(".tiparea"));
 	        },
 	        rules : {
-	        	username : {
-	        		required : true,
-	        		minlength: 1,
-	                maxlength: 20
-	        	},
 	        	mobile: {
 	                required : true,
 	                phoneChina:true
@@ -204,11 +199,6 @@ form label.error {
 	            }
 	        },
 	        messages : {
-	        	username : {
-	        		required : '请输入用户名称',
-	        		minlength: '最少输入1个字符',
-	                maxlength: '最多输入20个字符'
-	        	},
 	        	mobile: {
 	                required : '手机号码不能为空'
 	            },

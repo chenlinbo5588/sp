@@ -29,6 +29,10 @@ form label.error {
     text-align:left;
 }
 
+.anchor {
+	height:0px;
+}
+
 </style>
 
 <script>

@@ -18,6 +18,7 @@ img.responed {
 #reg {
 	margin: 0 auto;
 	padding:0 10px;
+	width: 90%;
 }
 
 
@@ -31,7 +32,7 @@ form label.error {
 }
 
 .username ,.mobile, .auth_code {
-	margin:5px 0 10px 0;
+	margin:5px 0;
 }
 
 
@@ -81,34 +82,17 @@ form label.error {
 	position:relative;
 }
 
-.btn2 input {
-	background:url('{resource_url("img/btns/btn2_2.png")}') repeat-x left top;
-	height:34px;
-	line-height:34px;
+.btn2 .t4 {
+	background:url('{resource_url("img/new_pg4/reg_btn.jpg")}') no-repeat center center;
+	height:39px;
+	line-height:39px;
 	text-align:center;
 	border:0;
 	color:#fe0050;
 	font-size:15px;
 	font-weight:bold;
 	width:100%;
-}
-
-.btn2 .lf , .btn2 .rf {
-	position:absolute;
-	width:3px;
-	height:34px;
-	background:url('{resource_url("img/btns/btn2_1.png")}') no-repeat left top;
-}
-
-.btn2 .lf {
-	left:0;
-	top:0p;x
-}
-
-.btn2 .rf {
-	right:0px;
-	top:0px;
-	background:url('{resource_url("img/btns/btn2_3.png")}') no-repeat left top;
+	text-indent:-1000px;
 }
 
 </style>
@@ -162,7 +146,7 @@ form label.error {
 	   			<div class="auth_code clearfix"><label class="side_lb">验证码</label><input type="text" class="txt noround" id="authcode_text" name="auth_code" autocomplete="off" value="" placeholder="请输入您的验证码"/><img class="nature t4" id="authImg" src="{site_url('captcha')}?w=100&h=37&type=num" title="点击图片刷新"/></div>
 	   			<div class="tiparea">{form_error('auth_code')}</div>
 	   			<div class="refresh"><a href="javascript:void(0);">看不清，点击验证码刷新</a></div>
-	   			<div class="btn2 clearfix"><div class="lf"></div><input class="t4" type="submit" name="tj" value="我要体验"/><div class="rf"></div></div>
+	   			<div class="btn2 clearfix"><input class="t4" type="submit" name="tj" value="我要体验"/></div>
 	   			</form>
 	   		</div>
    		</div>

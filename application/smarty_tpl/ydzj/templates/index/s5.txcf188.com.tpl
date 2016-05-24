@@ -18,6 +18,7 @@ img.responed {
 #reg {
 	margin: 0 auto;
 	padding:0 10px;
+	width:90%;
 }
 
 
@@ -82,15 +83,18 @@ form label.error {
 }
 
 .btn2 input {
-	background:#d31717;
-	height:34px;
-	line-height:34px;
+	line-height:43px;
+	height:43px;
 	text-align:center;
 	border:0;
 	color:#fff;
 	font-size:15px;
 	font-weight:bold;
-	width:100%;
+	width:80%;
+	margin:0 auto;
+	display:block;
+	text-indent:-1000em;
+	background:url('{resource_url("img/btns/reg_btn.png")}') no-repeat center center;
 }
 
 
@@ -138,11 +142,11 @@ form label.error {
 	   	</div>
 	   	<div>
    			{include file="./site_f1.tpl"}
-   			<div><img class="responed" src="{resource_url('img/pg12/pic7.png')}"/></div>
+   			<div><img class="responed" src="{resource_url('img/pg3/pic14.jpg')}"/></div>
    		</div>
    		<div>
    			{include file="./site_f2.tpl"}
-   			<div><img class="responed" src="{resource_url('img/pg12/pic8.png')}"/></div>
+   			<div><img class="responed" src="{resource_url('img/pg3/pic15.jpg')}"/></div>
    		</div>
 	</div><!-- //end of wrap -->
 	<script>

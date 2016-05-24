@@ -43,7 +43,7 @@ form label.error {
 }
 
 .username ,.mobile, .auth_code {
-	margin:5px 0 15px;
+	margin:6px 0;
 }
 
 
@@ -58,9 +58,8 @@ form label.error {
 
 .username .txt,.mobile .txt , .auth_code .txt {
 	width:100%;
-	height:73px;
-	line-height:73px;
-	font-size:200%;
+	height:37px;
+	line-height:37px;
 }
 
 .auth_code {
@@ -71,9 +70,8 @@ form label.error {
 	width:60%;
 }
 .auth_code .getCode {
-	width:100px;
-	height:74px;
-	line-height:74px;
+	height:37px;
+	line-height:37px;
 	position:absolute;
 	margin-right:0;
 	right:-1px;
@@ -108,12 +106,12 @@ form label.error {
 
 .btn2 input {
 	background:#d31717;
-	height:73px;
-	line-height:73px;
+	height:37px;
+	line-height:37px;
 	text-align:center;
 	border:0;
 	color:#fff;
-	font-size:28px;
+	font-size:15px;
 	font-weight:bold;
 	width:100%;
 }
