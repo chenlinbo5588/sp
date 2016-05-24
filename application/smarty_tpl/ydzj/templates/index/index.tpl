@@ -40,18 +40,26 @@
 					<div class="colPanel newslist">
 						<h3 class="panelTitel"><span>企业新闻</span><a class="more fr" href="{site_url('news/news_list?ac_id=15')}">更多&gt;&gt;</a></h3>
 						<ol class="clearfix">
-							<li><a href="/news/detail/?id=39">2015年越南国际塑胶工业展，秣马厉兵，通佳人准备</a><span>2016-09-09</span></li>
+							{foreach from=$qiyeList item=item}
+							<li><a href="{site_url('news/detail/')}?id={$item['article_id']}">{$item['article_title']|escape}</a><span>{$item['article_time']|date_format:"%Y-%m-%d"}</span></li>
+							{/foreach}
+							{*
 							<li><a href="/news/detail/?id=39">积极备战2015泰国国际塑胶展</a><span>2016-09-09</span></li>
 							<li><a href="/news/detail/?id=39">通佳集团将亮相第十四届亚太国际塑胶工业展览会</a><span>2016-09-09</span></li>
 							<li><a href="/news/detail/?id=39">新起点，新面貌，通佳机械全力备战第118届广交会</a><span>2016-09-09</span></li>
 							<li><a href="/news/detail/?id=39">中国塑料机械行业的影响力在逐渐提高</a><span>2016-09-09</span></li>
 							<li><a href="/news/detail/?id=39">领航智能装备制造，助力中国塑机腾飞</a><span>2016-09-09</span></li>
 							<li><a href="/news/detail/?id=39">新闻标题1</a><span>2016-09-09</span></li>
+							*}
 						</ol>
 					</div>
 					<div class="colPanel newslist">
-						<h3 class="panelTitel"><span>行业动态</span><a class="more fr" href="/news/news_list">更多&gt;&gt;</a></h3>
+						<h3 class="panelTitel"><span>行业动态</span><a class="more fr" href="{site_url('news/news_list?ac_id=16')}">更多&gt;&gt;</a></h3>
 						<ol class="clearfix">
+							{foreach from=$industryList item=item}
+							<li><a href="{site_url('news/detail/')}?id={$item['article_id']}">{$item['article_title']|escape}</a><span>{$item['article_time']|date_format:"%Y-%m-%d"}</span></li>
+							{/foreach}
+							{*
 							<li><a href="/news/detail/?id=39">2015年越南国际塑胶工业展，秣马厉兵，通佳人准备</a><span>2016-09-09</span></li>
 							<li><a href="/news/detail/?id=39">积极备战2015泰国国际塑胶展</a><span>2016-09-09</span></li>
 							<li><a href="/news/detail/?id=39">通佳集团将亮相第十四届亚太国际塑胶工业展览会</a><span>2016-09-09</span></li>
@@ -59,6 +67,7 @@
 							<li><a href="/news/detail/?id=39">中国塑料机械行业的影响力在逐渐提高</a><span>2016-09-09</span></li>
 							<li><a href="/news/detail/?id=39">领航智能装备制造，助力中国塑机腾飞</a><span>2016-09-09</span></li>
 							<li><a href="/news/detail/?id=39">新闻标题1</a><span>2016-09-09</span></li>
+							*}
 						</ol>
 					</div>
 				</li>
@@ -67,9 +76,10 @@
 				<h3><strong>推荐产品</strong></h3>
 			</div>
 			<div class="panelContent">
-				
 				<ul id="hotProductSwiper">
-		            <li><a href="/" target="_blank"><img src="{resource_url('img/cmp/nature1.jpg')}" title="Funky nature1"/></a></li>
+					{foreach from=$goodsList item=item}
+		            <li><a href="{site_url('product/detail/')}?id={$item['goods_id']}&gc_id={$item['gc_id']}" target="_blank"><img {if $item['goods_pic']}src="{resource_url('img/cmp/nature1.jpg')}"{else}src="{resource_url('img/default.jpg')}"{/if} title="{$item['goods_name']|escape}"/></a></li>
+		            {/foreach}
 		            <li><a href="/" target="_blank"><img src="{resource_url('img/cmp/nature2.jpg')}" title="Funky roots"/></a></li>
 		            <li><a href="/" target="_blank"><img src="{resource_url('img/cmp/nature3.jpg')}" title="Funky roots2"/></a></li>
 		            <li><a href="/" target="_blank"><img src="{resource_url('img/cmp/nature4.jpg')}" title="Funky roots3"/></a></li>
@@ -79,13 +89,9 @@
 			</div>
 		</div>
 		<div class="friendLinks panelContent">
-			<span>官方店铺:</span>
-			<a href="/">百度</a>
-			<a href="/">百度</a>
-			<a href="/">百度</a>
-			<a href="/">百度</a>
-			<a href="/">百度</a>
-			<a href="/">百度</a>
+			<h3><strong>官方店铺</strong></h3>
+			<a href="http://www.taobao.com" title="淘宝店铺"><img src="{resource_url('img/taobao.jpg')}" style="width:80px;"/></a>
+			<a href="http://www.alibaba.com.cn" title="阿里巴巴"><img src="{resource_url('img/alibaba.jpg')}"/></a>
 		</div>
 	</div>
 	
@@ -109,9 +115,11 @@
 				infiniteLoop:true,
 				captions: true,
 				touchEnabled:true,
-				slideWidth: 250,
-			    minSlides: 3,
-			    maxSlides: 5,
+				speed:300,
+				autoDelay:0,
+				slideWidth: 120,
+			    minSlides: 10,
+			    maxSlides: 20,
 			    moveSlides: 1,
 			    slideMargin: 10
 			});

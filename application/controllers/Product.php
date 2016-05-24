@@ -5,6 +5,7 @@ class Product extends Ydzj_Controller {
 	
 	private $sideNavs = null;
 	private $modKey = '产品中心';
+	private $seoKeys = array();
 	
 	
 	public function __construct(){
@@ -104,6 +105,10 @@ class Product extends Ydzj_Controller {
 		$this->assign('currentGcId',$currentGcId);
 		$this->assign('keyword',$keyword);
 		
+		
+		$tempSeo = array_reverse($this->seoKeys);
+		$this->seo($tempSeo[0], implode(',',$tempSeo));
+		
 		$this->assign('breadcrumb',$this->breadcrumb());
 		$this->display();
 	}
@@ -122,6 +127,7 @@ class Product extends Ydzj_Controller {
 			}
 			
 			foreach($parents as $pitem){
+				$this->seoKeys[] = $pitem['gc_name'];
 				$this->_navigation[$pitem['gc_name']] = site_url('product/plist?id='.$pitem['gc_id']);
 			}
 		}
@@ -147,11 +153,12 @@ class Product extends Ydzj_Controller {
 				'select' => 'goods_image',
 				'where' => array('goods_id' => $id)
 			));
+			
+			/*
 			if(empty($currentFiles)){
-				
 				$currentFiles[] = array('goods_image' => 'img/default.jpg');
 			}
-			
+			*/
 			
 			$this->_breadCrumbLinks($info['gc_id']);
 			$nextProduct = $this->goods_service->getNextByProduct($info);
@@ -167,6 +174,10 @@ class Product extends Ydzj_Controller {
 		}else{
 			$this->_breadCrumbLinks($gc_id);
 		}
+		
+		
+		$tempSeo = array_reverse($this->seoKeys);
+		$this->seo($info['goods_name'] .' - '.$tempSeo[0], implode(',',$tempSeo));
 		
 		$this->assign('breadcrumb',$this->breadcrumb());
 		$this->assign('info',$info);

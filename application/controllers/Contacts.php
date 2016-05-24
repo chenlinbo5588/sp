@@ -47,6 +47,7 @@ class Contacts extends Ydzj_Controller {
 		$key = '联系我们';
 		$this->_getArticleContent($key);
 		
+		$this->seo($key);
 		$this->display('common/art');
 	}
 	
@@ -55,7 +56,7 @@ class Contacts extends Ydzj_Controller {
 	{
 		$key = '售后中心';
 		$this->_getArticleContent($key);
-		
+		$this->seo($key);
 		$this->display('common/art');
 	}
 	
@@ -64,6 +65,7 @@ class Contacts extends Ydzj_Controller {
 	{
 		$key = '招商电话';
 		$this->_getArticleContent($key);
+		$this->seo($key);
 		$this->display('common/art');
 	}
 	
@@ -103,7 +105,8 @@ class Contacts extends Ydzj_Controller {
 			'weixin' => $this->input->post('weixin') ? $this->input->post('weixin') : '',
 			'doc_no' => $this->input->post('doc_no'),
 			'remark' => strip_tags($this->input->post('remark')),
-			'status' => '未处理'
+			'status' => '未处理',
+			'ip' => $this->input->ip_address()
 		);
 		
 		
@@ -114,7 +117,9 @@ class Contacts extends Ydzj_Controller {
 	public function suggestion(){
 		
 		$feedback = '';
-		$this->_navigation['投诉建议'] = site_url('contacts/suggestion');
+		
+		$key = '投诉建议';
+		$this->_navigation[$key] = site_url('contacts/suggestion');
 		$this->assign('breadcrumb',$this->breadcrumb());
 		
 		if($this->isPostRequest()){
@@ -138,11 +143,15 @@ class Contacts extends Ydzj_Controller {
 		
 		$this->assign('info',$info);
 		$this->assign('feedback',$feedback);
+		$this->seo($key);
 		$this->display();
 	}
 	
 	public function map(){
-		
+		$key = '在线地图';
+		$this->seo($key);
+		$this->assign('site_name',$this->_siteSetting['site_name']);
+		$this->assign('company_address',$this->_siteSetting['company_address']);
 		$this->display();
 	}
 }

@@ -6,7 +6,7 @@ class News extends Ydzj_Controller {
 	private $sideNavs = null;
 	private $modKey = '';
 	private $topClassId = 0;
-	
+	private $seoKeys = array();
 	
 	public function __construct(){
 		parent::__construct();
@@ -19,7 +19,7 @@ class News extends Ydzj_Controller {
 		
 		$this->assign('sideTitle',$this->modKey);
 		
-		$this->load->library('Article_service');
+		$this->load->library(array('Article_service','Goods_Service'));
 		
 		$articleClass = $this->Article_Class_Model->getList(array(
 			'where' => array(
@@ -47,6 +47,9 @@ class News extends Ydzj_Controller {
 		
 		
 		$this->assign('sideNavs',$this->sideNavs);
+		
+		$goodsList = $this->goods_service->getCommandGoodsList();
+		$this->assign('goodsList',$goodsList);
 	}
 	
 	
@@ -57,14 +60,12 @@ class News extends Ydzj_Controller {
 		$keyword = $this->input->get_post('keyword') ? $this->input->get_post('keyword') : '';
 		$currentAcId = $this->input->get_post('ac_id');
 		
-		
 		if(empty($currentAcId)){
 			$currentAcId = $this->topClassId;
 		}
 		
 		$this->_breadCrumbLinks($currentAcId);
 		$childIds = $this->article_service->getAllChildArticleClassByPid($currentAcId);
-		
 		
 		$childIds[] = $currentAcId;
 		
@@ -128,6 +129,10 @@ class News extends Ydzj_Controller {
 		$this->assign('currentAcId',$currentAcId);
 		$this->assign('keyword',$keyword);
 		
+		
+		$tempSeo = array_reverse($this->seoKeys);
+		$this->seo($tempSeo[0], implode(',',$tempSeo));
+		
 		$this->assign('breadcrumb',$this->breadcrumb());
 		$this->display();
 		
@@ -147,6 +152,8 @@ class News extends Ydzj_Controller {
 			}
 			
 			foreach($parents as $pitem){
+				$this->seoKeys[] = $pitem['ac_name'];
+				
 				$this->_navigation[$pitem['ac_name']] = site_url('news/news_list?id='.$pitem['ac_id']);
 			}
 		}
@@ -189,6 +196,9 @@ class News extends Ydzj_Controller {
 		}else{
 			$this->_breadCrumbLinks($ac_id);
 		}
+		
+		$tempSeo = array_reverse($this->seoKeys);
+		$this->seo($info['article_title'] .' - '.$tempSeo[0], implode(',',$tempSeo));
 		
 		$this->assign('breadcrumb',$this->breadcrumb());
 		$this->assign('info',$info);

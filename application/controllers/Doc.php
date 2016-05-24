@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Product_doc extends Ydzj_Controller {
+class Doc extends Ydzj_Controller {
 	
 	private $sideNavs = null;
 	private $modKey = '';
@@ -10,20 +10,27 @@ class Product_doc extends Ydzj_Controller {
 	
 	public function __construct(){
 		parent::__construct();
+		
+		$this->load->library(array('Article_service','Goods_Service'));
+		
 		$this->assign('pgClass',strtolower(get_class()).'Pg');
 		$this->modKey = $this->input->get_post('catname');
 		
 		if(empty($this->modKey)){
-			$this->modKey = '产品资料';
+			$this->modKey = '服务中心';
 		}
 		
 		$this->assign('sideTitle',$this->modKey);
 		
-		$this->load->library('Article_service');
+		
+		$tempAr = config_item('pageConf');
+		
+		$this->sideNavs = $tempAr[$this->modKey]['sideNav'];
+		$this->assign('sideNavs',$this->sideNavs);
 		
 		$articleClass = $this->Article_Class_Model->getList(array(
 			'where' => array(
-				'ac_name' => $this->modKey,
+				'ac_name' => '产品资料',
 				'ac_parent_id' => 0
 			)
 		));
@@ -31,6 +38,8 @@ class Product_doc extends Ydzj_Controller {
 		if($articleClass[0]){
 			$this->topClassId = $articleClass[0]['ac_id'];
 			
+			
+			/*
 			$sideNavs = $this->Article_Class_Model->getList(array(
 				'where' => array(
 					'ac_parent_id' => $this->topClassId
@@ -39,19 +48,23 @@ class Product_doc extends Ydzj_Controller {
 			
 			if($sideNavs){
 				foreach($sideNavs as $nav){
-					$this->sideNavs[$nav['ac_name']] = site_url('news/news_list/?ac_id=').$nav['ac_id'];
+					$this->sideNavs[$nav['ac_name']] = site_url('doc/product_list/?ac_id=').$nav['ac_id'];
 				}
 			}
-			
+			*/
 		}
 		
 		
-		$this->assign('sideNavs',$this->sideNavs);
+		//$this->assign('sideNavs',$this->sideNavs);
+		
+		
+		$goodsList = $this->goods_service->getCommandGoodsList();
+		$this->assign('goodsList',$goodsList);
 	}
 	
 	
 	
-	public function news_list()
+	public function product_list()
 	{
 		
 		$keyword = $this->input->get_post('keyword') ? $this->input->get_post('keyword') : '';
@@ -65,15 +78,12 @@ class Product_doc extends Ydzj_Controller {
 		$this->_breadCrumbLinks($currentAcId);
 		$childIds = $this->article_service->getAllChildArticleClassByPid($currentAcId);
 		
-		
 		$childIds[] = $currentAcId;
 		
-		//print_r($childIds);
 		$currentPage = $this->input->get_post('page') ? $this->input->get_post('page') : 1;
 		
 		//echo $currentPage;
 		$condition = array(
-			//'select' => 'article_id,ac_id,article_title,article_click,gmt_create,gmt_modify',
 			'where' => array(
 				'article_show' => 1
 			),
@@ -89,7 +99,7 @@ class Product_doc extends Ydzj_Controller {
 				//'call_js' => 'search_page',
 				'form_id' => '#listForm',
 				'anchor' => 'listmao',
-				'base_link' => site_url('news/news_list/?')."ac_id={$currentAcId}&keyword={$keyword}"
+				'base_link' => site_url('doc/product_list/?')."ac_id={$currentAcId}&keyword={$keyword}"
 			)
 		);
 		
@@ -150,52 +160,5 @@ class Product_doc extends Ydzj_Controller {
 				$this->_navigation[$pitem['ac_name']] = site_url('news/news_list?id='.$pitem['ac_id']);
 			}
 		}
-		
 	}
-	
-	
-	
-	public function detail(){
-		
-		$id = $this->input->get_post('id');
-		$ac_id = $this->input->get_post('ac_id');
-		$info = $this->Article_Model->getFirstByKey($id,'article_id');
-		if($info){
-			
-			if($info['article_click'] == 0){
-				$info['article_click']++;
-			}
-			
-			
-			$this->_breadCrumbLinks($info['ac_id']);
-			$nextArticle = $this->article_service->getNextByArticle($info);
-			$preArticle = $this->article_service->getPreByArticle($info);
-			if($nextArticle && empty($nextArticle['article_url'])){
-				$nextArticle['article_url'] = site_url('news/detail?id=') . $nextArticle['article_id'].'&ac_id='.$nextArticle['ac_id'];
-			}
-			
-			if($preArticle && empty($preArticle['article_url'])){
-				$preArticle['article_url'] = site_url('news/detail?id=') . $preArticle['article_id'].'&ac_id='.$preArticle['ac_id'];
-			}
-			
-			//print_r($preArticle);
-			$this->assign('nextArticle',$nextArticle);
-			$this->assign('preArticle',$preArticle);
-			
-			$this->Article_Model->increseOrDecrease(array(
-				array('key' => 'article_click','value'=> 'article_click + 1')
-			),array('article_id' => $id));
-			
-		}else{
-			$this->_breadCrumbLinks($ac_id);
-		}
-		
-		$this->assign('breadcrumb',$this->breadcrumb());
-		$this->assign('info',$info);
-		
-		$this->display();
-		
-		
-	}
-	
 }

@@ -14,37 +14,20 @@ class Index extends Ydzj_Controller {
 	 */
 	public function index()
 	{
-		
-		$this->load->library('Goods_service');
-		
-		$topClassId = 0;
-		
-		$topClassInfo = $this->Goods_Class_Model->getList(array(
-			'where' => array(
-				'gc_name' => '产品中心',
-				'gc_parent_id' => 0
-			)
-		));
-		
-		
-		$goodsClassIds = $this->goods_service->getAllChildGoodsClassByPid($topClassInfo[0]['gc_id']);
-		$goodsClassIds[] = $topClassInfo[0]['gc_id'];
-		
-		//print_r($goodsClassIds);
-		$goodsList = $this->Goods_Model->getList(array(
-			/*'where' => array(
-				'goods_commend' => 1,
-				'goods_verify' => 1,
-				'goods_state' => 1
-			),*/
-			'where_in' => array(
-				array('key' => 'gc_id' , 'value' => $goodsClassIds )
-			),
-			'order' => 'goods_sort ASC',
-			'limit' => 20
-		));
-		
+		$this->load->library(array('Goods_service','Article_Service'));
+		$goodsList = $this->goods_service->getCommandGoodsList();
 		$this->assign('goodsList',$goodsList);
+		
+		
+		// 获得 企业新闻
+		$qiyeList = $this->article_service->getCommandArticleList(15);
+		// 行业动态
+		$industryList = $this->article_service->getCommandArticleList(16);
+		
+		
+		$this->seo();
+		$this->assign('qiyeList',$qiyeList);
+		$this->assign('industryList',$industryList);
 		$this->display();
 	}
 	

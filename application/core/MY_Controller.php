@@ -9,6 +9,9 @@ class MY_Controller extends CI_Controller {
 	public $_reqtime ;
 	public $_navigation = array();
 	
+	protected $_siteSetting = array();
+	public $_seoSetting = array();
+	
 	
 	public $_seo = array(
 		'SEO_title' => '',
@@ -25,9 +28,10 @@ class MY_Controller extends CI_Controller {
 		$this->_initLibrary();
 		$this->_initApp();
 		
-		
 		$this->_initSmarty();
 		$this->_security();
+		$this->_initSiteSetting();
+		$this->_initSeoSetting();
 		
 		$this->smartyConfig();
 	}
@@ -100,6 +104,51 @@ class MY_Controller extends CI_Controller {
     }
     
     
+    private function _initSiteSetting(){
+    	$settingList = $this->cache->file->get(CACHE_KEY_SiteSetting);
+    	if(empty($settingList)){
+    		$temp = $this->Setting_Model->getList();
+    		//print_r($list);
+	    	$settingList = array();
+	    	foreach($temp as $item){
+	    		$settingList[$item['name']] = $item['value'];
+	    	}
+	    	
+	    	$this->cache->file->save(CACHE_KEY_SiteSetting,$settingList);
+    	}
+    	
+    	//var_dump($settingList);
+    	$this->_siteSetting = $settingList;
+    	
+    	$this->assign('siteSetting',$this->_siteSetting);
+    	//print_r($this->_siteSetting);
+    }
+    
+    
+    private function _initSeoSetting(){
+    	
+    	$seoList = $this->cache->file->get(CACHE_KEY_SeoSetting);
+    	if(empty($seoList)){
+    		$temp = $this->Seo_Model->getList();
+    		//print_r($list);
+	    	$seoList = array();
+	    	foreach($temp as $item){
+	    		$item['title'] = str_replace(array('{sitename}'),array($this->_siteSetting['site_name']),$item['title']);
+	    		$item['keywords'] = str_replace(array('{sitename}'),array($this->_siteSetting['site_name']),$item['keywords']);
+	    		$item['description'] = str_replace(array('{sitename}'),array($this->_siteSetting['site_name']),$item['description']);
+	    		
+	    		$seoList[$item['type']] = $item;
+	    	}
+	    	
+	    	//print_r($seoList);
+	    	$this->cache->file->save(CACHE_KEY_SeoSetting,$seoList);
+    	}
+    	
+    	$this->_seoSetting = $seoList;
+    	
+    }
+    
+    
     public function getAppTemplateDir(){
     	return 'default';
     }
@@ -120,7 +169,7 @@ class MY_Controller extends CI_Controller {
     protected function _initLibrary(){
 		$this->load->helper(array('form','directory','file', 'url','string'));
 		$this->load->driver('cache');
-		$this->load->model('Member_Model');
+		$this->load->model(array('Member_Model','Setting_Model','Seo_Model'));
 		$this->load->library(array('user_agent','form_validation','encrypt','PHPTree','Base_Service'));
 		
 		$this->base_service->initStaticVars();
@@ -202,7 +251,6 @@ class MY_Controller extends CI_Controller {
     	
     	$this->_smarty->assign($this->_seo);
     	
-    	
     	$this->output->set_output($this->_smarty->fetch($this->_smarty->getTemplateDir(0).$viewname.'.tpl'));
     }
     
@@ -211,17 +259,23 @@ class MY_Controller extends CI_Controller {
     }
     
     public function seo($title = '',$keyword = '', $desc = ''){
-    	
+    	//print_r($this->_seoSetting);
     	if($title){
     		$this->_seo['SEO_title'] = $title;
+    	}else{
+    		$this->_seo['SEO_title'] = $this->_siteSetting['site_name'];
     	}
     	
     	if($keyword){
-    		$this->_seo['SEO_keywords'] = $keyword;
+    		$this->_seo['SEO_keywords'] = $keyword . ','.$this->_seoSetting['index']['keywords'];
+    	}else{
+    		$this->_seo['SEO_keywords'] = $this->_seoSetting['index']['keywords'];
     	}
     	
     	if($desc){
-    		$this->_seo['SEO_description'] = $desc;
+    		$this->_seo['SEO_description'] = $desc. ','.$this->_seoSetting['index']['keywords'];
+    	}else{
+    		$this->_seo['SEO_description'] = $this->_seoSetting['index']['description'];
     	}
     }
     

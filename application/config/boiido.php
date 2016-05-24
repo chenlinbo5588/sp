@@ -21,7 +21,7 @@ $config['pageConf'] = array(
 		'url' => site_url('service/customer'),
 		'sideNav' => array(
 			'客户服务' => site_url('service/customer'),
-			'产品资料' => site_url('download/product'),
+			'产品资料' => site_url('doc/product_list'),
 		)
 	),
 	'联系我们' => array(

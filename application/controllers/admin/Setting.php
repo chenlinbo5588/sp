@@ -10,6 +10,11 @@ class Setting extends Ydzj_Admin_Controller {
 		$this->attachment_service->setUid($this->_adminProfile['basic']['uid']);
 	}
 	
+	
+	private function _clearCache(){
+		$this->cache->file->delete(CACHE_KEY_SiteSetting);
+	}
+	
 	public function base(){
 		
 		$feedback = '';
@@ -19,12 +24,16 @@ class Setting extends Ydzj_Admin_Controller {
 			'site_name',
 			'site_logo',
 			'icp_number',
-			'site_phone',
+			'site_phone',//客服电话
 			'site_email',
 			'statistics_code',
 			'time_zone',
 			'site_status',
 			'closed_reason',
+			'company_address',
+			'site_mobile',
+			'site_tel', //固定电话
+			'site_faxno',
 		);
 		
 		$currentSetting = $this->admin_service->getSettingList(array(
@@ -70,6 +79,8 @@ class Setting extends Ydzj_Admin_Controller {
 				
 				if($this->admin_service->updateSetting($data) >= 0){
 					$feedback = getSuccessTip('保存成功');
+					
+					$this->_clearCache();
 					
 					if($fileData){
 						//更新成功了，则删除原先的图片
@@ -158,6 +169,9 @@ class Setting extends Ydzj_Admin_Controller {
 				//print_r($data);
 				
 				if($this->admin_service->updateSetting($data) >= 0){
+					
+					$this->_clearCache();
+					
 					$feedback = getSuccessTip('保存成功');
 					
 					$currentSetting = $this->admin_service->getSettingList(array(
@@ -303,7 +317,36 @@ class Setting extends Ydzj_Admin_Controller {
 		
 	}
 	
-	
+	public function search(){
+		
+		if($this->isPostRequest()){
+			$this->form_validation->set_rules('hotwords','热门搜索关键词','required');
+			
+			if($this->form_validation->run()){
+				
+				if($this->Setting_Model->update(array('value' => $this->input->post('hotwords')),array('name' => 'hotwords')) >= 0){
+					$feedback = getSuccessTip('保存成功');
+					
+					$this->_clearCache();
+					
+					$currentSetting = $this->admin_service->getSettingList(array(
+						'where' => array('name' => 'hotwords' )
+					));
+							
+				}else{
+					$feedback = getErrorTip('保存失败');
+				}
+			}
+		}else{
+			$currentSetting = $this->admin_service->getSettingList(array(
+				'where' => array('name' => 'hotwords' )
+			));
+		}
+		$this->assign('feedback',$feedback);
+		$this->assign('currentSetting',$currentSetting);
+		$this->display();
+		
+	}
 	
 	
 	

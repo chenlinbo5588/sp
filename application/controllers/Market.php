@@ -8,11 +8,14 @@ class Market extends Ydzj_Controller {
 	
 	public function __construct(){
 		parent::__construct();
-		$this->assign('pgClass',strtolower(get_class()).'Pg');
 		
+		$this->load->library('Goods_service');
+		$this->load->model('Article_Model');
+		
+		$this->assign('pgClass',strtolower(get_class()).'Pg');
 		$this->assign('sideTitle',$this->modKey);
 		
-		$this->load->model('Article_Model');
+		
 		$tempAr = config_item('pageConf');
 		
 		$this->sideNavs = $tempAr[$this->modKey]['sideNav'];
@@ -22,6 +25,9 @@ class Market extends Ydzj_Controller {
 			'首页' => site_url('/'),
 			$this->modKey => $tempAr[$this->modKey]['url']
 		);
+		
+		$goodsList = $this->goods_service->getCommandGoodsList();
+		$this->assign('goodsList',$goodsList);
 	}
 	
 	private function _getArticleContent($key){
@@ -41,6 +47,7 @@ class Market extends Ydzj_Controller {
 		$key = '经销商网络';
 		$this->_getArticleContent($key);
 		
+		$this->seo($key);
 		$this->display('common/art');
 	}
 	
@@ -49,6 +56,7 @@ class Market extends Ydzj_Controller {
 	{
 		$key = '合作加盟';
 		$this->_getArticleContent($key);
+		$this->seo($key);
 		$this->display('common/art');
 	}
 	

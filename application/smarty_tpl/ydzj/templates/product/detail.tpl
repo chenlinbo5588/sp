@@ -11,6 +11,7 @@
 					<div class="productInfo">
 						<div class="album">
 							<ul class="bxslider">
+							  <li><img src="{resource_url($info['goods_pic'])}" width="500" height="260" /></li>
 							  {foreach from=$imgList item=item}
 							  <li><img src="{resource_url($item['goods_image'])}" width="500" height="260" /></li>
 							  {/foreach}

@@ -106,7 +106,7 @@
        				<a class="link0" href="{site_url('service/customer')}">服务中心</a>
        				<ul class="sublist">
        					<li><a class="link1" href="{site_url('service/customer')}">客户服务</a></li>
-       					<li><a class="link1" href="/">产品资料</a></li>
+       					<li><a class="link1" href="{site_url('doc/product_list')}">产品资料</a></li>
        				</ul>
        			</li>
        			<li class="level0">

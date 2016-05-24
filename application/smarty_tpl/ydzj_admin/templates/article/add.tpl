@@ -10,6 +10,12 @@
     </div>
   </div>
   <div class="fixed-empty"></div>
+  <style type="text/css">
+  
+  .filelist span {
+  	padding: 3px;
+  }
+  </style>
   <div class="feedback">{$feedback}</div>
   {if $info['article_id']}
   {form_open_multipart(admin_site_url('article/edit'),'id="article_form"')}
@@ -126,6 +132,21 @@
           <td class="vatop rowform"><textarea name="article_digest" style="width:300px;height:80px;">{$info['article_digest']|escape}</textarea></td>
           <td class="vatop tips">{form_error('article_digest')}</td>
         </tr>
+        <tr>
+          <td colspan="2" class="required">附件(PDF,WORD,JPG 格式):</td>
+        </tr>
+        <tr class="noborder">
+          <td colspan="2" id="divComUploadContainer"><input type="file" multiple="multiple" id="fileupload" name="fileupload" /></td>
+        </tr>
+        <tr>
+       		<td colspan="2">
+       			<ul id="thumbnails" class="filelist">
+       			{foreach from=$fileList item=item}
+       			<li id="{$item['id']}" class="picture"><input type="hidden" name="file_id[]" value="{$item['id']}" /><span>{$item['orig_name']|escape}</span><span><a href="javascript:del_file_upload('{$item['id']}');">删除</a></span></p></li>
+       			{/foreach}
+       			</ul>
+       		</td>
+       	</tr>
       </tbody>
       <tfoot>
         <tr>
@@ -135,8 +156,46 @@
     </table>
    </form>
   {include file="common/ajaxfileupload.tpl"}
+  {include file="common/fileupload.tpl"}
   <script type="text/javascript">
+	function del_file_upload(file_id)
+	{
+	    if(!window.confirm('您确定要删除吗?')){
+	        return;
+	    }
+	    
+	    $.getJSON('{admin_site_url("article/delfile")}?mod=article&file_id=' + file_id + "&article_id=" + $("input[name=article_id]").val(), function(result){
+	    	refreshFormHash(result.data);
+	        if(result){
+	            $('#' + file_id).remove();
+	        }else{
+	            alert('删除失败');
+	        }
+	    });
+	}
+	
 	$(function(){
+	
+		// 附件上传
+	    $('#fileupload').each(function(){
+	        $(this).fileupload({
+	            dataType: 'json',
+	            url: '{admin_site_url("article/addfile")}?mod=article',
+	            done: function (e,data) {
+	            	refreshFormHash(data.result);
+	            	
+	                if(data.result.error == 0){
+	                	add_uploadedfile(data.result);
+	                }
+	            }
+	        });
+	    });
+	    
+	    function add_uploadedfile(file_data)
+		{
+		    var newImg = '<li id="' + file_data.id + '" class="picture"><input type="hidden" name="file_id[]" value="' + file_data.id + '" /><span>' +  file_data.orig_name + '</span><span><a href="javascript:del_file_upload(\'' + file_data.id + '\');">删除</a></span></li>';
+		    $('#thumbnails').prepend(newImg);
+		}
 		
 		$('input[class="type-file-file"]').change(uploadChange);
 	    function uploadChange(){

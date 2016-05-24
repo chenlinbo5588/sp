@@ -5,14 +5,14 @@
       <h3>SEO设置</h3>
       <ul class="tab-base">
         <li><a href="JavaScript:void(0);" nctype="index" class="current"><span>首页</span></a></li>
-        <li><a href="JavaScript:void(0);" nctype="group"><span>团购</span></a></li>
+        {*<li><a href="JavaScript:void(0);" nctype="group"><span>团购</span></a></li>
         <li><a href="JavaScript:void(0);" nctype="brand"><span>品牌</span></a></li>
-        <li><a href="JavaScript:void(0);" nctype="credits"><span>积分中心</span></a></li>
+        <li><a href="JavaScript:void(0);" nctype="credits"><span>积分中心</span></a></li>*}
         <li><a href="JavaScript:void(0);" nctype="article"><span>文章</span></a></li>
-        <li><a href="JavaScript:void(0);" nctype="shop"><span>店铺</span></a></li>
+        {*<li><a href="JavaScript:void(0);" nctype="shop"><span>店铺</span></a></li>*}
         <li><a href="JavaScript:void(0);" nctype="product"><span>商品</span></a></li>
         <li><a href="JavaScript:void(0);" nctype="category"><span>商品分类</span></a></li>
-        <li><a href="JavaScript:void(0);" nctype="sns"><span>SNS</span></a></li>
+        {*<li><a href="JavaScript:void(0);" nctype="sns"><span>SNS</span></a></li>*}
       </ul>
     </div>
   </div>
@@ -64,6 +64,7 @@
       </tfoot>
     </table>
   </form>
+  {*
   {form_open(admin_site_url('setting/seoset'),'name="form_group"')}
     <span style="display:none" nctype="hide_tag"><a>{#sitename#}</a><a>{#name#}</a></span>
     <table class="table tb-type2">
@@ -172,6 +173,7 @@
       </tfoot>
     </table>
   </form>
+  *}
   {form_open(admin_site_url('setting/seoset'),'name="form_article"')}
     <span style="display:none" nctype="hide_tag"><a>{#sitename#}</a><a>{#article_class#}</a><a>{#name#}</a><a>{#key#}</a><a>{#description#}</a></span>
     <table class="table tb-type2">
@@ -208,6 +210,7 @@
       </tfoot>
     </table>
   </form>
+  {*
   {form_open(admin_site_url('setting/seoset'),'name="form_shop"')}
     <span style="display:none" nctype="hide_tag"><a>{#sitename#}</a><a>{#shopname#}</a><a>{#key#}</a><a>{#description#}</a></span>
     <table class="table tb-type2">
@@ -232,6 +235,7 @@
       </tfoot>
     </table>
   </form>
+  *}
   {form_open(admin_site_url('setting/seoset'),'name="form_product"')}
     <span style="display:none" nctype="hide_tag"><a>{#sitename#}</a><a>{#name#}</a><a>{#key#}</a><a>{#description#}</a></span>
     <table class="table tb-type2">
@@ -291,6 +295,7 @@
       </tfoot>
     </table>
   </form>
+  {*
   {form_open(admin_site_url('setting/seoset'),'name="form_sns"')}
     <span style="display:none" nctype="hide_tag"><a>{#sitename#}</a><a>{#name#}</a></span>
     <table class="table tb-type2">
@@ -314,7 +319,8 @@
         </tr>
       </tfoot>
     </table>
-  </form>  
+  </form>
+  *}
 	<div id="tag_tips">
 	<span class="dialog_title">可用的代码，点击插入</span>
 	<div style="margin: 0px; padding: 0px;line-height:25px;"></div>

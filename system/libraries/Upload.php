@@ -597,6 +597,7 @@ class CI_Upload {
 	public function data($index = NULL)
 	{
 		$data = array(
+				'orig_name'		=> $this->orig_name,
 				'file_name'		=> $this->file_name,
 				'file_type'		=> $this->file_type,
 				'file_path'		=> $this->upload_path,

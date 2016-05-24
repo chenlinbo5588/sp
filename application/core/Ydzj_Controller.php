@@ -19,8 +19,6 @@ class Ydzj_Controller extends MY_Controller {
 		$this->form_validation->set_error_delimiters('<label class="form_error">','</label>');
 		
 		$this->_initLogin();
-		$this->_initSetting();
-		$this->_initSeo();
 	}
 	
 	
@@ -29,10 +27,6 @@ class Ydzj_Controller extends MY_Controller {
 		
 		//@todo 需要删除，如果是其他网站
 		$this->load->config('boiido');
-	}
-	
-	private function _initSetting(){
-		$settingList = $this->base_service->getSettingList();
 	}
 	
 	private function _initLogin(){
@@ -49,20 +43,6 @@ class Ydzj_Controller extends MY_Controller {
 			$this->attachment_service->setUid($this->_profile['basic']['uid']);
 		}
 	}
-	
-	
-	private function _initSeo(){
-		$seoList = $this->cache->file->get(CACHE_KEY_SEO);
-		
-		if(empty($seoList)){
-			$seoList = $this->seo_service->getCurrentSeoSetting();
-			$this->cache->file->save(CACHE_KEY_SEO, $seoList, CACHE_ONE_DAY);
-		}
-		
-		
-		$this->seo($seoList['index']['title'],$seoList['index']['keywords'], $seoList['index']['description']);
-	}
-	
 	
 	
 	public function isLogin(){

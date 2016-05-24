@@ -2,15 +2,8 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 $entity = array(
-'sug_id' => 'int',
-'username' => 'varchar',
-'company_name' => 'varchar',
+'leave_id' => 'int',
 'mobile' => 'varchar',
-'city' => 'varchar',
-'tel' => 'varchar',
-'email' => 'varchar',
-'weixin' => 'varchar',
-'doc_no' => 'varchar',
 'remark' => 'varchar',
 'status' => 'varchar',
 'ip' => 'varchar',

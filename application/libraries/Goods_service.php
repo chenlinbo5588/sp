@@ -290,6 +290,40 @@ class Goods_Service extends Base_Service {
 		}
 	}
 	
+	/**
+	 * 获得推荐的商品列表
+	 */
+	public function getCommandGoodsList($goodsCate = '产品中心',$moreCondition = array('limit' => 20)){
+		
+		$topClassInfo = $this->_goodsClassModel->getList(array(
+			'where' => array(
+				'gc_name' => $goodsCate,
+				'gc_parent_id' => 0
+			)
+		));
+		
+		
+		$goodsClassIds = $this->getAllChildGoodsClassByPid($topClassInfo[0]['gc_id']);
+		$goodsClassIds[] = $topClassInfo[0]['gc_id'];
+		
+		//print_r($goodsClassIds);
+		
+		$condition = array(
+			'where' => array(
+				'goods_commend' => 1,
+				'goods_verify' => 1,
+				'goods_state' => 1
+			),
+			'where_in' => array(
+				array('key' => 'gc_id' , 'value' => $goodsClassIds )
+			),
+			'order' => 'goods_sort ASC',
+			'limit' => 20
+		);
+		
+		$condition = array_merge($condition,$moreCondition);
+		return $this->_goodsModel->getList($condition);
+	}
 	
 	
 	

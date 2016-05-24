@@ -6,15 +6,18 @@ class Article_Service extends Base_Service {
 	
 	private $_articleModel = null;
 	private $_articleClassModel = null;
+	private $_articleFileModel = null;
+	
 	private $_parentList = array();
 
 	public function __construct(){
 		parent::__construct();
 		
-		self::$CI->load->model(array('Article_Model', 'Article_Class_Model'));
+		self::$CI->load->model(array('Article_Model', 'Article_Class_Model','Article_File_Model'));
 		
 		$this->_articleModel = self::$CI->Article_Model;
 		$this->_articleClassModel = self::$CI->Article_Class_Model;
+		$this->_articleFileModel = self::$CI->Article_File_Model;
 	}
 	
 	public function getArticleClassTreeHTML(){
@@ -205,6 +208,27 @@ class Article_Service extends Base_Service {
 		}else{
 			return false;
 		}
+	}
+	
+	
+	public function getCommandArticleList($currentId,$moreCondition = array('limit' => 8)){
 		
+		$articleClassIds = $this->getAllChildArticleClassByPid($currentId);
+		$articleClassIds[] = $currentId;
+		
+		$condition = array(
+			'where' => array(
+				'article_show' => 1,
+			),
+			'where_in' => array(
+				array('key' => 'ac_id' , 'value' => $articleClassIds )
+			),
+			'order' => 'article_id DESC',
+			'limit' => 8
+		);
+		
+		$condition = array_merge($condition,$moreCondition);
+		
+		return $this->_articleModel->getList($condition);
 	}
 }

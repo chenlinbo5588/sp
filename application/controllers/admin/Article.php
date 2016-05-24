@@ -144,6 +144,26 @@ class Article extends Ydzj_Admin_Controller {
 		return $info;
 	}
 	
+	private function _getFileList(){
+		$file_ids = $this->input->post('file_id');
+		
+		$fileList = array();
+		
+		if($file_ids){
+			$fileList = $this->Attachment_Model->getList(array(
+				'where_in' => array(
+					array('key' => 'id', 'value' => $file_ids)
+				),
+				'order' => 'id DESC'
+			));
+			
+		}
+		
+		return $fileList;
+		
+	}
+	
+	
 	public function add(){
 		$feedback = '';
 		
@@ -155,6 +175,9 @@ class Article extends Ydzj_Admin_Controller {
 			for($i = 0; $i < 1; $i++){
 				
 				$info = $this->_prepareArticleData();
+				$fileList = $this->_getFileList();
+				
+				$this->assign('fileList',$fileList);
 				
 				if(!$this->form_validation->run()){
 					$feedback = $this->form_validation->error_string();
@@ -166,8 +189,29 @@ class Article extends Ydzj_Admin_Controller {
 					break;
 				}
 				
-				$feedback = getSuccessTip('保存成功');
+				if($fileList){
+					$insData = array();
+					
+					$whoadd = $this->addWhoHasOperated('add');
+					
+					foreach($fileList as $fileInfo){
+						$temp = array(
+							'article_id' => $newid,
+							'orig_name' => $fileInfo['orig_name'],
+							'file_url' => $fileInfo['file_url'],
+							'file_size' => $fileInfo['file_size'],
+							'is_image' => $fileInfo['is_image'],
+							'image_type' => $fileInfo['image_type'],
+							'file_id' => $fileInfo['id']
+						);
+						
+						$insData[] = array_merge($temp,$whoadd);
+					}
+					
+					$this->Article_File_Model->batchInsert($insData);
+				}
 				
+				$feedback = getSuccessTip('保存成功');
 				
 				$info = $this->Article_Model->getFirstByKey($newid,'article_id');
 			}
@@ -177,11 +221,77 @@ class Article extends Ydzj_Admin_Controller {
 			$info['article_author'] = $this->_adminProfile['basic']['username'];
 		}
 		
-		
 		$this->assign('info',$info);
 		$this->assign('feedback',$feedback);
 		$this->assign('articleClassList',$treelist);
 		$this->display();
+	}
+	
+	public function addfile(){
+		$json = array('error' => 1, 'formhash'=>$this->security->get_csrf_hash(),'id' => 0,'msg' => '上次失败');
+		$fileData = $this->attachment_service->addImageAttachment('fileupload',array(
+			'allowed_types' => 'jpg|jpeg|pdf|doc|docx'
+		),FROM_BACKGROUND,'article');
+		
+		//file_put_contents('debug.txt',print_r($fileData,true));
+		
+		if($fileData){
+			$fileData['file_id'] = $fileData['id'];
+			unset($fileData['id']);
+			
+			$info = array_merge(array(
+				'article_id' => $this->input->post('article_id') ? $this->input->post('article_id') : 0,
+			),$fileData);
+			
+			if($info['article_id']){
+				$info = array_merge($info,$this->addWhoHasOperated('add'));
+				
+				$newId = $this->Article_File_Model->_add($info);
+				if($newId){
+					$json['error'] = 0;
+					$json['id'] = $fileData['file_id'];
+					$json['orig_name'] = $fileData['orig_name'];
+				}else{
+					$json['error'] = 0;
+					$json['msg'] = '系统异常';
+					$this->attachment_service->deleteByFileUrl($fileData['file_url']);
+				}
+			}else{
+				$json['error'] = 0;
+				$json['id'] = $fileData['file_id'];
+				$json['orig_name'] = $fileData['orig_name'];
+			}
+			
+		}else{
+			$json['msg'] = $this->attachment_service->getErrorMsg('','');
+		}
+		
+		exit(json_encode($json));
+		
+	}
+	
+	
+	public function delfile(){
+		$file_id = $this->input->get_post('file_id');
+		$article_id = $this->input->get_post('article_id');
+		
+		if($article_id){
+			//如果在文章编辑页面
+			$this->Article_File_Model->deleteByCondition(array(
+				'where' => array(
+					'file_id' => $file_id,
+					'article_id' => $article_id,
+					'add_uid' => $this->_adminProfile['basic']['uid']
+				)
+			));
+		}
+		
+		if($file_id){
+			//文件删除，数据库记录不删除
+			$this->attachment_service->deleteFiles($file_id,'all',FROM_BACKGROUND);
+		}
+		
+		$this->jsonOutput('成功',$this->getFormHash());
 	}
 	
 	
@@ -200,6 +310,8 @@ class Article extends Ydzj_Admin_Controller {
 			for($i = 0; $i < 1; $i++){
 				
 				$info = $this->_prepareArticleData();
+				$fileList = $this->_getFileList();
+				
 				$info['article_id'] = $id;
 				
 				if(!$this->form_validation->run()){
@@ -214,7 +326,22 @@ class Article extends Ydzj_Admin_Controller {
 				
 				$feedback = getSuccessTip('保存成功');
 			}
+		}else{
+			
+			$currentFiles = $this->Article_File_Model->getList(array(
+				'select' => 'file_id,orig_name',
+				'where' => array('article_id' => $id)
+			));
+			
+			
+			foreach($currentFiles as $item){
+				$fileList[] = array(
+					'id' => $item['file_id'],
+					'orig_name' => $item['orig_name']
+				);
+			}
 		}
+		$this->assign('fileList',$fileList);
 		
 		$this->assign('info',$info);
 		$this->assign('feedback',$feedback);

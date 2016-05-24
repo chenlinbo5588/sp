@@ -42,11 +42,39 @@
           <td class="vatop tips"><span class="vatop rowform">前台页面底部可以显示 ICP 备案信息，如果网站已备案，在此输入你的授权码，它将显示在前台页面底部，如果没有请留空</span></td>
         </tr>
         <tr>
-          <td colspan="2" class="required"><label for="site_phone">客服联系电话:</label></td>
+          <td colspan="2" class="required"><label for="company_address">公司地址:</label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform"><input id="company_address" name="company_address" value="{$currentSetting['company_address']['value']|escape}" class="txt" type="text" /></td>
+          <td class="vatop tips"><span class="vatop rowform"></span></td>
+        </tr>
+        <tr>
+          <td colspan="2" class="required"><label for="site_phone">客服电话:</label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input id="site_phone" name="site_phone" value="{$currentSetting['site_phone']['value']|escape}" class="txt" type="text" /></td>
-          <td class="vatop tips"><span class="vatop rowform">前台卖家中心页面右下侧可以显示，方便卖家遇到问题时咨询，多个请用半角逗号 "," 隔开</span></td>
+          <td class="vatop tips"><span class="vatop rowform">前台页面下侧可以显示，方便访问者遇到问题时咨询，多个请用半角逗号 "," 隔开</span></td>
+        </tr>
+        <tr>
+          <td colspan="2" class="required"><label for="site_mobile">联系移动电话:</label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform"><input id="site_mobile" name="site_mobile" value="{$currentSetting['site_mobile']['value']|escape}" class="txt" type="text" /></td>
+          <td class="vatop tips"><span class="vatop rowform">前台页面下侧可以显示，方便访问者遇到问题时咨询，多个请用半角逗号 "," 隔开</span></td>
+        </tr>
+        <tr>
+          <td colspan="2" class="required"><label for="site_tel">固定电话:</label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform"><input id="site_tel" name="site_tel" value="{$currentSetting['site_tel']['value']|escape}" class="txt" type="text" /></td>
+          <td class="vatop tips"><span class="vatop rowform">前台页面下侧可以显示，方便访问者遇到问题时咨询，多个请用半角逗号 "," 隔开</span></td>
+        </tr>
+        <tr>
+          <td colspan="2" class="required"><label for="site_faxno">传真号码:</label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform"><input id="site_faxno" name="site_faxno" value="{$currentSetting['site_faxno']['value']|escape}" class="txt" type="text" /></td>
+          <td class="vatop tips"><span class="vatop rowform">前台页面右下侧可以显示，方便访问者遇到问题时咨询，多个请用半角逗号 "," 隔开</span></td>
         </tr>
         <tr>
           <td colspan="2" class="required"><label for="site_email">电子邮件:</label></td>

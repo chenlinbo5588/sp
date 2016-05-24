@@ -1,7 +1,7 @@
 {include file="common/main_header.tpl"}
   <div class="fixed-bar">
     <div class="item-title">
-      <h3>品牌</h3>
+      <h3>商品</h3>
       <ul class="tab-base">
       	<li><a href="{admin_site_url('goods/index')}"><span>管理</span></a></li>
       	<li><a class="current"><span>{if $info['goods_id']}编辑{else}新增{/if}</span></a></li>

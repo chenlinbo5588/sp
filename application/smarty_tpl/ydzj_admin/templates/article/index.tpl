@@ -49,6 +49,7 @@
       <thead>
         <tr class="thead">
           <th class="w24"></th>
+          <th>序号</th>
           <th class="w48">排序</th>
           <th>标题</th>
           <th>文章分类</th>
@@ -61,6 +62,7 @@
       	{foreach from=$list['data'] item=item}
       	<tr class="hover edit" id="row{$item['article_id']}">
           <td><input type="checkbox" name="id[]" group="chkVal" value="{$item['article_id']}" class="checkitem"></td>
+          <td>{$item['article_id']}</td>
           <td>{$item['article_sort']}</td>
           <td>{$item['article_title']|escape}</td>
           <td>{$articleClassList[$item['ac_id']]['ac_name']}</td>
@@ -74,7 +76,7 @@
       </tbody>
       <tfoot>
       	<tr class="tfoot">
-          <td colspan="7">
+          <td colspan="8">
           	<label><input type="checkbox" class="checkall" id="checkallBottom" name="chkVal">全选</label>&nbsp;
           	<a href="javascript:void(0);" class="btn" id="deleteBtn" data-checkbox="id[]" data-url="{admin_site_url('article/delete')}"><span>删除</span></a>
           	{include file="common/pagination.tpl"}

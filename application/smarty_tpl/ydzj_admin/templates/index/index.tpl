@@ -377,13 +377,13 @@ $(function(){
                     <li><a href="javascript:void(0);" id="param_upload" onclick="openItem('param,upload,setting');">上传设置</a></li>
                     <li><a href="javascript:void(0);" id="seoset_setting" onclick="openItem('seoset,setting,setting');">SEO设置</a></li>
                     <li><a href="javascript:void(0);" id="email_message" onclick="openItem('email,message,setting');">消息通知</a></li>
-                    <li><a href="javascript:void(0);" id="system_payment" onclick="openItem('system,payment,setting');">支付方式</a></li>
+                    {*<li><a href="javascript:void(0);" id="system_payment" onclick="openItem('system,payment,setting');">支付方式</a></li>
                     <li><a href="javascript:void(0);" id="express_setting" onclick="openItem('express,setting,setting');">快递公司</a></li>
                     <li><a href="javascript:void(0);" id="area_setting" onclick="openItem('area,setting,setting');">配送地区</a></li>
                     <li><a href="javascript:void(0);" id="cache_setting" onclick="openItem('cache,setting,setting');">清理缓存</a></li>
-                    <li><a href="javascript:void(0);" id="perform_setting" onclick="openItem('perform,setting,setting');">性能优化</a></li>
+                    <li><a href="javascript:void(0);" id="perform_setting" onclick="openItem('perform,setting,setting');">性能优化</a></li>*}
                     <li><a href="javascript:void(0);" id="search_setting" onclick="openItem('search,setting,setting');">搜索设置</a></li>
-                    <li><a href="javascript:void(0);" id="log_setting" onclick="openItem('log,setting,setting');">操作日志</a></li>
+                    {*<li><a href="javascript:void(0);" id="log_setting" onclick="openItem('log,setting,setting');">操作日志</a></li>*}
                   </ol>
                 </dd>
               </dl>
@@ -484,6 +484,7 @@ $(function(){
                     <li><a href="javascript:void(0);" id="index_adv" onclick="openItem('index,adv,website');">广告管理</a></li>
                     <li><a href="javascript:void(0);" id="index_recommend" onclick="openItem('index,recommend,website');">推荐位</a></li>*}
                     <li><a href="javascript:void(0);" id="index_suggestion" onclick="openItem('index,suggestion,website');">投诉建议</a></li>
+                    {*<li><a href="javascript:void(0);" id="index_leavemsg" onclick="openItem('index,leavemsg,website');">客户留言</a></li>*}
                   </ol>
                 </dd>
               </dl>
