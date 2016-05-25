@@ -20,11 +20,10 @@
     		</div>
     		<div class="row2">
     			<div class="boxz">
-    				<div>Coppyright &copy {$smarty.now|date_format:"%Y"} {config_item('site_name')} ALL rights reserved. 鲁ICP备11023068号 <a class="fr" href="{site_url('member/admin_login')}">管理页面</a></div>
+    				<div>Coppyright &copy {$smarty.now|date_format:"%Y"} {config_item('site_name')} ALL rights reserved. {$siteSetting['icp_number']|escape} {*<a class="fr" href="{site_url('member/admin_login')}">管理页面</a>*}</div>
     				<div>{$siteSetting['statistics_code']}</div>
 		        </div>
     		</div>
-    		
     	</div>
     </div><!-- //end of wrap -->
 </body>

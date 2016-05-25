@@ -1019,6 +1019,72 @@ table.liststyle1 {
     margin: 0 0 0 5px;
 }
 
+.filelist {
+    
+}
+
+
+.fileitem {
+	background: #D8D8D8;
+	margin: 0 0 5px 0;
+	1padding: 10px 5px;
+	position: relative;
+	height:40px;
+	
+}
+
+
+.fileitem .filename {
+	width: 50%;
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size:14px;
+    color:#ed6d00;
+    padding:0 0 0 5px;
+}
+
+.fileitem .filetype,.fileitem .filesize {
+	line-height:40px;
+}
+
+.fileitem em {
+	color:#666;
+}
+
+
+.fileitem .pubtime {
+	
+}
+
+
+.fileitem .downlink {
+	position: absolute;
+    /* top: 50%; */
+    right: 0;
+    /* margin: -5px 10px 0 0; */
+    width: 10%;
+    background: #ED6D00;
+    
+    color:#fff;
+    text-align: center;
+    height:40px;
+    line-height:40px;
+}
+
+.fileitem .wj {
+	display: inline-block;
+    width: 60px;
+    color: #999;
+}
+
+
+.fileitem .filetype, .fileitem .filesize {
+	color:#666;
+}
+
+
 
 @media (max-width: 1024px) {
 	.boxz {

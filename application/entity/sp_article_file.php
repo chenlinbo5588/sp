@@ -8,6 +8,7 @@ $entity = array(
 'article_id' => 'int',
 'file_url' => 'varchar',
 'file_size' => 'int',
+'file_ext' => 'varchar',
 'is_image' => 'tinyint',
 'image_type' => 'varchar',
 'add_uid' => 'int',

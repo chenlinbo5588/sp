@@ -6,6 +6,7 @@ class Doc extends Ydzj_Controller {
 	private $sideNavs = null;
 	private $modKey = '';
 	private $topClassId = 0;
+	private $seoKeys = array();
 	
 	
 	public function __construct(){
@@ -109,34 +110,50 @@ class Doc extends Ydzj_Controller {
 		
 		$list = $this->Article_Model->getList($condition);
 		//echo 'aaa';print_r($list);
+		
+		$articleIds = array();
+		$fileAssoc = array();
+		
 		if($list['data']){
 			foreach($list['data'] as $key => $newsArtile){
-				
-				
-				if($newsArtile['article_pic']){
-					$newsArtile['article_pic'] = resource_url($newsArtile['article_pic']);
-				}else{
-					$newsArtile['article_pic'] = resource_url('img/default.jpg');
-				}
-				
-				if(empty($newsArtile['article_url'])){
-					$newsArtile['article_url'] = site_url('news/detail?id=') . $newsArtile['article_id'].'&ac_id='.$newsArtile['ac_id'];
-				}
-				
-				if(trim($newsArtile['article_digest'])){
-					$newsArtile['article_digest'] = cutText(html_entity_decode(strip_tags($newsArtile['article_content'])),120);
-				}
-				
-				$list['data'][$key] = $newsArtile;
+				$articleIds[] = $newsArtile['article_id'];
 			}
+			
+			
+			if($articleIds){
+				$fileList = $this->Article_File_Model->getList(array(
+					'where_in' => array(
+						array('key' => 'article_id', 'value' => $articleIds)
+					)
+				));
+				
+				
+				foreach($fileList as $afile){
+					if(!isset($fileAssoc[$afile['article_id']])){
+						$fileAssoc[$afile['article_id']] = array();
+					}
+					
+					$fileAssoc[$afile['article_id']][] = $afile;
+				}
+			}
+			
 		}
 		
-		//print_r($list);
+		
+		$this->load->helper('number');
+		
+		//print_r($fileAssoc);
 		$this->assign('list',$list);
 		$this->assign('page',$list['pager']);
+		$this->assign('fileAssoc',$fileAssoc);
 		$this->assign('currentPage',$currentPage);
 		$this->assign('currentAcId',$currentAcId);
 		$this->assign('keyword',$keyword);
+		
+		
+		$tempSeo = array_reverse($this->seoKeys);
+		$this->seo($tempSeo[0], implode(',',$tempSeo));
+		
 		
 		$this->assign('breadcrumb',$this->breadcrumb());
 		$this->display();
@@ -157,7 +174,8 @@ class Doc extends Ydzj_Controller {
 			}
 			
 			foreach($parents as $pitem){
-				$this->_navigation[$pitem['ac_name']] = site_url('news/news_list?id='.$pitem['ac_id']);
+				$this->seoKeys[] = $pitem['ac_name'];
+				$this->_navigation[$pitem['ac_name']] = site_url('doc/product_list?id='.$pitem['ac_id']);
 			}
 		}
 	}

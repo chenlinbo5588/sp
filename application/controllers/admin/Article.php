@@ -200,6 +200,7 @@ class Article extends Ydzj_Admin_Controller {
 							'orig_name' => $fileInfo['orig_name'],
 							'file_url' => $fileInfo['file_url'],
 							'file_size' => $fileInfo['file_size'],
+							'file_ext' => $fileInfo['file_ext'],
 							'is_image' => $fileInfo['is_image'],
 							'image_type' => $fileInfo['image_type'],
 							'file_id' => $fileInfo['id']
