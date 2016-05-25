@@ -63,7 +63,14 @@ class Doc extends Ydzj_Controller {
 		$this->assign('goodsList',$goodsList);
 	}
 	
-	
+	public function download(){
+		
+		$this->load->helper('download');
+		
+		
+		//force_download();
+		
+	}
 	
 	public function product_list()
 	{
