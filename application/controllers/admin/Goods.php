@@ -7,7 +7,7 @@ class Goods extends Ydzj_Admin_Controller {
 	public function __construct(){
 		parent::__construct();
 		
-		$this->load->library(array('Goods_service','Attachment_Service'));
+		$this->load->library(array('Goods_service','Attachment_service'));
 		$this->attachment_service->setUid($this->_adminProfile['basic']['uid']);
 	}
 	

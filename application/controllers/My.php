@@ -12,7 +12,7 @@ class My extends MyYdzj_Controller {
 	{
 		//$this->assign('teamCount',$this->);
 		//phpinfo();
-		$this->load->library('Common_District_Service');
+		$this->load->library('Common_District_service');
 		
 		$ds = array();
 		for($i = 1; $i <= 4; $i++){
@@ -60,7 +60,7 @@ class My extends MyYdzj_Controller {
 					break;
 				}
 				
-				$this->load->library('Member_Service');
+				$this->load->library('Member_service');
 				$result = $this->member_service->updateUserInfo(array(
 					'username' => $this->input->post('username')
 				),$this->_profile['basic']['uid']);
@@ -102,7 +102,7 @@ class My extends MyYdzj_Controller {
 					break;
 				}
 				
-				$this->load->library('Member_Service');
+				$this->load->library('Member_service');
 				$result = $this->member_service->updateUserInfo(array(
 					'username' => $this->input->post('username')
 				),$this->_profile['basic']['uid']);
@@ -144,7 +144,7 @@ class My extends MyYdzj_Controller {
 				$newAvatar = $this->input->post('new_avatar');
 				$newAvatar = str_replace(base_url(),'',$newAvatar);
 				
-				$this->load->library('Attachment_Service');
+				$this->load->library('Attachment_service');
 				$this->attachment_service->setUid($this->_profile['basic']['uid']);
 				
 				$fileData = $this->attachment_service->resize(array(
@@ -162,7 +162,7 @@ class My extends MyYdzj_Controller {
 				//删除原图
 				unlink($fileData['full_path']);
 				
-				$this->load->library('Member_Service');
+				$this->load->library('Member_service');
 				$result = $this->member_service->updateUserInfo(array(
 					'status' => 0,
 					'avatar_status' => 0,
@@ -183,7 +183,7 @@ class My extends MyYdzj_Controller {
 				}else if('my' == $inviteFrom){
 					redirect('my');
 				}else{
-					$this->load->library('Common_District_Service');
+					$this->load->library('Common_District_service');
 					$this->_prepareSetCity();
 					$this->seoTitle('设置您的所在地');
 					$this->setTopNavTitle('设置您的所在地');
@@ -245,7 +245,7 @@ class My extends MyYdzj_Controller {
 	 */
 	public function set_city()
 	{
-		$this->load->library('Common_District_Service');
+		$this->load->library('Common_District_service');
 		
 		if($this->isPostRequest()){
 			
@@ -262,7 +262,7 @@ class My extends MyYdzj_Controller {
 			}
 			
 			if($this->form_validation->run() !== FALSE){
-				$this->load->library('Member_Service');
+				$this->load->library('Member_service');
 				
 				$addParam = array(
 					'district_bind' => 1,

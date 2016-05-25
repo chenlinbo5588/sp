@@ -2,7 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 
-class Goods_Service extends Base_Service {
+class Goods_service extends Base_service {
 	
 	private $_goodsModel = null;
 	private $_goodsClassModel = null;

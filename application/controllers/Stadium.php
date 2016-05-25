@@ -12,7 +12,7 @@ class Stadium extends Ydzj_Controller {
 		parent::__construct();
 		//$this->_controllerUrl = admin_site_url();
         
-        $this->load->library('Stadium_Service');
+        $this->load->library('Stadium_service');
         
         $this->_urlParam = $this->uri->segment_array();
 	}
@@ -72,7 +72,7 @@ class Stadium extends Ydzj_Controller {
 			redirect('stadium');
 		}
 		
-		$this->load->library('Common_District_Service');
+		$this->load->library('Common_District_service');
 		if($ar[4]){
 			$city = $ar[4];
 			$cityInfo = $this->common_district_service->getDistrictInfoById($city);
@@ -234,7 +234,7 @@ class Stadium extends Ydzj_Controller {
 	
 	private function _dealPicture(){
 		
-    	$this->load->library('Attachment_Service');
+    	$this->load->library('Attachment_service');
     	$this->attachment_service->setUid($this->_profile['basic']['uid']);
     	
     	$fileUpload = array();

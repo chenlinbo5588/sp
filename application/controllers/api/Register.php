@@ -44,7 +44,7 @@ class Register extends MY_Controller {
 				}
 				
 				
-				$this->load->library('Verify_Service');
+				$this->load->library('Verify_service');
 				
 				$phoneNo = $this->input->post('phoneNo');
 				
@@ -80,7 +80,7 @@ class Register extends MY_Controller {
 				
 				$rt['code'] = 'success';
 				
-				$this->load->library('ShortMessage_Service');
+				$this->load->library('ShortMessage_service');
 				if($this->shortmessage_service->sendMessage($phoneNo)){
 					$this->verify_service->updateSendFlag(array(
 			    		array('key' => 'send_normal' , 'value' => 'send_normal + 1')
@@ -145,8 +145,8 @@ class Register extends MY_Controller {
 					)
 				);
 				
-				$this->load->library('Register_Service');
-				$this->load->library('Verify_Service');
+				$this->load->library('Register_service');
+				$this->load->library('Verify_service');
 				
 				$phoneNo = $this->input->post('phoneNo');
 				
@@ -190,7 +190,7 @@ class Register extends MY_Controller {
 				}
 				
 				$rt['code'] = 'success';
-				$this->load->library('ShortMessage_Service');
+				$this->load->library('ShortMessage_service');
 				if($this->shortmessage_service->sendMessage($phoneNo)){
 					$this->verify_service->sendSuccessAddon($codeInfo['id']);
 				}else{
@@ -213,8 +213,8 @@ class Register extends MY_Controller {
 	public function step_authcode(){
 		if($this->isPostRequest()){
 			
-			$this->load->library('Register_Service');
-			$this->load->library('Verify_Service');
+			$this->load->library('Register_service');
+			$this->load->library('Verify_service');
 				
 			if($this->verify_service->isAuthCodeValidate($this->input->post('phoneNo'),$this->input->post('code'))){
 				$this->jsonOutput('成功',$this->getFormHash());

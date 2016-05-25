@@ -5,7 +5,7 @@ class Article extends Ydzj_Admin_Controller {
 	
 	public function __construct(){
 		parent::__construct();
-		$this->load->library(array('Article_service','Attachment_Service'));
+		$this->load->library(array('Article_service','Attachment_service'));
 	}
 	
 	public function index(){

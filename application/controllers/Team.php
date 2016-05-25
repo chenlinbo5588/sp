@@ -15,8 +15,8 @@ class Team extends Ydzj_Controller {
 	public function __construct(){
 		parent::__construct();
 		
-		$this->load->library('Team_Service');
-		//$this->load->library('District_Stat_Service');
+		$this->load->library('Team_service');
+		//$this->load->library('District_Stat_service');
 		
 		$this->_urlParam = $this->uri->segment_array();
 		
@@ -98,7 +98,7 @@ class Team extends Ydzj_Controller {
 			redirect(BASKET_BALL);
 		}
 		
-		$this->load->library('Common_District_Service');
+		$this->load->library('Common_District_service');
 		if($ar[4]){
 			$city = $ar[4];
 			$cityInfo = $this->common_district_service->getDistrictInfoById($city);
@@ -187,7 +187,7 @@ class Team extends Ydzj_Controller {
 		}
 		
 		if($inManageMode){
-			$this->load->library('Sports_Service');
+			$this->load->library('Sports_service');
 			$poistionList = $this->sports_service->getMetaByCategoryAndGroup($team['basic']['category_name'],'位置');
 			$roleList = $this->sports_service->getMetaByCategoryAndGroup($team['basic']['category_name'],'职务');
 			$this->assign('positionList',$poistionList);
@@ -364,7 +364,7 @@ class Team extends Ydzj_Controller {
 					break;
 				}
 				
-				$this->load->library('Attachment_Service');
+				$this->load->library('Attachment_service');
 				$this->attachment_service->setUid($this->_profile['basic']['uid']);
 				
 				$fileData = $this->attachment_service->addImageAttachment('avatar');
@@ -377,7 +377,7 @@ class Team extends Ydzj_Controller {
 				//创建缩略图
 				$resizeFile = $this->attachment_service->resize($fileData , array('large','big','middle'));
 				
-				$this->load->library('Team_Service');
+				$this->load->library('Team_service');
 				$result = $this->team_service->updateTeamInfo(array(
 					'aid' => $fileData['id'],
 					'avatar_large' => $resizeFile['img_large'],
@@ -472,7 +472,7 @@ class Team extends Ydzj_Controller {
 					/**
 					 * 首先处理上传图片，并记录，防止其他信息错误，不再消耗流量重传
 					 */
-					$this->load->library('Attachment_Service');
+					$this->load->library('Attachment_service');
 					$this->attachment_service->setUid($this->_profile['basic']['uid']);
 					$fileData = $this->attachment_service->addImageAttachment('logo_url');
 					

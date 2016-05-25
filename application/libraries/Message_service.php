@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Message_Service extends Base_Service {
+class Message_service extends Base_service {
 
 	private $_msgTemplateModel = null;
 

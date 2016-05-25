@@ -6,7 +6,7 @@ class Setting extends Ydzj_Admin_Controller {
 	public function __construct(){
 		parent::__construct();
 		
-		$this->load->library(array('Admin_Service','Attachment_Service'));
+		$this->load->library(array('Admin_service','Attachment_service'));
 		$this->attachment_service->setUid($this->_adminProfile['basic']['uid']);
 	}
 	
@@ -201,7 +201,7 @@ class Setting extends Ydzj_Admin_Controller {
 		$feedback = '';
 		
 		$selectedGroup = 'index';
-		$this->load->library(array('Seo_Service', 'Goods_Service'));
+		$this->load->library(array('Seo_service', 'Goods_service'));
 		
 		
 		if($this->isPostRequest()){
@@ -251,7 +251,7 @@ class Setting extends Ydzj_Admin_Controller {
 	
 	
 	public function ajax_category(){
-		$this->load->library('Goods_Service');
+		$this->load->library('Goods_service');
 		$goodsClassInfo = $this->goods_service->getGoodsClassModel()->getGoodsClassById($this->input->get('id'));
 		$this->jsonOutput('获取成功',$goodsClassInfo);
 	}

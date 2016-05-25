@@ -14,7 +14,7 @@ class Index extends Ydzj_Controller {
 	 */
 	public function index()
 	{
-		$this->load->library(array('Goods_service','Article_Service'));
+		$this->load->library(array('Goods_service','Article_service'));
 		$goodsList = $this->goods_service->getCommandGoodsList();
 		$this->assign('goodsList',$goodsList);
 		

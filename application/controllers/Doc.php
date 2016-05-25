@@ -12,7 +12,7 @@ class Doc extends Ydzj_Controller {
 	public function __construct(){
 		parent::__construct();
 		
-		$this->load->library(array('Article_service','Goods_Service'));
+		$this->load->library(array('Article_service','Goods_service'));
 		
 		$this->assign('pgClass',strtolower(get_class()).'Pg');
 		$this->modKey = $this->input->get_post('catname');

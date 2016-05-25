@@ -19,7 +19,7 @@ class News extends Ydzj_Controller {
 		
 		$this->assign('sideTitle',$this->modKey);
 		
-		$this->load->library(array('Article_service','Goods_Service'));
+		$this->load->library(array('Article_service','Goods_service'));
 		
 		$articleClass = $this->Article_Class_Model->getList(array(
 			'where' => array(

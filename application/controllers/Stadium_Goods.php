@@ -11,7 +11,7 @@ class Stadium_Goods extends Ydzj_Controller {
 	public function __construct(){
 		parent::__construct();
         
-        $this->load->library('Stadium_Service');
+        $this->load->library('Stadium_service');
         
         $this->_urlParam = $this->uri->segment_array();
 	}
@@ -71,7 +71,7 @@ class Stadium_Goods extends Ydzj_Controller {
 			redirect('stadium');
 		}
 		
-		$this->load->library('Common_District_Service');
+		$this->load->library('Common_District_service');
 		if($ar[4]){
 			$city = $ar[4];
 			$cityInfo = $this->common_district_service->getDistrictInfoById($city);
@@ -178,7 +178,7 @@ class Stadium_Goods extends Ydzj_Controller {
 				}
 				
 				$this->_commonRules();
-            	$this->load->library('Attachment_Service');
+            	$this->load->library('Attachment_service');
             	$fileUpload = array();
             	$fileInfo = $this->attachment_service->addImageAttachment('cover_img');
             	
@@ -303,7 +303,7 @@ class Stadium_Goods extends Ydzj_Controller {
 	            //$this->form_validation->set_error_delimiters('<div class="error">','</div>');
 	            for($i = 0 ; $i < 1; $i++){
 	            	$this->_commonRules();
-	            	$this->load->library('Attachment_Service');
+	            	$this->load->library('Attachment_service');
 	            	$fileUpload = array();
 	            	$fileInfo = $this->attachment_service->addImageAttachment('cover_img');
 	            	

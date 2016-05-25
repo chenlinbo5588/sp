@@ -51,7 +51,7 @@ class Member extends Ydzj_Controller {
 			
 			if($this->form_validation->run() !== FALSE){
 
-				$this->load->library('Member_Service');
+				$this->load->library('Member_service');
 				
 				$result = $this->member_service->do_login(array(
 					'mobile' => $this->input->post('loginname'),
@@ -125,7 +125,7 @@ class Member extends Ydzj_Controller {
 					break;
 				}
 				
-				$this->load->library('Admin_Service');
+				$this->load->library('Admin_service');
 				$result = $this->admin_service->do_adminlogin($this->input->post('email'),$this->input->post('password'));
 				
 				if($result['message'] != '成功'){
@@ -192,7 +192,7 @@ class Member extends Ydzj_Controller {
 					)
 				);
 				
-			$this->load->library('Verify_Service');
+			$this->load->library('Verify_service');
 			$this->form_validation->set_rules('auth_code','验证码', array(
 						'required',
 						array(
@@ -230,8 +230,8 @@ class Member extends Ydzj_Controller {
 			
 			if($this->form_validation->run() !== FALSE){
 				
-				$this->load->library('Member_Service');
-				$this->load->library('Register_Service');
+				$this->load->library('Member_service');
+				$this->load->library('Register_service');
 				
 				$todayRegistered = $this->register_service->getIpLimit($this->input->ip_address());
 				

@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Verify_Service extends Base_Service {
+class Verify_service extends Base_service {
 
 	protected $_verifyCodeLogModel;
 	protected $_expiredSeconds = 120;

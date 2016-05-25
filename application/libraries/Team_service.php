@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Team_Service extends Base_Service {
+class Team_service extends Base_service {
 
 	private $_teamModel;
 	private $_teamMemberModel;

@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Attachment_Service extends Base_Service {
+class Attachment_service extends Base_service {
 
 	protected $_uid = 0;
 	

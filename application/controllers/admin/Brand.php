@@ -8,7 +8,7 @@ class Brand extends Ydzj_Admin_Controller {
 		parent::__construct();
 		
 		$this->load->model(array('Brand_Model'));
-		$this->load->library(array('Goods_service','Attachment_Service'));
+		$this->load->library(array('Goods_service','Attachment_service'));
 	}
 	
 	

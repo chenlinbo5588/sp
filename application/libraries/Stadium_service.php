@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Stadium_Service extends Base_Service {
+class Stadium_service extends Base_service {
 
     private $_stadiumModel;
     private $_stadiumMetaModel;

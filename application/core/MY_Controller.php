@@ -170,7 +170,7 @@ class MY_Controller extends CI_Controller {
 		$this->load->helper(array('form','directory','file', 'url','string'));
 		$this->load->driver('cache');
 		$this->load->model(array('Member_Model','Setting_Model','Seo_Model'));
-		$this->load->library(array('user_agent','form_validation','encrypt','PHPTree','Base_Service'));
+		$this->load->library(array('user_agent','Form_validation','encrypt','PHPTree','Base_service'));
 		
 		$this->base_service->initStaticVars();
 		

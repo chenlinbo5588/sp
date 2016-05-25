@@ -10,7 +10,7 @@ class Team extends Ydzj_Admin_Controller {
 	
 	
 	public function index(){
-		$this->load->library(array('Team_Service','Member_Service','Common_District_Service'));
+		$this->load->library(array('Team_service','Member_service','Common_District_service'));
 		
 		$currentPage = $this->input->get('page') ? $this->input->get('page') : 1;
 		$condition = array(
@@ -118,7 +118,7 @@ class Team extends Ydzj_Admin_Controller {
 	
 	public function add(){
 		
-		$this->load->library(array('Team_Service','Common_District_Service'));
+		$this->load->library(array('Team_service','Common_District_service'));
 		$sportsCategoryList = $this->team_service->getSportsCategory();
 		$this->assign('sportsCategoryList',$sportsCategoryList);
 		
@@ -156,7 +156,7 @@ class Team extends Ydzj_Admin_Controller {
 			
 			for($i = 0 ; $i < 1; $i++){
 				
-				$this->load->library('Attachment_Service');
+				$this->load->library('Attachment_service');
 				$this->attachment_service->setUid($this->_adminProfile['basic']['uid']);
 				
 				$size = array('large','big','middle');
@@ -241,7 +241,7 @@ class Team extends Ydzj_Admin_Controller {
 		$urlParam = $this->uri->uri_to_assoc();
 		$this->assign('id',$urlParam['edit']);
 		
-		$this->load->library('Member_Service');
+		$this->load->library('Member_service');
 		$info = $this->member_service->getUserInfoById($urlParam['edit']);
 		
 		//print_r($urlParam);
@@ -294,13 +294,13 @@ class Team extends Ydzj_Admin_Controller {
 				}
 				
 				//print_r($updateData);
-				$this->load->library('Member_Service');
+				$this->load->library('Member_service');
 				$flag = $this->member_service->updateUserInfo($updateData,$urlParam['edit']);
 				
 				if($flag >= 0){
 					if($aid && $info['aid']){
 						//传新的图片
-						$this->load->library('Attachment_Service');
+						$this->load->library('Attachment_service');
 						$this->attachment_service->deleteByFileUrl(array($info['avatar_middle'],$info['avatar_small']));
 					}
 					

@@ -5,7 +5,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 /**
  * 运动项目 服务
  */
-class Sports_Service extends Base_Service {
+class Sports_service extends Base_service {
 
     private $_sportsCategoryModel;
     private $_sportsMetaModel;

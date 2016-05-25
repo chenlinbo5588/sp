@@ -13,7 +13,7 @@ class Product extends Ydzj_Controller {
 		$this->assign('pgClass',strtolower(get_class()).'Pg');
 		$this->assign('sideTitle',$this->modKey);
 		
-		$this->load->library('Goods_Service');
+		$this->load->library('Goods_service');
 		
 		$topClass = $this->Goods_Class_Model->getList(array(
 			'where' => array(

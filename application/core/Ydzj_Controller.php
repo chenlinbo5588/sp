@@ -15,7 +15,7 @@ class Ydzj_Controller extends MY_Controller {
 	public function __construct(){
 		parent::__construct();
 		
-		$this->load->library('Seo_Service');
+		$this->load->library('Seo_service');
 		$this->form_validation->set_error_delimiters('<label class="form_error">','</label>');
 		
 		$this->_initLogin();

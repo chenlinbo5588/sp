@@ -10,7 +10,7 @@ class Message extends Ydzj_Admin_Controller {
 	public function __construct(){
 		parent::__construct();
 		
-		$this->load->library(array('Admin_Service','Message_Service'));
+		$this->load->library(array('Admin_service','Message_service'));
 		
 		$this->settingKey = array(
 			'email_enabled',

@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Member_Service extends Base_Service {
+class Member_service extends Base_service {
 	
 
 	public function __construct(){

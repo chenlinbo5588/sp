@@ -8,7 +8,7 @@ class Member extends Ydzj_Admin_Controller {
 	}
 	
 	public function index(){
-		$this->load->library(array('Member_Service','Common_District_Service'));
+		$this->load->library(array('Member_service','Common_District_service'));
 		
 		$currentPage = $this->input->get_post('page') ? $this->input->get_post('page') : 1;
 		$condition = array(
@@ -237,7 +237,7 @@ class Member extends Ydzj_Admin_Controller {
 				}
 				
 				//print_r($addParam);
-				$this->load->library('Register_Service');
+				$this->load->library('Register_service');
 				$result = $this->register_service->createMember($addParam);
 				
 				if($result['code'] == 'success'){
@@ -261,7 +261,7 @@ class Member extends Ydzj_Admin_Controller {
 		$urlParam = $this->uri->uri_to_assoc();
 		$this->assign('id',$urlParam['edit']);
 		
-		$this->load->library('Member_Service');
+		$this->load->library('Member_service');
 		$info = $this->member_service->getUserInfoById($urlParam['edit']);
 		
 		//print_r($urlParam);
@@ -314,13 +314,13 @@ class Member extends Ydzj_Admin_Controller {
 				}
 				
 				//print_r($updateData);
-				$this->load->library('Member_Service');
+				$this->load->library('Member_service');
 				$flag = $this->member_service->updateUserInfo($updateData,$urlParam['edit']);
 				
 				if($flag >= 0){
 					if($aid && $info['aid']){
 						//传新的图片
-						$this->load->library('Attachment_Service');
+						$this->load->library('Attachment_service');
 						$this->attachment_service->deleteByFileUrl(array($info['avatar_middle'],$info['avatar_small']));
 					}
 					
@@ -346,7 +346,7 @@ class Member extends Ydzj_Admin_Controller {
 		if($this->isPostRequest()){
 			$src_file = str_ireplace(base_url(),'',$this->input->post('url'));
 			
-			$this->load->library('Attachment_Service');
+			$this->load->library('Attachment_service');
 			
 			$fileData = $this->attachment_service->resize(array('file_url' => $src_file) , 
 				array('middle' => array('width' => $this->input->post('w'),'height' => $this->input->post('h'),'maintain_ratio' => false , 'quality' => 100)) , 

@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Base_Service {
+class Base_service {
 	
 	public static $CI = null;
 	public static $memberModel = null;

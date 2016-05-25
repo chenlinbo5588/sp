@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Seo_Service extends Base_Service {
+class Seo_service extends Base_service {
 	
 	private $_seoModel = null;
 	private $_seoTypeList = null;
