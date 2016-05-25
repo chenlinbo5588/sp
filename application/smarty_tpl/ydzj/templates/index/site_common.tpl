@@ -31,6 +31,7 @@ form label.error {
 
 .anchor {
 	height:0px;
+	display:block;
 }
 
 </style>

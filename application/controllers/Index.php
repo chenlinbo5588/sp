@@ -166,10 +166,15 @@ class Index extends Ydzj_Controller {
 	}
 	
 	
-	private function _setValidationRules($site){
-		$currentConfig = $this->_siteRulesList[$site];
+	private function _setValidationRules($site,$isMutilRule = '',$ruleGroupName = ''){
+		if($isMutilRule == 'yes'){
+			$validateRules = $this->_siteRulesList[$site]['rules'][$ruleGroupName];
+		}else{
+			$validateRules = $this->_siteRulesList[$site]['rules'];
+		}
+		//print_r($validateRules);
 		
-		foreach($currentConfig['rules'] as $ruleName){
+		foreach($validateRules as $ruleName){
 			switch($ruleName){
 				case 'username':
 					$this->form_validation->set_rules('username','用户名称', 'required|min_length[1]|max_length[20]');
@@ -243,11 +248,14 @@ class Index extends Ydzj_Controller {
 		
 		$channelData = $this->_prepageChannelData();
 		
+		$mutiRule = $this->input->get_post('muti_rule') ? $this->input->get_post('muti_rule') : '';
+		$ruleName = $this->input->get_post('rule') ? $this->input->get_post('rule') : '';
+		
 		if($this->isPostRequest()){
 			$this->form_validation->reset_validation();
 			$this->form_validation->set_error_delimiters('<label class="error">','</label>');
 			
-			$this->_setValidationRules($currentHost);
+			$this->_setValidationRules($currentHost,$mutiRule,$ruleName);
 			
 			for($i = 0; $i < 1; $i++){
 				
@@ -286,8 +294,14 @@ class Index extends Ydzj_Controller {
 					*/
 					//redirect(config_item('dest_website'));
 					$registerOk = true;
-					$this->assign('feedback',config_item($this->_siteRulesList[$currentHost]['registeOkText']));
-					$this->assign('jumUrlType',$this->_siteRulesList[$currentHost]['jumUrlType']);
+					
+					if($mutiRule == 'yes'){
+						$this->assign('feedback',config_item($this->_siteRulesList[$currentHost]['registeOkText'][$ruleName]));
+						$this->assign('jumUrlType',$this->_siteRulesList[$currentHost]['jumUrlType'][$ruleName]);
+					}else{
+						$this->assign('feedback',config_item($this->_siteRulesList[$currentHost]['registeOkText']));
+						$this->assign('jumUrlType',$this->_siteRulesList[$currentHost]['jumUrlType']);
+					}
 					
 				}else{
 					$this->assign('feedback',$result['message']);

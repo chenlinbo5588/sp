@@ -2,10 +2,13 @@
 	var authCodeURL ="{site_url('api/register/authcode')}";
 	{include file="./site_alert.tpl"}
 	$(function(){
+	{*
 		$('#registerForm').validate({
 	        errorPlacement: function(error, element){
 	        	error.appendTo(element.parent().next(".tiparea"));
 	        },
+	        onfocusout:false,
+		    onkeyup:false,
 	        rules : {
 	        	username : {
 	        		required : true,
@@ -40,6 +43,7 @@
 	            }
 	        }
 	    });
+	    *}
 	});
 	</script>
-	<script type="text/javascript" src="{resource_url('js/register.js')}?v=1.1"></script>
+	{include file="./js_mobile_authcode.tpl"}

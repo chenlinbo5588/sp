@@ -175,6 +175,8 @@ form label.error {
 	        	//console.log(element);
 	            error.appendTo(element.parent().next(".tiparea"));
 	        },
+	        onfocusout:false,
+		    onkeyup:false,
 	        rules : {
 	        	username : {
 	        		required : true,

@@ -56,34 +56,26 @@ form label.error {
 	position:relative;
 }
 
-.auth_code .txt {
-	
-}
-.auth_code img {
-	position:absolute;
-	margin-right:0;
-	right:0;
-	top:0;
-}
-
-
-.refresh {
-	padding:2px 0;
-}
-
-.refresh a {
-	display:block;
-	width:100%;
+#reg .getCode {
+	height: 37px;
+	line-height:37px;
 	text-align:center;
-	color:#61615D;
+	background:#d3d5da;
+	border:0px;
+	position: absolute;
+    right: 0;
+    font-size: 14px;
+    width:28%;
+    border-radius:0px;
+    -webkit-border-radius:0px;
+    -moz-border-radius:0px;
+    -o-border-radius:0px;
+    -webkit-appearance:none;
 }
 
-.btn2 {
-	position:relative;
-}
+
 
 .btn2 input {
-	line-height:43px;
 	height:43px;
 	text-align:center;
 	border:0;
@@ -96,8 +88,6 @@ form label.error {
 	text-indent:-1000em;
 	background:url('{resource_url("img/btns/reg_btn.png")}') no-repeat center center;
 }
-
-
 
 </style>
 	<div id="wrap">
@@ -126,17 +116,14 @@ form label.error {
    		<div id="regbg">
    			<div class="hide">免费体验，入市首选指标 《K线入门宝典》</div>
    			<div id="reg">
-   				<a name="md">&nbsp;</a>
+   				<a class="anchor" name="md">&nbsp;</a>
 	   			{form_open(site_url('index/index'|cat:'#md'),'id="registerForm"')}
 		        {include file="./site_form_hidden.tpl"}
-	   			<div class="username clearfix"><label class="side_lb">姓名</label><input type="text" class="txt noround" autocomplete="off" name="username" value="{set_value('username')}" placeholder="请输入用户名称"/></div>
-	   			<div class="tiparea"></div>
 	   			<div class="mobile clearfix"><label class="side_lb">手机号码</label><input type="text" class="txt noround" autocomplete="off" name="mobile" id="mobile" value="{set_value('mobile')}" placeholder="请输入您的手机号码"/></div>
 	   			<div class="tiparea"></div>
-	   			<div class="auth_code clearfix"><label class="side_lb">验证码</label><input type="text" class="txt noround" name="auth_code" autocomplete="off" value="" placeholder="请输入您的验证码"/><img class="nature t4" id="authImg" src="{site_url('captcha')}?w=100&h=37&type=num" title="点击图片刷新"/></div>
+	   			<div class="auth_code clearfix"><label class="side_lb">验证码</label><input type="text" class="txt noround" name="auth_code" autocomplete="off" value="" placeholder="请输入您的验证码"/><input type="button" class="getCode noround" name="authCodeBtn" value="获取验证码"/></div>
 	   			<div class="tiparea"></div>
-	   			<div class="refresh"><a href="javascript:void(0);">看不清，点击验证码刷新</a></div>
-	   			<div class="btn2 clearfix"><input class="t4" type="submit" name="tj" value="免费申请账号"/></div>
+	   			<div class="btn2"><input class="t4" type="submit" name="tj" value="免费申请账号"/></div>
 	   			</form>
 	   		</div>
 	   	</div>
@@ -149,55 +136,42 @@ form label.error {
    			<div><img class="responed" src="{resource_url('img/pg3/pic15.jpg')}"/></div>
    		</div>
 	</div><!-- //end of wrap -->
-	<script>
-	var imgUrl = "{site_url('captcha')}?w=100&h=37&type=num";
+	<script type="text/javascript">
+	var authCodeURL ="{site_url('api/register/authcode')}";
+	{include file="./site_alert.tpl"}
 	$(function(){
 		{include file="./site_alert.tpl"}
-		
-		$("#authImg,.refresh").bind("click",function(){
-			$("#authImg").attr("src",imgUrl + "&t=" + Math.random());
-		});
-		
 		$('#registerForm').validate({
 	        errorPlacement: function(error, element){
-	        	//console.log(error);
-	        	//console.log(element);
 	            error.appendTo(element.parent().next(".tiparea"));
 	        },
+	        onfocusout:false,
+		    onkeyup:false,
 	        rules : {
-	        	username : {
-	        		required : true,
-	        		minlength: 1,
-	                maxlength: 20
-	        	},
 	        	mobile: {
 	                required : true,
 	                phoneChina:true,
 	            },
 	            auth_code : {
 	            	required:true,
-	                minlength: 4,
-	                maxlength: 4
+	                minlength: 6,
+	                maxlength: 6
 	            }
 	            
 	        },
 	        messages : {
-		        username : {
-	        		required : '请输入姓名',
-	        		minlength: '最少输入1个字符',
-	                maxlength: '最多输入20个字符'
-	        	},
 	        	mobile: {
 	                required : '手机号码不能为空',
 	           },
 	           auth_code : {
-	            	required : '请输入4位验证码',
-	                minlength: '请输入4位验证码',
-	                maxlength: '请输入4位验证码'
+	            	required : '请输入6位数字验证码',
+	                minlength: '请输入6位数字验证码',
+	                maxlength: '请输入6位数字验证码'
 	            }
 	        }
 	    });
 	});	
 	</script>
+	{include file="./js_mobile_authcode.tpl"}
 </body>
 </html>

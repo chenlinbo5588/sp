@@ -1,0 +1,1 @@
+	<script type="text/javascript" src="{resource_url('js/register.js')}?v=1.1"></script>

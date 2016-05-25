@@ -135,6 +135,8 @@ img.responed {
 	        	//console.log(element);
 	            error.appendTo(element.parent().find(".tiparea"));
 	        },
+	        onfocusout:false,
+		    onkeyup:false,
 	        rules : {
 	        	mobile: {
 	                required : true,
@@ -155,6 +157,8 @@ img.responed {
 	        	//console.log(element);
 	            error.appendTo(element.parent().find(".tiparea"));
 	        },
+	        onfocusout:false,
+		    onkeyup:false,
 	        rules : {
 	        	mobile: {
 	                required : true,
