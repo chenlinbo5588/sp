@@ -2,7 +2,6 @@
 	var authCodeURL ="{site_url('api/register/authcode')}";
 	{include file="./site_alert.tpl"}
 	$(function(){
-	{*
 		$('#registerForm').validate({
 	        errorPlacement: function(error, element){
 	        	error.appendTo(element.parent().next(".tiparea"));
@@ -43,7 +42,6 @@
 	            }
 	        }
 	    });
-	    *}
 	});
 	</script>
 	{include file="./js_mobile_authcode.tpl"}
