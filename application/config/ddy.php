@@ -6,6 +6,8 @@ $config['SMS_apikey'] = 'cb287ff419c6a8adba5d452feed76a03';
 $config['registerOk_text1'] = '恭喜您注册成功,稍后将有客服与你联系';
 $config['registerOk_text2'] = '注册成功';
 $config['registerOk_text3'] = '注册成功';
+$config['registerOk_text4'] = '稍后将有客服与你联系,为你介绍';
+$config['registerOk_text5'] = '恭喜您订阅成功,稍后将有客服与你联系';
 $config['maxRegisterIpLimit'] = 30;
 
 $config['jumUrl'] = array(
@@ -47,12 +49,12 @@ $config['siteRules'] = array(
 			'rules' => array( 'mobile','auth_code'),
 		),
 	's6.txcf188.com' => array(
-			'registeOkText' => 'registerOk_text2',
+			'registeOkText' => 'registerOk_text5',
 			'jumUrlType' => 'qqchat',
-			'rules' => array( 'mobile','auth_code'),
+			'rules' => array( 'mobile','mobile_auth_code'),
 		),
 	's7.txcf188.com' => array(
-			'registeOkText' => 'registerOk_text1',
+			'registeOkText' => 'registerOk_text4',
 			'jumUrlType' => 'download1',
 			'rules' => array(/*'username', */ 'mobile','mobile_auth_code'),
 		),

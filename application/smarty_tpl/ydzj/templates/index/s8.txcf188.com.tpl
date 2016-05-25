@@ -71,7 +71,6 @@ form label.error {
 }
 .auth_code .getCode {
 	height:37px;
-	line-height:37px;
 	position:absolute;
 	margin-right:0;
 	right:-1px;
@@ -143,16 +142,15 @@ form label.error {
    		</div>
    		<div class="formdiv">
 	   		<div id="regbg">
-	   			<div class="hide"></div>
 	   			<div id="reg">
-	   				<a name="md">&nbsp;</a>
+	   				<a name="md"></a>
 		   			{form_open(site_url('index/index'|cat:'#md'),'id="registerForm"')}
 			        {include file="./site_form_hidden.tpl"}
 		   			<div class="mobile"><input type="text" class="txt noround" autocomplete="off" name="mobile" id="mobile" value="{set_value('mobile')}" placeholder="请输入您的手机号码"/></div>
 		   			<div class="tiparea">{form_error('mobile')}</div>
 		   			<div class="auth_code"><input type="text" class="txt noround" name="auth_code" autocomplete="off" value="" placeholder="请输入您的验证码"/><input type="button" class="getCode noround" name="authCodeBtn" value="获取验证码"/></div>
 		   			<div class="tiparea">{form_error('auth_code')}</div>
-		   			<div class="btn2 clearfix"><input class="t4" type="submit" name="tj" value="申请资金"/></div>
+		   			<div class="btn2"><input class="t4" type="submit" name="tj" value="申请资金"/></div>
 		   			</form>
 		   		</div>
 	   		</div>

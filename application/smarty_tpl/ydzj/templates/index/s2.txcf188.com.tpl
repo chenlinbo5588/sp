@@ -28,7 +28,6 @@ img.responed {
 	font-size:14px;
 	font-weight:bold;
 	height:37px;
-	line-height:37px;
 	text-align:center;
 	text-indent:0;
 	box-sizing:border-box;
