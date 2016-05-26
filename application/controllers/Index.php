@@ -25,7 +25,12 @@ class Index extends Ydzj_Controller {
 		$industryList = $this->article_service->getCommandArticleList(16);
 		
 		
+		$hotkeys = $this->_getSiteSetting('hotwords');
+		
+		$hotwords = explode(',',$hotkeys);
+		
 		$this->seo();
+		$this->assign('hotwords',$hotwords);
 		$this->assign('qiyeList',$qiyeList);
 		$this->assign('industryList',$industryList);
 		$this->display();

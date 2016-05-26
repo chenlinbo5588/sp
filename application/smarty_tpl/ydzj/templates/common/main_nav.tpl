@@ -1,10 +1,10 @@
    	<div id="topBar" class="clearfix">
        <div class="boxz clearfix">
-       		<div class="fl" id="siteLogo"><a href="/"><img src="{resource_url('img/cmp/logo.jpg')}" style="width:130px;height:60px;"/></a></div>
-       		<div class="fr" id="siteContacts">
+       		<div id="siteLogo"><a href="/"><img src="{resource_url('img/cmp/logo.jpg')}" style=""/></a></div>
+       		<div id="siteContacts">
            		<a href="/" title="首页">您好,欢迎访问 {config_item('site_name')}</a>
-           		<a href="/">Tel: ＋86-13792366525</a>
-           		<a href="/">E-mail: sales@tongjia.com</a>
+           		<a href="javascript:void(0);">Tel: {$siteSetting['site_phone']|escape}</a>
+           		<a href="mailto:{$siteSetting['email_addr']}">E-mail: {$siteSetting['email_addr']|escape}</a>
        		</div>
        	</div>
        	<div class="boxz clearfix">

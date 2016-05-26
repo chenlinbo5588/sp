@@ -46,7 +46,8 @@
 		  $('.bxslider').bxSlider({
 		    slideWidth: 500,
 		    minSlides: 1,
-		    slideMargin: 10
+		    slideMargin: 10,
+		    pager:false
 		  });
 		});
 		{/if}

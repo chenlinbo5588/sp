@@ -118,14 +118,15 @@ a:focus,*:focus {
     *zoom:1; /* for IE6 IE7 */ 
 }
 
-.clear{ 
+.clear { 
     clear:both; 
     display:block; 
     overflow:hidden; 
     height:0; 
     line-height:0; 
     font-size:0; 
-} 
+}
+
 /* 设置显示和隐藏, 通常用来与 JS 配合 */ 
 .hide { 
     display:none !important; 
@@ -435,6 +436,10 @@ input[type=text].validation_error {
 	
 }
 
+#footer .row1 .qrcode {
+	float:right;
+}
+
 #footer .row1 td {
 	font-size:14px;
 	color:#6D7272;
@@ -479,10 +484,13 @@ input[type=text].validation_error {
 
 
 .searchbar {
-	margin: 20px 0;
+	margin: 8px 0;
 	
 }
 
+.searchbar .searchform {
+	float:right;
+}
 
 .panel1 h3 {
 	float:left;
@@ -505,6 +513,7 @@ input[type=text].validation_error {
 .twoCol li.col {
 	width:50%;
 	position:relative;
+	float: left;
 }
 
 .threeCol li.col {
@@ -523,6 +532,7 @@ input[type=text].validation_error {
 
 .hotlink strong {
 	font-size:14px;
+	color: #DB3652;
 }
 
 .hotlink a {
@@ -532,11 +542,18 @@ input[type=text].validation_error {
 }
 
 #siteLogo {
+	float:left;
+}
+
+#siteLogo img {
+	width:130px;
+	height:60px;
 	
 }
 
 #siteContacts {
 	padding-top:10px;
+	float:right;
 }
 
 #goinIntro {
@@ -760,27 +777,20 @@ input[type=text].validation_error {
 	padding:5px;
 }
 
-
-#swiper-container2 .swiper-slide a {
-	display:block;
-	position:absolute;
-	width:100%;
-	bottom:0px;
-	left: 50%;
-    margin-left:-50%;
-    background: #fff;
-}
-
-
-
 #starProducts {
-	margin:20px 0 0 0;
+	padding:5px;
 }
 
-.starProducts h3 {
-	float:left;
-	background:#e2e2e2;
+#starProducts h3 {
+	margin: 0 0 5px 0;
 }
+
+
+#starProducts .bx-wrapper {
+	margin: 0 auto;
+}
+
+
 
 
 .friendLinks {
@@ -1033,7 +1043,6 @@ table.liststyle1 {
 	
 }
 
-
 .fileitem .filename {
 	width: 50%;
     display: inline-block;
@@ -1045,7 +1054,7 @@ table.liststyle1 {
     padding:0 0 0 5px;
 }
 
-.fileitem .filetype,.fileitem .filesize {
+.fileitem .filetype, .fileitem .filesize {
 	line-height:40px;
 }
 
@@ -1085,7 +1094,6 @@ table.liststyle1 {
 }
 
 
-
 @media (max-width: 1024px) {
 	.boxz {
 		width:980px;
@@ -1102,6 +1110,47 @@ table.liststyle1 {
 	.boxz {
 		width:100%;
 		max-width:640px;
+	}
+}
+
+@media (max-width: 360px) {
+	.boxz {
+		width:100%;
+		max-width:360px;
+	}
+}
+
+
+@media (max-width: 360px), (max-width: 640px) {
+	.newslist {
+		padding:0;
+	}
+	
+	img { 
+	    height: auto; 
+	    width: auto\9; 
+	    width:100%;
+	}
+	
+	#siteLogo img {
+		display:none;
+	}
+	
+	#siteContacts {
+		float:none;
+	}
+	
+	#homeSwiper .sliderItem {
+		height:200px;
+	}
+	
+	.searchbar .searchform {
+		float:none;
+	}
+	
+	.twoCol li.col {
+		width:100%;
+		float:none;
 	}
 }
 

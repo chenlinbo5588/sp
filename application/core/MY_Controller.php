@@ -30,6 +30,7 @@ class MY_Controller extends CI_Controller {
 		
 		$this->_initSmarty();
 		$this->_security();
+		$this->_initMobile();
 		$this->_initSiteSetting();
 		$this->_initSeoSetting();
 		
@@ -82,6 +83,14 @@ class MY_Controller extends CI_Controller {
         return 'post' == strtolower($_SERVER['REQUEST_METHOD']) ? 1 : 0;
     }
     
+    
+    private function _initMobile(){
+    	//print_r($this->agent);
+    	
+    	
+    	$this->assign('isMobile',$this->agent->is_mobile());
+    }
+    
     private function _initApp(){
     	if($this->input->server('HTTP_APP_SP') == 'iOS'){
 			$this->_inApp = true;
@@ -103,6 +112,16 @@ class MY_Controller extends CI_Controller {
     	//$this->smartyConfig();
     }
     
+    protected function _getSiteSetting($key){
+    	if($key){
+    		return $this->_siteSetting[$key];
+    	}else{
+    		
+    		return $this->_siteSetting;
+    	}
+    	
+    	
+    }
     
     private function _initSiteSetting(){
     	$settingList = $this->cache->file->get(CACHE_KEY_SiteSetting);
@@ -231,27 +250,49 @@ class MY_Controller extends CI_Controller {
     
     
     public function display($viewname = ''){
+    	//echo $this->uri->uri_string();
+    	
     	if($viewname == ''){
-    		$paramAr = $this->uri->segment_array();
+    		$tempPath = array();
     		
+    		$paramAr = $this->uri->segment_array();
     		//print_r($paramAr);
+    		$startIndex = 1;
+    		
     		if($paramAr[1] == 'admin'){
-    			$viewname = empty($paramAr[2]) ? 'index' :  $paramAr[2];
-    			$viewname .=  '/'. (empty($paramAr[3]) ? 'index' :  $paramAr[3]);
-    		}else{
-    			$viewname = empty($paramAr[1]) ? 'index' :  $paramAr[1];
-    			$viewname .=  '/'. (empty($paramAr[2]) ? 'index' :  $paramAr[2]);
+    			$startIndex = 2;
     		}
     		
+    		$tempPath[] = empty($paramAr[$startIndex]) ? 'index' :  $paramAr[$startIndex];
+    		$startIndex++;
+    		$tempPath[] =  (empty($paramAr[$startIndex]) ? 'index' :  $paramAr[$startIndex]);
+    		
+    		$viewname = implode('/',$tempPath);
     	}
     	
-    	if($this->input->is_ajax_request()){
-    		$viewname = $viewname.'_ajax';
-    	}
+    	//修改前
+    	$unchangeTplName = $viewname;
+    	$tplDir = $this->_smarty->getTemplateDir(0);
     	
     	$this->_smarty->assign($this->_seo);
     	
-    	$this->output->set_output($this->_smarty->fetch($this->_smarty->getTemplateDir(0).$viewname.'.tpl'));
+    	
+    	if($this->input->is_ajax_request()){
+    		$viewname = $viewname.'_ajax';
+    	}else{
+    		if($this->agent->is_mobile()){
+    			$viewname = $viewname . '_mobile';
+    		}
+    	}
+    	
+    	$realPath = $tplDir.$viewname.'.tpl';
+    	//echo $realPath;
+    	if(file_exists($realPath)){
+    		$this->output->set_output($this->_smarty->fetch($realPath));
+    	}else{
+    		$this->output->set_output($this->_smarty->fetch($tplDir.$unchangeTplName.'.tpl'));
+    	}
+    	
     }
     
     public function seoTitle($title){

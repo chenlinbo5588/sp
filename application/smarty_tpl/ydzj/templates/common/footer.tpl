@@ -1,7 +1,7 @@
     	<div id="footer">
     		<div class="row1">
-    			<div class="boxz clearfix" style="">
-    				<div class="fr">
+    			<div class="boxz clearfix">
+    				<div class="qrcode">
     					<img src="{resource_url('img/cmp/ma.png')}" style="width:120px;height:120px;"/>
     					<br/><span>扫描二维码:访问手机版</span>
     				</div>
