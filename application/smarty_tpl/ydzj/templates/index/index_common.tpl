@@ -1,21 +1,29 @@
 	<div id="homeSwiper">
-	    <div class="sliderItem" style="background:url({resource_url('img/cmp/1.jpg')}) no-repeat 50% 0"></div>
+		{foreach from=$homeSliderImg item=item}
+		{if $isMobile}
+	    <div class="sliderItem" style="background:url({resource_url('img/cmp/m'|cat:$item|cat:'.jpg')}) no-repeat 50% 0"></div>
+	    {else}
+	    <div class="sliderItem" style="background:url({resource_url('img/cmp/'|cat:$item|cat:'.jpg')}) no-repeat 50% 0"></div>
+	    {/if}
+	    {/foreach}
+	    {*
         <div class="sliderItem" style="background:url({resource_url('img/cmp/2.jpg')}) no-repeat 50% 0"></div>
         <div class="sliderItem" style="background:url({resource_url('img/cmp/3.jpg')}) no-repeat 50% 0"></div>
         <div class="sliderItem" style="background:url({resource_url('img/cmp/4.jpg')}) no-repeat 50% 0"></div>
+        *}
 	</div>
 	<div class="boxz"><div id="homeSwiperPager"></div></div>
-	<div class="boxz" style="top:-60px;">
-		<div class="searchbar">
+	<div class="boxz bdwrap">
+		<div class="searchbar clearfix">
 			<span class="hotlink">
 				<strong>热门搜索:　</strong>
 				{foreach from=$hotwords item=item}
 				<a href="{site_url('product/plist/')}?keyword={urlencode($item)}">{$item|escape}</a>
 				{/foreach}
 			</span>
-			<div class="searchform clearfix">
+			<div class="searchform">
 				{form_open(site_url('product/plist'),'id="searchForm"')}
-				<input type="text" name="keyword" value="" style="width:200px" placeholder="输入产品名称"/><input type="image" name="search" src="{resource_url('img/btns/search_btn.png')}"/>
+				<input type="text" name="keyword" class="txt" value="" placeholder="输入产品名称"/><input type="image" name="search" src="{resource_url('img/btns/search_btn.png')}"/>
 				</form>
 			</div>
 		</div>
@@ -24,21 +32,19 @@
 				<li class="col">
 					<div class="colPanel">
 						<h3 class="panelTitel">走进标度</h3>
-						<div id="goinSwiper">
-					        <div><img src="{resource_url('img/cmp/goin1.jpg')}"/></div>
-					        <div><img src="{resource_url('img/cmp/goin2.jpg')}"/></div>
-				    	</div>
-						<div class="intro" id="goinIntro">
-							<p>杭州标度环保技术有限公司，专业生产仪器仪表及精密监测仪器，是一家集科研、生产、销售、售后服务于一体的高新技术企业。</p>
-							<p>公司本着“为客户提供最专业、最快速、最实惠、最简便的检测产品及服务”的宗旨，一直在完善产品功能、检测效果，致力于仪器仪表的研讨及开发，短短几年时间，迅速成为国内极具影响力的仪器仪表生产厂商之一.</p>
-							<p>作为仪器仪表行业的卓越品牌，公司绝大部分产品都已取得相关证书及专利，很多研发成果在国内都属首例。包括便携式COD消解仪、数显糖度计、水质在线监测设备等。不断的发展中，公司产品已遍布全国各地各个行业：环保局、食品饮料制造行业、农业研究所、城市供水、医疗制药、水产养殖、生物工程、工业水处理等。并远销海外，拥有众多满意客户。</p>
-						</div>
+						{if !$isMobile}
+						{include file="./index_goin.tpl"}
+						{include file="./index_intro.tpl"}
+						{else}
+						{include file="./index_intro.tpl"}
+						{include file="./index_goin.tpl"}
+						{/if}
 					</div>
 				</li>
-				<li class="col">
+				<li class="col col2">
 					<div class="colPanel newslist">
 						<h3 class="panelTitel"><span>企业新闻</span><a class="more fr" href="{site_url('news/news_list?ac_id=15')}">更多&gt;&gt;</a></h3>
-						<ol class="clearfix">
+						<ol>
 							{foreach from=$qiyeList item=item}
 							<li><a href="{site_url('news/detail/')}?id={$item['article_id']}">{$item['article_title']|escape}</a><span>{$item['article_time']|date_format:"%Y-%m-%d"}</span></li>
 							{/foreach}
@@ -85,8 +91,8 @@
 		</div>
 		<div class="friendLinks panelContent">
 			<h3><strong>官方店铺</strong></h3>
-			<a href="http://www.taobao.com" title="淘宝店铺"><img src="{resource_url('img/taobao.jpg')}" style="width:80px;"/></a>
-			<a href="http://www.alibaba.com.cn" title="阿里巴巴"><img src="{resource_url('img/alibaba.jpg')}"/></a>
+			<a href="http://www.taobao.com" title="淘宝店铺"><img class="nature" src="{resource_url('img/taobao.jpg')}" style="width:80px;"/></a>
+			<a href="http://www.alibaba.com.cn" title="阿里巴巴"><img class="nature" src="{resource_url('img/alibaba.jpg')}"/></a>
 		</div>
 	</div>
 	<script type="text/javascript" src="{resource_url('js/jquery.cycle.all.js')}"></script>

@@ -39,7 +39,6 @@ class Doc extends Ydzj_Controller {
 		if($articleClass[0]){
 			$this->topClassId = $articleClass[0]['ac_id'];
 			
-			
 			/*
 			$sideNavs = $this->Article_Class_Model->getList(array(
 				'where' => array(
@@ -58,7 +57,10 @@ class Doc extends Ydzj_Controller {
 		
 		//$this->assign('sideNavs',$this->sideNavs);
 		
-		
+		$this->_navigation = array(
+			'首页' => site_url('/'),
+			'服务中心' => site_url('service/customer'),
+		);
 		$goodsList = $this->goods_service->getCommandGoodsList();
 		$this->assign('goodsList',$goodsList);
 	}

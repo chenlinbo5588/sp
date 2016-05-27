@@ -2,14 +2,7 @@
 	<div class="linePg">
 		<div class="{$pgClass}"></div>
 		<div class="boxz clearfix mg10">
-			<div class="sideNav">
-				<ul class="sideItem">
-					<li class="itemTitle"><h3><a href="{$sideTitleUrl}">{$sideTitle}</a></h3></li>
-					{foreach from=$sideNavs item=item key=key}
-					<li><a href="{$item}">{$key}</a></li>
-					{/foreach}
-				</ul>
-			</div>
+			{if !$isMobile}{include file="common/side_nav.tpl"}{/if}
 			<div class="contentArea">
 				<div class="breadcrumb">{$breadcrumb}</div>
 				<div class="bd" id="articleInfo">
@@ -18,6 +11,7 @@
 					<div id="mapDiv" style="height:400px;"></div>
 				</div>
 			</div>
+			{if $isMobile}{include file="common/side_nav.tpl"}{/if}
 		</div>
 	</div>
 	<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=qkNnEXk6nC3jcPTM8mv3dcE8"></script>

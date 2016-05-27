@@ -8,8 +8,12 @@
 				infiniteLoop:true,
 				auto:true,
 				touchEnabled:true,
+				useCSS: false,
+				easing: 'easeOutCubic',
+				speed:2000,
 				captions: true
 			});
+			
 			
 			$('#hotProductSwiper').bxSlider({
 				responsive:true,
@@ -27,6 +31,7 @@
 			    moveSlides: 1,
 			    slideMargin: 10
 			});
+			
 		});
 	</script>
 {include file="common/footer.tpl"}

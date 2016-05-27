@@ -238,11 +238,20 @@ class MY_Controller extends CI_Controller {
     	if($this->_navigation){
     		
     		$temp = array();
+    		
+    		$i = 0;
+    		
     		foreach($this->_navigation as $key => $item){
-    			$temp[] = "<a href=\"{$item}\">{$key}</a>";
+    			if($i == 0){
+    				$temp[] = "<a class=\"first breadlink\" href=\"{$item}\">{$key}</a>";
+    			}else{
+    				$temp[] = "<a class=\"breadlink\" href=\"{$item}\">{$key}</a>";
+    			}
+    			
+    			$i++;
     		}
     		
-    		return implode('&gt;',$temp);
+    		return implode('<em>&gt;</em>',$temp);
     	}else{
     		return '';
     	}

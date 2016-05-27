@@ -38,8 +38,14 @@ class Product extends Ydzj_Controller {
 			}
 		}
 		
-		
+		$this->_navigation = array(
+			'首页' => site_url('/'),
+		);
 		$this->assign('sideNavs',$this->sideNavs);
+		
+		$goodsList = $this->goods_service->getCommandGoodsList();
+		$this->assign('goodsList',$goodsList);
+		
 	}
 	
 	
@@ -83,6 +89,12 @@ class Product extends Ydzj_Controller {
 		$list = $this->Goods_Model->getList($condition);
 		
 		
+		$cutLen = 300;
+		
+		if($this->agent->is_mobile()){
+			$cutLen = 80;
+		}
+		
 		if($list['data']){
 			$count = 0;
 			foreach($list['data'] as $key => $product){
@@ -91,7 +103,7 @@ class Product extends Ydzj_Controller {
 				}else{
 					$product['goods_pic'] = resource_url('img/default.jpg');
 				}
-				$product['digest'] = cutText(html_entity_decode(strip_tags($product['goods_intro'])),300);
+				$product['digest'] = cutText(html_entity_decode(strip_tags($product['goods_intro'])),$cutLen);
 				$list['data'][$key] = $product;
 				
 			}

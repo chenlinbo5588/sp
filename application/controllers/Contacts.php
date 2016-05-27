@@ -149,6 +149,10 @@ class Contacts extends Ydzj_Controller {
 	
 	public function map(){
 		$key = '在线地图';
+		
+		$this->_navigation[$key] = site_url('contacts/map');
+		$this->assign('breadcrumb',$this->breadcrumb());
+		
 		$this->seo($key);
 		$this->assign('site_name',$this->_siteSetting['site_name']);
 		$this->assign('company_address',$this->_siteSetting['company_address']);

@@ -48,6 +48,11 @@ class News extends Ydzj_Controller {
 		
 		$this->assign('sideNavs',$this->sideNavs);
 		
+		$this->_navigation = array(
+			'首页' => site_url('/'),
+		);
+		
+		
 		$goodsList = $this->goods_service->getCommandGoodsList();
 		$this->assign('goodsList',$goodsList);
 	}

@@ -3,7 +3,7 @@
 		<div class="{$pgClass}"></div>
 		<div class="boxz clearfix mg10">
 			<form id="detailForm" name="detailForm" action="{site_url('product/plist')}" method="get">
-			{include file="./product_side.tpl"}
+			{if !$isMobile}{include file="./product_side.tpl"}{/if}
 			<div class="contentArea">
 				<div class="breadcrumb"><span>您所在的位置:</span>{$breadcrumb}</div>
 				<div class="bd bdlist">
@@ -36,6 +36,7 @@
 					{/if}
 				</div>
 			</div>
+			{if $isMobile}{include file="./product_side.tpl"}{/if}
 			</form>
 		</div>
 	</div>

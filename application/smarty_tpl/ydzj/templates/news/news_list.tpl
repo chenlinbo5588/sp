@@ -5,12 +5,12 @@
 			<form id="listForm" name="listForm" action="{site_url('news/news_list')}" method="get">
 			<input type="hidden" name="page" value="{$currentPage}"/>
 			<input type="hidden" name="ac_id" value="{$currentAcId}"/>
-			{include file="./news_side.tpl"}
+			{if !$isMobile}{include file="./news_side.tpl"}{/if}
 			<div class="contentArea">
 				<div class="breadcrumb"><span>您所在的位置:</span>{$breadcrumb}</div>
 				<div class="bd bdlist">
 					<a name="listmao"></a>
-					<table class="liststyle1">
+					<table class="liststyle1 newsList">
 					{foreach from=$list['data'] item=item}
 					<tr class="liststyle1Item"><td>
 						<a href="{$item['article_url']}"><img class="previewPic" src="{$item['article_pic']}" alt="{$item['article_title']|escape}"/></a>
@@ -29,6 +29,7 @@
 					{include file="common/pagination.tpl"}
 				</div>
 			</div>
+			{if $isMobile}{include file="./news_side.tpl"}{/if}
 			</form>
 		</div>
 	</div>

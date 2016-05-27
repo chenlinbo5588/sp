@@ -2,17 +2,10 @@
 	<div class="linePg">
 		<div class="{$pgClass}"></div>
 		<div class="boxz clearfix mg10">
-			<div class="sideNav">
-				<ul class="sideItem">
-					<li class="itemTitle"><h3><a href="{$sideTitleUrl}">{$sideTitle}</a></h3></li>
-					{foreach from=$sideNavs item=item key=key}
-					<li><a href="{$item}">{$key}</a></li>
-					{/foreach}
-				</ul>
-			</div>
+			{if !$isMobile}{include file="common/side_nav.tpl"}{/if}
 			<div class="contentArea">
 				<div class="breadcrumb">{$breadcrumb}</div>
-				<div class="bd" id="articleInfo" style="border:1px solid #dcdcdc;border-top:none;">
+				<div class="bd" id="articleInfo" style="border:1px solid #dcdcdc;">
 					<h3>请按要求填写您的准确信息，相关人员将在第一时间与您联系</h3>
 					<a name="formmap">&nbsp;</a>
 					{form_open(site_url('contacts/suggestion/#formmap'),'id="suggestion_form"')}
@@ -34,6 +27,7 @@
 				</div>
 			</div>
 		</div>
+		{if $isMobile}{include file="common/side_nav.tpl"}{/if}
 	</div>
 	<script>
 		var imgUrl = "{site_url('captcha/index')}";
