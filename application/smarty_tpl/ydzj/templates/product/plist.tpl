@@ -15,7 +15,7 @@
 					<tr class="liststyle1Item"><td>
 						<a href="{site_url('product/detail/?id=')}{$item['goods_id']}&gc_id={$item['gc_id']}"><img class="previewPic" src="{resource_url($item['goods_pic'])}" alt="{$item['article_title']|escape}"/></a>
 						<div class="previewCont">
-							<div class="productName"><a target="_blank" href="{site_url('product/detail/?id=')}{$item['goods_id']}&gc_id={$item['gc_id']}">{$item['goods_name']|escape}</a></div>
+							<div class="productName"><a href="{site_url('product/detail/?id=')}{$item['goods_id']}&gc_id={$item['gc_id']}">{$item['goods_name']|escape}</a></div>
 							<div class="productDetail"><span class="mute">设备介绍:</span>{$item['digest']}</div>
 						</div>
 					</td></tr>

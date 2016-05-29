@@ -9,11 +9,11 @@
 				<div class="bd bdlist">
 					{if $info}
 					<div class="productInfo">
-						<div class="album">
+						<div class="album" {if !$isMobile}style="width:500px;"{/if}>
 							<ul class="bxslider">
-							  <li><img src="{resource_url($info['goods_pic'])}" width="500" height="260" /></li>
+							  <li><img src="{resource_url($info['goods_pic'])}" width="500" height="280" /></li>
 							  {foreach from=$imgList item=item}
-							  <li><img src="{resource_url($item['goods_image'])}" width="500" height="260" /></li>
+							  <li><img src="{resource_url($item['goods_image'])}" width="500" height="280" /></li>
 							  {/foreach}
 							</ul>
 						</div>

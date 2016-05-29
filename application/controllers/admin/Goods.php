@@ -241,7 +241,9 @@ class Goods extends Ydzj_Admin_Controller {
 		if($fileData){
 			$info = array(
 				'goods_id' => $this->input->post('goods_id') ? $this->input->post('goods_id') : 0,
-				'goods_image' => $fileData['file_url']
+				'goods_image_aid' => $fileData['id'],
+				'goods_image' => $fileData['file_url'],
+				'uid' => $this->_adminProfile['basic']['uid']
 			);
 			
 			if($info['goods_id']){
