@@ -1187,6 +1187,13 @@ table.liststyle1 {
 	float:left;
 }
 
+.qqchat {
+	position: fixed;
+    bottom: 300px;
+    right: 50px;
+    z-index: 30;
+}
+
 
 @media (max-width: 1024px) {
 	.boxz {
