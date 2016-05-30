@@ -1179,6 +1179,15 @@ table.liststyle1 {
 }
 
 
+.articleRelate .prevArticle {
+	float:right;
+}
+
+.articleRelate .nextArticle {
+	float:left;
+}
+
+
 @media (max-width: 1024px) {
 	.boxz {
 		width:980px;
@@ -1205,8 +1214,15 @@ table.liststyle1 {
 	}
 }
 
+@media (max-width: 720px) {
+	.boxz {
+		width:100%;
+		max-width:720px;
+	}
+}
 
-@media (max-width: 360px), (max-width: 640px) {
+
+@media (max-width: 360px), (max-width: 640px), (max-width:720px) {
 	img { 
 	    height: auto; 
 	    width: auto\9; 
@@ -1333,6 +1349,14 @@ table.liststyle1 {
 	    display: block;
 	    height: 30px;
 	    line-height: 30px;
+	}
+	
+	.articleRelate .prevArticle {
+		float:none;
+	}
+	
+	.articleRelate .nextArticle {
+		float:none;
 	}
 }
 

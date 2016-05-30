@@ -42,7 +42,7 @@
 					</div>
 				</li>
 				<li class="col col2">
-					<div class="colPanel newslist">
+					<div class="colPanel newslist bd">
 						<h3 class="panelTitel"><span>企业新闻</span><a class="more fr" href="{site_url('news/news_list?ac_id=15')}">更多&gt;&gt;</a></h3>
 						<ol>
 							{foreach from=$qiyeList item=item}
@@ -95,4 +95,3 @@
 			<a href="http://www.alibaba.com.cn" title="阿里巴巴"><img class="nature" src="{resource_url('img/alibaba.jpg')}"/></a>
 		</div>
 	</div>
-	<script type="text/javascript" src="{resource_url('js/jquery.cycle.all.js')}"></script>

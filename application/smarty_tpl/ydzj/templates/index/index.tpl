@@ -1,5 +1,6 @@
 {include file="common/header_main_nav.tpl"}
 	{include file="./index_common.tpl"}
+	<script type="text/javascript" src="{resource_url('js/jquery.cycle.all.js')}"></script>
 	{include file="common/bxslider.tpl"}
 	<script type="text/javascript">
 		$(function(){

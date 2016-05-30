@@ -6,7 +6,7 @@
            		{*<a href="javascript:void(0);">Tel: {$siteSetting['site_phone']|escape}</a>
            		<a href="mailto:{$siteSetting['email_addr']}">E-mail: {$siteSetting['email_addr']|escape}</a>*}
            		{if $isMobile}
-           		<a href="javascript:void(0);" id="naviText">+导航</a>
+           		<a href="javascript:void(0);" id="naviText">导航</a>
            		{/if}
        		</div>
        	</div>
