@@ -84,31 +84,23 @@ class Index extends Ydzj_Controller {
 	//渠道
 	private function _getCurrentServerName(){
 		$this->_currentHost = $this->input->server('HTTP_HOST');
+		$reSegment = $this->uri->rsegment_array();
+		//print_r($reSegment);
+		if(empty($reSegment[3])){
+			$reSegment[3] = "s1";
+		}
 		
-		//$this->_currentHost = 'www.txcf188.com';
-		//$this->_currentHost = 's1.txcf188.com';
-		//$this->_currentHost = 's2.txcf188.com';
-		//$this->_currentHost = 's3.txcf188.com';
-		//$this->_currentHost = 's4.txcf188.com';
-		//$this->_currentHost = 's5.txcf188.com';
-		//$this->_currentHost = 's6.txcf188.com';
-		//$this->_currentHost = 's7.txcf188.com';
-		//$this->_currentHost = 's8.txcf188.com';
-		//$this->_currentHost = 's9.txcf188.com';
-		//$this->_currentHost = 's10.txcf188.com';
-		//$this->_currentHost = 's11.txcf188.com';
-		//$this->_currentHost = 's12.txcf188.com';
-		//$this->_currentHost = 's13.txcf188.com';
-		//$this->_currentHost = 's14.txcf188.com';
+		$domain = explode('.',$this->_currentHost);
+		//print_r($domain);
+		$domain[0] = $reSegment[3];
+		$this->_currentHost = implode('.',$domain);
+		$this->assign('siteIndex',$reSegment[3]);
 		
 		$this->assign('currentHost',$this->_currentHost);
 		
 		return $this->_currentHost;
 	}
 	
-	
-	
-
 	
 	/**
 	 * 自动获取渠道数据

@@ -116,7 +116,7 @@ form label.error {
    		</div>
    		<div class="handler">
    			<a name="md"></a>
-   			{form_open(site_url('index/index'|cat:'#md'),'id="registerForm"')}
+   			{form_open(site_url('index/index/'|cat:$siteIndex|cat:'#md'),'id="registerForm"')}
    			{include file="./site_form_hidden.tpl"}
    			<div class="fromdiv" >
    				<h3>模拟交易，不投入资金，没有风险！</h3>

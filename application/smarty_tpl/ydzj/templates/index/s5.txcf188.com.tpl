@@ -117,7 +117,7 @@ form label.error {
    			<div class="hide">免费体验，入市首选指标 《K线入门宝典》</div>
    			<div id="reg">
    				<a class="anchor" name="md">&nbsp;</a>
-	   			{form_open(site_url('index/index'|cat:'#md'),'id="registerForm"')}
+	   			{form_open(site_url('index/index/'|cat:$siteIndex|cat:'#md'),'id="registerForm"')}
 		        {include file="./site_form_hidden.tpl"}
 	   			<div class="mobile clearfix"><label class="side_lb">手机号码</label><input type="text" class="txt noround" autocomplete="off" name="mobile" id="mobile" value="{set_value('mobile')}" placeholder="请输入您的手机号码"/></div>
 	   			<div class="tiparea"></div>

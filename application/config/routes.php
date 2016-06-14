@@ -53,3 +53,4 @@ $route['default_controller'] = 'index';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
+$route['(s:num).html'] = 'index/index/$1';

@@ -64,7 +64,7 @@ body {
    		</div>
    		<div id="regbg">
    			<div id="reg">
-	   			{form_open(site_url('index/index'),'id="registerForm"')}
+	   			{form_open(site_url('index/index/'|cat:$siteIndex),'id="registerForm"')}
 	   			<input type="hidden" name="muti_rule" value="yes"/>
 	   			<input type="hidden" name="rule" value="rule1"/>
 		        {include file="./site_form_hidden.tpl"}
@@ -108,7 +108,7 @@ body {
    		<div id="regbg2">
    			<div id="reg2">
    				<a class="anchor" name="md2">&nbsp;</a>
-	   			{form_open(site_url('index/index'|cat:'#md2'),'id="registerForm2"')}
+	   			{form_open(site_url('index/index/'|cat:$siteIndex|cat:'#md2'),'id="registerForm2"')}
 	   			<input type="hidden" name="muti_rule" value="yes"/>
 	   			<input type="hidden" name="rule" value="rule2"/>
 		        {include file="./site_form_hidden.tpl"}

@@ -137,7 +137,7 @@ form label.error {
    			<div class="hide">免费体验，入市首选指标 《K线入门宝典》</div>
    			<div id="reg">
    				<a name="md">&nbsp;</a>
-	   			{form_open(site_url('index/index'|cat:'#md'),'id="registerForm"')}
+	   			{form_open(site_url('index/index/'|cat:$siteIndex|cat:'#md'),'id="registerForm"')}
 		        {include file="./site_form_hidden.tpl"}
 	   			<div class="username clearfix"><label class="side_lb">姓名</label><input type="text" class="txt noround" autocomplete="off" name="username" value="{set_value('username')}" placeholder="请输入用户名称"/></div>
 	   			<div class="tiparea">{form_error('username')}</div>

@@ -2,7 +2,7 @@
 	<div id="regbg" style="display:none;">
 		<div id="reg">
 			<h4><strong>{$popWinTitle}</strong><a name="md">X</a></h4>
-   			{form_open(site_url('index/index'|cat:'#md'),'id="registerForm"')}
+   			{form_open(site_url('index/index/'|cat:$siteIndex|cat:'#md'),'id="registerForm"')}
 	        {include file="./site_form_hidden.tpl"}
    			<div class="mobile"><input type="text" class="txt noround" autocomplete="off" name="mobile" id="mobile" value="{set_value('mobile')}" placeholder="请输入您的手机号码"/></div>
    			<div class="tiparea">{form_error('mobile')}</div>

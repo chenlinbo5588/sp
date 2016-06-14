@@ -1,6 +1,6 @@
 <div id="regbg">
    			<div id="reg">
-	   			{form_open(site_url('index/index'),'id="registerForm"')}
+	   			{form_open(site_url('index/index/'|cat:$siteIndex),'id="registerForm"')}
 		        {include file="./site_form_hidden.tpl"}
 	   			<div class="username"><input type="text" class="txt noround" autocomplete="off" name="username" value="{set_value('username')}" placeholder="请输入用户名称"/></div>
 	   			<div class="tiparea">{form_error('username')}</div>

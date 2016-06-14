@@ -1577,7 +1577,9 @@ td.trigger i:hover { color: #27A9E3;}
     border: 1px solid #DFDADA;
     padding: 5px 0px;
     margin: 2px;
+    white-space: nowrap;
 }
+
 
 .websiteoper {
 	padding:5px 0 ;
