@@ -64,6 +64,9 @@ class Market_words extends Ydzj_Admin_Controller {
 			
 			if($affectRows > 0){
 				$this->jsonOutput('删除成功',$this->getFormHash());
+				
+				$this->cache->file->delete(Cache_Key_WordList);
+				
 			}else{
 				$this->jsonOutput('删除失败',$this->getFormHash());
 			}
@@ -255,6 +258,8 @@ class Market_words extends Ydzj_Admin_Controller {
 							$insert_array['word_code'] = '#'.$insert_array['word_code'];
 							
 							$word_id = $this->Market_Words_Model->_add($insert_array);
+							
+							$this->cache->file->delete(Cache_Key_WordList);
 						}
 					}
 				}

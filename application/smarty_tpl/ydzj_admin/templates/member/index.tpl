@@ -56,6 +56,7 @@
           <th>用户名称</th>
           <th>手机号码</th>
           <th>注册来源网站名称</th>
+          <th>分类页面</th>
           <th>点击来源平台名称</th>
           <th>对应关键词</th>
           <th>注册时间</th>
@@ -71,6 +72,10 @@
           <td>{if $item['username']}{$item['username']}{else}未填写{/if}</td>
           <td><strong>{$item['mobile']|escape}</strong></td>
           <td>{$item['channel_name']|escape}</td>
+          <td>
+          	<div>{$item['page_name']|escape}</div>
+          	<div>{$item['page_url']|escape}</div>
+          </td>
           <td>{$item['reg_origname']|escape}</td>
           <td>{$item['channel_word']|escape}</td>
           <td>{$item['reg_date']|date_format:"%Y-%m-%d %H:%M:%S"}</td>

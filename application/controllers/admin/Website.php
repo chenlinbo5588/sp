@@ -161,6 +161,10 @@ class Website extends Ydzj_Admin_Controller {
 		$urls = parse_url($info['site_url']);
 		$info['site_domain'] = $urls['host'] ? $urls['host'] : '';
 		
+		if(empty($urls['path'])){
+			$info['site_url'] .= '/';
+		}
+		
 		$info = array_merge($info,$this->addWhoHasOperated($action));
 		
 		return $info;

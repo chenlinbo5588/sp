@@ -5,7 +5,16 @@ class Index extends Ydzj_Controller {
 	
 	
 	private $_regLimit = 10;
-	private $_currentHost = '';
+	
+	//页面
+	private $_currentPage = '';
+	
+	//页面模板
+	// http://s1.txcf188.com/s1.html  模板名称为 s1.txcf188.com
+	// http://s1.txcf188.com/s2.html  模板名称为 s2.txcf188.com
+	// http://s1.txcf188.com/s3.html  模板名称为 s3.txcf188.com
+	// 依次类推
+	private $_tplName = '';
 	
 	// 用于前台验证,手动配置
 	private $_siteRulesList = array();
@@ -37,11 +46,11 @@ class Index extends Ydzj_Controller {
 		
 		if(empty($siteList)){
 			$tempList = $this->Website_Model->getList(array(
-				'select' => 'site_id,site_name,site_domain'
+				'select' => 'site_id,site_name,site_url,site_domain'
 			));
 			
 			foreach($tempList as $key => $item){
-				$siteList[$item['site_domain']] = $item;
+				$siteList[$item['site_url']] = $item;
 			}
 			
 			$this->cache->file->save(Cache_Key_SiteList,$siteList, 86400);
@@ -62,11 +71,11 @@ class Index extends Ydzj_Controller {
 		
 		if(empty($wordsList)){
 			$tempList = $this->Market_Words_Model->getList(array(
-				'select' => 'word_name,word_code'
+				'select' => 'word_name,word_url'
 			));
 			
 			foreach($tempList as $key => $item){
-				$wordsList[$item['word_code']] = $item['word_name'];
+				$wordsList[$item['word_url']] = $item['word_name'];
 			}
 			
 			$this->cache->file->save(Cache_Key_WordList,$wordsList, 86400);
@@ -83,22 +92,20 @@ class Index extends Ydzj_Controller {
 	
 	//渠道
 	private function _getCurrentServerName(){
-		$this->_currentHost = $this->input->server('HTTP_HOST');
 		$reSegment = $this->uri->rsegment_array();
-		//print_r($reSegment);
 		if(empty($reSegment[3])){
 			$reSegment[3] = "s1";
 		}
 		
-		$domain = explode('.',$this->_currentHost);
-		//print_r($domain);
-		$domain[0] = $reSegment[3];
-		$this->_currentHost = implode('.',$domain);
-		$this->assign('siteIndex',$reSegment[3]);
+		$this->_currentPage = $reSegment[3];
+		$domain = explode('.',$this->input->server('HTTP_HOST'));
+		$domain[0] = $this->_currentPage;
 		
-		$this->assign('currentHost',$this->_currentHost);
+		$this->_tplName = implode('.',$domain);
 		
-		return $this->_currentHost;
+		$this->assign('siteIndex',$this->_currentPage);
+		
+		return $this->_tplName;
 	}
 	
 	
@@ -113,11 +120,16 @@ class Index extends Ydzj_Controller {
 			$inviteFrom = $this->input->server('HTTP_REFERER');
 		}else if($this->isPostRequest()){
 			$inviteFrom = $this->input->post('refer');
-			
 		}
 		
+		$subPage = $this->input->get_post('subpage');
+		if(empty($subPage)){
+			$subPage = $this->input->server('REQUEST_URI');
+		}
 		
 		$channel_code = $this->input->get_post('channel_code');
+		
+		$this->assign('subpage',$subPage);
 		$this->assign('channel_code', $channel_code);
 		$this->assign('inviter', $inviter);
 		$this->assign('refer',$inviteFrom);
@@ -128,16 +140,28 @@ class Index extends Ydzj_Controller {
 			'inviter' => $inviter ? intval($inviter) : 0,
 			'reg_orig' => empty($inviteFrom) != true ? $inviteFrom : '',
 			'reg_origname' => '',
-			'reg_domain' => $this->_currentHost,
+			'reg_domain' => base_url(),
 			'channel_code' => empty($channel_code) != true ? $channel_code : '',
 			'channel_word' => '',
 			'channel_name' => ''
 		);
 		
-		if($this->_wordList[$d['channel_code']]){
-			$d['channel_word'] = $this->_wordList[$d['channel_code']];
+		$subPageInfo = parse_url(base_url($subPage));
+		$subPageUrl = $subPageInfo['scheme'].'://'.$subPageInfo['host'].$subPageInfo['path'];
+		$d['page_url'] = $subPageUrl;
+		
+		
+		//找到推广链接 后台配置的对应关键字
+		if($this->_websiteList[$d['page_url']]){
+			$d['page_name'] = $this->_websiteList[$d['page_url']]['site_name'];
 		}
 		
+		//找到推广链接 后台配置的对应关键字
+		if($this->_wordList[base_url($subPage).$d['channel_code']]){
+			$d['channel_word'] = $this->_wordList[base_url($subPage).$d['channel_code']];
+		}
+		
+		//找到当前站点 在后台配置的站点名称
 		if($this->_websiteList[$d['reg_domain']]){
 			$d['channel'] = $this->_websiteList[$d['reg_domain']]['site_id'];
 			$d['channel_name'] = $this->_websiteList[$d['reg_domain']]['site_name'];
@@ -145,14 +169,13 @@ class Index extends Ydzj_Controller {
 		
 		$referUrl = parse_url($inviteFrom);
 		if($referUrl['host']){
-			$d['reg_origname'] = $referUrl['host'];
+			$d['reg_origname'] = $referUrl['scheme'].'://'.$referUrl['host'] .'/';
 			
 			//如果配置网站，则存储成中文
-			if($this->_websiteList[$referUrl['host']]){
-				$d['reg_origname'] = $this->_websiteList[$referUrl['host']]['site_name'];
+			if($this->_websiteList[$d['reg_origname']]){
+				$d['reg_origname'] = $this->_websiteList[$d['reg_origname']]['site_name'];
 			}
 		}
-		
 		
 		return $d;
 	}
@@ -236,8 +259,7 @@ class Index extends Ydzj_Controller {
 	public function index()
 	{
 		$registerOk = false;
-		$currentHost = $this->_getCurrentServerName();
-		
+		$tplPageName = $this->_getCurrentServerName();
 		$channelData = $this->_prepageChannelData();
 		
 		$mutiRule = $this->input->get_post('muti_rule') ? $this->input->get_post('muti_rule') : '';
@@ -247,7 +269,7 @@ class Index extends Ydzj_Controller {
 			$this->form_validation->reset_validation();
 			$this->form_validation->set_error_delimiters('<label class="error">','</label>');
 			
-			$this->_setValidationRules($currentHost,$mutiRule,$ruleName);
+			$this->_setValidationRules($tplPageName,$mutiRule,$ruleName);
 			
 			for($i = 0; $i < 1; $i++){
 				
@@ -288,11 +310,11 @@ class Index extends Ydzj_Controller {
 					$registerOk = true;
 					
 					if($mutiRule == 'yes'){
-						$this->assign('feedback',config_item($this->_siteRulesList[$currentHost]['registeOkText'][$ruleName]));
-						$this->assign('jumUrlType',$this->_siteRulesList[$currentHost]['jumUrlType'][$ruleName]);
+						$this->assign('feedback',config_item($this->_siteRulesList[$tplPageName]['registeOkText'][$ruleName]));
+						$this->assign('jumUrlType',$this->_siteRulesList[$tplPageName]['jumUrlType'][$ruleName]);
 					}else{
-						$this->assign('feedback',config_item($this->_siteRulesList[$currentHost]['registeOkText']));
-						$this->assign('jumUrlType',$this->_siteRulesList[$currentHost]['jumUrlType']);
+						$this->assign('feedback',config_item($this->_siteRulesList[$tplPageName]['registeOkText']));
+						$this->assign('jumUrlType',$this->_siteRulesList[$tplPageName]['jumUrlType']);
 					}
 					
 				}else{
@@ -305,6 +327,6 @@ class Index extends Ydzj_Controller {
 		
 		$this->assign('jumUrl',config_item('jumUrl'));
 		$this->assign('registerOk',$registerOk);
-		$this->display('index/'.$currentHost);
+		$this->display('index/'.$tplPageName);
 	}
 }
