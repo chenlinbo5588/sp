@@ -28,4 +28,67 @@ class Welcome extends CI_Controller {
 	{
 		$this->load->view('welcome_message');
 	}
+	
+	
+	public function genfile(){
+		
+		if(!$this->input->is_cli_request()){
+			die(0);
+		}
+		
+		$_siteNum = intval($_SERVER['argv'][3]);
+		if(empty($_siteNum)){
+			die(0);
+		}
+		
+		$destPath = SMARTY_TPL_PATH.'ydzj/templates/index/';
+		
+		$siteConfig = array(
+			's{PAGENUM}.txcf188.com',
+			's{PAGENUM}.ddy168.com',
+			's{PAGENUM}.ddyzbj.com',
+			's{PAGENUM}.ddyzbs.com',
+		);
+		
+		$configTemplate = "'{TPLNAME}' => array(
+		'registeOkText' => 'registerOk_text1',
+		'jumUrlType' => 'website',
+		'rules' => array('username','mobile','mobile_auth_code'),
+	),";
+		
+		$configValue = array();
+		
+		$mainTple = '';
+		
+		foreach($siteConfig as $key => $site){
+			
+			$tplName = str_replace('{PAGENUM}',$_siteNum,$site);
+			
+			if($key == 0){
+				$mainTple = $tplName;
+			}
+			
+			$configValue[] = str_replace('{TPLNAME}',$tplName,$configTemplate);
+			
+			if(file_exists($destPath.$tplName.'.tpl')){
+				echo $destPath.$tplName.".tpl  已经存在\n";
+			}else{
+				$writeSize = file_put_contents($destPath.$tplName.'.tpl',"{include file=\"{$mainTple}.tpl\"}");
+				
+				if($writeSize) {
+					echo $destPath.$tplName.".tpl  创建成功\n";
+				}else{
+					echo $destPath.$tplName.".tpl  创建失败\n";
+				}
+			}
+			
+		}
+		
+		echo "\n";
+		
+		foreach($configValue as $aconfig){
+			echo $aconfig ."\n";
+		}
+		
+	}
 }
