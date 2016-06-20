@@ -5,7 +5,7 @@
       <h3>{#title#}{#manage#}</h3>
       <ul class="tab-base">
         {if isset($permission['admin/member/index'])}<li><a href="javascript:void(0);" class="current"><span>{#manage#}</span></a></li>{/if}
-        {*<li><a href="{admin_site_url('member/add')}" ><span>{#add#}</span></a></li>*}
+        {if isset($permission['admin/member/export'])}<li><a href="{admin_site_url('member/export')}"><span>{#export#}</span></a></li>{/if}
       </ul>
     </div>
   </div>

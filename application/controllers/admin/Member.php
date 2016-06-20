@@ -11,7 +11,7 @@ class Member extends Ydzj_Admin_Controller {
 		
 		$currentPage = $this->input->get_post('page') ? $this->input->get_post('page') : 1;
 		$condition = array(
-			'order' => 'uid DESC',
+			'order' => 'reg_date DESC',
 			'pager' => array(
 				'page_size' => config_item('page_size'),
 				'current_page' => $currentPage,
@@ -42,33 +42,16 @@ class Member extends Ydzj_Admin_Controller {
 	}
 	
 	
-	
-	/**
-	 * 
-	 */
-	private function _setMobileRule($key){
-		$this->form_validation->set_rules($key,'手机号码',array(
-				'required',
-				'valid_mobile',
-				array(
-					'loginname_callable[mobile]',
-					array(
-						$this->Member_Model,'isUnqiueByKey'
-					)
-				)
-			),
-			array(
-				'loginname_callable' => '%s已经被注册'
-			)
-		);
-		
-	}
-	
-	
 	/**
 	 * 验证规则
 	 */
 	private function _addRules($action){
+		$param['mobile'] = $this->input->post('mobile');
+		if($param['mobile']){
+			$this->form_validation->set_rules('mobile','手机号码','required|valid_mobile');
+		}else{
+			$param['mobile'] = '';
+		}
 		
 		$param['username'] = $this->input->post('username');
 		if($param['username']){
@@ -139,8 +122,6 @@ class Member extends Ydzj_Admin_Controller {
 		
 		if(!empty($uid) && $this->isPostRequest()){
 			
-			$this->form_validation->set_rules('mobile','手机号码','required|valid_mobile|is_unique_not_self['.$this->Member_Model->getTableRealName().'.mobile.uid.'.$uid.']');
-			
 			$extraParam = $this->_addRules('edit');
 			$info = array_merge($info,$extraParam);
 			
@@ -166,6 +147,109 @@ class Member extends Ydzj_Admin_Controller {
 		
 		$this->assign('info',$info);
 		$this->display();
+	}
+	
+	
+	
+	
+	public function export(){
+		
+		if($this->isPostRequest()){
+			
+	    	$this->form_validation->set_rules('sdate','注册开始日期','required');
+	    	$this->form_validation->set_rules('edate','注册结束日期','required');
+	    	
+	    	
+	    	for($i = 0; $i < 1; $i++){
+	    		if(!$this->form_validation->run()){
+	    			$this->display();
+	    			break;
+	    		}
+	    		
+	    		@header("Content-type: application/unknown");
+	    		@header("Content-Disposition: attachment; filename=member.csv");
+	    	
+	    		$cd = array(
+		            'where' => array(
+		                'reg_date >= ' => strtotime($_POST['sdate']),
+		                'reg_date < ' => strtotime($_POST['edate']) + 86400
+		             ),
+		            'order' => 'reg_date DESC'
+		        );
+		        
+				$memberList = $this->Member_Model->getList($cd);
+				
+				if (is_array($memberList)){
+					$tmp = array();
+					$tmp[] = '注册时间';
+					$tmp[] = '注册状态';
+					$tmp[] = '用户名称';
+					$tmp[] = '手机号码';
+					$tmp[] = '注册来源网站域名';
+					$tmp[] = '注册来源域名名称';
+					$tmp[] = '注册页面链接地址';
+					$tmp[] = '注册页面名称';
+					$tmp[] = '来源平台名称';
+					$tmp[] = '点击来源地址';
+					$tmp[] = '推广关键字';
+					$tmp[] = '推广尾巴代码';
+					
+					$tmp[] = '注册IP';
+					
+					//转码 utf-gbk
+					if (strtoupper(config_item('charset')) == 'UTF-8'){
+						switch ($_POST['if_convert']){
+							case '1':
+								$tmp_line = iconv('UTF-8','GB2312//IGNORE',join(',',$tmp));
+								break;
+							case '0':
+								$tmp_line = join(',',$tmp);
+								break;
+						}
+					}else {
+						$tmp_line = join(',',$tmp);
+					}
+					$tmp_line = str_replace("\r\n",'',$tmp_line);
+					echo $tmp_line."\r\n";
+					
+					
+					foreach ($memberList as $k => $v){
+						$tmp = array();
+						$tmp[] = date("Y-m-d H:i:s",$v['reg_date']);
+						$tmp[] = $v['status'] == -2 ? '注册未提交' : '注册完成';
+						$tmp[] = str_replace(',',' ',$v['username']);
+						$tmp[] = $v['mobile'];
+						$tmp[] = $v['reg_domain'];
+						$tmp[] = str_replace(',',' ',$v['channel_name']);
+						$tmp[] = $v['page_url'];
+						$tmp[] = str_replace(',',' ',$v['page_name']);
+						$tmp[] = str_replace(',',' ',$v['reg_origname']);
+						$tmp[] = $v['reg_orig'];
+						$tmp[] = str_replace(',',' ',$v['channel_word']);
+						$tmp[] = $v['channel_code'];
+						$tmp[] = $v['reg_ip'];
+						
+						//转码 utf-gbk
+						if (strtoupper(config_item('charset')) == 'UTF-8'){
+							switch ($_POST['if_convert']){
+								case '1':
+									$tmp_line = iconv('UTF-8','GB2312//IGNORE',join(',',$tmp));
+									break;
+								case '0':
+									$tmp_line = join(',',$tmp);
+									break;
+							}
+						}else {
+							$tmp_line = join(',',$tmp);
+						}
+						$tmp_line = str_replace("\r\n",'',$tmp_line);
+						echo $tmp_line."\r\n";
+					}
+				}
+	    	}
+		}else{
+			$this->display();
+		}
 	}
 	
 	

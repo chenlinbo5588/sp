@@ -295,7 +295,7 @@ class Index extends Ydzj_Controller {
 				
 				$addParam = array_merge($addParam,$channelData);
 				// check
-				$result = $this->register_service->createMember($addParam,true);
+				$result = $this->register_service->createMember($addParam);
 				
 				if($result['code'] == 'success'){
 					/*

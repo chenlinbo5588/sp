@@ -4,7 +4,7 @@
     <div class="item-title">
       <h3>会员管理</h3>
       <ul class="tab-base">
-        <li><a href="{admin_site_url('member')}"><span>管理</span></a></li>
+        <li><a href="{admin_site_url('member/index')}"><span>管理</span></a></li>
         {include file="common/sub_topnav.tpl"}
       </ul>
     </div>
