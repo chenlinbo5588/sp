@@ -57,8 +57,7 @@ class Register_Service extends Base_Service {
 	public function createMember($regParam,$doUpdate = false){
 		$return = $this->formatArrayReturn();
 		
-		//$memberInfo = self::$memberModel->getFirstByKey($regParam['mobile'],'mobile');
-		$memberInfo = false;
+		$memberInfo = self::$memberModel->getFirstByKey($regParam['mobile'],'mobile');
 		
 		$regParam['reg_ip'] = self::$CI->input->ip_address();
 		$regParam['reg_date'] = self::$CI->input->server('REQUEST_TIME');

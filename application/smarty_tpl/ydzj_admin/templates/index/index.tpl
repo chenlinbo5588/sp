@@ -205,7 +205,7 @@ $(function(){
 	          <nav id="nav" class="main-nav">
 	            <ul>
 	                <li style="display:none;"><a class="link actived" id="nav_dashboard" href="javascript:void(0);" onclick="openItem('dashboard');"><span>控制台</span></a></li>
-					{if isset($permission['nav_setting'])}<li style="display:none;"><a class="link" id="nav_setting" href="javascript:void(0);" onclick="openItem('setting');"><span>设置</span></a></li>{/if}
+					{if isset($permission['nav_setting'])}<li><a class="link" id="nav_setting" href="javascript:void(0);" onclick="openItem('setting');"><span>设置</span></a></li>{/if}
 					{if isset($permission['nav_member'])}<li><a class="link" id="nav_member" href="javascript:void(0);" onclick="openItem('member');"><span>会员资料</span></a></li>{/if}
 					{if isset($permission['nav_website'])}<li><a class="link" id="nav_website" href="javascript:void(0);" onclick="openItem('website');"><span>站点管理</span></a></li>{/if}
 					{if isset($permission['nav_words'])}<li><a class="link" id="nav_words" href="javascript:void(0);" onclick="openItem('words');"><span>关键词管理</span></a></li>{/if}

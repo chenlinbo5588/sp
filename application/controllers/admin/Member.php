@@ -46,12 +46,6 @@ class Member extends Ydzj_Admin_Controller {
 	 * 验证规则
 	 */
 	private function _addRules($action){
-		$param['mobile'] = $this->input->post('mobile');
-		if($param['mobile']){
-			$this->form_validation->set_rules('mobile','手机号码','required|valid_mobile');
-		}else{
-			$param['mobile'] = '';
-		}
 		
 		$param['username'] = $this->input->post('username');
 		if($param['username']){
@@ -121,6 +115,7 @@ class Member extends Ydzj_Admin_Controller {
 		//print_r($urlParam);
 		
 		if(!empty($uid) && $this->isPostRequest()){
+			$this->form_validation->set_rules('mobile','手机号码','required|valid_mobile|is_unique_not_self['.$this->Member_Model->getTableRealName().'.mobile.uid.'.$uid.']');
 			
 			$extraParam = $this->_addRules('edit');
 			$info = array_merge($info,$extraParam);

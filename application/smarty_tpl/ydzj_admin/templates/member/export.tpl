@@ -2,7 +2,7 @@
 {config_load file="member.conf"}
   <div class="fixed-bar">
     <div class="item-title">
-      <h3>{#title#}</h3>
+      <h3>{#title#}{#manage#}</h3>
       <ul class="tab-base">
       	{if isset($permission['admin/member/index'])}<li><a href="{admin_site_url('member/index')}"><span>{#manage#}</span></a></li>{/if}
         {if isset($permission['admin/member/export'])}<li><a href="javascript:void(0);" class="current" ><span>{#export#}</span></a></li>{/if}

@@ -46,7 +46,7 @@ class Index extends Ydzj_Controller {
 		
 		if(empty($siteList)){
 			$tempList = $this->Website_Model->getList(array(
-				'select' => 'site_id,site_name,site_url,site_domain'
+				'select' => 'site_id,site_name,site_url,site_domain,seo_title,seo_keywords,seo_description,statistics_code'
 			));
 			
 			foreach($tempList as $key => $item){
@@ -295,7 +295,7 @@ class Index extends Ydzj_Controller {
 				
 				$addParam = array_merge($addParam,$channelData);
 				// check
-				$result = $this->register_service->createMember($addParam);
+				$result = $this->register_service->createMember($addParam,true);
 				
 				if($result['code'] == 'success'){
 					/*
@@ -327,6 +327,22 @@ class Index extends Ydzj_Controller {
 		
 		$this->assign('jumUrl',config_item('jumUrl'));
 		$this->assign('registerOk',$registerOk);
+		
+		$pageSeoSetting = $this->_websiteList[$channelData['page_url']];
+		if($pageSeoSetting){
+			if($pageSeoSetting['seo_title']){
+				$this->_seo['SEO_title'] = $pageSeoSetting['seo_title'];
+			}
+			
+			if($pageSeoSetting['seo_keywords']){
+				$this->_seo['SEO_keywords'] = $pageSeoSetting['seo_keywords'];
+			}
+			
+			if($pageSeoSetting['seo_description']){
+				$this->_seo['SEO_description'] = $pageSeoSetting['seo_description'];
+			}
+		}
+		
 		$this->display('index/'.$tplPageName);
 	}
 }

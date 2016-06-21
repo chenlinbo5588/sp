@@ -68,6 +68,13 @@
           <td class="vatop tips"></td>
         </tr>
         <tr>
+          <td colspan="2" class="required"><label>{#channel_name#}</label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform">{$info['channel_name']}</td>
+          <td class="vatop tips"></td>
+        </tr>
+        <tr>
           <td colspan="2"><label class="required">{#channel_code#}</label></td>
         </tr>
         <tr class="noborder">
@@ -75,10 +82,17 @@
           <td class="vatop tips"></td>
         </tr>
         <tr>
-          <td colspan="2" class="required"><label>{#channel_name#}</label></td>
+          <td colspan="2"><label class="required">{#channel_word#}</label></td>
         </tr>
         <tr class="noborder">
-          <td class="vatop rowform">{$info['channel_name']}</td>
+          <td class="vatop rowform">{$info['channel_word']}</td>
+          <td class="vatop tips"></td>
+        </tr>
+        <tr>
+          <td colspan="2"><label class="required">{#reg_origname#}</label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform">{$info['reg_origname']}</td>
           <td class="vatop tips"></td>
         </tr>
         <tr>
