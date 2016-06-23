@@ -155,7 +155,7 @@ class Attachment_service extends Base_service {
 			//file_put_contents("currentResizeConfig.txt",print_r($currentConfig,true));
 			$fileData['img_'.$resizeName] = '';
 			$resize['maintain_ratio'] = $currentConfig['maintain_ratio'];
-			$resize['new_image'] = $fileData['raw_name'].'@'.$resizeName.$fileData['file_ext'];
+			$resize['new_image'] = $fileData['raw_name'].'_'.$resizeName.$fileData['file_ext'];
 			$resize['width']         = $currentConfig['width'];
 			$resize['height']       = $currentConfig['height'];
 			$resize['quality']      = $currentConfig['quality'];

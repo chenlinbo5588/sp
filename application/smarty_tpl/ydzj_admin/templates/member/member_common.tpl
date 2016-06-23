@@ -28,7 +28,7 @@ $(function(){
         $.ajaxFileUpload
         (
             {
-                url:'{admin_site_url("common/pic_upload")}',
+                url:'{admin_site_url("common/pic_upload")}?mod=avatar',
                 secureuri:false,
                 fileElementId:'_pic',
                 dataType: 'json',

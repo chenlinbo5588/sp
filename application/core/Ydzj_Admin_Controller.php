@@ -13,6 +13,8 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 		
 		$this->form_validation->set_error_delimiters('<label class="error">','</label>');
 		$this->_initAdminLogin();
+		
+		//@todo 打开检查权限
 		//$this->_checkPermission();
 	}
 	

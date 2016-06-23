@@ -140,6 +140,8 @@ class MY_Controller extends CI_Controller {
     	$this->_siteSetting = $settingList;
     	
     	$this->assign('siteSetting',$this->_siteSetting);
+    	
+    	$this->config->set_item('site_name',$this->_siteSetting['site_name']);
     	//print_r($this->_siteSetting);
     }
     

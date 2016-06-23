@@ -935,8 +935,8 @@ if ( ! function_exists('getImgPathArray'))
 	
 	function getImgPathArray($srcImgUrl , $size = array()){
 		
-		if(strpos($srcImgUrl,'@') !== false){
-			$tempUrl = substr($srcImgUrl,0,strrpos($srcImgUrl,'@')) . substr($srcImgUrl,strrpos($srcImgUrl,'.'));
+		if(strpos($srcImgUrl,'_') !== false){
+			$tempUrl = substr($srcImgUrl,0,strrpos($srcImgUrl,'_')) . substr($srcImgUrl,strrpos($srcImgUrl,'.'));
 			$srcImgUrl = $tempUrl;
 		}
 		
@@ -948,7 +948,7 @@ if ( ! function_exists('getImgPathArray'))
 			$suffixName = substr($srcImgUrl,$dotPos);
 			
 			foreach($size as $sname){
-				$img['avatar_'.$sname] = $fileName.'@'.$sname.$suffixName;
+				$img['avatar_'.$sname] = $fileName.'_'.$sname.$suffixName;
 			}
 		}
 		
