@@ -210,61 +210,68 @@ class Market_words extends Ydzj_Admin_Controller {
 	
 	public function import(){
 		$feedback = '';
-	
+		
+		set_time_limit(0);
+		
 		if ($this->isPostRequest()){
 			//得到导入文件后缀名
 			$csv_array = explode('.',$_FILES['csv']['name']);
 			$file_type = end($csv_array);
 			if (!empty($_FILES['csv']) && !empty($_FILES['csv']['name']) && $file_type == 'csv'){
 				$fp = @fopen($_FILES['csv']['tmp_name'],'rb');
-				
-				while (!feof($fp)) {
-					$data = fgets($fp, 4096);
-					switch (strtoupper($_POST['charset'])){
-						case 'UTF-8':
-							if (strtoupper(config_item('charset')) !== 'UTF-8'){
-								$data = iconv('UTF-8',strtoupper(config_item('charset')),$data);
-							}
-							break;
-						case 'GBK':
-							if (strtoupper(config_item('charset')) !== 'GBK'){
-								$data = iconv('GBK',strtoupper(config_item('charset')),$data);
-							}
-							break;
-					}
-					
-					if (!empty($data)){
-						$data	= str_replace(array('"',"\r\n","\r","\n"),'',$data);
+
+				if($fp){
+					while (!feof($fp)) {
+						$data = fgets($fp, 4096);
+						switch (strtoupper($_POST['charset'])){
+							case 'UTF-8':
+								if (strtoupper(config_item('charset')) !== 'UTF-8'){
+									$data = iconv('UTF-8',strtoupper(config_item('charset')),$data);
+								}
+								break;
+							case 'GBK':
+								if (strtoupper(config_item('charset')) !== 'GBK'){
+									$data = iconv('GBK',strtoupper(config_item('charset')),$data);
+								}
+								break;
+						}
 						
-						//逗号去除
-						$tmp_array = array();
-						$tmp_array = explode(',',$data);
-						
-						if($tmp_array[0] == '关键字')continue;
-						
-						$insert_array = array();
-						$insert_array['word_name'] = $tmp_array[0];
-						$insert_array['word_url'] = $tmp_array[1];
-						
-						
-						$this->form_validation->reset_validation();
-						$this->form_validation->set_data($insert_array);
-						
-						$this->form_validation->set_rules('word_url','推广链接',"required|valid_starthttp|valid_url|is_unique[{$this->Market_Words_Model->_tableRealName}.word_url]");
-						
-						if($this->form_validation->run()){
-							$url = parse_url($insert_array['word_url']);
-							$insert_array['word_code'] = $url['fragment'] ? $url['fragment'] :'';
-							$insert_array['word_code'] = '#'.$insert_array['word_code'];
+						if (!empty($data)){
+							$data	= str_replace(array('"',"\r\n","\r","\n"),'',$data);
 							
-							$word_id = $this->Market_Words_Model->_add($insert_array);
+							//逗号去除
+							$tmp_array = array();
+							$tmp_array = explode(',',$data);
 							
-							$this->cache->file->delete(Cache_Key_WordList);
+							if($tmp_array[0] == '关键字')continue;
+							
+							$insert_array = array();
+							$insert_array['word_name'] = $tmp_array[0];
+							$insert_array['word_url'] = $tmp_array[1];
+							
+							
+							$this->form_validation->reset_validation();
+							$this->form_validation->set_data($insert_array);
+							
+							$this->form_validation->set_rules('word_url','推广链接',"required|valid_starthttp|valid_url|is_unique[{$this->Market_Words_Model->_tableRealName}.word_url]");
+							
+							if($this->form_validation->run()){
+								$url = parse_url($insert_array['word_url']);
+								$insert_array['word_code'] = $url['fragment'] ? $url['fragment'] :'';
+								$insert_array['word_code'] = '#'.$insert_array['word_code'];
+								
+								$word_id = $this->Market_Words_Model->_add($insert_array);
+							}else{
+								$rows = $this->Market_Words_Model->update($insert_array,array('word_url' => $insert_array['word_url']));
+							}
 						}
 					}
+					
+					$feedback = getSuccessTip('导入成功');
+				}else{
+					$feedback = getErrorTip('文件上传失败，文件可能过大');
 				}
 				
-				$feedback = getSuccessTip('导入成功');
 			}else {
 				$feedback = getErrorTip('导入失败,请上传文件');
 			}

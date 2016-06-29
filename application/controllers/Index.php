@@ -19,7 +19,7 @@ class Index extends Ydzj_Controller {
 	// 用于前台验证,手动配置
 	private $_siteRulesList = array();
 	
-	// 用于获得渠道代码对应的名称
+	// 用于获得渠道代码对应的名称, 已废弃
 	private $_wordList = array();
 	
 	// 用户记录 site id
@@ -34,7 +34,7 @@ class Index extends Ydzj_Controller {
 		
 		$this->_getSiteRulesConfig();
 		$this->_getWebSiteList();
-		$this->_getWordsConfig();
+		//$this->_getWordsConfig();
 	}
 	
 	
@@ -67,6 +67,8 @@ class Index extends Ydzj_Controller {
 		
 		
 		$wordsList = array();
+		
+		/*
 		$wordsList = $this->cache->get(Cache_Key_WordList);
 		
 		if(empty($wordsList)){
@@ -80,6 +82,7 @@ class Index extends Ydzj_Controller {
 			
 			$this->cache->file->save(Cache_Key_WordList,$wordsList, 86400);
 		}
+		*/
 		
 		$this->_wordList = $wordsList;
 	}
@@ -157,8 +160,15 @@ class Index extends Ydzj_Controller {
 		}
 		
 		//找到推广链接 后台配置的对应关键字
-		if($this->_wordList[base_url($subPage).$d['channel_code']]){
-			$d['channel_word'] = $this->_wordList[base_url($subPage).$d['channel_code']];
+		$wordsInfo = $this->Market_Words_Model->getList(array(
+			'where' => array(
+				'word_url' => base_url($subPage).$d['channel_code']
+			)
+		));
+		
+		
+		if(!empty($wordsInfo[0])){
+			$d['channel_word'] = $wordsInfo[0]['word_name'];
 		}
 		
 		//找到当前站点 在后台配置的站点名称
