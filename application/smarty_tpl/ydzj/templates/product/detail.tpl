@@ -27,8 +27,8 @@
 							{$info['goods_intro']}
 						</div>
 						<div class="articleRelate clearfix">
-							<div class="fr"><span>上一篇：{if empty($preProduct)}无{else}<a href="{site_url('product/detail/?id=')}{$preProduct['goods_id']}&gc_id={$preProduct['gc_id']}">{$preProduct['goods_name']|escape}</a>{/if}</div>
-							<div class="fl"><span>下一篇：{if empty($nextProduct)}无{else}<a href="{site_url('product/detail/?id=')}{$nextProduct['goods_id']}&gc_id={$nextProduct['gc_id']}">{$nextProduct['goods_name']|escape}</a>{/if}</div>
+							<div class="fr"><span>上一个产品：{if empty($preProduct)}无{else}<a href="{site_url('product/detail/?id=')}{$preProduct['goods_id']}&gc_id={$preProduct['gc_id']}">{$preProduct['goods_name']|escape}</a>{/if}</div>
+							<div class="fl"><span>下一个产品：{if empty($nextProduct)}无{else}<a href="{site_url('product/detail/?id=')}{$nextProduct['goods_id']}&gc_id={$nextProduct['gc_id']}">{$nextProduct['goods_name']|escape}</a>{/if}</div>
 						</div>
 					</div>
 					{else}
