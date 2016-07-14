@@ -11,9 +11,9 @@
 					<div class="productInfo">
 						<div class="album" {if !$isMobile}style="width:500px;"{/if}>
 							<ul class="bxslider">
-							  <li><img src="{resource_url($info['goods_pic'])}" width="500" height="280" /></li>
+							  <li><img src="{if $info['goods_pic_b']}{resource_url($info['goods_pic_b'])}{else}{resource_url($info['goods_pic'])}{/if}" width="500" height="280" /></li>
 							  {foreach from=$imgList item=item}
-							  <li><img src="{resource_url($item['goods_image'])}" width="500" height="280" /></li>
+							  <li><img src="{if $item['goods_image_b']}{resource_url($item['goods_image_b'])}{else}{resource_url($item['goods_image'])}{/if}" width="500" height="280" /></li>
 							  {/foreach}
 							</ul>
 						</div>

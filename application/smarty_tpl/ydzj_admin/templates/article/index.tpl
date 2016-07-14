@@ -69,7 +69,7 @@
           <td class="align-center">{$item['article_show']}</td>
           <td class="nowrap align-center">{$item['gmt_create']|date_format:"%Y-%m-%d %H:%M:%S"}</td>
           <td class="align-center">
-          	<p><a href="{site_url('article/detail')}?article_id={$item['article_id']}" target="_blank">查看</a> | <a href="{admin_site_url('article/edit')}?article_id={$item['article_id']}">编辑</a></p>
+          	<p><a href="{site_url('news/detail')}?ac_id={$item['ac_id']}&id={$item['article_id']}" target="_blank">查看</a> | <a href="{admin_site_url('article/edit')}?article_id={$item['article_id']}">编辑</a></p>
           </td>
         </tr>
       	{/foreach}

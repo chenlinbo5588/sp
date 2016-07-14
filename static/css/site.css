@@ -1004,7 +1004,7 @@ table.liststyle1 {
 
 .productList .previewPic {
 	width:120px;
-	height:80px;
+	height:100px;
 	float: left;
 	border:1px solid #dcdcdc;
 }
@@ -1053,7 +1053,7 @@ table.liststyle1 {
 .articleContent img { 
     height: auto; 
     width: auto\9; 
-    width:100%;
+    max-width:100%;
 }
 
 

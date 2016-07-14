@@ -82,7 +82,7 @@
 				<ul id="hotProductSwiper">
 					{foreach from=$goodsList item=item}
 		            <li>
-		            	<div class="pic"><a href="{site_url('product/detail/')}?id={$item['goods_id']}&gc_id={$item['gc_id']}" target="_blank"><img class="respond_img" {if $item['goods_pic']}src="{resource_url('img/cmp/nature1.jpg')}"{else}src="{resource_url('img/default.jpg')}"{/if} title="{$item['goods_name']|escape}"/></a></div>
+		            	<div class="pic"><a href="{site_url('product/detail/')}?id={$item['goods_id']}&gc_id={$item['gc_id']}" target="_blank"><img class="respond_img" src="{if $item['goods_pic_m']}{resource_url($item['goods_pic_m'])}{else if $item['goods_pic_b']}{resource_url($item['goods_pic_b'])}{else}{resource_url('img/default.jpg')}{/if}" title="{$item['goods_name']|escape}"/></a></div>
 		            	<div class="title"><a href="{site_url('product/detail/')}?id={$item['goods_id']}&gc_id={$item['gc_id']}" target="_blank">{$item['goods_name']|escape}</a></div>
 		            </li>
 		            {/foreach}

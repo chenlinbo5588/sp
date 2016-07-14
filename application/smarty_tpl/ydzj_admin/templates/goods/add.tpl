@@ -64,7 +64,7 @@
           	<input type="hidden" name="old_pic" value="{if $info['goods_pic']}{$info['goods_pic']}{/if}"/>
           	<span class="type-file-show">
           		<img class="show_image" src="{resource_url('img/preview.png')}">
-          		<div class="type-file-preview">{if !empty($info['goods_pic'])}<img src="{resource_url($info['goods_pic'])}">{/if}</div>
+          		<div class="type-file-preview">{if $info['goods_pic_m']}<img src="{resource_url($info['goods_pic_m'])}">{else if $info['goods_pic_b']}<img src="{resource_url($info['goods_pic_b'])}">{else}<img src="{resource_url($info['goods_pic'])}">{/if}</div>
             </span>
             <span class="type-file-box"><input type='text' name='goods_pic_txt' value="{if $info['goods_pic']}{$info['goods_pic']}{/if}" id='goods_pic_txt' class='type-file-text' /><input type='button' name='button' id='button1' value='' class='type-file-button' />
             <input name="goods_pic" type="file" class="type-file-file" id="goods_pic" size="30" hidefocus="true" nc_type="change_brand_logo">
@@ -81,7 +81,7 @@
        		<td colspan="2">
        			<ul id="thumbnails" class="thumblists">
        			{foreach from=$fileList item=item}
-       			<li id="{$item['id']}" class="picture"><input type="hidden" name="file_id[]" value="{$item['id']}" /><div class="size-64x64"><span class="thumb"><i></i><img src="{resource_url($item['file_url'])}" alt="" width="64px" height="64px"/></span></div><p><span><a href="javascript:insert_editor('{resource_url($item['file_url'])}');">插入</a></span><span><a href="javascript:del_file_upload('{$item['id']}');">删除</a></span></p></li>
+       			<li id="{$item['goods_image_aid']}" class="picture"><input type="hidden" name="file_id[]" value="{$item['goods_image_aid']}" /><div class="size-64x64"><span class="thumb"><i></i><img src="{resource_url($item['goods_image_b'])}" alt="" width="64px" height="64px"/></span></div><p><span><a href="javascript:insert_editor('{resource_url($item['goods_image_b'])}');">插入</a></span><span><a href="javascript:del_file_upload('{$item['goods_image_aid']}');">删除</a></span></p></li>
        			{/foreach}
        			</ul>
        		</td>

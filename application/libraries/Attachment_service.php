@@ -50,10 +50,9 @@ class Attachment_service extends Base_service {
 	 */
 	private function getImageSizeConfig(){
 		return array(
-			'large' => array('width' => 1200,'height' => 900, 'maintain_ratio' => true,'quality' => 90),
-			'big' => array('width' => 400,'height' => 300 , 'maintain_ratio' => true,'quality' => 90),
-			'middle' => array('width' => 150,'height' => 150,'maintain_ratio' => true,'quality' => 90),
-			'small' => array('width' => 100,'height' => 100,'maintain_ratio' => true,'quality' => 100)
+			'b' => array('width' => 800,'height' => 600 , 'maintain_ratio' => true,'quality' => 90),
+			'm' => array('width' => 400,'height' => 300,'maintain_ratio' => true,'quality' => 90),
+			's' => array('width' => 120,'height' => 120,'maintain_ratio' => false,'quality' => 100)
 		);
 	}
 	
@@ -118,8 +117,10 @@ class Attachment_service extends Base_service {
 	
 	/**
 	 * 根据实际需要采裁切图片
+	 * 
+	 * $axis  裁切参数
 	 */
-	public function resize($fileData , $resizeConfig , $axis = array() ){
+	public function resize($fileData , $resizeConfig = array('b','m') , $axis = array() ){
 		
 		if(!$fileData['full_path']){
 			$fileData['full_path'] = ROOTPATH .DIRECTORY_SEPARATOR. $fileData['file_url'];
@@ -155,7 +156,7 @@ class Attachment_service extends Base_service {
 			//file_put_contents("currentResizeConfig.txt",print_r($currentConfig,true));
 			$fileData['img_'.$resizeName] = '';
 			$resize['maintain_ratio'] = $currentConfig['maintain_ratio'];
-			$resize['new_image'] = $fileData['raw_name'].'@'.$resizeName.$fileData['file_ext'];
+			$resize['new_image'] = $fileData['raw_name'].'_'.$resizeName.$fileData['file_ext'];
 			$resize['width']         = $currentConfig['width'];
 			$resize['height']       = $currentConfig['height'];
 			$resize['quality']      = $currentConfig['quality'];
@@ -218,6 +219,7 @@ class Attachment_service extends Base_service {
 			$file_id = self::$CI->Attachment_Model->_add($fileData);
 			$fileData['id'] = $file_id;
 			
+			
 			//print_r($fileData);
 			return $fileData;
 		}else{
@@ -252,6 +254,14 @@ class Attachment_service extends Base_service {
 		//$exif = exif_read_data($fileData['file_url'],0,true);
 		if($fileData){
 			//上传多次情况下，清理上一次上传的文件
+			$fileData = $this->resize($fileData);
+			
+			$returnArray = array('error' => 0, 'formhash'=>self::$CI->security->get_csrf_hash(),'id' => $fileData['id'], 'url'=>base_url($fileData['file_url']));
+			if($fileData['img_b']){
+				$returnArray['url']  = base_url($fileData['img_b']);
+			}else if($fileData['img_m']){
+				$returnArray['url']  = base_url($fileData['img_m']);
+			}
 			
 			/*
 			 * 还没有解决，异步上上传后，放弃保存后， 原来的图变被删的问题, 暂时注释
@@ -259,7 +269,7 @@ class Attachment_service extends Base_service {
 				$this->deleteFiles(array(self::$CI->input->post('id')),'all');
 			}
 			*/
-			return array('error' => 0, 'formhash'=>self::$CI->security->get_csrf_hash(),'id' => $fileData['id'], 'url'=>base_url($fileData['file_url']));
+			return $returnArray;
 		}else{
 			return array('error' => 1, 'formhash'=>self::$CI->security->get_csrf_hash(),'msg'=>$this->getErrorMsg('',''));
 		}

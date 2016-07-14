@@ -162,7 +162,6 @@ class Product extends Ydzj_Controller {
 			}
 			
 			$currentFiles = $this->Goods_Images_Model->getList(array(
-				'select' => 'goods_image',
 				'where' => array('goods_id' => $id)
 			));
 			

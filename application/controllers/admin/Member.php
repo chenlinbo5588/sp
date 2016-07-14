@@ -213,7 +213,7 @@ class Member extends Ydzj_Admin_Controller {
 				$aid = $this->input->post('avatar_id');
 				if($aid){
 					$member_avatar = $this->input->post('member_avatar');
-					$avatar = getImgPathArray($member_avatar,array('middle','small'));
+					$avatar = getImgPathArray($member_avatar,array('m','s'));
 					$avatar['aid'] = $aid;
 				}
 				
@@ -304,7 +304,7 @@ class Member extends Ydzj_Admin_Controller {
 				
 				if($aid){
 					$member_avatar = $this->input->post('member_avatar');
-					$avatar = getImgPathArray($member_avatar,array('middle','small'));
+					$avatar = getImgPathArray($member_avatar,array('m','s'));
 					$avatar['aid'] = $aid;
 					$updateData = array_merge($updateData,$avatar);
 				}

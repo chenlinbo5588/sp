@@ -13,7 +13,7 @@
 					<table class="liststyle1 productList">
 					{foreach from=$list['data'] item=item}
 					<tr class="liststyle1Item"><td>
-						<a href="{site_url('product/detail/?id=')}{$item['goods_id']}&gc_id={$item['gc_id']}"><img class="previewPic" src="{resource_url($item['goods_pic'])}" alt="{$item['article_title']|escape}"/></a>
+						<a href="{site_url('product/detail/?id=')}{$item['goods_id']}&gc_id={$item['gc_id']}"><img class="previewPic" src="{if $item['goods_pic_m']}{resource_url($item['goods_pic_m'])}{else if $item['goods_pic_b']}{resource_url($item['goods_pic_b'])}{else}{resource_url($item['goods_pic'])}{/if}" alt="{$item['article_title']|escape}"/></a>
 						<div class="previewCont">
 							<div class="productName"><a href="{site_url('product/detail/?id=')}{$item['goods_id']}&gc_id={$item['gc_id']}">{$item['goods_name']|escape}</a></div>
 							<div class="productDetail"><span class="mute">设备介绍:</span>{$item['digest']}</div>

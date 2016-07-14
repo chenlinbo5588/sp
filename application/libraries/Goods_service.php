@@ -310,9 +310,9 @@ class Goods_service extends Base_service {
 		
 		$condition = array(
 			'where' => array(
-				/*'goods_commend' => 1,
+				'goods_commend' => 1,
 				'goods_verify' => 1,
-				'goods_state' => 1*/
+				'goods_state' => 1
 			),
 			'where_in' => array(
 				array('key' => 'gc_id' , 'value' => $goodsClassIds )

@@ -18,7 +18,12 @@ class Common extends Ydzj_Controller {
         if(0 === $_FILES['imgFile']['error']){
             $uploadname = 'imgFile';
 		}
+		
 		$mod = $this->input->get_post('mod');
+		if(empty($mod)){
+			$mod = '';
+		}
+		
 		$this->load->library('Attachment_service');
 		
 		$json = $this->attachment_service->pic_upload($this->_profile['basic']['uid'],$uploadname,0,$mod);

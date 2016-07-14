@@ -90,8 +90,7 @@
       	{foreach from=$list['data'] item=item}
       	<tr class="hover edit" id="row{$item['goods_id']}">
           <td><input type="checkbox" name="id[]" group="chkVal" value="{$item['goods_id']}" class="checkitem"></td>
-          <td class="w60 picture"><img class="size-56x56" src="{if $item['goods_pic']}{resource_url($item['goods_pic'])}{else}{resource_url('img/default.jpg')}{/if}"/></td>
-          
+          <td class="w60 picture"><img class="size-100x100" src="{if $item['goods_pic_m']}{resource_url($item['goods_pic_m'])}{else if $item['goods_pic_b']}{resource_url($item['goods_pic_b'])}{else if $item['goods_pic']}{resource_url($item['goods_pic'])}{else}{resource_url('img/default.jpg')}{/if}"/></td>
           <td class="goods-name w270">
           	<p><span>{$item['goods_name']|escape}</span></p>
             {*<p class="store">所属店铺:官方店铺</p>*}
@@ -101,17 +100,17 @@
           	<p>{$brandList[$item['brand_id']]['brand_name']}</p>
             <p>{$goodsClassList[$item['gc_id']]['gc_name']}</p>
           </td>
-          <td class="align-center">{$searchMap['goods_state'][$item['goods_state']]}</td>
-          <td class="align-center">{$searchMap['goods_verify'][$item['goods_verify']]}</td>
+          <td class="align-center">{if $item['goods_state'] == 1}已发布{else}未发布{/if}</td>
+          <td class="align-center">{if $item['goods_verify'] == 1}已审核{else}未审核{/if}</td>
           <td class="align-center">
-          	<p><a href="{site_url('goods/detail')}?goods_id={$item['goods_id']}" target="_blank">查看</a> | <a href="{admin_site_url('goods/edit')}?goods_id={$item['goods_id']}">编辑</a></p>
+          	<p><a href="{site_url('product/detail')}?gc_id={$item['gc_id']}&id={$item['goods_id']}" target="_blank">查看</a> | <a href="{admin_site_url('goods/edit')}?goods_id={$item['goods_id']}">编辑</a></p>
           </td>
         </tr>
         {/foreach}
       </tbody>
       <tfoot>
       	<tr class="tfoot">
-          <td colspan="7">
+          <td colspan="12">
           	<label><input type="checkbox" class="checkall" id="checkallBottom" name="chkVal">全选</label>&nbsp;
           	<a href="javascript:void(0);" class="btn" id="deleteBtn" data-checkbox="id[]" data-url="{admin_site_url('goods/delete')}"><span>删除</span></a>
           	{include file="common/pagination.tpl"}

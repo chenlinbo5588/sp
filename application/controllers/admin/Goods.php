@@ -119,7 +119,6 @@ class Goods extends Ydzj_Admin_Controller {
 	
 	private function _prepareGoodsData(){
 		
-		
 		$fileInfo = $this->attachment_service->addImageAttachment('goods_pic',array(),FROM_BACKGROUND,'goods');
 		
 		//print_r($fileInfo);
@@ -131,12 +130,26 @@ class Goods extends Ydzj_Admin_Controller {
 			'goods_commend' => $this->input->post('goods_commend') ? $this->input->post('goods_commend') : 0,
 			'goods_verify' => $this->input->post('goods_verify'),
 			'goods_state' => $this->input->post('goods_state'),
-			
 		);
 		
 		if($fileInfo){
+			$fileInfo = $this->attachment_service->resize($fileInfo);
+			
 			$info['goods_pic'] = $fileInfo['file_url'];
+			
+			if($fileInfo['img_b']){
+				//如果裁剪了大图用大图,防止上传超级大图后，前台页面显示好几兆的图片
+				$info['goods_pic_b'] = $fileInfo['img_b'];
+			}
+			
+			if($fileInfo['img_m']){
+				//如果裁剪了大图用大图,防止上传超级大图后，前台页面显示好几兆的图片
+				$info['goods_pic_m'] = $fileInfo['img_m'];
+			}
+			
+			// 标记上传了新文件
 			$info['file_url'] = $fileInfo['file_url'];
+			
 		}
 		
 		
@@ -199,15 +212,18 @@ class Goods extends Ydzj_Admin_Controller {
 				}
 				
 				
-				
 				if($fileList){
 					$insData = array();
 					
 					foreach($fileList as $fileInfo){
+						$imgs = getImgPathArray($fileInfo['file_url'],array('b','m'));
+						
 						$insData[] = array(
 							'goods_id' => $newid,
 							'goods_image_aid' => $fileInfo['id'],
 							'goods_image' => $fileInfo['file_url'],
+							'goods_image_b' => $imgs['img_b'],
+							'goods_image_m' => $imgs['img_m'],
 							'uid' => $this->_adminProfile['basic']['uid'],
 							'gmt_create' => $this->input->server('REQUEST_TIME'),
 							'gmt_modify' => $this->input->server('REQUEST_TIME'),
@@ -239,10 +255,16 @@ class Goods extends Ydzj_Admin_Controller {
 		
 		$fileData = $this->attachment_service->addImageAttachment('fileupload',array(),FROM_BACKGROUND,'goods');
 		if($fileData){
+			
+			
+			$fileData = $this->attachment_service->resize($fileData);
+			
 			$info = array(
 				'goods_id' => $this->input->post('goods_id') ? $this->input->post('goods_id') : 0,
 				'goods_image_aid' => $fileData['id'],
 				'goods_image' => $fileData['file_url'],
+				'goods_image_b' => !empty($fileData['img_b']) ? $fileData['img_b'] : '',
+				'goods_image_m' => !empty($fileData['img_m']) ? $fileData['img_m'] : '',
 				'uid' => $this->_adminProfile['basic']['uid']
 			);
 			
@@ -253,15 +275,32 @@ class Goods extends Ydzj_Admin_Controller {
 					$json['id'] = $fileData['id'];
 					$json['image_id'] = $imageId;
 					$json['url'] = base_url($fileData['file_url']);
+					
+					//尽量选择小图
+					if($fileData['img_b']){
+						$json['url'] = base_url($fileData['img_b']);
+					}
+					
 				}else{
 					$json['error'] = 0;
 					$json['msg'] = '系统异常';
-					$this->attachment_service->deleteByFileUrl($fileData['file_url']);
+					$this->attachment_service->deleteByFileUrl(array(
+						$fileData['file_url'],
+						$fileData['img_b'],
+						$fileData['img_m'],
+					));
 				}
 			}else{
+				//maybe run here
+				
 				$json['error'] = 0;
 				$json['id'] = $fileData['id'];
 				$json['url'] = base_url($fileData['file_url']);
+				
+				//尽量选择小图
+				if($fileData['img_b']){
+					$json['url'] = base_url($fileData['img_b']);
+				}
 			}
 			
 		}else{
@@ -317,7 +356,8 @@ class Goods extends Ydzj_Admin_Controller {
 				
 				$postInfo = $this->_prepareGoodsData();
 				$fileList = $this->_getFileList();
-				//没有新上次文件
+				
+				//没有新上传文件，并且原来有图片
 				if(empty($postInfo['goods_pic']) && !empty($info['goods_pic'])){
 					$postInfo['goods_pic'] = $info['goods_pic'];
 				}
@@ -350,18 +390,10 @@ class Goods extends Ydzj_Admin_Controller {
 			}
 		}else{
 			
-			$currentFiles = $this->Goods_Images_Model->getList(array(
-				'select' => 'goods_image_aid,goods_image',
+			$fileList = $this->Goods_Images_Model->getList(array(
 				'where' => array('goods_id' => $id)
 			));
 			
-			
-			foreach($currentFiles as $item){
-				$fileList[] = array(
-					'id' => $item['goods_image_aid'],
-					'file_url' => $item['goods_image']
-				);
-			}
 		}
 		
 		$this->assign('fileList',$fileList);

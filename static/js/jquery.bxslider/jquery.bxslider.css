@@ -204,4 +204,6 @@
 	display: block;
 	font-size: .85em;
 	padding: 10px;
+	white-space: nowrap;
+    text-overflow: ellipsis;
 }

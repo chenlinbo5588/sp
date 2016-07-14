@@ -11,6 +11,7 @@ class Contacts extends Ydzj_Controller {
 		
 		$this->assign('pgClass',strtolower(get_class()).'Pg');
 		
+		$this->load->library('Goods_service');
 		$this->load->model('Article_Model');
 		
 		$tempAr = config_item('pageConf');
@@ -25,6 +26,9 @@ class Contacts extends Ydzj_Controller {
 			'首页' => site_url('/'),
 			$this->modKey => $tempAr[$this->modKey]['url']
 		);
+		
+		$goodsList = $this->goods_service->getCommandGoodsList();
+		$this->assign('goodsList',$goodsList);
 	}
 	
 	private function _getArticleContent($key){
