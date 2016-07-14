@@ -66,10 +66,10 @@
           <td>{$item['article_sort']}</td>
           <td>{$item['article_title']|escape}</td>
           <td>{$articleClassList[$item['ac_id']]['ac_name']}</td>
-          <td class="align-center">{$item['article_show']}</td>
+          <td class="align-center">{if $item['article_show']}是{else}否{/if}</td>
           <td class="nowrap align-center">{$item['gmt_create']|date_format:"%Y-%m-%d %H:%M:%S"}</td>
           <td class="align-center">
-          	<p><a href="{site_url('news/detail')}?ac_id={$item['ac_id']}&id={$item['article_id']}" target="_blank">查看</a> | <a href="{admin_site_url('article/edit')}?article_id={$item['article_id']}">编辑</a></p>
+          	<p>{if $articleClassList[$item['ac_id']]['ac_detail_tpl']}<a href="{site_url($articleClassList[$item['ac_id']]['ac_detail_tpl'])}?ac_id={$item['ac_id']}&id={$item['article_id']}" target="_blank">查看</a> | {/if}<a href="{admin_site_url('article/edit')}?article_id={$item['article_id']}">编辑</a></p>
           </td>
         </tr>
       	{/foreach}

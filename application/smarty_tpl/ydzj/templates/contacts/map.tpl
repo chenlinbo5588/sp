@@ -6,8 +6,8 @@
 			<div class="contentArea">
 				<div class="breadcrumb">{$breadcrumb}</div>
 				<div class="bd" id="articleInfo">
-					<h2>杭州标度环保技术有限公司</h2>
-					<address><label>公司地址:</label><span>XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</span></address>
+					<h2>{$siteSetting['site_name']|escape}</h2>
+					<address><label>公司地址:</label><span>{$siteSetting['company_address']|escape}</span></address>
 					<div id="mapDiv" style="height:400px;"></div>
 				</div>
 			</div>
@@ -27,7 +27,7 @@
 		
 		function init() {
 			map = new BMap.Map("mapDiv");
-			var point = new BMap.Point(120.085741,30.324261);
+			var point = new BMap.Point(120.274059,30.333041);
 			map.centerAndZoom(point,16);
 			map.addControl(new BMap.MapTypeControl());
 			map.enableScrollWheelZoom(true);
@@ -51,22 +51,34 @@
 	    	var opts = {
 			  width : 200,     // 信息窗口宽度
 			  height: 100,     // 信息窗口高度
-			  title : "海底捞王府井店" , // 信息窗口标题
+			  title : "{$siteSetting['site_name']|escape}" , // 信息窗口标题
 			  enableMessage:true,//设置允许信息窗发送短息
 			  message:"亲耐滴，晚上一起吃个饭吧？戳下面的链接看下地址喔~"
 			}
 			
-			var point = new BMap.Point(120.086945,30.319117);
+			var point = new BMap.Point(120.274059,30.333041);
 			
 			var marker = new BMap.Marker(point);  // 创建标注
 			map.addOverlay(marker); 
-			var infoWindow = new BMap.InfoWindow("地址：北京市东城区王府井大街88号乐天银泰百货八层", opts);  
+			var infoWindow = new BMap.InfoWindow("地址：{$siteSetting['company_address']|escape}", opts);  
 			map.openInfoWindow(infoWindow,point); 
 	    }
 	    
 		$(function(){
 			init();
+			
 			{*
+			var myGeo = new BMap.Geocoder();
+			// 将地址解析结果显示在地图上,并调整地图视野
+			myGeo.getPoint("浙江省杭州市江干区九环路63号", function(point){
+				if (point) {
+					map.centerAndZoom(point, 16);
+					map.addOverlay(new BMap.Marker(point));
+				}else{
+					alert("您选择地址没有解析到结果!");
+				}
+			}, "杭州市");
+			
 			map.addEventListener("click",function(e){
 				console.log(e.point.lng);
 				console.log(e.point.lat);
