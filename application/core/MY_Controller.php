@@ -3,7 +3,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class MY_Controller extends CI_Controller {
 
-	public $_inApp = false;
 	public $_verifyName = 'verify';
 	public $_lastVisit = 'lastvisit';
 	public $_reqtime ;
@@ -26,7 +25,7 @@ class MY_Controller extends CI_Controller {
 		$this->_reqtime = $this->input->server('REQUEST_TIME');
 		
 		$this->_initLibrary();
-		$this->_initApp();
+		
 		
 		$this->_initSmarty();
 		$this->_security();
@@ -87,15 +86,9 @@ class MY_Controller extends CI_Controller {
     private function _initMobile(){
     	//print_r($this->agent);
     	
-    	
     	$this->assign('isMobile',$this->agent->is_mobile());
     }
     
-    private function _initApp(){
-    	if($this->input->server('HTTP_APP_SP') == 'iOS'){
-			$this->_inApp = true;
-		}
-    }
     
     private function _initSmarty(){
     	$this->load->file(APPPATH.'third_party/smarty/Smarty.class.php');
@@ -205,7 +198,7 @@ class MY_Controller extends CI_Controller {
     	if($this->input->cookie($this->_lastVisit) != ''){
 			$elapsed_time = number_format(microtime(TRUE) -  $this->input->cookie($this->_lastVisit), 2);
 			if($elapsed_time < 0.2){
-				if($this->input->is_ajax_request() || $this->_inApp == true){
+				if($this->input->is_ajax_request()){
 					$this->responseJSON('请求过于频繁');
 				}else{
 					show_error('请求过于频繁',200);
@@ -216,7 +209,7 @@ class MY_Controller extends CI_Controller {
 		$this->input->set_cookie($this->_lastVisit,microtime(TRUE),time() + 86400);
 		
 		if($this->isPostRequest() && !$this->_checkVerify()){
-			if($this->input->is_ajax_request() || $this->_inApp == true){
+			if($this->input->is_ajax_request()){
 				$this->responseJSON('请求失效');
 			}else{
 				show_error('请求失效',500);
@@ -287,7 +280,6 @@ class MY_Controller extends CI_Controller {
     	
     	$this->_smarty->assign($this->_seo);
     	
-    	
     	if($this->input->is_ajax_request()){
     		$viewname = $viewname.'_ajax';
     	}else{
@@ -306,8 +298,12 @@ class MY_Controller extends CI_Controller {
     	
     }
     
-    public function seoTitle($title){
-    	$this->_seo['SEO_title'] = $title;
+    public function seoTitle($title = ''){
+    	if($title){
+    		$this->_seo['SEO_title'] = $title . ' - '.$this->_siteSetting['site_name'];
+    	}else{
+    		$this->_seo['SEO_title'] = $this->_siteSetting['site_name'];
+    	}
     }
     
     public function seo($title = '',$keyword = '', $desc = ''){
@@ -368,4 +364,5 @@ class MY_Controller extends CI_Controller {
 
 
 include APPPATH.'core/Ydzj_Controller.php';
+include APPPATH.'core/MyYdzj_Controller.php';
 include APPPATH.'core/Ydzj_Admin_Controller.php';

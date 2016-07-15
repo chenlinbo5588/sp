@@ -34,6 +34,7 @@ $entity = array(
 'fail_game' => 'int',
 'draw_game' => 'int',
 'win_rate' => 'float',
+'owner_name' => 'varchar',
 'owner_uid' => 'mediumint',
 'gmt_create' => 'int',
 'gmt_modify' => 'int'

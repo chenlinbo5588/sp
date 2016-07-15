@@ -56,6 +56,7 @@ class Index extends Ydzj_Controller {
 			$this->assign('cityLevel','dname'.($cityInfo['level'] + 1));
 		}
 		
+		
 		$this->assign('teamList',$teamList);
 		$this->display('team/index');
 	}

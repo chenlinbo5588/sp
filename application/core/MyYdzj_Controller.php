@@ -1,15 +1,20 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Basketball extends MY_Controller {
+/**
+ * 登陆态
+ */
+class MyYdzj_Controller extends Ydzj_Controller {
 	
 	public function __construct(){
 		parent::__construct();
-
-	}
-	
-	public function index()
-	{
+		
+		if(!$this->isLogin()){
+			redirect('member/login');
+		}
 		
 	}
 }
+
+
+

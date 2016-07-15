@@ -50,7 +50,7 @@ class Attachment_service extends Base_service {
 	 */
 	private function getImageSizeConfig(){
 		return array(
-			'large' => array('width' => 1200,'height' => 900, 'maintain_ratio' => true,'quality' => 90),
+			'large' => array('width' => 800,'height' => 600, 'maintain_ratio' => true,'quality' => 90),
 			'big' => array('width' => 400,'height' => 300 , 'maintain_ratio' => true,'quality' => 90),
 			'middle' => array('width' => 150,'height' => 150,'maintain_ratio' => true,'quality' => 90),
 			'small' => array('width' => 100,'height' => 100,'maintain_ratio' => true,'quality' => 100)

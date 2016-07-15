@@ -60,7 +60,7 @@ class Team_service extends Base_service {
 	/**
 	 * 根据条件获得队伍
 	 */
-	public function getTeamListByCondition($condition){
+	public function getTeamListByCondition($condition = array()){
 		return $this->toEasyUseArray($this->_teamModel->getList($condition));
 	}
 	
