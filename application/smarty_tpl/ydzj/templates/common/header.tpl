@@ -26,3 +26,11 @@ var cookiedomain = "",
 </head>
 <body {if $bodyClass}class="{$bodyClass}"{/if}>
    <div id="wrap">
+   		<header>
+            <div id="topBar" class="clearfix">
+                {$LEFT_BUTTON}
+                <h1>{if $TOP_NAV_TITLE}{$TOP_NAV_TITLE}{else}{$SEO_title|escape}{/if}</h1>
+                {$RIGHT_BUTTON}
+            </div>
+        </header>
+   

@@ -24,7 +24,7 @@
     <div id="teamList" class="list pd5">
         {foreach from=$teamList['data'] item=item}
         <div class="team clearfix">
-            <div class="team_avatar fl"><a href="{site_url('team/detail/'|cat:$item['id'])}"><img src="{base_url($item['avatar_middle'])}"/></a></div>
+            <div class="team_avatar fl"><a href="{site_url('team/detail/'|cat:$item['id'])}"><img src="{base_url($item['avatar_m'])}"/></a></div>
             <div class="team_basic fl">
                 <ul>
                     <li>

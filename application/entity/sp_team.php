@@ -34,6 +34,7 @@ $entity = array(
 'fail_game' => 'int',
 'draw_game' => 'int',
 'win_rate' => 'float',
+'channel' => 'int',
 'add_uid' => 'mediumint',
 'edit_uid' => 'mediumint',
 'add_username' => 'varchar',

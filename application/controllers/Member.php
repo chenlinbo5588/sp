@@ -102,7 +102,7 @@ class Member extends Ydzj_Controller {
 			
 		}
 		
-		$this->seoTitle('登陆'.config_item('site_name'));
+		$this->seoTitle('登陆');
 		$this->display("member/login");
 	}
 

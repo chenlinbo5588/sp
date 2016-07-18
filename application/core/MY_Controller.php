@@ -33,6 +33,8 @@ class MY_Controller extends CI_Controller {
 		$this->_initSiteSetting();
 		$this->_initSeoSetting();
 		
+		$this->seo();
+		
 		$this->smartyConfig();
 	}
 
@@ -129,19 +131,17 @@ class MY_Controller extends CI_Controller {
 	    	$this->cache->file->save(CACHE_KEY_SiteSetting,$settingList);
     	}
     	
-    	//var_dump($settingList);
     	$this->_siteSetting = $settingList;
-    	
     	$this->assign('siteSetting',$this->_siteSetting);
-    	
     	$this->config->set_item('site_name',$this->_siteSetting['site_name']);
-    	//print_r($this->_siteSetting);
     }
     
     
     private function _initSeoSetting(){
     	
     	$seoList = $this->cache->file->get(CACHE_KEY_SeoSetting);
+    	
+    	
     	if(empty($seoList)){
     		$temp = $this->Seo_Model->getList();
     		//print_r($list);
@@ -159,7 +159,7 @@ class MY_Controller extends CI_Controller {
     	}
     	
     	$this->_seoSetting = $seoList;
-    	
+    	///print_r($this->_seoSetting);
     }
     
     
@@ -307,7 +307,6 @@ class MY_Controller extends CI_Controller {
     }
     
     public function seo($title = '',$keyword = '', $desc = ''){
-    	//print_r($this->_seoSetting);
     	if($title){
     		$this->_seo['SEO_title'] = $title;
     	}else{

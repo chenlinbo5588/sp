@@ -560,6 +560,8 @@ class Team extends Ydzj_Controller {
 		}else{
 			//创建球队需要登陆态下
 			$this->assign('returnUrl',site_url('team/create_team'));
+			
+			$this->seoTitle('登陆');
 			$this->display('member/login');
 			
 		}

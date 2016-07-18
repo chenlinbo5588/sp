@@ -47,7 +47,7 @@ class Stadium extends Ydzj_Controller {
 		
 		$list = $this->stadium_service->getPagerData($condition);
 		$this->setLeftNavLink('<a id="leftBarLink" class="bar_button" href="'.site_url('stadium/switch_city/upid/'.$city_id).'" title="点击切换城市">'.$cityInfo['name'].'</a>');
-		$this->setRightNavLink('<a id="rightBarLink" class="bar_button" href="'.site_url('stadium/add').'">+报告场馆</a>');
+		$this->setRightNavLink('<a id="rightBarLink" class="bar_button" href="'.site_url('stadium/add').'">+发现场馆</a>');
 		
 		$this->setTopNavTitle($title);
 		$this->seo('体育场馆','篮球馆,足球场,游泳馆,羽毛球场,网球场,体育场馆');

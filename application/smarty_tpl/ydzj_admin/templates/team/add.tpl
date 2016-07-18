@@ -12,7 +12,6 @@
   <div class="fixed-empty"></div>
   {$feedback}
   {form_open_multipart(admin_site_url('team/add'),'id="team_form"')}
-    <input type="hidden" name="form_submit" value="ok" />
     <table class="table tb-type2">
       <colgroup>
         <col width="10%"/>
@@ -73,7 +72,7 @@
             <label class="validation" for="team_title">{#team_name#}:</label>
           </td>
           <td class="vatop rowform">
-            <input type="text" id="team_title" value="{set_value('title')}" name="title" class="txt"/>
+            <input type="text" id="team_title" value="{$info['title']}" name="title" class="txt"/>
             {form_error('title')}
           </td>
         </tr>
@@ -83,7 +82,7 @@
           </td>
           <td class="vatop rowform">
             <input type="hidden"  id="leader" value="1" name="leader" class="txt"/>
-            <input type="text"  id="leader_account" value="{set_value('leader_account')}" name="leader_account" class="txt"/>
+            <input type="text"  id="leader_account" value="{$info['leader_account']}" name="leader_account" class="txt"/>
             {form_error('leader_account')}
           </td>
         </tr>
@@ -104,7 +103,7 @@
           </td>
           <td class="vatop rowform">
             <select name="accept_game">
-                <option value="1">可接受比赛预约</option>
+                <option value="1" {if $info['accept_game'] == 1}selected{/if}>可接受比赛预约</option>
                 <option value="0">休战</option>
             </select>
             {form_error('accept_game')}
@@ -113,16 +112,16 @@
         <tr>
           <td class="required"><label class="validation">队伍合影(支持格式jpg):</label></td>
           <td class="vatop">
-            <input type="hidden" name="team_log_id" value="{$smarty.post['team_log_id']}"/>
-            <input type="hidden" name="team_logo" value="{$smarty.post['team_logo']}"/>
+            <input type="hidden" name="aid" value="{$info['aid']}"/>
+            <input type="hidden" name="avatar" value="{$info['avatar']}"/>
             <input type="file" name="team_avatar"/>
             {$logo_error}
         </tr>
         <tr>
             <td></td>
             <td>
-                {if $team_logo}
-		        <img style="width:300px" src="{resource_url($team_logo)}"/>
+                {if $info['avatar']}
+		        <img style="width:300px" src="{resource_url($info['avatar'])}"/>
 		        {/if}
             </td>
         </tr>

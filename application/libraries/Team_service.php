@@ -200,7 +200,7 @@ class Team_service extends Base_service {
 			
 			self::$form_validation->set_rules('title','球队名称', array(
 					'required',
-					'max_length[4]',
+					'max_length[30]',
 					array(
 						'title_callable['.$userInfo['d4'].']',
 						array(
@@ -213,7 +213,7 @@ class Team_service extends Base_service {
 				)
 			);
 		}else{
-			self::$form_validation->set_rules('title','球队名称', 'required|max_length[4]');
+			self::$form_validation->set_rules('title','球队名称', 'required|max_length[30]');
 		}
 		
 		self::$form_validation->set_rules('leader','队长设置','required|in_list[1,2]');
@@ -229,7 +229,7 @@ class Team_service extends Base_service {
 		
 		// 启动事务
 		$this->_teamModel->transStart();
-		
+		//file_put_contents('debug.txt',print_r($creatorInfo,true));
 		/*
 		$cateName = $this->_sportsCategoryModel->getById(array(
 			'select' => 'name',
@@ -238,13 +238,13 @@ class Team_service extends Base_service {
 		$param['category_name'] = $cateName['name'];
 		*/
 		
-		$param['owner_uid'] = $creatorInfo['uid'];
 		$param['d1'] = $creatorInfo['d1'];
 		$param['d2'] = $creatorInfo['d2'];
 		$param['d3'] = $creatorInfo['d3'];
 		$param['d4'] = $creatorInfo['d4'];
 		
 		$dIDs = array($param['d1'],$param['d2'],$param['d3'],$param['d4']);
+		
 		$dNameList = self::$districtModel->getList(array(
 			'select' => 'id,name',
 			'where_in' => array(
@@ -257,11 +257,10 @@ class Team_service extends Base_service {
 			$dName[$dn['id']] = $dn['name'];
 		}
 		
-		$param['dname1'] = $dName[$param['d1']];
-		$param['dname2'] = $dName[$param['d2']];
-		$param['dname3'] = $dName[$param['d3']];
-		$param['dname4'] = empty($dName[$param['d4']]) ? '' : $dName[$param['d4']];
-		
+		//四级地址
+		foreach(array(1,2,3,4) as $dk){
+			$param['dname'.$dk] = empty($dName[$param['d'.$dk]]) ? '' : $dName[$param['d'.$dk]];
+		}
 		
 		$teamid = $this->_teamModel->_add($param);
 		
@@ -272,9 +271,12 @@ class Team_service extends Base_service {
 		
 		$memberid = $this->_teamMemberModel->_add(array(
 			'uid' => $creatorInfo['uid'],
+			//@todo nickname 同步问题  还没有解决 
 			'nickname' => $creatorInfo['nickname'],
 			'username' => $creatorInfo['username'],
-			'avatar_middle' => $creatorInfo['avatar_middle'],
+			'aid' => $creatorInfo['aid'],
+			'avatar_m' => $creatorInfo['avatar_m'],
+			'avatar_s' => $creatorInfo['avatar_s'],
 			'team_id' => $teamid,
 			'rolename' => $param['leader_uid'] == 0 ? '队员' : '队长'
 		));
@@ -286,6 +288,7 @@ class Team_service extends Base_service {
 		}
 		
 		
+		//地区统计数据
 		$stat_id = md5($param['category_id'].$creatorInfo['d1'].$creatorInfo['d2'].$creatorInfo['d3'].$creatorInfo['d4']);
 		$cnt = $this->_districtStatModel->getCount(array(
 			'where' => array(

@@ -1,6 +1,4 @@
 {include file="common/header.tpl"}
-
-
 {form_open($formUrl,'id="swictCityForm"')}
 <input type="hidden" name="cityid" value="{$currentCity['id']}"/>
 <div class="cityList">
@@ -13,12 +11,12 @@
     </div>
     {/foreach}
 </div>
-
+{*
 <div class="row" id="submitFixedWrap" >
     <div class="row col">
         <input type="submit" class="master_btn" name="submit" value="确定" />
     </div>
 </div>
+*}
 </form>
-
 {include file="common/footer.tpl"}

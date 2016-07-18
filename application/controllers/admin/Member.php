@@ -212,7 +212,7 @@ class Member extends Ydzj_Admin_Controller {
 			$old_avatar = $this->input->post('old_avatar');
 			if($aid){
 				$member_avatar = $this->input->post('avatar');
-				$avatar = getImgPathArray($member_avatar,array('m','s'),'avatar');
+				$avatar = getImgPathArray($member_avatar,array('m','s'));
 				$avatar['aid'] = $aid;
 			}
 			
@@ -227,7 +227,7 @@ class Member extends Ydzj_Admin_Controller {
 					//如果再次上次图片,则需要将前面那张图片删除
 					if($old_aid){
 						$this->load->library('Attachment_service');
-						$oldsImags = getImgPathArray($old_avatar,array('m','s'),'avatar');
+						$oldsImags = getImgPathArray($old_avatar,array('m','s'));
 						$this->attachment_service->deleteByFileUrl($oldsImags);
 					}
 					

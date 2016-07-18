@@ -76,7 +76,7 @@ class Team extends Ydzj_Admin_Controller {
 		
 		if($userList){
 			$this->assign('userInfo',$this->member_service->getListByCondition(array(
-				'select' => 'uid,mobile,avatar_middle,avatar_small',
+				'select' => 'uid,mobile,avatar_m,avatar_s',
 				'where_in' => array(
 					array('key' => 'uid' ,'value' => $userList )
 				)
@@ -123,26 +123,30 @@ class Team extends Ydzj_Admin_Controller {
 		$this->assign('sportsCategoryList',$sportsCategoryList);
 		
 		//$this->_city();
+		$info = array();
 		
 		if($this->isPostRequest()){
 			
 			$addParam = $this->team_service->teamAddRules();
 			
-			$this->form_validation->set_rules('leader_account','队长账号',array(
-				'required',
-				'valid_mobile',
-				array(
-					'mobile_callable[mobile]',
+			$this->form_validation->set_rules('leader_account','手机号码',"required|valid_mobile|in_db_list[{$this->Member_Model->_tableRealName}.mobile]");
+			/*
+			$this->form_validation->set_rules('leader_account','手机号码',array(
+					'required',
+					'valid_mobile',
 					array(
-						$this->Member_Model,'checkExists'
+						'loginname_callable[mobile]',
+						array(
+							$this->Member_Model,'isUnqiueByKey'
+						)
 					)
 				),
-				'errors' => array(
-					'mobile_callable' => '%s必须为有效的登陆账号'
+				array(
+					'loginname_callable' => '%s必须为有效的登陆账号'
 				)
-			));
+			);
+		
 			
-			/*
 			$this->form_validation->set_rules('d1','一级地址','required|is_natural_no_zero');
 			$this->form_validation->set_rules('d2','二级地址','required|is_natural_no_zero');
 			$this->form_validation->set_rules('d3','三级地址','required|is_natural_no_zero');
@@ -158,31 +162,37 @@ class Team extends Ydzj_Admin_Controller {
 				
 				$this->load->library('Attachment_service');
 				
-				$size = array('large','big','middle');
+				$size = array('h','b','m');
 				
-				$fileData = $this->attachment_service->addImageAttachment('team_avatar',$size,1);
-				$team_logo = $this->input->post('team_logo');
-				$team_logo_id = $this->input->post('team_log_id');
+				$fileData = $this->attachment_service->addImageAttachment('team_avatar',$size,FROM_BACKGROUND,'team');
 				
-				if(!$fileData && empty($team_logo)){
+				// 看有没有传成功过 
+				$avatar = $this->input->post('avatar');
+				$aid = $this->input->post('aid');
+				
+				$info = $_POST;
+				
+				
+				if(!$fileData && empty($aid)){
 					$this->assign('logo_error','<label class="form_error">请上传球队合影照片</label>');
 					break;
 				}
 				
 				if($fileData){
-					$this->assign('team_log_id',$fileData['id']);
-					$this->assign('team_logo',$fileData['file_url']);
-					
+					$info['aid'] = $fileData['id'];
+					$info['avatar'] = $fileData['file_url'];
 					//重传了直接删除原先传的那张图片
-					if($team_logo_id){
-						$this->attachment_service->deleteFiles(array($team_logo_id) , $size, 1);
+					if($aid){
+						$oldsImags = getImgPathArray($avatar,array('h','b','m'));
+						$this->attachment_service->deleteByFileUrl($oldsImags);
 					}
 				}else{
-					$this->assign('team_log_id',$team_logo_id);
-					$this->assign('team_logo',$team_logo);
+					$info['aid'] = $aid;
+					$info['avatar'] = $avatar;
 				}
 				
 				if(!$this->form_validation->run()){
+					
 					break;
 				}
 				
@@ -204,30 +214,36 @@ class Team extends Ydzj_Admin_Controller {
 				if($fileData){
 					$addParam['aid'] = $fileData['id'];
 					$addParam['avatar'] = $fileData['file_url'];
-				}else if($team_logo){
-					$addParam['aid'] = $team_logo_id;
-					$addParam['avatar'] = $team_logo;
+				}else if($avatar){
+					$addParam['aid'] = $aid;
+					$addParam['avatar'] = $avatar;
 				}
 				
 				//创建缩略图
 				$resizeFile = $this->attachment_service->resize(array('file_url' => $addParam['avatar']) , $size);
-				$addParam['avatar_large'] = $resizeFile['img_large'];
-				$addParam['avatar_big'] = $resizeFile['img_big'];
-				$addParam['avatar_middle'] = $resizeFile['img_middle'];
+				$addParam['avatar_h'] = $resizeFile['img_h'];
+				$addParam['avatar_b'] = $resizeFile['img_b'];
+				$addParam['avatar_m'] = $resizeFile['img_m'];
 				//$addParam['avatar_small'] = $resizeFile['img_small'];
-				
+				$addParam = array_merge($addParam,$this->addWhoHasOperated('add'));
 				
 				$teamid = $this->team_service->addTeam($addParam, $leaderInfo);
 				
 				if($teamid > 0){
-					$this->assign('feedback','<div class="tip_success">添加成功</div>');
+					
+					//蒋队伍名称 何队伍图片去除
+					unset($info);
+					
+					$this->assign('feedback',getSuccessTip('添加成功'));
 				}else{
-					$this->assign('feedback','<div class="tip_error">添加失败</div>');
+					$this->assign('feedback',getErrorTip('添加失败'));
 				}
 			}
 		}
 		
-		$this->display('team/add');
+		
+		$this->assign('info',$info);
+		$this->display();
 		
 		
 	}

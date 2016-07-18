@@ -214,6 +214,8 @@ class Setting extends Ydzj_Admin_Controller {
 				}
 			
 				$rows = $this->seo_service->updateSeo($_POST['SEO']);
+				
+				$this->cache->file->delete(CACHE_KEY_SeoSetting);
 			}else{
 				
 				if($this->input->post('category') != '' && $this->input->post('form_name') == 'category'){
