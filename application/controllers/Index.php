@@ -22,10 +22,8 @@ class Index extends Ydzj_Controller {
 		// 获得 企业新闻
 		$qiyeList = $this->article_service->getCommandArticleList(15);
 		// 行业动态
-		$industryList = $this->article_service->getCommandArticleList(16);
+		$industryList = $this->article_service->getCommandArticleList(22);
 
-		
-		
 		$hotkeys = $this->_getSiteSetting('hotwords');
 		$hotwords = explode(',',$hotkeys);
 		

@@ -26,7 +26,7 @@
        				<a class="link0" href="{site_url('news/news_list')}">新闻资讯</a>
        				<ul class="sublist">
        					<li><a class="link1" href="{site_url('news/news_list/?ac_id=15#listmao')}">企业新闻</a></li>
-       					<li><a class="link1" href="{site_url('news/news_list/?ac_id=16#listmao')}">行业动态</a></li>
+       					<li><a class="link1" href="{site_url('news/news_list/?ac_id=22#listmao')}">行业动态</a></li>
        					<li><a class="link1" href="{site_url('news/news_list/?ac_id=17#listmao')}">促销信息</a></li>
        				</ul>
        			</li>
