@@ -13,8 +13,8 @@ $config['pageConf'] = array(
 	'营销招商' => array(
 		'url' => site_url('market'),
 		'sideNav' => array(
-			'经销商网络' => site_url('market/agency'),
-			'合作加盟' => site_url('market/cooperation'),
+			'经销招商' => site_url('market/agency'),
+			'运营特点' => site_url('market/cooperation'),
 		)
 	),
 	'服务中心' => array(

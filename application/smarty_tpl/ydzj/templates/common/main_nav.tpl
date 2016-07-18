@@ -39,71 +39,12 @@
        					</li>
        					{/foreach}
        				</ul>
-       				{*
-       				<ul class="sublist clearfix" id="menuProducts">
-       					<li class="level1">
-       						<div><a href="{site_url('news/news_list')}"><img src="{resource_url('img/cmp/product.jpg')}"/><div>系列1</div></a></div>
-       						<ol class="serialProduct">
-       							<li><a href="">PE多层气垫膜生产线</a></li>
-       							<li><a href="">PE多层气垫膜生产线</a></li>
-       							<li><a href="">PE多层气垫膜生产线</a></li>
-       							<li><a href="">PE多层气垫膜生产线</a></li>
-       							<li><a href="">PE多层气垫膜生产线</a></li>
-       							<li><a href="">PE多层气垫膜生产线</a></li>
-       						</ol>
-       					</li>
-       					<li class="level1">
-       						<div><a href="/"><img src="{resource_url('img/cmp/product.jpg')}"/><div>系列1</div></a></div>
-       						<ol class="serialProduct">
-       							<li><a href="">PE多层气垫膜生产线</a></li>
-       							<li><a href="">PE多层气垫膜生产线</a></li>
-       							<li><a href="">PE多层气垫膜生产线</a></li>
-       							<li><a href="">PE多层气垫膜生产线</a></li>
-       							<li><a href="">PE多层气垫膜生产线</a></li>
-       							<li><a href="">PE多层气垫膜生产线</a></li>
-       						</ol>
-       					</li>
-       					<li class="level1">
-       						<div><a href="/"><img src="{resource_url('img/cmp/product.jpg')}"/><div>系列1</div></a></div>
-       						<ol class="serialProduct">
-       							<li><a href="">PE多层气dd垫膜生产线</a></li>
-       							<li><a href="">PE多层气垫dsd膜生产线</a></li>
-       							<li><a href="">PE多层气垫膜生产线</a></li>
-       							<li><a href="">PE多层气垫膜vv生产线</a></li>
-       							<li><a href="">PE多层气垫膜生产线</a></li>
-       							<li><a href="">PE多层气垫vv膜生产线</a></li>
-       						</ol>
-       					</li>
-       					<li class="level1">
-       						<div><a href="/"><img src="{resource_url('img/cmp/product.jpg')}"/><div>系列1</div></a></div>
-       						<ol class="serialProduct">
-       							<li><a href="">PE多层气垫膜生产线</a></li>
-       							<li><a href="">PE多层气垫膜生产线</a></li>
-       							<li><a href="">PE多层sds气垫膜生产线</a></li>
-       							<li><a href="">PE多asd层气垫膜生产线</a></li>
-       							<li><a href="">PE多层气垫膜生产线</a></li>
-       							<li><a href="">PE多层气垫膜生产线</a></li>
-       						</ol>
-       					</li>
-       					<li class="level1">
-       						<div><a href="/"><img src="{resource_url('img/cmp/product.jpg')}"/><div>系列1</div></a></div>
-       						<ol class="serialProduct">
-       							<li><a href="">PE多层d气垫膜生产线</a></li>
-       							<li><a href="">PE多层气ss垫膜生产线</a></li>
-       							<li><a href="">PE多层气垫膜生产线</a></li>
-       							<li><a href="">PE多层dd气垫膜生产线</a></li>
-       							<li><a href="">PE多层气垫膜生产线</a></li>
-       							<li><a href="">PE多层ss气垫膜生产线</a></li>
-       						</ol>
-       					</li>
-       				</ul>
-       				*}
        			</li>
        			<li class="level0">
        				<a class="link0" href="{site_url('market/agency')}">营销招商</a>
        				<ul class="sublist">
-       					<li><a class="link1" href="{site_url('market/agency')}">经销商网络</a></li>
-       					<li><a class="link1" href="{site_url('market/cooperation')}">合作加盟</a></li>
+       					<li><a class="link1" href="{site_url('market/agency')}">经销招商</a></li>
+       					<li><a class="link1" href="{site_url('market/cooperation')}">运营特点</a></li>
        				</ul>
        			</li>
        			<li class="level0">

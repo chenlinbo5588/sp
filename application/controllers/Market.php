@@ -44,7 +44,7 @@ class Market extends Ydzj_Controller {
 	
 	public function agency()
 	{
-		$key = '经销商网络';
+		$key = '经销招商';
 		$this->_getArticleContent($key);
 		
 		$this->seo($key);
@@ -54,7 +54,7 @@ class Market extends Ydzj_Controller {
 	
 	public function cooperation()
 	{
-		$key = '合作加盟';
+		$key = '运营特点';
 		$this->_getArticleContent($key);
 		$this->seo($key);
 		$this->display('common/art');
