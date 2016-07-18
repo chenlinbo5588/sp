@@ -25,7 +25,7 @@ class Ydzj_Controller extends MY_Controller {
 	protected function _initLibrary(){
 		parent::_initLibrary();
 		
-		$this->load->config('api_keys');
+		$this->load->config('site');
 	}
 	
 	private function _initLogin(){

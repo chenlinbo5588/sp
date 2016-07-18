@@ -5,7 +5,7 @@
 function call_back(resp){
     refreshFormHash(resp);
     
-    $('#member_avatar').val(resp.picname);
+    $('#avatar').val(resp.picname);
     $('#view_img').attr('src',resp.url);
 }
 $(function(){
@@ -32,11 +32,16 @@ $(function(){
                 secureuri:false,
                 fileElementId:'_pic',
                 dataType: 'json',
-                data: { formhash : formhash , id : $("input[name=avatar_id]").val() , size : "big" },
+                data: { formhash : formhash , id : $("input[name=avatar_id]").val() , old_id : $("input[name=old_avatar_id]").val()},
                 success: function (resp, status)
                 {
                     if (resp.error == 0){
+                    	$("input[name=old_avatar]").val($("input[name=avatar]").val());
+                    	$("input[name=old_avatar_id]").val($("input[name=avatar_id]").val());
+                    	
                         $("input[name=avatar_id]").val(resp.id);
+                        $("input[name=avatar]").val(resp.url);
+                        
                         ajax_form('cutpic','裁剪','{admin_site_url("member/pic_cut")}?type=member&x=200&y=200&resize=0&ratio=1&url='+resp.url,800);
                     }else
                     {

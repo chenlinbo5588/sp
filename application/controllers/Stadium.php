@@ -235,7 +235,7 @@ class Stadium extends Ydzj_Controller {
 	private function _dealPicture(){
 		
     	$this->load->library('Attachment_service');
-    	$this->attachment_service->setUid($this->_profile['basic']['uid']);
+    	$this->attachment_service->setUserInfo($this->_profile['basic']);
     	
     	$fileUpload = array();
     	$deleteImage = array();

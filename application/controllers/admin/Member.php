@@ -52,7 +52,7 @@ class Member extends Ydzj_Admin_Controller {
 				'-7 days' => '最近7天内活跃' ,'-15 days' => '最近15天内活跃');
 		*/
 		
-		$search_map['register_channel'] = array('1' => '手机网页版','2' => '后台管理中心' ,'3' => 'PC网页版','4' => 'iOS客户端','5' => 'Android客户端');
+		$search_map['register_channel'] = array('1' => '后台管理中心','2' => '手机网页版' ,'3' => 'PC网页版','4' => 'iOS客户端','5' => 'Android客户端');
 		$search_map['register_sort'] = array('uid DESC' => '按时间倒序','uid ASC' => '按时间顺序');
 		$search_map['member_state'] = array('avatar_status@0' => '待验证头像','district_bind@0' => '未设置地区','freeze@1' => '已禁止登录');
 		
@@ -114,7 +114,7 @@ class Member extends Ydzj_Admin_Controller {
 		
 		if($inviterList){
 			$this->assign('inviterInfo',$this->member_service->getListByCondition(array(
-				'select' => 'uid,mobile,avatar_middle,avatar_small',
+				'select' => 'uid,mobile,avatar_m,avatar_s',
 				'where_in' => array(
 					array('key' => 'uid' ,'value' => $inviterList )
 				)
@@ -164,30 +164,30 @@ class Member extends Ydzj_Admin_Controller {
 	private function _addRules(){
 		
 		
-		$param['email'] = $this->input->post('member_email');
+		$param['email'] = $this->input->post('email');
 		if($param['email']){
-			$this->form_validation->set_rules('member_email','电子邮箱','valid_email');
+			$this->form_validation->set_rules('email','电子邮箱','valid_email');
 		}
 		
-		$param['username'] = $this->input->post('member_username');
+		$param['username'] = $this->input->post('username');
 		if($param['username']){
-			$this->form_validation->set_rules('member_username','真实名称','min_length[1]|max_length[6]');
+			$this->form_validation->set_rules('username','真实名称','min_length[1]|max_length[30]');
 		}
 		
-		$param['member_qq'] = $this->input->post('member_qq');
+		$param['qq'] = $this->input->post('qq');
 		
-		if($param['member_qq']){
-			$this->form_validation->set_rules('member_qq','QQ','regex_match[/^\d+$/]');
+		if($param['qq']){
+			$this->form_validation->set_rules('qq','QQ','regex_match[/^\d+$/]');
 		}
 		
-		$param['member_weixin'] = $this->input->post('member_weixin');
+		$param['weixin'] = $this->input->post('weixin');
 		
-		if($param['member_weixin']){
-			$this->form_validation->set_rules('member_weixin','微信号','alpha_dash|min_length[6]|max_length[20]');
+		if($param['weixin']){
+			$this->form_validation->set_rules('weixin','微信号','alpha_dash|min_length[6]|max_length[20]');
 		}
 		
 		$this->form_validation->set_rules('allowtalk','允许发表言论','required|in_list[N,Y]');
-		$this->form_validation->set_rules('memberstate','允许登录','required|in_list[N,Y]');
+		$this->form_validation->set_rules('freeze','允许登录','required|in_list[N,Y]');
 	}
 	
 	
@@ -196,43 +196,60 @@ class Member extends Ydzj_Admin_Controller {
 	 */
 	public function add(){
 		
+		
+		$info = array();
+		
 		if($this->isPostRequest()){
 			
-			$this->_setMobileRule('member_mobile');
-			$this->form_validation->set_rules('member_passwd','密码','required|alpha_dash|min_length[6]|max_length[12]');
-			$this->form_validation->set_rules('member_passwd2','密码确认','required|matches[member_passwd]');
+			$this->_setMobileRule('mobile');
+			$this->form_validation->set_rules('passwd','密码','required|alpha_dash|min_length[6]|max_length[12]');
+			$this->form_validation->set_rules('passwd2','密码确认','required|matches[passwd]');
 			
 			$this->_addRules();
 			
+			$aid = $this->input->post('avatar_id');
+			$old_aid = $this->input->post('old_avatar_id');
+			$old_avatar = $this->input->post('old_avatar');
+			if($aid){
+				$member_avatar = $this->input->post('avatar');
+				$avatar = getImgPathArray($member_avatar,array('m','s'),'avatar');
+				$avatar['aid'] = $aid;
+			}
 			
 			for($i = 0 ; $i < 1; $i++){
 				if(!$this->form_validation->run()){
+					$info = $_POST;
+					if($aid){
+						//校验出错，记住上传的图片
+						$info = array_merge($info,$avatar);
+					}
+					
+					//如果再次上次图片,则需要将前面那张图片删除
+					if($old_aid){
+						$this->load->library('Attachment_service');
+						$oldsImags = getImgPathArray($old_avatar,array('m','s'),'avatar');
+						$this->attachment_service->deleteByFileUrl($oldsImags);
+					}
+					
 					break;
 				}
 				
-				$aid = $this->input->post('avatar_id');
-				if($aid){
-					$member_avatar = $this->input->post('member_avatar');
-					$avatar = getImgPathArray($member_avatar,array('middle','small'));
-					$avatar['aid'] = $aid;
-				}
-				
 				$addParam = array(
-					'mobile' => $this->input->post('member_mobile'),
-					'nickname' => $this->input->post('member_mobile'),
-					'password' => $this->input->post('member_passwd'),
-					'qq' => $this->input->post('member_qq'),
-					'weixin' => $this->input->post('member_weixin'),
-					'email' => $this->input->post('member_email'),
-					'username' => $this->input->post('member_username'),
-					'sex' => $this->input->post('member_sex'),
+					'mobile' => $this->input->post('mobile'),
+					'nickname' => $this->input->post('mobile'),
+					'password' => $this->input->post('passwd'),
+					'qq' => $this->input->post('qq'),
+					'weixin' => $this->input->post('weixin'),
+					'email' => $this->input->post('email'),
+					'username' => $this->input->post('username'),
+					'sex' => $this->input->post('sex'),
 					'allowtalk' => $this->input->post('allowtalk'),
-					'freeze' => $this->input->post('memberstate'),
+					'freeze' => $this->input->post('freeze'),
 					'status' => 0,
 					'channel' => 1	//1 标志直接后台增加
 				);
 				
-				if($avatar){
+				if($aid){
 					$addParam = array_merge($addParam,$avatar);
 				}
 				
@@ -241,13 +258,26 @@ class Member extends Ydzj_Admin_Controller {
 				$result = $this->register_service->createMember($addParam);
 				
 				if($result['code'] == 'success'){
-					$this->assign('feedback','<div class="tip_success">添加成功</div>');
+					$this->assign('feedback',getSuccessTip('添加成功'));
 				}else{
-					$this->assign('feedback','<div class="tip_error">添加失败</div>');
+					$this->assign('feedback',getErrorTip('添加失败'));
 				}
 			}
+		}else{
+			
+			$info = array(
+				//@todo 需要修改为明文
+				'passwd' => random_string('numeric',6),
+				'sex' => 'S',
+				'allowtalk' => 'Y',
+				'freeze' => 'Y'
+			);
+			
+			$info['passwd2'] = $info['passwd'];
 		}
 		
+		
+		$this->assign('info',$info);
 		$this->display();
 		
 		
@@ -258,53 +288,49 @@ class Member extends Ydzj_Admin_Controller {
 	 */
 	public function edit(){
 		
-		$urlParam = $this->uri->uri_to_assoc();
-		$this->assign('id',$urlParam['edit']);
+		$member_id = $this->input->get_post('id');
 		
 		$this->load->library('Member_service');
-		$info = $this->member_service->getUserInfoById($urlParam['edit']);
+		$info = $this->member_service->getUserInfoById($member_id);
+		//print_r($info);
 		
-		//print_r($urlParam);
-		
-		if(!empty($urlParam['edit']) && $this->isPostRequest()){
-			$this->assign('inpost',true);
+		if(!empty($member_id) && $this->isPostRequest()){
 			
-			$this->form_validation->set_rules('member_nickname','昵称','min_length[3]|max_length[30]|is_unique_not_self['.$this->Member_Model->getTableRealName().'.nickname.uid.'.$urlParam['edit'].']');
+			$this->form_validation->set_rules('nickname','昵称','min_length[3]|max_length[30]|is_unique_not_self['.$this->Member_Model->getTableRealName().'.nickname.uid.'.$member_id.']');
 			
-			$password = $this->input->post('member_passwd');
-			$password2 =  $this->input->post('member_passwd2');
+			$password = $this->input->post('passwd');
+			$password2 =  $this->input->post('passwd2');
 			
 			if($password || $password2){
-				$this->form_validation->set_rules('member_passwd','密码','alpha_dash|min_length[6]|max_length[12]');
-				$this->form_validation->set_rules('member_passwd2','密码确认','matches[member_passwd]');
+				$this->form_validation->set_rules('passwd','密码','alpha_dash|min_length[6]|max_length[12]');
+				$this->form_validation->set_rules('passwd2','密码确认','matches[passwd]');
 			}
-			
-			
 			
 			$this->_addRules();
 			
 			for($i = 0 ; $i < 1; $i++){
 				if(!$this->form_validation->run()){
-					$this->assign('feedback','<div class="tip_error">'.$this->form_validation->error_string('','').'</div>');
+					$this->assign('feedback',getErrorTip($this->form_validation->error_string('','')));
+					$info = array_merge($info,$_POST);
 					break;
 				}
 				
 				$updateData = array(
-					'nickname' => $this->input->post('member_nickname'),
-					'qq' => $this->input->post('member_qq'),
-					'weixin' => $this->input->post('member_weixin'),
-					'email' => $this->input->post('member_email'),
-					'username' => $this->input->post('member_username'),
-					'sex' => $this->input->post('member_sex'),
+					'nickname' => $this->input->post('nickname'),
+					'qq' => $this->input->post('qq'),
+					'weixin' => $this->input->post('weixin'),
+					'email' => $this->input->post('email'),
+					'username' => $this->input->post('username'),
+					'sex' => $this->input->post('sex'),
 					'allowtalk' => $this->input->post('allowtalk'),
-					'freeze' => $this->input->post('memberstate'),
+					'freeze' => $this->input->post('freeze'),
 				);
 				
 				$aid = $this->input->post('avatar_id');
 				
 				if($aid){
-					$member_avatar = $this->input->post('member_avatar');
-					$avatar = getImgPathArray($member_avatar,array('middle','small'));
+					$member_avatar = $this->input->post('avatar');
+					$avatar = getImgPathArray($member_avatar,array('m','s'));
 					$avatar['aid'] = $aid;
 					$updateData = array_merge($updateData,$avatar);
 				}
@@ -315,22 +341,21 @@ class Member extends Ydzj_Admin_Controller {
 				
 				//print_r($updateData);
 				$this->load->library('Member_service');
-				$flag = $this->member_service->updateUserInfo($updateData,$urlParam['edit']);
+				$flag = $this->member_service->updateUserInfo($updateData,$member_id);
 				
 				if($flag >= 0){
-					if($aid && $info['aid']){
-						//传新的图片
+					if($aid > 0 && $aid != $info['aid']){
+						//上次了新的图片后 需要将旧的图片删除 释放空间
 						$this->load->library('Attachment_service');
-						$this->attachment_service->deleteByFileUrl(array($info['avatar_middle'],$info['avatar_small']));
+						$this->attachment_service->deleteByFileUrl(array($info['avatar'],$info['avatar_m'],$info['avatar_s']));
 					}
 					
-					$info = $this->member_service->getUserInfoById($urlParam['edit']);
-					$this->assign('feedback','<div class="tip_success">保存成功</div>');
+					$info = $this->member_service->getUserInfoById($member_id);
+					$this->assign('feedback',getSuccessTip('保存成功'));
 				}else{
-					$this->assign('feedback','<div class="tip_error">保存失败</div>');
+					$this->assign('feedback',getErrorTip('保存失败'));
 				}
 			}
-			
 		}
 		
 		$this->assign('info',$info);
@@ -349,22 +374,20 @@ class Member extends Ydzj_Admin_Controller {
 			$this->load->library('Attachment_service');
 			
 			$fileData = $this->attachment_service->resize(array('file_url' => $src_file) , 
-				array('middle' => array('width' => $this->input->post('w'),'height' => $this->input->post('h'),'maintain_ratio' => false , 'quality' => 100)) , 
+				array('m' => array('width' => $this->input->post('w'),'height' => $this->input->post('h'),'maintain_ratio' => false , 'quality' => 100)) , 
 				array('x_axis' => $this->input->post('x1'), 'y_axis' => $this->input->post('y1')));
 			
-			
-			
-			if($fileData['img_middle']){
+			// 在中 img_m 的基础上再次裁剪 
+			if($fileData['img_m']){
 				$smallImg = $this->attachment_service->resize(array(
-					'file_url' => $fileData['img_middle']
-				) , array('small') );
+					'file_url' => $fileData['img_m']
+				) , array('s') );
 			}
 			
 			//删除原图
-			unlink($fileData['full_path']);
-				
-				
-			if (empty($fileData['img_middle'])){
+			//unlink($fileData['full_path']);
+			
+			if (empty($fileData['img_m'])){
 				exit(json_encode(array(
 					'status' => 0, 
 					'formhash'=>$this->security->get_csrf_hash(),
@@ -374,7 +397,7 @@ class Member extends Ydzj_Admin_Controller {
 				exit(json_encode(array(
 					'status' => 1, 
 					'formhash'=>$this->security->get_csrf_hash(),
-					'url'=>base_url($fileData['img_middle']),
+					'url'=>base_url($fileData['img_m']),
 					'picname' => $src_file
 				)));
 			}

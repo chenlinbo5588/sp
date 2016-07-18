@@ -145,7 +145,6 @@ class My extends MyYdzj_Controller {
 				$newAvatar = str_replace(base_url(),'',$newAvatar);
 				
 				$this->load->library('Attachment_service');
-				$this->attachment_service->setUid($this->_profile['basic']['uid']);
 				
 				$fileData = $this->attachment_service->resize(array(
 					'file_url' => $newAvatar

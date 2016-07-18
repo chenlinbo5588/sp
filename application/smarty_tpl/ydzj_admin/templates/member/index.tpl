@@ -103,9 +103,10 @@
         <tr class="thead">
           <th>&nbsp;</th>
           <th colspan="2">会员</th>
-          <th>最后登录</th>
           <th class="align-center">邀请人</th>
+          <th>注册渠道</th>
           <th>地区</th>
+          <th>最后登录</th>
           <th>积分</th>
           <th>状态</th>
           <th class="align-center">发表言论</th>
@@ -118,7 +119,7 @@
         <tr class="hover member">
           <td class="w24"></td>
           <td class="w120 picture">
-            <div class=""><span class="thumb"><i></i><img src="{base_url($item['avatar_small'])}"  data-avatar="{$item['avatar_middle']}" /></span></div></td>
+            <div class=""><span class="thumb"><i></i><img src="{base_url($item['avatar_s'])}"  data-avatar="{$item['avatar_m']}" /></span></div></td>
           <td>
             <p class="name"><strong>账号:&nbsp;{$item['mobile']|escape}</strong></p>
             <p><strong>昵称:&nbsp;</strong><span>{$item['nickname']|escape}</span></p>
@@ -141,30 +142,31 @@
                 {/if}
             </div>
           </td>
-          <td>
-            <p>{if $item['last_login']}{$item['last_login']|date_format:"%Y-%m-%d %H:%M:%S"}</p>
-            <p>{$item['last_loginip']}{/if}</p>
-          </td>
           <td class="align-center w120">
             {if $item['inviter']}
-            <div class=""><a href="{admin_site_url('member/edit')}/{$item['inviter']}"><img src="{resource_url($inviterInfo[$item['inviter']]['avatar_small'])}" /></a></div>
+            <div class=""><a href="{admin_site_url('member/edit')}?id={$item['inviter']}"><img src="{resource_url($inviterInfo[$item['inviter']]['avatar_s'])}" /></a></div>
             <p>{$inviterInfo[$item['inviter']]['mobile']}</p>
             {/if}
           </td>
+          <td>{$item['channel']}</td>
           <td>
            {$memberDs[$item['d1']]['name']}{$memberDs[$item['d2']]['name']}{$memberDs[$item['d3']]['name']}{$memberDs[$item['d4']]['name']}
+          </td>
+          <td>
+            <p>{if $item['last_login']}{$item['last_login']|date_format:"%Y-%m-%d %H:%M:%S"}</p>
+            <p>{$item['last_loginip']}{/if}</p>
           </td>
           <td>{$item['credits']}</td>
           <td>{$item['status']}</td>
           <td class="align-center">{if $item['allowtalk'] == 'N'}禁止{else}允许{/if}</td>
           <td class="align-center">{if $item['freeze'] == 'Y'}禁止{else}允许{/if}</td>
-          <td class="align-center"><a href="{admin_site_url('member/edit')}/{$item['uid']}">编辑</a> | <a href="index.php?act=notice&op=notice&member_name=c2hvcG5j">通知</a></td>
+          <td class="align-center"><a href="{admin_site_url('member/edit')}?id={$item['uid']}">编辑</a> | <a href="index.php?act=notice&op=notice&member_name=c2hvcG5j">通知</a></td>
         </tr>
       {/foreach}
       </tbody>
       <tfoot class="tfoot">
         <tr>
-          <td colspan="11">
+          <td colspan="12">
             {include file="common/pagination.tpl"}
         </tr>
       </tfoot>

@@ -24,8 +24,8 @@ class Common extends Ydzj_Admin_Controller {
 		}
 		
 		$this->load->library('Attachment_service');
-		
-		$json = $this->attachment_service->pic_upload($this->_adminProfile['basic']['uid'],$uploadname,FROM_BACKGROUND,$mod);
+		$this->attachment_service->setUserInfo($this->_adminProfile['basic']);
+		$json = $this->attachment_service->pic_upload($uploadname,FROM_BACKGROUND,$mod);
 		
 		@unlink($_FILES[$uploadname]['tmp_name']);
 		

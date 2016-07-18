@@ -933,14 +933,14 @@ function cutText($str, $len, $mode = true) {
 if ( ! function_exists('getImgPathArray'))
 {
 	
-	function getImgPathArray($srcImgUrl , $size = array()){
+	function getImgPathArray($srcImgUrl , $size = array(), $keyName = 'avatar'){
 		
 		if(strpos($srcImgUrl,'_') !== false){
 			$tempUrl = substr($srcImgUrl,0,strrpos($srcImgUrl,'_')) . substr($srcImgUrl,strrpos($srcImgUrl,'.'));
 			$srcImgUrl = $tempUrl;
 		}
 		
-		$img['avatar'] = $srcImgUrl;
+		$img[$keyName] = $srcImgUrl;
 		
 		if($size){
 			$dotPos = strrpos($srcImgUrl,'.');
@@ -948,7 +948,7 @@ if ( ! function_exists('getImgPathArray'))
 			$suffixName = substr($srcImgUrl,$dotPos);
 			
 			foreach($size as $sname){
-				$img['avatar_'.$sname] = $fileName.'_'.$sname.$suffixName;
+				$img["{$keyName}_{$sname}"] = "{$fileName}_{$sname}{$suffixName}";
 			}
 		}
 		

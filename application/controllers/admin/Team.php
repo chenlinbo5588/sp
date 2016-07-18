@@ -157,7 +157,6 @@ class Team extends Ydzj_Admin_Controller {
 			for($i = 0 ; $i < 1; $i++){
 				
 				$this->load->library('Attachment_service');
-				$this->attachment_service->setUid($this->_adminProfile['basic']['uid']);
 				
 				$size = array('large','big','middle');
 				

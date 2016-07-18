@@ -5,9 +5,8 @@ class Setting extends Ydzj_Admin_Controller {
 	
 	public function __construct(){
 		parent::__construct();
-		
 		$this->load->library(array('Admin_service','Attachment_service'));
-		$this->attachment_service->setUid($this->_adminProfile['basic']['uid']);
+		$this->attachment_service->setUserInfo($this->_adminProfile['basic']);
 	}
 	
 	

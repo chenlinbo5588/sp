@@ -4,6 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Attachment_service extends Base_service {
 
 	protected $_uid = 0;
+	protected $_userInfo;
 	
 	private $_attachModel ;
 	private $_imageSizeConfig ;
@@ -16,7 +17,7 @@ class Attachment_service extends Base_service {
 		self::$CI->load->library('image_lib');
 		
 		$this->_attachModel = self::$CI->Attachment_Model;
-		$this->_imageSizeConfig = $this->getImageSizeConfig();
+		$this->_imageSizeConfig = config_item('img_size');
 	}
 	
 	/*
@@ -29,14 +30,14 @@ class Attachment_service extends Base_service {
 	/**
 	 * 获得图片上传配置
 	 */
-	public function getImageConfig(){
+	public function getImageUploadConfig(){
 		
 		$config['file_path'] = 'static/attach/'.date("Y/m/d/");
         $config['upload_path'] = ROOTPATH . '/'.$config['file_path'];
         
         make_dir($config['upload_path']);
         
-		$config['allowed_types'] = 'jpg|jpeg';
+		$config['allowed_types'] = config_item('allowed_img_types');
 		$config['file_ext_tolower'] = true;
 		$config['encrypt_name'] = true;
 		$config['max_size'] = 4096;
@@ -46,23 +47,14 @@ class Attachment_service extends Base_service {
 	
 	
 	/**
-	 * 获得图片尺寸配置参数
-	 */
-	private function getImageSizeConfig(){
-		return array(
-			'large' => array('width' => 800,'height' => 600, 'maintain_ratio' => true,'quality' => 90),
-			'big' => array('width' => 400,'height' => 300 , 'maintain_ratio' => true,'quality' => 90),
-			'middle' => array('width' => 150,'height' => 150,'maintain_ratio' => true,'quality' => 90),
-			'small' => array('width' => 100,'height' => 100,'maintain_ratio' => true,'quality' => 100)
-		);
-	}
-	
-	
-	/**
-	 * 设置用户id
+	 * 设置用户id ,废弃
 	 */
 	public function setUid($uid){
 		$this->_uid = intval($uid);
+	}
+	
+	public function setUserInfo($userProfile){
+		$this->_userInfo = $userProfile;
 	}
 	
 	
@@ -80,16 +72,15 @@ class Attachment_service extends Base_service {
 		
 	}
 	
+	
 	/**
 	 * @param array $files id列表
 	 * @param array $size array('big','middle')
-	 * @param array $fromBg  0 = 前台用户上传的  1 = 后台用户上传的
 	 */
-	public function deleteFiles($files , $size = array() , $fromBg = 0){
+	public function deleteFiles($files , $size = array()){
 		if(is_array($files)){
 			$list = $this->_attachModel->getList(array(
 				'select' => 'file_url',
-				'where' => array('uid' => $this->_uid > 0 ?  $this->_uid : -1 , 'from_bg' => $fromBg),
 				'where_in' => array(
 					array('key' => 'id','value' => $files)
 				)
@@ -97,8 +88,7 @@ class Attachment_service extends Base_service {
 			
 		}else{
 			$list = $this->_attachModel->getList(array(
-				'select' => 'file_url',
-				'where' => array('uid' => $this->_uid > 0 ?  $this->_uid : -1 , 'from_bg' => $fromBg ,  'id' => $files)
+				'select' => 'file_url'
 			));
 		}
 		
@@ -190,7 +180,7 @@ class Attachment_service extends Base_service {
 	public function addImageAttachment($filename, $moreConfig = array(),$from = 0,$mod = ''){
 		
 		//处理照片
-		$config = $this->getImageConfig();
+		$config = $this->getImageUploadConfig();
 		
 		if(!empty($moreConfig)){
 			$config = array_merge($config,$moreConfig);
@@ -201,12 +191,17 @@ class Attachment_service extends Base_service {
 		if(self::$CI->upload->do_upload($filename)){
 			$fileData = self::$CI->upload->data();
 			//print_r($fileData);
-			
 			$fileData['file_url'] = $config['file_path'].$fileData['file_name'];
 			$fileData['ip'] = self::$CI->input->ip_address();
 			
-			if($this->_uid){
-				$fileData['uid'] = $this->_uid;
+			if($this->_userInfo){
+				$fileData['uid'] = $this->_userInfo['uid'];
+				
+				if($from == FROM_BACKGROUND){
+					$fileData['username'] = $this->_userInfo['username'];
+				}else{
+					$fileData['username'] = $this->_userInfo['nickname'];
+				}
 			}
 			
 			
@@ -214,14 +209,14 @@ class Attachment_service extends Base_service {
 			$fileData['image_height'] = $fileData['image_height'] ? $fileData['image_height'] : 0;
 			$fileData['mod'] = $mod;
 			
-			$fileData['from_bg'] = $from;
+			$fileData['upload_from'] = $from;
 			$file_id = self::$CI->Attachment_Model->_add($fileData);
 			$fileData['id'] = $file_id;
 			
 			//print_r($fileData);
 			return $fileData;
 		}else{
-			log_message('info',$this->getErrorMsg());
+			log_message('error',$this->getErrorMsg());
 			return false;
 		}
 		
@@ -235,8 +230,6 @@ class Attachment_service extends Base_service {
 	}
 	
 	
-	
-	
 	/**
 	 * 前后台上传图片公告逻辑
 	 * 
@@ -244,15 +237,16 @@ class Attachment_service extends Base_service {
 	 * @param datatype $uploadName 上传名
 	 * @param datatype $fromBg description
 	 */
-	public function pic_upload($uid,$uploadName , $fromBg = 0,$mod = ''){
-		
-		$this->setUid($uid);
+	public function pic_upload($uploadName , $fromBg = 0,$mod = ''){
 		$fileData = $this->addImageAttachment($uploadName,array(),$fromBg,$mod);
+		
+		
 		//$Orientation[$exif[IFD0][Orientation]];
 		//$exif = exif_read_data($fileData['file_url'],0,true);
+		
+		
 		if($fileData){
 			//上传多次情况下，清理上一次上传的文件
-			
 			/*
 			 * 还没有解决，异步上上传后，放弃保存后， 原来的图变被删的问题, 暂时注释
 			if(self::$CI->input->post('id')){

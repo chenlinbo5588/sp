@@ -422,8 +422,8 @@ $(function(){
               <dl>
                 <dd>
                   <ol>
+                  	<li><a href="javascript:void(0);" id="index_stadium" onclick="openItem('index,stadium,stadium');">场馆管理</a></li>
                     <li><a href="javascript:void(0);" id="setting_stadium" onclick="openItem('setting,stadium,stadium');">场馆设置</a></li>
-                    <li><a href="javascript:void(0);" id="index_stadium" onclick="openItem('index,stadium,stadium');">场馆管理</a></li>
                   </ol>
                 </dd>
               </dl>
@@ -434,9 +434,9 @@ $(function(){
               <dl>
                 <dd>
                   <ol>
+                  	<li><a href="javascript:void(0);" id="index_goods" onclick="openItem('index,goods,goods');">商品管理</a></li>
                     <li><a href="javascript:void(0);" id="category_goods_class" onclick="openItem('category,goods_class,goods');">分类管理</a></li>
                     <li><a href="javascript:void(0);" id="index_brand" onclick="openItem('index,brand,goods');">品牌管理</a></li>
-                    <li><a href="javascript:void(0);" id="index_goods" onclick="openItem('index,goods,goods');">商品管理</a></li>
                     {*<li><a href="javascript:void(0);" id="type_goods" onclick="openItem('type,goods,goods');">类型管理</a></li>
                     <li><a href="javascript:void(0);" id="spec_goods" onclick="openItem('spec,goods,goods');">规格管理</a></li>
                     <li><a href="javascript:void(0);" id="album_goods" onclick="openItem('album,goods,goods');">图片空间</a></li>*}
