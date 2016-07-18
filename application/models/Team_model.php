@@ -38,7 +38,7 @@ class Team_Model extends MY_Model {
     	$cnt = $this->getCount(array(
     		'where' => array(
 				'category_id' => $category,
-				'owner_uid' => $uid
+				'add_uid' => $uid
     		)
     	
     	));
