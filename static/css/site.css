@@ -389,9 +389,9 @@ input[type=text].validation_error {
 }
 
 #main_menu {
-    position:absolute;
+    position:fixed;
     z-index: 10;
-    bottom:-40px;
+    bottom:0;
     left:0;
     height:40px;
     background:#000;
@@ -433,7 +433,8 @@ input[type=text].validation_error {
 .navbar li {
     float:left;
     width:33%;
-    
+    text-align: center;
+    line-height: 40px;
 }
 
 .navbar li a {
@@ -560,7 +561,8 @@ table.fulltable {
 }
 
 .team .team_avatar img {
-    width:140px;
+    width:180px;
+    height:120px;
 }
 
 .team .team_basic {
@@ -743,4 +745,3 @@ table.fulltable {
     top:0;
     z-index: 1;
 }
-

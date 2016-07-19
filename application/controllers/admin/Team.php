@@ -3,11 +3,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Team extends Ydzj_Admin_Controller {
 	
+	private $_teamImageSize ;
+	private $_teamSizeKeys;
+	
 	public function __construct(){
 		parent::__construct();
+		
+		$this->_teamImageSize = config_item('team_img_size');
+		$this->_teamSizeKeys = array_keys($this->_teamImageSize);
 	}
-	
-	
 	
 	public function index(){
 		$this->load->library(array('Team_service','Member_service','Common_District_service'));
@@ -16,7 +20,7 @@ class Team extends Ydzj_Admin_Controller {
 		$condition = array(
 			'order' => 'id DESC',
 			'pager' => array(
-				'page_size' => config_item('page_size'),
+				'page_size' => 3,
 				'current_page' => $currentPage,
 				'call_js' => 'search_page',
 				'form_id' => '#formSearch'
@@ -161,29 +165,27 @@ class Team extends Ydzj_Admin_Controller {
 			for($i = 0 ; $i < 1; $i++){
 				
 				$this->load->library('Attachment_service');
-				
-				$size = array('h','b','m');
-				
-				$fileData = $this->attachment_service->addImageAttachment('team_avatar',$size,FROM_BACKGROUND,'team');
+				$fileData = $this->attachment_service->addImageAttachment('team_avatar',array(),FROM_BACKGROUND,'team');
 				
 				// 看有没有传成功过 
 				$avatar = $this->input->post('avatar');
 				$aid = $this->input->post('aid');
-				
 				$info = $_POST;
 				
-				
+				/**
+				 * 可以后面再传图片
 				if(!$fileData && empty($aid)){
 					$this->assign('logo_error','<label class="form_error">请上传球队合影照片</label>');
 					break;
 				}
+				*/
 				
 				if($fileData){
 					$info['aid'] = $fileData['id'];
 					$info['avatar'] = $fileData['file_url'];
 					//重传了直接删除原先传的那张图片
 					if($aid){
-						$oldsImags = getImgPathArray($avatar,array('h','b','m'));
+						$oldsImags = getImgPathArray($avatar,$this->_teamSizeKeys);
 						$this->attachment_service->deleteByFileUrl($oldsImags);
 					}
 				}else{
@@ -192,7 +194,6 @@ class Team extends Ydzj_Admin_Controller {
 				}
 				
 				if(!$this->form_validation->run()){
-					
 					break;
 				}
 				
@@ -215,25 +216,26 @@ class Team extends Ydzj_Admin_Controller {
 					$addParam['aid'] = $fileData['id'];
 					$addParam['avatar'] = $fileData['file_url'];
 				}else if($avatar){
-					$addParam['aid'] = $aid;
-					$addParam['avatar'] = $avatar;
+					$addParam['aid'] = $aid ? $aid : 0;
+					$addParam['avatar'] = empty($avatar) != true ? $avatar : '';
 				}
 				
 				//创建缩略图
-				$resizeFile = $this->attachment_service->resize(array('file_url' => $addParam['avatar']) , $size);
-				$addParam['avatar_h'] = $resizeFile['img_h'];
-				$addParam['avatar_b'] = $resizeFile['img_b'];
-				$addParam['avatar_m'] = $resizeFile['img_m'];
+				if($addParam['avatar']){
+					$this->attachment_service->setImageSizeConfig($this->_teamImageSize);
+					$resizeFile = $this->attachment_service->resize(array('file_url' => $addParam['avatar']) , $this->_teamSizeKeys);
+					foreach($this->_teamSizeKeys as $sizeKey){
+						$addParam['avatar_'.$sizeKey] = $resizeFile['img_'.$sizeKey];
+					}
+				}
+				
 				//$addParam['avatar_small'] = $resizeFile['img_small'];
 				$addParam = array_merge($addParam,$this->addWhoHasOperated('add'));
-				
 				$teamid = $this->team_service->addTeam($addParam, $leaderInfo);
 				
 				if($teamid > 0){
-					
 					//蒋队伍名称 何队伍图片去除
 					unset($info);
-					
 					$this->assign('feedback',getSuccessTip('添加成功'));
 				}else{
 					$this->assign('feedback',getErrorTip('添加失败'));
@@ -241,10 +243,9 @@ class Team extends Ydzj_Admin_Controller {
 			}
 		}
 		
-		
+		$this->assign('formUrl',admin_site_url('team/add'));
 		$this->assign('info',$info);
 		$this->display();
-		
 		
 	}
 	
@@ -253,83 +254,22 @@ class Team extends Ydzj_Admin_Controller {
 	 */
 	public function edit(){
 		
-		$urlParam = $this->uri->uri_to_assoc();
-		$this->assign('id',$urlParam['edit']);
+		$teamId = $this->input->get_post('id');
 		
 		$this->load->library('Member_service');
-		$info = $this->member_service->getUserInfoById($urlParam['edit']);
+		$info = $this->member_service->getUserInfoById($teamId);
 		
 		//print_r($urlParam);
 		
-		if(!empty($urlParam['edit']) && $this->isPostRequest()){
-			$this->assign('inpost',true);
-			
-			$this->form_validation->set_rules('member_nickname','昵称','min_length[3]|max_length[30]|is_unique_not_self['.$this->Member_Model->getTableRealName().'.nickname.uid.'.$urlParam['edit'].']');
-			
-			$password = $this->input->post('member_passwd');
-			$password2 =  $this->input->post('member_passwd2');
-			
-			if($password || $password2){
-				$this->form_validation->set_rules('member_passwd','密码','alpha_dash|min_length[6]|max_length[12]');
-				$this->form_validation->set_rules('member_passwd2','密码确认','matches[member_passwd]');
-			}
+		if(!empty($teamId) && $this->isPostRequest()){
 			
 			
-			
-			$this->_addRules();
-			
-			for($i = 0 ; $i < 1; $i++){
-				if(!$this->form_validation->run()){
-					echo $this->form_validation->error_string();
-					break;
-				}
-				
-				$updateData = array(
-					'nickname' => $this->input->post('member_nickname'),
-					'qq' => $this->input->post('member_qq'),
-					'weixin' => $this->input->post('member_weixin'),
-					'email' => $this->input->post('member_email'),
-					'username' => $this->input->post('member_username'),
-					'sex' => $this->input->post('member_sex'),
-					'allowtalk' => $this->input->post('allowtalk'),
-					'freeze' => $this->input->post('memberstate'),
-				);
-				
-				$aid = $this->input->post('avatar_id');
-				
-				if($aid){
-					$member_avatar = $this->input->post('member_avatar');
-					$avatar = getImgPathArray($member_avatar,array('middle','small'));
-					$avatar['aid'] = $aid;
-					$updateData = array_merge($updateData,$avatar);
-				}
-				
-				if($password){
-					$updateData['password'] = $password;
-				}
-				
-				//print_r($updateData);
-				$this->load->library('Member_service');
-				$flag = $this->member_service->updateUserInfo($updateData,$urlParam['edit']);
-				
-				if($flag >= 0){
-					if($aid && $info['aid']){
-						//传新的图片
-						$this->load->library('Attachment_service');
-						$this->attachment_service->deleteByFileUrl(array($info['avatar_middle'],$info['avatar_small']));
-					}
-					
-					$info = $this->member_service->getUserInfoById($urlParam['edit']);
-					$this->assign('feedback','<div class="tip_success">保存成功</div>');
-				}else{
-					$this->assign('feedback','<div class="tip_error">保存失败</div>');
-				}
-			}
 			
 		}
 		
+		$this->assign('formUrl',admin_site_url('team/edit?id=').$teamId);
 		$this->assign('info',$info);
-		$this->display('member/edit');
+		$this->display('member/add');
 	}
 	
 	

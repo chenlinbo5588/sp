@@ -70,7 +70,6 @@
    <table class="table tb-type2 nobdb">
       <thead>
         <tr class="thead">
-          <th>&nbsp;</th>
           <th colspan="2">{#team#}</th>
           <th class="align-center">{#team_leader#}</th>
           <th class="align-center">{#team_owner#}</th>
@@ -84,9 +83,8 @@
       <tbody>
       {foreach from=$list['data'] item=item key=key}
         <tr class="hover member">
-          <td class="w24"></td>
           <td class="w120 picture">
-            <div class=""><span class="thumb"><i></i><img src="{base_url($item['avatar_m'])}"  data-avatar="{$item['avatar_b']}" /></span></div></td>
+            <div class=""><span class="thumb"><i></i><img src="{resource_url($item['avatar_m'])}"  data-avatar="{$item['avatar_b']}" /></span></div></td>
           <td>
             <p class="name"><strong>{#team_name#}:&nbsp;{$item['title']|escape}</strong></p>
             <p><strong>{#team_category#}:&nbsp;</strong><span>{$item['category_name']|escape}</span></p>
@@ -112,7 +110,7 @@
           <td class="align-center w120">
           	
             {if $item['leader_uid']}
-            <p><strong>队长:&nbsp;</strong><span>{$userInfo[$item['leader_uid']]['nickname']}</span></p>
+            <p><strong></strong><span>{$userInfo[$item['leader_uid']]['nickname']}</span></p>
             <div class=""><a href="{admin_site_url('member/edit')}?id={$item['leader_uid']}"><img src="{resource_url($userInfo[$item['leader_uid']]['avatar_s'])}" /></a></div>
             <p>{$userInfo[$item['leader_uid']]['mobile']}</p>
             {else}
@@ -140,7 +138,7 @@
       </tbody>
       <tfoot class="tfoot">
         <tr>
-          <td colspan="11">
+          <td colspan="10">
             {include file="common/pagination.tpl"}
         </tr>
       </tfoot>

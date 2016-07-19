@@ -56,7 +56,7 @@
       	<tr>
       		<td colspan="5">
       			<label><input type="checkbox" class="checkall" name="chkVal">全选</label>&nbsp;
-          		<a href="javascript:void(0);" class="btn" onclick="$('#submit_type').val('开启');go();"><span>开启</span></a>
+          		<a href="javascript:void(0);" class="btn" onclick="$('#submit_type').val('启用');go();"><span>开启</span></a>
           		<a href="javascript:void(0);" class="btn" onclick="$('#submit_type').val('关闭');go();"><span>关闭</span></a>
           		{include file="common/pagination.tpl"}
           	</td>

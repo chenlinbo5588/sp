@@ -20,7 +20,7 @@
         <tr class="noborder">
           <td class="vatop rowform">
             <p>{$info['mobile']}</p>
-            <p><img src="{base_url($info['avatar_m'])}"/></p>
+            <p><img src="{resource_url($info['avatar_m'])}"/></p>
           </td>
           <td class="vatop tips"></td>
         </tr>
@@ -67,5 +67,4 @@
 <script type="text/javascript" src="{resource_url('js/jquery.Jcrop/jquery.Jcrop.js')}"></script>
 <link href="{resource_url('js/jquery.Jcrop/jquery.Jcrop.min.css')}" rel="stylesheet" type="text/css"/>
 {include file="member/member_common.tpl"}
-
 {include file="common/main_footer.tpl"}

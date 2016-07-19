@@ -17,14 +17,11 @@ class Attachment_service extends Base_service {
 		self::$CI->load->library('image_lib');
 		
 		$this->_attachModel = self::$CI->Attachment_Model;
-		$this->_imageSizeConfig = config_item('img_size');
+		$this->_imageSizeConfig = config_item('default_img_size');
 	}
 	
-	/*
-	 * 
-	 */
-	public function isAllowedSize($size){
-		return isset($this->_imageSizeConfig[$size]) ? true : false;
+	public function setImageSizeConfig($config){
+		$this->_imageSizeConfig = $config;
 	}
 	
 	/**
@@ -106,6 +103,8 @@ class Attachment_service extends Base_service {
 		}
 	}
 	
+	
+	
 	/**
 	 * 根据实际需要采裁切图片
 	 */
@@ -178,7 +177,6 @@ class Attachment_service extends Base_service {
 	 * 
 	 */
 	public function addImageAttachment($filename, $moreConfig = array(),$from = 0,$mod = ''){
-		
 		//处理照片
 		$config = $this->getImageUploadConfig();
 		
@@ -239,8 +237,6 @@ class Attachment_service extends Base_service {
 	 */
 	public function pic_upload($uploadName , $fromBg = 0,$mod = ''){
 		$fileData = $this->addImageAttachment($uploadName,array(),$fromBg,$mod);
-		
-		
 		//$Orientation[$exif[IFD0][Orientation]];
 		//$exif = exif_read_data($fileData['file_url'],0,true);
 		

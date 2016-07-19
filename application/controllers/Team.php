@@ -1,8 +1,8 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-
 define('BASKET_BALL','team/index/cate/1');
+
 /**
  * 队伍
  */
@@ -20,7 +20,6 @@ class Team extends Ydzj_Controller {
 		
 		$this->_urlParam = $this->uri->segment_array();
 		
-		
 		/*
 		if(empty($this->_urlParam[3])){
 			redirect(site_url(BASKET_BALL));
@@ -32,7 +31,7 @@ class Team extends Ydzj_Controller {
 	
 	
 	/**
-	 * 队伍 聚合页
+	 * 队伍 列表页
 	 */
 	public function index()
 	{
@@ -47,6 +46,11 @@ class Team extends Ydzj_Controller {
 		}
 		
 		//print_r($cityInfo);
+		$cateId = $this->input->get_post('cate');
+		
+		if(empty($cateId)){
+			$cateId = 1;
+		}
 		
 		$title = '篮球队';
 		$this->setTopNavTitle($title);
@@ -422,23 +426,15 @@ class Team extends Ydzj_Controller {
 	 */
 	public function order_game(){
 		if(!$this->isLogin()){
-			
-			
-			
 			$this->assign('returnUrl',site_url($this->uri->uri_string()));
 			$this->display('member/login');
 			
 		}else{
-			
 			/**
 			 * 当前用户使用创建篮球队或者是管理者
 			 */
-			
 			$this->display();
 		}
-		
-		
-		
 		
 	}
 	
@@ -473,7 +469,7 @@ class Team extends Ydzj_Controller {
 					 * 首先处理上传图片，并记录，防止其他信息错误，不再消耗流量重传
 					 */
 					$this->load->library('Attachment_service');
-					$this->attachment_service->setUid($this->_profile['basic']['uid']);
+					$this->attachment_service->setUserInfo($this->_profile['basic']);
 					$fileData = $this->attachment_service->addImageAttachment('logo_url');
 					
 					$team_logo = $this->input->post('team_logo');

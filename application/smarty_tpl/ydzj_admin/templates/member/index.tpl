@@ -119,7 +119,7 @@
         <tr class="hover member">
           <td class="w24"></td>
           <td class="w120 picture">
-            <div class=""><span class="thumb"><i></i><img src="{base_url($item['avatar_s'])}"  data-avatar="{$item['avatar_m']}" /></span></div></td>
+            <div class=""><span class="thumb"><i></i><img src="{resource_url($item['avatar_s'])}"  data-avatar="{$item['avatar_m']}" /></span></div></td>
           <td>
             <p class="name"><strong>账号:&nbsp;{$item['mobile']|escape}</strong></p>
             <p><strong>昵称:&nbsp;</strong><span>{$item['nickname']|escape}</span></p>

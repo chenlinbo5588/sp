@@ -1,19 +1,10 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Member extends Ydzj_Admin_Controller {
-	
-	private $_avatarImageSize ;
-	private $_avatarSizeKeys;
-	
+class Member_credits extends Ydzj_Admin_Controller {
 	
 	public function __construct(){
 		parent::__construct();
-		
-		$this->_avatarImageSize = config_item('avatar_img_size');
-		$this->_avatarSizeKeys = array_keys($this->_avatarImageSize);
-		
-		$this->assign('avatarImageSize',$this->_avatarImageSize);
 	}
 	
 	public function index(){

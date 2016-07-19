@@ -198,6 +198,7 @@
 		}
 		
 		$('input[class="type-file-file"]').change(uploadChange);
+		
 	    function uploadChange(){
 	        var filepatd=$(this).val();
 	        var extStart=filepatd.lastIndexOf(".");

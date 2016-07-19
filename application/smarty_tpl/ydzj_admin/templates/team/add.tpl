@@ -11,7 +11,7 @@
   </div>
   <div class="fixed-empty"></div>
   {$feedback}
-  {form_open_multipart(admin_site_url('team/add'),'id="team_form"')}
+  {form_open_multipart($formUrl,'id="team_form"')}
     <table class="table tb-type2">
       <colgroup>
         <col width="10%"/>
@@ -134,5 +134,4 @@
       </tfoot>
     </table>
   </form>
-
 {include file="common/main_footer.tpl"}

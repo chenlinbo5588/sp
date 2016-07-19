@@ -216,7 +216,6 @@ $(function(){
             <dd><a href="javascript:void(0)" onclick="openItem('index,team,team')">队伍管理</a></dd>
             <dd><a href="javascript:void(0)" onclick="openItem('member_list,team,team')">队伍成员管理</a></dd>
             <dd><a href="javascript:void(0)" onclick="openItem('inform,team,team')">队伍举报管理</a></dd>
-            <dd><a href="javascript:void(0)" onclick="openItem('adv,team,team')">队伍首页广告</a></dd>
             <dd><a href="javascript:void(0)" onclick="openItem('cache,team,team')">更新队伍缓存</a></dd>
         </dl>
         <dl>    
@@ -404,13 +403,12 @@ $(function(){
                 <dd>
                   <ol>
                     <li><a href="JavaScript:void(0);" id="index_team" onclick="openItem('index,team,team');">队伍管理</a></li>
-                    <li><a href="JavaScript:void(0);" id="category_team" onclick="openItem('category,team,team');">队伍分类管理</a></li>
-                    <li><a href="JavaScript:void(0);" id="level_team" onclick="openItem('level,team,team');">队伍头衔设置</a></li>
-                    <li><a href="JavaScript:void(0);" id="member_list_team" onclick="openItem('member_list,team,team');">队伍成员管理</a></li>
-                    <li><a href="JavaScript:void(0);" id="inform_team" onclick="openItem('inform,team,team');">队伍举报管理</a></li>
+                    <li><a href="JavaScript:void(0);" id="index_sports_cate" onclick="openItem('index,sports_cate,team');">体育项目</a></li>
+                    <li><a href="JavaScript:void(0);" id="index_sports_meta" onclick="openItem('index,sports_meta,team');">基础数据</a></li>
+                    <li><a href="JavaScript:void(0);" id="index_team_medal" onclick="openItem('index,team_medal,team');">队伍头衔</a></li>
+                    <li><a href="JavaScript:void(0);" id="member_list_team" onclick="openItem('member_list,team,team');">队伍成员</a></li>
+                    <li><a href="JavaScript:void(0);" id="inform_team" onclick="openItem('inform,team,team');">队伍举报</a></li>
                     <li><a href="JavaScript:void(0);" id="setting_team" onclick="openItem('setting,team,team');">队伍设置</a></li>
-                    <li><a href="JavaScript:void(0);" id="adv_team" onclick="openItem('adv,team,team');">队伍首页广告</a></li>
-                    <li><a href="JavaScript:void(0);" id="cache_team" onclick="openItem('cache,team,team');">更新队伍缓存</a></li>
                   </ol>
                 </dd>
               </dl>

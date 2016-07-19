@@ -7,7 +7,6 @@ class Brand extends Ydzj_Admin_Controller {
 	public function __construct(){
 		parent::__construct();
 		
-		$this->load->model(array('Brand_Model'));
 		$this->load->library(array('Goods_service','Attachment_service'));
 	}
 	
@@ -108,7 +107,7 @@ class Brand extends Ydzj_Admin_Controller {
 	
 	
 	private function _prepareBrandData(){
-		$fileInfo = $this->attachment_service->addImageAttachment('brand_logo',array(),FROM_BACKGROUND);
+		$fileInfo = $this->attachment_service->addImageAttachment('brand_logo',array(),FROM_BACKGROUND,'brand');
 		
 		//print_r($fileInfo);
 		$info = array(
@@ -124,14 +123,7 @@ class Brand extends Ydzj_Admin_Controller {
 		
 		if($fileInfo){
 			$info['brand_pic'] = $fileInfo['file_url'];
-			
-			$originalPic = $this->input->post('old_pic');
-			
-			if($originalPic){
-				$this->attachment_service->deleteByFileUrl($originalPic);
-			}
 		}
-		
 		
 		if($info['class_id']){
 			$goodsClassInfo = $this->Goods_Class_Model->getFirstByKey($info['class_id'],'gc_id');
@@ -153,7 +145,6 @@ class Brand extends Ydzj_Admin_Controller {
 			for($i = 0; $i < 1; $i++){
 				
 				$info = $this->_prepareBrandData();
-				
 				if(!$this->form_validation->run()){
 					$feedback = $this->form_validation->error_string();
 					break;

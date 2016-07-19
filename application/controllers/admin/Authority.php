@@ -50,9 +50,7 @@ class Authority extends Ydzj_Admin_Controller {
 					break;
 				}
 				
-				
 				$ids = $this->input->post('del_id');
-				
 				
 				if(empty($ids)){
 					break;
@@ -69,7 +67,6 @@ class Authority extends Ydzj_Admin_Controller {
 				}
 				
 				$this->Adminuser_Model->batchUpdate($updateData,'uid');
-				
 			}
 			
 		}

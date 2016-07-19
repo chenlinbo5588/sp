@@ -1,6 +1,5 @@
 {include file="common/ajaxfileupload.tpl"}
 <script type="text/javascript">
-
 //裁剪图片后返回接收函数
 function call_back(resp){
     refreshFormHash(resp);
@@ -42,7 +41,7 @@ $(function(){
                         $("input[name=avatar_id]").val(resp.id);
                         $("input[name=avatar]").val(resp.url);
                         
-                        ajax_form('cutpic','裁剪','{admin_site_url("member/pic_cut")}?type=member&x=200&y=200&resize=0&ratio=1&url='+resp.url,800);
+                        ajax_form('cutpic','裁剪','{admin_site_url("member/pic_cut")}?type=member&x={$avatarImageSize['m']['width']}&y={$avatarImageSize['m']['height']}&resize=0&ratio=1&url='+resp.url,800);
                     }else
                     {
                         alert(resp.msg);

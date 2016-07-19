@@ -8,7 +8,6 @@ class Goods extends Ydzj_Admin_Controller {
 		parent::__construct();
 		
 		$this->load->library(array('Goods_service','Attachment_service'));
-		$this->attachment_service->setUid($this->_adminProfile['basic']['uid']);
 	}
 	
 	

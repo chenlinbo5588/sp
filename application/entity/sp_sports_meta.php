@@ -8,6 +8,10 @@ $entity = array(
 'name' => 'varchar',
 'status' => 'tinyint',
 'displayorder' => 'int',
+'add_uid' => 'int',
+'edit_uid' => 'int',
+'add_username' => 'varchar',
+'edit_username' => 'varchar',
 'gmt_create' => 'int',
 'gmt_modify' => 'int'
 );

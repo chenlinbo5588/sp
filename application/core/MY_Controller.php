@@ -25,8 +25,6 @@ class MY_Controller extends CI_Controller {
 		$this->_reqtime = $this->input->server('REQUEST_TIME');
 		
 		$this->_initLibrary();
-		
-		
 		$this->_initSmarty();
 		$this->_security();
 		$this->_initMobile();
@@ -87,7 +85,6 @@ class MY_Controller extends CI_Controller {
     
     private function _initMobile(){
     	//print_r($this->agent);
-    	
     	$this->assign('isMobile',$this->agent->is_mobile());
     }
     
@@ -114,8 +111,6 @@ class MY_Controller extends CI_Controller {
     		
     		return $this->_siteSetting;
     	}
-    	
-    	
     }
     
     private function _initSiteSetting(){
@@ -231,9 +226,7 @@ class MY_Controller extends CI_Controller {
     public function breadcrumb(){
     	
     	if($this->_navigation){
-    		
     		$temp = array();
-    		
     		$i = 0;
     		
     		foreach($this->_navigation as $key => $item){
@@ -255,7 +248,6 @@ class MY_Controller extends CI_Controller {
     
     public function display($viewname = ''){
     	//echo $this->uri->uri_string();
-    	
     	if($viewname == ''){
     		$tempPath = array();
     		

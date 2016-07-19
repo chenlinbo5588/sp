@@ -52,7 +52,7 @@ class Team_service extends Base_service {
 	 */
 	public function getSportsCategory($condition = array())
 	{
-		$condition['where']['status'] = 0;
+		$condition['where']['status'] = 1;
 		
 		return $this->toEasyUseArray($this->_sportsCategoryModel->getList($condition));
 	}
