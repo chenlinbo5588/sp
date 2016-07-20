@@ -21,6 +21,7 @@
         <li><a href="javascript:void(0);" nctype="consume"><span>消费记录</span></a></li>
       </ul>
   </div>
+  
   {form_open_multipart(admin_site_url('team/edit?id='|cat:$info['basic']['id']),'name="form_index"')}
     <table class="table tb-type2">
       <tbody>
@@ -53,6 +54,30 @@
             <input type="text" name="slogan" class="txt" value="{$info['basic']['slogan']|escape}" placeholder="请输入建队口号"/>
           </td>
           <td class="vatop tips"></td>
+        </tr>
+        <tr class="noborder">
+          <td colspan="2" class="required"><label>球队合照:</label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform">
+            <img src="{resource_url($info['basic']['avatar_m'])}"/>
+          </td>
+          <td class="vatop tips"></td>
+        </tr>
+        <tr>
+          <td colspan="2" class="required"><label>修改球队合照:</label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform">
+            <input type="hidden" name="avatar_id" value="{$info['basic']['aid']}"/>
+            <input type="hidden" name="old_avatar_id" value=""/>
+            <input type="hidden" name="old_avatar" value=""/>
+            <div class="upload"><input type='text' class="txt" name='avatar' id='avatar' value="{$info['basic']['avatar']}"/><input type="button" id="uploadButton" value="浏览" /></div>
+            </td>
+          <td class="vatop tips">支持格式jpg或者PNG 最小尺寸 {$teamImageConfig['h']['width']}x{$teamImageConfig['h']['height']}</td>
+        </tr>
+        <tr>
+        	<td colspan="2" class="required"><div id="preview"></div></td>
         </tr>
         <tr>
           <td colspan="2" class="required"><label>积分:</label></td>
@@ -148,40 +173,47 @@
       </tbody>
     </table>
   </form>
-<script type="text/javascript">
-$(function(){
-	$('.tab-base').find('a').bind('click',function(){
-		$("#tag_tips").css('display','none');
-		$('.tab-base').find('a').removeClass('current');
-		$(this).addClass('current');
-		
-		$('form').css('display','none');
-		$('form[name="form_'+$(this).attr('nctype')+'"]').css('display','');
-		
-		
-	});
-	
-	$('form:gt(0)').css('display','none');
-	
-	/*
-	$('form[name="form_{$selectedGroup}"]').css('display','');
-	$('.tab-base a[nctype="{$selectedGroup}"]').trigger("click");
-	
-	
-	$('#category').bind('change',function(){
-		$.getJSON("{admin_site_url('setting/ajax_category/')}?id=" +$(this).val(), function(json){
-			if(json){
-				$('#cate_title').val(json.data.gc_title);
-				$('#cate_keywords').val(json.data.gc_keywords);
-				$('#cate_description').val(json.data.gc_description);
-			}else{
-				$('#cate_title').val('');
-				$('#cate_keywords').val('');
-				$('#cate_description').val('');			
+  {include file="common/ke.tpl"}
+  {include file="common/jcrop.tpl"}
+  <script type="text/javascript">
+	KindEditor.ready(function(K) {
+		var uploadbutton = K.uploadbutton({
+			button : K('#uploadButton')[0],
+			fieldName : 'imgFile',
+			extraParams : { formhash : formhash,min_width :{$teamImageConfig['h']['width']},min_height: {$teamImageConfig['h']['height']} },
+			url : '{admin_site_url("common/pic_upload")}?mod=team_avatar',
+			afterUpload : function(data) {
+				refreshFormHash(data);
+				if (data.error === 0) {
+					K('#avatar').val(data.url);
+					K('#preview').html('<img width="{$teamImageConfig['h']['width']}" height="{$teamImageConfig['h']['height']}" src="' + data.url + '"/>');
+					
+				} else {
+					alert(data.msg);
+				}
+			},
+			afterError : function(str) {
+				alert('自定义错误信息: ' + str);
 			}
 		});
+		uploadbutton.fileBox.change(function(e) {
+			uploadbutton.submit();
+		});
 	});
-	*/
-});
-</script>
+			
+			
+	$(function(){
+		$('.tab-base').find('a').bind('click',function(){
+			$("#tag_tips").css('display','none');
+			$('.tab-base').find('a').removeClass('current');
+			$(this).addClass('current');
+			
+			$('form').css('display','none');
+			$('form[name="form_'+$(this).attr('nctype')+'"]').css('display','');
+		});
+		
+		$('form:gt(0)').css('display','none');
+		
+	});
+	</script>
 {include file="common/main_footer.tpl"}

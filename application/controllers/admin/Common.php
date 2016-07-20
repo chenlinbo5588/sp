@@ -25,7 +25,19 @@ class Common extends Ydzj_Admin_Controller {
 		
 		$this->load->library('Attachment_service');
 		$this->attachment_service->setUserInfo($this->_adminProfile['basic']);
-		$json = $this->attachment_service->pic_upload($uploadname,FROM_BACKGROUND,$mod);
+		
+		$options = array();
+		
+		if($this->input->get_post('min_width')){
+			$options['min_width'] = intval($this->input->get_post('min_width'));
+		}
+		
+		if($this->input->get_post('min_height')){
+			$options['min_height'] = intval($this->input->get_post('min_height'));
+		}
+		
+		
+		$json = $this->attachment_service->pic_upload($uploadname,$options,FROM_BACKGROUND,$mod);
 		
 		@unlink($_FILES[$uploadname]['tmp_name']);
 		

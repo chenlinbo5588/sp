@@ -1318,6 +1318,13 @@ span.module-assembly-html { background-position: -490px -1040px;}
 .cms-special-uploadpic .handle a.insert-hotpoint { background-position: -600px -770px;}
 .cms-special-uploadpic .handle a.delete { background-position: -620px -770px;}
 
+.upload .txt {
+	margin:0;
+	float:left;
+	width: 200px;
+}
+
+
 /*方形图裁切*/
 .pic-cut-150brand,
 .pic-cut-120circle,

@@ -61,10 +61,10 @@ class Attachment_service extends Base_service {
 	public function deleteByFileUrl($files){
 		if(is_array($files)){
 			foreach($files as $del){
-				@unlink(ROOTPATH.DIRECTORY_SEPARATOR.$del);
+				@unlink(ROOTPATH.DIRECTORY_SEPARATOR.str_replace(base_url(),'',$del));
 			}
 		}else{
-			@unlink(ROOTPATH.DIRECTORY_SEPARATOR.$files);
+			@unlink(ROOTPATH.DIRECTORY_SEPARATOR.str_replace(base_url(),'',$files));
 		}
 		
 	}
@@ -235,8 +235,8 @@ class Attachment_service extends Base_service {
 	 * @param datatype $uploadName 上传名
 	 * @param datatype $fromBg description
 	 */
-	public function pic_upload($uploadName , $fromBg = 0,$mod = ''){
-		$fileData = $this->addImageAttachment($uploadName,array(),$fromBg,$mod);
+	public function pic_upload($uploadName ,$options = array(), $fromBg = 0,$mod = ''){
+		$fileData = $this->addImageAttachment($uploadName,$options,$fromBg,$mod);
 		//$Orientation[$exif[IFD0][Orientation]];
 		//$exif = exif_read_data($fileData['file_url'],0,true);
 		

@@ -65,17 +65,15 @@
             <input type="hidden" name="avatar_id" value="{$info['aid']}"/>
             <input type="hidden" name="old_avatar_id" value=""/>
             <input type="hidden" name="old_avatar" value=""/>
-            <span class="type-file-show">
-            <img class="show_image" src="{resource_url('img/preview.png')}">
-            <div class="type-file-preview" style="display: none;"><img id="view_img" {if $info['avatar_m']}src="{base_url($info['avatar_m'])}"{/if}></div>
-            </span>
-            <span class="type-file-box">
-              <input type='text' name='avatar' id='avatar' value="{$info['avatar']}" class='type-file-text' />
-              <input type='button' name='button' id='button' value='' class='type-file-button' />
-              <input name="_pic" type="file" class="type-file-file" id="_pic" size="30" hidefocus="true" />
-            </span>
+            <div class="upload">
+              <input type='text' name='avatar' id='avatar' value="{$info['avatar']}" class='txt' />
+              <input type="button" id="uploadButton" value="浏览" />
+            </div>
             </td>
           <td class="vatop tips">支持格式jpg</td>
+        </tr>
+        <tr>
+        	<td colspan="2"><div id="previewWrap"></div></td>
         </tr>
         <tr>
           <td colspan="2" class="required"><label>允许发表言论:</label>{form_error('allowtalk')}</td>

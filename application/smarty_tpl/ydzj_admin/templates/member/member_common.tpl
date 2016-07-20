@@ -1,60 +1,42 @@
-{include file="common/ajaxfileupload.tpl"}
+{include file="common/ke.tpl"}
+{include file="common/dlg.tpl"}
+{include file="common/jcrop.tpl"}
 <script type="text/javascript">
 //裁剪图片后返回接收函数
 function call_back(resp){
     refreshFormHash(resp);
-    
-    $('#avatar').val(resp.picname);
-    $('#view_img').attr('src',resp.url);
+    $('#previewWrap').html('<img src="' + resp.url + '"/>');
 }
-$(function(){
-    $('input[class="type-file-file"]').change(uploadChange);
-    function uploadChange(){
-        var filepatd=$(this).val();
-        var extStart=filepatd.lastIndexOf(".");
-        var ext=filepatd.substring(extStart,filepatd.lengtd).toUpperCase();     
-        if(ext!=".JPG"&&ext!=".JPEG"){
-            alert("file type error");
-            $(this).attr('value','');
-            return false;
-        }
-        if ($(this).val() == '') return false;
-        ajaxFileUpload();
-    }
-    
-    function ajaxFileUpload()
-    {
-        $.ajaxFileUpload
-        (
-            {
-                url:'{admin_site_url("common/pic_upload")}?mod=avatar',
-                secureuri:false,
-                fileElementId:'_pic',
-                dataType: 'json',
-                data: { formhash : formhash , id : $("input[name=avatar_id]").val() , old_id : $("input[name=old_avatar_id]").val()},
-                success: function (resp, status)
-                {
-                    if (resp.error == 0){
-                    	$("input[name=old_avatar]").val($("input[name=avatar]").val());
-                    	$("input[name=old_avatar_id]").val($("input[name=avatar_id]").val());
-                    	
-                        $("input[name=avatar_id]").val(resp.id);
-                        $("input[name=avatar]").val(resp.url);
-                        
-                        ajax_form('cutpic','裁剪','{admin_site_url("member/pic_cut")}?type=member&x={$avatarImageSize['m']['width']}&y={$avatarImageSize['m']['height']}&resize=0&ratio=1&url='+resp.url,800);
-                    }else
-                    {
-                        alert(resp.msg);
-                    }
-                    $('input[class="type-file-file"]').bind('change',uploadChange);
-                },
-                error: function (resp, status, e)
-                {
-                    alert('upload failed');
-                    $('input[class="type-file-file"]').bind('change',uploadChange);
-                }
-            }
-        )
-    }
+
+KindEditor.ready(function(K) {
+	var uploadbutton = K.uploadbutton({
+		button : K('#uploadButton')[0],
+		fieldName : 'imgFile',
+		extraParams : { formhash : formhash,min_width :{$avatarImageSize['b']['width']},min_height: {$avatarImageSize['b']['height']} },
+		url : '{admin_site_url("common/pic_upload")}?mod=member_avatar',
+		afterUpload : function(data) {
+			refreshFormHash(data);
+			if (data.error === 0) {
+				$("input[name=old_avatar]").val($("input[name=avatar]").val());
+            	$("input[name=old_avatar_id]").val($("input[name=avatar_id]").val());
+            	
+                $("input[name=avatar_id]").val(data.id);
+                $("input[name=avatar]").val(data.url);
+				
+				ajax_form('cutpic','裁剪','{admin_site_url("member/pic_cut")}?type=member&x={$avatarImageSize['m']['width']}&y={$avatarImageSize['m']['height']}&resize=0&ratio=1&url='+data.url,800);
+				
+			} else {
+				alert(data.msg);
+			}
+		},
+		afterError : function(str) {
+			alert('自定义错误信息: ' + str);
+		}
+	});
+	uploadbutton.fileBox.change(function(e) {
+		uploadbutton.submit();
+	});
 });
+
+
 </script>

@@ -267,6 +267,9 @@ class Team extends Ydzj_Admin_Controller {
 			
 		}
 		
+		
+		$this->assign('teamImageConfig',config_item('team_img_size'));
+		
 		$this->assign('formUrl',admin_site_url('team/edit?id=').$teamId);
 		$this->assign('info',$info);
 		$this->display();

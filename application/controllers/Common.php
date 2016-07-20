@@ -23,7 +23,18 @@ class Common extends Ydzj_Controller {
 		
 		$this->attachment_service->setUserInfo($this->_profile['basic']);
 		
-		$json = $this->attachment_service->pic_upload($uploadname,0,$mod ? $mod : '');
+		$options = array();
+		
+		if($this->input->get_post('min_width')){
+			$options['min_width'] = intval($this->input->get_post('min_width'));
+		}
+		
+		if($this->input->get_post('min_height')){
+			$options['min_height'] = intval($this->input->get_post('min_height'));
+		}
+		
+		
+		$json = $this->attachment_service->pic_upload($uploadname, $options, 0,$mod ? $mod : '');
 		
 		exit(json_encode($json));
 		
