@@ -51,12 +51,12 @@
           <td>{$item['id']}</td>
           <td>{$item['category_name']|escape} - {$item['gname']|escape} - {$item['name']|escape}</td>
           <td class="yes-onoff">
-	      	<a href="javascript:void(0);" data-url="{admin_site_url('sports_cate/onoff')}" data-id="{$item['id']}" class="{if $item['status'] == 1}enabled{else}disabled{/if}" data-fieldname="status">&nbsp;</a>
+	      	<a href="javascript:void(0);" data-url="{admin_site_url('sports_meta/onoff')}" data-id="{$item['id']}" class="{if $item['status'] == 1}enabled{else}disabled{/if}" data-fieldname="status">&nbsp;</a>
 	     </td>
           <td class="nowrap">{$item['gmt_create']|date_format:"%Y-%m-%d %H:%M:%S"}</td>
           <td class="nowrap">{$item['add_username']|escape}</td>
           <td>
-          	<p><a href="{admin_site_url('sports_cate/edit')}?id={$item['id']}">编辑</a></p>
+          	<p><a href="{admin_site_url('sports_meta/edit')}?id={$item['id']}">编辑</a></p>
           </td>
         </tr>
       	{/foreach}

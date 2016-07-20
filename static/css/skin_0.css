@@ -255,7 +255,7 @@ input[type=checkbox],input[type=radio] {
 .fixed-empty { height: 50px !important;}
 .item-title { line-height: 20px; margin-bottom: 0 !important; clear: both; overflow: hidden; _padding-bottom: 10px; +padding-bottom: 10px;}
     .item-title h3 { float: left; margin-right:20px; }
-.tab-base {float: left; overflow: hidden; padding-top:16px; }
+.tab-base {overflow: hidden; padding-top:16px; }
     .tab-base li { float: left;}
         .tab-base a { font-weight: 700; line-height: 20px; background: #FFF url(../img/sky/bg_position.gif) no-repeat 0px -200px; height: 20px; float: left; padding-left: 9px; margin-right:2px;  cursor: pointer;}
         .tab-base a:hover { color: #09C; background-position: 0 -220px; }

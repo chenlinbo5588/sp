@@ -19,8 +19,46 @@
   	<input type="hidden" name="id" value="{$info['id']}"/>
     <table class="table tb-type2">
       <tbody>
+      	<tr class="noborder">
+      		<td colspan="2" class="required"><label class="validation" for="category_name">{#cate_title#}</label></td>
+      	</tr>
+      	<tr class="noborder">
+	        <td class="vatop rowform">
+	          	<select name="category_name" id="category_name">
+	          	<option value="">请选择</option>
+	            {foreach from=$cateList item=item}
+	            <option value="{$item['name']}" {if $info['category_name'] == $item['name']}selected{/if}>{$item['name']}</option>
+	            {/foreach}
+	        	</select>
+	        </td>
+	        <td class="vatop tips">{form_error('category_name')} <span>没有找到{#cate_title#} 点击去增加</span><a href="{admin_site_url('sports_cate/add')}">{#cate_title#}</a></td>
+        </tr>
         <tr class="noborder">
-          <td colspan="2" class="required"><label class="validation" for="name">{#title#}名称:</label></td>
+      		<td colspan="2" class="required"><label for="gname">{#groupname#}</label></td>
+      	</tr>
+      	<tr class="noborder">
+	        <td class="vatop rowform">
+	          	<select name="gname">
+	          	{foreach from=$groupList item=item}
+	          		<option value="{$item['gname']|escape}" {if $item['gname'] == $info['gname']}selected{/if}">{$item['gname']|escape}</option>
+	          	{/foreach}
+	          	</select>
+	        </td>
+	        <td class="vatop tips">{form_error('gname')}</td>
+        </tr>
+        {if empty($info['id'])}
+        <tr class="noborder">
+      		<td colspan="2" class="required"><label for="newgname">新{#groupname#}</label></td>
+      	</tr>
+      	<tr class="noborder">
+	        <td class="vatop rowform">
+	          	<input type="text" class="txt" value="{$info['newgname']|escape}" name="newgname" id="newgname" placeholder="请输入新的{#groupname#}"  maxlength="20" class="txt">
+	        </td>
+	        <td class="vatop tips">{form_error('newgname')}</td>
+        </tr>
+        {/if}
+        <tr class="noborder">
+          <td colspan="2" class="required"><label class="validation" for="name">{#meta_title#}名称:</label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input type="text" value="{$info['name']|escape}" name="name" id="name" maxlength="20" class="txt"></td>
@@ -34,27 +72,14 @@
             <label for="status0" {if $info['status'] == 1}class="cb-disable"{else}class="cb-disable selected"{/if}><span>否</span></label>
             <input id="status1" name="status" {if $info['status'] == 1}checked{/if} value="1" type="radio">
             <input id="status0" name="status" {if $info['status'] == 0}checked{/if} value="0" type="radio"></td>
-          <td class="vatop tips">{form_error('status')} 分类启动状态。</td>
-        </tr>
-        <tr>
-          <td colspan="2" class="required">参与形势: </td>
-        </tr>
-        <tr class="noborder">
-          <td class="vatop rowform onoff">
-          	<select name="teamwork">
-          		<option value="1" {if $info['teamwork'] == 1}selected{/if}>团体</option>
-          		<option value="2" {if $info['teamwork'] == 2}selected{/if}>团体或个人</option>
-          		<option value="3" {if $info['teamwork'] == 3}selected{/if}>个人</option>
-          	</select>
-          </td>
-          <td class="vatop tips">{form_error('teamwork')}</td>
+          <td class="vatop tips">{form_error('status')}</td>
         </tr>
         <tr>
           <td colspan="2" class="required"><label>排序:</label></td>
         </tr>
         <tr class="noborder">
-          <td class="vatop rowform"><input type="text" value="{if $info['cate_sort']}{$info['cate_sort']}{else}255{/if}" name="cate_sort" id="cate_sort" class="txt"></td>
-          <td class="vatop tips">{form_error('cate_sort')} 数字范围为0~255，数字越小越靠前</td>
+          <td class="vatop rowform"><input type="text" value="{if $info['meta_sort']}{$info['meta_sort']}{else}255{/if}" name="meta_sort" id="meta_sort" class="txt"></td>
+          <td class="vatop tips">{form_error('meta_sort')} 数字范围为0~255，数字越小越靠前</td>
         </tr>
       </tbody>
       <tfoot>
@@ -64,11 +89,23 @@
       </tfoot>
     </table>
   </form>
-  <script type="text/javascript">
-	$(function(){
-		$("#sports_logo").change(function(){
-			$("#logo_show_url").val($(this).val());
-		});
-	})
- </script>
+  <script>
+  $(function(){
+  	$("select[name=category_name]").change(function(){
+  		var currentCate = $(this).val();
+  		$.get("{admin_site_url('sports_meta/getgroup')}", { category_name: currentCate , ts: Math.random() } ,function(json){
+  			if(json.message == 'success'){
+  				$("select[name=gname").html('<option value="">请选择</option>' );
+  				for(var i = 0; i < json['data'].length; i++) {
+  					
+  					$("select[name=gname").append('<option value="' + json['data'][i].gname + '">' + json['data'][i].gname + '</option>'); 
+  				}
+  			}
+  		
+  		})
+  	});
+  	
+  	
+  })
+  </script>
 {include file="common/main_footer.tpl"}

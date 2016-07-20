@@ -82,8 +82,8 @@
         </tr>
         <tr class="noborder">
           <td class="vatop rowform onoff">
-            <label for="allowtalk_1" class="cb-enable selected"><span>允许</span></label>
-            <label for="allowtalk_2" class="cb-disable" ><span>禁止</span></label>
+            <label for="allowtalk_1" class="cb-enable{if $info['allowtalk'] == 'Y'} selected{/if}"><span>允许</span></label>
+            <label for="allowtalk_2" class="cb-disable{if $info['allowtalk'] == 'N'} selected{/if}" ><span>禁止</span></label>
             <input id="allowtalk_1" name="allowtalk" value="Y" {if $info['allowtalk'] == 'Y'}checked{/if} type="radio"/>
             <input id="allowtalk_2" name="allowtalk" value="N" {if $info['allowtalk'] == 'N'}checked{/if} type="radio"/></td>
           <td class="vatop tips">如果禁止该项则会员不能发表咨询和发送站内信</td>
@@ -93,8 +93,8 @@
         </tr>
         <tr class="noborder">
           <td class="vatop rowform onoff">
-            <label for="freeze_1" class="cb-enable selected" ><span>允许</span></label>
-            <label for="freeze_2" class="cb-disable" ><span>禁止</span></label>
+            <label for="freeze_1" class="cb-enable{if $info['freeze'] == 'N'} selected{/if}" ><span>允许</span></label>
+            <label for="freeze_2" class="cb-disable{if $info['freeze'] == 'Y'} selected{/if}" ><span>禁止</span></label>
             <input id="freeze_1" name="freeze" value="N" {if $info['freeze'] == 'N'}checked{/if} type="radio"/>
             <input id="freeze_2" name="freeze" value="Y" {if $info['freeze'] == 'Y'}checked{/if} type="radio"/></td>
           <td class="vatop tips"></td>

@@ -4,7 +4,7 @@
 {form_open(site_url($formTarget),'id="teamManageForm"')}
 {/if}
 <div id="teamDetail">
-    <div class="teamCoverImg"><img src="{base_url($team['basic']['avatar_big'])}" data-largeurl="{$team['basic']['avatar_large']}" alt="{$team['basic']['title']}"></div>
+    <div class="teamCoverImg"><img src="{base_url($team['basic']['avatar_m'])}" data-largeurl="{$team['basic']['avatar_b']}" alt="{$team['basic']['title']}"></div>
     <div class="row bordered pd5">
         {if $canManager}
         <a class="link_btn grayed" href="{site_url('team/set_teamavatar/'|cat:$team['basic']['id'])}">修改球队合影</a>
@@ -49,7 +49,7 @@
             <li class="member manage clearfix">
             	<div class="delmask" {if set_value('kick['|cat:$item['id']|cat:']')}style="width:100%;height:100%;display:block;"{/if}>已标记删除,轻触取消</div>
                 <div class="headerImg pd5">
-                   <a href="{site_url('user/info/')}/{$item['uid']}" title="{$item['nickname']|escape}"><img src="{resource_url($item['avatar_middle'])}"/></a>
+                   <a href="{site_url('user/info/')}/{$item['uid']}" title="{$item['nickname']|escape}"><img src="{resource_url($item['avatar_s'])}"/></a>
                    <strong>昵称:{mask_mobile($item['nickname'])|escape}</strong>
                    <p>真名:{$item['username']|escape}</p>
                    <p>位置:{$item['position']|escape}</p>
@@ -84,7 +84,7 @@
        {else}
            {foreach from=$team['members'] item=item}
             <li class="member">
-                <a href="{site_url('user/info/')}/{$item['uid']}" title="{$item['nickname']|escape}"><img src="{resource_url($item['avatar_middle'])}"/></a>
+                <a href="{site_url('user/info/')}/{$item['uid']}" title="{$item['nickname']|escape}"><img src="{resource_url($item['avatar_s'])}"/></a>
                 <div>[{if empty($item['position'])}未知{else}{$item['position']}{/if}]</div>
                 <div>{mask_mobile($item['nickname'])|escape}</div>
             </li>

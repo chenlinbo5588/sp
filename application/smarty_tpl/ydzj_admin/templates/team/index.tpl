@@ -17,6 +17,7 @@
         <tr>
             <td colspan="5">
                 <div class="cityGroupWrap">
+                	<label>选择地区</label>
                     <select name="d1" class="citySelect">
                         <option value="">{#choose#}</option>
                         {foreach from=$ds['d1'] item=item}
@@ -70,6 +71,7 @@
    <table class="table tb-type2 nobdb">
       <thead>
         <tr class="thead">
+          <th>&nbsp;</th>
           <th colspan="2">{#team#}</th>
           <th class="align-center">{#team_leader#}</th>
           <th class="align-center">{#team_owner#}</th>
@@ -83,6 +85,7 @@
       <tbody>
       {foreach from=$list['data'] item=item key=key}
         <tr class="hover member">
+          <td class="w24"><input name="id[]" group="chkVal" type="checkbox" value="{$item['id']}"></td>
           <td class="w120 picture">
             <div class=""><span class="thumb"><i></i><img src="{resource_url($item['avatar_m'])}"  data-avatar="{$item['avatar_b']}" /></span></div></td>
           <td>
@@ -110,7 +113,7 @@
           <td class="align-center w120">
           	
             {if $item['leader_uid']}
-            <p><strong></strong><span>{$userInfo[$item['leader_uid']]['nickname']}</span></p>
+            <p><strong></strong><span>{$userInfo[$item['leader_uid']]['nickname']|escape}</span></p>
             <div class=""><a href="{admin_site_url('member/edit')}?id={$item['leader_uid']}"><img src="{resource_url($userInfo[$item['leader_uid']]['avatar_s'])}" /></a></div>
             <p>{$userInfo[$item['leader_uid']]['mobile']}</p>
             {else}
@@ -119,27 +122,28 @@
           </td>
           <td class="align-center w120">
           	{if $item['channel'] != 1}
-            <p><strong>创建人:&nbsp;</strong><span>{$userInfo[$item['add_uid']]['nickname']}</span></p>
+            <p><strong>创建人:&nbsp;</strong><span>{$userInfo[$item['add_uid']]['nickname']|escape}</span></p>
             <div class=""><a href="{admin_site_url('member/edit')}?id={$item['add_uid']}"><img src="{resource_url($userInfo[$item['add_uid']]['avatar_s'])}" /></a></div>
             <p>{$userInfo[$item['add_uid']]['mobile']}</p>
             {else}
             后台创建
             {/if}
           </td>
-          <td>
-           {$item['dname1']}{$item['dname2']}{$item['dname3']}{$item['dname4']}
-          </td>
+          <td>{$item['dname1']}{$item['dname2']}{$item['dname3']}{$item['dname4']}</td>
           <td>{$item['games']}/{$item['victory_game']}/{$item['fail_game']}/{$item['draw_game']}</td>
           <td class="align-center">{if $item['joined_type'] == 1}{#join_type1#}{else}{#join_type2#}{/if}</td>
           <td class="align-center">{if $item['accept_game'] == 1}是{else}否{/if}</td>
-          <td class="align-center"><a href="{admin_site_url('member/edit')}/{$item['uid']}">编辑</a> | <a href="index.php?act=notice&op=notice&member_name=c2hvcG5j">通知</a></td>
+          <td class="align-center"><a href="{admin_site_url('team/edit')}?id={$item['id']}">编辑</a> | <a href="{admin_site_url('notice/member')}?id={$item['id']}">通知</a></td>
         </tr>
       {/foreach}
       </tbody>
       <tfoot class="tfoot">
         <tr>
-          <td colspan="10">
+          <td colspan="11">
             {include file="common/pagination.tpl"}
+            <label><input type="checkbox" class="checkall" name="chkVal">全选</label>
+            <input type="button" value="审核通过" class="btn" name="verfiy"/>
+            <input type="button" value="审核失败" class="btn"  name="verfiy"/>
         </tr>
       </tfoot>
     </table>

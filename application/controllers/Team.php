@@ -204,7 +204,7 @@ class Team extends Ydzj_Controller {
 		$this->assign('canManager',$canManager);
 		$this->assign('team',$team);
 		
-		$this->seoTitle($team['basic']['title']);
+		$this->seo($team['basic']['title']);
 	}
 	
 	

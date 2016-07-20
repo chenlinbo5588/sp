@@ -8,11 +8,13 @@ class Sports_meta extends Ydzj_Admin_Controller {
 		$this->load->library(array('Sports_service'));
 	}
 	
+	
+	
 	public function index(){
 		
-		$cateList = $this->Sports_Category_Model->getList(array(
-			'where' => array('status' => 1)
-		));
+		
+		$cateList = $this->sports_service->getSportsCategory();
+		
 		
 		$currentPage = $this->input->get_post('page') ? $this->input->get_post('page') : 1;
 		
@@ -41,9 +43,6 @@ class Sports_meta extends Ydzj_Admin_Controller {
 		
 		$search_name = $this->input->get_post('search_name');
 		
-		
-		
-		
 		if($search_name){
 			$condition['like']['name'] = $search_name;
 		}
@@ -63,11 +62,26 @@ class Sports_meta extends Ydzj_Admin_Controller {
 	
 	
 	private function _getRules(){
+		$this->form_validation->set_rules('category_name','项目分类','required');
+		
+		$gname = trim($this->input->post('gname'));
+		$newgname = trim($this->input->post('newgname'));
+		
+		if(empty($gname) && empty($newgname)){
+			$this->form_validation->set_rules('gname','分组名称','required');
+		}else if(empty($gname) && !empty($newgname)){
+			//验证 新增加的
+			$this->form_validation->set_rules('newgname','新分组名称','required');
+			
+		}else if(!empty($gname) && empty($newgname)){
+			$this->form_validation->set_rules('gname','分组名称','required');
+		}
+		
+		$this->form_validation->set_rules('name','名称','required|min_length[1]|max_length[30]');
 		$this->form_validation->set_rules('status','是否显示','required|in_list[0,1]');
 		
-		$this->form_validation->set_rules('teamwork','参与形势','required|in_list[1,2,3]');
-		if($this->input->post('cate_sort')){
-			$this->form_validation->set_rules('cate_sort','排序',"is_natural|less_than[256]");
+		if($this->input->post('meta_sort')){
+			$this->form_validation->set_rules('meta_sort','排序',"is_natural|less_than[256]");
 		}
 	}
 	
@@ -95,27 +109,15 @@ class Sports_meta extends Ydzj_Admin_Controller {
 	}
 	
 	
-	private function _prepareData($action = 'add'){
-		$fileInfo = $this->attachment_service->addImageAttachment('sports_logo',array(),FROM_BACKGROUND,'sports_cate');
-		
+	private function _prepareData(){
 		$info = array(
+			'category_name' => $this->input->post('category_name'),
+			'gname' => $this->input->post('gname') ? $this->input->post('gname') : '',
+			'newgname' => $this->input->post('newgname') ? $this->input->post('newgname') : '',
 			'name' => $this->input->post('name'),
 			'status' => $this->input->post('status') ? $this->input->post('status') : 0,
-			'cate_sort' => $this->input->post('cate_sort') ? $this->input->post('cate_sort') : 255,
-			'aid'  => $this->input->post('aid') ? $this->input->post('aid') : 0,
-			'logo_url'  => $this->input->post('logo_url') ? $this->input->post('logo_url') : '',
-			'teamwork'  => $this->input->post('teamwork'),
+			'meta_sort' => $this->input->post('meta_sort') ? $this->input->post('meta_sort') : 255,
 		);
-		
-		if($fileInfo){
-			//添加阶段 
-			if($action == 'add' && $info['logo_url']){
-				$this->attachment_service->deleteByFileUrl($info['logo_url']);
-			}
-			
-			$info['logo_url'] = $fileInfo['file_url'];
-			$info['aid'] = $fileInfo['id'];
-		}
 		
 		return $info;
 	}
@@ -126,87 +128,111 @@ class Sports_meta extends Ydzj_Admin_Controller {
 		
 		$info = array();
 		
+		
+		$groupList = array();
+		
 		if($this->isPostRequest()){
-			
-			$this->form_validation->set_rules('name','名称','required|min_length[1]|max_length[30]|is_unique['.$this->Sports_Category_Model->getTableRealName().'.name]');
 			$this->_getRules();
 			
+			$info = $this->_prepareData();
+			
+			
+			
 			for($i = 0; $i < 1; $i++){
-				$info = $this->_prepareData('add');
+				if($info['category_name']){
+					$groupList = $this->sports_service->getGroupByCategory($info['category_name']);
+				}
 				
 				if(!$this->form_validation->run()){
 					$feedback = $this->form_validation->error_string();
 					break;
 				}
 				
+				if($info['newgname']){
+					$info['gname'] = $info['newgname'];
+				}
+				
 				$info = array_merge($info,$this->addWhoHasOperated('add'));
 				
-				if(($newid = $this->Sports_Category_Model->_add($info)) < 0){
+				if(($newid = $this->Sports_Meta_Model->_add($info)) < 0){
 					$feedback = getErrorTip('保存失败');
 					break;
 				}
 				$feedback = getSuccessTip('保存成功');
-				$info = $this->Sports_Category_Model->getFirstByKey($newid);
+				$info = $this->Sports_Meta_Model->getFirstByKey($newid);
+				$groupList = $this->sports_service->getGroupByCategory($info['category_name']);
+				
 			}
 		}else{
-			
 			$info['status'] = 1; 
-			
 		}
 		
+		$cateList = $this->sports_service->getSportsCategory();
+		$this->assign('groupList',$groupList);
+		$this->assign('cateList',$cateList);
 		$this->assign('info',$info);
 		$this->assign('feedback',$feedback);
 		$this->display();
 	}
 	
-	
+	public function getgroup(){
+		$categoryName = trim($this->input->get_post('category_name'));
+		
+		if($categoryName){
+			$list = $this->sports_service->getGroupByCategory($categoryName);
+			$this->jsonOutput('success',$list);
+			
+		}else{
+			$this->jsonOutput('success');
+		}
+	}
 	
 	
 	public function edit(){
 		
 		$feedback = '';
 		$id = $this->input->get_post('id');
-		$info = $this->Sports_Category_Model->getFirstByKey($id);
 		
+		$cateList = $this->sports_service->getSportsCategory();
+		$info = $this->Sports_Meta_Model->getFirstByKey($id);
+		
+		if($info['category_name']){
+			$groupList = $this->sports_service->getGroupByCategory($info['category_name']);
+		}
+				
 		if($this->isPostRequest()){
-			
-			$this->form_validation->set_rules('name','名称','required|min_length[1]|max_length[30]|is_unique_not_self['.$this->Sports_Category_Model->getTableRealName().'.name.id.'.$id.']');
 			$this->_getRules();
 			
 			for($i = 0; $i < 1; $i++){
-				$infoPost = $this->_prepareData('edit');
-				$infoPost['id'] = $id;
-				
+				$info = $this->_prepareData('edit');
+				$info['id'] = $id;
+		
 				if(!$this->form_validation->run()){
 					$feedback = $this->form_validation->error_string();
-					$info = $infoPost;
 					break;
 				}
 				
-				//确定是否要删除文件
-				$deleteFile = '';
-				if($info['aid'] != $infoPost['aid']){
-					$deleteFile = $info['logo_url'];
-				}
+				$info = array_merge($info,$this->addWhoHasOperated('edit'));
 				
-				$info = array_merge($infoPost,$this->addWhoHasOperated('edit'));
-				
-				if($this->Sports_Category_Model->update($info,array('id' => $id)) < 0){
+				if($this->Sports_Meta_Model->update($info,array('id' => $id)) < 0){
 					$feedback = getErrorTip('保存失败');
 					break;
 				}
 				
-				if($deleteFile){
-					$this->attachment_service->deleteByFileUrl($deleteFile);
-				}
+				//刷新
+				$groupList = $this->sports_service->getGroupByCategory($info['category_name']);
 				
 				$feedback = getSuccessTip('保存成功');
 			}
 		}
 		
+		
+		
+		$this->assign('groupList',$groupList);
+		$this->assign('cateList',$cateList);
 		$this->assign('info',$info);
 		$this->assign('feedback',$feedback);
-		$this->display('sports_cate/add');
+		$this->display('sports_meta/add');
 	}
 	
 	
@@ -223,7 +249,7 @@ class Sports_meta extends Ydzj_Admin_Controller {
 				
 				$upInfo[$this->input->post('fieldname')] = $this->input->post('enabled');
 				
-				$this->Sports_Category_Model->update($upInfo,array('id' => $this->input->post('id')));
+				$this->Sports_Meta_Model->update($upInfo,array('id' => $this->input->post('id')));
 				
 				$this->jsonOutput('保存成功', $this->getFormHash());
 				

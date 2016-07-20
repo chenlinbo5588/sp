@@ -5,7 +5,7 @@ class Sports_cate extends Ydzj_Admin_Controller {
 	
 	public function __construct(){
 		parent::__construct();
-		$this->load->library(array('Sports_service'));
+		$this->load->library(array('Sports_service','Attachment_service'));
 	}
 	
 	public function index(){

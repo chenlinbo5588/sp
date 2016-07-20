@@ -2,7 +2,7 @@
 
 <div id="my" class="bordered">
     <div class="row avatar">
-        <img class="nature" src="{resource_url($profile['basic']['avatar_middle'])}" alt="{resource_url($profile['basic']['nickname'])}"/>
+        <img class="nature" src="{resource_url($profile['basic']['avatar_m'])}" alt="{resource_url($profile['basic']['nickname'])}"/>
         <div class="pd5"><a class="link_btn grayed" href="{site_url('my/set_avatar?inviteFrom=my')}">修改头像</a></div>
     </div>
     <div class="pd5">

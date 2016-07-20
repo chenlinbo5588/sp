@@ -279,7 +279,7 @@ class Member extends Ydzj_Admin_Controller {
 				'passwd' => random_string('numeric',6),
 				'sex' => 'S',
 				'allowtalk' => 'Y',
-				'freeze' => 'Y'
+				'freeze' => 'N'
 			);
 			
 			$info['passwd2'] = $info['passwd'];

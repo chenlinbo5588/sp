@@ -402,13 +402,13 @@ $(function(){
               <dl>
                 <dd>
                   <ol>
-                    <li><a href="JavaScript:void(0);" id="index_team" onclick="openItem('index,team,team');">队伍管理</a></li>
-                    <li><a href="JavaScript:void(0);" id="index_sports_cate" onclick="openItem('index,sports_cate,team');">体育项目</a></li>
-                    <li><a href="JavaScript:void(0);" id="index_sports_meta" onclick="openItem('index,sports_meta,team');">基础数据</a></li>
-                    <li><a href="JavaScript:void(0);" id="index_team_medal" onclick="openItem('index,team_medal,team');">队伍头衔</a></li>
-                    <li><a href="JavaScript:void(0);" id="member_list_team" onclick="openItem('member_list,team,team');">队伍成员</a></li>
-                    <li><a href="JavaScript:void(0);" id="inform_team" onclick="openItem('inform,team,team');">队伍举报</a></li>
-                    <li><a href="JavaScript:void(0);" id="setting_team" onclick="openItem('setting,team,team');">队伍设置</a></li>
+                    <li><a href="javascript:void(0);" id="index_team" onclick="openItem('index,team,team');">队伍管理</a></li>
+                    <li><a href="javascript:void(0);" id="index_sports_cate" onclick="openItem('index,sports_cate,team');">体育项目</a></li>
+                    <li><a href="javascript:void(0);" id="index_sports_meta" onclick="openItem('index,sports_meta,team');">基础数据</a></li>
+                    <li><a href="javascript:void(0);" id="index_team_medal" onclick="openItem('index,team_medal,team');">队伍头衔</a></li>
+                    <li><a href="javascript:void(0);" id="member_list_team" onclick="openItem('member_list,team,team');">队伍成员</a></li>
+                    <li><a href="javascript:void(0);" id="index_team_jubao" onclick="openItem('index,team_jubao,team');">队伍举报</a></li>
+                    <li><a href="javascript:void(0);" id="index_team_setting" onclick="openItem('index,team_setting,team');">队伍全局设置</a></li>
                   </ol>
                 </dd>
               </dl>
@@ -532,12 +532,12 @@ $(function(){
               <dl>
                 <dd>
                   <ol>
-                    <li><a href="JavaScript:void(0);" id="setting_cms" onclick="openItem('setting,cms,cms');">CMS设置</a></li>
-                    <li><a href="JavaScript:void(0);" id="index_cms_article" onclick="openItem('index,cms_article,cms');">文章管理</a></li>
-                    <li><a href="JavaScript:void(0);" id="category_cms_article" onclick="openItem('category,cms_article,cms');">文章分类</a></li>
-                    <li><a href="JavaScript:void(0);" id="index_magazine" onclick="openItem('index,magazine,cms');">画报管理</a></li>
-                    <li><a href="JavaScript:void(0);" id="category_magazine" onclick="openItem('category,magazine,cms');">画报分类</a></li>
-                    <li><a href="JavaScript:void(0);" id="index_special" onclick="openItem('index,special,cms');">专题管理</a></li>
+                    <li><a href="javascript:void(0);" id="setting_cms" onclick="openItem('setting,cms,cms');">CMS设置</a></li>
+                    <li><a href="javascript:void(0);" id="index_cms_article" onclick="openItem('index,cms_article,cms');">文章管理</a></li>
+                    <li><a href="javascript:void(0);" id="category_cms_article" onclick="openItem('category,cms_article,cms');">文章分类</a></li>
+                    <li><a href="javascript:void(0);" id="index_magazine" onclick="openItem('index,magazine,cms');">画报管理</a></li>
+                    <li><a href="javascript:void(0);" id="category_magazine" onclick="openItem('category,magazine,cms');">画报分类</a></li>
+                    <li><a href="javascript:void(0);" id="index_special" onclick="openItem('index,special,cms');">专题管理</a></li>
                     
                   </ol>
                 </dd>
@@ -549,9 +549,9 @@ $(function(){
               <dl>
                 <dd>
                   <ol>
-                    <li><a href="JavaScript:void(0);" id="user_authority" onclick="openItem('user,authority,authority');">管理员管理</a></li>
-                    <li><a href="JavaScript:void(0);" id="role_authority" onclick="openItem('role,authority,authority');">角色管理</a></li>
-                    <li><a href="JavaScript:void(0);" id="menu_authority" onclick="openItem('menu,authority,authority');">菜单管理</a></li>
+                    <li><a href="javascript:void(0);" id="user_authority" onclick="openItem('user,authority,authority');">管理员管理</a></li>
+                    <li><a href="javascript:void(0);" id="role_authority" onclick="openItem('role,authority,authority');">角色管理</a></li>
+                    <li><a href="javascript:void(0);" id="menu_authority" onclick="openItem('menu,authority,authority');">菜单管理</a></li>
                   </ol>
                 </dd>
               </dl>

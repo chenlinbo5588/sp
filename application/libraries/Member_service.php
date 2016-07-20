@@ -40,7 +40,6 @@ class Member_service extends Base_service {
 					$result = $this->successRetun(array('basic' => $userInfo));
 				}
 				
-				
 			}else{
 				$result['message'] = '密码错误';
 			}

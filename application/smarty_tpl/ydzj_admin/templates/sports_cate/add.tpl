@@ -51,7 +51,7 @@
             <label for="status0" {if $info['status'] == 1}class="cb-disable"{else}class="cb-disable selected"{/if}><span>否</span></label>
             <input id="status1" name="status" {if $info['status'] == 1}checked{/if} value="1" type="radio">
             <input id="status0" name="status" {if $info['status'] == 0}checked{/if} value="0" type="radio"></td>
-          <td class="vatop tips">{form_error('status')} 分类启动状态。</td>
+          <td class="vatop tips">{form_error('status')}</td>
         </tr>
         <tr>
           <td colspan="2" class="required">{#teamwork#}: </td>

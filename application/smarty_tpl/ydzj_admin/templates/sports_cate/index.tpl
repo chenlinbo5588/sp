@@ -5,7 +5,7 @@
       <h3>{#cate_title#}</h3>
       <ul class="tab-base">
         <li><a href="javascript:void(0);" class="current"><span>管理</span></a></li>
-        <li><a href="{admin_site_url('sports_meta/add')}"><span>新增</span></a></li>
+        <li><a href="{admin_site_url('sports_cate/add')}"><span>新增</span></a></li>
       </ul>
     </div>
   </div>

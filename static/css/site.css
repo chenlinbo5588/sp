@@ -375,10 +375,14 @@ input[type=text].validation_error {
 .type-file-file { position:absolute; top:0px; right:0px; height:25px; width:256px; filter:alpha(opacity:0); opacity: 0; cursor: pointer;}
 .type-file-button , input.type-file-button:focus { background: url(../img/sky/bg_position.gif) no-repeat -50px -450px; width: 57px; height: 25px; border: 0; display:inline; float:right;}
 
-#wrap,#main_menu {
+#wrap {
 	max-width:640px;
 	margin:0 auto;
 	position:relative;
+}
+
+#main_menu {
+	
 	width:100%;
 }
 

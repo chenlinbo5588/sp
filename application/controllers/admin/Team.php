@@ -9,6 +9,8 @@ class Team extends Ydzj_Admin_Controller {
 	public function __construct(){
 		parent::__construct();
 		
+		$this->load->library(array('Team_service','Common_District_service'));
+		
 		$this->_teamImageSize = config_item('team_img_size');
 		$this->_teamSizeKeys = array_keys($this->_teamImageSize);
 	}
@@ -122,7 +124,6 @@ class Team extends Ydzj_Admin_Controller {
 	
 	public function add(){
 		
-		$this->load->library(array('Team_service','Common_District_service'));
 		$sportsCategoryList = $this->team_service->getSportsCategory();
 		$this->assign('sportsCategoryList',$sportsCategoryList);
 		
@@ -256,20 +257,19 @@ class Team extends Ydzj_Admin_Controller {
 		
 		$teamId = $this->input->get_post('id');
 		
-		$this->load->library('Member_service');
-		$info = $this->member_service->getUserInfoById($teamId);
+		$sportsCategoryList = $this->team_service->getSportsCategory();
+		$this->assign('sportsCategoryList',$sportsCategoryList);
+		
+		$info = $this->team_service->getTeamInfo($teamId);
 		
 		//print_r($urlParam);
-		
 		if(!empty($teamId) && $this->isPostRequest()){
-			
-			
 			
 		}
 		
 		$this->assign('formUrl',admin_site_url('team/edit?id=').$teamId);
 		$this->assign('info',$info);
-		$this->display('member/add');
+		$this->display();
 	}
 	
 	
