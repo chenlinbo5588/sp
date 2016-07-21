@@ -3,8 +3,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class My extends MyYdzj_Controller {
 	
+	private $_avatarImageSize ;
+	private $_avatarSizeKeys;
+	
+	
 	public function __construct(){
 		parent::__construct();
+		
+		$this->_avatarImageSize = config_item('avatar_img_size');
+		$this->_avatarSizeKeys = array_keys($this->_avatarImageSize);
 	}
 	
 	
@@ -145,29 +152,27 @@ class My extends MyYdzj_Controller {
 				$newAvatar = str_replace(base_url(),'',$newAvatar);
 				
 				$this->load->library('Attachment_service');
+				$this->attachment_service->setImageSizeConfig($this->_avatarImageSize);
+				$fileData = $this->attachment_service->resize(
+					$newAvatar,
+					array('m') , 
+					array('x_axis' => $this->input->post('x1'), 'y_axis' => $this->input->post('y1'))
+				);
 				
-				$fileData = $this->attachment_service->resize(array(
-					'file_url' => $newAvatar
-				) , array('middle' => array('width' => 200,'height' => 200,'maintain_ratio' => false , 'quality' => 100)) , 
-					array('x_axis' => $this->input->post('x1'), 'y_axis' => $this->input->post('y1')));
-				
-				
-				if($fileData['img_middle']){
-					$smallImg = $this->attachment_service->resize(array(
-						'file_url' => $fileData['img_middle']
-					) , array('small') );
+				if($fileData['img_m']){
+					$smallImg = $this->attachment_service->resize($fileData['img_m'],array('s'));
 				}
 				
 				//删除原图
-				unlink($fileData['full_path']);
+				//unlink($fileData['full_path']);
 				
 				$this->load->library('Member_service');
 				$result = $this->member_service->updateUserInfo(array(
 					'status' => 0,
 					'avatar_status' => 0,
 					'aid' => $avatar_id,
-					'avatar_middle' => $fileData['img_middle'],
-					'avatar_small' => $smallImg['img_small']
+					'avatar_m' => $fileData['img_m'],
+					'avatar_s' => $smallImg['img_s']
 				),$this->_profile['basic']['uid']);
 				
 				$this->member_service->refreshProfile($this->_profile['basic']['uid']);
@@ -196,7 +201,7 @@ class My extends MyYdzj_Controller {
 		}else{
 			
 			$this->assign('inviteFrom',$this->input->get('inviteFrom'));
-			$this->assign('default_avatar',$this->_profile['basic']['avatar_big']);
+			$this->assign('default_avatar',$this->_profile['basic']['avatar_m']);
 			$this->display('my/set_avatar');
 		}
 		

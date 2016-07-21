@@ -44,7 +44,7 @@ class Sports_service extends Base_service {
 	
 	
 	public function getGroupByCategory($categoryName){
-		$this->_sportsMetaModel->distinct(true);
+		self::$dbInstance->distinct(true);
 		
 		$dataList = $this->_sportsMetaModel->getList(array(
 			'select' => 'gname',

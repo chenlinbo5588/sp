@@ -31,42 +31,17 @@ class MY_Model extends CI_Model {
     	return $this->_tablePre.$this->_tableName;
     }
     
-    // Database related
     /**
-     * 事务
+     * 获得db 对象
      */
-    public function transStart(){
-    	$this->db->trans_start();
+    public function getDb(){
+    	return $this->db;
     }
     
-    public function transStatus(){
-    	return $this->db->trans_status();
-    }
     
-    public function transCommit(){
-    	$this->db->trans_commit();
-    }
-    
-    public function transRollback(){
-    	$this->db->trans_rollback();
-    }
-    
-    public function transComplete(){
-    	$this->db->trans_complete();
-    }
-    
-    public function transOff(){
-    	$this->db->trans_off();
-    }
-     
     /**
-     * 计算
+     * statictis
      */
-    public function distinct($flag = false){
-    	$this->db->distinct($flag);
-    }
-    
-    
     public function sumByCondition($condition){
         
         $this->db->select_sum($condition['field']);
@@ -75,6 +50,14 @@ class MY_Model extends CI_Model {
         
         $data = $query->result_array();
         return $data;
+    }
+    
+    public function getCount($condition = array()){
+        if($condition['where']){
+            $this->db->where($condition['where']);
+        }
+        
+        return $this->db->count_all_results($this->_tableRealName);
     }
     
     public function isUnqiueByKey($value,$key){
@@ -90,14 +73,6 @@ class MY_Model extends CI_Model {
     		return true;
     	}
     	
-    }
-    
-    public function getCount($condition = array()){
-        if($condition['where']){
-            $this->db->where($condition['where']);
-        }
-        
-        return $this->db->count_all_results($this->_tableRealName);
     }
     
     

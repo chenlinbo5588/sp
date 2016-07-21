@@ -4,6 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Base_service {
 	
 	public static $CI = null;
+	public static $dbInstance = null;
 	public static $memberModel = null;
 	public static $adminUserModel = null;
 	public static $districtModel = null;
@@ -28,8 +29,35 @@ class Base_service {
 		self::$form_validation = self::$CI->form_validation;
 		self::$settingModel = self::$CI->Setting_Model;
 		
+		self::$dbInstance = self::$CI->Member_Model->getDb();
+		
 	}
 	
+	
+	/**
+	 * 根据输入的 IDS 数组，返回带名称的数据组
+	 */
+	public function getDistrictNameByIds($dIDs){
+		
+		$dNameList = self::$districtModel->getList(array(
+			'select' => 'id,name',
+			'where_in' => array(
+				array('key' => 'id', 'value' => $dIDs)
+			)
+		));
+		
+		$dName = array();
+		foreach($dNameList as $dn){
+			$dName[$dn['id']] = $dn['name'];
+		}
+		
+		$arrayWithName = array();
+		foreach($dIDs as $key => $value){
+			$arrayWithName[$key] = empty($dName[$value]) ? '' : $dName[$value];
+		}
+		
+		return $arrayWithName;
+	}
 	
 	public function __construct(){
 		//empty here

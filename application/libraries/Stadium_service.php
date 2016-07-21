@@ -218,7 +218,7 @@ class Stadium_service extends Base_service {
      */
     public function addStadium($param,$images , $user){
     	
-    	$this->_stadiumModel->transStart();
+    	self::$dbInstance->trans_start();
     	
     	$addParam = $this->_stadiumBasicInfo($param, $images[0],$user);
     	$addParam = $this->_getDistrictIdFromName($addParam,$param);
@@ -228,8 +228,8 @@ class Stadium_service extends Base_service {
     	
     	$stadiumId = $this->_stadiumModel->_add($addParam);
     	
-    	if ($this->_stadiumModel->transStatus() === FALSE){
-			$this->_stadiumModel->transRollback();
+    	if (self::$dbInstance->trans_status() === FALSE){
+			self::$dbInstance->trans_rollback();
 			return false;
 		}
 		
@@ -251,13 +251,13 @@ class Stadium_service extends Base_service {
 		
     	$this->_stadiumPhotosModel->batchInsert($insertImage);
     	
-    	if ($this->_stadiumModel->transStatus() === FALSE){
-			$this->_stadiumModel->transRollback();
+    	if (self::$dbInstance->trans_status() === FALSE){
+			self::$dbInstance->trans_rollback();
 			return false;
 		}
     	
-    	$this->_stadiumModel->transCommit();
-		$this->_stadiumModel->transOff();
+    	self::$dbInstance->trans_commit();
+		self::$dbInstance->trans_off();
     	
     	return $stadiumId;
     	
@@ -295,7 +295,7 @@ class Stadium_service extends Base_service {
 		}
     	
     	if($useTrans){
-    		$this->_stadiumModel->transStart();
+    		self::$dbInstance->trans_start();
     	}
     	
     	$updateParam = $this->_stadiumBasicInfo($param, $images[0],$user);
@@ -304,8 +304,8 @@ class Stadium_service extends Base_service {
     	$rows = $this->_stadiumModel->update($updateParam , array('stadium_id' => $stadiumId));
     	
     		
-    	if ($useTrans && $this->_stadiumModel->transStatus() === FALSE){
-			$this->_stadiumModel->transRollback();
+    	if ($useTrans && self::$dbInstance->trans_status() === FALSE){
+			self::$dbInstance->trans_rollback();
 			return false;
 		}
 		
@@ -315,8 +315,8 @@ class Stadium_service extends Base_service {
 		));
 		
 		
-		if ($useTrans && $this->_stadiumModel->transStatus() === FALSE){
-			$this->_stadiumModel->transRollback();
+		if ($useTrans && self::$dbInstance->trans_status() === FALSE){
+			self::$dbInstance->trans_rollback();
 			return false;
 		}
 		
@@ -333,14 +333,14 @@ class Stadium_service extends Base_service {
 		
     	$this->_stadiumPhotosModel->batchInsert($insertImage);
     	
-    	if ($useTrans && $this->_stadiumModel->transStatus() === FALSE){
-			$this->_stadiumModel->transRollback();
+    	if ($useTrans && self::$dbInstance->trans_status() === FALSE){
+			self::$dbInstance->trans_rollback();
 			return false;
 		}
     	
     	if($useTrans){
-    		$this->_stadiumModel->transCommit();
-			$this->_stadiumModel->transOff();
+    		self::$dbInstance->trans_commit();
+			self::$dbInstance->trans_off();
     	}
     	
     	return $rows;

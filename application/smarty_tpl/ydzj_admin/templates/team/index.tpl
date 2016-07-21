@@ -111,7 +111,6 @@
             </div>
           </td>
           <td class="align-center w120">
-          	
             {if $item['leader_uid']}
             <p><strong></strong><span>{$userInfo[$item['leader_uid']]['nickname']|escape}</span></p>
             <div class=""><a href="{admin_site_url('member/edit')}?id={$item['leader_uid']}"><img src="{resource_url($userInfo[$item['leader_uid']]['avatar_s'])}" /></a></div>

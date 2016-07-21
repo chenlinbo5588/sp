@@ -145,6 +145,98 @@ class Team_service extends Base_service {
 	}
 	
 	/**
+	 * 公共规则
+	 */
+	public function commonTeamRules(){
+		$param['title'] = self::$CI->input->post('title');
+		$param['leader'] = self::$CI->input->post('leader');
+		$param['joined_type'] = self::$CI->input->post('joined_type');
+		$param['slogan'] = self::$CI->input->post('slogan');
+		$param['base_area'] = self::$CI->input->post('base_area');
+		$param['notice_board'] = self::$CI->input->post('notice_board');
+		
+		foreach($param as $pk => $pv){
+			$param[$pk] = trim($pv) ? trim($pv) : '';
+		}
+		
+		$param['d1'] = intval(self::$CI->input->post('d1'));
+		$param['d2'] = intval(self::$CI->input->post('d2'));
+		$param['d3'] = intval(self::$CI->input->post('d3'));
+		$param['d4'] = intval(self::$CI->input->post('d4'));
+		
+		self::$form_validation->set_rules('title','球队名称', 'required|max_length[30]');
+		
+		if($param['leader']){
+			self::$form_validation->set_rules('leader','队长设置','required|in_list[1,2]');
+		}else{
+			$param['leader'] = 1;
+		}
+		
+		self::$form_validation->set_rules('joined_type','加入队伍设置','required|in_list[1]');
+		
+		if($param['slogan']){
+			self::$form_validation->set_rules('slogan','建队口号', 'required|max_length[40]');
+		}
+		
+		if($param['base_area']){
+			self::$form_validation->set_rules('base_area','活动根据地', 'required|max_length[40]');
+		}
+		
+		if($param['notice_board']){
+			self::$form_validation->set_rules('notice_board','队伍公告', 'required|max_length[50]');
+		}
+		
+		
+		return $param;
+	}
+	
+	
+	/**
+	 * 队伍分类规则
+	 */
+	public function getCategoryRule(){
+		$rule = array();
+		
+		$rule['category_id'] = array(
+			'field' => 'category_id',
+			'label' => '队伍类型',
+			'rules' => array(
+				'required',
+				array(
+					'category_callable[]',
+					array(
+						$this->_sportsCategoryModel,'avaiableCategory'
+					)
+				)
+			),
+			'errors' => array(
+				'category_callable' => '%s 无效'
+			)
+		);
+		
+		return $rule;
+	}
+	
+	/**
+	 * 队伍编辑验证规则
+	 */
+	public function teamEditRules(){
+		$rules = $this->getCategoryRule();
+		
+		foreach($rules as $rule){
+			self::$form_validation->set_rules($rule['field'],$rule['label'],$rule['rules'],$rule['errors']);
+		}
+		
+		
+		$param = $this->commonTeamRules();
+		$param['category_id'] = self::$CI->input->post('category_id');
+		
+		
+		return $param;
+	}
+	
+	
+	/**
 	 * 增加队伍验证规则
 	 *  
 	 * @param array  $userInfo  登陆用户信息
@@ -153,41 +245,29 @@ class Team_service extends Base_service {
 	public function teamAddRules($userInfo = array()){
 		self::$form_validation->reset_validation();
 		
-		$rule = array();
-		
-		$rule['category_id'] = array(
-			'field' => 'category_id',
-			'label' => '队伍类型',
-			'rules' => array(
-				'required',
-				'is_natural_no_zero',
-				array(
-					'category_callable',
-					array(
-						$this->_sportsCategoryModel,'avaiableCategory'
-					)
-				)
-			),
-			'errors' => array(
-				'category_callable' => '%s无效'
-			)
-		);
+		$this->commonTeamRules();
+		$rules = $this->getCategoryRule();
 		
 		
 		if($userInfo){
-			$rule['category_id']['rules'][] = array(
+			//再加一条规则 用户建队伍数量限制
+			$rules['category_id']['rules'][] = array(
 					'user_categroy_callbale['.$userInfo['uid'].']',
 					array(
 						$this->_teamModel,'userCategoryTeamCount'
 					)
 				);
 				
-			$rule['category_id']['errors']['user_categroy_callbale'] = '对不起,同一个类型的球队最多创建三个';
+			$rules['category_id']['errors']['user_categroy_callbale'] = '对不起,同一个类型的球队最多创建三个';
 		}
 		
-		self::$form_validation->set_rules($rule['category_id']['field'],$rule['category_id']['label'],$rule['category_id']['rules'],$rule['category_id']['errors']);
-
-
+		
+		foreach($rules as $rule){
+			self::$form_validation->set_rules($rule['field'],$rule['label'],$rule['rules'],$rule['errors']);
+		}
+		
+		/*
+		 * 暂时不校验重复性  现实允许有重名产生
 		//队伍名称允许相同,因现实情况下确实有可能相同
 		//用户如果设置 d4 级的话， 则校验名称重复，如果d4 级没有设置，则不校验
 		
@@ -215,11 +295,9 @@ class Team_service extends Base_service {
 		}else{
 			self::$form_validation->set_rules('title','球队名称', 'required|max_length[30]');
 		}
+		*/
 		
-		self::$form_validation->set_rules('leader','队长设置','required|in_list[1,2]');
-		self::$form_validation->set_rules('joined_type','入队设置','required|in_list[1]');
 	}
-	
 	
 	
 	/**
@@ -228,8 +306,7 @@ class Team_service extends Base_service {
 	public function addTeam($param,$creatorInfo){
 		
 		// 启动事务
-		$this->_teamModel->transStart();
-		//file_put_contents('debug.txt',print_r($creatorInfo,true));
+		self::$dbInstance->trans_start();
 		/*
 		$cateName = $this->_sportsCategoryModel->getById(array(
 			'select' => 'name',
@@ -245,27 +322,15 @@ class Team_service extends Base_service {
 		
 		$dIDs = array($param['d1'],$param['d2'],$param['d3'],$param['d4']);
 		
-		$dNameList = self::$districtModel->getList(array(
-			'select' => 'id,name',
-			'where_in' => array(
-				array('key' => 'id', 'value' => $dIDs)
-			)
-		));
-		
-		$dName = array();
-		foreach($dNameList as $dn){
-			$dName[$dn['id']] = $dn['name'];
-		}
-		
-		//四级地址
-		foreach(array(1,2,3,4) as $dk){
-			$param['dname'.$dk] = empty($dName[$param['d'.$dk]]) ? '' : $dName[$param['d'.$dk]];
+		$dsWithName = $this->getDistrictNameByIds($dIDs);
+		foreach($dsWithName as $dkey => $dName){
+			$param['dname'.($dkey + 1)] = $dName;
 		}
 		
 		$teamid = $this->_teamModel->_add($param);
 		
-		if ($this->_teamModel->transStatus() === FALSE){
-			$this->_teamModel->transRollback();
+		if (self::$dbInstance->trans_status() === FALSE){
+			self::$dbInstance->trans_rollback();
 			return false;
 		}
 		
@@ -282,8 +347,8 @@ class Team_service extends Base_service {
 		));
 		
 		
-		if ($this->_teamModel->transStatus() === FALSE){
-			$this->_teamModel->transRollback();
+		if (self::$dbInstance->trans_status() === FALSE){
+			self::$dbInstance->trans_rollback();
 			return false;
 		}
 		
@@ -324,14 +389,14 @@ class Team_service extends Base_service {
 			));
 		}
 		
-		if ($this->_teamModel->transStatus() === FALSE){
-			$this->_teamModel->transRollback();
+		if (self::$dbInstance->trans_status() === FALSE){
+			self::$dbInstance->trans_rollback();
 			
 			return false;
 		}
 		
-		$this->_teamModel->transCommit();
-		$this->_teamModel->transOff();
+		self::$dbInstance->trans_commit();
+		self::$dbInstance->trans_off();
 		
 		return $teamid;
 	}
@@ -355,31 +420,46 @@ class Team_service extends Base_service {
 	
 	
 	/**
+	 * 更新队伍
+	 */
+	public function updateTeam($teamId , $updateParam){
+		
+		$ds = array( $updateParam['d1'] ,$updateParam['d2'],$updateParam['d3'],$updateParam['d4']);
+		$dsWithName = $this->getDistrictNameByIds($ds);
+		
+		foreach($dsWithName as $dkey => $dName){
+			$updateParam['dname'.($dkey + 1)] = $dName;
+		}
+		
+		return $this->_teamModel->update($updateParam,array('id' => $teamId));
+	}
+	
+	/**
 	 * 更新队伍 和队员信息
 	 */
     public function manageTeam($team,$members){
     	
-    	$this->_sportsCategoryModel->transStart();
+    	self::$dbInstance->trans_start();
     	
     	$teamid = $team['id'];
     	
     	//unset($team['id']);
     	$this->_teamModel->update($team,array('id' => $team['id']));
     	
-    	if ($this->_sportsCategoryModel->transStatus() === FALSE){
-			$this->_sportsCategoryModel->transRollback();
+    	if (self::$dbInstance->trans_status() === FALSE){
+			self::$dbInstance->trans_rollback();
 			return false;
 		}
     	
     	$this->_teamMemberModel->batchUpdate($members);
     	
-    	if ($this->_sportsCategoryModel->transStatus() === FALSE){
-			$this->_sportsCategoryModel->transRollback();
+    	if (self::$dbInstance->trans_status() === FALSE){
+			self::$dbInstance->trans_rollback();
 			return false;
 		}
     	
-    	$this->_sportsCategoryModel->transCommit();
-		$this->_sportsCategoryModel->transOff();
+    	self::$dbInstance->trans_commit();
+		self::$dbInstance->trans_off();
     	
     	return true;
     	

@@ -221,6 +221,7 @@ class Member extends Ydzj_Admin_Controller {
 			$old_avatar = $this->input->post('old_avatar');
 			if($aid){
 				$member_avatar = $this->input->post('avatar');
+				
 				$avatar = getImgPathArray($member_avatar,$this->_avatarSizeKeys);
 				$avatar['aid'] = $aid;
 			}
@@ -383,15 +384,13 @@ class Member extends Ydzj_Admin_Controller {
 			$this->load->library('Attachment_service');
 			
 			$this->attachment_service->setImageSizeConfig($this->_avatarImageSize);
-			$fileData = $this->attachment_service->resize(array('file_url' => $src_file) , 
+			$fileData = $this->attachment_service->resize($src_file, 
 				array('m'),
 				array('x_axis' => $this->input->post('x1'), 'y_axis' => $this->input->post('y1')));
 			
 			// 在中 img_m 的基础上再次裁剪 
 			if($fileData['img_m']){
-				$smallImg = $this->attachment_service->resize(array(
-					'file_url' => $fileData['img_m']
-				) , array('s') );
+				$smallImg = $this->attachment_service->resize($fileData['img_m'], array('s') );
 			}
 			
 			//删除原图

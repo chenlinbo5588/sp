@@ -61,10 +61,12 @@ class Attachment_service extends Base_service {
 	public function deleteByFileUrl($files){
 		if(is_array($files)){
 			foreach($files as $del){
-				@unlink(ROOTPATH.DIRECTORY_SEPARATOR.str_replace(base_url(),'',$del));
+				$del = urlToPath($del);
+				@unlink(ROOTPATH.DIRECTORY_SEPARATOR.$del);
 			}
 		}else{
-			@unlink(ROOTPATH.DIRECTORY_SEPARATOR.str_replace(base_url(),'',$files));
+			$files = urlToPath($files);
+			@unlink(ROOTPATH.DIRECTORY_SEPARATOR.$files);
 		}
 		
 	}
@@ -106,9 +108,17 @@ class Attachment_service extends Base_service {
 	
 	
 	/**
-	 * 根据实际需要采裁切图片
+	 * $fileUrl      文件路径
+	 * $resizeConfig 缩放配置
+	 * $axis         裁切设置
+	 * $assocKey     返回数组key前缀
+	 * 
 	 */
-	public function resize($fileData , $resizeConfig , $axis = array() ){
+	public function resize($fileUrl , $resizeConfig , $axis = array(), $assocKey = 'img' ){
+		
+		//兼容处理
+		$fileData['file_url'] = urlToPath($fileUrl);
+		
 		
 		if(!$fileData['full_path']){
 			$fileData['full_path'] = ROOTPATH .DIRECTORY_SEPARATOR. $fileData['file_url'];
@@ -164,7 +174,7 @@ class Attachment_service extends Base_service {
 			if(!$isOk){
 				log_message('error',$resize['new_image'] ." {$action} failed.");
 			}else{
-				$fileData['img_'.$resizeName] = substr($fileData['file_url'] , 0 , strrpos($fileData['file_url'], '/') + 1).$resize['new_image'];
+				$fileData[$assocKey.'_'.$resizeName] = substr($fileData['file_url'] , 0 , strrpos($fileData['file_url'], '/') + 1).$resize['new_image'];
 			}
 		}
 		

@@ -244,13 +244,13 @@ class Stadium extends Ydzj_Controller {
         	$otherFile = $this->attachment_service->addImageAttachment('img'.$i);
         	
         	if($otherFile){
-        		$previewFile = $this->attachment_service->resize($otherFile,array('small'));
+        		$previewFile = $this->attachment_service->resize($otherFile['file_url'],array('s'));
         		
         		//对已上传的图片 在提交校验其他数据错误的情况下，记住已传图片
         		$fileUpload[$i] = array(
         			'aid' => $otherFile['id'],
         			'url' => $otherFile['file_url'],
-        			'preview' => $previewFile['img_small']
+        			'preview' => $previewFile['img_s']
         		);
         	}else{
         		
@@ -288,7 +288,7 @@ class Stadium extends Ydzj_Controller {
 	 */
 	private function _cutImage($images){
 		foreach($images as $imgK => $img){
-			$file = $this->attachment_service->resize(array('file_url' => $img['url']),array('large','big','middle'));
+			$file = $this->attachment_service->resize($img['url'],array('large','big','middle'));
 			$images[$imgK]['avatar_large'] = $file['img_large'];
 			$images[$imgK]['avatar_big'] = $file['img_big'];
 			$images[$imgK]['avatar_middle'] = $file['img_middle'];
@@ -306,7 +306,6 @@ class Stadium extends Ydzj_Controller {
 	public function add(){
         
         if(!$this->isLogin()){
-        	
         	$this->assign('returnUrl',site_url('stadium/add'));
         	$this->display('member/login');
         	

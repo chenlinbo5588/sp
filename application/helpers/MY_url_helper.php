@@ -103,4 +103,24 @@ if ( ! function_exists('js_redirect'))
 }
 
 
+if ( ! function_exists('urlToPath')) {
+	function urlToPath($url){
+		//兼容处理
+		if(strpos($url,'http://') !== false){
+			$tempUrl = parse_url($url);
+			
+			if(substr($tempUrl['path'],0,1) == '/'){
+				$tempUrl['path'] = substr($tempUrl['path'],1);
+			}
+			
+			return $tempUrl['path'];
+		}else{
+			return $url;
+		}
+	}
+}
+
+
+
+
 

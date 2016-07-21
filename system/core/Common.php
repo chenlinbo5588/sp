@@ -934,6 +934,7 @@ if ( ! function_exists('getImgPathArray'))
 {
 	
 	function getImgPathArray($srcImgUrl , $size = array(), $keyName = 'avatar'){
+		$srcImgUrl = urlToPath($srcImgUrl);
 		
 		if(strpos($srcImgUrl,'_') !== false){
 			$tempUrl = substr($srcImgUrl,0,strrpos($srcImgUrl,'_')) . substr($srcImgUrl,strrpos($srcImgUrl,'.'));
@@ -955,6 +956,7 @@ if ( ! function_exists('getImgPathArray'))
 		return $img;
 	}
 }
+
 
 function getSuccessTip($message = ''){
 	return "<div class=\"tip_success\">{$message}</div>";

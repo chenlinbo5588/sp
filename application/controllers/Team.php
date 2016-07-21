@@ -378,16 +378,14 @@ class Team extends Ydzj_Controller {
 					break;
 				}
 				
+				$this->attachment_service->setImageSizeConfig(config_item('avatar_img_size'));
 				//创建缩略图
-				$resizeFile = $this->attachment_service->resize($fileData , array('large','big','middle'));
+				$resizeFile = $this->attachment_service->resize($fileData['file_url'] , array_keys(config_item('avatar_img_size')),array(),'avatar');
+				
+				$resizeFile['aid'] = $fileData['id'];
 				
 				$this->load->library('Team_service');
-				$result = $this->team_service->updateTeamInfo(array(
-					'aid' => $fileData['id'],
-					'avatar_large' => $resizeFile['img_large'],
-					'avatar_big' => $resizeFile['img_big'],
-					'avatar_middle' => $resizeFile['img_middle']
-				),$team['basic']['id']);
+				$result = $this->team_service->updateTeamInfo($resizeFile,$team['basic']['id']);
 				
 				$this->attachment_service->deleteByFileUrl($fileData['file_url']);
 				if($team['basic']['aid']){

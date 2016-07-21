@@ -6,173 +6,286 @@
       <ul class="tab-base">
         <li><a href="{admin_site_url('team')}" ><span>{#manage#}</span></a></li>
         <li><a href="{admin_site_url('team/add')}" ><span>{#add#}</span></a></li>
-        <li><a href="javascript:void(0);" class="current"><span>{#edit#}</span></a></li>
+        <li><a href="{admin_site_url('team/edit')}?id={$info['basic']['id']}" class="current"><span>{#edit#}</span></a></li>
+      </ul>
+      <ul class="tab-sub">
+        <li><a href="javascript:void(0);" class="current"><span>{#titel#}基本信息</span></a></li>
+        <li><a href="javascript:void(0);"><span>审核信息</span></a></li>
+        <li><a href="javascript:void(0);"><span>成员信息</span></a></li>
+        <li><a href="javascript:void(0);"><span>比赛记录</span></a></li>
+        <li><a href="javascript:void(0);"><span>消费记录</span></a></li>
       </ul>
     </div>
   </div>
   <div class="fixed-empty"></div>
   {$feedback}
-  <div>
-  	<ul class="tab-base">
-        <li><a href="javascript:void(0);" nctype="index" class="current"><span>{#titel#}基本信息</span></a></li>
-        <li><a href="javascript:void(0);" nctype="audit"><span>审核信息</span></a></li>
-        <li><a href="javascript:void(0);" nctype="members"><span>成员信息</span></a></li>
-        <li><a href="javascript:void(0);" nctype="games"><span>比赛记录</span></a></li>
-        <li><a href="javascript:void(0);" nctype="consume"><span>消费记录</span></a></li>
-      </ul>
+  <div class="tab-content">
+	  <div class="tab-item">
+	  {form_open_multipart(admin_site_url('team/edit?id='|cat:$info['basic']['id']),'name="form_index"')}
+	    <table class="table tb-type2">
+	      <tbody>
+	      	<tr class="noborder">
+	          <td colspan="2" class="required"><label class="validation">{#team_category#}:</label></td>
+	        </tr>
+	        <tr class="noborder">
+	          <td class="vatop rowform">
+	          	<select name="category_id">
+	                {foreach from=$sportsCategoryList item=item}
+	                <option value="{$item['id']}" {if $info['basic']['category_id'] == $item['id']}selected{/if}>{$item['name']}</option>
+	                {/foreach}
+	            </select>
+	          </td>
+	          <td class="vatop tips"><label class="errtip" id="error_category_id"></label></td>
+	        </tr>
+	      	<tr class="noborder">
+	          <td colspan="2" class="required"><label class="validation">{#team_name#}:</label></td>
+	        </tr>
+	        <tr class="noborder">
+	          <td class="vatop rowform"><input type="text" class="txt" name="title" value="{$info['basic']['title']|escape}"/></td>
+	          <td class="vatop tips"><label class="errtip" id="error_title"></label></td>
+	        </tr>
+	        <tr class="noborder">
+	          <td colspan="2" class="required"><label>{#slogan#}:</label></td>
+	        </tr>
+	        <tr class="noborder">
+	          <td class="vatop rowform">
+	            <input type="text" name="slogan" class="txt" value="{$info['basic']['slogan']|escape}" placeholder="{#please_enter#}{#slogan#}"/>
+	          </td>
+	          <td class="vatop tips"><label class="errtip" id="error_slogan"></label> 如：不惧任何对手</td>
+	        </tr>
+	        <tr class="noborder">
+	          <td colspan="2" class="required"><label>{#base_area#}:</label></td>
+	        </tr>
+	        <tr class="noborder">
+	          <td class="vatop rowform">
+	            <input type="text" name="base_area" class="txt" value="{$info['basic']['base_area']|escape}" placeholder="{#please_enter#}{#base_area#}"/>
+	          </td>
+	          <td class="vatop tips"><label class="errtip" id="error_base_area"></label> 如： 傅家路灯光球场</td>
+	        </tr>
+	        <tr class="noborder">
+	          <td colspan="2" class="required"><label>{#notice_board#}:</label></td>
+	        </tr>
+	        <tr class="noborder">
+	          <td class="vatop rowform">
+	            <input type="text" name="notice_board" class="txt" value="{$info['basic']['notice_board']|escape}" placeholder="{#please_enter#}{#notice_board#}"/>
+	          </td>
+	          <td class="vatop tips"><label class="errtip" id="error_notice_board"></label> 如：球队活动有事者需提前请假</td>
+	        </tr>
+	        <tr class="noborder">
+	          <td colspan="2" class="required"><label>{#team_city#}:</label></td>
+	        </tr>
+	        <tr class="noborder">
+	          <td class="vatop ">
+	            <div class="cityGroupWrap">
+                    <select name="d1" class="citySelect">
+                        <option value="">{#choose#}</option>
+                        {foreach from=$ds['d1'] item=item}
+                        <option value="{$item['id']}" {if $info['basic']['d1'] == $item['id']}selected="selected"{/if}>{$item['name']}</option>
+                        {/foreach}
+                    </select>
+                    <select name="d2" class="citySelect">
+                        <option value="">{#choose#}</option>
+                        {foreach from=$ds['d2'] item=item}
+                        <option value="{$item['id']}" {if $info['basic']['d2'] == $item['id']}selected="selected"{/if}>{$item['name']}</option>
+                        {/foreach}
+                    </select>
+                    <select name="d3" class="citySelect">
+                        <option value="">{#choose#}</option>
+                        {foreach from=$ds['d3'] item=item}
+                        <option value="{$item['id']}" {if $info['basic']['d3'] == $item['id']}selected="selected"{/if}>{$item['name']}</option>
+                        {/foreach}
+                    </select>
+                    <select name="d4" class="citySelect">
+                        <option value="">{#choose#}</option>
+                        {foreach from=$ds['d4'] item=item}
+                        <option value="{$item['id']}" {if $info['basic']['d4'] == $item['id']}selected="selected"{/if}>{$item['name']}</option>
+                        {/foreach}
+                    </select>
+                </div>
+	          </td>
+	          <td class="vatop tips">请选择队伍所在的地区</td>
+	        </tr>
+	        <tr class="noborder">
+	          <td colspan="2" class="required"><label>{#team_avatar#}:</label></td>
+	        </tr>
+	        <tr class="noborder">
+	          <td class="vatop rowform">
+	            {if $info['basic']['aid']}<img src="{resource_url($info['basic']['avatar_m'])}"/>{else}还没有{#team_avatar#}{/if}
+	          </td>
+	          <td class="vatop tips"></td>
+	        </tr>
+	        <tr>
+	          <td colspan="2" class="required"><label>修改球队合照:</label></td>
+	        </tr>
+	        <tr class="noborder">
+	          <td class="vatop rowform">
+	            <input type="hidden" name="avatar_id" id="avatar_id" value=""/>
+	            <div class="upload"><input type='text' readonly="readonly" class="txt" name='avatar' id='avatar' value="{$info['basic']['avatar']}"/><input type="button" id="uploadButton" value="浏览" /></div>
+	            </td>
+	          <td class="vatop tips">支持格式jpg或者PNG 最小尺寸 <strong class="warning">{$teamImageConfig['h']['width']}x{$teamImageConfig['h']['height']}</strong></td>
+	        </tr>
+	        <tr>
+	        	<td colspan="2" class="required"><div id="preview"></div></td>
+	        </tr>
+	        <tr>
+	          <td colspan="2" class="required"><label>{#team_leader#}:</label></td>
+	        </tr>
+	        <tr class="noborder">
+	          <td class="vatop rowform">{if $info['basic']['leader_uid']}<a href="{admin_site_url('member/edit')}?id={$info['basic']['leader_uid']}">{$info['basic']['leader_name']|escape}</a>{else}未设置队长{/if}</td>
+	          <td class="vatop tips"></td>
+	        </tr>
+	        <tr>
+	          <td colspan="2" class="required"><label>{#join_type#}:</label></td>
+	        </tr>
+	        <tr class="noborder">
+	          <td class="vatop rowform">
+	          	<label><input type="radio" name="joined_type" value="1" {if $info['basic']['joined_type'] == 1}checked{/if}/>{#join_type1#}</label>
+	          	<label><input type="radio" name="joined_type" value="2" {if $info['basic']['joined_type'] == 2}checked{/if}/>{#join_type2#}</label>
+	          </td>
+	          <td class="vatop tips"></td>
+	        </tr>
+	        <tr>
+	          <td colspan="2" class="required"><label>{#accept_game#}:</label></td>
+	        </tr>
+	        <tr class="noborder">
+	          <td class="vatop rowform">
+	          	<label><input type="radio" name="accept_game" value="1" {if $info['basic']['accept_game'] == 1}checked{/if}/>{#accept_game_enable#}</label>
+	          	<label><input type="radio" name="accept_game" value="0" {if $info['basic']['accept_game'] == 0}checked{/if}/>{#accept_game_disable#}</label>
+	          </td>
+	          <td class="vatop tips"></td>
+	        </tr>
+	        <tr>
+	          <td colspan="2" class="required"><label>战绩:</label></td>
+	        </tr>
+	        <tr class="noborder">
+	          <td class="vatop rowform">
+	          	<span>{#games_cnt#}:</span><strong>{$info['basic']['games']}</strong>
+	          	<span>{#victory_game#}:</span><strong>{$info['basic']['victory_game']}</strong>
+	          	<span>{#fail_game#}:</span><strong>{$info['basic']['fail_game']}</strong>
+	          	<span>{#draw_game#}:</span><strong>{$info['basic']['draw_game']}</strong>
+	          	<span>{#win_rate#}:</span><strong>{$info['basic']['win_rate']}</strong></td>
+	          <td class="vatop tips"></td>
+	        </tr>
+	        <tr>
+	          <td colspan="2" class="required"><label>{#team_credits#}:</label></td>
+	        </tr>
+	        <tr class="noborder">
+	          <td class="vatop rowform">{#team_credits#}&nbsp;<strong class="red">{$info['basic']['credits']}</strong></td>
+	          <td class="vatop tips"></td>
+	        </tr>
+	        <tr>
+	          <td colspan="2" class="required"><label>{#register_channel#}:</label></td>
+	        </tr>
+	        <tr class="noborder">
+	          <td class="vatop rowform">{$info['basic']['channel']}</td>
+	          <td class="vatop tips"></td>
+	        </tr>
+	        <tr>
+	          <td colspan="2" class="required"><label>{#creator#}:</label></td>
+	        </tr>
+	        <tr class="noborder">
+	          <td class="vatop rowform">{$info['basic']['add_username']|escape}</td>
+	          <td class="vatop tips"></td>
+	        </tr>
+	        <tr>
+	          <td colspan="2" class="required"><label>{#create_time#}:</label></td>
+	        </tr>
+	        <tr class="noborder">
+	          <td class="vatop rowform">{$info['basic']['gmt_create']|date_format:"%Y-%m-%d %H:%M:%S"}</td>
+	          <td class="vatop tips"></td>
+	        </tr>
+	      </tbody>
+	      <tfoot>
+	        <tr class="tfoot">
+	          <td colspan="15"><input type="submit" name="submit" value="保存" class="msbtn"/></td>
+	        </tr>
+	      </tfoot>
+	    </table>
+	  </form>
   </div>
-  
-  {form_open_multipart(admin_site_url('team/edit?id='|cat:$info['basic']['id']),'name="form_index"')}
-    <table class="table tb-type2">
-      <tbody>
-      	<tr class="noborder">
-          <td colspan="2" class="required"><label>{#team_category#}:</label></td>
-        </tr>
-        <tr class="noborder">
-          <td class="vatop rowform">
-          	<select name="category_id">
-                {foreach from=$sportsCategoryList item=item}
-                <option value="{$item['id']}" {if $info['basic']['title'] == $item['name']}selected{/if}>{$item['name']}</option>
-                {/foreach}
-            </select>
-            {form_error('category_id')}
-          </td>
-          <td class="vatop tips"></td>
-        </tr>
-      	<tr class="noborder">
-          <td colspan="2" class="required"><label>{#team_name#}:</label></td>
-        </tr>
-        <tr class="noborder">
-          <td class="vatop rowform"><input type="text" class="txt" name="title" value="{$info['basic']['title']|escape}"/></td>
-          <td class="vatop tips"></td>
-        </tr>
-        <tr class="noborder">
-          <td colspan="2" class="required"><label>{#slogan#}:</label></td>
-        </tr>
-        <tr class="noborder">
-          <td class="vatop rowform">
-            <input type="text" name="slogan" class="txt" value="{$info['basic']['slogan']|escape}" placeholder="请输入建队口号"/>
-          </td>
-          <td class="vatop tips"></td>
-        </tr>
-        <tr class="noborder">
-          <td colspan="2" class="required"><label>球队合照:</label></td>
-        </tr>
-        <tr class="noborder">
-          <td class="vatop rowform">
-            <img src="{resource_url($info['basic']['avatar_m'])}"/>
-          </td>
-          <td class="vatop tips"></td>
-        </tr>
-        <tr>
-          <td colspan="2" class="required"><label>修改球队合照:</label></td>
-        </tr>
-        <tr class="noborder">
-          <td class="vatop rowform">
-            <input type="hidden" name="avatar_id" value="{$info['basic']['aid']}"/>
-            <input type="hidden" name="old_avatar_id" value=""/>
-            <input type="hidden" name="old_avatar" value=""/>
-            <div class="upload"><input type='text' class="txt" name='avatar' id='avatar' value="{$info['basic']['avatar']}"/><input type="button" id="uploadButton" value="浏览" /></div>
-            </td>
-          <td class="vatop tips">支持格式jpg或者PNG 最小尺寸 {$teamImageConfig['h']['width']}x{$teamImageConfig['h']['height']}</td>
-        </tr>
-        <tr>
-        	<td colspan="2" class="required"><div id="preview"></div></td>
-        </tr>
-        <tr>
-          <td colspan="2" class="required"><label>积分:</label></td>
-        </tr>
-        <tr class="noborder">
-          <td class="vatop rowform">积分&nbsp;<strong class="red">{$info['basic']['credits']}</strong>&nbsp;</td>
-          <td class="vatop tips"></td>
-        </tr>
-      </tbody>
-      <tfoot>
-        <tr class="tfoot">
-          <td colspan="15"><input type="submit" name="submit" value="保存" class="msbtn"/></td>
-        </tr>
-      </tfoot>
-    </table>
-  </form>
-  {form_open(admin_site_url('team/audit'),'name="form_audit"')}
-    <table class="table tb-type2">
-      <tbody>
-        <tr>
-          <td colspan="2" class="required"><label>审核意见</label></td>
-        </tr>
-        <tr class="noborder">
-        </tr>
-        <tr>
-          <td colspan="2" class="required"><label>审核备注</label></td>
-        </tr>
-        <tr class="noborder">
-        	<td><textarea name="audit_remark"></textarea></td>
-        </tr>
-      </tbody>
-      <tfoot>
-        <tr class="tfoot">
-          <td colspan="2" ><input type="submit" value="保存" class="msbtn"></td>
-        </tr>
-      </tfoot>
-    </table>
-    <table class="table tb-type2">
-      <tbody>
-        <tr>
-          <td colspan="2" class="required"><label>审核意见</label></td>
-        </tr>
-        <tr class="noborder">
-        </tr>
-        <tr>
-          <td colspan="2" class="required"><label>审核意见</label></td>
-        </tr>
-        <tr class="noborder">
-        </tr>
-      </tbody>
-    </table>
-  </form>
-  {form_open(admin_site_url('team/audit'),'name="form_members"')}
-    <table class="tb-type2">
-      <thead>
-      	<tr>
-      		<th></th>
-      		<th>头像</th>
-      		<th>真实名称</th>
-      		<th>昵称</th>
-      		<th>队内职务</th>
-      		<th>场上位置</th>
-      		<th>球衣号码</th>
-      		<th>排序</th>
-      	</tr>
-      </thead>
-      <tbody>
-      	{foreach from=$info['members'] item=item key=key}
-        <tr class="noborder">
-          <td><input type="checkbox" name="sel" value="{$item['id']}"/></td>
-          <td><img src="{resource_url($item['avatar_s'])}"/></td>
-          <td>
-          	<input type="hidden" name="uid" value="{$item['uid']|escape}" />
-          	<input type="text" name="username" value="{$item['username']|escape}" />
-          </td>
-          <td>
-          	<input type="text" name="nickname" value="{$item['nickname']|escape}" />
-          </td>
-          <td>
-          	<input type="text" name="rolename" value="{$item['rolename']|escape}" />
-          </td>
-          <td>
-          	<input type="text" name="position" value="{$item['position']|escape}" />
-          </td>
-          <td>
-          	<input type="text" name="num" value="{$item['num']|escape}" />
-          </td>
-          <td>
-          	<input type="text" name="displayorder" value="{$item['displayorder']|escape}" />
-          </td>
-        </tr>
-        {/foreach}
-      </tbody>
-    </table>
-  </form>
+  <div class="tab-item">
+	  {form_open(admin_site_url('team/audit'),'name="form_audit"')}
+	    <table class="table tb-type2">
+	      <tbody>
+	        <tr>
+	          <td colspan="2" class="required"><label>审核意见</label></td>
+	        </tr>
+	        <tr class="noborder">
+	        </tr>
+	        <tr>
+	          <td colspan="2" class="required"><label>审核备注</label></td>
+	        </tr>
+	        <tr class="noborder">
+	        	<td><textarea name="audit_remark" style="height:260px;width:100%;"></textarea></td>
+	        </tr>
+	      </tbody>
+	      <tfoot>
+	        <tr class="tfoot">
+	          <td colspan="2" ><input type="submit" value="保存" class="msbtn"></td>
+	        </tr>
+	      </tfoot>
+	    </table>
+	    <table class="table tb-type2">
+	      <tbody>
+	        <tr>
+	          <td colspan="2" class="required"><label>审核意见</label></td>
+	        </tr>
+	        <tr class="noborder">
+	        </tr>
+	        <tr>
+	          <td colspan="2" class="required"><label>审核意见</label></td>
+	        </tr>
+	        <tr class="noborder">
+	        </tr>
+	      </tbody>
+	    </table>
+	  </form>
+  </div>
+  <div class="tab-item">
+	  {form_open(admin_site_url('team/audit'),'name="form_members"')}
+	    <table class="tb-type2">
+	      <thead>
+	      	<tr>
+	      		<th></th>
+	      		<th>头像</th>
+	      		<th>真实名称</th>
+	      		<th>昵称</th>
+	      		<th>队内职务</th>
+	      		<th>场上位置</th>
+	      		<th>球衣号码</th>
+	      		<th>排序</th>
+	      	</tr>
+	      </thead>
+	      <tbody>
+	      	{foreach from=$info['members'] item=item key=key}
+	        <tr class="noborder">
+	          <td><input type="checkbox" name="sel" value="{$item['id']}"/></td>
+	          <td><img src="{resource_url($item['avatar_s'])}"/></td>
+	          <td>
+	          	<input type="hidden" name="uid" value="{$item['uid']|escape}" />
+	          	<input type="text" name="username" value="{$item['username']|escape}" />
+	          </td>
+	          <td>
+	          	<input type="text" name="nickname" value="{$item['nickname']|escape}" />
+	          </td>
+	          <td>
+	          	<input type="text" name="rolename" value="{$item['rolename']|escape}" />
+	          </td>
+	          <td>
+	          	<input type="text" name="position" value="{$item['position']|escape}" />
+	          </td>
+	          <td>
+	          	<input type="text" name="num" value="{$item['num']|escape}" />
+	          </td>
+	          <td>
+	          	<input type="text" name="displayorder" value="{$item['displayorder']|escape}" />
+	          </td>
+	        </tr>
+	        {/foreach}
+	      </tbody>
+	    </table>
+	  </form>
+  </div>
   {include file="common/ke.tpl"}
   {include file="common/jcrop.tpl"}
   <script type="text/javascript">
@@ -186,6 +299,8 @@
 				refreshFormHash(data);
 				if (data.error === 0) {
 					K('#avatar').val(data.url);
+					K('#avatar_id').val(data.id);
+					
 					K('#preview').html('<img width="{$teamImageConfig['h']['width']}" height="{$teamImageConfig['h']['height']}" src="' + data.url + '"/>');
 					
 				} else {
@@ -203,16 +318,41 @@
 			
 			
 	$(function(){
-		$('.tab-base').find('a').bind('click',function(){
-			$("#tag_tips").css('display','none');
-			$('.tab-base').find('a').removeClass('current');
+		$('.tab-sub').find('a').bind('click',function(){
+			$('.tab-sub').find('a').removeClass('current');
 			$(this).addClass('current');
 			
-			$('form').css('display','none');
-			$('form[name="form_'+$(this).attr('nctype')+'"]').css('display','');
+			$('.tab-content .tab-item').css('display','none');
+			$(".tab-content .tab-item:eq(" + $(this).parent('li').index() + ")").show();
+			
 		});
 		
-		$('form:gt(0)').css('display','none');
+		$('.tab-content .tab-item:gt(0)').css('display','none');
+		
+		$("form").submit(function(){
+			$.post($(this).attr('action'),$(this).serialize(),function(resp){
+				refreshFormHash(resp.data);
+				alert(resp.message);
+				
+				if(resp.message != '保存成功'){
+					var errors = resp.data.errors;
+					var first = null;
+					
+					for(var f in errors){
+						if(first == null){
+							first = f;
+						}
+						$("#error_" + f).html(errors[f]).addClass("error").show();
+					}
+					$("input[name=" + first + "]").focus();
+					
+				}else{
+					$("label.errtip").hide();
+				}
+			},'json')
+		
+			return false;
+		});
 		
 	});
 	</script>

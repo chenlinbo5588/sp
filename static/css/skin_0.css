@@ -249,7 +249,7 @@ input[type=checkbox],input[type=radio] {
 /*内容页面样式
 ------------------------------------------------------------------- */
 .page { padding: 9px 20px 20px; text-align: left;}
-.fixed-bar {background: #FFF url(../img/sky/fixed_bg.png) repeat-x scroll center bottom; width: 99%; padding: 8px 20px 8px 0; margin-left: 20px; position: fixed; top: 0; left: 0; z-index: 99;}
+.fixed-bar {background: #FFF url(../img/sky/fixed_bg.png) repeat-x scroll center bottom; width: 99%; padding: 8px 20px 10px 0; margin-left: 20px; position: fixed; top: 0; left: 0; z-index: 99;}
 * html .fixedbar { width: 100%; margin-top: -10px; position: relative; left: -20px;}
 
 .fixed-empty { height: 50px !important;}
@@ -262,7 +262,17 @@ input[type=checkbox],input[type=radio] {
             .tab-base a span { color: #555; background: url(../img/sky/bg_position.gif) no-repeat 9999px 9999px; float: left; padding-right: 9px; }
                 .tab-base a:hover span {  background-position: 100% -220px;}
         .tab-base a.current, .tab-base a:hover.current { background-position: 0 -240px; cursor: default;}
-            .tab-base a.current span, .tab-base a:hover.current span{ color: #FFF; background-position: 100% -240px;}
+            .tab-base a.current span, .tab-base a:hover.current span{ color: #FFF; background-position: 100% -240px;cursor: pointer;}
+            
+.tab-sub {overflow: hidden; padding-top:16px; }
+    .tab-sub li { float: left;}
+        .tab-sub a { font-weight: 700; line-height: 20px; background: #FFF url(../img/sky/bg_position.gif) no-repeat 0px -200px; height: 20px; float: left; padding-left: 9px; margin-right:2px;  cursor: pointer;}
+        .tab-sub a:hover { color: #09C; background-position: 0 -220px; }
+            .tab-sub a span { color: #555; background: url(../img/sky/bg_position.gif) no-repeat 9999px 9999px; float: left; padding-right: 9px; }
+                .tab-sub a:hover span {  background-position: 100% -220px;}
+        .tab-sub a.current, .tab-sub a:hover.current { background-position: 0 -240px; cursor: default;}
+            .tab-sub a.current span, .tab-sub a:hover.current span{ color: #FFF; background-position: 100% -240px;cursor: pointer;}
+            
 
 
 /* table
@@ -312,7 +322,7 @@ input[type=checkbox],input[type=radio] {
 #table_area_box_edit label { vertical-align: top; display: inline-block; *display: inline; width: 25%; margin: 0 0 10px 0; *zoom: 1; }
 #table_area_box_edit input[type="checkbox"] { vertical-align: middle;}
 
-    .rowform{ width:306px; overflow:auto; }
+    .rowform{ width:400px; overflow:auto; }
 
         .rowform .txt, .rowform textarea{ margin-right:10px; width:250px; }
         .rowform .txt2, .rowform textarea{ margin-right:10px; width:110px; }

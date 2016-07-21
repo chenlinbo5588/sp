@@ -131,10 +131,9 @@ class Team extends Ydzj_Admin_Controller {
 		$info = array();
 		
 		if($this->isPostRequest()){
-			
 			$addParam = $this->team_service->teamAddRules();
-			
 			$this->form_validation->set_rules('leader_account','手机号码',"required|valid_mobile|in_db_list[{$this->Member_Model->_tableRealName}.mobile]");
+			
 			/*
 			$this->form_validation->set_rules('leader_account','手机号码',array(
 					'required',
@@ -166,7 +165,7 @@ class Team extends Ydzj_Admin_Controller {
 			for($i = 0 ; $i < 1; $i++){
 				
 				$this->load->library('Attachment_service');
-				$fileData = $this->attachment_service->addImageAttachment('team_avatar',array(),FROM_BACKGROUND,'team');
+				$fileData = $this->attachment_service->addImageAttachment('team_avatar',array(),FROM_BACKGROUND,'team_avatar');
 				
 				// 看有没有传成功过 
 				$avatar = $this->input->post('avatar');
@@ -224,13 +223,10 @@ class Team extends Ydzj_Admin_Controller {
 				//创建缩略图
 				if($addParam['avatar']){
 					$this->attachment_service->setImageSizeConfig($this->_teamImageSize);
-					$resizeFile = $this->attachment_service->resize(array('file_url' => $addParam['avatar']) , $this->_teamSizeKeys);
-					foreach($this->_teamSizeKeys as $sizeKey){
-						$addParam['avatar_'.$sizeKey] = $resizeFile['img_'.$sizeKey];
-					}
+					$resizeFile = $this->attachment_service->resize($addParam['avatar'],$this->_teamSizeKeys,array(), 'avatar');
+					$addParam = array_merge($addParam,$resizeFile);
 				}
 				
-				//$addParam['avatar_small'] = $resizeFile['img_small'];
 				$addParam = array_merge($addParam,$this->addWhoHasOperated('add'));
 				$teamid = $this->team_service->addTeam($addParam, $leaderInfo);
 				
@@ -262,19 +258,64 @@ class Team extends Ydzj_Admin_Controller {
 		
 		$info = $this->team_service->getTeamInfo($teamId);
 		
-		//print_r($urlParam);
 		if(!empty($teamId) && $this->isPostRequest()){
+			// 队伍未审核通过时，可以修改队伍类型，审核通过后不可再次修改
+			for($i = 0; $i < 1; $i++){
+				$updateParam = $this->team_service->teamEditRules();
+				
+				if(!$this->form_validation->run()){
+					$d = $this->getFormHash();
+					$d['errors'] = $this->form_validation->error_array();
+					$this->jsonOutput('保存失败',$d);
+					break;
+				}
+				
+				$avatar = $this->input->post('avatar');
+				$avatar_id = $this->input->post('avatar_id');
+				
+				if($avatar){
+					$this->load->library('Attachment_service');
+					$this->attachment_service->setImageSizeConfig($this->_teamImageSize);
+					$resizeFile = $this->attachment_service->resize($avatar,$this->_teamSizeKeys,array(), 'avatar');
+					
+					$updateParam = array_merge($updateParam,$resizeFile);
+				}
+				
+				$updateParam = array_merge($updateParam,$this->addWhoHasOperated('edit'));
+				$row = $this->team_service->updateTeam($teamId,$updateParam);
+				
+				if($row >= 0){
+					$this->jsonOutput('保存成功',$this->getFormHash());
+					
+					/*
+					file_put_contents('debug.txt',print_r($info,true));
+					file_put_contents('debug.txt',$avatar_id,FILE_APPEND);
+					file_put_contents('debug.txt',$avatar,FILE_APPEND);
+					*/
+					
+					if($row > 0 && $info['basic']['aid'] && $avatar_id != $info['basic']['aid']){
+						$wantDeleteFiles = getImgPathArray($info['basic']['avatar_h'],$this->_teamSizeKeys);
+						$this->attachment_service->deleteByFileUrl($wantDeleteFiles);
+					}
+				}else{
+					$this->jsonOutput($this->form_validation->error_string(),$this->getFormHash());
+				}
+			}
 			
+		}else{
+			$this->assign('ds',$this->common_district_service->prepareCityData(array(
+				'd1' => $info['basic']['d1'],
+				'd2' => $info['basic']['d2'],
+				'd3' => $info['basic']['d3'],
+				'd4' => $info['basic']['d4']
+			)));
+			
+			$this->assign('teamImageConfig',config_item('team_img_size'));
+		
+			$this->assign('formUrl',admin_site_url('team/edit?id=').$teamId);
+			$this->assign('info',$info);
+			$this->display();
+		
 		}
-		
-		
-		$this->assign('teamImageConfig',config_item('team_img_size'));
-		
-		$this->assign('formUrl',admin_site_url('team/edit?id=').$teamId);
-		$this->assign('info',$info);
-		$this->display();
 	}
-	
-	
-	
 }

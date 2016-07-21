@@ -103,4 +103,5 @@ class Member_service extends Base_service {
 			'd4' => $param['d4']
 		),array('uid' => $param['uid']));
 	}
+	
 }

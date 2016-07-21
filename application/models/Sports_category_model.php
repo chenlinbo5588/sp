@@ -18,13 +18,13 @@ class Sports_Category_Model extends MY_Model {
     
     
     public function avaiableCategory($category){
-    	$info = $this->getById(array(
+    	$cnt = $this->getCount(array(
     		'where' => array(
     			'id' => $category
     		)
     	));
     	
-    	if($info){
+    	if($cnt > 0){
     		return true;
     	}else{
     		
