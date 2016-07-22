@@ -24,13 +24,10 @@ class Ydzj_Controller extends MY_Controller {
 	
 	protected function _initLibrary(){
 		parent::_initLibrary();
-		
 		$this->load->config('site');
 	}
 	
 	private function _initLogin(){
-		
-		$this->session->set_userdata(array('lastvisit' => $this->_reqtime));
 		$this->_profile = $this->session->userdata('profile');
 		//print_r($this->session->all_userdata());
 		if(empty($this->_profile)){
@@ -40,11 +37,14 @@ class Ydzj_Controller extends MY_Controller {
 		if($this->isLogin()){
 			$this->assign('profile',$this->session->userdata('profile'));
 		}
+		
+		//前台登陆
+		$this->session->set_userdata(array('lastvisit' => $this->_reqtime));
 	}
 	
 	
 	public function isLogin(){
-		if($this->_profile && ($this->_reqtime - $this->session->userdata('lastvisit') < 86400)){
+		if($this->_profile && ($this->_reqtime - $this->session->userdata('lastvisit') < 86400 * 30)){
 			return true;
 		}
 		

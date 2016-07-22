@@ -49,16 +49,8 @@ class MY_Controller extends CI_Controller {
 	
 	
 	public function getFormHash(){
-		return array('formhash' => $this->security->get_csrf_hash(), $this->_verifyName => $this->_verify());
+		return array(config_item('csrf_token_name') => $this->security->get_csrf_hash(), $this->_verifyName => $this->_verify());
 	}
-	
-	/**
-	 * @todo for iOS api , need to revamp
-	 */
-	public function formhash(){
-		$this->jsonOutput('',$this->getFormHash());
-	}
-	
 	
 	protected function _checkVerify(){
 		if($this->isPostRequest()){
@@ -187,8 +179,8 @@ class MY_Controller extends CI_Controller {
     
     
     private function _security(){
+    	$this->assign(config_item('csrf_token_name'),$this->security->get_csrf_hash());
     	
-    	$this->assign('formhash',$this->security->get_csrf_hash());
     	/*
     	if($this->input->cookie($this->_lastVisit) != ''){
 			$elapsed_time = number_format(microtime(TRUE) -  $this->input->cookie($this->_lastVisit), 2);
@@ -319,13 +311,31 @@ class MY_Controller extends CI_Controller {
     }
     
     /**
+     * json format
+     */
+    private function _buildJsonFormat($message = '' , $data = array()){
+    	if(is_array($message)){
+			$d =	array('code' => $message[0],'message' =>$message[1], 'data' => $data);
+		}else{
+			$d = array('message' => $message,'data' => $data);
+		}
+		
+		if(config_item('csrf_protection') && $this->isPostRequest()){
+			$d['data'] = array_merge($d['data'],$this->getFormHash());
+		}
+		
+		return $d;
+    }
+    
+    
+    /**
      * 
      */
     public function responseJSON($message = '' , $data = array()){
     	$this->output
 		    	->set_status_header(200)
 		    	->set_content_type('application/json')
-		    	->set_output(json_encode(array('message' => $message,'data' => $data)));
+		    	->set_output(json_encode($this->_buildJsonFormat($message,$data)));
 		    	
 		$this->output->_display();
 		
@@ -338,12 +348,11 @@ class MY_Controller extends CI_Controller {
     public function jsonOutput($message = '' , $data = array() , $cacheTime = 0 ){
     	if(!$this->output->_display_cache($this->config,$this->URI)){
 			// 缓存文件不存在或者是已经失效，设置数据
-			$data = array('message' => $message,'data' => $data);
-			//print_r($data);
+			$d = $this->_buildJsonFormat($message,$data);
 			$this->output
 		    	->set_status_header(200)
 		    	->set_content_type('application/json')
-		    	->set_output(json_encode($data));
+		    	->set_output(json_encode($d));
 		    	
 		    if($cacheTime > 0){
 		    	$this->output->cache($cacheTime);

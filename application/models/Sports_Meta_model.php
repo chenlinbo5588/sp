@@ -13,7 +13,7 @@ class Sports_Meta_Model extends MY_Model {
     }
     
     protected function _metaData(){
-    	return array_keys(self::$_tableMeta);
+    	return self::$_tableMeta;
     }
     
     public function getMetaDataByGroup($group = ''){

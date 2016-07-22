@@ -311,7 +311,7 @@ class Member extends Ydzj_Controller {
 		
 		$this->session->unset_userdata('profile');
 		//$this->session->sess_destroy();
-		//$this->jsonOutput('',$this->getFormHash());
+		//$this->jsonOutput('');
 		
 		redirect('member/login');
 	}

@@ -98,7 +98,6 @@ class Team extends Ydzj_Admin_Controller {
 		$this->display('team/index');
 	}
 	
-	
 	/**
 	 * 
 	 */
@@ -264,7 +263,6 @@ class Team extends Ydzj_Admin_Controller {
 				$updateParam = $this->team_service->teamEditRules();
 				
 				if(!$this->form_validation->run()){
-					$d = $this->getFormHash();
 					$d['errors'] = $this->form_validation->error_array();
 					$this->jsonOutput('保存失败',$d);
 					break;
@@ -285,7 +283,7 @@ class Team extends Ydzj_Admin_Controller {
 				$row = $this->team_service->updateTeam($teamId,$updateParam);
 				
 				if($row >= 0){
-					$this->jsonOutput('保存成功',$this->getFormHash());
+					$this->jsonOutput('保存成功');
 					
 					/*
 					file_put_contents('debug.txt',print_r($info,true));
@@ -298,7 +296,8 @@ class Team extends Ydzj_Admin_Controller {
 						$this->attachment_service->deleteByFileUrl($wantDeleteFiles);
 					}
 				}else{
-					$this->jsonOutput($this->form_validation->error_string(),$this->getFormHash());
+					//file_put_contents('debug2.txt',print_r(DB(),true));
+					$this->jsonOutput(DB()->get_db_error());
 				}
 			}
 			

@@ -10,6 +10,11 @@ class MY_Model extends CI_Model {
 	public $_tablePre = 'sp_';
 	public $_tableRealName = '';
 	
+	//用户自动记录操作人
+	public static $operator;
+	//数据来源  比如后台 , 手机网页版 等等
+	public static $channel;
+	
     public function __construct(){
         parent::__construct();
         $this->_tableRealName = $this->getTableRealName();
@@ -146,13 +151,13 @@ class MY_Model extends CI_Model {
         $data = array();
         
         foreach($param as $key => $value){
-        	if(in_array($key,$fields)){
+        	if(array_key_exists($key,$fields)){
         		$data[$key] = $value;
         	}
         }
         
         foreach(array('gmt_create','gmt_modify') as $value){
-            if(in_array($value,$fields)){
+            if(array_key_exists($value,$fields)){
                 $data[$value] = $now;
             }
         }
@@ -164,28 +169,26 @@ class MY_Model extends CI_Model {
         	$this->db->replace($this->_tableRealName, $data);
         	return $this->db->affected_rows();
         }
-    	
-
     }
+    
+    
     
     /**
      * 更新
      */
     public function update($param, $where = null){
-    	
         $fields = $this->_metaData();
         
         $data = array();
-        
         $now = time();
         
         foreach($param as $key => $value){
-        	if(in_array($key,$fields)){
+        	if(array_key_exists($key,$fields)){
         		$data[$key] = $value;
         	}
         }
         
-        if(in_array('gmt_modify',$fields)){
+        if(array_key_exists('gmt_modify',$fields)){
             $data['gmt_modify'] = $now;
         }
         
@@ -303,6 +306,10 @@ class MY_Model extends CI_Model {
         
         if($condition['where']){
             $this->db->where($condition['where']);
+        }
+        
+        if($condition['or_where']){
+            $this->db->where($condition['or_where']);
         }
         
         if($condition['where_in']){

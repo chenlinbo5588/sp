@@ -272,10 +272,10 @@ class Setting extends Ydzj_Admin_Controller {
 				
 				$this->Express_Model->update($upInfo,array('id' => $this->input->post('id')));
 				
-				$this->jsonOutput('保存成功', $this->getFormHash());
+				$this->jsonOutput('保存成功');
 				
 			}else{
-				$this->jsonOutput('保存失败 '.$this->form_validation->error_string(),$this->getFormHash());
+				$this->jsonOutput('保存失败 '.$this->form_validation->error_string());
 			}
 			
 		}else{

@@ -154,6 +154,7 @@ class Team_service extends Base_service {
 		$param['slogan'] = self::$CI->input->post('slogan');
 		$param['base_area'] = self::$CI->input->post('base_area');
 		$param['notice_board'] = self::$CI->input->post('notice_board');
+		$param['status'] = self::$CI->input->post('status');
 		
 		foreach($param as $pk => $pv){
 			$param[$pk] = trim($pv) ? trim($pv) : '';
@@ -185,7 +186,6 @@ class Team_service extends Base_service {
 		if($param['notice_board']){
 			self::$form_validation->set_rules('notice_board','队伍公告', 'required|max_length[50]');
 		}
-		
 		
 		return $param;
 	}

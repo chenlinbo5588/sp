@@ -10,7 +10,7 @@
     </div>
   </div>
   <div class="fixed-empty"></div>
-  {$feedback}
+  <div class="feedback">{$feedback}</div>
   {form_open_multipart($formUrl,'id="team_form"')}
     <table class="table tb-type2">
       <colgroup>

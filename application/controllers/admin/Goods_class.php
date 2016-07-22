@@ -43,9 +43,9 @@ class Goods_Class extends Ydzj_Admin_Controller {
 		
 		if($this->isPostRequest()){
 			$this->goods_service->deleteGoodsClass($delId);
-			$this->jsonOutput('成功',$this->getFormHash());
+			$this->jsonOutput('成功');
 		}else{
-			$this->jsonOutput('请求非法',$this->getFormHash());
+			$this->jsonOutput('请求非法');
 		}
 	}
 	
@@ -510,9 +510,9 @@ class Goods_Class extends Ydzj_Admin_Controller {
 			}
 			
 			$this->goods_service->deleteGoodsClassTag($ids);
-			$this->jsonOutput('删除成功',$this->getFormHash());
+			$this->jsonOutput('删除成功');
 		}else{
-			$this->jsonOutput('请求非法',$this->getFormHash());
+			$this->jsonOutput('请求非法');
 			
 		}
 		

@@ -25,15 +25,20 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 	}
 	
 	private function _initAdminLogin(){
-		
 		//print_r($this->session->all_userdata());
+		
 		$this->_adminProfile = $this->session->userdata('manage_profile');
+		$adminLastVisit = $this->session->userdata('admin_lastvisit');
+		
+		if(empty($adminLastVisit)){
+			$this->session->set_userdata(array('admin_lastvisit' => $this->_reqtime));
+		}
 		
 		if(empty($this->_adminProfile)){
 			$this->_adminProfile = array();
 		}
 		
-		if(!$this->isLogin()){
+		if(!$this->isAdminLogin()){
 			if($this->input->is_ajax_request()){
 				$this->responseJSON('您尚未登陆',array('url' => site_url('member/admin_login')));
 			}else{
@@ -41,6 +46,10 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 			}
 		}else{
 			$this->assign('manage_profile',$this->_adminProfile);
+		}
+		
+		if(!empty($adminLastVisit)){
+			$this->session->set_userdata(array('admin_lastvisit' => $this->_reqtime));
 		}
 	}
 	
@@ -81,8 +90,16 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
     }
     
 	
-	public function isLogin(){
-		if($this->_adminProfile && ($this->_reqtime - $this->session->userdata('lastvisit') < 86400)){
+	public function isAdminLogin(){
+		
+		/*
+		echo $this->session->userdata('admin_lastvisit');
+		echo '<br>';
+		echo $this->_reqtime;
+		print_r($this->_adminProfile);
+		echo ($this->_reqtime - $this->session->userdata('admin_lastvisit'));
+		*/
+		if($this->_adminProfile && ($this->_reqtime - $this->session->userdata('admin_lastvisit') <= 86400)){
 			return true;
 		}
 		

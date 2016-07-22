@@ -103,9 +103,9 @@ class Article extends Ydzj_Admin_Controller {
 				)
 			));
 			
-			$this->jsonOutput('删除成功',$this->getFormHash());
+			$this->jsonOutput('删除成功');
 		}else{
-			$this->jsonOutput('请求非法',$this->getFormHash());
+			$this->jsonOutput('请求非法');
 			
 		}
 	}
@@ -292,7 +292,7 @@ class Article extends Ydzj_Admin_Controller {
 			$this->attachment_service->deleteFiles($file_id,'all',FROM_BACKGROUND);
 		}
 		
-		$this->jsonOutput('成功',$this->getFormHash());
+		$this->jsonOutput('成功');
 	}
 	
 	

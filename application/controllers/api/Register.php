@@ -91,9 +91,9 @@ class Register extends MY_Controller {
 			}
 			
 			if($rt['code'] == 'success'){
-				$this->jsonOutput('成功',$this->getFormHash());
+				$this->jsonOutput('成功');
 			}else{
-				$this->jsonOutput($rt['message'],$this->getFormHash());
+				$this->jsonOutput($rt['message']);
 			}
 			
 		}else{
@@ -197,13 +197,13 @@ class Register extends MY_Controller {
 			}
 			
 			if($rt['code'] == 'success'){
-				$this->jsonOutput('成功',$this->getFormHash());
+				$this->jsonOutput('成功');
 			}else{
-				$this->jsonOutput($rt['message'],$this->getFormHash());
+				$this->jsonOutput($rt['message']);
 			}
 			
 		}else{
-			$this->formhash();
+			$this->jsonOutput('');
 		}
 	}
 	
@@ -215,9 +215,9 @@ class Register extends MY_Controller {
 			$this->load->library('Verify_service');
 				
 			if($this->verify_service->isAuthCodeValidate($this->input->post('phoneNo'),$this->input->post('code'))){
-				$this->jsonOutput('成功',$this->getFormHash());
+				$this->jsonOutput('成功');
 			}else{
-				$this->jsonOutput('验证码错误',$this->getFormHash());
+				$this->jsonOutput('验证码错误');
 			}
 			
 			

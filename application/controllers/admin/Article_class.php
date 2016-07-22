@@ -43,10 +43,9 @@ class Article_Class extends Ydzj_Admin_Controller {
 		
 		if($this->isPostRequest()){
 			$this->article_service->deleteArticleClass($delId);
-			$this->jsonOutput('成功',$this->getFormHash());
+			$this->jsonOutput('成功');
 		}else{
-			
-			$this->jsonOutput('请求非法',$this->getFormHash());
+			$this->jsonOutput('请求非法');
 		}
 	}
 	

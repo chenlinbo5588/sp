@@ -10,7 +10,7 @@
     </div>
   </div>
   <div class="fixed-empty"></div>
-  {$feedback}
+  <div class="feedback">{$feedback}</div>
   {form_open_multipart(admin_site_url('member/edit?id='|cat:$info['uid']),'id="user_form"')}
     <table class="table tb-type2">
       <tbody>

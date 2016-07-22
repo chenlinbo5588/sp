@@ -11,6 +11,7 @@ $entity = array(
 'notice_board' => 'varchar',
 'max_member' => 'smallint',
 'current_num' => 'smallint',
+'status' => 'tinyint',
 'aid' => 'mediumint',
 'avatar_h' => 'varchar',
 'avatar_b' => 'varchar',

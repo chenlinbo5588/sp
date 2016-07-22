@@ -12,7 +12,7 @@ class Common_District_Model extends MY_Model {
     }
     
     protected function _metaData(){
-    	return array_keys(self::$_tableMeta);
+    	return self::$_tableMeta;
     }
     
 }

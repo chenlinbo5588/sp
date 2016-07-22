@@ -101,9 +101,9 @@ class Sports_meta extends Ydzj_Admin_Controller {
 				)
 			));
 			
-			$this->jsonOutput('删除成功',$this->getFormHash());
+			$this->jsonOutput('删除成功');
 		}else{
-			$this->jsonOutput('请求非法',$this->getFormHash());
+			$this->jsonOutput('请求非法');
 			
 		}
 	}
@@ -251,10 +251,10 @@ class Sports_meta extends Ydzj_Admin_Controller {
 				
 				$this->Sports_Meta_Model->update($upInfo,array('id' => $this->input->post('id')));
 				
-				$this->jsonOutput('保存成功', $this->getFormHash());
+				$this->jsonOutput('保存成功');
 				
 			}else{
-				$this->jsonOutput('保存失败 '.$this->form_validation->error_string(),$this->getFormHash());
+				$this->jsonOutput('保存失败 '.$this->form_validation->error_string());
 			}
 		}
 	}

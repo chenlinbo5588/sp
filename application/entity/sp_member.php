@@ -37,6 +37,7 @@ $entity = array(
 'd3' => 'mediumint',
 'd4' => 'mediumint',
 'channel' => 'smallint',
+'channel_name' => 'varchar',
 'allowtalk' => 'char',
 'freeze' => 'char',
 'gmt_create' => 'int',

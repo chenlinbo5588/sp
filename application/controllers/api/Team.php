@@ -23,11 +23,4 @@ class Team extends Ydzj_Controller {
 		$this->jsonOutput('success',$teamList);
 	}
 	
-	public function index()
-	{
-		
-		
-		
-		
-	}
 }
