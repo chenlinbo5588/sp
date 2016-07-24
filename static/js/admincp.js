@@ -76,6 +76,27 @@ $(function(){
     		return false;
     	}
     },"必须是有效的手机号码");
+    
+    
+    /* 自动更新 formhash 
+    $(document).ajaxComplete(function(event,request, settings) {
+        console.log(settings);
+        console.log(event);
+        console.log(request);
+        if(settings.type.toLowerCase() == 'post' && settings.dataType.toLowerCase() == 'json'){
+        	var newformhash = '';
+        	if(typeof(request.responseJSON.formhash) != "undefined"){
+        		newformhash = request.responseJSON.formhash;
+        	}else if(typeof(request.responseJSON.data.formhash != "undefined")){
+        		newformhash = request.responseJSON.data.formhash;
+        	}
+        	
+        	if(newformhash){
+        		formhash = newformhash;
+        		$("input[name=formhash]").val(newformhash);
+        	}
+        }
+    });*/
 });
 
 

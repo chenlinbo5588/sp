@@ -7,12 +7,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Ydzj_Admin_Controller extends Ydzj_Controller {
 	
 	public $_adminProfile = array() ;
+	public $_adminProfileKey = '';
+	public $_adminLastVisitKey = '';
 	
 	public function __construct(){
 		parent::__construct();
 		
+		$this->_adminProfileKey = 'admin_profile';
+		$this->_adminLastVisitKey = 'admin_lastvisit';
+		
 		$this->form_validation->set_error_delimiters('<label class="error">','</label>');
 		$this->_initAdminLogin();
+		
+		
 		
 		//@todo 打开检查权限
 		//$this->_checkPermission();
@@ -26,31 +33,47 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 	
 	private function _initAdminLogin(){
 		//print_r($this->session->all_userdata());
-		
-		$this->_adminProfile = $this->session->userdata('manage_profile');
-		$adminLastVisit = $this->session->userdata('admin_lastvisit');
+		$adminLastVisit = $this->session->userdata($this->_adminLastVisitKey);
 		
 		if(empty($adminLastVisit)){
-			$this->session->set_userdata(array('admin_lastvisit' => $this->_reqtime));
+			$adminLastVisit = $this->_reqtime;
 		}
 		
+		$this->_adminProfile = $this->session->userdata($this->_adminProfileKey);
 		if(empty($this->_adminProfile)){
 			$this->_adminProfile = array();
 		}
 		
-		if(!$this->isAdminLogin()){
+		if(!$this->isAdminLogin($adminLastVisit)){
 			if($this->input->is_ajax_request()){
 				$this->responseJSON('您尚未登陆',array('url' => site_url('member/admin_login')));
 			}else{
+				$this->session->unset_userdata(array($this->_adminLastVisitKey,$this->_adminProfileKey));
 				redirect(site_url('member/admin_login'));
 			}
 		}else{
-			$this->assign('manage_profile',$this->_adminProfile);
+			$this->assign($this->_adminProfileKey,$this->_adminProfile);
 		}
 		
-		if(!empty($adminLastVisit)){
-			$this->session->set_userdata(array('admin_lastvisit' => $this->_reqtime));
+		$this->session->set_userdata(array($this->_adminLastVisitKey => $this->_reqtime));
+	}
+	
+	
+	public function isAdminLogin($lastVisitTime){
+		
+		/*
+		echo $this->session->userdata('admin_lastvisit');
+		echo '<br>';
+		echo $this->_reqtime;
+		print_r($this->_adminProfile);
+		echo ($this->_reqtime - $this->session->userdata('admin_lastvisit'));
+		*/
+		
+		if($this->_adminProfile && ($this->_reqtime - $lastVisitTime) <= 86400){
+			return true;
 		}
+
+		return false;
 	}
 	
 	
@@ -90,21 +113,7 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
     }
     
 	
-	public function isAdminLogin(){
-		
-		/*
-		echo $this->session->userdata('admin_lastvisit');
-		echo '<br>';
-		echo $this->_reqtime;
-		print_r($this->_adminProfile);
-		echo ($this->_reqtime - $this->session->userdata('admin_lastvisit'));
-		*/
-		if($this->_adminProfile && ($this->_reqtime - $this->session->userdata('admin_lastvisit') <= 86400)){
-			return true;
-		}
-		
-		return false;
-	}
+	
 	
 	/**
 	 * 记录谁操作得

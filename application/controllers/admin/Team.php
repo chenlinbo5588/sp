@@ -285,19 +285,12 @@ class Team extends Ydzj_Admin_Controller {
 				if($row >= 0){
 					$this->jsonOutput('保存成功');
 					
-					/*
-					file_put_contents('debug.txt',print_r($info,true));
-					file_put_contents('debug.txt',$avatar_id,FILE_APPEND);
-					file_put_contents('debug.txt',$avatar,FILE_APPEND);
-					*/
-					
 					if($row > 0 && $info['basic']['aid'] && $avatar_id != $info['basic']['aid']){
 						$wantDeleteFiles = getImgPathArray($info['basic']['avatar_h'],$this->_teamSizeKeys);
 						$this->attachment_service->deleteByFileUrl($wantDeleteFiles);
 					}
 				}else{
-					//file_put_contents('debug2.txt',print_r(DB(),true));
-					$this->jsonOutput(DB()->get_db_error());
+					$this->jsonOutput($this->db->get_error_info());
 				}
 			}
 			

@@ -17,14 +17,14 @@
           <td colspan="2" class="required"><label class="validation" for="email">登录名:</label></td>
         </tr>
         <tr class="noborder">
-          <td class="vatop rowform">{$manage_profile['basic']['email']}</td>
+          <td class="vatop rowform">{$admin_profile['basic']['email']}</td>
           <td class="vatop tips"></td>
         </tr>
         <tr class="noborder">
           <td colspan="2" class="required"><label class="validation" for="username">用户真实名称:</label></td>
         </tr>
         <tr class="noborder">
-          <td class="vatop rowform"><input type="text" id="username" value="{$manage_profile['basic']['username']|escape}" name="username" class="txt"></td>
+          <td class="vatop rowform"><input type="text" id="username" value="{$admin_profile['basic']['username']|escape}" name="username" class="txt"></td>
           <td class="vatop tips">请输入用户真实名称 {form_error('username')}</td>
         </tr>
         <tr>

@@ -10,10 +10,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Ydzj_Controller extends MY_Controller {
 	
 	public $_profile = array();
-	
+	public $_profileKey = '';
+	public $_lastVisitKey = '';
 	
 	public function __construct(){
 		parent::__construct();
+		
+		$this->_profileKey = 'profile';
+		$this->_lastVisitKey = 'lastvisit';
 		
 		$this->load->library('Seo_service');
 		$this->form_validation->set_error_delimiters('<label class="form_error">','</label>');
@@ -28,23 +32,29 @@ class Ydzj_Controller extends MY_Controller {
 	}
 	
 	private function _initLogin(){
-		$this->_profile = $this->session->userdata('profile');
 		//print_r($this->session->all_userdata());
+		$this->_profile = $this->session->userdata($this->_profileKey);
 		if(empty($this->_profile)){
 			$this->_profile = array();
 		}
 		
-		if($this->isLogin()){
-			$this->assign('profile',$this->session->userdata('profile'));
+		$lastVisit = $this->session->userdata($this->_lastVisitKey);
+		
+		if(empty($lastVisit)){
+			$this->_lastVisit = $this->_reqtime;
+		}
+		
+		if($this->isLogin($lastVisit)){
+			$this->assign($this->_profileKey,$this->session->userdata($this->_profileKey));
 		}
 		
 		//前台登陆
-		$this->session->set_userdata(array('lastvisit' => $this->_reqtime));
+		$this->session->set_userdata(array($this->_lastVisitKey => $this->_reqtime));
 	}
 	
 	
-	public function isLogin(){
-		if($this->_profile && ($this->_reqtime - $this->session->userdata('lastvisit') < 86400 * 30)){
+	public function isLogin($lastVisitTime){
+		if($this->_profile && ($this->_reqtime - $lastVisitTime) < 86400 * 30){
 			return true;
 		}
 		

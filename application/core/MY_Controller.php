@@ -315,7 +315,12 @@ class MY_Controller extends CI_Controller {
      */
     private function _buildJsonFormat($message = '' , $data = array()){
     	if(is_array($message)){
-			$d =	array('code' => $message[0],'message' =>$message[1], 'data' => $data);
+    		if (array_key_exists('code', $message)) {
+    			$d = array_merge($message,array('data' => $data));
+    		}else {
+    			$d = array('code' => $message[0],'message' =>$message[1], 'data' => $data);
+    		}
+			
 		}else{
 			$d = array('message' => $message,'data' => $data);
 		}

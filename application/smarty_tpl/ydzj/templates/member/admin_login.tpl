@@ -22,7 +22,7 @@
 }
 
 </style>
-{if !$manage_profile}
+{if !$admin_profile}
 <div class="handle_area" id="adminlogin">
     <div class="feedback">{$feedback}</div>
     <h1>管理后台登陆</h1>

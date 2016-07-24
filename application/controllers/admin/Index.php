@@ -74,11 +74,4 @@ class Index extends Ydzj_Admin_Controller {
 		//print_r($this->session->all_userdata());
 		$this->display('index/index');
 	}
-	
-	
-	public function logout()
-	{
-		$this->session->unset_userdata('manage_profile');
-		redirect(site_url('member/admin_login'));
-	}
 }

@@ -134,7 +134,7 @@ class Member extends Ydzj_Controller {
 				}
 				
 				$this->session->set_userdata(array(
-					'manage_profile' => $result['data'],
+					'admin_profile' => $result['data'],
 					'lastvisit' => $this->_reqtime
 				));
 				

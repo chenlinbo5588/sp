@@ -16,7 +16,7 @@ class My extends Ydzj_Admin_Controller {
 	
 	public function logout()
 	{
-		$this->session->unset_userdata('manage_profile');
+		$this->session->unset_userdata($this->_adminProfileKey);
 		redirect(site_url('member/admin_login'));
 	}
 }

@@ -353,6 +353,15 @@ abstract class CI_DB_driver {
 	 * @var	string
 	 */
 	protected $_count_string = 'SELECT COUNT(*) AS ';
+	
+	
+	/**
+	 * 
+	 * database error info
+	 * 
+	 * 
+	 */
+	protected $_error_info = array('code' => '','message' => '');
 
 	// --------------------------------------------------------------------
 
@@ -442,6 +451,13 @@ abstract class CI_DB_driver {
 
 		// Now we set the character set and that's all
 		return $this->db_set_charset($this->char_set);
+	}
+	
+	
+	public function get_error_info(){
+		
+		return $this->_error_info;
+		
 	}
 
 	// --------------------------------------------------------------------
@@ -577,6 +593,7 @@ abstract class CI_DB_driver {
 		return 'SELECT VERSION() AS ver';
 	}
 
+	
 	// --------------------------------------------------------------------
 
 	/**
@@ -651,7 +668,9 @@ abstract class CI_DB_driver {
 
 			// Grab the error now, as we might run some additional queries before displaying the error
 			$error = $this->error();
-
+			
+			$this->_error_info = $error;
+			
 			// Log errors
 			log_message('error', 'Query error: '.$error['message'].' - Invalid query: '.$sql);
 

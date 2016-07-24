@@ -259,9 +259,9 @@ class Attachment_service extends Base_service {
 				$this->deleteFiles(array(self::$CI->input->post('id')),'all');
 			}
 			*/
-			return array('error' => 0, 'formhash'=>self::$CI->security->get_csrf_hash(),'id' => $fileData['id'], 'url'=>base_url($fileData['file_url']));
+			return array('error' => 0, config_item('csrf_token_name') =>self::$CI->security->get_csrf_hash(),'id' => $fileData['id'], 'url'=>base_url($fileData['file_url']));
 		}else{
-			return array('error' => 1, 'formhash'=>self::$CI->security->get_csrf_hash(),'msg'=>$this->getErrorMsg('',''));
+			return array('error' => 1, config_item('csrf_token_name') =>self::$CI->security->get_csrf_hash(),'msg'=>$this->getErrorMsg('',''));
 		}
 	}
 	
