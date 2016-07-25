@@ -4,7 +4,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class MY_Controller extends CI_Controller {
 
 	public $_verifyName = 'verify';
-	public $_lastVisit = 'lastvisit';
+	public $_lastVisit;
+	public $_lastVisitKey = '';
+	
 	public $_reqtime ;
 	public $_navigation = array();
 	
@@ -23,6 +25,7 @@ class MY_Controller extends CI_Controller {
 	public function __construct(){
 		parent::__construct();
 		$this->_reqtime = $this->input->server('REQUEST_TIME');
+		$this->_lastVisitKey = 'lastvisit';
 		
 		$this->_initLibrary();
 		$this->_initSmarty();
@@ -182,8 +185,8 @@ class MY_Controller extends CI_Controller {
     	$this->assign(config_item('csrf_token_name'),$this->security->get_csrf_hash());
     	
     	/*
-    	if($this->input->cookie($this->_lastVisit) != ''){
-			$elapsed_time = number_format(microtime(TRUE) -  $this->input->cookie($this->_lastVisit), 2);
+    	if($this->input->cookie($this->_lastVisitKey) != ''){
+			$elapsed_time = number_format(microtime(TRUE) -  $this->input->cookie($this->_lastVisitKey), 2);
 			if($elapsed_time < 0.2){
 				if($this->input->is_ajax_request()){
 					$this->responseJSON('请求过于频繁');

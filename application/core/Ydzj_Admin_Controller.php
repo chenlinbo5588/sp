@@ -36,7 +36,7 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 		$adminLastVisit = $this->session->userdata($this->_adminLastVisitKey);
 		
 		if(empty($adminLastVisit)){
-			$adminLastVisit = $this->_reqtime;
+			$this->session->set_userdata(array($this->_adminLastVisitKey => $this->_reqtime));
 		}
 		
 		$this->_adminProfile = $this->session->userdata($this->_adminProfileKey);
@@ -55,7 +55,10 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 			$this->assign($this->_adminProfileKey,$this->_adminProfile);
 		}
 		
-		$this->session->set_userdata(array($this->_adminLastVisitKey => $this->_reqtime));
+		//如果没有被刷新，则刷新
+		if($adminLastVisit){
+			$this->session->set_userdata(array($this->_adminLastVisitKey => $this->_reqtime));
+		}
 	}
 	
 	
@@ -69,7 +72,7 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 		echo ($this->_reqtime - $this->session->userdata('admin_lastvisit'));
 		*/
 		
-		if($this->_adminProfile && ($this->_reqtime - $lastVisitTime) <= 86400){
+		if($this->_adminProfile && ($this->_reqtime - $this->session->userdata($this->_adminLastVisitKey)) <= 86400){
 			return true;
 		}
 

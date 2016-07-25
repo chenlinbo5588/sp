@@ -203,20 +203,20 @@ $(function(){
 	    <dl>    
             <dt>会员</dt>
             <dd><a href="javascript:void(0)" onclick="openItem('index,member,member')">会员管理</a></dd>
-            <dd><a href="javascript:void(0)" onclick="openItem('notify,member,member')">会员通知</a></dd>
+            <dd><a href="javascript:void(0)" onclick="openItem('member,notify,member')">会员通知</a></dd>
             <dd><a href="javascript:void(0)" onclick="openItem('credits,member,member')">积分管理</a></dd>
             <dd><a href="javascript:void(0)" onclick="openItem('album,member,member')">会员相册</a></dd>
             <dd><a href="javascript:void(0)" onclick="openItem('tag,member,member')">会员标签</a></dd>
         </dl>
         <dl>    
             <dt>队伍</dt>
-            <dd><a href="javascript:void(0)" onclick="openItem('setting,team,team')">队伍设置</a></dd>
-            <dd><a href="javascript:void(0)" onclick="openItem('level,team,team')">队伍头衔设置</a></dd>
-            <dd><a href="javascript:void(0)" onclick="openItem('category,team,team')">队伍分类管理</a></dd>
             <dd><a href="javascript:void(0)" onclick="openItem('index,team,team')">队伍管理</a></dd>
-            <dd><a href="javascript:void(0)" onclick="openItem('member_list,team,team')">队伍成员管理</a></dd>
-            <dd><a href="javascript:void(0)" onclick="openItem('inform,team,team')">队伍举报管理</a></dd>
-            <dd><a href="javascript:void(0)" onclick="openItem('cache,team,team')">更新队伍缓存</a></dd>
+            <dd><a href="javascript:void(0)" onclick="openItem('team,notify,team')">队伍通知</a></dd>
+            <dd><a href="javascript:void(0)" onclick="openItem('index,sports_cate,team')">体育项目</a></dd>
+            <dd><a href="javascript:void(0)" onclick="openItem('index,sports_meta,team')">基础数据</a></dd>
+            <dd><a href="javascript:void(0)" onclick="openItem('index,team_medal,team')">队伍头衔</a></dd>
+            <dd><a href="javascript:void(0)" onclick="openItem('index,team_jubao,team')">队伍举报</a></dd>
+            <dd><a href="javascript:void(0)" onclick="openItem('index,team_setting,team')">队伍全局设置</a></dd>
         </dl>
         <dl>    
             <dt>场馆</dt>
@@ -388,7 +388,7 @@ $(function(){
                 <dd>
                   <ol>
                     <li><a href="javascript:void(0);" id="index_member" onclick="openItem('index,member,member');">会员管理</a></li>
-                    <li><a href="javascript:void(0);" id="notice_member" onclick="openItem('notice,member,member');">会员通知</a></li>
+                    <li><a href="javascript:void(0);" id="member_notify" onclick="openItem('member,notify,member');">会员通知</a></li>
                     <li><a href="javascript:void(0);" id="credits_member" onclick="openItem('credits,member,member');">积分管理</a></li>
                     <li><a href="javascript:void(0);" id="album_member" onclick="openItem('album,member,member');">会员相册</a></li>
                     <li><a href="javascript:void(0);" id="tag_member" onclick="openItem('tag,member,member');">会员标签</a></li>
@@ -403,6 +403,7 @@ $(function(){
                 <dd>
                   <ol>
                     <li><a href="javascript:void(0);" id="index_team" onclick="openItem('index,team,team');">队伍管理</a></li>
+                    <li><a href="javascript:void(0);" id="team_notify" onclick="openItem('team,notify,team');">队伍通知</a></li>
                     <li><a href="javascript:void(0);" id="index_sports_cate" onclick="openItem('index,sports_cate,team');">体育项目</a></li>
                     <li><a href="javascript:void(0);" id="index_sports_meta" onclick="openItem('index,sports_meta,team');">基础数据</a></li>
                     <li><a href="javascript:void(0);" id="index_team_medal" onclick="openItem('index,team_medal,team');">队伍头衔</a></li>

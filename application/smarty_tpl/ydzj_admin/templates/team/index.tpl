@@ -132,7 +132,7 @@
           <td>{$item['games']}/{$item['victory_game']}/{$item['fail_game']}/{$item['draw_game']}</td>
           <td class="align-center">{if $item['joined_type'] == 1}{#join_type1#}{else}{#join_type2#}{/if}</td>
           <td class="align-center">{if $item['accept_game'] == 1}是{else}否{/if}</td>
-          <td class="align-center"><a href="{admin_site_url('team/edit')}?id={$item['id']}">编辑</a> | <a href="{admin_site_url('notice/member')}?id={$item['id']}">通知</a></td>
+          <td class="align-center"><a href="{admin_site_url('team/edit')}?id={$item['id']}">编辑</a> | <a href="{admin_site_url('notify/team')}?id={$item['id']}">通知</a></td>
         </tr>
       {/foreach}
       </tbody>

@@ -52,7 +52,7 @@ class Team extends Ydzj_Controller {
 			$cateId = 1;
 		}
 		
-		$title = '篮球队';
+		$title = '队伍';
 		$this->setTopNavTitle($title);
 		$this->seoTitle($title);
 		
@@ -75,7 +75,7 @@ class Team extends Ydzj_Controller {
 		$teamList = $this->team_service->getAllPagerTeam($condition);
 		
 		$this->setLeftNavLink('<a id="leftBarLink" class="bar_button" href="'.site_url('team/switch_city/upid/'.$city_id).'" title="点击切换城市">'.$cityInfo['name'].'</a>');
-		$this->setRightNavLink('<a id="rightBarLink" class="bar_button" href="'.site_url('team/create_team').'">+创建球队</a>');
+		$this->setRightNavLink('<a id="rightBarLink" class="bar_button" href="'.site_url('team/create_team').'">+创建队伍</a>');
 		
 		//$this->assign('sportsCategoryList',$sportsCategoryList);
 		if($cityInfo['level'] == 4){
@@ -93,7 +93,7 @@ class Team extends Ydzj_Controller {
 	 * 切换城市
 	 */
 	public function switch_city(){
-		$this->setLeftNavLink('<a id="leftBarLink" class="bar_button goback" href="'.site_url(BASKET_BALL).'" title="返回篮球队">篮球队</a>');
+		$this->setLeftNavLink('<a id="leftBarLink" class="bar_button goback" href="'.site_url(BASKET_BALL).'" title="返回队伍">队伍</a>');
 		
 		$ar = $this->uri->segment_array();
 		

@@ -145,22 +145,7 @@ class MY_Model extends CI_Model {
      * 添加
      */
     public function _add($param,$replace = false){
-    	$now = time();
-        $fields = $this->_metaData();
-
-        $data = array();
-        
-        foreach($param as $key => $value){
-        	if(array_key_exists($key,$fields)){
-        		$data[$key] = $value;
-        	}
-        }
-        
-        foreach(array('gmt_create','gmt_modify') as $value){
-            if(array_key_exists($value,$fields)){
-                $data[$value] = $now;
-            }
-        }
+    	$data = $this->_fieldsDecorator($param,'add');
         
         if(!$replace){
         	$this->db->insert($this->_tableRealName, $data);
@@ -172,12 +157,11 @@ class MY_Model extends CI_Model {
     }
     
     
-    
     /**
-     * 更新
+     * 字段保护
      */
-    public function update($param, $where = null){
-        $fields = $this->_metaData();
+    private function _fieldsDecorator($param, $action = 'add'){
+    	$fields = $this->_metaData();
         
         $data = array();
         $now = time();
@@ -188,9 +172,26 @@ class MY_Model extends CI_Model {
         	}
         }
         
-        if(array_key_exists('gmt_modify',$fields)){
-            $data['gmt_modify'] = $now;
+        if($action == 'add'){
+        	foreach(array('gmt_create','gmt_modify') as $value){
+	            if(array_key_exists($value,$fields)){
+	                $data[$value] = $now;
+	            }
+	        }
+        }else if ($action == 'update'){
+        	if(array_key_exists('gmt_modify',$fields)){
+	            $data['gmt_modify'] = $now;
+	        }
         }
+        
+        return $data;
+    }
+    
+    /**
+     * 更新
+     */
+    public function update($param, $where = null){
+        $data = $this->_fieldsDecorator($param,'update');
         
         if($data){
         	$this->db->update($this->_tableRealName, $data, $where);
@@ -217,6 +218,8 @@ class MY_Model extends CI_Model {
     }
     
     public function updateByWhere($data,$where = null){
+    	
+    	
         $this->db->update($this->_tableRealName,$data,$where);
         return $this->db->affected_rows();
     }
@@ -309,7 +312,7 @@ class MY_Model extends CI_Model {
         }
         
         if($condition['or_where']){
-            $this->db->where($condition['or_where']);
+            $this->db->or_where($condition['or_where']);
         }
         
         if($condition['where_in']){

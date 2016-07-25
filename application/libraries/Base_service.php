@@ -10,6 +10,7 @@ class Base_service {
 	public static $districtModel = null;
 	public static $form_validation = null;
 	public static $settingModel = null;
+	public static $auditLogModel = null;
 	
 	
 	public static function initStaticVars(){
@@ -21,6 +22,7 @@ class Base_service {
 		self::$CI->load->model('Common_District_Model');
 		self::$CI->load->library('form_validation');
 		self::$CI->load->model('Setting_Model');
+		self::$CI->load->model('Audit_Log_Model');
 		
 		self::$memberModel = self::$CI->Member_Model;
 		self::$adminUserModel = self::$CI->Adminuser_Model;
@@ -28,6 +30,7 @@ class Base_service {
 		self::$districtModel = self::$CI->Common_District_Model;
 		self::$form_validation = self::$CI->form_validation;
 		self::$settingModel = self::$CI->Setting_Model;
+		self::$auditLogModel = self::$CI->Audit_Log_Model;
 		
 		self::$dbInstance = self::$CI->Member_Model->getDb();
 		

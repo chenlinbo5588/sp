@@ -160,7 +160,7 @@
           <td>{$item['status']}</td>
           <td class="align-center">{if $item['allowtalk'] == 'N'}禁止{else}允许{/if}</td>
           <td class="align-center">{if $item['freeze'] == 'Y'}禁止{else}允许{/if}</td>
-          <td class="align-center"><a href="{admin_site_url('member/edit')}?id={$item['uid']}">编辑</a> | <a href="index.php?act=notice&op=notice&member_name=c2hvcG5j">通知</a></td>
+          <td class="align-center"><a href="{admin_site_url('member/edit')}?id={$item['uid']}">编辑</a> | <a href="{admin_site_url('notify/member?uid=')}{$item['uid']}">通知</a></td>
         </tr>
       {/foreach}
       </tbody>

@@ -40,5 +40,14 @@ $config['team_img_size'] = array(
 	'm' => array('width' => 320,'height' => 180,'maintain_ratio' => false,'quality' => 100),
 );
 
+/**
+ * 场馆图片参数 16:9
+ */
+$config['stadium_img_size'] = array(
+	'h' => array('width' => 960,'height' => 540, 'maintain_ratio' => true,'quality' => 90),
+	'b' => array('width' => 640,'height' => 360 , 'maintain_ratio' => true,'quality' => 100),
+	'm' => array('width' => 320,'height' => 180,'maintain_ratio' => false,'quality' => 100),
+);
+
 
 $config['allowed_img_types'] = 'jpg|jpeg|png';

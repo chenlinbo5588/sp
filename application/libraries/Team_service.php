@@ -5,6 +5,7 @@ class Team_service extends Base_service {
 
 	private $_teamModel;
 	private $_teamMemberModel;
+	
 	private $_sportsCategoryModel;
 	private $_districtStatModel;
 
@@ -77,11 +78,54 @@ class Team_service extends Base_service {
 		
 		if($withMemeber){
 			$team['members'] = $this->_teamMemberModel->getList(array(
-				'where' => array('team_id' => $teamid)
+				'where' => array('team_id' => $teamid),
+				'order' => 'displayorder ASC'
 			));
 		}
 		
 		return $team;
+	}
+	
+	
+	/**
+	 * 
+	 */
+	public function getTeamInfoWithExtraInfo($teamid,$moreFlag = array()){
+		
+		$flag = array('members' => true, 'audit_log' => true, 'games' => true);
+		$flag = array_merge($flag,$moreFlag);
+		
+		$team['basic'] = $this->_teamModel->getById(array(
+			'where' => array('id' => $teamid)
+		));
+		
+		
+		if($flag['members']){
+			$team['members'] = $this->_teamMemberModel->getList(array(
+				'where' => array('team_id' => $teamid),
+				'order' => 'displayorder ASC'
+			));
+		}
+		
+		if($flag['audit_log']){
+			$team['audit_log'] = self::$auditLogModel->getList(array(
+				'where' => array('ref_id' => $teamid),
+				'order' => 'id DESC',
+				'limit' => 6
+			));
+		}
+		
+		/*
+		if($flag['games']){
+			$team['games'] = self::$auditLogModel->getList(array(
+				'where' => array('ref_id' => $teamid),
+				'order' => 'id DESC'
+			));
+		}
+		*/
+		
+		return $team;
+		
 	}
 	
 	
@@ -185,6 +229,14 @@ class Team_service extends Base_service {
 		
 		if($param['notice_board']){
 			self::$form_validation->set_rules('notice_board','队伍公告', 'required|max_length[50]');
+		}
+		
+		if($param['status']){
+			self::$form_validation->set_rules('status','审核状态', 'required|in_list[1,-1]');
+			self::$form_validation->set_rules('audit_remark','审核备注', 'required|min_length[2]');
+			
+		}else{
+			unset($param['status']);
 		}
 		
 		return $param;
@@ -300,6 +352,86 @@ class Team_service extends Base_service {
 	}
 	
 	
+	public function isTeamManager($team,$userInfo){
+		
+		$canManager = false;
+		
+		$teamOwnerUid = $team['basic']['leader_uid'];
+		if(!$teamOwnerUid){
+			$teamOwnerUid = $team['basic']['owner_uid'];
+		}
+		
+		if($userInfo['uid'] == $teamOwnerUid){
+			$canManager = true;
+		}
+		
+		return $canManager;
+	}
+	
+	/**
+	 * 审核队伍
+	 */
+	public function auditTeam($teamId , $param ,$user){
+		
+		$this->_teamModel->update(array_merge($param,$user),array('id' => $teamId));
+		
+		$addInfo = array(
+			'mod' => 'team',
+			'ref_id' => $teamId,
+			'remark' => $param['remark'],
+			'add_uid' => $user['edit_uid'],
+			'add_username' => $user['edit_username'],
+		);
+		
+		$rows = self::$auditLogModel->_add($addInfo);
+	
+		return true;
+	}
+	
+	/**
+	 * 添加队伍成员
+	 */
+	public function addMember($memberInfo){
+		$member = $this->_teamMemberModel->getList(array(
+			'where' => array(
+				'team_id' => $memberInfo['team_id'],
+				'uid' => $memberInfo['uid']
+			)
+		));
+		
+		$memberInfo2 = self::$memberModel->getFirstByKey($memberInfo['uid'],'uid');
+		$memberInfo['aid'] = $memberInfo2['aid'];
+		$memberInfo['avatar_m'] = $memberInfo2['avatar_m'];
+		$memberInfo['avatar_s'] = $memberInfo2['avatar_s'];
+		
+		if($member[0]){
+			//do update
+			return $this->_teamMemberModel->update($memberInfo,array('id' => $member[0]['id']));
+		}else{
+			//do insert
+			return $this->_teamMemberModel->_add($memberInfo);
+		}
+		
+	}
+	
+	
+	/**
+	 * 
+	 */
+	public function removeMember($teamId,$ids){
+		
+		return $this->_teamMemberModel->deleteByCondition(array(
+			'where' => array(
+				'team_id' => $teamId
+			),
+			'where_in' => array(
+				array('key' => 'uid' ,'value' => $ids)
+			)
+		));
+	}
+	
+	
+	
 	/**
 	 * 添加队伍
 	 */
@@ -399,23 +531,6 @@ class Team_service extends Base_service {
 		self::$dbInstance->trans_off();
 		
 		return $teamid;
-	}
-	
-	
-	public function isTeamManager($team,$userInfo){
-		
-		$canManager = false;
-		
-		$teamOwnerUid = $team['basic']['leader_uid'];
-		if(!$teamOwnerUid){
-			$teamOwnerUid = $team['basic']['owner_uid'];
-		}
-		
-		if($userInfo['uid'] == $teamOwnerUid){
-			$canManager = true;
-		}
-		
-		return $canManager;
 	}
 	
 	

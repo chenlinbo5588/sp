@@ -1,18 +1,18 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Team extends Ydzj_Admin_Controller {
+class Stadium extends Ydzj_Admin_Controller {
 	
-	private $_teamImageSize ;
-	private $_teamSizeKeys;
+	private $_imageSize ;
+	private $_imageSizeKeys;
 	
 	public function __construct(){
 		parent::__construct();
 		
 		$this->load->library(array('Team_service','Common_District_service'));
 		
-		$this->_teamImageSize = config_item('team_img_size');
-		$this->_teamSizeKeys = array_keys($this->_teamImageSize);
+		$this->_imageSize = config_item('team_img_size');
+		$this->_imageSizeKeys = array_keys($this->_imageSize);
 	}
 	
 	public function index(){

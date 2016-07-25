@@ -17,12 +17,12 @@ class Member extends Ydzj_Controller {
 	public function getInfoByMobileOrNickname(){
 		$word = $this->input->get_post('word');
 		$info = $this->member_service->getListByCondition(array(
+			'select' => 'uid,avatar_s,username,mobile,nickname',
 			'where' => array('mobile' => $word),
 			'or_where' => array('nickname' => $word)
 		));
 		
 		if($info){
-			
 			foreach($info as $value){
 				$this->jsonOutput('success',$value);
 				break;

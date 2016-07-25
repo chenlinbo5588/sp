@@ -10,6 +10,7 @@
       </ul>
       <ul class="tab-sub">
         <li><a href="javascript:void(0);" class="current"><span>{#titel#}基本信息</span></a></li>
+        <li><a href="javascript:void(0);"><span>审核记录</span></a></li>
         <li><a href="javascript:void(0);"><span>成员信息</span></a></li>
         <li><a href="javascript:void(0);"><span>比赛记录</span></a></li>
       </ul>
@@ -22,6 +23,9 @@
 	  {form_open_multipart(admin_site_url('team/edit?id='|cat:$info['basic']['id']),'name="form_index"')}
 	    <table class="table tb-type2">
 	      <tbody>
+	      	<tr class="noborder">
+	          <td colspan="2" class="required"><label class="validation">{#team_index#}:{$info['basic']['id']}</label></td>
+	        </tr>
 	      	<tr class="noborder">
 	          <td colspan="2" class="required"><label class="validation">{#team_category#}:</label></td>
 	        </tr>
@@ -198,8 +202,10 @@
 	        <tr class="noborder">
 	        	<td class="vatop rowform">
 	        		<div class="clearfix">
-		          		<label class="btnlike_segment"><input type="radio" name="status" value="1" {if $info['basic']['status'] == 1}checked{/if}/><span>{#audit_success#}</span></label>
-		          		<label class="btnlike_segment"><input type="radio" name="status" value="-1" {if $info['basic']['status'] == -1}checked{/if}/><span>{#audit_fail#}</span></label>
+		          		{if $info['basic']['status'] == 1}{#audit_success#}
+		          		{elseif $info['basic']['status'] == 0}尚未审核
+		          		{elseif $info['basic']['status'] == -1}{#audit_fail#}
+		          		{/if}
 		        	</div>
 		        </td>
 	        </tr>
@@ -207,7 +213,7 @@
 	          <td colspan="2" class="required"><label>审核备注</label></td>
 	        </tr>
 	        <tr class="noborder">
-	        	<td colspan="2"><textarea name="audit_remark" style="height:100px;width:100%;"></textarea></td>
+	        	<td colspan="2">{$info['audit_log'][0]['remark']|escape}</td>
 	        </tr>
 	      </tbody>
 	      <tfoot>
@@ -219,13 +225,71 @@
 	  </form>
   </div>
   <div class="tab-item">
+	  {form_open(admin_site_url('team/audit?id='|cat:$info['basic']['id']),'name="form_audit"')}
+	  <table class="tb-type2">
+	  	<tbody>
+	  		<tr>
+	          <td colspan="2" class="required"><label>{#audit_status#}</label></td>
+	        </tr>
+	        <tr class="noborder">
+	        	<td class="vatop rowform">
+	        		<div class="clearfix">
+		          		<label class="btnlike_segment{if $info['basic']['status'] == 1} selected{/if}"><input type="radio" name="status" value="1" {if $info['basic']['status'] == 1}checked{/if}/><span>{#audit_success#}</span></label>
+		          		<label class="btnlike_segment{if $info['basic']['status'] == -1} selected{/if}"><input type="radio" name="status" value="-1" {if $info['basic']['status'] == -1}checked{/if}/><span>{#audit_fail#}</span></label>
+		        	</div>
+		        	
+		        </td>
+		        <td class="vatop tips"><label class="errtip" id="error_status"></label></td>
+	        </tr>
+	        <tr>
+	          <td colspan="2" class="required"><label>审核备注</label></td>
+	        </tr>
+	        <tr class="noborder">
+	        	<td><textarea name="remark" style="height:100px;width:100%;"></textarea></td>
+	        	<td class="vatop tips"><label class="errtip" id="error_remark"></label></td>
+	        </tr>
+	  	</tbody>
+	  	<tfoot>
+	        <tr class="tfoot">
+	          <td colspan="15"><input type="submit" name="submit" value="保存" class="msbtn"/></td>
+	        </tr>
+	      </tfoot>
+	  </table>
+	  <h3>审核历史记录</h3>
+	    <table class="tb-type2">
+	      <thead>
+	      	<tr>
+	      		<th>序号</th>
+	      		<th>审核时间</th>
+	      		<th>审核人</th>
+	      		<th>审核备注</th>
+	      	</tr>
+	      </thead>
+	      <tbody>
+	      	{foreach from=$info['audit_log'] item=item key=key}
+	        <tr>
+	          <td>{$item['id']}</td>
+	          <td>{$item['gmt_create']|date_format:"%Y-%m-%d %H:%M:%S"}</td>
+	          <td>{$item['add_username']|escape}</td>
+	          <td>{$item['remark']|escape}</td>
+	        </tr>
+	        {foreachelse}
+	        <tr>
+	        	<td colspan="4">暂无审核记录</td>
+	        </tr>
+	        {/foreach}
+	      </tbody>
+	    </table>
+	  </form>
+  </div>
+  <div class="tab-item">
 	  {form_open(admin_site_url('team/member'),'name="form_members"')}
 	    <table class="tb-type2" id="teamMemberList">
 	      <thead>
 	      	<tr>
 	      		<th></th>
 	      		<th>头像</th>
-	      		<th>手机号/昵称</th>
+	      		<th>登陆手机号/昵称</th>
 	      		<th>真实名称</th>
 	      		<th>队内职务</th>
 	      		<th>场上位置</th>
@@ -235,9 +299,9 @@
 	      </thead>
 	      <tbody>
 	      	{foreach from=$info['members'] item=item key=key}
-	        <tr>
-	          <td><input type="checkbox" name="sel[]" group="sel" value="{$item['id']}"/></td>
-	          <td>{if $item['aid']}<img src="{resource_url($item['avatar_s'])}"/>{else}暂无头像{/if}</td>
+	        <tr id="member_{$item['uid']}">
+	          <td>{if $item['uid'] != $info['basic']['leader_uid']}<input type="checkbox" name="sel[]" group="sel" value="{$item['uid']}"/>{/if}</td>
+	          <td class="size-64x64">{if $item['aid']}<img src="{resource_url($item['avatar_s'])}"/>{else}暂无头像{/if}</td>
 	          <td>
 	          	<input type="hidden" name="uid[]" value="{$item['uid']|escape}" />
 	          	<input type="text" name="nickname[]" value="{$item['nickname']|escape}"/>
@@ -247,10 +311,18 @@
 	          	
 	          </td>
 	          <td>
-	          	<input type="text" name="rolename[]" value="{$item['rolename']|escape}" />
+	          	<select name="rolename[]">
+	          	{foreach from=$roleNameList item=subitem}
+	      		<option value="{$subitem['name']|escape}" {if $subitem['name'] == $item['rolename']}selected{/if}>{$subitem['name']|escape}</option>
+	      		{/foreach}
+	      		</select>
 	          </td>
 	          <td>
-	          	<input type="text" name="position[]" value="{$item['position']|escape}" />
+	          	<select name="position[]">
+	          	{foreach from=$positionList item=subitem}
+	      		<option value="{$subitem['name']|escape}" {if $subitem['name'] == $item['position']}selected{/if}>{$subitem['name']|escape}</option>
+	      		{/foreach}
+	      		</select>
 	          </td>
 	          <td>
 	          	<input type="text" name="num[]" value="{$item['num']|escape}" />
@@ -259,9 +331,7 @@
 	          	<input type="text" name="displayorder[]" value="{$item['displayorder']|escape}" />
 	          </td>
 	          <td>
-	          	{if $item['uid'] != $info['basic']['leader_uid']}
-	          	<a class="deleteRow" href="javascript:void(0);">删除</a>
-	          	{/if}
+	          	<a class="saveRow" href="javascript:void(0);">保存</a>
 	          </td>
 	        </tr>
 	        {/foreach}
@@ -277,7 +347,7 @@
 	  </form>
   </div>
   <script type="ydzj-template" id="template_addTeamMember">
-  	<tr>
+  	<tr class="addrow">
       <td><input type="checkbox" name="sel" group="sel" value=""/></td>
       <td></td>
       <td>
@@ -288,16 +358,26 @@
       	<input type="text" name="username[]" value="" />
       </td>
       <td>
-      	<input type="text" name="rolename[]" value="" />
+      	<select name="rolename[]">
+      		<option value="">请选择</option>
+      		{foreach from=$roleNameList item=item}
+      		<option value="{$item['name']|escape}">{$item['name']|escape}</option>
+      		{/foreach}
+      	</select>
       </td>
       <td>
-      	<input type="text" name="position[]" value="" />
+      	<select name="position[]">
+      		<option value="">请选择</option>
+      		{foreach from=$positionList item=item}
+      		<option value="{$item['name']|escape}">{$item['name']|escape}</option>
+      		{/foreach}
+      	</select>
       </td>
       <td>
       	<input type="text" name="num[]" value="" />
       </td>
       <td>
-      	<input type="text" name="displayorder[]" value="" />
+      	<input type="text" name="displayorder[]" value="255" />
       </td>
       <td>
       	<a class="saveRow" href="javascript:void(0);">保存</a>
@@ -357,15 +437,107 @@
 		});
 		
 		
-		var refreshCurrentPage = function refreshWhenError(){
-			alert("服务器发送错误,将重新刷新页面");
-			
+		var refreshCurrentPage = function refreshPage(){
 			var whitchTab = $(".tab-sub a.current").parent("li").index();
-			//location.href="{admin_site_url('team/edit?id=')}{$info['basic']['id']}&tabIndx=" + whitchTab;
+			location.href="{admin_site_url('team/edit?id=')}{$info['basic']['id']}&tabIndx=" + whitchTab;
 		};
 		
-		$("#teamMemberList").delegate("input[name='nickname[]']","focusout",function(){
+		$("#teamMemberList").delegate("a.saveRow","click",function(){
+			var alink = $(this);
+			var row = $(this).parents("tr");
+			var txt = alink.html();
+			
+			if(txt == '正在保存'){
+				return;
+			}		
+			
+			alink.html('正在保存');
+			$.ajax({
+				type:'POST',
+				url:'{admin_site_url('team/saveTeamMember?id=')}{$info['basic']['id']}',
+				dataType:'json',
+				data:{
+					'formhash' : formhash,
+					'uid' : $("input[name='uid[]']",row).val(),
+					'username' : $("input[name='username[]']",row).val(),
+					'nickname' : $("input[name='nickname[]']",row).val(),
+					'position' : $("select[name='position[]']",row).val(),
+					'rolename' : $("select[name='rolename[]']",row).val(),
+					'num' : $("input[name='num[]']",row).val(),
+					'displayorder' : $("input[name='displayorder[]']",row).val()
+				},
+				success:function(resp){
+					refreshFormHash(resp.data);
+				
+					alink.html('保存');
+					$("a.deleteRow",row).remove();
+					row.prop("id","member_" + $("input[name='uid[]']",row).val()).removeClass("addrow");
+					
+					if(resp.message != '保存成功'){
+						alert(resp.message);
+					}
+				},
+				error:function(xhr, textStatus, errorThrown){
+					alink.html('保存');
+				}
+			});
+		});
+		
+		$("#teamMemberList").delegate("input[name=deleteAll]",'click',function(){
+			var ids = [], that = $(this);
+			
+			$("input[name='sel[]']").each(function(){
+				if($(this).prop("checked")){
+					ids.push($(this).val());
+				}
+			});
+			
+			if(ids.length == 0){
+				alert("请先勾选");
+				return;
+			}
+			
+			if(!confirm("真的要删除吗")){
+				return;
+			}
+			
+			var txt = that.val();
+			if(txt == '正在删除'){
+				return;
+			}
+			
+			that.val('正在删除');
+			$.ajax({
+				type:'POST',
+				url:'{admin_site_url('team/removeTeamMember?id=')}{$info['basic']['id']}',
+				dataType:'json',
+				data:{
+					formhash:formhash,
+					sel:ids
+				},
+				success:function(resp){
+					that.val('删除');
+					refreshFormHash(resp.data);
+					
+					if(resp.message != '删除成功'){
+						alert(resp.message);
+					}else{
+						for(var i = 0; i < ids.length; i++){
+							$("#member_" + ids[i]).remove();
+						}
+					}
+				},
+				error:function(xhr, textStatus, errorThrown){
+					that.val('删除');
+				}
+			});
+			
+		});
+		
+		$("#teamMemberList").delegate("tr.addrow input[name='nickname[]']","focusout",function(){
 			var word = $.trim($(this).val());
+			var row = $(this).parents("tr");
+			var that = $(this);
 			
 			if(word.length == 0){
 				return;
@@ -377,7 +549,19 @@
 				dataType:'json',
 				data : { word:word },
 				success:function(resp){
-					
+					if(resp.message == 'success'){
+						if($("#member_" + resp.data.uid).size() > 0){
+							$("td:eq(1)",row).html('<label class="error">已在列表中,请更换手机号或者昵称</label>');
+						}else{
+							$("a.saveRow",row).show();
+							//row.prop("id","member_" + resp.data.uid);
+							
+							$("input[name='uid[]']",row).val(resp.data.uid);
+							$("input[name='username[]']",row).val(resp.data.username);
+							$("input[name='nickname[]']",row).val(resp.data.nickname);
+							$("td:eq(1)",row).html('<img src="' + SITEURL  + resp.data.avatar_s + '"/>');
+						}
+					}
 				},
 				error:function(xhr, textStatus, errorThrown){
 				}
@@ -392,6 +576,8 @@
 		});
 		
 		var formLock = [];
+		
+		//$.loadingbar({ text: "正在提交，请耐心等待", autoHide: true , urls:[ new RegExp('{admin_site_url('team/edit')}') ] } );
 		
 		$("form").each(function(){
 			var name=$(this).prop("name");
@@ -416,7 +602,6 @@
 					formLock[name] = false;
 					refreshFormHash(resp.data);
 					alert(resp.message);
-					
 					if(resp.message != '保存成功'){
 						var errors = resp.data.errors;
 						var first = null;
@@ -436,6 +621,7 @@
 				},
 				error:function(xhr, textStatus, errorThrown){
 					formLock[name] = false;
+					alert("服务器发送错误,将重新刷新页面");
 					
 					refreshCurrentPage();
 				}

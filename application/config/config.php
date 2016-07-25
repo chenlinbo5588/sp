@@ -223,7 +223,7 @@ $config['directory_trigger'] = 'd';
 |
 */
 $config['log_threshold'] = 0;
-
+$config['log_driver'] = 'Mixed';
 /*
 |--------------------------------------------------------------------------
 | Error Logging Directory Path

@@ -36,7 +36,7 @@ class Sports_service extends Base_service {
 	public function getMetaByCategoryAndGroup($categoryName , $groupname){
 		$dataList = $this->_sportsMetaModel->getList(array(
 			'select' => 'id,category_name,name',
-			'where' => array('category_name' => $categoryName , 'gname' => $groupname)
+			'where' => array('category_name' => $categoryName , 'gname' => $groupname , 'status' => 1)
 		));
 		
 		return $dataList ;

@@ -11,13 +11,12 @@ class Ydzj_Controller extends MY_Controller {
 	
 	public $_profile = array();
 	public $_profileKey = '';
-	public $_lastVisitKey = '';
+	
 	
 	public function __construct(){
 		parent::__construct();
 		
 		$this->_profileKey = 'profile';
-		$this->_lastVisitKey = 'lastvisit';
 		
 		$this->load->library('Seo_service');
 		$this->form_validation->set_error_delimiters('<label class="form_error">','</label>');
@@ -42,19 +41,26 @@ class Ydzj_Controller extends MY_Controller {
 		
 		if(empty($lastVisit)){
 			$this->_lastVisit = $this->_reqtime;
+			$this->session->set_userdata(array($this->_lastVisitKey => $this->_lastVisit));
+		}else{
+			$this->_lastVisit = $lastVisit;
 		}
 		
-		if($this->isLogin($lastVisit)){
+		if($this->isLogin()){
 			$this->assign($this->_profileKey,$this->session->userdata($this->_profileKey));
 		}
 		
-		//前台登陆
-		$this->session->set_userdata(array($this->_lastVisitKey => $this->_reqtime));
+		
+		if(!empty($lastVisit)){
+			//前台登陆
+			$this->session->set_userdata(array($this->_lastVisitKey => $this->_reqtime));
+		}
+		
 	}
 	
 	
-	public function isLogin($lastVisitTime){
-		if($this->_profile && ($this->_reqtime - $lastVisitTime) < 86400 * 30){
+	public function isLogin(){
+		if($this->_profile && ($this->_reqtime - $this->session->userdata($this->_lastVisitKey)) < 86400 * 30){
 			return true;
 		}
 		
