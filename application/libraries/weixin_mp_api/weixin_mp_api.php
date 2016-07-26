@@ -6,7 +6,7 @@
  * 公众平台API
  */
 
-class Weixin_Mp_Api extends Weixin_Api {
+class Weixin_Mp_Api extends Http_Client {
     
     protected $_mpConfig = array();
     public static $_mpAccessToken = '';

@@ -346,7 +346,7 @@ input[type=checkbox],input[type=radio] {
 
 /*内容页面样式
 ------------------------------------------------------------------- */
-.page { padding: 9px 20px 20px; text-align: left;}
+.page { padding:20px; text-align: left;}
 
 .page .tab-content {margin-top:35px;}
 .fixed-bar {background: #FFF url(../img/sky/fixed_bg.png) repeat-x scroll center bottom; width: 99%; padding: 8px 20px 10px 0; margin-left: 20px; position: fixed; top: 0; left: 0; z-index: 99;}

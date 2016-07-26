@@ -5,7 +5,8 @@
       <h3>{#meta_title#}</h3>
       <ul class="tab-base">
       	<li><a href="{admin_site_url('sports_meta/index')}"><span>{#manage#}</span></a></li>
-      	<li><a class="current"><span>{if $info['id']}编辑{else}新增{/if}</span></a></li>
+      	<li><a href="{admin_site_url('sports_meta/add')}" {if !$info['id']}class="current"{/if}><span>新增</span></a></li>
+      	{if $info['id']}<li><a href="{admin_site_url('sports_meta/index?id=')}{$info['id']}" class="current"><span>编辑</span></a></li>{/if}
       </ul>
     </div>
   </div>

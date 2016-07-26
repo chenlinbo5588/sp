@@ -7,7 +7,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * and open the template in the editor.
  */
 
-class Weixin_Api {
+class Http_Client {
     
     public $_baseURL = 'https://api.weixin.qq.com';
     public $_CI = null;

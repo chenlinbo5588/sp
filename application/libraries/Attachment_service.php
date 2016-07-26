@@ -3,7 +3,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Attachment_service extends Base_service {
 
-	protected $_uid = 0;
 	protected $_userInfo;
 	
 	private $_attachModel ;
@@ -40,14 +39,6 @@ class Attachment_service extends Base_service {
 		$config['max_size'] = 4096;
 		
 		return $config;
-	}
-	
-	
-	/**
-	 * 设置用户id ,废弃
-	 */
-	public function setUid($uid){
-		$this->_uid = intval($uid);
 	}
 	
 	public function setUserInfo($userProfile){
@@ -180,6 +171,10 @@ class Attachment_service extends Base_service {
 		
 		return $fileData;
 	}
+	
+	
+	
+	
 	
 	
 	/**

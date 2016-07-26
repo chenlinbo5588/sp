@@ -1,6 +1,10 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+
+/**
+ * 系统文章
+ */
 class Article_Class extends Ydzj_Admin_Controller {
 	
 	public function __construct(){

@@ -369,7 +369,7 @@ class Team extends Ydzj_Controller {
 				}
 				
 				$this->load->library('Attachment_service');
-				$this->attachment_service->setUid($this->_profile['basic']['uid']);
+				$this->attachment_service->setUserInfo($this->_profile['basic']);
 				
 				$fileData = $this->attachment_service->addImageAttachment('avatar');
 				

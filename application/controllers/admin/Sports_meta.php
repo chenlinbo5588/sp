@@ -78,7 +78,7 @@ class Sports_meta extends Ydzj_Admin_Controller {
 		}
 		
 		$this->form_validation->set_rules('name','名称','required|min_length[1]|max_length[30]');
-		$this->form_validation->set_rules('status','是否显示','required|in_list[0,1]');
+		$this->form_validation->set_rules('status','开启状态','required|in_list[0,1]');
 		
 		if($this->input->post('meta_sort')){
 			$this->form_validation->set_rules('meta_sort','排序',"is_natural|less_than[256]");

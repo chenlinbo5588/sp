@@ -5,7 +5,8 @@
       <h3>{#cate_title#}</h3>
       <ul class="tab-base">
       	<li><a href="{admin_site_url('sports_cate/index')}"><span>{#manage#}</span></a></li>
-      	<li><a class="current"><span>{if $info['id']}编辑{else}新增{/if}</span></a></li>
+      	<li><a href="{admin_site_url('sports_cate/add')}" {if !$info['id']}class="current"{/if}><span>新增</span></a></li>
+      	{if $info['id']}<li><a href="{admin_site_url('sports_cate/index?id=')}{$info['id']}" class="current"><span>编辑</span></a></li>{/if}
       </ul>
     </div>
   </div>
@@ -57,7 +58,7 @@
           <td colspan="2" class="required">{#teamwork#}: </td>
         </tr>
         <tr class="noborder">
-          <td class="vatop rowform onoff">
+          <td class="vatop rowform">
           	<select name="teamwork">
           		<option value="1" {if $info['teamwork'] == 1}selected{/if}>团体</option>
           		<option value="2" {if $info['teamwork'] == 2}selected{/if}>团体或个人</option>

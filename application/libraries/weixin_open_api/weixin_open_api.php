@@ -6,7 +6,7 @@
  * 开放平台API
  */
 
-class Weixin_Open_Api extends Weixin_Api {
+class Weixin_Open_Api extends Http_Client {
     
     protected $_openConfig = array();
     

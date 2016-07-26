@@ -7,6 +7,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $config['api_secret'] = 'b53209f0e4d2b2335d726e4e381511d59d22a31f';
 
 
+$config['allowed_img_types'] = 'jpg|jpeg|png';
+
 /**
  * 默认图片大小
  */
@@ -49,5 +51,28 @@ $config['stadium_img_size'] = array(
 	'm' => array('width' => 320,'height' => 180,'maintain_ratio' => false,'quality' => 100),
 );
 
+/**
+ * 文章配图 图片参数 16:9
+ * 微信消息文章配图
+ * 
+ * 屏幕显示如下
+ * ---------------------
+ * |大图消息1 360x200     |
+ * |                   | 
+ * ---------------------
+ * |小图消息1 200x200     | 
+ * ---------------------
+ * |小图消息2 200x200     |
+ * ---------------------
+ * |小图消息3 200x200     |
+ * ---------------------
+ * |小图消息4 200x200     |
+ * ---------------------
+ * 
+ */
+$config['weixin_img_size'] = array(
+	'm' => array('width' => 360,'height' => 200 , 'maintain_ratio' => false,'quality' => 100),
+	's' => array('width' => 200,'height' => 200,'maintain_ratio' => false,'quality' => 100),
+);
 
-$config['allowed_img_types'] = 'jpg|jpeg|png';
+

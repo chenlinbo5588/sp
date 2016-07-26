@@ -4,7 +4,7 @@
     <div class="item-title">
       <h3>{#title#}</h3>
       <ul class="tab-base">
-        <li><a href="JavaScript:void(0);" class="current"><span>管理</span></a></li>
+        <li><a href="{admin_site_url('article/index')}" class="current"><span>管理</span></a></li>
         <li><a href="{admin_site_url('article/add')}"><span>新增</span></a></li>
       </ul>
     </div>

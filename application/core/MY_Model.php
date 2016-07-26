@@ -95,7 +95,9 @@ class MY_Model extends CI_Model {
         return $data[0][$field];
     }
     
-    
+    /**
+     * 设置条件
+     */
     protected function _setCondition($condition){
     	if($condition['where']){
             $this->db->where($condition['where']);
@@ -214,22 +216,41 @@ class MY_Model extends CI_Model {
     	$this->db->update($this->_tableRealName);
     	
     	return $this->db->affected_rows();
+    }
+    
+    
+    public function updateByCondition($data,$condition){
+    	$this->_setCondition($condition);
     	
+    	$data = $this->_fieldsDecorator($data,'update');
+    	
+    	$this->db->update($this->_tableRealName, $data);
+        return $this->db->affected_rows();
     }
     
     public function updateByWhere($data,$where = null){
-    	
+    	$data = $this->_fieldsDecorator($data,'update');
     	
         $this->db->update($this->_tableRealName,$data,$where);
         return $this->db->affected_rows();
     }
     
     public function batchInsert($data){
-        return $this->db->insert_batch($this->_tableRealName, $data); 
+    	$filterData = array();
+    	foreach($data as $key => $item){
+    		$filterData[] = $this->_fieldsDecorator($item,'add');
+    	}
+    	
+        return $this->db->insert_batch($this->_tableRealName, $filterData); 
     }
     
     public function batchUpdate($data,$key = 'id'){
-        return $this->db->update_batch($this->_tableRealName, $data,$key); 
+    	$filterData = array();
+    	foreach($data as $key => $item){
+    		$filterData[] = $this->_fieldsDecorator($item,'update');
+    	}
+    	
+        return $this->db->update_batch($this->_tableRealName, $filterData,$key); 
     }
     
     
