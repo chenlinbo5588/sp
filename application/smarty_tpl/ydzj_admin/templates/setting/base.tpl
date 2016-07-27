@@ -63,7 +63,7 @@
           <td class="vatop tips"><span class="vatop rowform">前台页面下侧可以显示，方便访问者遇到问题时咨询，多个请用半角逗号 "," 隔开</span></td>
         </tr>
         <tr>
-          <td colspan="2" class="required"><label for="site_tel">固定电话:</label></td>
+          <td colspan="2" class="required"><label for="site_tel">招商电话:</label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input id="site_tel" name="site_tel" value="{$currentSetting['site_tel']['value']|escape}" class="txt" type="text" /></td>

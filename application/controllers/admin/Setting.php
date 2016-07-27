@@ -32,7 +32,7 @@ class Setting extends Ydzj_Admin_Controller {
 			'closed_reason',
 			'company_address',
 			'site_mobile',
-			'site_tel', //固定电话
+			'site_tel', //招商电话
 			'site_faxno',
 		);
 		

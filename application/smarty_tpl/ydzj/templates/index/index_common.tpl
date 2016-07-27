@@ -89,9 +89,11 @@
 			    </ul>
 			</div>
 		</div>
+		{*
 		<div class="friendLinks panelContent">
 			<h3><strong>官方店铺</strong></h3>
 			<a href="http://www.taobao.com" title="淘宝店铺"><img class="nature" src="{resource_url('img/taobao.jpg')}" style="width:80px;"/></a>
 			<a href="http://www.alibaba.com.cn" title="阿里巴巴"><img class="nature" src="{resource_url('img/alibaba.jpg')}"/></a>
 		</div>
+		*}
 	</div>
