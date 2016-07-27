@@ -602,6 +602,8 @@ input[type=text].validation_error {
 
 #siteLogo {
 	float:left;
+	position: relative;
+    top: 3px;
 }
 
 #siteLogo img {
