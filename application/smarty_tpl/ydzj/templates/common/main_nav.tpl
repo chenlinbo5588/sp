@@ -1,6 +1,6 @@
    	<div id="topBar" class="clearfix">
        <div class="boxz clearfix">
-       		<div id="siteLogo"><a href="/"><img src="{resource_url('img/cmp/logo.jpg')}" style=""/></a></div>
+       		<div id="siteLogo"><a href="/"><img src="{resource_url('img/cmp/logo.png')}" style=""/></a></div>
        		<div id="siteContacts">
            		<a href="/" title="首页">您好,欢迎访问{config_item('site_name')}官方网站</a>
            		{*<a href="javascript:void(0);">Tel: {$siteSetting['site_phone']|escape}</a>

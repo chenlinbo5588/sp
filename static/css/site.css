@@ -191,7 +191,7 @@ input[type=text]:focus , input[type=password]:focus ,textarea:focus {
 
 .logo {
     height:	100px;
-    background:url(../img/logo.jpg) no-repeat 50% 50%;
+    background:url(../img/logo.png) no-repeat 50% 50%;
 }
 
 img.nature {
@@ -605,7 +605,7 @@ input[type=text].validation_error {
 }
 
 #siteLogo img {
-	width:130px;
+	width:142px;
 	height:60px;
 	
 }
