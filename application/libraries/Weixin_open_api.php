@@ -1,15 +1,45 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php
+
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
+ * 微信开放平台 API 实现
  */
 
-
-class Weixin_Open_Basic extends Weixin_Open_Api {
+class Weixin_Open_Api extends Http_Client {
+    
+    protected $_openConfig = array();
     
     public function __construct($config){
-        parent::__construct($config);
+        parent::__construct();
+        $this->_openConfig = $config;
     }
+    
+    /**
+     * 验证签名
+     * @return boolean 
+     */
+    public function checkSignature(){
+        
+        $signature = $_GET["signature"];
+        $timestamp = $_GET["timestamp"];
+        $nonce = $_GET["nonce"];	
+       
+        $token = $this->_openConfig['token'];
+        
+        $tmpArr = array($token, $timestamp, $nonce);
+        sort($tmpArr, SORT_STRING);
+        $tmpStr = implode( $tmpArr );
+        $tmpStr = sha1( $tmpStr );
+
+        if( $tmpStr == $signature ){
+            return true;
+        }else{
+            return false;
+        }
+        
+    }
+    
     
     /**
      * 获取服务器推送的 token
@@ -39,5 +69,4 @@ class Weixin_Open_Basic extends Weixin_Open_Api {
 		}
         
     }
-    
 }
