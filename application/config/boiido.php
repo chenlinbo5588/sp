@@ -11,7 +11,7 @@ $config['pageConf'] = array(
 		)
 	),
 	'营销招商' => array(
-		'url' => site_url('market'),
+		'url' => site_url('market/agency'),
 		'sideNav' => array(
 			'经销招商' => site_url('market/agency'),
 			'运营特点' => site_url('market/cooperation'),
