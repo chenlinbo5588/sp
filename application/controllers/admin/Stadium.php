@@ -9,10 +9,12 @@ class Stadium extends Ydzj_Admin_Controller {
 	public function __construct(){
 		parent::__construct();
 		
-		$this->load->library(array('Stadium_service', 'Team_service','Common_District_service'));
+		$this->load->library(array('Stadium_service', 'Sports_service','Common_District_service'));
 		
 		$this->_imageSize = config_item('stadium_img_size');
 		$this->_imageSizeKeys = array_keys($this->_imageSize);
+		
+		$this->assign('imageConfig',$this->_imageSize);
 	}
 	
 	public function index(){
@@ -117,82 +119,39 @@ class Stadium extends Ydzj_Admin_Controller {
 	public function add(){
 		
 		$allMetaList = $this->stadium_service->getAllMetaGroups();
+		$sportsList = $this->sports_service->getSportsCategory();
+		
 		$this->assign('allMetaList',$allMetaList);
+		$this->assign('sportsList',$sportsList);
 		
 		$info = array();
 		
 		if($this->isPostRequest()){
-			$addParam = $this->team_service->teamAddRules();
+			$addParam = $this->stadium_service->stadiumAddRules();
 			
 			for($i = 0 ; $i < 1; $i++){
-				
-				$this->load->library('Attachment_service');
-				$fileData = $this->attachment_service->addImageAttachment('team_avatar',array(),FROM_BACKGROUND,'team_avatar');
-				
-				// 看有没有传成功过 
-				$avatar = $this->input->post('avatar');
-				$aid = $this->input->post('aid');
 				$info = $_POST;
 				
-				/**
-				 * 可以后面再传图片
-				if(!$fileData && empty($aid)){
-					$this->assign('logo_error','<label class="form_error">请上传球队合影照片</label>');
-					break;
-				}
-				*/
+				$avatar = urlToPath(trim($this->input->post('avatar')));
+				$avatar_id = trim($this->input->post('avatar_id'));
 				
-				if($fileData){
-					$info['aid'] = $fileData['id'];
-					$info['avatar'] = $fileData['file_url'];
-					//重传了直接删除原先传的那张图片
-					if($aid){
-						$oldsImags = getImgPathArray($avatar,$this->_teamSizeKeys);
-						$this->attachment_service->deleteByFileUrl($oldsImags);
-					}
-				}else{
-					$info['aid'] = $aid;
-					$info['avatar'] = $avatar;
+				$this->load->library('Attachment_service');
+				
+				
+				if($avatar){
+					$this->attachment_service->setImageSizeConfig($this->_imageSize);
+					$resizeFile = $this->attachment_service->resize($avatar,$this->_imageSizeKeys,array(), 'avatar');
+					$addParam = array_merge($addParam,$resizeFile);
 				}
 				
 				if(!$this->form_validation->run()){
 					break;
 				}
 				
-				$leaderInfo = $this->Member_Model->getFirstByKey($this->input->post('leader_account'),'mobile');
-				$addParam = array(
-					'category_id' => $this->input->post('category_id'),
-					'category_name' => $sportsCategoryList[$this->input->post('category_id')]['name'],
-					'title' => $this->input->post('title'),
-					'leader_uid' => $leaderInfo['uid'],
-					'leader_name' => $leaderInfo['username'] ? $leaderInfo['username']  : $leaderInfo['nickname'] ,
-					'joined_type' => $this->input->post('joined_type'),
-					
-				);
-				$addParam['category_name'] = $sportsCategoryList[$this->input->post('category_id')]['name'];
-				if(empty($addParam['category_name'])){
-					$addParam['category_name'] = '';
-				}
-				
-				if($fileData){
-					$addParam['aid'] = $fileData['id'];
-					$addParam['avatar'] = $fileData['file_url'];
-				}else if($avatar){
-					$addParam['aid'] = $aid ? $aid : 0;
-					$addParam['avatar'] = empty($avatar) != true ? $avatar : '';
-				}
-				
-				//创建缩略图
-				if($addParam['avatar']){
-					$this->attachment_service->setImageSizeConfig($this->_teamImageSize);
-					$resizeFile = $this->attachment_service->resize($addParam['avatar'],$this->_teamSizeKeys,array(), 'avatar');
-					$addParam = array_merge($addParam,$resizeFile);
-				}
-				
 				$addParam = array_merge($addParam,$this->addWhoHasOperated('add'));
-				$teamid = $this->team_service->addTeam($addParam, $leaderInfo);
+				$newid = $this->stadium_service->addStadium($addParam);
 				
-				if($teamid > 0){
+				if($newid > 0){
 					//蒋队伍名称 何队伍图片去除
 					unset($info);
 					$this->assign('feedback',getSuccessTip('添加成功'));
@@ -200,12 +159,20 @@ class Stadium extends Ydzj_Admin_Controller {
 					$this->assign('feedback',getErrorTip('添加失败'));
 				}
 			}
+		}else{
+			
+			$info['status'] = 0;
+			$info['category_name'] = array();
+			$info['ground_type'] = array();
+			$info['charge_type'] = array();
+			$info['support_sports'] = array();
 		}
 		
 		$this->assign('info',$info);
 		$this->display();
 		
 	}
+	
 	
 	/**
 	 * 编辑

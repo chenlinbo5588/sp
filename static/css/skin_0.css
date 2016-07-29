@@ -101,6 +101,11 @@ h6 { font-size:12px;}
 .orange { color: #F60;}
 .bold {font-weight: bold; color: #545454}
 
+.hightlight {
+	color:#DA1CC1;
+	
+}
+
 
 .tip_success {
     font-weight: bold;
@@ -494,7 +499,7 @@ td.team a.weibo { background-position: 100% -40px;}
 
 .red_common {font-weight: bold; color: #ff5400;}
 .red_big {font-weight: bold; color: #ff5400; font-size: 16px;}
-form label.error { font-style:normal; font-weight: normal; color:#F00; background: url(../img/sky/bg_position.gif) no-repeat -625px -730px; padding-left: 20px; margin-left:5px;}
+form label.error { font-style:normal; font-weight: normal; color:#F00; background: url(../img/error.gif) no-repeat; padding-left: 20px; margin-left:5px;}
 form input.error , form textarea.error { background-color: #FFF0F0; background-repeat: repeat border: 1px dotted #FF3300;}
 form label.valid { font-weight: normal; color:#390; background: transparent url(../img/sky/bg_position.gif) no-repeat -625px -690px; float:none; padding-left:18px; margin-left:5px;}
 .help { line-height: 24px; color: #666; background-color: #F6F6F6; padding: 6px; border: 1px dashed #CCC;}

@@ -38,7 +38,40 @@ class Base_service {
 	
 	
 	/**
+     * 解析 地址名称 反过来得到 id
+     * 
+     * @param $dnames  array('浙江省','宁波市','慈溪市','浒山街道')
+     * 
+     * @return $arrayWithIds array(230,400,790,1222);
+     */
+    public function getDistrictIdByNames($dnames){
+    	
+    	$dIdList = self::$districtModel->getList(array(
+			'select' => 'id,name',
+			'where_in' => array(
+				array('key' => 'name', 'value' => $dnames)
+			)
+		));
+		
+		$ids = array();
+		foreach($dIdList as $dn){
+			$ids[$dn['name']] = $dn['id'];
+		}
+		
+		$arrayWithIds = array();
+		foreach($dnames as $key => $value){
+			$arrayWithIds[$key] = empty($ids[$value]) ? 0 : $ids[$value];
+		}
+		
+		return $arrayWithIds;
+		
+    }
+    
+	/**
 	 * 根据输入的 IDS 数组，返回带名称的数据组
+	 * @param $dIDs  array(230,400,790,1222)
+     * 
+     * @return $arrayWithName array('浙江省','宁波市','慈溪市','浒山街道');
 	 */
 	public function getDistrictNameByIds($dIDs){
 		
@@ -61,6 +94,7 @@ class Base_service {
 		
 		return $arrayWithName;
 	}
+	
 	
 	public function __construct(){
 		//empty here
