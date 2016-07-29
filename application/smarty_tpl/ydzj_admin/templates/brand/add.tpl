@@ -4,7 +4,8 @@
       <h3>品牌</h3>
       <ul class="tab-base">
       	<li><a href="{admin_site_url('brand/index')}"><span>管理</span></a></li>
-      	<li><a class="current"><span>{if $info['brand_id']}编辑{else}新增{/if}</span></a></li>
+      	<li><a href="{admin_site_url('brand/add')}" {if !$info['brand_id']}class="current"{/if}><span>新增</span></a></li>
+      	{if $info['brand_id']}<li><a href="{admin_site_url('brand/edit?brand_id=')}{$info['brand_id']}" class="current"><span>编辑</span></a></li>{/if}
       </ul>
     </div>
   </div>

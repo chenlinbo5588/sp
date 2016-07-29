@@ -5,7 +5,7 @@
       <h3>{#title#}</h3>
       <ul class="tab-base">
         <li><a href="{admin_site_url('team')}" ><span>{#manage#}</span></a></li>
-        <li><a href="JavaScript:void(0);" class="current"><span>{#add#}</span></a></li>
+        <li><a href="{admin_site_url('team/add')}" class="current"><span>{#add#}</span></a></li>
       </ul>
     </div>
   </div>

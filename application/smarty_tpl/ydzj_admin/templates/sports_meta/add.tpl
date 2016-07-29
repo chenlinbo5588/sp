@@ -6,7 +6,7 @@
       <ul class="tab-base">
       	<li><a href="{admin_site_url('sports_meta/index')}"><span>{#manage#}</span></a></li>
       	<li><a href="{admin_site_url('sports_meta/add')}" {if !$info['id']}class="current"{/if}><span>新增</span></a></li>
-      	{if $info['id']}<li><a href="{admin_site_url('sports_meta/index?id=')}{$info['id']}" class="current"><span>编辑</span></a></li>{/if}
+      	{if $info['id']}<li><a href="{admin_site_url('sports_meta/edit?id=')}{$info['id']}" class="current"><span>编辑</span></a></li>{/if}
       </ul>
     </div>
   </div>
@@ -53,7 +53,7 @@
       	</tr>
       	<tr class="noborder">
 	        <td class="vatop rowform">
-	          	<input type="text" class="txt" value="{$info['newgname']|escape}" name="newgname" id="newgname" placeholder="请输入新的{#groupname#}"  maxlength="20" class="txt">
+	          	<input type="text" class="txt" value="{$info['newgname']|escape}" name="newgname" id="newgname" placeholder="请输入新的{#groupname#}"  class="txt">
 	        </td>
 	        <td class="vatop tips">{form_error('newgname')}</td>
         </tr>
@@ -62,7 +62,7 @@
           <td colspan="2" class="required"><label class="validation" for="name">{#meta_title#}名称:</label></td>
         </tr>
         <tr class="noborder">
-          <td class="vatop rowform"><input type="text" value="{$info['name']|escape}" name="name" id="name" maxlength="20" class="txt"></td>
+          <td class="vatop rowform"><input type="text" value="{$info['name']|escape}" name="name" id="name" class="txt"></td>
           <td class="vatop tips">{form_error('name')}</td>
         </tr>
         <tr>

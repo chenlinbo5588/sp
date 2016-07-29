@@ -1,140 +1,193 @@
-{include file="common/admin_header.tpl"}
-
-<script>
-var map;
-
-function setJW(obj){
-
-     //console.log(obj);
-     if(typeof(obj) != "undefined"){
-	     $("input[name=longitude]").val(obj.longitude);
-	     $("input[name=latitude]").val(obj.latitude);
-         $("input[name=has_coordinates]").val(1);
-	     
-	     var geoc = new BMap.Geocoder();
-	     
-	     geoc.getLocation(obj.point, function(rs){
-	        var addComp = rs.addressComponents;
-	        var address = addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber;
-	        $("input[name=address]").val(address);
-	        //alert(addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber);
-	    });
-    }
-    
-    
-}
-  
-function initialize() {
-  map = new BMap.Map('map');  
-  map.centerAndZoom(new BMap.Point(121.491, 31.233), 15);
-  
-  var top_left_control = new BMap.ScaleControl({ anchor: BMAP_ANCHOR_TOP_LEFT });// 左上角，添加比例尺
-  var top_left_navigation = new BMap.NavigationControl();  //左上角，添加默认缩放平移控件
-  
-  map.addControl(top_left_control);
-  map.addControl(top_left_navigation);    
-  
-  //getCurrentLocation(map,setJW);
-  
-  $("button[name=getAddress]").bind("click",function(){
-       //获取当前地址
-      getCurrentLocation(map,setJW);
-  });
-}
-
-$(function(){
-    $("input[name=openMap]").bind("click",function(){
-        //$(this).val();
-        $("#mapDiv").show();
-        loadScript();
-    });
-    
-});
-</script>
-
-{include file="common/baidu_map.tpl"}
-{validation_errors()}
-{$message}
-{form_open_multipart(admin_site_url('stadium/add'),$formAttr)}
-    <input type="hidden" name="longitude" value="{$smarty.post['longitude']}"/>
-    <input type="hidden" name="latitude" value="{$smarty.post['latitude']}"/>
-    <input type="hidden" name="has_coordinates" value="{$smarty.post['has_coordinates']}"/>
-    <input type="hidden" name="other_image_count" value="1"/>
-    <div class="ui-field-contain">
-        <label class="required">场馆名称</label>
-        <input type="text" name="title" value="{set_value('title')}" placeholder="请输入场馆名称"/>
-        {form_error('title')}
+{include file="common/main_header.tpl"}
+{config_load file="stadium.conf"}
+  <div class="fixed-bar">
+    <div class="item-title">
+      <h3>{#title#}</h3>
+      <ul class="tab-base">
+      	<li><a href="{admin_site_url('stadium/index')}"><span>{#manage#}</span></a></li>
+      	<li><a href="{admin_site_url('stadium/add')}" {if !$info['id']}class="current"{/if}><span>新增</span></a></li>
+      	{if $info['id']}<li><a href="{admin_site_url('stadium/edit?id=')}{$info['id']}" class="current"><span>编辑</span></a></li>{/if}
+      </ul>
     </div>
-    
-    <div class="ui-field-contain">
-        <label class="required">场馆地址</label>
-        <input type="text" name="address" value="{set_value('address')}" placeholder="请输入场馆地址,(地图模式下)可通过获取位置自动填充"/>
-        <input type="button" name="openMap" value="地图模式"/>
-        {form_error('address')}
-    </div>
-    <div class="ui-field-contain" id="mapDiv" style="display:none;">
-        <button type="button" name="getAddress" class="ui-btn ui-icon-navigation ui-btn-icon-left ui-shadow ui-corner-all" data-textonly="false" data-textvisible="true" data-msgtext="正在获取位置" data-inline="true">获取地址</button>
-        <div style="padding:20px;"><div id="map" style="height:320px"></div></div>
-    </div>
-    
-    <div class="ui-field-contain">
-        <label class="required">联系人</label>
-        <input type="text" name="contact" value="{set_value('contact')}" placeholder="请输入联系人名称"/>
-        {form_error('contact')}
-    </div>
-    <div class="ui-field-contain">
-        <label>手机号码</label>
-        <input type="text" name="mobile" value="{set_value('mobile')}" placeholder="请输入联系人手机号码"/>
-        {form_error('contact')}
-    </div>
-    {foreach from=$allMetaGroups key=key item=item}
-    <div class="ui-field-contain">
-        <label>{$key}</label>
-        <select name="{if $key == '地面材质'}ground_type{else if $key == '收费类型'}charge_type{else if $key == '场地类型'}stadium_type{/if}">
-            {foreach from=$item item=list}
-            <option value="{$list['name']}" {if $smarty.post[$key] == $list['name']}selected{/if}>{$list['name']}</option>
-            {/foreach}
-        </select>
-    </div>
-    {/foreach}
-    <div class="ui-field-contain">
-        <label>备注</label>
-        <textarea name="remark" placeholder="如周一至周五:早8点 - 晚10点">{set_value('remark')}</textarea>
-    </div>
-    <div class="ui-field-contain">
-        <label>场馆封面照片</label>
-        <input type="file" name="cover_img" />
-    </div>
-    
-    <a href="javascript:void(0);" id="moreFile">添加文件选择</a>
-    <div id="fileArea">
-        <div class="ui-field-contain">
-            <label>其它照片<em>1</em></label>
-            <input type="file" name="other_img1" />
-        </div>
-    </div>
-    <button type="submit" name="submit">保存</button>
-</form>
-
-<script type="sp-template" id="addFileTpl">
-    <div class="ui-field-contain">
-        <label>其它照片<em></em></label>
-        <input type="file" name="other_img" />
-    </div>
-</script>
-<a href="{admin_site_url('stadium')}" class="ui-btn">返回</a>
-<script>
-
-$("#moreFile").bind("click",function(event){
-    var count = $("#fileArea em").size() + 1;
-    var fileTpl = $($("#addFileTpl").html());
-    
-    fileTpl.find("input").attr("name","other_img" + count);
-    fileTpl.find("em").html(count);
-    
-    $("input[name=other_image_count]").val(count);
-    $("#fileArea").append(fileTpl);
-});
-
-</script>
-{include file="common/admin_footer.tpl"}
+  </div>
+  <div class="fixed-empty"></div>
+  <div class="feedback">{$feedback}</div>
+  {if $info['id']}
+  {form_open(admin_site_url('stadium/edit'),'id="add_form"')}
+  {else}
+  {form_open(admin_site_url('stadium/add'),'id="add_form"')}
+  {/if}
+  	<input type="hidden" name="id" value="{$info['id']}"/>
+  	<input type="hidden" name="longitude" value="{$info['longitude']}"/>
+    <input type="hidden" name="latitude" value="{$info['latitude']}"/>
+    <input type="hidden" name="province" value="{$info['province']}"/>
+    <input type="hidden" name="city" value="{$info['city']}"/>
+    <input type="hidden" name="district" value="{$info['district']}"/>
+    <input type="hidden" name="street" value="{$info['street']}"/>
+    <input type="hidden" name="street_number" value="{$info['streetNumber']}"/>
+    <table class="table tb-type2">
+      <tbody>
+      	<tr class="noborder">
+      		<td colspan="2" class="required"><label class="validation">{#title#}{#short_name#}</label></td>
+      	</tr>
+      	<tr class="noborder">
+	        <td class="vatop rowform">
+	          	<input type="text" class="txt" value="{$info['name']|escape}" name="name" id="name" placeholder="请输入{#title#}{#short_name#}" class="txt">
+	        </td>
+	        <td class="vatop tips">{form_error('name')}</td>
+        </tr>
+        <tr class="noborder">
+      		<td colspan="2" class="required"><label>{#title#}{#full_name#}</label></td>
+      	</tr>
+      	<tr class="noborder">
+	        <td class="vatop rowform">
+	          	<input type="text" class="txt" value="{$info['full_name']|escape}" name="full_name" id="full_name" placeholder="请输入{#title#}{#full_name#}" class="txt">
+	        </td>
+	        <td class="vatop tips">{form_error('full_name')}</td>
+        </tr>
+        <tr class="noborder">
+      		<td colspan="2" class="required"><label class="validation">{#title#}{#address#}</label></td>
+      	</tr>
+        <tr class="noborder">
+	        <td class="vatop rowform">
+	        
+	          	<input type="text" class="txt" value="{$info['address']|escape}" name="address" id="address" placeholder="请输入{#title#}{#address#}" class="txt">
+	        </td>
+	        <td class="vatop tips"><a href="javascript:void(0);" id="locationOnMap">开始地图标注</a> {form_error('address')}</td>
+        </tr>
+        <tr class="noborder">
+      		<td colspan="2" class="required"><label class="validation">{#owner#}{#mobile#}</label></td>
+      	</tr>
+        <tr class="noborder">
+	        <td class="vatop rowform">
+	        
+	          	<input type="text" class="txt" value="{$info['mobile']|escape}" name="mobile" id="mobile" placeholder="请输入{#title#}{#mobile#}" class="txt">
+	        </td>
+	        <td class="vatop tips">{form_error('mobile')}</td>
+        </tr>
+        <tr class="noborder">
+      		<td colspan="2" class="required"><label>{#owner#}备用{#mobile#}</label></td>
+      	</tr>
+        <tr class="noborder">
+	        <td class="vatop rowform">
+	          	<input type="text" class="txt" value="{$info['mobile2']|escape}" name="mobile2" id="mobile2" placeholder="请输入{#title#}{#mobile2#}" class="txt">
+	        </td>
+	        <td class="vatop tips">{form_error('mobile2')}</td>
+        </tr>
+        <tr class="noborder">
+      		<td colspan="2" class="required"><label>{#tel#}</label></td>
+      	</tr>
+        <tr class="noborder">
+	        <td class="vatop rowform">
+	          	<input type="text" class="txt" value="{$info['tel']|escape}" name="tel" id="tel" placeholder="请输入{#tel#}" class="txt">
+	        </td>
+	        <td class="vatop tips">{form_error('mobile')}</td>
+        </tr>
+      	<tr class="noborder">
+      		<td colspan="2" class="required"><label class="validation" >{#category_name#}</label></td>
+      	</tr>
+      	<tr class="noborder">
+	        <td class="vatop rowform">
+	            {foreach from=$allMetaList['场地类型'] item=item}
+	            <label><input type="checkbox" name="category_name[]" value="{$item['name']}" {if $info['category_name'] == $item['name']}selected{/if}/>{$item['name']}</label>
+	            {/foreach}
+	        </td>
+	        <td class="vatop tips">{form_error('category_name')}</td>
+        </tr>
+        <tr class="noborder">
+      		<td colspan="2" class="required"><label class="validation">{#ground_type#}</label></td>
+      	</tr>
+      	<tr class="noborder">
+	        <td class="vatop rowform">
+	          	{foreach from=$allMetaList['地面材质'] item=item}
+	            <label><input type="checkbox" name="ground_type[]" value="{$item['name']}" {if $info['ground_type'] == $item['name']}selected{/if}/>{$item['name']}</label>
+	            {/foreach}
+	        </td>
+	        <td class="vatop tips">{form_error('ground_type')}</td>
+        </tr>
+        <tr class="noborder">
+      		<td colspan="2" class="required"><label class="validation">{#open_type#}</label></td>
+      	</tr>
+      	<tr class="noborder">
+	        <td class="vatop rowform">
+	          	{foreach from=$allMetaList['开放类型'] item=item}
+	            <label><input type="radio" name="open_type" value="{$item['name']}" {if $info['open_type'] == $item['name']}selected{/if}/>{$item['name']}</label>
+	            {/foreach}
+	        </td>
+	        <td class="vatop tips">{form_error('open_type')}</td>
+        </tr>
+        <tr class="noborder">
+      		<td colspan="2" class="required"><label class="validation">{#owner_type#}</label></td>
+      	</tr>
+      	<tr class="noborder">
+	        <td class="vatop rowform">
+	          	{foreach from=$allMetaList['权属类型'] item=item}
+	            <label><input type="radio" name="owner_type" value="{$item['name']}" {if $info['open_type'] == $item['name']}selected{/if}/>{$item['name']}</label>
+	            {/foreach}
+	        </td>
+	        <td class="vatop tips">{form_error('owner_type')}</td>
+        </tr>
+        <tr class="noborder">
+      		<td colspan="2" class="required"><label class="validation">{#support_sports#}</label></td>
+      	</tr>
+        <tr class="noborder">
+	        <td class="vatop rowform">
+	          	{foreach from=$allMetaList['权属类型'] item=item}
+	            <label><input type="checkbox" name="support_sports" value="{$item['name']}" {if $info['open_type'] == $item['name']}selected{/if}/>{$item['name']}</label>
+	            {/foreach}
+	        </td>
+	        <td class="vatop tips">{form_error('owner_type')}</td>
+        </tr>
+        
+        <tr class="noborder">
+          <td colspan="2" class="required"><label class="validation" for="name">{#meta_title#}名称:</label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform"><input type="text" value="{$info['name']|escape}" name="name" id="name" maxlength="20" class="txt"></td>
+          <td class="vatop tips">{form_error('name')}</td>
+        </tr>
+        <tr>
+          <td colspan="2" class="required">开启状态: </td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform onoff"><label for="status1" {if $info['status'] == 1}class="cb-enable selected"{else}class="cb-enable"{/if}><span>是</span></label>
+            <label for="status0" {if $info['status'] == 1}class="cb-disable"{else}class="cb-disable selected"{/if}><span>否</span></label>
+            <input id="status1" name="status" {if $info['status'] == 1}checked{/if} value="1" type="radio">
+            <input id="status0" name="status" {if $info['status'] == 0}checked{/if} value="0" type="radio"></td>
+          <td class="vatop tips">{form_error('status')}</td>
+        </tr>
+        <tr>
+          <td colspan="2" class="required"><label>排序:</label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform"><input type="text" value="{if $info['meta_sort']}{$info['meta_sort']}{else}255{/if}" name="meta_sort" id="meta_sort" class="txt"></td>
+          <td class="vatop tips">{form_error('meta_sort')} 数字范围为0~255，数字越小越靠前</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="2"><input type="submit" name="submit" value="保存" class="msbtn"/></td>
+        </tr>
+      </tfoot>
+    </table>
+  </form>
+  <script>
+  $(function(){
+  	$("select[name=category_name]").change(function(){
+  		var currentCate = $(this).val();
+  		$.get("{admin_site_url('sports_meta/getgroup')}", { category_name: currentCate , ts: Math.random() } ,function(json){
+  			if(json.message == 'success'){
+  				$("select[name=gname").html('<option value="">请选择</option>' );
+  				for(var i = 0; i < json['data'].length; i++) {
+  					
+  					$("select[name=gname").append('<option value="' + json['data'][i].gname + '">' + json['data'][i].gname + '</option>'); 
+  				}
+  			}
+  		
+  		})
+  	});
+  	
+  	
+  })
+  </script>
+{include file="common/main_footer.tpl"}

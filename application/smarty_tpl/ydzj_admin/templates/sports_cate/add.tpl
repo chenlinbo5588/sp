@@ -6,7 +6,7 @@
       <ul class="tab-base">
       	<li><a href="{admin_site_url('sports_cate/index')}"><span>{#manage#}</span></a></li>
       	<li><a href="{admin_site_url('sports_cate/add')}" {if !$info['id']}class="current"{/if}><span>新增</span></a></li>
-      	{if $info['id']}<li><a href="{admin_site_url('sports_cate/index?id=')}{$info['id']}" class="current"><span>编辑</span></a></li>{/if}
+      	{if $info['id']}<li><a href="{admin_site_url('sports_cate/edit?id=')}{$info['id']}" class="current"><span>编辑</span></a></li>{/if}
       </ul>
     </div>
   </div>
@@ -25,7 +25,7 @@
           <td colspan="2" class="required"><label class="validation" for="name">{#title#}名称:</label></td>
         </tr>
         <tr class="noborder">
-          <td class="vatop rowform"><input type="text" value="{$info['name']|escape}" name="name" id="name" maxlength="20" class="txt"></td>
+          <td class="vatop rowform"><input type="text" value="{$info['name']|escape}" name="name" id="name" class="txt"></td>
           <td class="vatop tips">{form_error('name')}</td>
         </tr>
         <tr>

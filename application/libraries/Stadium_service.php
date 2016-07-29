@@ -62,7 +62,7 @@ class Stadium_service extends Base_service {
 	 */
 	public function getSportsCategory($condition = array())
 	{
-		$condition['where']['status'] = 0;
+		$condition['where']['status'] = 1;
 		return $this->_sportsCategoryModel->getList($condition);
 	}
 	
@@ -71,13 +71,13 @@ class Stadium_service extends Base_service {
 	 */
 	public function getStadiumInfo($id){
 		$info['basic'] = $this->_stadiumModel->getById(array(
-			'where' => array('stadium_id' => $id)
+			'where' => array('id' => $id)
 		));
 		
 		//图片列表
 		
 		$info['photos'] = $this->_stadiumPhotosModel->getList(array(
-			'where' => array('stadium_id' => $id)
+			'where' => array('id' => $id)
 		));
 		
 		
@@ -121,9 +121,9 @@ class Stadium_service extends Base_service {
      */
     public function getOpenType(){
 		return array(
-			'1' => '完全对外开放',
-			'2' => '部分设施对外开放',
-			'3' => '仅对内部人员开放'
+			'1' => '完全开放',
+			'2' => '部分开放',
+			'3' => '仅对内部开放'
 		);
 	}
     
@@ -223,7 +223,7 @@ class Stadium_service extends Base_service {
     	$addParam = $this->_stadiumBasicInfo($param, $images[0],$user);
     	$addParam = $this->_getDistrictIdFromName($addParam,$param);
     	
-    	$addParam['reporter'] = empty($user['username']) == true ? $user['nickname'] : $user['username'];
+    	$addParam['reporter_username'] = empty($user['username']) == true ? $user['nickname'] : $user['username'];
     	$addParam['reporter_uid'] = $user['uid'];
     	
     	$stadiumId = $this->_stadiumModel->_add($addParam);
@@ -238,11 +238,11 @@ class Stadium_service extends Base_service {
 		$insertImage = array();
 		foreach($images as $ik => $img){
 			$newImag = array();
-			$newImag['stadium_id'] = $stadiumId;
+			$newImag['id'] = $stadiumId;
 			$newImag['aid'] = $img['aid'];
-			$newImag['avatar_large'] = $img['avatar_large'];
-			$newImag['avatar_big'] = $img['avatar_big'];
-			$newImag['avatar_middle'] = $img['avatar_middle'];
+			$newImag['avatar_h'] = $img['avatar_h'];
+			$newImag['avatar_b'] = $img['avatar_b'];
+			$newImag['avatar_m'] = $img['avatar_m'];
 			$newImag['gmt_create'] = $now;
 			$newImag['gmt_modify'] = $now;
 			
@@ -274,7 +274,7 @@ class Stadium_service extends Base_service {
     public function editStadium($stadium,$param,$images,$user){
     	
     	$useTrans = false;
-    	$stadiumId = $stadium['basic']['stadium_id'];
+    	$stadiumId = $stadium['basic']['id'];
     	
     	$oldPhotos = array();
     	foreach($stadium['photos'] as $photo){
@@ -301,7 +301,7 @@ class Stadium_service extends Base_service {
     	$updateParam = $this->_stadiumBasicInfo($param, $images[0],$user);
     	$updateParam = $this->_getDistrictIdFromName($updateParam,$param);
     	
-    	$rows = $this->_stadiumModel->update($updateParam , array('stadium_id' => $stadiumId));
+    	$rows = $this->_stadiumModel->update($updateParam , array('id' => $stadiumId));
     	
     		
     	if ($useTrans && self::$dbInstance->trans_status() === FALSE){
@@ -311,7 +311,7 @@ class Stadium_service extends Base_service {
 		
 		
 		$deletedRows = $this->_stadiumPhotosModel->deleteByWhere(array(
-			'stadium_id' => $stadiumId
+			'id' => $stadiumId
 		));
 		
 		
@@ -324,7 +324,7 @@ class Stadium_service extends Base_service {
 		$now = time();
 		$insertImage = array();
 		foreach($images as $ik => $img){
-			$img['stadium_id'] = $stadiumId;
+			$img['id'] = $stadiumId;
 			$img['gmt_create'] = $now;
 			$img['gmt_modify'] = $now;
 			

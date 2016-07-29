@@ -220,8 +220,8 @@ $(function(){
         </dl>
         <dl>    
             <dt>场馆</dt>
-            <dd><a href="javascript:void(0)" onclick="openItem('setting,stadium,stadium')">场馆等级</a></dd>
             <dd><a href="javascript:void(0)" onclick="openItem('index,stadium,stadium')">场馆管理</a></dd>
+            <dd><a href="javascript:void(0)" onclick="openItem('setting,stadium,stadium')">基础数据</a></dd>
         </dl>
 	    <dl>    
 	        <dt>商品</dt>
@@ -419,7 +419,7 @@ $(function(){
                 <dd>
                   <ol>
                   	<li><a href="javascript:void(0);" id="index_stadium" onclick="openItem('index,stadium,stadium');">场馆管理</a></li>
-                    <li><a href="javascript:void(0);" id="setting_stadium" onclick="openItem('setting,stadium,stadium');">场馆设置</a></li>
+                    <li><a href="javascript:void(0);" id="setting_stadium" onclick="openItem('setting,stadium_meta,stadium');">场馆设置</a></li>
                   </ol>
                 </dd>
               </dl>

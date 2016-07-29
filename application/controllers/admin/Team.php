@@ -16,7 +16,7 @@ class Team extends Ydzj_Admin_Controller {
 	}
 	
 	public function index(){
-		$this->load->library(array('Team_service','Member_service','Common_District_service'));
+		$this->load->library(array('Member_service'));
 		
 		$currentPage = $this->input->get('page') ? $this->input->get('page') : 1;
 		$condition = array(
@@ -95,7 +95,7 @@ class Team extends Ydzj_Admin_Controller {
 		
 		$this->assign('search_map',$search_map);
 		
-		$this->display('team/index');
+		$this->display();
 	}
 	
 	/**

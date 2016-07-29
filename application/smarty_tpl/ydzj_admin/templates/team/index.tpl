@@ -10,7 +10,7 @@
     </div>
   </div>
   <div class="fixed-empty"></div>
-  <form method="get" name="formSearch" id="formSearch" action="{admin_site_url('team')}">
+  <form method="get" name="formSearch" id="formSearch" action="{admin_site_url('team/index')}">
     <input type="hidden" name="page" value="{$currentPage}"/>
     <table class="tb-type1 noborder search">
       <tbody>

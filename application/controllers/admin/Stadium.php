@@ -9,14 +9,14 @@ class Stadium extends Ydzj_Admin_Controller {
 	public function __construct(){
 		parent::__construct();
 		
-		$this->load->library(array('Team_service','Common_District_service'));
+		$this->load->library(array('Stadium_service', 'Team_service','Common_District_service'));
 		
-		$this->_imageSize = config_item('team_img_size');
+		$this->_imageSize = config_item('stadium_img_size');
 		$this->_imageSizeKeys = array_keys($this->_imageSize);
 	}
 	
 	public function index(){
-		$this->load->library(array('Team_service','Member_service','Common_District_service'));
+		$this->load->library(array('Member_service'));
 		
 		$currentPage = $this->input->get('page') ? $this->input->get('page') : 1;
 		$condition = array(
@@ -51,14 +51,10 @@ class Stadium extends Ydzj_Admin_Controller {
 		}
 		
 		$search_map['create_time'] = array('id DESC' => '按时间倒序','id ASC' => '按时间顺序');
-		$search_map['member_state'] = array('avatar_status@0' => '待验证队伍合影');
+		$search['name'] = $this->input->get('name');
 		
-		
-		$search['team_name'] = $this->input->get('team_name');
-		$search['member_state'] = $this->input->get('member_state');
-		
-		if($search['team_name']){
-			$condition['like']['title'] = $search['team_name'];
+		if($search['name']){
+			$condition['like']['name'] = $search['name'];
 		}
 		
 		
@@ -66,18 +62,11 @@ class Stadium extends Ydzj_Admin_Controller {
 			$condition['order'] = $search['create_time'];
 		}
 		
-		if(in_array($search['member_state'], array_keys($search_map['member_state']))){
-			$statArray = explode('@',$search['member_state']);
-			$condition['where'][$statArray[0]] = $statArray[1];
-		}
+		$list = $this->Stadium_Model->getList($condition);
 		
-		$list = $this->team_service->getTeamListByCondition($condition);
-		
-		//print_r($list);
 		$userList = array();
 		foreach($list['data'] as $item){
 			$userList[] = $item['owner_uid'];
-			$userList[] = $item['leader_uid'];
 		}
 		
 		if($userList){
@@ -95,7 +84,7 @@ class Stadium extends Ydzj_Admin_Controller {
 		
 		$this->assign('search_map',$search_map);
 		
-		$this->display('team/index');
+		$this->display();
 	}
 	
 	/**
@@ -121,45 +110,19 @@ class Stadium extends Ydzj_Admin_Controller {
 		}
 	}
 	
+	
+	/**
+	 * 添加场馆
+	 */
 	public function add(){
 		
-		$sportsCategoryList = $this->team_service->getSportsCategory();
-		$this->assign('sportsCategoryList',$sportsCategoryList);
+		$allMetaList = $this->stadium_service->getAllMetaGroups();
+		$this->assign('allMetaList',$allMetaList);
 		
-		//$this->_city();
 		$info = array();
 		
 		if($this->isPostRequest()){
 			$addParam = $this->team_service->teamAddRules();
-			$this->form_validation->set_rules('leader_account','手机号码',"required|valid_mobile|in_db_list[{$this->Member_Model->_tableRealName}.mobile]");
-			
-			/*
-			$this->form_validation->set_rules('leader_account','手机号码',array(
-					'required',
-					'valid_mobile',
-					array(
-						'loginname_callable[mobile]',
-						array(
-							$this->Member_Model,'isUnqiueByKey'
-						)
-					)
-				),
-				array(
-					'loginname_callable' => '%s必须为有效的登陆账号'
-				)
-			);
-		
-			
-			$this->form_validation->set_rules('d1','一级地址','required|is_natural_no_zero');
-			$this->form_validation->set_rules('d2','二级地址','required|is_natural_no_zero');
-			$this->form_validation->set_rules('d3','三级地址','required|is_natural_no_zero');
-			
-			$d4 = $this->input->post('d4');
-			if($d4){
-				$this->form_validation->set_rules('d4','四级地址','required|is_natural_no_zero');
-			}
-			*/
-			
 			
 			for($i = 0 ; $i < 1; $i++){
 				
@@ -239,7 +202,6 @@ class Stadium extends Ydzj_Admin_Controller {
 			}
 		}
 		
-		$this->assign('formUrl',admin_site_url('team/add'));
 		$this->assign('info',$info);
 		$this->display();
 		
