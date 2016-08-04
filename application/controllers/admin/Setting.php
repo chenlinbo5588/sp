@@ -31,6 +31,7 @@ class Setting extends Ydzj_Admin_Controller {
 			'site_status',
 			'closed_reason',
 			'company_address',
+			'company_intro',
 			'site_mobile',
 			'site_tel', //招商电话
 			'site_faxno',
