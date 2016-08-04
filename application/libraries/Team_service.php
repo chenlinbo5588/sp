@@ -455,9 +455,7 @@ class Team_service extends Base_service {
 		$dIDs = array($param['d1'],$param['d2'],$param['d3'],$param['d4']);
 		
 		$dsWithName = $this->getDistrictNameByIds($dIDs);
-		foreach($dsWithName as $dkey => $dName){
-			$param['dname'.($dkey + 1)] = $dName;
-		}
+		$param = array_merge($param,$dsWithName);
 		
 		$teamid = $this->_teamModel->_add($param);
 		
@@ -516,7 +514,6 @@ class Team_service extends Base_service {
 				'd2' => $creatorInfo['d2'],
 				'd3' => $creatorInfo['d3'],
 				'd4' => $creatorInfo['d4'],
-				//'dname' => $district['name'] == '' ? '' : $district['name'],
 				'teams' => 1
 			));
 		}
@@ -538,13 +535,8 @@ class Team_service extends Base_service {
 	 * 更新队伍
 	 */
 	public function updateTeam($teamId , $updateParam){
-		
-		$ds = array( $updateParam['d1'] ,$updateParam['d2'],$updateParam['d3'],$updateParam['d4']);
-		$dsWithName = $this->getDistrictNameByIds($ds);
-		
-		foreach($dsWithName as $dkey => $dName){
-			$updateParam['dname'.($dkey + 1)] = $dName;
-		}
+		$dsWithName = $this->getDistrictNameByIds(array( $updateParam['d1'] ,$updateParam['d2'],$updateParam['d3'],$updateParam['d4']));
+		$updateParam = array_merge($updateParam,$dsWithName);
 		
 		return $this->_teamModel->update($updateParam,array('id' => $teamId));
 	}

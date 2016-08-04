@@ -30,12 +30,14 @@ function addMyIcon(lng,lat){
     var marker = new BMap.Marker(point,{icon:myIcon});  // 创建标注
     marker.setAnimation(BMAP_ANIMATION_BOUNCE);
 	map.addOverlay(marker);           				 // 将标注添加到地图中
+	
+	map.panTo(point);
 }
 
 
 function initialize() {
   map = new BMap.Map('map');  
-  map.centerAndZoom(new BMap.Point(121.243254, 30.183492), 12);
+  map.centerAndZoom(new BMap.Point(121.263186, 30.190465), 12);
   
   //var top_left_control = new BMap.ScaleControl({ anchor: BMAP_ANCHOR_TOP_LEFT });// 左上角，添加比例尺
   //var top_left_navigation = new BMap.NavigationControl();  //左上角，添加默认缩放平移控件
@@ -68,7 +70,6 @@ function initialize() {
 	  map.addOverlay(marker);           				 // 将标注添加到地图中
 	  */
 	  
-	  
 	  geoc.getLocation(point, function(rs){
 			var addComp = rs.addressComponents;
 			$("input[name=province]").val(addComp.province);
@@ -85,14 +86,4 @@ function initialize() {
 		});
 	  //alert(e.point.lng + "," + e.point.lat);
   });
-  
-  //getCurrentLocation(map,setJW);
-  
-  /*
-  $("button[name=getAddress]").bind("click",function(){
-       //获取当前地址
-      getCurrentLocation(map,setJW);
-  });
-  */
-  
 }

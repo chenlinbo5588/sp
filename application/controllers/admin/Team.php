@@ -193,6 +193,7 @@ class Team extends Ydzj_Admin_Controller {
 				}
 				
 				if(!$this->form_validation->run()){
+					$this->assign('feedback',$this->form_validation->error_string());
 					break;
 				}
 				

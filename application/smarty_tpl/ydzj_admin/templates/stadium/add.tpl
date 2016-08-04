@@ -13,12 +13,12 @@
   <div class="fixed-empty"></div>
   <div class="feedback">{$feedback}</div>
   
-  <div id="mapDiv" style="display:none" >
+  <div id="mapDiv">
   	<div class="tip_warning">点击地图标注场馆所在具体位置</div>
     <div id="map" style="height:400px;"></div>
   </div>
   {if $info['id']}
-  {form_open(admin_site_url('stadium/edit'),'id="add_form"')}
+  {form_open(admin_site_url('stadium/edit?id='|cat:$info['id']),'id="add_form"')}
   {else}
   {form_open(admin_site_url('stadium/add'),'id="add_form"')}
   {/if}
@@ -88,7 +88,7 @@
 	        <td class="vatop tips">{form_error('mobile')}</td>
         </tr>
         <tr class="noborder">
-      		<td colspan="2" class="required"><label>{#owner#}备用{#mobile#}</label></td>
+      		<td colspan="2" class="required"><label>{#owner#}{#mobile2#}</label></td>
       	</tr>
         <tr class="noborder">
 	        <td class="vatop rowform">
@@ -133,10 +133,10 @@
       	<tr class="noborder">
 	        <td class="vatop rowform">
 	          	{foreach from=$allMetaList['收费类型'] item=item}
-	            <label><input type="checkbox" name="charge_type[]" value="{$item['name']}" {if is_array($info['charge_type']) && in_array($item['name'],$info['charge_type'])}checked{/if}/>{$item['name']}</label>
+	            <label><input type="radio" name="charge_type" value="{$item['name']}" {if $item['name'] == $info['charge_type']}checked{/if}/>{$item['name']}</label>
 	            {/foreach}
 	        </td>
-	        <td class="vatop tips">{form_error('charge_type[]')}</td>
+	        <td class="vatop tips">{form_error('charge_type')}</td>
         </tr>
         <tr class="noborder">
       		<td colspan="2" class="required"><label class="validation">{#open_type#}</label></td>
@@ -194,7 +194,7 @@
        		<td colspan="2">
        			<ul id="thumbnails" class="thumblists">
        			{foreach from=$fileList item=item}
-       			<li id="{$item['id']}" class="picture"><input type="hidden" name="file_id[]" value="{$item['id']}" /><div class="size-64x64"><span class="thumb"><i></i><img src="{resource_url($item['file_url'])}" alt="" width="64px" height="64px"/></span></div><p><span><a href="javascript:insert_editor('{resource_url($item['file_url'])}');">插入</a></span><span><a href="javascript:del_file_upload('{$item['id']}');">删除</a></span></p></li>
+       			<li id="img_{$item['aid']}" class="picture"><input type="hidden" name="file_id[]" value="{$item['aid']}" /><div><span class="thumb"><i></i><img src="{resource_url($item['avatar_m'])}" alt="" width="180px" height="180px"/></span></div><p><span><a href="javascript:del_file_upload('{$item['aid']}');">删除</a></span></p></li>
        			{/foreach}
        			</ul>
        		</td>
@@ -203,7 +203,7 @@
           <td colspan="2" class="required"><label>{#remark#}</label></td>
         </tr>
         <tr class="noborder">
-          <td><textarea name="remark" style="height:100px;width:100%;"></textarea></td>
+          <td><textarea name="remark" style="height:100px;width:100%;">{$info['remark']|escape}</textarea></td>
           <td class="vatop tips">{form_error('remark')}</td>
         </tr>
         <tr>
@@ -276,15 +276,22 @@
 	    if(!window.confirm('您确定要删除吗?')){
 	        return;
 	    }
-	    $.getJSON('{admin_site_url("goods/delimg")}?mod=stadium&file_id=' + file_id + "&id=" + $("input[name=id]").val(), function(result){
+	    $.getJSON('{admin_site_url("stadium/delimg")}?mod=stadium&file_id=' + file_id + "&id=" + $("input[name=id]").val(), function(result){
 	    	refreshFormHash(result.data);
 	        if(result){
-	            $('#' + file_id).remove();
+	            $('#img_' + file_id).remove();
 	        }else{
 	            alert('删除失败');
 	        }
 	    });
 	}
+	
+	function add_uploadedfile(file_data)
+	{
+	    var newImg = '<li id="img_' + file_data.aid + '" class="picture"><input type="hidden" name="file_id[]" value="' + file_data.aid + '" /><div><span class="thumb"><i></i><img src="' + file_data.url + '" alt="" width="180px" height="180px"/></span></div><p><span><a href="javascript:del_file_upload(\'' + file_data.aid + '\');">删除</a></span></p></li>';
+	    $('#thumbnails').prepend(newImg);
+	}
+	
 	
 	$(function(){
 		loadScript();
@@ -299,19 +306,18 @@
 	            dataType: 'json',
 	            url: '{admin_site_url("stadium/addimg")}?mod=stadium',
 	            done: function (e,data) {
-	            	refreshFormHash(data.result);
-	                if(data.result.error == 0){
-	                	add_uploadedfile(data.result);
+	            	refreshFormHash(data.result.data);
+	                if(data.result.data.error == 0){
+	                	add_uploadedfile(data.result.data);
+	                }else{
+	                	alert(data.result.message);
 	                }
+	                
 	            }
 	        });
 	    });
 	    
-	    function add_uploadedfile(file_data)
-		{
-		    var newImg = '<li id="' + file_data.id + '" class="picture"><input type="hidden" name="file_id[]" value="' + file_data.id + '" /><div class="size-64x64"><span class="thumb"><i></i><img src="' + file_data.url + '" alt="" width="64px" height="64px"/></span></div><p><span><a href="javascript:insert_editor(\'' + file_data.url + '\');">插入</a></span><span><a href="javascript:del_file_upload(\'' + file_data.id + '\');">删除</a></span></p></li>';
-		    $('#thumbnails').prepend(newImg);
-		}
+	    
 	})
   </script>
 {include file="common/main_footer.tpl"}

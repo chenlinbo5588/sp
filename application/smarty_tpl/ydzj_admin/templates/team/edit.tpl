@@ -6,7 +6,7 @@
       <ul class="tab-base">
         <li><a href="{admin_site_url('team')}" ><span>{#manage#}</span></a></li>
         <li><a href="{admin_site_url('team/add')}" ><span>{#add#}</span></a></li>
-        <li><a href="{admin_site_url('team/edit')}?id={$info['basic']['id']}" class="current"><span>{#edit#}</span></a></li>
+        <li><a href="{admin_site_url('team/edit')}?id={$info['basic']['id']}" class="current"><span>{#edit#}:{#team_index#}{$info['basic']['id']}</span></a></li>
       </ul>
       <ul class="tab-sub">
         <li><a href="javascript:void(0);" class="current"><span>{#titel#}基本信息</span></a></li>
@@ -23,9 +23,6 @@
 	  {form_open_multipart(admin_site_url('team/edit?id='|cat:$info['basic']['id']),'name="form_index"')}
 	    <table class="table tb-type2">
 	      <tbody>
-	      	<tr class="noborder">
-	          <td colspan="2" class="required"><label class="validation">{#team_index#}:{$info['basic']['id']}</label></td>
-	        </tr>
 	      	<tr class="noborder">
 	          <td colspan="2" class="required"><label class="validation">{#team_category#}:</label></td>
 	        </tr>

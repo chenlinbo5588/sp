@@ -123,7 +123,7 @@ class Stadium_service extends Base_service {
     	$stadiumParam = array(
     		'owner_type' => $param['owner_type'],
     		'open_type' => $param['open_type'],
-    		'title' => $param['title'],
+    		'name' => $param['name'],
     		'address' => $param['address'],
     		'longitude' => $param['longitude'],
     		'latitude' => $param['latitude'],
@@ -160,7 +160,45 @@ class Stadium_service extends Base_service {
 	public function commonStadiumRules(){
 		
 		//位置信息
+		$param = array();
 		
+		$keyArray = array(
+			'longitude',
+			'latitude',
+			'province',
+			'city',
+			'district',
+			'street',
+			'street_number',
+			'name',
+			'full_name',
+			'address',
+			'owner_username',
+			'contact',
+			'mobile',
+			'mobile2',
+			'tel',
+			'charge_type',
+			'open_type',
+			'owner_type',
+			'remark',
+			'status',
+			'displayorder',
+			'aid',
+			'avatar',
+		);
+		
+		foreach($keyArray as $kv){
+			$param[$kv] = trim(self::$CI->input->post($kv));
+			if(empty($param[$kv])){
+				$param[$kv] = '';
+			}
+		}
+		
+		$param['avatar'] = urlToPath($param['avatar']);
+		
+		
+		/*
 		$param['longitude'] = self::$CI->input->post('longitude');
 		$param['latitude'] = self::$CI->input->post('latitude');
 		$param['dname1'] = self::$CI->input->post('province');
@@ -186,14 +224,14 @@ class Stadium_service extends Base_service {
 		$param['displayorder'] = self::$CI->input->post('displayorder');
 		$param['aid'] = self::$CI->input->post('aid');
 		$param['avatar'] = self::$CI->input->post('avatar');
+		*/
 		
 		foreach($param as $pk => $pv){
 			$param[$pk] = trim($pv) ? trim($pv) : '';
 		}
 		
-		$arrayValue = array('category_name' => '场馆类型','ground_type' => '地面材质','charge_type' => '收费类型','support_sports' => '支持的运动项目');
+		$arrayValue = array('category_name' => '场馆类型','ground_type' => '地面材质','support_sports' => '支持的运动项目');
 		foreach($arrayValue as $ke => $val){
-			
 			$tempAr = self::$CI->input->post($ke);
 			
 			if(is_array($tempAr)){
@@ -212,6 +250,7 @@ class Stadium_service extends Base_service {
 		}
 		
 		self::$form_validation->set_rules('address','地址','required|max_length[100]');
+		self::$form_validation->set_rules('charge_type','开放类型','required');
 		self::$form_validation->set_rules('owner_type','权属类型','required');
 		self::$form_validation->set_rules('open_type','开放类型','required');
 		
@@ -260,6 +299,7 @@ class Stadium_service extends Base_service {
     }
     
     
+    
     /**
      * 添加体育场馆
      * 
@@ -272,10 +312,10 @@ class Stadium_service extends Base_service {
     	self::$dbInstance->trans_start();
     	
     	$dIds = $this->getDistrictIdByNames(array(
-			$param['dnam1'],
-			$param['dnam2'],
-			$param['dnam3'],
-			$param['dnam4']
+			$param['province'],
+			$param['city'],
+			$param['district'],
+			$param['street']
 		));
     	
     	foreach($dIds as $dk => $dv){
@@ -289,29 +329,34 @@ class Stadium_service extends Base_service {
 			return false;
 		}
 		
-		if(empty($images)){
-			//默认插入主图
-			$this->_stadiumPhotosModel->_add(array(
-				'stadium_id' => $stadiumId,
-				'aid' => $param['aid'],
-				'avatar' => $param['avatar'],
-				'avatar_h' => $param['avatar_h'],
-				'avatar_b' => $param['avatar_b'],
-				'avatar_m' => $param['avatar_m'],
-				'remark' => '封面图',
-				'uid' => $param['add_uid']
-			));
-		}else{
-			//插入图片
+		/*
+		//默认插入主图
+		$this->_stadiumPhotosModel->_add(array(
+			'stadium_id' => $stadiumId,
+			'aid' => $param['aid'],
+			'avatar' => $param['avatar'],
+			'avatar_h' => $param['avatar_h'],
+			'avatar_b' => $param['avatar_b'],
+			'avatar_m' => $param['avatar_m'],
+			'remark' => '封面图',
+			'ip' => self::$CI->input->ip_address(),
+			'uid' => $param['add_uid']
+		));
+		*/
+		
+		if(!empty($images)){
+			//插入其他图片
 			$insertImage = array();
 			foreach($images as $ik => $img){
 				$newImag = array();
 				$newImag['stadium_id'] = $stadiumId;
 				$newImag['aid'] = $img['aid'];
+				$newImag['avatar'] = $img['avatar'];
 				$newImag['avatar_h'] = $img['avatar_h'];
 				$newImag['avatar_b'] = $img['avatar_b'];
 				$newImag['avatar_m'] = $img['avatar_m'];
-				$newImag['uid'] = $img['add_uid'];
+				$newImag['ip'] = $img['ip'] ? $img['ip'] : '';
+				$newImag['uid'] = $param['add_uid'];
 				
 				$insertImage[] = $newImag;
 			}
@@ -319,7 +364,6 @@ class Stadium_service extends Base_service {
 	    	$this->_stadiumPhotosModel->batchInsert($insertImage);
 		}
 		
-    	
     	if (self::$dbInstance->trans_status() === FALSE){
 			self::$dbInstance->trans_rollback();
 			return false;
@@ -334,86 +378,23 @@ class Stadium_service extends Base_service {
     
     /**
      * 编辑场馆
-     * @param  stadium  场馆信息
-     * @param  param  新提交的信息
-     * @param  images 当前图片信息
-     * @param  user   用户
+     * @param  stadium_id  场馆信息
+     * @param  $stadium  新提交的信息
      * 
      */
-    public function editStadium($stadium,$param,$images,$user){
-    	
-    	$useTrans = false;
-    	$stadiumId = $stadium['basic']['id'];
-    	
-    	$oldPhotos = array();
-    	foreach($stadium['photos'] as $photo){
-    		$oldPhotos[] = $photo['aid'];
-    	}
-    	
-    	
-    	$currentPhotos = array();
-    	foreach($images as $photo){
-    		$currentPhotos[] = $photo['aid'];
-    	}
-    	
-    	sort($oldPhotos,SORT_NUMERIC);
-    	sort($currentPhotos,SORT_NUMERIC);
-    	
-		if (implode(',',$currentPhotos) != implode(',',$oldPhotos)){
-			$useTrans = true;
-		}
-    	
-    	if($useTrans){
-    		self::$dbInstance->trans_start();
-    	}
-    	
-    	$updateParam = $this->_stadiumBasicInfo($param, $images[0],$user);
-    	$updateParam = $this->_getDistrictIdFromName($updateParam,$param);
-    	
-    	$rows = $this->_stadiumModel->update($updateParam , array('id' => $stadiumId));
-    	
-    		
-    	if ($useTrans && self::$dbInstance->trans_status() === FALSE){
-			self::$dbInstance->trans_rollback();
-			return false;
-		}
-		
-		
-		$deletedRows = $this->_stadiumPhotosModel->deleteByWhere(array(
-			'id' => $stadiumId
+    public function editStadium($stadium_id,$stadium){
+    	$dIds = $this->getDistrictIdByNames(array(
+			$stadium['province'],
+			$stadium['city'],
+			$stadium['district'],
+			$stadium['street']
 		));
-		
-		
-		if ($useTrans && self::$dbInstance->trans_status() === FALSE){
-			self::$dbInstance->trans_rollback();
-			return false;
-		}
-		
-		//插入图片
-		$now = time();
-		$insertImage = array();
-		foreach($images as $ik => $img){
-			$img['id'] = $stadiumId;
-			$img['gmt_create'] = $now;
-			$img['gmt_modify'] = $now;
-			
-			$insertImage[] = $img;
-		}
-		
-    	$this->_stadiumPhotosModel->batchInsert($insertImage);
     	
-    	if ($useTrans && self::$dbInstance->trans_status() === FALSE){
-			self::$dbInstance->trans_rollback();
-			return false;
-		}
-    	
-    	if($useTrans){
-    		self::$dbInstance->trans_commit();
-			self::$dbInstance->trans_off();
+    	foreach($dIds as $dk => $dv){
+    		$stadium['d'.($dk + 1)] = $dv;
     	}
     	
-    	return $rows;
-    	
+    	return $this->_stadiumModel->update($stadium,array('id' => $stadium_id));
     }
 	
 }

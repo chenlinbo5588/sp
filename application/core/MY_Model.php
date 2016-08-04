@@ -278,6 +278,9 @@ class MY_Model extends CI_Model {
         }
     }
     
+    /**
+     * 获得
+     */
     public function getById($condition){
         if($condition['where']){
             

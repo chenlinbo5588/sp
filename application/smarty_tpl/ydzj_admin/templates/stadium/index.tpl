@@ -65,14 +65,11 @@
       <thead>
         <tr class="thead">
           <th>&nbsp;</th>
-          <th colspan="2">{#stadium#}</th>
-          <th class="align-center">{#team_leader#}</th>
-          <th class="align-center">{#team_owner#}</th>
-          <th>{#team_city#}</th>
-          <th>{#team_game_stat#}</th>
-          <th class="align-center">{#join_type#}</th>
-          <th class="align-center">{#accept_game#}</th>
-          <th class="align-center">操作</th>
+          <th colspan="2">{#stadium_info#}</th>
+          <th>{#address#}以及{#contact#}</th>
+          <th>{#booking_enable#}</th>
+          <th>状态</th>
+          <th>操作</th>
         </tr>
       </thead>
       <tbody>
@@ -83,55 +80,30 @@
             <div class=""><span class="thumb"><i></i><img src="{resource_url($item['avatar_m'])}"  data-avatar="{$item['avatar_b']}" /></span></div></td>
           <td>
             <p class="name"><strong>{#stadium_name#}:&nbsp;{$item['name']|escape}</strong></p>
-            <p><strong>{#stadium_category#}:&nbsp;</strong><span>{$item['category_name']|escape}</span></p>
-            <p class="smallfont">{#create_time#}}:&nbsp;{$item['gmt_create']|date_format:"%Y-%m-%d %H:%M:%S"}</p>
-            <div class="im">
-            {if $item['owner_uid']}
-                {if $userInfo[$item['owner_uid']]['email'] != ''}
-                <span class="email">
-                    <a href="mailto:{$userInfo[$item['owner_uid']]['email']}" class="yes" title="电子邮箱:{$userInfo[$item['owner_uid']]['email']|escape}">{$userInfo[$item['owner_uid']]['email']}</a>
-                </span>
-                {/if}
-                {if $userInfo[$item['owner_uid']]['qq'] != ''}
-                <span class="qq">
-                    <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin={$userInfo[$item['owner_uid']]['qq']}&site=qq&menu=yes" class="yes"  title="QQ: {$userInfo[$item['owner_uid']]['qq']|escape}">&nbsp;</a>
-                </span>
-                {/if}
-                {if $userInfo[$item['owner_uid']]['weixin'] != ''}
-                <span class="weixin"><a href="javascript:void(0)" title="{$userInfo[$item['owner_uid']]['weixin']|escape}">{$userInfo[$item['owner_uid']]['weixin']|escape}</a></span>
-                {/if}
-            {/if}
-            </div>
+            <p><strong>{#category_name#}:&nbsp;</strong><span>{$item['category_name']|escape}</span></p>
+            <p><strong>{#ground_type#}:&nbsp;</strong><span>{$item['ground_type']|escape}</span></p>
+            <p><strong>{#charge_type#}:&nbsp;</strong><span>{$item['charge_type']|escape}</span></p>
+            <p><strong>{#open_type#}:&nbsp;</strong><span>{$item['open_type']|escape}</span></p>
+            <p><strong>{#owner_type#}:&nbsp;</strong><span>{$item['owner_type']|escape}</span></p>
+            <p><strong>{#support_sports#}:&nbsp;</strong><span>{$item['support_sports']|escape}</span></p>
+            <p class="smallfont">{#create_time#}:&nbsp;{$item['gmt_create']|date_format:"%Y-%m-%d %H:%M:%S"}</p>
           </td>
-          <td class="align-center w120">
-            {if $item['leader_uid']}
-            <p><strong></strong><span>{$userInfo[$item['leader_uid']]['nickname']|escape}</span></p>
-            <div class=""><a href="{admin_site_url('member/edit')}?id={$item['leader_uid']}"><img src="{resource_url($userInfo[$item['leader_uid']]['avatar_s'])}" /></a></div>
-            <p>{$userInfo[$item['leader_uid']]['mobile']}</p>
-            {else}
-            未设置队长
-            {/if}
+          <td>
+          	<div>{#contact#}:{$item['contact']|escape}</div>
+          	<div>{#mobile#}:{$item['mobile']|escape}</div>
+          	<div>{#mobile2#}:{$item['mobile2']|escape}</div>
+          	<div>{#tel#}:{$item['tel']|escape}</div>
+          	<div>{#address#}:{$item['province']}{$item['city']}{$item['district']}{$item['street']}{$item['street_number']}</div>
           </td>
-          <td class="align-center w120">
-          	{if $item['channel'] != 1}
-            <p><strong>创建人:&nbsp;</strong><span>{$userInfo[$item['add_uid']]['nickname']|escape}</span></p>
-            <div class=""><a href="{admin_site_url('member/edit')}?id={$item['add_uid']}"><img src="{resource_url($userInfo[$item['add_uid']]['avatar_s'])}" /></a></div>
-            <p>{$userInfo[$item['add_uid']]['mobile']}</p>
-            {else}
-            后台创建
-            {/if}
-          </td>
-          <td>{$item['dname1']}{$item['dname2']}{$item['dname3']}{$item['dname4']}</td>
-          <td>{$item['games']}/{$item['victory_game']}/{$item['fail_game']}/{$item['draw_game']}</td>
-          <td class="align-center">{if $item['joined_type'] == 1}{#join_type1#}{else}{#join_type2#}{/if}</td>
-          <td class="align-center">{if $item['accept_game'] == 1}是{else}否{/if}</td>
-          <td class="align-center"><a href="{admin_site_url('team/edit')}?id={$item['id']}">编辑</a> | <a href="{admin_site_url('notify/team')}?id={$item['id']}">通知</a></td>
+          <td>{if $item['booking_enable'] == 'Y'}是{else}否{/if}</td>
+          <td>{if $item['status'] == 0}未审核{elseif $item['status'] == 1}审核通过{elseif $item['status'] == -1}审核未通过{/if}</td>
+          <td><a href="{admin_site_url('stadium/edit')}?id={$item['id']}">编辑</a> | <a href="{admin_site_url('notify/stadium')}?id={$item['id']}">通知</a></td>
         </tr>
       {/foreach}
       </tbody>
       <tfoot class="tfoot">
         <tr>
-          <td colspan="11">
+          <td colspan="7">
             {include file="common/pagination.tpl"}
             <label><input type="checkbox" class="checkall" name="chkVal">全选</label>
             <input type="button" value="审核通过" class="btn" name="verfiy"/>

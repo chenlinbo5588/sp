@@ -648,7 +648,7 @@ input.readonly , textarea.readonly, textarea.readonly:focus ,textarea.readonly:h
     .thumb i { *display:inline-block; *height:100%; *vertical-align:middle; }
     .thumb img { *vertical-align:middle; }
 .thumblists {}
-.thumblists li { float: left; width:80px; height: 100px; margin-right:10px;}
+.thumblists li { float: left; }
 .thumblists li.picture div { background:#FFF; float: left;/* if IE7/8/9*/ *text-align: center; display: inline; border: dotted 1px #CBE9F3; float: left; padding: 2px; margin:5px;}
 .thumblists li.picture p { clear:both; line-height: 20px; height:20px; width: 70px; margin: 0 5px;}
 .thumblists li.picture p span { display:inline-block; width: 50%; text-align:center;}

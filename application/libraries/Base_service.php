@@ -88,11 +88,18 @@ class Base_service {
 		}
 		
 		$arrayWithName = array();
+		$names = array();
+		
 		foreach($dIDs as $key => $value){
 			$arrayWithName[$key] = empty($dName[$value]) ? '' : $dName[$value];
 		}
 		
-		return $arrayWithName;
+		$names['province'] = $arrayWithName[0];
+		$names['city'] = $arrayWithName[1];
+		$names['district'] = $arrayWithName[2];
+		$names['street'] = $arrayWithName[3];
+		
+		return $names;
 	}
 	
 	
