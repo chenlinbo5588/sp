@@ -16,6 +16,9 @@ class MyYdzj_Controller extends Ydzj_Controller {
 		}
 		
 	}
+	
+	
+	
 }
 
 

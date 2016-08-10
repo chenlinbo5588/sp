@@ -201,7 +201,7 @@ $(function(){
 	        <dd><a href="javascript:void(0)" onclick="openItem('log,setting,setting')">操作日志</a></dd>
 	    </dl>
 	    <dl>    
-            <dt>会员</dt>
+            <dt>实验员</dt>
             <dd><a href="javascript:void(0)" onclick="openItem('index,member,member')">会员管理</a></dd>
             <dd><a href="javascript:void(0)" onclick="openItem('member,notify,member')">会员通知</a></dd>
             <dd><a href="javascript:void(0)" onclick="openItem('credits,member,member')">积分管理</a></dd>
@@ -209,7 +209,7 @@ $(function(){
             <dd><a href="javascript:void(0)" onclick="openItem('tag,member,member')">会员标签</a></dd>
         </dl>
         <dl>    
-            <dt>队伍</dt>
+            <dt>实验室</dt>
             <dd><a href="javascript:void(0)" onclick="openItem('index,team,team')">队伍管理</a></dd>
             <dd><a href="javascript:void(0)" onclick="openItem('team,notify,team')">队伍通知</a></dd>
             <dd><a href="javascript:void(0)" onclick="openItem('index,sports_cate,team')">体育项目</a></dd>
@@ -219,15 +219,15 @@ $(function(){
             <dd><a href="javascript:void(0)" onclick="openItem('index,team_setting,team')">队伍全局设置</a></dd>
         </dl>
         <dl>    
-            <dt>场馆</dt>
+            <dt>实验室</dt>
             <dd><a href="javascript:void(0)" onclick="openItem('index,stadium,stadium')">场馆管理</a></dd>
             <dd><a href="javascript:void(0)" onclick="openItem('setting,stadium,stadium')">基础数据</a></dd>
         </dl>
 	    <dl>    
-	        <dt>商品</dt>
+	        <dt>货品</dt>
 	        <dd><a href="javascript:void(0)" onclick="openItem('category,goods,goods')">分类管理</a></dd>
 	        <dd><a href="javascript:void(0)" onclick="openItem('index,brand,goods')">品牌管理</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('index,goods,goods')">商品管理</a></dd>
+	        <dd><a href="javascript:void(0)" onclick="openItem('index,goods,goods')">货品管理</a></dd>
 	        <dd><a href="javascript:void(0)" onclick="openItem('type,goods,goods')">类型管理</a></dd>
 	        <dd><a href="javascript:void(0)" onclick="openItem('spec,goods,goods')">规格管理</a></dd>
 	        <dd><a href="javascript:void(0)" onclick="openItem('album,goods,goods')">图片空间</a></dd>
@@ -312,11 +312,11 @@ $(function(){
 	            <ul>
 	                <li><a class="link actived" id="nav_dashboard" href="javascript:;" onclick="openItem('dashboard');"><span>控制台</span></a></li>
 					<li><a class="link" id="nav_setting" href="javascript:;" onclick="openItem('setting');"><span>设置</span></a></li>
-					<li><a class="link" id="nav_member" href="javascript:;" onclick="openItem('member');"><span>会员</span></a></li>
+					<li><a class="link" id="nav_member" href="javascript:;" onclick="openItem('member');"><span>实验员</span></a></li>
 					<li><a class="link" id="nav_team" href="javascript:;" onclick="openItem('team');"><span>队伍</span></a></li>
-					<li><a class="link" id="nav_stadium" href="javascript:;" onclick="openItem('stadium');"><span>场馆</span></a></li>
+					<li><a class="link" id="nav_stadium" href="javascript:;" onclick="openItem('stadium');"><span>实验室</span></a></li>
 					<li><a class="link" id="nav_game" href="javascript:;" onclick="openItem('game');"><span>赛事</span></a></li>
-					<li><a class="link" id="nav_goods" href="javascript:;" onclick="openItem('goods');"><span>商品</span></a></li>
+					<li><a class="link" id="nav_lab_goods" href="javascript:;" onclick="openItem('lab_goods');"><span>货品</span></a></li>
 					<li><a class="link" id="nav_trade" href="javascript:;" onclick="openItem('trade');"><span>交易</span></a></li>
 					<li><a class="link" id="nav_website" href="javascript:;" onclick="openItem('website');"><span>网站</span></a></li>
 					<li><a class="link" id="nav_operation" href="javascript:;" onclick="openItem('operation');"><span>运营</span></a></li>
@@ -425,7 +425,7 @@ $(function(){
               </dl>
             </li>
           </ul>
-          <ul id="sort_goods">
+          <ul id="sort_lab_goods">
             <li>
               <dl>
                 <dd>

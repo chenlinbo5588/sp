@@ -9,14 +9,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 class Ydzj_Controller extends MY_Controller {
 	
-	public $_profile = array();
-	public $_profileKey = '';
-	
-	
 	public function __construct(){
 		parent::__construct();
 		
-		$this->_profileKey = 'profile';
 		
 		$this->load->library('Seo_service');
 		$this->form_validation->set_error_delimiters('<label class="form_error">','</label>');

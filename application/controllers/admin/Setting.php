@@ -74,7 +74,7 @@ class Setting extends Ydzj_Admin_Controller {
 					$data[] = $temp;
 				}
 				
-				//print_r($data);
+				
 				
 				if($this->admin_service->updateSetting($data) >= 0){
 					$feedback = getSuccessTip('保存成功');

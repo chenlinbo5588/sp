@@ -1,63 +1,206 @@
-{include file="common/header.tpl"}
-<style>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>实验室药品仪器管理平台登录</title>
+<script type="text/javascript" src="{resource_url('js/jquery.js')}"></script>
+<script type="text/javascript" src="{resource_url('js/jquery.validation.min.js')}"></script>
+<link href="{resource_url('css/base.css')}" rel="stylesheet" type="text/css">
+<link href="{resource_url('css/lab.css')}" rel="stylesheet" type="text/css">
 
-#adminlogin {
-	width:100%;
-	max-width:640px;
-	margin: 0 auto;
+<link href="{resource_url('font/font-awesome/css/font-awesome.min.css')}" rel="stylesheet" />
+<!--[if IE 7]>
+  <link rel="stylesheet" href="{resource_url('font/font-awesome/css/font-awesome-ie7.min.css')}">
+<![endif]-->
+
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+      <script src="{resource_url('js/html5shiv.js')}"></script>
+      <script src="{resource_url('js/respond.min.js')}"></script>
+<![endif]-->
+<!--[if IE 6]>
+<script src="{resource_url('js/IE6_MAXMIX.js')}"></script>
+<script src="{resource_url('js/IE6_PNG.js')}"></script>
+<script>
+DD_belatedPNG.fix('.pngFix');
+</script>
+<script> 
+// <![CDATA[ 
+if((window.navigator.appName.toUpperCase().indexOf("MICROSOFT")>=0)&&(document.execCommand)) 
+try{ 
+document.execCommand("BackgroundImageCache", false, true); 
+   } 
+catch(e){} 
+// ]]> 
+</script> 
+<![endif]-->
+{include file="common/js_var.tpl"}
+<script type="text/javascript">
+var checkUrl = "{site_url('captcha/index')}";
+
+function setcookie(cookieName, cookieValue, seconds, path, domain, secure) {
+    if(cookieValue == '' || seconds < 0) {
+        cookieValue = '';
+        seconds = -2592000;
+    }
+    if(seconds) {
+        var expires = new Date();
+        expires.setTime(expires.getTime() + seconds * 1000);
+    }
+    domain = !domain ? cookiedomain : domain;
+    path = !path ? cookiepath : path;
+    document.cookie = escape(cookiepre + cookieName) + '=' + escape(cookieValue)
+        + (expires ? '; expires=' + expires.toGMTString() : '')
+        + (path ? '; path=' + path : '/')
+        + (domain ? '; domain=' + domain : '')
+        + (secure ? '; secure' : '');
 }
 
-#adminlogin h1 {
-	text-align:center;
+function getcookie(name, nounescape) {
+    name = cookiepre + name;
+    var cookie_start = document.cookie.indexOf(name);
+    var cookie_end = document.cookie.indexOf(";", cookie_start);
+    if(cookie_start == -1) {
+        return '';
+    } else {
+        var v = document.cookie.substring(cookie_start + name.length + 1, (cookie_end > cookie_start ? cookie_end : document.cookie.length));
+        return !nounescape ? unescape(v) : v;
+    }
 }
 
-#adminlogin .side_lb {
-	width:23%;
-	display:block;
-	float:left;
-}
-
-#adminlogin .at_txt {
-	width:70%;
-}
-
-</style>
-{if !$admin_profile}
-<div class="handle_area" id="adminlogin">
-    <div class="feedback">{$feedback}</div>
-    <h1>管理后台登陆</h1>
-    {form_open(site_url('member/admin_login'))}
-        <input type="hidden" name="returnUrl" value="{$returnUrl}"/>
-        <div class="row clearfix">
-            <label class="side_lb" for="email_text">用户名：</label><input id="email_text" class="at_txt" type="text" name="email" value="{set_value('email')}" placeholder="请输入邮箱"/>
-        </div>
-        {form_error('email')}
-        <div class="row clearfix">
-            <label class="side_lb" for="password_text">密码：</label><input id="password_text" class="at_txt" type="password" name="password" value="{set_value('password')}" placeholder="请输入您的登陆密码"/>
-        </div>
-        {form_error('password')}
-        <div class="row clearfix">
-            <label class="side_lb" for="authcode_text">验证码：</label><input id="authcode_text" class="at_txt" type="text" name="auth_code" value="{set_value('auth_code')}" placeholder="请输入4位验证码"/>
-        </div>
-        {form_error('auth_code')}
-        <div class="row clearfix">
-            <label class="side_lb" for="authcode_text">&nbsp;</label>
-            <img class="nature" id="authImg" src="{site_url('captcha')}" title="点击图片刷新"/>&nbsp;<a href="javascript:void(0)" id="refreshBtn">看不请,点击刷新验证码</a>
-        </div>
-        
-        <div class="row"><input class="master_btn" type="submit" name="login" value="登陆"/></div>
-        {*<div class="row center"><a href="{site_url('member/login')}" title="去前台登陆">去前台登陆</a></div>*}
-    </form>
+$(document).ready(function() {
+    $("#form_login").validate({
+        errorPlacement:function(error, element) {
+            element.prev(".repuired").append(error);
+        },
+        rules:{
+            username:{
+                required:true
+            },
+            password:{
+                required:true
+            },
+            captcha:{
+                required:true
+            }
+        },
+        messages:{
+            username:{
+                required:"<i class='icon-exclamation-sign'></i>用户名不能为空"
+            },
+            password:{
+                required:"<i class='icon-exclamation-sign'></i>密码不能为空"
+            },
+            captcha:{
+                required:"<i class='icon-exclamation-sign'></i>验证码不能为空"
+            }
+        }
+    });
+    //Hide Show verification code
+    $("#hide").click(function(){
+        $(".code").fadeOut("slow");
+    });
+    $("#captcha").focus(function(){
+        $(".code").fadeIn("fast");
+    });    
+    
+    
+});
+</script>
+</head>
+<body>
+<div id="loginBG01" class="ncsc-login-bg" style="display:block" >
+  <p class="pngFix"></p>
 </div>
-{else}
-您已登陆 ,点击进入<a href="{site_url('sp_admin')}"> 管理中心 </a>
-{/if}
-	<script>
-	var imgUrl = "{site_url('captcha')}";
-	$(function(){
-		$("#refreshBtn").bind("click",function(){
-			$("#authImg").attr("src",imgUrl + "?t=" + Math.random());
-		});
-	});
-	</script>
-{include file="common/footer.tpl"}
+<div id="welcome" style="display:none;">
+    <p id="welcomeText"></p>
+</div>
+<div class="ncsc-login-container">
+  <div class="ncsc-login-title">
+    <h2>实验室药品仪器管理中心</h2>
+    {*<span>请输入您注册商铺时申请的商家名称</br>
+    登录密码为商城用户通用密码</span>*}</div>
+    {form_open(site_url('member/admin_login'),'id="form_login"')}
+    <div class="input">
+      <label>用户名</label>
+      {if $errorMsg['username']}
+      <span class="repuired error"><label for="username" class="error"><i class="icon-exclamation-sign"></i>{$errorMsg['username']}</label></span>
+      {else}
+      <span class="repuired"></span>
+      {/if}
+      <input name="username" type="text" autocomplete="off" class="text{if $errorMsg['username']} error{/if}" value="{$smarty.post.username}" autofocus>
+      <span class="ico"><i class="icon-user"></i></span> </div>
+    <div class="input">
+      <label>密码</label>
+      {if $errorMsg['password']}
+      <span class="repuired error"><label for="password" class="error"><i class="icon-exclamation-sign"></i>{$errorMsg['password']}</label></span>
+      {else}
+      <span class="repuired"></span>
+      {/if}
+      <input name="password" type="password" autocomplete="off" class="text{if $errorMsg['password']} error{/if}">
+      <span class="ico"><i class="icon-key"></i></span> </div>
+    <div class="input">
+      <label>验证码</label>
+      {if $errorMsg['captcha']}
+      <span class="repuired error"><label for="captcha" class="error"><i class="icon-exclamation-sign"></i>{$errorMsg['captcha']}</label></span>
+      {else}
+      <span class="repuired"></span>
+      {/if}
+      <input type="text" name="captcha" id="captcha" autocomplete="off" class="text{if $errorMsg['captcha']} error{/if}" style="width: 80px;" maxlength="4" size="10" />
+      <div class="code">
+        <div class="arrow"></div>
+        <div class="code-img"><a href="javascript:void(0)" onclick="javascript:document.getElementById('codeimage').src='{site_url('captcha/index')}?t=' + Math.random();"><img src="{site_url('captcha/index')}" name="codeimage" border="0" id="codeimage"></a></div>
+        <a href="javascript:void(0);" id="hide" class="close" title=""><i></i></a> <a href="javascript:void(0);" onclick="javascript:document.getElementById('codeimage').src='{site_url('captcha/index')}?t=' + Math.random();" class="change" title=""><i></i></a> </div>
+      <span class="ico"><i class="icon-qrcode"></i></span>
+      <input type="submit" class="login-submit" value="登录">
+    </div>
+  </form>
+  <div class="copyright">浙ICP备15010132号 Powered by Jay © 2007-{$smarty.now|date_format:"Y"}<br/><a href="mailto:chenlinbo5588@163.com">邮件反馈问题</a><p>{include file="common/baidu_stat.tpl"}</p></div>
+</div>
+<script>
+
+var welText = [
+    '欢迎进入浙江省农产品加工技术研究重点实验室药品仪器管理中心！',
+    '欢迎进入浙江大学生工食品学院实验室药品仪器管理中心！'
+];
+
+$(function(){
+	{if $feedback}
+	alert("{$feedback}");
+	{/if}
+
+
+    var wel = getcookie('wel');
+    if(wel && wel.substring(0,wel.indexOf(',')) == 'no'){
+	    var w = $(document).width();
+	    var h = $(document).height();
+	    
+	    $("#welcomeText").html(welText[parseInt(wel.substring(wel.indexOf(',') + 1)) - 1]);
+	    
+	    $("#welcome").css({
+	        left:0,
+	        top:0,
+	        zIndex:100,
+	        backgroundColor:"#000",
+	        opacity: 0.3
+	    }).show().animate({
+	        width: w + 'px',
+	        height: h + 'px'
+	    });
+	    
+	    var timer = setTimeout(function(){
+	        $("#welcome").animate({
+	            width:0,
+	            height:0
+	        } , function(){
+	            $(this).hide();
+	        });
+	        
+	        setcookie('wel','yes' +  wel.substring(wel.indexOf(',')), 86400 * 365);
+	        
+	    }, 3000);
+    }
+});
+</script>
+</body>
+</html>

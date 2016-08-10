@@ -12,7 +12,7 @@
 <script type="text/javascript" src="{resource_url('js/jquery.validation.min.js')}"></script>
 <script type="text/javascript" src="{resource_url('js/jquery.cookie.js')}"></script>
 <script>
-var cookiedomain = "",
+var cookiedomain = "{config_item('cookie_domain')}",
     cookiepath = "{config_item('cookie_path')}",
     cookiepre = "{config_item('cookie_prefix')}",
     formhash = "{$formhash}",

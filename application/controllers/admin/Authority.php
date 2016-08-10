@@ -14,7 +14,7 @@ class Authority extends Ydzj_Admin_Controller {
 		$currentPage = $this->input->get_post('page') ? $this->input->get_post('page') : 1;
 		
 		$condition = array(
-			'order' => 'uid DESC',
+			'order' => 'id DESC',
 			'pager' => array(
 				'page_size' => config_item('page_size'),
 				'current_page' => $currentPage,
@@ -34,8 +34,8 @@ class Authority extends Ydzj_Admin_Controller {
 			$condition['like']['email'] = $email;
 		}
 		
-		if($this->_adminProfile['basic']['uid'] != WEBSITE_FOUNDER){
-			$condition['where']['uid !='] = WEBSITE_FOUNDER;
+		if($this->_adminProfile['basic']['id'] != WEBSITE_FOUNDER){
+			$condition['where']['id !='] = WEBSITE_FOUNDER;
 		}
 		
 		
@@ -61,12 +61,12 @@ class Authority extends Ydzj_Admin_Controller {
 				foreach($ids as $id){
 					
 					$updateData[] = array(
-						'uid' => $id,
+						'id' => $id,
 						'status' => $switchType
 					);
 				}
 				
-				$this->Adminuser_Model->batchUpdate($updateData,'uid');
+				$this->Adminuser_Model->batchUpdate($updateData,'id');
 			}
 			
 		}

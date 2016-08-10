@@ -3,10 +3,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Member_service extends Base_service {
 	
-
 	public function __construct(){
 		parent::__construct();
-		
 	}
 	
 	
@@ -28,14 +26,15 @@ class Member_service extends Base_service {
 		$result = $this->formatArrayReturn();
 		$result['message'] = '登陆失败';
 		
-		$userInfo = self::$memberModel->getFirstByKey($param['mobile'],'mobile');
+		$userInfo = self::$memberModel->getFirstByKey($param['account'],'account');
 		
 		if(!empty($userInfo)){
-			if($userInfo['password'] == $param['password']){
-				unset($userInfo['password']);
+			
+			if($userInfo['psw'] == md5(config_item('encryption_key').$param['password'])){
+				unset($userInfo['psw']);
 				
-				if($userInfo['freeze'] == 'Y'){
-					$result['message'] = '您的账号已被冻结,请联系网站客服人员';
+				if($userInfo['locked'] != 0){
+					$result['message'] = '您的账号已被冻结,请联系网站管理人员';
 				}else{
 					$result = $this->successRetun(array('basic' => $userInfo));
 				}
@@ -56,7 +55,7 @@ class Member_service extends Base_service {
 	 * 
 	 */
 	public function getUserInfoById($id){
-		return self::$memberModel->getFirstByKey($id,'uid');
+		return self::$memberModel->getFirstByKey($id,'id');
 	}
 	
 	public function getUserInfoByKey($value,$key){
@@ -80,28 +79,13 @@ class Member_service extends Base_service {
 	 * 更新用户信息
 	 */
 	public function updateUserInfo($data,$uid){
-		return self::$memberModel->update($data,array('uid' => $uid));
+		return self::$memberModel->update($data,array('id' => $uid));
 	}
 	
 	/**
 	 * 
 	 */
 	public function getListByCondition($condition){
-		return $this->toEasyUseArray(self::$memberModel->getList($condition),'uid');
+		return $this->toEasyUseArray(self::$memberModel->getList($condition),'id');
 	}
-	
-	/**
-	 * 用户设置所在地
-	 */
-	public function set_city($param){
-		
-		return self::$memberModel->update(array(
-			'district_bind' => 1,
-			'd1' => $param['d1'],
-			'd2' => $param['d2'],
-			'd3' => $param['d3'],
-			'd4' => $param['d4']
-		),array('uid' => $param['uid']));
-	}
-	
 }

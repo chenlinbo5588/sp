@@ -6,20 +6,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 class Ydzj_Admin_Controller extends Ydzj_Controller {
 	
-	public $_adminProfile = array() ;
-	public $_adminProfileKey = '';
-	public $_adminLastVisitKey = '';
-	
 	public function __construct(){
 		parent::__construct();
 		
-		$this->_adminProfileKey = 'admin_profile';
-		$this->_adminLastVisitKey = 'admin_lastvisit';
 		
 		$this->form_validation->set_error_delimiters('<label class="error">','</label>');
 		$this->_initAdminLogin();
-		
-		
 		
 		//@todo 打开检查权限
 		//$this->_checkPermission();
@@ -132,6 +124,55 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 	public function getAppTemplateDir(){
 		return 'ydzj_admin';
 	}
+	
+	
+	protected function _checkIsFounder(){
+    	if(1 != $this->_userProfile['id']){
+			redirect(base_url("lab_goods"),'javascript:top');
+		}
+    }
+    
+    /**
+     * 检查是否 有管辖实验室 即为某一个或者某几个实验室的管理员
+     */
+    protected function _checkIsLabManager()
+    {
+    	
+    	if($this->_userProfile['id'] == LAB_FOUNDER_ID){
+    		return true;
+    	}
+    	
+    	$managerLabs = $this->session->userdata('user_manager_labs');
+    	
+    	//print_r($managerLabs);
+    	if(empty($managerLabs)){
+    		return false;
+    	}
+    	
+    	return true;
+    	
+    }
+    
+    
+    /**
+     *  检查是否是 系统管理员
+     */
+    protected function _checkIsSystemManager(){
+    	
+    	if($this->_userProfile['id'] == LAB_FOUNDER_ID){
+    		return true;
+    	}
+    	
+    	if($this->_userProfile['is_manager'] != 'y'){
+			return false;
+		}else{
+			return true;
+		}
+    }
+    
+    protected function show_access_deny(){
+    	$this->display('access_deny','common');
+    }
 	
 }
 

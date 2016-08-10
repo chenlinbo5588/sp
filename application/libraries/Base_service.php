@@ -7,10 +7,10 @@ class Base_service {
 	public static $dbInstance = null;
 	public static $memberModel = null;
 	public static $adminUserModel = null;
-	public static $districtModel = null;
+	//public static $districtModel = null;
 	public static $form_validation = null;
 	public static $settingModel = null;
-	public static $auditLogModel = null;
+	//public static $auditLogModel = null;
 	
 	
 	public static function initStaticVars(){
@@ -19,7 +19,7 @@ class Base_service {
 		self::$CI->load->model('Member_Model');
 		self::$CI->load->model('Adminuser_Model');
 		
-		self::$CI->load->model('Common_District_Model');
+		//self::$CI->load->model('Common_District_Model');
 		self::$CI->load->library('form_validation');
 		self::$CI->load->model('Setting_Model');
 		self::$CI->load->model('Audit_Log_Model');
@@ -27,10 +27,10 @@ class Base_service {
 		self::$memberModel = self::$CI->Member_Model;
 		self::$adminUserModel = self::$CI->Adminuser_Model;
 		
-		self::$districtModel = self::$CI->Common_District_Model;
+		//self::$districtModel = self::$CI->Common_District_Model;
 		self::$form_validation = self::$CI->form_validation;
 		self::$settingModel = self::$CI->Setting_Model;
-		self::$auditLogModel = self::$CI->Audit_Log_Model;
+		//self::$auditLogModel = self::$CI->Audit_Log_Model;
 		
 		self::$dbInstance = self::$CI->Member_Model->getDb();
 		
@@ -122,10 +122,11 @@ class Base_service {
 		);
 	}
 	
+	/*
 	public function getCityById($city_id){
     	return  self::$districtModel->getFirstByKey($city_id);
     }
-    
+    */
     
     /**
      * 转换成更容易使用的数组

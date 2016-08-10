@@ -5,7 +5,15 @@ class MY_Controller extends CI_Controller {
 
 	public $_verifyName = 'verify';
 	public $_lastVisit;
+	
+	
+	public $_profile = array();
+	public $_profileKey = '';
 	public $_lastVisitKey = '';
+	
+	public $_adminProfile = array();
+	public $_adminProfileKey = '';
+	public $_adminLastVisitKey = '';
 	
 	public $_reqtime ;
 	public $_navigation = array();
@@ -25,7 +33,13 @@ class MY_Controller extends CI_Controller {
 	public function __construct(){
 		parent::__construct();
 		$this->_reqtime = $this->input->server('REQUEST_TIME');
+		
+		$this->_profileKey = 'profile';
 		$this->_lastVisitKey = 'lastvisit';
+		
+		$this->_adminProfileKey = 'admin_profile';
+		$this->_adminLastVisitKey = 'admin_lastvisit';
+		
 		
 		$this->_initLibrary();
 		$this->_initSmarty();

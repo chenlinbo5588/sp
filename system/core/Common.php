@@ -958,6 +958,32 @@ if ( ! function_exists('getImgPathArray'))
 }
 
 
+function time_tran($the_time) {
+    $dur = time() - $the_time;
+    if ($dur < 0) {
+        return $the_time;
+    } else {
+        if ($dur < 60) {
+            return $dur . '秒前';
+        } else {
+            if ($dur < 3600) {
+                return floor($dur / 60) . '分钟前';
+            } else {
+                if ($dur < 86400) {
+                    return floor($dur / 3600) . '小时前';
+                } else {
+                    if ($dur < 259200) {//3天内
+                        return floor($dur / 86400) . '天前';
+                    } else {
+                        return date("Y-m-d H:i",$the_time);
+                    }
+                }
+            }
+        }
+    }
+}
+
+
 function getSuccessTip($message = ''){
 	return "<div class=\"tip_success\">{$message}</div>";
 }
@@ -972,6 +998,8 @@ function validateAuthCode($val){
 	$ci = & get_instance();
 	$word = $ci->session->userdata('auth_code');
 	if(strtolower($val) == strtolower($word)){
+		//清空
+		$ci->session->unset_userdata('auth_code');
 		return true;
 	}else{
 		$ci->form_validation->set_message('validateAuthCode', '对不起,{field} 输入不正确');
