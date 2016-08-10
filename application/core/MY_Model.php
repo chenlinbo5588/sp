@@ -246,7 +246,7 @@ class MY_Model extends CI_Model {
     
     public function batchUpdate($data,$key = 'id'){
     	$filterData = array();
-    	foreach($data as $key => $item){
+    	foreach($data as $item){
     		$filterData[] = $this->_fieldsDecorator($item,'update');
     	}
     	
