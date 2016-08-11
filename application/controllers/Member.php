@@ -116,7 +116,7 @@ class Member extends Ydzj_Controller {
 					$result['data']['basic']['id']);
 				
 				//默认货品
-				js_redirect(admin_site_url('admin'),'top');
+				js_redirect(admin_site_url('dashboard/welcome'),'top');
 				
 			}
 		}

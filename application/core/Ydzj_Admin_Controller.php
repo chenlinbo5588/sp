@@ -6,6 +6,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 class Ydzj_Admin_Controller extends Ydzj_Controller {
 	
+	protected $_loginUID = 0;
+	
+	
 	public function __construct(){
 		parent::__construct();
 		
@@ -13,13 +16,49 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 		$this->form_validation->set_error_delimiters('<label class="error">','</label>');
 		$this->_initAdminLogin();
 		
+		
+		$this->_initUserLabsRelate();
+		
 		//@todo 打开检查权限
 		//$this->_checkPermission();
 	}
 	
 	
+	private function _friendSiteWelcome(){
+		$this->load->helper('cookie');
+		
+		static $_friendWebsite = array(
+	    	//欢迎进入浙江省农产品加工技术研究重点实验室药品仪器管理中心！
+			'zjufs.zju.edu.cn' => 1,
+	    	//欢迎进入浙江大学生工食品学院实验室药品仪器管理中心！
+	    	'www.caefs.zju.edu.cn' => 2
+	    );
+		
+		$showWelcome = $this->input->cookie('wel');
+		if(!$showWelcome){
+			if($_SERVER['HTTP_REFERER']){
+				$urlParam = parse_url($_SERVER['HTTP_REFERER']);
+				if($this->_friendWebsite[$urlParam['host']]){
+					set_cookie('wel','no,'.$this->_friendWebsite[$urlParam['host']],86400 * 365);
+				}
+			}
+		}
+		
+	}
+	
+	
+	
+	private function _initUserLabsRelate(){
+		
+		$this->load->library('Lab_service');
+		$ar = $this->lab_service->getUserLabsAssoc($this->_adminProfile['basic']['id']);
+    	
+    	$this->session->set_userdata($ar);
+	}
+	
 	protected function _initLibrary(){
 		parent::_initLibrary();
+		
 		$this->load->model('Role_Model');
 	}
 	
@@ -44,6 +83,7 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 				redirect(site_url('member/admin_login'));
 			}
 		}else{
+			$this->_loginUID = $this->_adminProfile['basic']['id'];
 			$this->assign($this->_adminProfileKey,$this->_adminProfile);
 		}
 		
@@ -115,8 +155,7 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 	 */
 	public function addWhoHasOperated($action = 'add'){
 		return array(
-			"{$action}_uid" => $this->_adminProfile['basic']['uid'],
-			"{$action}_username" => $this->_adminProfile['basic']['username']
+			"creator" => $this->_adminProfile['basic']['name']
 		);
 	}
 	

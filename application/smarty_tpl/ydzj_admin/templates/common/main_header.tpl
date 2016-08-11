@@ -11,6 +11,7 @@
 <script type="text/javascript" src="{resource_url('js/jquery.js')}" ></script>
 <script type="text/javascript" src="{resource_url('js/jquery.validation.min.js')}"></script>
 <script type="text/javascript" src="{resource_url('js/jquery.cookie.js')}"></script>
+
 <script>
 var cookiedomain = "{config_item('cookie_domain')}",
     cookiepath = "{config_item('cookie_path')}",

@@ -153,6 +153,25 @@ class Base_service {
 		return $temp;
     }
     
+    
+    public function addWhoHasOperated($action = 'add',$user = array()){
+    	$rt = array();
+    	
+    	switch($action){
+    		case 'add':
+    			$rt = array('creator' => $user['name']);
+    			break;
+    		case 'edit':
+    			$rt = array('updator' => $user['name']);
+    			break;
+    		default;
+    			break;
+    	}
+    	
+    	return $rt;
+    	
+    }
+    
     /**
 	 * 更新网站设置
 	 */

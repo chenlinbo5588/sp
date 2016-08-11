@@ -167,8 +167,7 @@ class Lab_Model extends MY_Model {
             $condition['where']['id !='] =  $selfid;
         }
         
-        $result = $this->getList($condition);
-        $childrenList = $result['data'];
+        $childrenList = $this->getList($condition);
         if(is_array($childrenList)){
             foreach ($childrenList as $item){
                 
@@ -205,8 +204,6 @@ class Lab_Model extends MY_Model {
             'pid' => empty($param['pid']) ? 0 : intval($param['pid']),
             'creator' => $param['creator'],
             'updator' => $param['creator'],
-            'gmt_create' => $now,
-            'gmt_modify' => $now
         );
         
         if(empty($param['displayorder'])){
@@ -216,8 +213,7 @@ class Lab_Model extends MY_Model {
         }
         
         
-        $this->db->insert($this->_tableName, $data);
-        return $this->db->insert_id();
+        return $this->_add($data);
     }
     
     public function delete($param){
@@ -266,11 +262,9 @@ class Lab_Model extends MY_Model {
     
     
     
-    
     public function update($param){
         $data = array(
-            'updator' => $param['updator'],
-            'gmt_modify' => time()
+            'updator' => $param['updator']
         );
         
         if(empty($param['displayorder'])){
@@ -291,8 +285,7 @@ class Lab_Model extends MY_Model {
             'id' => $param['id']
         );
         
-        $this->db->update($this->_tableName, $data, $where);
-        return $this->db->affected_rows();
+        return $this->update($data, $where);
     }
     
     
@@ -300,15 +293,13 @@ class Lab_Model extends MY_Model {
     	$data = array(
     		'displayorder' => $param['displayorder'],
             'updator' => $param['updator'],
-            'gmt_modify' => time()
         );
         
         $where = array(
             'id' => $param['id']
         );
         
-        $this->db->update($this->_tableName, $data, $where);
-        return $this->db->affected_rows();
+        return $this->update($data, $where);
     }
     
 }

@@ -1,0 +1,2 @@
+    <link rel="stylesheet" type="text/css" href="{resource_url('js/dhtmlxTree_v413_std/codebase/dhtmlxtree.css')}"/>
+    <script src="{resource_url('js/dhtmlxTree_v413_std/codebase/dhtmlxtree.js')}"></script>

@@ -300,7 +300,7 @@ $(function(){
 	          <!-- Top navigation -->
 	          <div id="topnav" class="top-nav">
 	            <ul>
-	              <li class="adminid" title="您好:{$admin_profile['basic']['username']|escape}">您好&nbsp;:&nbsp;<strong>{$admin_profile['basic']['username']|escape}</strong></li>
+	              <li class="adminid" title="您好:{$admin_profile['basic']['account']|escape}">您好&nbsp;:&nbsp;<strong>{$admin_profile['basic']['account']|escape}</strong></li>
 	              <li><a href="{admin_site_url('index/profile')}" target="workspace" ><span>修改密码</span></a></li>
 	              <li><a href="{admin_site_url('my/logout')}" title="退出"><span>退出</span></a></li>
 	              <li><a href="{site_url('index')}" target="_blank" title="{config_item('site_name')}"><span>{config_item('site_name')}</span></a></li>
@@ -312,9 +312,10 @@ $(function(){
 	            <ul>
 	                <li><a class="link actived" id="nav_dashboard" href="javascript:;" onclick="openItem('dashboard');"><span>控制台</span></a></li>
 					<li><a class="link" id="nav_setting" href="javascript:;" onclick="openItem('setting');"><span>设置</span></a></li>
+					<li><a class="link" id="nav_lab" href="javascript:;" onclick="openItem('lab');"><span>实验室</span></a></li>
 					<li><a class="link" id="nav_member" href="javascript:;" onclick="openItem('member');"><span>实验员</span></a></li>
 					<li><a class="link" id="nav_team" href="javascript:;" onclick="openItem('team');"><span>队伍</span></a></li>
-					<li><a class="link" id="nav_stadium" href="javascript:;" onclick="openItem('stadium');"><span>实验室</span></a></li>
+					<li><a class="link" id="nav_stadium" href="javascript:;" onclick="openItem('stadium');"><span>场馆</span></a></li>
 					<li><a class="link" id="nav_game" href="javascript:;" onclick="openItem('game');"><span>赛事</span></a></li>
 					<li><a class="link" id="nav_lab_goods" href="javascript:;" onclick="openItem('lab_goods');"><span>货品</span></a></li>
 					<li><a class="link" id="nav_trade" href="javascript:;" onclick="openItem('trade');"><span>交易</span></a></li>
@@ -374,6 +375,19 @@ $(function(){
                     <li><a href="javascript:void(0);" id="perform_setting" onclick="openItem('perform,setting,setting');">性能优化</a></li>
                     <li><a href="javascript:void(0);" id="search_setting" onclick="openItem('search,setting,setting');">搜索设置</a></li>
                     <li><a href="javascript:void(0);" id="log_setting" onclick="openItem('log,setting,setting');">操作日志</a></li>
+                  </ol>
+                </dd>
+              </dl>
+            </li>
+          </ul>
+          <ul id="sort_lab">
+            <li>
+              <dl>
+                <dd>
+                  <ol>
+                    <li><a href="javascript:void(0);" id="index_lab" onclick="openItem('index,lab,lab');">实验室管理</a></li>
+                    <li><a href="javascript:void(0);" id="add_lab" onclick="openItem('member,lab,lab');">添加实验室</a></li>
+                    <li><a href="javascript:void(0);" id="export_lab" onclick="openItem('export,lab,lab');">导出实验室</a></li>
                   </ol>
                 </dd>
               </dl>
