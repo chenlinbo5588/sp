@@ -43,6 +43,10 @@ class Lab_service extends Base_service {
 	 * 添加实验室
 	 */
 	public function addLab($param,$userInfo){
+		
+		$param['displayorder'] = empty($param['displayorder']) ? 255 : intval($param['displayorder']);
+		$param['creator'] = $userInfo['name'];
+		
 		$labId = $this->_labModel->_add($param);
 		
 		$labMember = array(
@@ -65,7 +69,7 @@ class Lab_service extends Base_service {
 	 * 缓存过期
 	 */
 	public function makeLabXMLExpire(){
-    	$this->_labeCacheModel->update(array('expire' => -1),array('key_group' => $this->getXMLGroupKey()));
+    	$this->_labCacheModel->update(array('expire' => -1),array('key_group' => $this->getXMLGroupKey()));
     }
 	
 	
@@ -123,7 +127,7 @@ class Lab_service extends Base_service {
 	/**
 	 * 获得用户lab XML
 	 */
-	public function getUserLabXML($uid){
+	public function getUserLabXML($uid = 0){
 		
 		$str = array();
 		
@@ -137,7 +141,7 @@ class Lab_service extends Base_service {
    			'order' => 'pid ASC , displayorder DESC'
    		);
    		
-   		if($uid != LAB_FOUNDER_ID){
+   		if($uid && $uid != LAB_FOUNDER_ID){
    			$labs = self::$CI->session->userdata('user_labs');
    			$condition['where_in'] = array(
    				array('key' => 'id', 'value' => $labs)
@@ -145,21 +149,13 @@ class Lab_service extends Base_service {
    		}
    		
    		$list = $this->_labModel->getList($condition);
-		$listTree = array();
+		$tree = array();
 		
-		/*
-		$this->Lab_Model->clearMenuTree();
-		$listTree = $this->Lab_Model->getMenusArray();
-		file_put_contents("debug.txt",print_r($listTree, true));
-		*/
-		
-		foreach($list as $node){
-			$listTree = $this->_labModel->getParents($node['id']);
-		}
-   		$tree = $this->_labModel->getRealTree($listTree,0);
-   		
-   		//file_put_contents("debug2.txt",print_r($tree, true));
-		
+		$tree = self::$CI->phptree->makeTree($list,array(
+			'primary_key' => 'id',
+			'parent_key' => 'pid',
+			'expanded' => true
+		));
 		
    		$str[] = $this->_labModel->toXML($tree);
    		$str[] = '</tree>';
@@ -189,4 +185,58 @@ class Lab_service extends Base_service {
     public function getCacheXMLUserKey($user_id){
     	return str_replace('{uid}',$user_id,$this->_cacheXMLUserKey);
     }
+    
+    
+    /**
+     * 获得用户 是管理员的实验室
+     */
+    public function getLabManager($user_id,$lab_id){
+    	if(!is_array($lab_id)){
+    		$lab_id = (array)$lab_id;
+    	}
+    	
+    	return $this->getList(array(
+    		'where' => array(
+    			'is_manager' => 'y',
+    			'user_id' => $user_id
+    		),
+    		'where_in' => array(
+    			array('key' => 'lab_id' , 'value' => $lab_id)
+    		)
+    	));
+    }
+    
+    /**
+     * 获得 某一个 lab 的成员列表
+     * 
+     */
+     public function getLabMemberList($lab_id){
+		
+		$userIds = array();
+		$users = array();
+		
+		$userList = $this->_labeMemberModel->getLabUserList($lab_id);
+		
+		if($userList){
+			foreach($userList as $user){
+				$userIds[$user['user_id']] = $user;
+			}
+		}
+		
+		if($userIds){
+			$users = self::$adminUserModel->getList(array(
+				'where_in' => array(
+					array(
+						'key' => 'id','value' => array_keys($userIds)
+					)
+				),
+				'order' => 'id ASC '
+			));
+			foreach($users as $uk => $user){
+				$userIds[$user['id']]['name'] = $user['name'];
+			}
+		}
+		
+		return $userIds;
+	}
 }

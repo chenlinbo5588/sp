@@ -70,12 +70,12 @@
   <div class="feedback">{$feedback}</div>
     {include file="common/dhtml_tree.tpl"}
 	{if $info['id']}
-		{form_open(admin_site_url('lab/edit?id='|cat:$info['id']),'name="categoryForm"')}
+		{form_open(admin_site_url('lab/edit?id='|cat:$info['id']),'name="labForm"')}
 	<input type="hidden" name="id" value="{$info['id']}"/>
 	{else}
-		{form_open(admin_site_url('lab/add'),'name="categoryForm"')}
+		{form_open(admin_site_url('lab/add'),'name="labForm"')}
 	{/if}
-	<input type="hidden" name="pid" value="{if $info['pid']}{$info['pid']}{else}{/if}"/>
+	<input type="hidden" name="pid" value="{if $info['pid']}{$info['pid']}{else}0{/if}"/>
 	<table>
       <tbody>
       	<tr class="noborder">
@@ -83,21 +83,21 @@
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input type="text" value="{$info['address']|escape}" name="address" id="address" class="txt"></td>
-          <td class="vatop tips">{form_error('address')}</td>
+          <td class="vatop tips"><label class="errtip" id="error_address"></label></td>
         </tr>
         <tr class="noborder">
-          <td colspan="2" class="required"><label class="validation" for="displayorder">{#displayorder#}:</label></td>
+          <td colspan="2" class="required"><label for="displayorder">{#displayorder#}:</label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input type="text" value="{$info['displayorder']|escape}" name="displayorder" id="displayorder" class="txt"></td>
-          <td class="vatop tips">{form_error('displayorder')}</td>
+          <td class="vatop tips"><label class="errtip" id="error_displayorder"></label> 数字范围为0~255，数字越小越靠前</td>
         </tr>
         <tr class="noborder">
-          <td colspan="2" class="required"><label class="validation" for="parent">{#parent#}:</label>{form_error('displayorder')}</td>
+          <td colspan="2" class="required"><label class="validation" for="parent">{#parent#}:</label><label class="errtip" id="error_pid"></label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform">
-          	  <span class="tip">鼠标双击实验室名称项进入实验室详情页 <span class="blue">蓝色文字表示您管辖的实验室</span> <span id="pid_tip"" class="warning">{form_error('pid')}</span></span>
+          	  <span class="tip">鼠标双击实验室名称项进入实验室详情页 <span class="blue">蓝色文字表示您管辖的实验室</span><span id="pid_tip" class="hightlight">{form_error('pid')}</span></span>
 	          <div id="treeboxbox_tree1" class="rounded_box" style="height:400px;">
 	               <div id="loading_img" class="loading_div" style="display:none;"></div>
 	          </div>
@@ -200,10 +200,10 @@
 	    
 	    tree.loadXML("{admin_site_url('lab/getTreeXML')}",function(){
 	        var parent = 0;
-	        {if $act == 'add'}
+	        {if empty($info['id'])}
 	        {if $info['pid']}tree.selectItem({$info['pid']});{/if}
-	        {elseif $act == 'edit'}
-	        {if $info['id']}tree.selectItem({$info['id']});{/if}
+	        {elseif $info['id']}
+	        tree.selectItem({$info['id']});
 	        {/if}
 	        
 	        {include file="./tree_unexpand.tpl"}
@@ -223,24 +223,7 @@
 	    });
 	    
 	    
-	    function validation(form){
-	        if($("input[name=address]").val() == ''){
-	            $.jBox.tip('请输入实验室地址:', '提示');
-	            $("input[name=address]").focus();
-	            return false;
-	        }
-	        
-	        {if $userProfile['id'] != $smarty.const.LAB_FOUNDER_ID}
-	        if($("input[name=pid]").val() == '' || $("input[name=pid]").val() == 0){
-	            $.jBox.tip('请输入实验室父级:', '提示');
-	            return false;
-	        }
-	        {/if}
-	        
-	        return true;
-	    }
-	
-	    
+	    {* 成员管理 *}
 	    {if $info['id']}
 	    function ajaxPage(page){
 	        //$("#user_loading").show();
@@ -257,15 +240,10 @@
 	    {/if}
 	    
 	    
+	    
 	    $(function(){
-	        {if $message}
-	            {if $success }
-	              $.jBox.success('{$message}',"提示");
-	            {else}
-	            $.jBox.error('{$message}', '提示');
-	            {/if}
-	        {/if}
-	          
+	    	{include file="common/form_ajax_submit.tpl"}
+	    	
 	        {if $info['id']}
 	        $("body").delegate("#search_btn","click",function(){
 	            ajaxPage(1);

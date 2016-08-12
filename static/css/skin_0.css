@@ -732,6 +732,10 @@ table.search { margin: 12px 0 6px 4px;}
 	
 }
 
+.btndisabled {
+	background-color:#C3BFBF;
+}
+
 a.btn { font-size: 14px; color: #555; font-weight: 700; line-height:18px; background: transparent url(../img/sky/bg_position.gif) no-repeat scroll 0 -280px; display: inline-block; height: 38px; padding-left: 15px; margin-right:6px; cursor: pointer;}
 a.btn:hover { background-position: 0 -318px;}
 a.btn:active { background-position: 0 -356px;}

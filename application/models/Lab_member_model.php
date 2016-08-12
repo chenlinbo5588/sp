@@ -134,37 +134,9 @@ class Lab_Member_Model extends MY_Model {
     		);
     	}
     	
-    	$d = $this->getList($condition);
-    	if($d['data']){
-    		return $d['data'];
-    	}else{
-    		return array();
-    	}
+    	return $this->getList($condition);
     }
     
-    
-    public function getLabManager($user_id,$lab_id){
-    	if(!is_array($lab_id)){
-    		$lab_id = (array)$lab_id;
-    	}
-    	
-    	$d = $this->getList(array(
-    		'where' => array(
-    			'is_manager' => 'y',
-    			'user_id' => $user_id
-    		),
-    		'where_in' => array(
-    			array('key' => 'lab_id' , 'value' => $lab_id)
-    		)
-    	));
-    	
-    	if($d['data']){
-    		return $d['data'];
-    	}else{
-    		return array();
-    	}
-    	
-    }
     
     /**
      * 获得用户管理的lab

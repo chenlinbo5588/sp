@@ -177,19 +177,33 @@ class Lab extends Ydzj_Admin_Controller {
     }
     
     
+    
+    
+    
+    /**
+     * 
+     */
    	public function getTreeXML(){
    		
    		header("Content-type:text/xml");
    		
-   		$cache = $this->Lab_Cache_Model->getFirstByKey($this->lab_service->getCacheXMLUserKey($this->_loginUID),'key_id');
+   		$uid = $this->input->get_post('uid');
    		
+   		//空 或者 是 创始人  创始人 整课树可见
+   		if(empty($uid) || $this->_loginUID == LAB_FOUNDER_ID){
+   			$uid = 0;
+   		}else{
+   			$uid = $this->_loginUID;
+   		}
+   		
+   		$cache = $this->Lab_Cache_Model->getFirstByKey($this->lab_service->getCacheXMLUserKey($uid),'key_id');
    		if(!empty($cache) && $cache['expire'] >= 0 && ((time() - $cache['gmt_create']) < 3600 )){
    			echo $cache['content'];
    			exit;
    		}
    		
-   		$output = $this->lab_service->getUserLabXML($this->_loginUID);
-   		$this->lab_service->cacheUserLabXML($this->_loginUID,$output);
+   		$output = $this->lab_service->getUserLabXML($uid);
+   		$this->lab_service->cacheUserLabXML($uid,$output);
    		
    		echo $output;
    		
@@ -199,13 +213,16 @@ class Lab extends Ydzj_Admin_Controller {
      * 权属
      */
     public function checkowner($pid){
-    	$id = $this->input->post('id');
-    	
-    	$info = $this->Lab_Model->getFirstByKey($id);
-    	$allowIds = $this->session->userdata('user_labs');
-    	$allowIds[] = $info['pid'];
     	
     	if(LAB_FOUNDER_ID != $this->_loginUID){
+    		
+    		$id = $this->input->post('id');
+    	
+	    	$info = $this->Lab_Model->getFirstByKey($id);
+	    	$allowIds = $this->session->userdata('user_labs');
+	    	$allowIds[] = $info['pid'];
+	    	
+    	
     		if(!in_array($pid,$allowIds)){
     			$this->form_validation->set_message('checkowner', '%s 不能选择不在自己管辖的实验室为父级');
             	return FALSE;
@@ -242,13 +259,13 @@ class Lab extends Ydzj_Admin_Controller {
     
     private function _updateCache(){
     	//@todo 可能更新很多记录， 优化 取在线的 session_id 去更新
-    	$this->Lab_Cache_Model->updateByGroupKey($this->Lab_Cache_Model->getXMLGroupKey(), array('expire' => -1));
+    	$this->lab_service->makeLabXMLExpire();
     }
     
     
     private function _addRules(){
     	
-    	if(!empty($_POST['displayorder'])){
+    	if(!empty($this->input->post('displayorder'))){
     		$this->form_validation->set_rules('displayorder','排序',  'required|is_natural_no_zero');
     	}
 		
@@ -293,24 +310,28 @@ class Lab extends Ydzj_Admin_Controller {
 
     public function edit(){
 		
-		$this->assign('act','edit');
-		
 		$isLabManager = false;
+		$id = $this->input->get_post('id');
+		if($this->lab_service->getLabManager($this->_loginUID,$id)){
+			$isLabManager = true;
+		}
 		
-		if($this->isPostRequest()){
-			$id = $_POST['id'];
-			if($this->Lab_Member_Model->getLabManager($this->_userProfile['id'],$id)){
-				$isLabManager = true;
-			}
-			
-			if($this->_userProfile['id'] == LAB_FOUNDER_ID){
+		if($id && $this->isPostRequest()){
+			if($this->_loginUID == LAB_FOUNDER_ID){
 				$isLabManager = true;
 			}
 			
 			$this->form_validation->set_rules('id','实验室id',  'required');
-			$this->form_validation->set_rules('address', '实验室地址', 'required|is_unique_not_self['.$this->Lab_Model->_tableName.'.address.id.'.$id.'.status.正常]');
+			$this->form_validation->set_rules('address', '实验室地址', 'required|is_unique_not_self['.$this->Lab_Model->_tableName.'.address.id.'.$id.']');
 			$this->form_validation->set_rules('pid','父级',  'is_natural|callback_checkowner|callback_compare');
 			$this->_addRules();
+			
+			for($i = 0; $i < 1; $i++){
+				
+				if(!$isLabManager){
+					$this->assign('message','对不起，您不是该实验室的管理员，无权修改');
+				}
+			}
 			
 			if($isLabManager && $this->form_validation->run()){
 				$_POST['updator'] = $this->_userProfile['name'];
@@ -326,32 +347,24 @@ class Lab extends Ydzj_Admin_Controller {
 				
 				$info = $this->Lab_Model->queryById($id);
 			}else{
-				
 				if($isLabManager){
 					$this->assign('message','数据不能通过校验,修改失败');
 				}else{
 					$this->assign('message','对不起，您不是该实验室的管理员，无权修改');
 				}
-				
 				$info = $_POST;
 			}
 			
 		}else{
+			$info = $this->Lab_Model->getFirstByKey($id);
+			$this->assign('user_labs',json_encode(array_values($this->session->userdata('user_labs'))));
+			$this->assign('userList', $this->_getUserList($id));
 			
-			$id = $this->uri->segment(4);
-			if($this->Lab_Member_Model->getLabManager($this->_userProfile['id'],$id)){
-				$isLabManager = true;
-			}
+			$this->assign('isManager',$isLabManager);
 			
-			$info = $this->Lab_Model->queryById($id);
+			$this->assign('info',$info);
+	        $this->display('lab/add');
 		}
-		
-		$this->assign('user_labs',json_encode(array_values($this->session->userdata('user_labs'))));
-		$this->assign('userList', $this->_getUserList($id));
-		$this->assign('isManager',$isLabManager);
-		$this->assign('info',$info);
-		$this->assign('gobackUrl', $this->getGobackUrl());
-        $this->display('add');
     }
     
     
@@ -457,52 +470,77 @@ class Lab extends Ydzj_Admin_Controller {
     }
     
     
+    /**
+     * 移动
+     */
     public function move(){
+    	
 		if($this->isPostRequest()){
 			
-			$id = $_POST['id'];
-			$toId = $_POST['pid'];
+			$id = $this->input->post('id');
+			$toId = $this->input->post('pid');
 			
+			$labInfos = $this->Lab_Model->getList(array(
+				'where_in' => array(
+					array('key' => 'id', 'value' => array($id,$toId))
+				)
+			));
 			
-			$srcInfo = $this->Lab_Model->queryById($id);
-			$toInfo = $this->Lab_Model->queryById($toId);
+			$srcInfo = array();
+			$toInfo = array();
+			///print_r($labInfos);
 			
-			$method = "pid";
-			if($srcInfo['pid'] != $toInfo['pid']){
-				$this->form_validation->set_rules('pid','父级',  'required|callback_compare');
-			}else{
-				$method = "displayorder";
-				$_POST[$method] = $toInfo[$method] + 1;
+			foreach($labInfos as $labInfo){
+				if($labInfo['id'] == $id){
+					$srcInfo = $labInfo;
+				}else if($labInfo['id'] == $toId){
+					$toInfo = $labInfo;
+				}
 			}
 			
+			$this->form_validation->set_rules('pid','父级',  'required|callback_compare');
 			$this->form_validation->set_rules('id','实验室id',  'required');
 			
-			if($this->form_validation->run()){
-				$_POST['updator'] = $this->_userProfile['name'];
-				
-				switch($method){
-					case 'pid':
-						$flag = $this->Lab_Model->update($_POST);
-						break;
-					case 'displayorder':
-						$flag = $this->Lab_Model->updateDisplayorder($_POST);
-						break;
-					default:
-						break;
+			for($i = 0; $i < 1; $i++){
+				if(!$this->form_validation->run()){
+					$this->jsonOutput($this->form_validation->error_string(' ',' '));
+					break;
 				}
 				
-				if($flag >= 0){
-					$this->_updateCache();
-					$this->sendFormatJson('success',array('id' => $id , 'text' => '操作成功' , 'wait' => 1 ), array('jsReload' => true));
+				$row = 0;
+				$updateData = array(
+					'updator' => $this->_adminProfile['basic']['name'],
+					'pid' => $toId
+				);
+				
+				//父级没有变,优先级调整
+				if($srcInfo['pid'] == $toId){
+					$maxRecord = $this->Lab_Model->getList(array(
+						'where' => array('pid' => $toId,'status' => '正常'),
+						'order' => 'displayorder DESC , id ASC',
+						'limit' => 1
+					));
+					//print_r($maxRecord);
+					//存在 并且不是自己
+					if($maxRecord[0] && $maxRecord[0]['id'] != $id){
+						$updateData['displayorder'] = $maxRecord[0]['displayorder'] + 1;
+					}
+				}
+				
+				$row = $this->Lab_Model->update($updateData,array('id' => $id));
+				
+				if($row >= 0){
+					if($row > 0){
+						$this->_updateCache();
+					}
+					$this->jsonOutput('操作成功');
 				}else{
-					$this->sendFormatJson('failed',array('text' => '数据库出错,修改失败'));
+					$this->jsonOutput($this->db->get_error_info());
 				}
-			}else{
-				$this->sendFormatJson('failed',array('text' => '数据不能通过校验,修改失败'));
 			}
 			
 		}else{
-			$this->sendFormatJson('failed',array('text' => '请求错误'));
+			$this->sendFormatJson('请求参数错误');
 		}
     	
     }
@@ -561,36 +599,33 @@ class Lab extends Ydzj_Admin_Controller {
      */
     public function add()
     {
+    	
 		if($this->isPostRequest()){
-			$this->form_validation->set_rules('address','实验室地址',  'required|is_unique_by_status['.$this->Lab_Model->getTableRealName().'.address.status.正常]');
+			
+			$this->form_validation->set_rules('address','实验室地址',  'trim|required|is_unique_by_status['.$this->Lab_Model->getTableRealName().'.address.status.正常]');
 			$this->form_validation->set_rules('pid','父级',  'is_natural|callback_checkowner');
 			$this->_addRules();
 			
-			
 			for($i = 0; $i < 1; $i++){
 				if(!$this->form_validation->run()){
-					$info = $_POST;
-					$this->assign('message','数据不能通过校验,添加失败');
+					$d['errors'] = $this->form_validation->error_array();
+					$this->jsonOutput($this->form_validation->error_string(' ',' '),$d);
+					break;
 				}
 				
 				$flag = $this->lab_service->addLab($_POST,$this->_adminProfile['basic']);
-				
 				if($flag > 0){
-					$this->lab_service->makeLabXMLExpire();
-					$this->assign('success','1');
-					$this->assign('message','添加成功');
+					$this->_updateCache();
+					$this->jsonOutput('保存成功');
+					
 				}else{
-					$info = $_POST;
-					$this->assign('message','添加失败');
+					$this->jsonOutput($this->db->get_error_info());
 				}
-					
-					
 			}
+		}else{
+			$this->assign('user_labs',json_encode(array_values($this->session->userdata('user_labs'))));
+       	 	$this->display();
 		}
-		
-		$this->assign('user_labs',json_encode(array_values($this->session->userdata('user_labs'))));
-		$this->assign('info',$info);
-        $this->display();
     }
     
 }

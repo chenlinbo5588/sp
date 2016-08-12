@@ -81,7 +81,9 @@ class MY_Model extends CI_Model {
     }
     
     
-    
+    /**
+     * 
+     */
     public function getMaxByWhere($field,$where = array()){
         if($where){
             $this->db->where($where);

@@ -23,7 +23,8 @@
 	        	<ul>
 	              <li class="tip">【修改操作】鼠标双击实验室名称进入修改页面</li>
 		          <li class="tip">【删除操作】鼠标左键拖曳实验室名称至右侧空白区域进行删除</li>
-		          <li class="tip">【节点调整】改变父级:鼠标拖曳实验室名称到某一实验室下 ,<span class="hightlight">如果实验室级别相同，则为调整排序</span></li>
+		          <li class="tip">【改变父级】鼠标拖曳实验室名称到某一实验室下</li>
+		          <li class="tip">【排序调整】鼠标拖曳实验室名称至其父级节点下，则当前实验室则显示在最前面</li>
 	            </ul>
 	        </td>
 	      </tr>
@@ -50,57 +51,50 @@
             if(id == 'root'){
                 return
             }
-            location.href= "{admin_site_url('lab/edit/id/')}" + id + "?" + Math.random();
+            location.href= "{admin_site_url('lab/edit?id=')}" + id + "&t=" + Math.random();
             //console.log(id);
             //console.log(tree.getItemText(id)+" was selected");
         }
         
         function toncheck(id,state){
-        
+        	
         }
+        
+        var successHandler = function(json){
+        	alert(json.message);
+	      	if(json.message == '操作成功'){
+	      		//location.href = "{admin_site_url('lab/index')}";
+	      	}
+        
+        };
         
         function tondrag(id,id2){
             //console.log(id2);
             if(0 == id2){
-                var submit = function (v, h, f) {
-				    if (v == 'ok'){
-				         $.ajax({
-				              type:"POST",
-				              url:"{admin_site_url('lab/delete')}",
-				              dataType:"json",
-				              data: { id: id },
-				              success:ajax_success
-				         });
-				    }
+				if(confirm("确定删除 " + tree.getItemText(id) + " 吗？")){
+					$.ajax({
+			              type:"POST",
+			              url:"{admin_site_url('lab/delete')}",
+			              dataType:"json",
+			              data: { id: id },
+			              success:successHandler
+			         });
+				}
 				
-				    return true;
-				};
-				
-				$.jBox.confirm("确定删除 " + tree.getItemText(id) + " 吗？", "提示", submit);
-				
-                //var flag = confirm("确定要删除 "+tree.getItemText(id)+" to item "+tree.getItemText(id2)+"?");
-                
             }else{
-            
-                var submit2 = function (v, h, f) {
-                    if (v == 'ok'){
-                         $.ajax({
-                              type:"POST",
-                              url:"{admin_site_url('lab/move')}",
-                              data: { id: id , pid: id2 },
-                              success:ajax_success
-                         });
-                    }
+                if(confirm("确定调整节点 " + tree.getItemText(id) + " 和 " + tree.getItemText(id2) + " 吗？")){
+                	$.ajax({
+	                      type:"POST",
+	                      dataType:"json",
+	                      url:"{admin_site_url('lab/move')}",
+	                      data: { id: id , pid: id2 },
+	                      success:successHandler
+	                 });
+                }
                 
-                    return true;
-                };
-                
-                $.jBox.confirm("确定调整节点 " + tree.getItemText(id) + " 和 " + tree.getItemText(id2) + " 吗？", "提示", submit2);
-            
                 return false;
             }
         }
-        
         
         function treeLoading(){
             $("#loading_img").show();
@@ -117,7 +111,7 @@
         tree.setOnDblClickHandler(tondblclick);
         //tree.setOnCheckHandler(toncheck);
         tree.setDragHandler(tondrag);
-        tree.loadXML("{admin_site_url('lab/getTreeXML/')}",function(){
+        tree.loadXML("{admin_site_url('lab/getTreeXML?uid='|cat:$admin_profile['basic']['id'])}",function(){
             tree.closeAllItems();
             {include file="./tree_unexpand.tpl"}
         });
