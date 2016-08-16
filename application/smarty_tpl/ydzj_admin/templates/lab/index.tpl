@@ -117,7 +117,7 @@
         });
         
         $(function(){
-            $.loadingbar({ templateData:{ message:"努力加载中..."} });
+            $.loadingbar({ container: "#catelist" ,templateData:{ message:"努力加载中..."} });
         });
        </script>
 {include file="common/main_footer.tpl"}

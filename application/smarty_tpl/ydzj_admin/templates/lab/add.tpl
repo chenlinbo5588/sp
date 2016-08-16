@@ -90,7 +90,7 @@
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input type="text" value="{$info['displayorder']|escape}" name="displayorder" id="displayorder" class="txt"></td>
-          <td class="vatop tips"><label class="errtip" id="error_displayorder"></label> 数字范围为0~255，数字越小越靠前</td>
+          <td class="vatop tips"><label class="errtip" id="error_displayorder"></label> 大于等于0的自然数，数字越大越靠前</td>
         </tr>
         <tr class="noborder">
           <td colspan="2" class="required"><label class="validation" for="parent">{#parent#}:</label><label class="errtip" id="error_pid"></label></td>
@@ -106,9 +106,6 @@
         </tr>
         
         {if $info['id']}
-        <tr class="noborder">
-          <td colspan="2" class="required"><label class="validation" for="parent">{#parent#}:</label>{form_error('displayorder')}</td>
-        </tr>
         <tr class="noborder">
           <td class="vatop rowform">
           	  <label>成员管理:</label><input class="form_submit" id="addUserBtn" type="button" name="addUser" value="成员管理"/>
@@ -230,7 +227,7 @@
 	        $.ajax({
 	            type:"GET",
 	            cache:false,
-	            url:"{base_url('lab_user/search')}",
+	            url:"{admin_site_url('lab_user/search')}",
 	              data: { id: {$info['id']} ,page: page , username: $("#search_username").val()},
 	              success:function(data){
 	                  $("#usertable").html(data);
@@ -250,6 +247,10 @@
 	        });
 	        
 	        $("#addUserBtn").bind("click",function(){
+	        	
+	        	ajax_form('search','成员维护','{admin_site_url("member/pic_cut")}?type=member&x={$avatarImageSize['m']['width']}&y={$avatarImageSize['m']['height']}&resize=0&ratio=1&url='+data.url,800);
+	        	
+	        	/*
 	            $.jBox("get:{admin_site_url('lab_user/search_popup?id=')}{$info['id']}",{ 
 		            title:"查找用户",
 		            width:570,
@@ -275,6 +276,8 @@
 		                
 		            }
 		        });
+		        
+		        */
 	        });
 	        
 	        $.loadingbar({ urls: [ new RegExp("{admin_site_url('lab/manager_lab_user') }") ], templateData:{ message:"努力加载中..." }   });

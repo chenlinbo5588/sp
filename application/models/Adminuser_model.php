@@ -84,7 +84,7 @@ class Adminuser_Model extends MY_Model {
         return $this->update($data, $where);
     }
     
-    
+    /*
     public function update($user){
         $data = array(
             'name' => $user['name'],
@@ -109,7 +109,7 @@ class Adminuser_Model extends MY_Model {
         
         return $this->update($data, $where);
     }
-    
+    */
     
     public function updatePassword($user){
     	

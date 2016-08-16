@@ -148,8 +148,8 @@ class Lab_Member_Model extends MY_Model {
     		)
     	));
     	
-    	if($d['data']){
-    		return $d['data'];
+    	if($d){
+    		return $d;
     	}else{
     		return array();
     	}
@@ -161,10 +161,12 @@ class Lab_Member_Model extends MY_Model {
     		$lab_id = (array)$lab_id;
     	}
     	
-    	$this->db->where_in('lab_id', $lab_id);
-    	$this->db->delete($this->_tableName);
+    	return $this->deleteByCondition(array(
+    		'where_in' => array(
+    			array('key' => 'lab_id' , 'value' => $lab_id)
+    		)
     	
-    	return $this->db->affected_rows();
+    	));
     }
     
     /**
@@ -176,22 +178,23 @@ class Lab_Member_Model extends MY_Model {
     		$lab_id = (array)$lab_id;
     	}
     	
+    	return $this->deleteByCondition(array(
+    		'where' => array(
+    			'user_id' => $user_id
+    		),
+    		'where_in' => array(
+    			array('key' => 'lab_id' , 'value' => $lab_id)
+    		)
     	
-    	$this->db->where('user_id', $user_id);
-    	$this->db->where_in('lab_id', $lab_id);
-    	$this->db->delete($this->_tableName);
-    	
-    	return $this->db->affected_rows();
+    	));
     }
     
     public function deleteByUserId($user_id){
-    	$this->db->delete($this->_tableName, array('user_id' => $user_id));
-    	return $this->db->affected_rows();
+    	return $this->deleteByWhere(array('user_id' => $user_id));
     }
     
     public function deleteByLabId($lab_id){
-    	$this->db->delete($this->_tableName, array('lab_id' => $lab_id));
-    	return $this->db->affected_rows();
+    	return $this->deleteByWhere(array('lab_id' => $lab_id));
     }
     
     public function deleteUsersByLabId($lab_id , $users , $createFrom = array()){
@@ -202,7 +205,7 @@ class Lab_Member_Model extends MY_Model {
     		$this->db->where_in('uid', $createFrom);
     	}
     	$this->db->where_in('lab_id', $lab_id);
-    	$this->db->delete($this->_tableName);
+    	$this->db->delete($this->_tableRealName);
     	return $this->db->affected_rows();
     	
     }

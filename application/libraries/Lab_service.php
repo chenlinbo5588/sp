@@ -54,6 +54,8 @@ class Lab_service extends Base_service {
 			'lab_id' => $labId,
 			'is_manager' => 'y',
 			'uid' => $userInfo['id'],
+			'creator' => $param['creator'],
+			'updator' => $param['creator'],
 		);
 		
 		$labMember = array_merge($labMember,$this->addWhoHasOperated($userInfo));
@@ -122,6 +124,70 @@ class Lab_service extends Base_service {
     	);
     	
 	}
+	
+	/**
+	 * 删除用户的实验室
+	 */
+	public function deleteUserLab($userId,$lab_id,$operator = array()){
+		$this->_labModel->clearMenuTree();
+		
+		//获得子孙实验室
+		$subIds = $this->_labModel->getListByTree($lab_id);
+		
+		$ids = array();
+		$ids[] = $lab_id;
+		if($subIds){
+			foreach($subIds as $item){
+				$ids[] = $item['id'];
+			}
+		}
+		
+		$ids = array_unique($ids);
+		
+		/**
+		 * 查询是否是 这个实验室的管理管理员, 如果不是这个实验室的管理员
+		 * 不能进行删除
+		 */
+		if(LAB_FOUNDER_ID != $userId){
+			if(!$this->getLabManager($userId,$lab_id)){
+				return $this->formatArrayReturn('failed','对不起，您不是这个实验室的管理员，无权删除');
+    		}
+		}
+		
+		//原来不删除,现在直接删除
+		$this->_labModel->updateByCondition(
+			array('status' => '已删除','updator' => $operator['name']),
+			array(
+				'where_in' => array(
+					array('key' => 'id' , 'value' => $ids)
+			)
+		));
+		
+		if($ids){
+			//
+			$this->_labMemberModel->deleteAllUserByLabs($ids);
+			
+			/**
+			 * @todo 优化，后期可以考虑后台定时清理
+			 */
+			 
+			/*
+			// 性能考虑 不自动清理了，
+			$this->load->model('Goods_Model');
+			$this->Goods_Model->deleteByLabIds($ids);
+			$this->_labModel->deleteByCondition(array(
+	    		'where_in' => array(
+	    			array('key' => 'id' , 'value' => $ids)
+	    		)
+	    	
+	    	));
+	    	*/
+		}
+		
+		return $this->formatArrayReturn('success');
+		
+	}
+	
 	
 	
 	/**
@@ -195,7 +261,7 @@ class Lab_service extends Base_service {
     		$lab_id = (array)$lab_id;
     	}
     	
-    	return $this->getList(array(
+    	return $this->_labMemberModel->getList(array(
     		'where' => array(
     			'is_manager' => 'y',
     			'user_id' => $user_id

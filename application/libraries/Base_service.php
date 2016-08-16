@@ -12,6 +12,8 @@ class Base_service {
 	public static $settingModel = null;
 	//public static $auditLogModel = null;
 	
+	public static $adminOperator = null;
+	
 	
 	public static function initStaticVars(){
 		

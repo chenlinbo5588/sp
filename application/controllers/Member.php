@@ -93,6 +93,8 @@ class Member extends Ydzj_Controller {
 					break;
 				}
 				
+				
+				
 				$this->load->library('Admin_service');
 				
 				$result = $this->admin_service->do_adminlogin($this->input->post('username'),$this->input->post('password'));
@@ -102,10 +104,13 @@ class Member extends Ydzj_Controller {
 					break;
 				}
 				
+				
+				
 				$this->session->set_userdata(array(
 					'admin_profile' => $result['data'],
 					'lastvisit' => $this->_reqtime
 				));
+				///print_r($result);
 				
 				$this->admin_service->updateUserInfo(
 					array(
@@ -115,8 +120,7 @@ class Member extends Ydzj_Controller {
 					),
 					$result['data']['basic']['id']);
 				
-				//默认货品
-				js_redirect(admin_site_url('dashboard/welcome'),'top');
+				js_redirect(admin_site_url('index/index'),'top');
 				
 			}
 		}

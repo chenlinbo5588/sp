@@ -291,7 +291,7 @@ class Lab extends Ydzj_Admin_Controller {
 		}
 		
 		if($userIds){
-			$users = $this->Lab_User_Model->getList(array(
+			$users = $this->Adminuser_Model->getList(array(
 				'where_in' => array(
 					array(
 						'key' => 'id','value' => array_keys($userIds)
@@ -299,7 +299,7 @@ class Lab extends Ydzj_Admin_Controller {
 				),
 				'order' => 'id ASC '
 			));
-			foreach($users['data'] as $uk => $user){
+			foreach($users as $uk => $user){
 				$userIds[$user['id']]['name'] = $user['name'];
 			}
 		}
@@ -316,6 +316,8 @@ class Lab extends Ydzj_Admin_Controller {
 			$isLabManager = true;
 		}
 		
+		$feedback = '';
+		
 		if($id && $this->isPostRequest()){
 			if($this->_loginUID == LAB_FOUNDER_ID){
 				$isLabManager = true;
@@ -329,30 +331,29 @@ class Lab extends Ydzj_Admin_Controller {
 			for($i = 0; $i < 1; $i++){
 				
 				if(!$isLabManager){
-					$this->assign('message','对不起，您不是该实验室的管理员，无权修改');
+					$feedback = '对不起，您不是该实验室的管理员，无权修改';
+					
+					$info = $_POST;
+					break;
 				}
-			}
-			
-			if($isLabManager && $this->form_validation->run()){
-				$_POST['updator'] = $this->_userProfile['name'];
-				$flag = $this->Lab_Model->update($_POST);
 				
-				if($flag >= 0){
+				if(!$this->form_validation->run()){
+					$feedback = '数据不能通过校验,修改失败';
+				}
+				
+				$flag = $this->Lab_Model->update(array(
+					'address' => $this->input->post('address'),
+					'pid' => $this->input->post('pid'),
+					'displayorder' => $this->input->post('displayorder'),
+					'updator' => $this->_adminProfile['basic']['name']
+				),array('id' => $id));
+				
+				
+				if($flag > 0){
 					$this->_updateCache();
-					$this->assign('success','1');
-					$this->assign('message','修改成功');
-				}else{
-					$this->assign('message','修改失败');
 				}
 				
 				$info = $this->Lab_Model->queryById($id);
-			}else{
-				if($isLabManager){
-					$this->assign('message','数据不能通过校验,修改失败');
-				}else{
-					$this->assign('message','对不起，您不是该实验室的管理员，无权修改');
-				}
-				$info = $_POST;
 			}
 			
 		}else{
@@ -513,6 +514,8 @@ class Lab extends Ydzj_Admin_Controller {
 					'pid' => $toId
 				);
 				
+				$tipText = "改变父级";
+				
 				//父级没有变,优先级调整
 				if($srcInfo['pid'] == $toId){
 					$maxRecord = $this->Lab_Model->getList(array(
@@ -523,6 +526,7 @@ class Lab extends Ydzj_Admin_Controller {
 					//print_r($maxRecord);
 					//存在 并且不是自己
 					if($maxRecord[0] && $maxRecord[0]['id'] != $id){
+						$tipText = '更改优先级';
 						$updateData['displayorder'] = $maxRecord[0]['displayorder'] + 1;
 					}
 				}
@@ -533,7 +537,7 @@ class Lab extends Ydzj_Admin_Controller {
 					if($row > 0){
 						$this->_updateCache();
 					}
-					$this->jsonOutput('操作成功');
+					$this->jsonOutput($tipText.'成功');
 				}else{
 					$this->jsonOutput($this->db->get_error_info());
 				}
@@ -545,52 +549,29 @@ class Lab extends Ydzj_Admin_Controller {
     	
     }
     
+    
+    /**
+     * 实验室删除
+     */
     public function delete(){
     	
-    	//$id = $this->uri->segment(4);
-    	
     	if($this->isPostRequest()){
-    		
-    		$id = $_POST['id'];
-    		
-    		$this->Lab_Model->clearMenuTree();
-    		$subIds = $this->Lab_Model->getListByTree($id);
-    		
-    		$ids = array();
-    		$ids[] = $id;
-    		if($subIds){
-    			foreach($subIds as $item){
-    				$ids[] = $item['id'];
-    			}
-    		}
-    		
-    		$ids = array_unique($ids);
-    		
-    		/**
-    		 * 查询是否是 这个实验室的管理管理员, 如果不是这个实验室的管理员
-    		 * 不能进行删除
-    		 */
-    		 
-    		if(LAB_FOUNDER_ID != $this->_userProfile['id']){
-    			if(!$this->Lab_Member_Model->getLabManager($this->_userProfile['id'],$id)){
-	    			$this->sendFormatJson('failed',array('text' => '对不起，您不是这个实验室的管理员，无权删除'));
+    		for($i = 0; $i < 1; $i++){
+    			
+    			$id = $this->input->post('id');
+	    		$return = $this->lab_service->deleteUserLab($this->_loginUID,$id,$this->_adminProfile['baisc']);
+	    		
+	    		if($return['code'] != 'success'){
+	    			$this->jsonOutput($return['message']);
+	    			break;
 	    		}
-    		} 
-    		
-    		$this->Lab_Model->fake_delete(array('id' => $ids , 'updator' => $this->_userProfile['name']));
-    		$this->_updateCache();
-    		
-    		if($ids){
-    			$this->Lab_Member_Model->deleteAllUserByLabs($ids);
-    			$this->load->model('Goods_Model');
-    			$this->Goods_Model->deleteByLabIds($ids);
+	    		
+	    		$this->_updateCache();
+	    		$this->jsonOutput('删除成功');
     		}
     		
-    		$this->Lab_Model->delete($ids);
-    		
-    		$this->sendFormatJson('success',array('id' => $id , 'text' => '删除成功' , 'wait' => 1 ), array('jsReload' => true));
     	}else{
-    		$this->sendFormatJson('failed',array('text' => '请求错误'));
+    		$this->jsonOutput('请求参数错误');
     	}
     }
     

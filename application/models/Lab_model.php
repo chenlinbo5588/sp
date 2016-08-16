@@ -52,9 +52,6 @@ class Lab_Model extends MY_Model {
         return $this->_parentList;
     }
     
-    
-    
-    
     /**
      * 返回XML
      */

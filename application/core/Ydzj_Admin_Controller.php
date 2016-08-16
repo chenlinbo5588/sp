@@ -91,6 +91,7 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 		if($adminLastVisit){
 			$this->session->set_userdata(array($this->_adminLastVisitKey => $this->_reqtime));
 		}
+		
 	}
 	
 	
