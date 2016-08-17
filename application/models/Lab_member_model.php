@@ -72,11 +72,14 @@ class Lab_Member_Model extends MY_Model {
      * 单用户 多lab
      */
     public function addUserLabs($user_id,$labs , $is_manager = 'n', $uid = 0 , $creator = ''){
-    	$now = time();
         $data = array();
         
         if(is_array($labs)){
         	foreach($labs as $lab){
+        		if($lab == 0){
+        			continue;
+        		}
+        		
         		$data[] = array(
         			'user_id' => $user_id,
         			'lab_id' => $lab,

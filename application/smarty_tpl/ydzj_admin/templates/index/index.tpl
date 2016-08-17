@@ -314,16 +314,19 @@ $(function(){
 					<li><a class="link" id="nav_setting" href="javascript:;" onclick="openItem('setting');"><span>设置</span></a></li>
 					<li><a class="link" id="nav_lab" href="javascript:;" onclick="openItem('lab');"><span>实验室</span></a></li>
 					<li><a class="link" id="nav_member" href="javascript:;" onclick="openItem('member');"><span>实验员</span></a></li>
+					<li><a class="link" id="nav_goods" href="javascript:;" onclick="openItem('goods');"><span>货品</span></a></li>
+					{*
 					<li><a class="link" id="nav_team" href="javascript:;" onclick="openItem('team');"><span>队伍</span></a></li>
 					<li><a class="link" id="nav_stadium" href="javascript:;" onclick="openItem('stadium');"><span>场馆</span></a></li>
 					<li><a class="link" id="nav_game" href="javascript:;" onclick="openItem('game');"><span>赛事</span></a></li>
-					<li><a class="link" id="nav_lab_goods" href="javascript:;" onclick="openItem('lab_goods');"><span>货品</span></a></li>
+					<li><a class="link" id="nav_goods" href="javascript:;" onclick="openItem('goods');"><span>商品</span></a></li>
 					<li><a class="link" id="nav_trade" href="javascript:;" onclick="openItem('trade');"><span>交易</span></a></li>
 					<li><a class="link" id="nav_website" href="javascript:;" onclick="openItem('website');"><span>网站</span></a></li>
 					<li><a class="link" id="nav_operation" href="javascript:;" onclick="openItem('operation');"><span>运营</span></a></li>
 					<li><a class="link" id="nav_stat" href="javascript:;" onclick="openItem('stat');"><span>统计</span></a></li>
 					<li><a class="link" id="nav_weixin" href="javascript:;" onclick="openItem('weixin');"><span>微信营销</span></a></li>
 					<li><a class="link" id="nav_cms" href="javascript:;" onclick="openItem('cms');"><span>CMS</span></a></li>
+					*}
 					<li><a class="link" id="nav_authority" href="javascript:;" onclick="openItem('authority');"><span>权限</span></a></li>
 	            </ul>
 	          </nav>
@@ -400,7 +403,33 @@ $(function(){
                   <ol>
                     <li><a href="javascript:void(0);" id="index_lab_user" onclick="openItem('index,lab_user,member');">实验员管理</a></li>
                     <li><a href="javascript:void(0);" id="add_lab_user" onclick="openItem('add,lab_user,member');">添加实验员</a></li>
-                    {*<li><a href="javascript:void(0);" id="export_lab_user" onclick="openItem('export,lab_user,member');">导出实验员</a></li>*}
+                    <li><a href="javascript:void(0);" id="export_lab_user" onclick="openItem('export,lab_user,member');">导出实验员</a></li>
+                  </ol>
+                </dd>
+              </dl>
+            </li>
+          </ul>
+          <ul id="sort_goods">
+            <li>
+              <dl>
+                <dd>
+                  <ol>
+                    <li><a href="javascript:void(0);" id="index_lab_goods" onclick="openItem('index,lab_goods,goods');">货品</a></li>
+                    <li><a href="javascript:void(0);" id="index_lab_category" onclick="openItem('index,lab_category,goods');">货品分类</a></li>
+                  </ol>
+                </dd>
+              </dl>
+            </li>
+          </ul>
+          {*
+          <ul id="sort_member">
+            <li>
+              <dl>
+                <dd>
+                  <ol>
+                    <li><a href="javascript:void(0);" id="index_lab_user" onclick="openItem('index,lab_user,member');">实验员管理</a></li>
+                    <li><a href="javascript:void(0);" id="add_lab_user" onclick="openItem('add,lab_user,member');">添加实验员</a></li>
+                    <li><a href="javascript:void(0);" id="export_lab_user" onclick="openItem('export,lab_user,member');">导出实验员</a></li>
                   </ol>
                 </dd>
               </dl>
@@ -424,7 +453,6 @@ $(function(){
               </dl>
             </li>
           </ul>
-          
           <ul id="sort_stadium">
             <li>
               <dl>
@@ -437,7 +465,8 @@ $(function(){
               </dl>
             </li>
           </ul>
-          <ul id="sort_lab_goods">
+          
+          <ul id="sort_goods">
             <li>
               <dl>
                 <dd>
@@ -445,9 +474,9 @@ $(function(){
                   	<li><a href="javascript:void(0);" id="index_goods" onclick="openItem('index,goods,goods');">商品管理</a></li>
                     <li><a href="javascript:void(0);" id="category_goods_class" onclick="openItem('category,goods_class,goods');">分类管理</a></li>
                     <li><a href="javascript:void(0);" id="index_brand" onclick="openItem('index,brand,goods');">品牌管理</a></li>
-                    {*<li><a href="javascript:void(0);" id="type_goods" onclick="openItem('type,goods,goods');">类型管理</a></li>
+                    <li><a href="javascript:void(0);" id="type_goods" onclick="openItem('type,goods,goods');">类型管理</a></li>
                     <li><a href="javascript:void(0);" id="spec_goods" onclick="openItem('spec,goods,goods');">规格管理</a></li>
-                    <li><a href="javascript:void(0);" id="album_goods" onclick="openItem('album,goods,goods');">图片空间</a></li>*}
+                    <li><a href="javascript:void(0);" id="album_goods" onclick="openItem('album,goods,goods');">图片空间</a></li>
                   </ol>
                 </dd>
               </dl>
@@ -551,6 +580,7 @@ $(function(){
               </dl>
             </li>
           </ul>
+          *}
           <ul id="sort_authority">
             <li>
               <dl>

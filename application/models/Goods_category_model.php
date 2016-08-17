@@ -52,37 +52,19 @@ class Goods_Category_Model extends MY_Model {
     }
     
 	
-    /**
-     * 获得树形
-     */
-    public function getRealTree($data, $pid){
-    	$tree = '';
-		foreach($data as $k => $v)
-		{
-		   if($v['pid'] == $pid)
-		   {    //父亲找到儿子
-		    	$v['pid'] = $this->getRealTree($data, $v['id']);
-		    	$tree[] = $v;
-		   }
-		}
-		
-		return $tree;
-    }
-    
-    
     public function toXML($tree)
 	{
 		$xml = '';
 		foreach($tree as $t)
 		{
-		   if($t['pid'] == 0)
+		   if(empty($t['children']))
 		   {
 		   		$xml .= '<item text="'.$t['name'].'" id="'.$t['id'].'" open="1"></item>';
 		   }
 		   else
 		   {
 			    $xml .= '<item text="'.$t['name'].'" id="'.$t['id'].'" open="1">';
-			    $xml .= $this->toXML($t['pid']);
+			    $xml .= $this->toXML($t['children']);
 			    $xml = $xml."</item>";
 		   }
 		}

@@ -6,7 +6,7 @@
     {if $info['id']}
     <form name="userForm" method="post" action="{admin_site_url('lab_user/edit?id=')}{$info['id']}">
     <input type="hidden" name="id" value="{$info['id']}"/>
-	{elseif $action = 'edit'}
+	{else}
 	<form name="userForm" method="post" action="{admin_site_url('lab_user/add')}">
 	{/if}
 	<input type="hidden" name="lab_id" value="{$lab_id}"/>
@@ -40,6 +40,18 @@
           <td class="vatop rowform"><input type="password" value="" name="psw2" class="txt" placeholder="请输入{#psw2#}"></td>
           <td class="vatop tips"><label class="errtip" id="error_psw2"></label> </td>
         </tr>
+        {if $admin_profile['basic']['id'] == $smarty.const.LAB_FOUNDER_ID}
+        <tr class="noborder">
+          <td colspan="2" class="required"><label>{#set_manager#}:</label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform">
+          	<label><input type="radio" name="is_manager" value="y" {if $info['is_manager'] == 'y'}checked{/if}/>是</label>
+          	<label><input type="radio" name="is_manager" value="n" {if $info['is_manager'] == 'n'}checked{/if}/>否</label>
+          </td>
+          <td class="vatop tips"><label class="errtip" id="error_is_manager"></label> </td>
+        </tr>
+        {/if}
        </tbody>
     </table>
     <table class="autotable">
@@ -102,6 +114,7 @@
 		    var list = tree.getAllUnchecked(); 
 		    var ids = list.split(',');
 		    
+		    {* 全部不可选 *}
 		    {if $admin_profile['basic']['id'] != $smarty.const.LAB_FOUNDER_ID }
 		    for(var i = 0; i < ids.length; i++)
 		    {
@@ -113,6 +126,8 @@
 		    {/if}
 		    
 		    {include file="lab/tree_unexpand.tpl"}
+		    
+		    {* 当前登录为成员的实验室 设置 黑色  *}
 		    {if $user_labs}
 		        {foreach from=$user_labs item=item}
 		            {if $item != 0}
@@ -122,13 +137,13 @@
 		            }
 		            tree.setItemColor({$item}, "black", "blue");
 		            tree.disableCheckbox({$item},false);
-		            
-		                {if $action == 'add'}
+		                {if empty($info['id'])}
 		                tree.setCheck({$item}, true);
 		                {/if}
 		            {/if}
 		        {/foreach}
-		    
+		        
+		        {* 当前编辑用户 使得可选 *}
 		        {if $edit_user_labs}
 		            {foreach from=$edit_user_labs item=item}
 		            tree.disableCheckbox({$item},false);

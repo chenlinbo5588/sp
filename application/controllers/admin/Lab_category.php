@@ -8,21 +8,13 @@ class Lab_Category extends Ydzj_Admin_Controller {
     public function __construct(){
 		parent::__construct();
 		
-		if(!$this->_checkIsSystemManager()){
-			$this->show_access_deny();
-		}
-		$this->load->model('Goods_Category_Model');
+		$this->assign('action',$this->uri->rsegment(2));
+		$this->load->library('Goods_service');
    		
-		$this->assign('currentMenu',strtolower(get_class($this)));
     }
     
     public function index()
     {
-    	$this->assign('action','index');
-    	
-    	
-    	//$this->_getPageData();
-    	
         $this->display();
     }
     
@@ -32,34 +24,18 @@ class Lab_Category extends Ydzj_Admin_Controller {
    		
    		header("Content-type:text/xml");
    		
-   		/*
-   		echo '<?xml version="1.0" ?><tree id="0">';
-   		echo '<item text="实验室药品仪器分类" id="lab_categroy" open="1">';
-   		$categoryList = $data = $this->Goods_Category_Model->getList(array(
-    		'order' => 'pid ASC , id ASC'
-    	));
-    	
-    	
-    	$tree = $this->Goods_Category_Model->getRealTree($categoryList['data'],0);
-    	$xml = $this->Goods_Category_Model->toXML($tree);
-    	echo $xml;
-   		echo '</item></tree>';
-   		*/
-   		
-   		$str = $this->Lab_Cache_Model->queryById($this->_cacheKey,Lab_Admin_Controller::$CACHE_KEY_FIELD);
+   		$str = $this->Lab_Cache_Model->getFirstByKey($this->_cacheKey,'key_id');
    		if(empty($str)){
    			$str = $this->_writeCache();
-   			$str = $this->Lab_Cache_Model->queryById($this->_cacheKey,Lab_Admin_Controller::$CACHE_KEY_FIELD);
+   			echo $str;
+   		}else{
+   			echo $str['content'];
    		}
-   		
-   		echo $str['content'];
-   		
    	}
     
     
     public function compare($pid){
     	$id = $_POST['id'];
-    	
     	
     	$subIds = $this->Goods_Category_Model->getListByTree($id);
 		$ids = array();
@@ -85,26 +61,10 @@ class Lab_Category extends Ydzj_Admin_Controller {
     
     
     private function _writeCache(){
-    	
-    	$str[] = '<?xml version="1.0" ?><tree id="0">';
-   		$str[] = '<item text="实验室药品仪器分类" id="root" open="1">';
-   		$categoryList = $data = $this->Goods_Category_Model->getList(array(
-   			'where' => array(
-   				'status' => '正常'
-   			),
-    		'order' => 'pid ASC , id ASC'
-    	));
-    	
-    	
-    	$tree = $this->Goods_Category_Model->getRealTree($categoryList['data'],0);
-    	if($tree){
-    		$str[] = $this->Goods_Category_Model->toXML($tree);
-    	}
-    	
-   		$str[] = '</item></tree>';
+    	$xml = $this->goods_service->goodsCategoryXML();
+   		$this->Lab_Cache_Model->addByKey($this->_cacheKey,$xml);
    		
-   		$this->Lab_Cache_Model->addByKey($this->_cacheKey,implode('',$str));
-   		
+   		return $xml;
     }
     
     public function edit(){

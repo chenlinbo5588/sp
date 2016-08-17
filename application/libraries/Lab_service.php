@@ -21,6 +21,8 @@ class Lab_service extends Base_service {
 		$this->_labModel = self::$CI->Lab_Model;
 		$this->_labMemberModel = self::$CI->Lab_Member_Model;
 		$this->_labCacheModel = self::$CI->Lab_Cache_Model;
+		
+		
 	}
 	
 	
@@ -220,7 +222,13 @@ class Lab_service extends Base_service {
    		$list = $this->_labModel->getList($condition);
 		$tree = array();
 		
-		$tree = self::$CI->phptree->makeTree($list,array(
+		
+		//获得 祖先，才能将树构建起来 重要
+		foreach($list as $node){
+			$tree = $this->_labModel->getParents($node['id']);
+		}
+		
+		$tree = self::$CI->phptree->makeTree($tree,array(
 			'primary_key' => 'id',
 			'parent_key' => 'pid',
 			'expanded' => true

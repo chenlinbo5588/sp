@@ -379,7 +379,7 @@ background: #dde8f0;
 ------------------------------------------------------------------- */
 .menutd { background: url(../img/sky/left.png) repeat-y left top;}
 .main-menu{ position:relative; z-index:20; width:161px;}
-    .main-menu ul { background: url(../img/sky/left.png) repeat-y 0px 0px; display:none; width: 161px; position:absolute; top:10px; left:0px;}
+    .main-menu ul { background: url(../img/sky/left.png) repeat-y 0px 0px; display:none; width: 161px; position:absolute; top:0px; left:0px;}
         .main-menu li a , .main-menu li a.selected , .main-menu dl dt { line-height: 20px; text-decoration: none; color: #7394A4; background: url(../img/sky/bg_position.gif) no-repeat ; display: block; width: 120px; height: 20px; float: left; clear: left; padding: 4px 12px 4px 29px; margin: 0;}
         .main-menu li a { background-position: 0 -170px;}
         .main-menu li a.selected { color: #31444D; background-color: #CBE9F3; background-position: -161px -170px;}
@@ -427,7 +427,7 @@ background: #dde8f0;
 
 /* table
 ------------------------------------------------------------------- */
-.autotable {width:100%;};
+.autotable {width:100%;}
 
 .table { clear:both; width:100%; margin-top: 8px}
     .table th, .table td{ padding:5px; }
