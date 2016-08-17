@@ -1,5 +1,5 @@
-							 <form name="memberForm" action="{base_url('lab_admin/add_lab_user')}" method="post">
-							 <table class="rounded-corner center" id="user_table">
+							 {form_open(admin_site_url('lab/manager_lab_user'),'name="memberForm"')}
+							 <table class="rounded-corner" id="user_table">
 							    <colgroup>
 							        <col style="width:10%"/>
 							        <col style="width:10%"/>
@@ -33,7 +33,7 @@
 							    </tbody>
 							    <tfoot>
 			                        <tr>
-			                            <td colspan="7">{include file="pagination.tpl"}</td>
+			                            <td colspan="7">{include file="common/pagination.tpl"}</td>
 			                        </tr>
 			                    </tfoot>
 							</table>

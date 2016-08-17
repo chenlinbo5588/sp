@@ -56,16 +56,7 @@
         display:inline;
     }
     </style>
-  <div class="fixed-bar">
-    <div class="item-title">
-      <h3>{#title#}</h3>
-      <ul class="tab-base">
-      	<li><a href="{admin_site_url('lab/index')}"><span>{#manage#}</span></a></li>
-      	<li><a href="{admin_site_url('lab/add')}"><span>{#add#}</span></a></li>
-      	{if $info['id']}<li><a href="{admin_site_url('lab/edit?id='|cat:$info['id'])}" class="current"><span>{#edit#}</span></a></li>{/if}
-      </ul>
-    </div>
-  </div>
+  {include file="./lab_common.tpl"}
   <div class="fixed-empty"></div>
   <div class="feedback">{$feedback}</div>
     {include file="common/dhtml_tree.tpl"}
@@ -76,7 +67,7 @@
 		{form_open(admin_site_url('lab/add'),'name="labForm"')}
 	{/if}
 	<input type="hidden" name="pid" value="{if $info['pid']}{$info['pid']}{else}0{/if}"/>
-	<table>
+	<table class="autotable">
       <tbody>
       	<tr class="noborder">
           <td colspan="2" class="required"><label class="validation" for="address">{#lab_address#}:</label></td>
@@ -90,38 +81,35 @@
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input type="text" value="{$info['displayorder']|escape}" name="displayorder" id="displayorder" class="txt"></td>
-          <td class="vatop tips"><label class="errtip" id="error_displayorder"></label> 大于等于0的自然数，数字越大越靠前</td>
+          <td class="vatop tips"><label class="errtip" id="error_displayorder"></label> 大于等于0的自然数,最大9999，数字越大越靠前</td>
         </tr>
         <tr class="noborder">
           <td colspan="2" class="required"><label class="validation" for="parent">{#parent#}:</label><label class="errtip" id="error_pid"></label></td>
         </tr>
         <tr class="noborder">
-          <td class="vatop rowform">
+          <td colspan="2" class="vatop rowform">
           	  <span class="tip">鼠标双击实验室名称项进入实验室详情页 <span class="blue">蓝色文字表示您管辖的实验室</span><span id="pid_tip" class="hightlight">{form_error('pid')}</span></span>
 	          <div id="treeboxbox_tree1" class="rounded_box" style="height:400px;">
 	               <div id="loading_img" class="loading_div" style="display:none;"></div>
 	          </div>
           </td>
-          <td class="vatop tips"></td>
         </tr>
         
         {if $info['id']}
         <tr class="noborder">
-          <td class="vatop rowform">
-          	  <label>成员管理:</label><input class="form_submit" id="addUserBtn" type="button" name="addUser" value="成员管理"/>
-          	  <label>成员清单:</label>
-	          <div class="rounded_box" style="padding:0px;height:150px;overflow:auto;">
+          <td colspan="2" class="vatop rowform">
+          	  <input class="form_submit" id="addUserBtn" type="button" name="addUser" value="成员管理"/>
+	          <div class="rounded_box" style="padding:10px;overflow:auto;">
+	          	<label>成员清单:</label>
 	            <span class="manager_color color_sample">图例：管理员</span>
 	            <span class="member_color color_sample">图例：实验员</span>
 	            <ul class="lab_users clearfix">
 	                {foreach from=$userList item=item}
-	                <li id="row_{$item['user_id']}"><a {if $item['is_manager'] == 'y'}class="manager_color"{/if}" href="javascript:void(0);" data-width="300" data-title="成员详情"  data-href="{base_url('lab/get_join_info/id/')}{$item['user_id']}" >{$item['name']|escape}</a><span class="close" data-id="{$item['user_id']|escape}" data-title="{$item['name']|escape}">x</span></li>
+	                <li id="row_{$item['user_id']}"><a {if $item['is_manager'] == 'y'}class="manager_color"{/if}" href="javascript:void(0);" data-width="300" data-title="成员详情"  data-href="{base_url('lab/get_join_info?id=')}{$item['user_id']}" >{$item['name']|escape}</a><span class="close" data-id="{$item['user_id']|escape}" data-title="{$item['name']|escape}">x</span></li>
 	                {/foreach}
 	            </ul>
 	          </div>
-	          
           </td>
-          <td class="vatop tips"></td>
         </tr>
         {/if}
        </tbody>
@@ -131,9 +119,17 @@
         </tr>
       </tfoot>
       </form>
+	
+	  <div id="labMemberDlg" title="成员管理"><div id="userlist"></div></div>
+	  <div id="dialog-confirm" title="移除成员" style="display:none;"><p><span class="ui-icon ui-icon-alert" style="float:left;"></span>确定要移除成员<span class="memberName hightlight"></span>吗?</p></div>
+
+	 {include file="common/jquery_dlg.tpl"}
+
       <script>
 	    var user_labs = {$user_labs};
 	    var current_pid = {if $info['pid']}{$info['pid']}{else}""{/if};
+	    var dialog = null;
+	    
 	    var tree=new dhtmlXTreeObject("treeboxbox_tree1","100%","100%",0);
 	    tree.setImagePath("/static/js/dhtmlxTree_v413_std/skins/web/imgs/dhxtree_web/");
 	    
@@ -186,9 +182,10 @@
 	    
 	    function tondblclick(id){
 	        if(id == 'root'){
-	            return
+	            return;
+	        }else{
+	        	location.href= "{admin_site_url('lab/edit?id=')}" + id + "&" + Math.random();
 	        }
-	        location.href= "{admin_site_url('lab/edit/id/')}" + id + "?" + Math.random();
 	    }
 	    
 	    tree.setOnDblClickHandler(tondblclick);
@@ -205,6 +202,7 @@
 	        
 	        {include file="./tree_unexpand.tpl"}
 	        
+	        // 用户管理的实验室
 	        for(var i = 0 ; i < user_labs.length ; i++ )
 	        {
 	            if(user_labs[i] != 0){
@@ -230,76 +228,121 @@
 	            url:"{admin_site_url('lab_user/search')}",
 	              data: { id: {$info['id']} ,page: page , username: $("#search_username").val()},
 	              success:function(data){
-	                  $("#usertable").html(data);
+	              	$("#userlist").html(data);
+	              	dialog.dialog( "open" );
 	              }
 	        });
 	    }
 	    {/if}
 	    
 	    
+	    var successHandler = function(json){
+        	alert(json.message);
+	      	if(json.message == '操作成功'){
+	      		location.href= "{admin_site_url('lab/edit?id=')}" + id + "&" + Math.random();
+	      	}
+        };
+	    
 	    
 	    $(function(){
 	    	{include file="common/form_ajax_submit.tpl"}
 	    	
-	        {if $info['id']}
+	    	{if $info['id']}
+	    	dialog = $( "#labMemberDlg" ).dialog({
+			      autoOpen: false,
+			      height: 'auto',
+			      width: 800,
+			      modal: true,
+			      buttons: [
+			      	{
+				      text: "确定",
+				      icons: {
+				        primary: "ui-icon-heart"
+				      },
+				      click: function() {
+				      
+				      	if(!confirm("确定要进行管理操作吗？")){
+				      		return;
+				      	}
+				      	
+				      	$.ajax({
+                              type:"POST",
+                              url:"{admin_site_url('lab/manager_lab_user')}",
+                              dataType:"json",
+                              data: "id={$info['id']}&" + $("form[name=memberForm]").serialize(),
+                              success:successHandler
+                         });
+				      }
+				    },
+				    {
+				      text: "取消",
+				      icons: {
+				        primary: "ui-icon-heart"
+				      },
+				      click: function() {
+				         $( this ).dialog( "close" );
+				      }
+				    }
+				  ],
+			      close: function() { }
+			});
+			
+			
+	        
 	        $("body").delegate("#search_btn","click",function(){
 	            ajaxPage(1);
 	        });
 	        
 	        $("#addUserBtn").bind("click",function(){
-	        	
-	        	ajax_form('search','成员维护','{admin_site_url("member/pic_cut")}?type=member&x={$avatarImageSize['m']['width']}&y={$avatarImageSize['m']['height']}&resize=0&ratio=1&url='+data.url,800);
-	        	
-	        	/*
-	            $.jBox("get:{admin_site_url('lab_user/search_popup?id=')}{$info['id']}",{ 
-		            title:"查找用户",
-		            width:570,
-		            height:'auto',
-		            buttons:{ "确定" : 1, "取消" : 0 },
-		            submit: function (v, o, f) {
-		                //console.log(v);
-		                if (v == 0) {
-				            return true; // close the window
-				        }else if(v == 1){
-				             $.ajax({
-	                              type:"POST",
-	                              url:"{admin_site_url('lab/manager_lab_user')}",
-	                              dataType:"json",
-	                              data: "id={$info['id']}&" + $("form[name=memberForm]").serialize(),
-	                              success:ajax_success
-	                         });
-				        }
-				        
-		                return true;
-		            },
-		            loaded:function(h){
-		                
-		            }
-		        });
-		        
-		        */
+	        	$.ajax({
+	        		type:"GET",
+	        		url:"{admin_site_url('lab_user/search?id=')}{$info['id']}&t=" + Math.random(),
+	        		success:function(resp){
+	        			$("#userlist").html(resp);
+	        			dialog.dialog( "open" );
+	        		}
+	        	});
 	        });
 	        
-	        $.loadingbar({ urls: [ new RegExp("{admin_site_url('lab/manager_lab_user') }") ], templateData:{ message:"努力加载中..." }   });
+	        $.loadingbar({ urls: [ new RegExp("{admin_site_url('lab/manager_lab_user') }"),new RegExp("{admin_site_url('lab_user/search') }") ], templateData:{ message:"努力加载中..." } , container: "#labMemberDlg" });
 	        
 	        $(".close").bind("click",function(){
-	            var user_id = $(this).attr("data-id");
-	            var user_name = $(this).attr("data-title");
-	            var submit = function (v, h, f) {
-	                if (v == 'ok'){
-	                     $.ajax({
+	        	var user_id = $(this).attr("data-id");
+                var user_name = $(this).attr("data-title");
+                var alink = $(this);
+                
+                $( "#dialog-confirm .memberName" ).html(user_name);
+                
+	        	$( "#dialog-confirm" ).dialog({
+			      resizable: false,
+			      height: "auto",
+			      width: 400,
+			      modal: true,
+			      position: { my: "left bottom", at: "left bottom", of: alink },
+			      buttons: {
+			        "确定": function() {
+			          $.ajax({
 	                          type:"POST",
 	                          url:"{admin_site_url('lab/delete_lab_user')}",
 	                          dataType:"json",
 	                          data: { id: {$info['id']} , user_id: user_id},
-	                          success:ajax_success
+	                          success:function(json){
+	                          	 alert('删除成功');
+	                          	 if(json.message == '删除成功'){
+	                          	 	$("#row_" + user_id).fadeOut();
+	                          	 }
+	                          },
+	                          error:function(XMLHttpRequest, textStatus, errorThrown){
+	                          }
 	                     });
-	                }
-	            
-	                return true;
-	            };
-	            
-	            $.jBox.confirm("确定把实验员 " + user_name + " 从当前实验室删除吗？", "提示", submit);
+	                     
+			          $( this ).dialog( "close" );
+			        },
+			        "取消": function() {
+			          $( this ).dialog( "close" );
+			        }
+			      }
+			    });
 	        });
 	        {/if}
 	    });

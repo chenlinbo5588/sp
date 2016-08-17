@@ -34,8 +34,6 @@ class Adminuser_Model extends MY_Model {
     
     public function add($user){
         
-        $now = time();
-        
         if(!$user['psw']){
             $user['psw'] = md5(config_item('encryption_key').config_item('default_password'));
         }else{
@@ -57,6 +55,31 @@ class Adminuser_Model extends MY_Model {
         
         return $this->_add($data);
     }
+    
+    /**
+     * 
+     */
+    public function updateInfo($user){
+        
+        $data = array(
+            'name' => $user['name'],
+            'updator' => $user['updator']
+        );
+        
+        if(!$user['psw']){
+            $data['psw'] = md5(config_item('encryption_key').config_item('default_password'));
+        }else{
+            $data['psw'] = md5(config_item('encryption_key').$user['psw']);
+        }
+        
+        if($user['is_manager'] == 'y'){
+        	$data['is_manager'] = $user['is_manager'];
+        }
+        
+        return $this->update($data,array('id' => $user['id']));
+    }
+    
+    
     
     /**
      * really delete

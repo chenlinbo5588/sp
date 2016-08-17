@@ -1,6 +1,9 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+
+$config['default_password'] = '123456';
+
 /**
  * api 密钥配置
  */

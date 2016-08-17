@@ -1,18 +1,10 @@
 {include file="common/main_header.tpl"}
 {config_load file="lab.conf"}
-	<div class="fixed-bar">
-    <div class="item-title">
-      <h3>{#title#}</h3>
-      <ul class="tab-base">
-      	<li><a href="{admin_site_url('lab/index')}"><span>{#manage#}</span></a></li>
-      	<li><a href="{admin_site_url('lab/add')}"><span>{#add#}</span></a></li>
-      </ul>
-    </div>
-  </div>
+  {include file="./lab_common.tpl"}
   <div class="fixed-empty"></div>
   <div class="feedback">{$feedback}</div>
    {include file="common/dhtml_tree.tpl"}
-	<table class="table tb-type2" id="prompt">
+	<table class="autotable" id="prompt">
 	    <tbody>
 	      <tr class="space odd">
 	        <th colspan="12"><div class="title"><h5>操作提示</h5><span class="arrow"></span></div>
@@ -30,7 +22,7 @@
 	      </tr>
 	    </tbody>
 	  </table>
-      <div id="catelist" style="max-width:800px;">
+      <div id="catelist" style="max-width:750px;">
         <div class="rounded_box">
           <div id="treeboxbox_tree1"></div>
           <div id="loading_img" class="loading_div" style="display:none;"></div>
@@ -63,9 +55,8 @@
         var successHandler = function(json){
         	alert(json.message);
 	      	if(json.message == '操作成功'){
-	      		//location.href = "{admin_site_url('lab/index')}";
+	      		location.href = "{admin_site_url('lab/index')}";
 	      	}
-        
         };
         
         function tondrag(id,id2){

@@ -386,7 +386,7 @@ $(function(){
                 <dd>
                   <ol>
                     <li><a href="javascript:void(0);" id="index_lab" onclick="openItem('index,lab,lab');">实验室管理</a></li>
-                    <li><a href="javascript:void(0);" id="add_lab" onclick="openItem('member,lab,lab');">添加实验室</a></li>
+                    <li><a href="javascript:void(0);" id="add_lab" onclick="openItem('add,lab,lab');">添加实验室</a></li>
                     <li><a href="javascript:void(0);" id="export_lab" onclick="openItem('export,lab,lab');">导出实验室</a></li>
                   </ol>
                 </dd>
@@ -398,11 +398,9 @@ $(function(){
               <dl>
                 <dd>
                   <ol>
-                    <li><a href="javascript:void(0);" id="index_member" onclick="openItem('index,member,member');">会员管理</a></li>
-                    <li><a href="javascript:void(0);" id="member_notify" onclick="openItem('member,notify,member');">会员通知</a></li>
-                    <li><a href="javascript:void(0);" id="credits_member" onclick="openItem('credits,member,member');">积分管理</a></li>
-                    <li><a href="javascript:void(0);" id="album_member" onclick="openItem('album,member,member');">会员相册</a></li>
-                    <li><a href="javascript:void(0);" id="tag_member" onclick="openItem('tag,member,member');">会员标签</a></li>
+                    <li><a href="javascript:void(0);" id="index_lab_user" onclick="openItem('index,lab_user,member');">实验员管理</a></li>
+                    <li><a href="javascript:void(0);" id="add_lab_user" onclick="openItem('add,lab_user,member');">添加实验员</a></li>
+                    {*<li><a href="javascript:void(0);" id="export_lab_user" onclick="openItem('export,lab_user,member');">导出实验员</a></li>*}
                   </ol>
                 </dd>
               </dl>
@@ -568,7 +566,7 @@ $(function(){
           </ul>
         </div>
         <div class="copyright">
-            <p>Powered By <em><a href="{site_url('index')}" target="_blank"><span class="vol"><font class="b">{config_item('site_name')}</font></span></a></em></p>
+            <p>Powered By <em><a href="{site_url('index')}" target="_blank"><span class="vol"><font class="b">{config_item('site_name')} V3.0</font></span></a></em></p>
             <p>&copy;2010-{$smarty.now|date_format:"%Y"} <a href="{site_url('index')}" target="_blank">Jay Inc.</a></p>
         </div>
       </td>

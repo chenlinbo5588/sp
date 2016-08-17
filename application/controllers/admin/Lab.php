@@ -7,6 +7,7 @@ class Lab extends Ydzj_Admin_Controller {
     public function __construct(){
 		parent::__construct();
 		
+		$this->assign('action',$this->uri->rsegment(2));
 		/*
 		if(!$this->_checkIsSystemManager()){
 			$this->show_access_deny();
@@ -17,7 +18,6 @@ class Lab extends Ydzj_Admin_Controller {
     
     public function index()
     {
-    	$this->assign('action','index');
         $this->display();
     }
     
@@ -36,63 +36,67 @@ class Lab extends Ydzj_Admin_Controller {
 		
 	}
     
+    
+    /**
+     * 导出数据
+     */
     public function export(){
+    	if($this->isPostRequest()){
+    		$this->load->helper('download');
     	
-    	$this->load->helper('download');
+	    	//$condition['select'] = 'a,b';
+	        $condition['order'] = "id  ASC , pid ASC";
+	        
+	        if(!empty($_GET['name'])){
+	            $condition['like']['name'] = $_GET['name'];
+	        }
+	        
+	        $condition['where']['status'] = '正常';
+	        
+	        if($this->_loginUID != LAB_FOUNDER_ID){
+	        	$condition['where_in'][] = array(
+	        		'key' => 'id',
+	        		'value' => $this->session->userdata['user_labs']
+	        	);
+	        }
+	        
+	        $this->Lab_Model->clearMenuTree();
+	        $data = $this->Lab_Model->getList($condition);
+	
+	    	require_once PHPExcel_PATH.'PHPExcel.php';
+	    	
+	    	$cacheMethod = PHPExcel_CachedObjectStorageFactory::cache_to_discISAM; 
+	        $cacheSettings = array( 'dir'  => PHPExcel_TEMP_PATH );
+	        PHPExcel_Settings::setLocale('zh_CN');
+	        PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
+	        
+	        $objPHPExcel = new PHPExcel();
+	    	$objPHPExcel->setActiveSheetIndex(0);
+	    	
+	    	$title = "lab";
+	    	
+	        $objPHPExcel->getActiveSheet()->setTitle($title);
+	    	
+	    	
+	    	$this->_writeTitleLine($objPHPExcel);
+	    	$this->_writeDetailTitleLine($objPHPExcel,2,$this->_getExcelColumnConfig());
+	    	$this->_writeDetailLine($objPHPExcel,3,$data);
+	    	
+	    	
+	    	$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+	    	
+	    	$showFilename = "{$title}.xls";
+	        $filename = "{$title}".$this->_loginUID.".xls";
+	        
+	        $objWriter->save(PHPExcel_TEMP_PATH.$filename);
+	        $objPHPExcel->disconnectWorksheets(); 
+	        unset($objPHPExcel,$objWriter);
+	        
+	        force_download($showFilename,  file_get_contents(PHPExcel_TEMP_PATH.$filename));
+    	}else{
+    		$this->display();
+    	}
     	
-    	
-    	//$condition['select'] = 'a,b';
-        $condition['order'] = "id  ASC , pid ASC";
-        
-
-        if(!empty($_GET['name'])){
-            $condition['like']['name'] = $_GET['name'];
-        }
-        
-        $condition['where']['status'] = '正常';
-        
-        
-        if($this->_loginUID != LAB_FOUNDER_ID){
-        	$condition['where_in'][] = array(
-        		'key' => 'id',
-        		'value' => $this->session->userdata['user_labs']
-        	);
-        }
-        
-        $this->Lab_Model->clearMenuTree();
-        $data = $this->Lab_Model->getList($condition);
-    	
-
-    	require_once PHPExcel_PATH.'PHPExcel.php';
-    	
-    	$cacheMethod = PHPExcel_CachedObjectStorageFactory::cache_to_discISAM; 
-        $cacheSettings = array( 'dir'  => ROOTPATH.'/temp' );
-        PHPExcel_Settings::setLocale('zh_CN');
-        PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
-        
-        $objPHPExcel = new PHPExcel();
-    	$objPHPExcel->setActiveSheetIndex(0);
-    	
-    	
-    	$title = "实验室列表";
-    	
-        $objPHPExcel->getActiveSheet()->setTitle($title);
-    	
-    	
-    	$this->_writeTitleLine($objPHPExcel);
-    	$this->_writeDetailTitleLine($objPHPExcel,2,$this->_getExcelColumnConfig());
-    	$this->_writeDetailLine($objPHPExcel,3,$data);
-    	
-    	
-    	$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
-    	
-    	$showFilename = "{$title}.xls";
-        $filename = "{$title}".$this->_userProfile['id'].".xls";
-        
-        $objWriter->save(ROOT_DIR.'/temp/'.$filename);
-        $objPHPExcel->disconnectWorksheets(); 
-        unset($objPHPExcel,$objWriter); 
-        force_download($showFilename,  file_get_contents(ROOT_DIR.'/temp/'.$filename));
     }
     
     private function _writeTitleLine($objPHPExcel){
@@ -127,12 +131,12 @@ class Lab extends Ydzj_Admin_Controller {
     
     private function _writeDetailLine($objPHPExcel, $row_start , $list){
     	
-    	if(empty($list['data'])){
+    	if(empty($list)){
     		return;
     	}
     	
         $i = 0;
-        foreach($list['data'] as $p){
+        foreach($list as $p){
             $current_row = $i + $row_start;
             $objPHPExcel->getActiveSheet()->setCellValue('A'.$current_row,$p['address']);
             $i++;
@@ -266,7 +270,7 @@ class Lab extends Ydzj_Admin_Controller {
     private function _addRules(){
     	
     	if(!empty($this->input->post('displayorder'))){
-    		$this->form_validation->set_rules('displayorder','排序',  'required|is_natural_no_zero');
+    		$this->form_validation->set_rules('displayorder','排序',  'required|is_natural_no_zero|less_than_equal_to[9999]');
     	}
 		
     	/*
@@ -307,7 +311,10 @@ class Lab extends Ydzj_Admin_Controller {
 		return $userIds;
 	}
 
-
+	
+	/**
+	 * 编辑实验室
+	 */
     public function edit(){
 		
 		$isLabManager = false;
@@ -324,21 +331,21 @@ class Lab extends Ydzj_Admin_Controller {
 			}
 			
 			$this->form_validation->set_rules('id','实验室id',  'required');
-			$this->form_validation->set_rules('address', '实验室地址', 'required|is_unique_not_self['.$this->Lab_Model->_tableName.'.address.id.'.$id.']');
+			$this->form_validation->set_rules('address', '实验室地址', 'required|is_unique_not_self['.$this->Lab_Model->getTableRealName().'.address.id.'.$id.']');
 			$this->form_validation->set_rules('pid','父级',  'is_natural|callback_checkowner|callback_compare');
 			$this->_addRules();
 			
 			for($i = 0; $i < 1; $i++){
 				
 				if(!$isLabManager){
-					$feedback = '对不起，您不是该实验室的管理员，无权修改';
-					
-					$info = $_POST;
+					$this->jsonOutput('对不起，您不是该实验室的管理员，无权修改');
 					break;
 				}
 				
 				if(!$this->form_validation->run()){
-					$feedback = '数据不能通过校验,修改失败';
+					$d['errors'] = $this->form_validation->error_array();
+					$this->jsonOutput($this->form_validation->error_string(' ',' '),$d);
+					break;
 				}
 				
 				$flag = $this->Lab_Model->update(array(
@@ -353,7 +360,11 @@ class Lab extends Ydzj_Admin_Controller {
 					$this->_updateCache();
 				}
 				
-				$info = $this->Lab_Model->queryById($id);
+				if($flag >= 0){
+					$this->jsonOutput('保存成功');
+				}else{
+					$this->jsonOutput($this->db->get_error_info());
+				}
 			}
 			
 		}else{
@@ -370,104 +381,112 @@ class Lab extends Ydzj_Admin_Controller {
     
     
     public function get_join_info(){
-    	
-    	
     	$this->display();
     }
     
     
-    
+    /**
+     * 
+     */
     public function manager_lab_user(){
+    	
+    	$id = $this->input->get_post('id');
+    	
     	if($this->isPostRequest()){
     		
-    		$id = $_POST['id'];
-    		if($this->_userProfile['id'] != LAB_FOUNDER_ID && !$this->Lab_Member_Model->getLabManager($this->_userProfile['id'],$id)){
-    			$this->sendFormatJson('failed',array('text' => '对不起，您不是这个实验室的管理员，无权管理'));
+    		for($i = 0; $i < 1; $i++){
+    			if($this->_loginUID != LAB_FOUNDER_ID && !$this->Lab_Member_Model->getLabManager($this->_loginUID,$id)){
+	    			$this->jsonOutput('对不起，您不是这个实验室的管理员，无权管理');
+	    			break;
+	    		}
+	    		
+	    		$userNeedAdd = array();
+	    		$userNeedDelete = array();
+	    		$changed = false;
+	    		
+	    		//新进成员
+	    		if(is_array($_POST['user_id'])){
+	    			foreach($_POST['user_id'] as $user_id){
+	    				$userNeedAdd['u_'.$user_id] = 'n';
+	    			}
+	    		}
+	    		
+	    		//新管理员
+	    		if(is_array($_POST['be_manager'])){
+	    			foreach($_POST['be_manager'] as $user_id){
+	    				$userNeedAdd['u_'.$user_id] = 'y';
+	    			}
+	    		}
+	    		
+	    		//即将删除管理员
+	    		if(is_array($_POST['drop_manager'])){
+	    			foreach($_POST['drop_manager'] as $user_id){
+	    				$userNeedAdd['u_'.$user_id] = 'n';
+	    			}
+	    		}
+	    		
+	    		
+	    		$insData = array();
+	    		foreach($userNeedAdd as $k => $v){
+	    			$uid = intval(str_replace('u_','',$k));
+	    			$insData[$uid] = array(
+	    				'user_id' => $uid,
+		    			'lab_id' => $id,
+		    			'is_manager' => $v,
+		    			'uid' => $this->_loginUID,
+		    			'creator' => $this->_adminProfile['basic']['name']
+	    			);
+	    		}
+	    		
+	    		
+	    		if($insData){
+	    			//$this->Lab_Member_Model->batch
+	    			$rows = $this->Lab_Member_Model->addMultiUserLabs($insData);
+	    			$changed = $rows > 0 ? true : false;
+	    		}
+	    		
+	    		
+	    		if($_POST['drop_user_id'] && is_array($_POST['drop_user_id'])){
+	    			
+	    			/**
+	    			 * 删除lab 成员
+	    			 */
+	    			$dropRow = $this->Lab_Member_Model->deleteUsersByLabId($id,$_POST['drop_user_id'],array_unique(array(LAB_FOUNDER_ID , $this->_loginUID)));
+	    		}
+	    		
+	    		$this->jsonOutput('操作成功');
     		}
-    		
-    		$userNeedAdd = array();
-    		$userNeedDelete = array();
-    		$changed = false;
-    		
-    		//新进成员
-    		if(is_array($_POST['user_id'])){
-    			foreach($_POST['user_id'] as $user_id){
-    				$userNeedAdd['u_'.$user_id] = 'n';
-    			}
-    		}
-    		
-    		//新管理员
-    		if(is_array($_POST['be_manager'])){
-    			foreach($_POST['be_manager'] as $user_id){
-    				$userNeedAdd['u_'.$user_id] = 'y';
-    			}
-    		}
-    		
-    		//删除管理员
-    		if(is_array($_POST['drop_manager'])){
-    			foreach($_POST['drop_manager'] as $user_id){
-    				$userNeedAdd['u_'.$user_id] = 'n';
-    			}
-    		}
-    		
-    		
-    		$insData = array();
-    		foreach($userNeedAdd as $k => $v){
-    			$uid = intval(str_replace('u_','',$k));
-    			$insData[$uid] = array(
-    				'user_id' => $uid,
-	    			'lab_id' => $id,
-	    			'is_manager' => $v,
-	    			'uid' => $this->_userProfile['id'],
-	    			'creator' => $this->_userProfile['name']
-    			);
-    		}
-    		
-    		
-    		if($insData){
-    			$this->Lab_Member_Model->addMultiUserLabs($insData);
-    			$changed = true;
-    		}
-    		
-    		if($_POST['drop_user_id'] && is_array($_POST['drop_user_id'])){
-    			$this->Lab_Member_Model->deleteUsersByLabId($id,$_POST['drop_user_id'] , array(LAB_FOUNDER_ID , $this->_userProfile['id']));
-    			$changed = true;
-    		}
-    		
-    		if($changed){
-    			$this->sendFormatJson('success',array('text' => '操作成功' ,'wait' => 1) , base_url('lab_admin/edit/id/'.$id));
-    		}else{
-    			$this->sendFormatJson('success',array('text' => '操作成功' , 'do_not_tip' => true));
-    		}
-    		
     	}else{
-    		$this->sendFormatJson('failed',array('text' => '请求错误'));
+    		$this->jsonOutput('请求参数错误');
     	}
     	
     }
     
     
+    /**
+     * 删除
+     */
     public function delete_lab_user(){
     	if($this->isPostRequest()){
+    		$id = $this->input->post('id');
+    		$user_id = $this->input->post('user_id');
     		
-    		$id = $_POST['id'];
-    		$user_id = $_POST['user_id'];
-    		
-    		if($user_id == LAB_FOUNDER_ID){
-    			$this->sendFormatJson('failed',array('text' => '对不起，无法从实验室删除创始人'));
+    		for($i = 0; $i < 1; $i++){
+    			if($user_id == LAB_FOUNDER_ID){
+    				$this->jsonOutput('对不起，无法从实验室删除创始人');
+    				break;
+	    		}
+	    		
+	    		if(!$this->lab_service->getLabManager($this->_loginUID,$id)){
+	    			$this->jsonOutput('对不起，您不是这个实验室的管理员，无权删除');
+	    		}
+	    		
+	    		$this->Lab_Member_Model->deleteByUserIdAndLabId($user_id,$id);
+	    		$this->jsonOutput('删除成功');
     		}
-    		
-    		if(!$this->Lab_Member_Model->getLabManager($this->_userProfile['id'],$id)){
-    			$this->sendFormatJson('failed',array('text' => '对不起，您不是这个实验室的管理员，无权删除'));
-    		}
-    		
-    		$this->Lab_Member_Model->deleteByUserIdAndLabId($user_id,$id);
-    		$this->sendFormatJson('success',array('id' => $user_id , 'text' => '删除成功' ,'operation' => "delete" ));
-    		
     	}else{
-    		$this->sendFormatJson('failed',array('text' => '请求错误'));
+    		$this->jsonOutput('请求参数错误');
     	}
-    	
     }
     
     
@@ -544,7 +563,7 @@ class Lab extends Ydzj_Admin_Controller {
 			}
 			
 		}else{
-			$this->sendFormatJson('请求参数错误');
+			$this->jsonOutput('请求参数错误');
 		}
     	
     }

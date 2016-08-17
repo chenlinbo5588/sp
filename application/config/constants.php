@@ -90,6 +90,7 @@ define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
 define('SMARTY_TPL_PATH',APPPATH.'smarty_tpl/');
 define('EntityPATH',APPPATH.'entity/');
 define('PHPExcel_PATH',ROOTPATH.'/Classes/');
+define('PHPExcel_TEMP_PATH',ROOTPATH.'/temp/');
 
 define('FROM_BACKGROUND',1);
 define('WEBSITE_FOUNDER',1);

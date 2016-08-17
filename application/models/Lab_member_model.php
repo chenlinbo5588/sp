@@ -60,12 +60,9 @@ class Lab_Member_Model extends MY_Model {
     			'uid' => $user['uid'],
     			'creator' => $user['creator'],
     			'updator' => $user['creator'],
-    			'gmt_create' => $now,
-    			'gmt_modify' => $now
     		);
     		
-    		$this->db->replace($this->_tableName, $ins);
-    		$affect += $this->db->affected_rows();
+    		$affect += $this->_add($ins,true);
     		
     	}
     	return $affect;
@@ -86,14 +83,11 @@ class Lab_Member_Model extends MY_Model {
         			'is_manager' => $is_manager,
         			'uid' => $uid,
         			'creator' => $creator,
-        			'updator' => $creator,
-        			'gmt_create' => $now,
-        			'gmt_modify' => $now
+        			'updator' => $creator
         		);
         	}
         	
-        	$this->db->insert_batch($this->_tableName, $data); 
-        	return $this->db->affected_rows();
+        	return $this->batchInsert($data); 
         	
         }else{
         	return $this->singleAdd($user_id,$labs , $is_manager, $uid , $creator);
@@ -171,6 +165,10 @@ class Lab_Member_Model extends MY_Model {
     
     /**
      * 删除用户 lab 归属
+     * 
+     * 将一个用户从 一个或者多个实验室从移除
+     * 
+     * 
      */
     public function deleteByUserIdAndLabId($user_id ,$lab_id){
     	
@@ -197,6 +195,10 @@ class Lab_Member_Model extends MY_Model {
     	return $this->deleteByWhere(array('lab_id' => $lab_id));
     }
     
+    
+    /**
+     * 从
+     */
     public function deleteUsersByLabId($lab_id , $users , $createFrom = array()){
     	
     	$this->db->where_in('user_id', $users);
@@ -204,7 +206,7 @@ class Lab_Member_Model extends MY_Model {
     	if($createFrom){
     		$this->db->where_in('uid', $createFrom);
     	}
-    	$this->db->where_in('lab_id', $lab_id);
+    	$this->db->where('lab_id', $lab_id);
     	$this->db->delete($this->_tableRealName);
     	return $this->db->affected_rows();
     	

@@ -209,9 +209,12 @@ class Lab_service extends Base_service {
    		
    		if($uid && $uid != LAB_FOUNDER_ID){
    			$labs = self::$CI->session->userdata('user_labs');
-   			$condition['where_in'] = array(
-   				array('key' => 'id', 'value' => $labs)
-   			);
+   			
+   			if($labs){
+   				$condition['where_in'] = array(
+	   				array('key' => 'id', 'value' => $labs)
+	   			);
+   			}
    		}
    		
    		$list = $this->_labModel->getList($condition);
@@ -305,4 +308,15 @@ class Lab_service extends Base_service {
 		
 		return $userIds;
 	}
+	
+	/**
+	 * 
+	 */
+	public function getUserLabList($user_id){
+    	return $this->_labMemberModel->getList(array(
+    		'where' => array(
+    			'user_id' => $user_id
+    		)
+    	));
+    }
 }
