@@ -40,8 +40,10 @@ class Lab extends Ydzj_Admin_Controller {
 	    	//$condition['select'] = 'a,b';
 	        $condition['order'] = "id  ASC , pid ASC";
 	        
-	        if(!empty($_GET['name'])){
-	            $condition['like']['name'] = $_GET['name'];
+	        $name = trim($this->input->get_post('name'));
+	        
+	        if(!empty($name)){
+	            $condition['like']['name'] = $name;
 	        }
 	        
 	        $condition['where']['status'] = '正常';
@@ -262,7 +264,9 @@ class Lab extends Ydzj_Admin_Controller {
     
     private function _addRules(){
     	
-    	if(!empty($this->input->post('displayorder'))){
+    	$displayorder = $this->input->post('displayorder');
+    	
+    	if(!empty($displayorder)){
     		$this->form_validation->set_rules('displayorder','排序',  'required|is_natural_no_zero|less_than_equal_to[9999]');
     	}
 		
