@@ -1,209 +1,182 @@
-{include file="common/main_header.tpl"}
-  <div class="fixed-bar">
-    <div class="item-title">
-      <h3>商品</h3>
-      <ul class="tab-base">
-      	<li><a href="{admin_site_url('goods/index')}"><span>管理</span></a></li>
-      	<li><a class="current"><span>{if $info['goods_id']}编辑{else}新增{/if}</span></a></li>
-      </ul>
+{include file="common/lab_admin_header.tpl"}
+    <div class="submenu">
+        <div class="clear"></div>
     </div>
-  </div>
-  <div class="fixed-empty"></div>
-  <div class="feedback">{$feedback}</div>
-  {if $info['goods_id']}
-  {form_open_multipart(admin_site_url('goods/edit'),'id="goods_form"')}
-  {else}
-  {form_open_multipart(admin_site_url('goods/add'),'id="goods_form"')}
-  {/if}
-  	<input type="hidden" name="goods_id" value="{$info['goods_id']}"/>
-    <table class="table tb-type2">
-      <tbody>
-        <tr class="noborder">
-          <td colspan="2" class="required"><label class="validation" for="goods_name">商品名称:</label></td>
-        </tr>
-        <tr class="noborder">
-          <td class="vatop rowform"><input type="text" value="{$info['goods_name']|escape}" name="goods_name" id="goods_name" maxlength="20" class="txt"></td>
-          <td class="vatop tips">{form_error('goods_name')}</td>
-        </tr>
-        <tr class="noborder">
-          <td colspan="2" class="required"><label class="validation" for="goods_name">商品代码:{$info['goods_code']}</label></td>
-        </tr>
-        <tr>
-          <td colspan="2" class="required"><label for="brandId">品牌:</label></td>
-        </tr>
-        <tr class="noborder">
-          <td class="vatop rowform">
-          	<select name="brand_id" id="brandId">
-	          <option value="">请选择...</option>
-	          {foreach from=$brandList item=item}
-	          <option {if $info['brand_id'] == $item['brand_id']}selected{/if} value="{$item['brand_id']}">{$item['brand_name']}</option>
-	          {/foreach}
-	        </select>
-          </td>
-          <td class="vatop tips">{form_error('brand_id')} 商品的品牌</td>
-        </tr>
-        <tr>
-          <td colspan="2" class="required"><label class="validation" for="goodsClassId">商品分类:</label></td>
-        </tr>
-        <tr class="noborder">
-          <td class="vatop rowform">
-          	<select name="gc_id" id="goodsClassId">
-	          <option value="">请选择...</option>
-	          {foreach from=$goodsClassList item=item}
-	          <option {if $info['gc_id'] == $item['gc_id']}selected{/if} value="{$item['gc_id']}">{str_repeat('......',$item['level'])}{$item['level']+1} {$item['gc_name']}</option>
-	          {/foreach}
-	        </select>
-          </td>
-          <td class="vatop tips">{form_error('class_id')} 商品的分类</td>
-        </tr>
-        <tr>
-          <td colspan="2" class="required">商品主图: </td>
-        </tr>
-        <tr class="noborder">
-          <td class="vatop rowform">
-          	<input type="hidden" name="old_pic" value="{if $info['goods_pic']}{$info['goods_pic']}{/if}"/>
-          	<span class="type-file-show">
-          		<img class="show_image" src="{resource_url('img/preview.png')}">
-          		<div class="type-file-preview">{if !empty($info['goods_pic'])}<img src="{resource_url($info['goods_pic'])}">{/if}</div>
-            </span>
-            <span class="type-file-box"><input type='text' name='goods_pic_txt' value="{if $info['goods_pic']}{$info['goods_pic']}{/if}" id='goods_pic_txt' class='type-file-text' /><input type='button' name='button' id='button1' value='' class='type-file-button' />
-            <input name="goods_pic" type="file" class="type-file-file" id="goods_pic" size="30" hidefocus="true" nc_type="change_brand_logo">
-            </span></td>
-          <td class="vatop tips"><span class="vatop rowform">上传商品默认主图，如多规格值时将默认使用该图或分规格上传各规格主图；支持jpg，建议使用尺寸800x800像素以上、大小不超过1M的正方形图片，上传后的图片将会自动保存在图片空间的默认分类中。</span></td>
-        </tr>
-       	<tr>
-          <td colspan="2" class="required">商品展示图片上传(JPG格式 , 用于显示在详情页面):</td>
-        </tr>
-        <tr class="noborder">
-          <td colspan="2" id="divComUploadContainer"><input type="file" multiple="multiple" id="fileupload" name="fileupload" /></td>
-        </tr>
-        <tr>
-       		<td colspan="2">
-       			<ul id="thumbnails" class="thumblists">
-       			{foreach from=$fileList item=item}
-       			<li id="{$item['id']}" class="picture"><input type="hidden" name="file_id[]" value="{$item['id']}" /><div class="size-64x64"><span class="thumb"><i></i><img src="{resource_url($item['file_url'])}" alt="" width="64px" height="64px"/></span></div><p><span><a href="javascript:insert_editor('{resource_url($item['file_url'])}');">插入</a></span><span><a href="javascript:del_file_upload('{$item['id']}');">删除</a></span></p></li>
-       			{/foreach}
-       			</ul>
-       		</td>
-       	</tr>
-        <tr>
-          <td colspan="2" class="required"><label class="validation">商品描述: </label>{form_error('goods_intro')}</td>
-        </tr>
-        <tr>
-        	<td colspan="2" ><textarea id="goods_intro" name="goods_intro" style="width:100%;height:480px;visibility:hidden;">{$info['goods_intro']}</textarea></td>
-        	{include file="common/ke.tpl"}
-			<script type="text/javascript">
-	            var editor1;
-				
-	            KindEditor.ready(function(K) {
-	                editor1 = K.create('textarea[name="goods_intro"]', {
-	                    uploadJson : '{admin_site_url("common/pic_upload")}?mod=goods',
-	                    extraFileUploadParams:{ formhash: formhash },
-	                    allowImageUpload : true,
-	                    allowFlashUpload : false,
-	                    allowMediaUpload : false,
-	                    formatUploadUrl : false,
-	                    allowFileManager : false,
-	                    afterCreate : function() {
-	                    	
-	                    },
-	                    afterChange : function() {
-	                    	$("input[name=formhash]").val(formhash);
-	                    },
-	                    afterUpload : function(url,data) {
-	                    	formhash = data.formhash;
-		                }
-	                });
-	            });
-	        </script>
-        </tr>
-        <tr>
-          <td colspan="2" class="required">是否推荐: </td>
-        </tr>
-        <tr class="noborder">
-          <td class="vatop rowform onoff"><label for="goods_commend1" {if $info['goods_commend']}class="cb-enable selected"{else}class="cb-enable"{/if}><span>是</span></label>
-            <label for="goods_commend0" {if $info['goods_commend']}class="cb-disable"{else}class="cb-disable selected"{/if}><span>否</span></label>
-            <input id="goods_commend1" name="goods_commend" {if $info['goods_commend']}checked{/if} value="1" type="radio">
-            <input id="goods_commend0" name="goods_commend" {if $info['goods_commend'] == 0}checked{/if} value="0" type="radio"></td>
-          <td class="vatop tips">选择被推荐的图片将在所有商品列表页“推荐商品”位置展现。</td>
-        </tr>
-        <tr>
-          <td colspan="2" class="required">审核通过: </td>
-        </tr>
-        <tr class="noborder">
-          <td class="vatop rowform onoff"><label for="goods_verify1" {if $info['goods_verify']}class="cb-enable selected"{else}class="cb-enable"{/if}><span>是</span></label>
-            <label for="goods_verify0" {if $info['goods_verify']}class="cb-disable"{else}class="cb-disable selected"{/if}><span>否</span></label>
-            <input id="goods_verify1" name="goods_verify" {if $info['goods_verify']}checked{/if} value="1" type="radio">
-            <input id="goods_verify0" name="goods_verify" {if $info['goods_verify'] == 0}checked{/if} value="0" type="radio"></td>
-          <td class="vatop tips">选择被推荐的图片将在所有商品列表页“推荐商品”位置展现。</td>
-        </tr>
-        <tr>
-          <td colspan="2" class="required">是否发布: </td>
-        </tr>
-        <tr class="noborder">
-          <td class="vatop rowform onoff"><label for="goods_state1" {if $info['goods_state']}class="cb-enable selected"{else}class="cb-enable"{/if}><span>是</span></label>
-            <label for="goods_state0" {if $info['goods_state']}class="cb-disable"{else}class="cb-disable selected"{/if}><span>否</span></label>
-            <input id="goods_state1" name="goods_state" {if $info['goods_state']}checked{/if} value="1" type="radio">
-            <input id="goods_state0" name="goods_state" {if $info['goods_state'] == 0}checked{/if} value="0" type="radio"></td>
-          <td class="vatop tips">是否发布。</td>
-        </tr>
-      </tbody>
-      <tfoot>
-        <tr>
-          <td colspan="2"><input type="submit" name="submit" value="保存" class="msbtn"/></td>
-        </tr>
-      </tfoot>
-    </table>
-  </form>
-  {include file="common/fileupload.tpl"}
-  <script type="text/javascript">
-  	function insert_editor(file_path){
-		editor1.insertHtml('<img src="'+ file_path + '" alt="'+ file_path + '"/>');
-	}
-	
-	function del_file_upload(file_id)
-	{
-	    if(!window.confirm('您确定要删除吗?')){
-	        return;
-	    }
-	    
-	    $.getJSON('{admin_site_url("goods/delimg")}?mod=goods&file_id=' + file_id + "&goods_id=" + $("input[name=goods_id]").val(), function(result){
-	    	refreshFormHash(result.data);
-	    	
-	        if(result){
-	            $('#' + file_id).remove();
-	        }else{
-	            alert('删除失败');
-	        }
-	    });
-	}
-	
-	$(function(){
-		$("#goods_pic").change(function(){
-			$("#goods_pic_txt").val($(this).val());
-		});
+    <style type="text/css">
+    
+    .form_row .lab_item {
+        float:none;
+        display:inline;
+        margin: 5px;
+    }
+    
+    </style>
+    <div class="center_content"> 
+	    <div id="right_wrap">
+		    <div id="right_content">
+		      {if $action == 'add'}
+		      <form name="categoryForm" method="post" action="{base_url('lab_goods/add')}" onsubmit="return validation(this);">
+		      {elseif $action = 'edit'}
+		      <form name="categoryForm" method="post" action="{base_url('lab_goods/edit')}" onsubmit="return validation(this);">
+		      <input type="hidden" name="id" value="{$info['id']}"/>
+		      <input type="hidden" name="lab_id" value="{$info['lab_id']}"/>
+		      {/if}
+		       <div class="form">
+		            <div class="form_row clearfix">
+                      <label class="require"><em>*</em>实验室:</label>
+                      {if $action == 'add'}
+                      <select class="form_select"  name="lab_id">
+                        <option value="">请选择</option>
+                        {foreach from=$labList['data'] item=item}
+                        <option value="{$item['id']}" {if $info['lab_id'] == $item['id']}selected{/if}>{$item['address']|escape}</option>
+                        {/foreach}
+                      </select>
+                      {else}
+                        {$info['lab_address']|escape}
+                      {/if}
+                      {form_error('lab_id')}
+                    </div>
+		            <div class="form_row clearfix">
+                      <label class="require"><em>*</em>药品柜/<br/>试验台编号:</label>
+                      <input type="text" class="form_input" name="code" style="width:250px;" value="{$info['code']|escape}" placeholder="请输入药品柜/试验台编号" />
+                      {form_error('code')}
+                      <span class="tip">药品柜/试验台编号，如A柜1层</span>
+                    </div>
+                    <div class="form_row clearfix">
+                      <label class="require"><em>*</em>类别:</label>
+                      <select class="form_select" name="category_id">
+                          {foreach from=$categoryList item=item key=key}
+                          <option value="{$key}" {if $key == $info['category_id']}selected{/if}>{$item['sep']}{$item['name']|escape}</option>
+                          {/foreach}
+                      </select>
+                      {form_error('category_id')}
+                      <span class="tip">如果找不到到对应类别,<a href="{base_url('lab_category/add')}">点击添加类别</a></span>
+                    </div>
+		            <div class="form_row clearfix">
+		              <label class="require"><em>*</em>名称:</label>
+		              <input type="text" class="form_input" name="name" style="width:250px;" value="{$info['name']|escape}" placeholder="请输入名称" />
+		              {form_error('name')}
+		            </div>
+		            
+                    <div class="form_row clearfix">
+                      <label class="require"><em>*</em>单位:</label>
+                      <select class="form_select" name="measure">
+                          {foreach from=$measureList['data'] item=item key=key}
+                          <option value="{$item['name']}" {if $item['name'] == $info['measure']}selected{/if}>{$item['name']|escape}</option>
+                          {/foreach}
+                      </select>
+                      {form_error('category_id')}
+                    </div>
+                    
+                    <div class="form_row clearfix">
+                      <label class="">规格:</label>
+                      <input type="text" class="form_input" name="specific" value="{$info['specific']|escape}" placeholder="请输入规格" />
+                      {form_error('specific')}
+                    </div>
+                    <div class="form_row clearfix">
+                      <label class="">药品CAS号:</label>
+                      <input type="text" class="form_input" name="cas" value="{$info['cas']|escape}" placeholder="请输入药品CAS号" />
+                      {form_error('cas')}
+                    </div>
+                    <div class="form_row clearfix">
+                      <label class="">危险等级:</label>
+                      <input type="text" class="form_input" name="danger_remark" value="{$info['danger_remark']|escape}" placeholder="请输入危险等级" />
+                      {form_error('danger_remark')}
+                      <span class="tip">例如: 剧毒品，易制毒，易爆，易腐蚀</span>
+                    </div>
+                    <div class="form_row clearfix">
+                      <label class="">生产厂家:</label>
+                      <input type="text" class="form_input" name="manufacturer" value="{$info['manufacturer']|escape}" placeholder="请输入生产厂家" />
+                      {form_error('manufacturer')}
+                    </div>
+                    
+                    <div class="form_row clearfix">
+                      <label class="require"><em>*</em>参考价格:</label>
+                      <input type="text" class="form_input" name="price" value="{$info['price']|escape}" placeholder="请输入价格" />
+                      {form_error('price')}
+                    </div>
+                    
+                    <div class="form_row clearfix">
+                      <label class="require"><em>*</em>库存:</label>
+                      <input type="text" class="form_input" name="quantity" value="{$info['quantity']|escape}" placeholder="请输入库存数量" />
+                      {form_error('quantity')}
+                    </div>
+                    <div class="form_row clearfix">
+                      <label class="">底库存预警<br/>(0为不报警):</label>
+                      <input type="text" class="form_input" name="threshold" value="{$info['threshold']|escape}" placeholder="请输入阀值" />
+                      {form_error('threshold')}
+                    </div>
+                    <div class="form_row clearfix">
+                      <label class="">实验/课程名称:</label>
+                      <input type="text" class="form_input" name="subject_name" value="{$info['subject_name']|escape}" placeholder="请输入实验/课程名称" />
+                      {form_error('subject_name')}
+                    </div>
+                    <div class="form_row clearfix">
+                      <label class="">备注:</label>
+                      <input type="text" class="form_input" name="project_name" value="{$info['project_name']|escape}" placeholder="请输入备注" />
+                      {form_error('project_name')}
+                    </div>
+                    <div class="form_row paddingleft100">
+	                   <input type="submit" class="form_submit" value="保存" />
+	                   {if $gobackUrl }<input type="hidden" name="gobackUrl" value="{$gobackUrl}"/><input type="button" class="form_submit" value="返回" onclick="location.href='{$gobackUrl}'" />{/if}
+	               </div>
+		        </div>
+		        {if $action == 'add' || $action == 'edit'} </form>{/if}
+		    </div><!-- end of right content-->
+		</div><!-- end of right wrap -->
+		<script>
+		  function validation(form){
+		         {if $action == 'add'}
+                if($("select[name=lab_id]").val() == ''){
+                    $.jBox.tip('请选择实验室', '提示');
+                    
+                    $("select[name=lab_id]").focus();
+                    return false;
+                }
+                {/if}
+                if($("input[name=code]").val() == ''){
+                    $.jBox.tip('请输入药品柜/试验台编号:', '提示');
+                    $("input[name=code]").focus();
+                    return false;
+                }
+                
+                if($("input[name=name]").val() == ''){
+                    $.jBox.tip('请输入名称:', '提示');
+                    $("input[name=name]").focus();
+                    return false;
+                }
+                
+                if($("input[name=price]").val() == ''){
+                    $.jBox.tip('请输入参考价格', '提示');
+                    return false;
+                }
+                
+                return true;
+            }
 		
-		// 图片上传
-	    $('#fileupload').each(function(){
-	        $(this).fileupload({
-	            dataType: 'json',
-	            url: '{admin_site_url("goods/addimg")}?mod=goods',
-	            done: function (e,data) {
-	            	refreshFormHash(data.result);
-	            	
-	                if(data.result.error == 0){
-	                	add_uploadedfile(data.result);
-	                }
-	            }
-	        });
-	    });
-	    
-	    function add_uploadedfile(file_data)
-		{
-		    var newImg = '<li id="' + file_data.id + '" class="picture"><input type="hidden" name="file_id[]" value="' + file_data.id + '" /><div class="size-64x64"><span class="thumb"><i></i><img src="' + file_data.url + '" alt="" width="64px" height="64px"/></span></div><p><span><a href="javascript:insert_editor(\'' + file_data.url + '\');">插入</a></span><span><a href="javascript:del_file_upload(\'' + file_data.id + '\');">删除</a></span></p></li>';
-		    $('#thumbnails').prepend(newImg);
-		}
-	})
-  </script>
- 
-{include file="common/main_footer.tpl"}
+		  
+		  {if $message}
+		  $(function(){
+		      {if $success }
+			      {if $action == 'add'}
+			      var submit = function (v, h, f) {
+	                 if (v == 'ok'){
+	                 
+	                 }else if (v == 'cancel'){
+	                     location.href = "{base_url('lab_goods')}";
+	                 }
+	                 return true; //close
+	              };
+	            
+	              $.jBox.confirm("{$message},要继续添加吗？", "提示", submit);
+	              {else}
+	              $.jBox.success("{$message}", "提示");
+	              {/if}
+		      {else}
+		      $.jBox.error('{$message}', '提示');
+		      {/if}
+		  });
+		  {/if}
+		</script>
+		{include file="./side.tpl"} 
+{include file="common/lab_admin_footer.tpl"}

@@ -1,7 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 
-class Lab_Category extends Ydzj_Admin_Controller {
+class Goods_Category extends Ydzj_Admin_Controller {
 	
 	private $_cacheKey = "lab_category";
 	
@@ -69,7 +69,6 @@ class Lab_Category extends Ydzj_Admin_Controller {
     
     public function edit(){
 		
-		$this->assign('act','edit');
 		if($this->isPostRequest()){
 			$this->form_validation->set_rules('id','类别id',  'required');
 			$this->form_validation->set_rules('name','类别名称',  'required');
@@ -141,34 +140,31 @@ class Lab_Category extends Ydzj_Admin_Controller {
     
     public function add()
     {
-    	$this->assign('act','add');
+    	phpinfo();
 		if($this->isPostRequest()){
+			$this->form_validation->set_rules('name','类别名称',  'required|max_length[30]');
 			
-			$this->form_validation->set_rules('name','类别名称',  'required');
-			
-			if($this->form_validation->run()){
-				$_POST['creator'] = $this->_userProfile['name'];
-				$flag = $this->Goods_Category_Model->add($_POST);
-				
-				if($flag){
-					$this->_writeCache();
-					$this->assign('success','1');
-					$this->assign('message','添加成功');
-				}else{
-					$info = $_POST;
-					$this->assign('message','添加失败');
+			for($i = 0; $i < 1; $i++){
+				if($this->form_validation->run()){
+					$d['errors'] = $this->form_validation->error_array();
+					$this->jsonOutput('数据不能通过校验,添加失败',$d);
+					break;	
 				}
 				
-			}else{
-				$info = $_POST;
-				$this->assign('message','数据不能通过校验,添加失败');
+				$_POST['creator'] = $this->_adminProfile['basic']['name'];
+				$newid = $this->Goods_Category_Model->_add($_POST);
+				
+				if($newid > 0){
+					$this->_updateCache();
+					$this->jsonOutput('保存成功');
+				}else{
+					$this->jsonOutput($this->db->get_error_info());
+				}
 			}
 			
+		}else{
+        	$this->display();
 		}
-		
-		$this->assign('info',$info);
-		$this->assign('gobackUrl', $this->getGobackUrl());
-        $this->display();
     }
     
 }

@@ -3,17 +3,10 @@
 
 class Lab extends Ydzj_Admin_Controller {
 	
-	
     public function __construct(){
 		parent::__construct();
 		
 		$this->assign('action',$this->uri->rsegment(2));
-		/*
-		if(!$this->_checkIsSystemManager()){
-			$this->show_access_deny();
-		}
-		*/
-		
     }
     
     public function index()

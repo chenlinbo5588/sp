@@ -1,7 +1,7 @@
 {include file="common/main_header.tpl"}
   <div class="fixed-bar">
     <div class="item-title">
-      <h3>商品</h3>
+      <h3>货品</h3>
       <ul class="tab-base">
         <li><a href="JavaScript:void(0);" class="current"><span>管理</span></a></li>
         <li><a href="{admin_site_url('goods/add')}"><span>新增</span></a></li>
@@ -9,56 +9,38 @@
     </div>
   </div>
   <div class="fixed-empty"></div>
-  {form_open(admin_site_url('goods/index'),'id="formSearch"')}
+  {form_open(admin_site_url('lab_goods/index'),'id="formSearch"')}
   <input type="hidden" name="page" value="{$currentPage}"/>
     <table class="tb-type1 noborder search">
       <tbody>
-        <tr>
-          <th><label for="search_goods_name">商品名称</label></th>
-          <td><input type="text" value="{$smarty.post['search_goods_name']|escape}" name="search_goods_name" id="search_goods_name" class="txt"></td>
-          <th><label>审核</label></th>
-          <td>
-          	<select name="goods_verify">
-              <option value="全部">请选择...</option>
-              {foreach from=$searchMap['goods_verify'] item=item key=key}
-              <option value="{$key}" {if $smarty.post['goods_verify'] == $key}selected{/if}>{$key}</option>
-              {/foreach}
-            </select>
+      	<tr>
+          <td><label>实验室地址:</label></td>
+          <td><input type="text" class="form_input" name="lab_address" value="{$smarty.get.lab_address}" placeholder="请输入实验室地址" /></td>
+          <td><label>货品名称:</label></td>
+          <td><input type="text" class="form_input" name="name" value="{$smarty.get.name}" placeholder="请输入货品名称" /></td>
+          <td><label>实验名称/课程名称:</label></td>
+          <td><input type="text" class="form_input" name="subject_name" value="{$smarty.get.subject_name}" placeholder="请输入实验名称/课程名称" /></td>
+     </tr>
+     <tr>
+          <td><label>备注:</label></td>
+          <td><input type="text" class="form_input" name="project_name" value="{$smarty.get.project_name}" placeholder="请输入备注" /></td>
+          <td><label>分类:</label></td>
+          <td><select class="form_select" name="category_id">
+            <option value="0">全部</option>
+            {foreach from=$categoryList item=item key=key}
+            <option value="{$key}" {if $key == $smarty.get.category_id}selected{/if}>{$item['sep']}{$item['name']|escape}</option>
+            {/foreach}
+          </select>
           </td>
-          <th><label>商品发布状态</label></th>
-          <td>
-          	<select name="goods_state">
-              <option value="全部">请选择...</option>
-              {foreach from=$searchMap['goods_state'] item=item key=key}
-              <option value="{$key}" {if $smarty.post['goods_state'] == $key}selected{/if}>{$key}</option>
-              {/foreach}
-            </select>
-          </td>
-          <td><input type="submit" class="msbtn" name="tijiao" value="查询"/></td>
-        </tr>
-        <tr>
-        	<td>品牌:</td>
-        	<td>
-        		<select name="brand_id" id="brandId">
-		          <option value="">请选择...</option>
-		          {foreach from=$brandList item=item}
-		          <option {if $smarty.post['brand_id'] == $item['brand_id']}selected{/if} value="{$item['brand_id']}">{$item['brand_name']}</option>
-		          {/foreach}
-		        </select>
-	        </td>
-	        <td>商品分类:</td>
-	        <td colspan="3">
-	        	<select name="gc_id" id="goodsClassId">
-		          <option value="">请选择...</option>
-		          {foreach from=$goodsClassList item=item}
-		          <option {if $smarty.post['gc_id'] == $item['gc_id']}selected{/if} value="{$item['gc_id']}">{str_repeat('......',$item['level'])}{$item['level']+1} {$item['gc_name']}</option>
-		          {/foreach}
-		        </select>
-	        </td>
-        </tr>
+          <td><label>已达到预警:<input type="checkbox" name="threshold_active" value="y" {if $smarty.get.threshold_active}checked{/if}/></label></td>
+          <td><input type="submit" class="form_submit" value="查询" />
+              <a href="{base_url('lab_goods/export/?')}{$queryStr}" title="导出到EXCEL">导出到EXCEL</a>
+              <span class="tip">&lt;&lt;&lt;请右键目标另存为</span></td>
+       	</tr>
       </tbody>
     </table>
   </form>
+  {*
   <table class="table tb-type2" id="prompt">
     <tbody>
       <tr class="space odd">
@@ -74,57 +56,79 @@
       </tr>
     </tbody>
   </table>
-    <table class="table tb-type2">
-      <thead>
-        <tr class="thead">
-          <th class="w24"></th>
-          <th colspan="2">商品名称</th>
-          <th>商品代码</th>
-          <th>品牌&分类</th>
-          <th class="align-center">商品状态</th>
-          <th class="align-center">审核状态</th>
-          <th class="align-center">操作 </th>
-        </tr>
-      </thead>
-      <tbody>
-      	{foreach from=$list['data'] item=item}
-      	<tr class="hover edit" id="row{$item['goods_id']}">
-          <td><input type="checkbox" name="id[]" group="chkVal" value="{$item['goods_id']}" class="checkitem"></td>
-          <td class="w60 picture"><img class="size-56x56" src="{if $item['goods_pic']}{resource_url($item['goods_pic'])}{else}{resource_url('img/default.jpg')}{/if}"/></td>
-          
-          <td class="goods-name w270">
-          	<p><span>{$item['goods_name']|escape}</span></p>
-            {*<p class="store">所属店铺:官方店铺</p>*}
-         </td>
-         <td>{$item['goods_code']|escape}</td>
-         <td>
-          	<p>{$brandList[$item['brand_id']]['brand_name']}</p>
-            <p>{$goodsClassList[$item['gc_id']]['gc_name']}</p>
-          </td>
-          <td class="align-center">{$searchMap['goods_state'][$item['goods_state']]}</td>
-          <td class="align-center">{$searchMap['goods_verify'][$item['goods_verify']]}</td>
-          <td class="align-center">
-          	<p><a href="{site_url('goods/detail')}?goods_id={$item['goods_id']}" target="_blank">查看</a> | <a href="{admin_site_url('goods/edit')}?goods_id={$item['goods_id']}">编辑</a></p>
-          </td>
-        </tr>
-        {/foreach}
-      </tbody>
-      <tfoot>
-      	<tr class="tfoot">
-          <td colspan="7">
-          	<label><input type="checkbox" class="checkall" id="checkallBottom" name="chkVal">全选</label>&nbsp;
-          	<a href="javascript:void(0);" class="btn" id="deleteBtn" data-checkbox="id[]" data-url="{admin_site_url('goods/delete')}"><span>删除</span></a>
-          	{include file="common/pagination.tpl"}
-           </td>
-        </tr>
-      </tfoot>
-    </table>
+  *}
+  <table class="table tb-type2">
+	    <colgroup>
+	        <col style="width:10%"/>
+	        <col style="width:8%"/>
+	        <col style="width:10%"/>
+	        <col style="width:5%"/>
+	        <col style="width:5%"/>
+	        <col style="width:5%"/>
+	        <col style="width:5%"/>
+	        <col style="width:8%"/>
+	        <col style="width:10%"/>
+	        <col style="width:10%"/>
+	        <col style="width:5%"/>
+	        <col style="width:10%"/>
+	        <col style="width:5%"/>
+	    </colgroup>
+	    <thead>
+	        <tr>
+	            <th>实验室地址</th>
+	            <th>货品柜/试验台</th>
+	            <th>名称</th>
+	            <th>规格</th>
+	            <th>单位</th>
+	            <th>库存</th>
+	            <th>参考价格</th>
+	            <th>类别</th>
+	            <th>实验名称/课程名称</th>
+	            <th>备注</th>
+	            <th>录入人</th>
+	            <th>录入时间</th>
+	            <th>操作</th>
+	        </tr>
+	    </thead>
+	    <tbody>
+	        {foreach from=$data['data'] key=key item=item}
+	        <tr id="row_{$item['id']}" class="{if $key % 2 == 0}odd{else}even{/if}">
+	            <td>{$item['lab_address']|escape}</td>
+	            <td>{$item['code']|escape}</td>
+	            <td><a class="popwin asblock" data-width="500"  data-href="{base_url('lab_goods/info/id/')}{$item['id']}" data-title="{$item['name']|escape}" href="javascript:void(0);">{$item['name']|escape}</a></td>
+	            <td>{$item['specific']|escape}</td>
+	            <td>{$item['measure']|escape}</td>
+	            <td {if $item['threshold'] > 0 && $item['threshold'] >= $item['quantity']}class="warning" title="低库存 阀值{$item['threshold']}"{/if}>{$item['quantity']|escape}</td>
+	            <td>{$item['price']|escape}</td>
+	            <td>{$item['category_name']|escape}</td>
+	            <td>{$item['subject_name']|escape}</td>
+	            <td>{$item['project_name']|escape}</td>
+	            <td>{$item['creator']|escape}</td>
+	            <td>{time_tran($item['gmt_create'])}</td>
+	            <td>
+	            {* 如果是系统级 管理员 ， 但不是该货品实验室管理员 只能修改 *}
+	            {if $isSystemManager || in_array($item['lab_id'],$joinedLabs)}
+	                <a href="{base_url('lab_goods/edit/id/')}{$item['id']}">编辑</a>&nbsp;
+	            {/if}
+	            {if in_array($item['lab_id'],$managedLabs)}
+	                <a class="delete" href="javascript:void(0);" data-href="{base_url('lab_goods/delete/id/')}{$item['id']}" data-title="确定删除{$item['name']|escape}吗?">删除</a>
+	            {/if}
+	            </td>
+	        </tr>
+	        {foreachelse}
+	        <tr><td colspan="13" align="center"><span class="warning">找不到记录</span></td></tr>
+	        {/foreach}  
+	    </tbody>
+	    <tfoot>
+	        <tr>
+	            <td colspan="13">{include file="common/pagination.tpl"}</td>
+	        </tr>
+	    </tfoot>
+	</table>
   </form>
-  
 <script>
 $(function(){
     bindDeleteEvent();
 });
 </script>
-
 {include file="common/main_footer.tpl"}

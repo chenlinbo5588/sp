@@ -267,7 +267,7 @@ class Lab_User extends Ydzj_Admin_Controller {
 				
 				if(!$this->form_validation->run()){
 					$d['errors'] = $this->form_validation->error_array();
-					$this->jsonOutput($this->form_validation->error_string(' ',' '),$d);
+					$this->jsonOutput('数据不能通过校验,添加失败',$d);
 					break;
 				}
 				
@@ -459,7 +459,7 @@ class Lab_User extends Ydzj_Admin_Controller {
 			for($i = 0 ; $i < 1;  $i++){
 				if(!$this->form_validation->run()){
 					$d['errors'] = $this->form_validation->error_array();
-					$this->jsonOutput($this->form_validation->error_string(' ',' '),$d);
+					$this->jsonOutput('数据不能通过校验,添加失败',$d);
 					break;
 				}
 				

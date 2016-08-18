@@ -25,7 +25,10 @@
 	      <div id="treeboxbox_tree1"></div>
 	      <div id="loading_img" class="loading_div" style="display:none;"></div>
 	    </div>
-	  </div>  
+	  </div>
+	  
+	<div id="dialog-confirm" title="移除成员" style="display:none;"><p><span class="ui-icon ui-icon-alert" style="float:left;"></span>确定要移除成员<span class="memberName hightlight"></span>吗?</p></div>
+	
 	{include file="common/dhtml_tree.tpl"}
     <script>
 	    var tree=new dhtmlXTreeObject("treeboxbox_tree1","100%","100%",0);
@@ -41,7 +44,7 @@
 	        if(id == 'root'){
 	            return;
 	        }
-	        location.href= "{admin_site_url('lab_category/edit?id=')}" + id + "&t" + Math.random();
+	        location.href= "{admin_site_url('goods_category/edit?id=')}" + id + "&t" + Math.random();
 	    }
 	    
 	    function toncheck(id,state){
@@ -49,6 +52,13 @@
 	    }
 	    
 	    function tondrag(id,id2){
+	    	
+	    	
+	    	
+	    	
+	    	
+	    
+	    	
 	        //console.log(id2);
 	        if(0 == id2){
 	            var submit = function (v, h, f) {
@@ -107,7 +117,7 @@
 	    tree.setOnLoadingEnd(treeLoaded); 
 	    tree.setOnDblClickHandler(tondblclick);
 	    tree.setDragHandler(tondrag);
-	    tree.loadXML("{admin_site_url('lab_category/getTreeXML/')}",function(){
+	    tree.loadXML("{admin_site_url('goods_category/getTreeXML/')}",function(){
 	    	
 	    });
 	    

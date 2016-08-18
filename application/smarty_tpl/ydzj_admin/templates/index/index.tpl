@@ -414,8 +414,8 @@ $(function(){
               <dl>
                 <dd>
                   <ol>
-                    <li><a href="javascript:void(0);" id="index_lab_goods" onclick="openItem('index,lab_goods,goods');">货品</a></li>
-                    <li><a href="javascript:void(0);" id="index_lab_category" onclick="openItem('index,lab_category,goods');">货品分类</a></li>
+                    <li><a href="javascript:void(0);" id="index_goods" onclick="openItem('index,goods,goods');">货品</a></li>
+                    <li><a href="javascript:void(0);" id="index_goods_category" onclick="openItem('index,goods_category,goods');">货品分类</a></li>
                   </ol>
                 </dd>
               </dl>

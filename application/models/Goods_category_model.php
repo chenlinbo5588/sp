@@ -122,26 +122,6 @@ class Goods_Category_Model extends MY_Model {
 		return $this->_menuTree;
 	}
     
-
-    public function add($param){
-        $now = time();
-        $data = array(
-            'id' => NULL,
-            'name' => $param['name'],
-            'pid' => $param['pid'],
-            'creator' => $param['creator'],
-            'updator' => $param['creator'],
-            'gmt_create' => $now,
-            'gmt_modify' => $now
-        );
-        
-        $this->db->insert($this->_tableName, $data);
-        return $this->db->insert_id();
-    }
-    
-    public function delete($param){
-        
-    }
     
     public function fake_delete($param){
         
@@ -173,24 +153,5 @@ class Goods_Category_Model extends MY_Model {
         return $this->db->affected_rows();
     }
     
-    
-    public function update($param){
-        $data = array(
-            'name' => $param['name'],
-            'updator' => $param['updator'],
-            'gmt_modify' => time()
-        );
-        
-        if(!empty($param['pid'])){
-            $data['pid'] = $param['pid'];
-        }
-        
-        $where = array(
-            'id' => $param['id']
-        );
-        
-        $this->db->update($this->_tableName, $data, $where);
-        return $this->db->affected_rows();
-    }
     
 }

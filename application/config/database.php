@@ -86,9 +86,9 @@ $db['default'] = array(
 */
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'localhost',
-	'username' => 'db_lab_admin',
-	'password' => 'lab_admin_psw',
+	'hostname' => '192.168.171.128',
+	'username' => 'root',
+	'password' => '123123',
 	'database' => 'db_lab2',
 	'dbdriver' => 'mysql',
 	'dbprefix' => '',

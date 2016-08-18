@@ -8,14 +8,11 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 	
 	protected $_loginUID = 0;
 	
-	
 	public function __construct(){
 		parent::__construct();
 		
-		
 		$this->form_validation->set_error_delimiters('<label class="error">','</label>');
 		$this->_initAdminLogin();
-		
 		
 		$this->_initUserLabsRelate();
 		
