@@ -76,7 +76,7 @@
     {include file="common/dhtml_tree.tpl"}
 	<script>
 		var tree=new dhtmlXTreeObject("treeboxbox_tree1","100%","100%",0);
-		tree.setImagePath("/static/js/dhtmlxTree_v413_std/skins/web/imgs/dhxtree_web/");
+		tree.setImagePath("{$smarty.const.TREE_IMG_PATH}");
 		
 		tree.enableHighlighting(true);
 		tree.enableSmartXMLParsing(true);

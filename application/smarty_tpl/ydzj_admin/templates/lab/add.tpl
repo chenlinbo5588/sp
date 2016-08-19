@@ -131,7 +131,7 @@
 	    var dialog = null;
 	    
 	    var tree=new dhtmlXTreeObject("treeboxbox_tree1","100%","100%",0);
-	    tree.setImagePath("/static/js/dhtmlxTree_v413_std/skins/web/imgs/dhxtree_web/");
+	    tree.setImagePath("{$smarty.const.TREE_IMG_PATH}");
 	    
 	    function tonclick(id){
 	        var isFind = false;
@@ -327,7 +327,7 @@
 	                          dataType:"json",
 	                          data: { id: {$info['id']} , user_id: user_id},
 	                          success:function(json){
-	                          	 alert('删除成功');
+	                          	 alert(json.message);
 	                          	 if(json.message == '删除成功'){
 	                          	 	$("#row_" + user_id).fadeOut();
 	                          	 }

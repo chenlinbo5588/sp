@@ -69,11 +69,11 @@ class Lab_service extends Base_service {
 	}
 	
 	
-	/**
-	 * 缓存过期
-	 */
-	public function makeLabXMLExpire(){
-    	$this->_labCacheModel->update(array('expire' => -1),array('key_group' => $this->getXMLGroupKey()));
+    /**
+     * 使得缓存过期
+     */
+    public function expireCacheByCondition($condition){
+    	return $this->_labCacheModel->updateByWhere(array('expire' => -1),$condition);
     }
 	
 	

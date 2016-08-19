@@ -171,7 +171,7 @@ $.loadingbar = function(settings) {
         container: 'body',
         showClose: false,
         wrapperClass:'',
-        text:'数据加载中，请稍候…',
+        text:'正在操作，请稍候…',
         template:''
     };
     var xhr;

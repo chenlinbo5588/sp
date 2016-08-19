@@ -3,7 +3,6 @@
   {include file="./lab_common.tpl"}
   <div class="fixed-empty"></div>
   <div class="feedback">{$feedback}</div>
-   {include file="common/dhtml_tree.tpl"}
 	<table class="autotable" id="prompt">
 	    <tbody>
 	      <tr class="space odd">
@@ -28,9 +27,13 @@
           <div id="loading_img" class="loading_div" style="display:none;"></div>
         </div>
       </div>
+      <div id="dialog-confirm" title="删除{#title#}" style="display:none;"><p><span class="ui-icon ui-icon-alert" style="float:left;"></span>确定要移除<span class="categoryName hightlight"></span>吗?</p></div>
+	 {include file="common/dhtml_tree.tpl"}
+	 {include file="common/jquery_dlg.tpl"}
+	
       <script>
         var tree=new dhtmlXTreeObject("treeboxbox_tree1","100%","100%",0);
-        tree.setImagePath("/static/js/dhtmlxTree_v413_std/skins/web/imgs/dhxtree_web/");
+        tree.setImagePath("{$smarty.const.TREE_IMG_PATH}");
         tree.enableHighlighting(true);
         tree.enableDragAndDrop(1);
         tree.enableSmartXMLParsing(true);
@@ -41,7 +44,7 @@
         
         function tondblclick(id){
             if(id == 'root'){
-                return
+                return;
             }
             location.href= "{admin_site_url('lab/edit?id=')}" + id + "&t=" + Math.random();
             //console.log(id);
@@ -54,24 +57,42 @@
         
         var successHandler = function(json){
         	alert(json.message);
-	      	if(json.message == '操作成功'){
-	      		location.href = "{admin_site_url('lab/index')}";
-	      	}
+        	
+        	if(json.message.indexOf('成功') != -1){
+        		location.href = "{admin_site_url('lab/index')}";
+        	}
+        	
         };
         
         function tondrag(id,id2){
             //console.log(id2);
             if(0 == id2){
-				if(confirm("确定删除 " + tree.getItemText(id) + " 吗？")){
-					$.ajax({
-			              type:"POST",
-			              url:"{admin_site_url('lab/delete')}",
-			              dataType:"json",
-			              data: { id: id },
-			              success:successHandler
-			         });
-				}
-				
+            	$( "#dialog-confirm .categoryName" ).html(tree.getItemText(id));
+	        	
+	        	$( "#dialog-confirm" ).dialog({
+			      resizable: false,
+			      height: "auto",
+			      width: 400,
+			      modal: true,
+			      buttons: {
+			        "确定": function() {
+			          	$.ajax({
+                          type:"POST",
+                          url:"{admin_site_url('lab/delete')}",
+                          dataType:"json",
+                          data: { id: id },
+                          success:successHandler,
+                          error:function(XMLHttpRequest, textStatus, errorThrown){ }
+	                  	});
+	                  	
+	                  	$( this ).dialog( "close" );
+			        },
+			        "取消": function() {
+			          $( this ).dialog( "close" );
+			        }
+			      }
+			    });
+            	
             }else{
                 if(confirm("确定调整节点 " + tree.getItemText(id) + " 和 " + tree.getItemText(id2) + " 吗？")){
                 	$.ajax({

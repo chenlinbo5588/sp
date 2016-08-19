@@ -93,8 +93,7 @@ class Goods_Category_Model extends MY_Model {
             $condition['where']['id !='] =  $selfid;
         }
         
-        $result = $this->getList($condition);
-        $childrenList = $result['data'];
+        $childrenList = $this->getList($condition);
         if(is_array($childrenList)){
             foreach ($childrenList as $item){
                 
@@ -121,37 +120,4 @@ class Goods_Category_Model extends MY_Model {
 		
 		return $this->_menuTree;
 	}
-    
-    
-    public function fake_delete($param){
-        
-        if(is_array($param['id'])){
-             $data = array();
-           
-            foreach($param['id'] as $v){
-                $data[] = array(
-                    'id' => $v,
-                    'status' => '已删除',
-                    'updator' => $param['updator'],
-                    'gmt_modify' => time()
-                );
-            }
-            
-            $this->db->update_batch($this->_tableName, $data,'id'); 
-        }else{
-            $data = array(
-                'status' => '已删除',
-                'updator' => $param['updator'],
-                'gmt_modify' => time()
-            );
-            
-            $where = array(
-                'id' => $param['id']
-            );
-            $this->db->update($this->_tableName, $data,$where);
-        }
-        return $this->db->affected_rows();
-    }
-    
-    
 }

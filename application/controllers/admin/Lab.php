@@ -195,17 +195,42 @@ class Lab extends Ydzj_Admin_Controller {
    			$uid = $this->_loginUID;
    		}
    		
+   		/**
+   		 * 与总的树比较 更新的时间点
+   		 */
+   		$fullTreeCache = $this->Lab_Cache_Model->getById(array(
+   			'select' => 'gmt_modify',
+   			'where' => array(
+   				'key_id' => $this->lab_service->getCacheXMLUserKey(0)
+   			)
+   		));
+   		
    		$cache = $this->Lab_Cache_Model->getFirstByKey($this->lab_service->getCacheXMLUserKey($uid),'key_id');
-   		if(!empty($cache) && $cache['expire'] >= 0 && ((time() - $cache['gmt_create']) < 3600 )){
-   			echo $cache['content'];
-   			exit;
+   		$cacheExpire = false;
+   		
+   		if(empty($cache)){
+   			$cacheExpire = true;
    		}
    		
-   		$output = $this->lab_service->getUserLabXML($uid);
-   		$this->lab_service->cacheUserLabXML($uid,$output);
+   		if(!$cacheExpire){
+   			if($fullTreeCache){
+   				if($fullTreeCache['gmt_modify'] >= $cache['gmt_modify']){
+	   				$cacheExpire = true;
+	   			}
+   			}else{
+   				if($cache['expire'] < 0 || (time() - $cache['gmt_modify']) >= CACHE_ONE_DAY){
+   					$cacheExpire = true;
+   				}
+   			}
+   		}
    		
-   		echo $output;
-   		
+   		if(!$cacheExpire){
+   			echo $cache['content'];
+   		}else{
+   			$output = $this->lab_service->getUserLabXML($uid);
+   			$this->lab_service->cacheUserLabXML($uid,$output);
+   			echo $output;
+   		}
    	}
     
     /**
@@ -257,8 +282,10 @@ class Lab extends Ydzj_Admin_Controller {
     
     
     private function _updateCache(){
-    	//@todo 可能更新很多记录， 优化 取在线的 session_id 去更新
-    	$this->lab_service->makeLabXMLExpire();
+    	//只需将 labxml_0 过期
+    	$this->lab_service->expireCacheByCondition(array(
+    		'key_id' => $this->lab_service->getCacheXMLUserKey(0)
+    	));
     }
     
     
@@ -341,7 +368,7 @@ class Lab extends Ydzj_Admin_Controller {
 				
 				if(!$this->form_validation->run()){
 					$d['errors'] = $this->form_validation->error_array();
-					$this->jsonOutput($this->form_validation->error_string(' ',' '),$d);
+					$this->jsonOutput('数据不能通过校验,添加失败',$d);
 					break;
 				}
 				
@@ -606,7 +633,7 @@ class Lab extends Ydzj_Admin_Controller {
 			for($i = 0; $i < 1; $i++){
 				if(!$this->form_validation->run()){
 					$d['errors'] = $this->form_validation->error_array();
-					$this->jsonOutput($this->form_validation->error_string(' ',' '),$d);
+					$this->jsonOutput('数据不能通过校验,添加失败',$d);
 					break;
 				}
 				

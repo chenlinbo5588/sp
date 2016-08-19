@@ -18,24 +18,27 @@ class Goods_Category extends Ydzj_Admin_Controller {
         $this->display();
     }
     
+    private function _updateCache(){
+    	$this->lab_service->expireCacheByCondition(array('key_id' => $this->_cacheKey));
+    }
     
    	public function getTreeXML(){
    		
-   		
    		header("Content-type:text/xml");
+   		$cache = $this->Lab_Cache_Model->getFirstByKey($this->_cacheKey,'key_id');
    		
-   		$str = $this->Lab_Cache_Model->getFirstByKey($this->_cacheKey,'key_id');
-   		if(empty($str)){
+   		if(!empty($cache) && $cache['expire'] >= 0 && ((time() - $cache['gmt_create']) < CACHE_ONE_DAY )){
+   			echo $cache['content'];
+   		}else{
    			$str = $this->_writeCache();
    			echo $str;
-   		}else{
-   			echo $str['content'];
    		}
+   		
    	}
     
     
     public function compare($pid){
-    	$id = $_POST['id'];
+    	$id = $this->input->post('id');
     	
     	$subIds = $this->Goods_Category_Model->getListByTree($id);
 		$ids = array();
@@ -69,83 +72,86 @@ class Goods_Category extends Ydzj_Admin_Controller {
     
     public function edit(){
 		
+		$id = $this->input->get_post('id');
+		
 		if($this->isPostRequest()){
-			$this->form_validation->set_rules('id','类别id',  'required');
-			$this->form_validation->set_rules('name','类别名称',  'required');
-			$this->form_validation->set_rules('pid','父类别',  'required|callback_compare');
+			$this->form_validation->set_rules('id','分类id',  'required');
+			$this->form_validation->set_rules('name','分类名称',  'required');
+			$this->form_validation->set_rules('pid','父级分类',  'required|callback_compare');
 			
-			if($this->form_validation->run()){
-				$_POST['updator'] = $this->_userProfile['name'];
-				$flag = $this->Goods_Category_Model->update($_POST);
-				
-				if($flag){
-					
-					$this->_writeCache();
-					$this->assign('success','1');
-					$this->assign('message','修改成功');
-				}else{
-					$this->assign('message','修改失败');
+			for($i = 0; $i < 1; $i++){
+				if(!$this->form_validation->run()){
+					$d['errors'] = $this->form_validation->error_array();
+					$this->jsonOutput('数据不能通过校验,添加失败',$d);
+					break;
 				}
 				
-			}else{
-				$this->assign('message','数据不能通过校验,修改失败');
+				$_POST['updator'] = $this->_adminProfile['basic']['name'];
+				$rows = $this->Goods_Category_Model->update($_POST,array('id' => $id));
+				
+				if($rows >= 0){
+					if($rows > 0){
+						$this->_writeCache();
+					}
+					
+					$this->jsonOutput('保存成功');
+				}else{
+					$this->jsonOutput($this->db->get_error_info());
+				}
 			}
 			
-			
-			$id = $_POST['id'];
-			$info = $this->Goods_Category_Model->queryById($id);
-			$info['name'] = $_POST['name'];
-			
-			
 		}else{
-			$id = $this->uri->segment(4);
-			$info = $this->Goods_Category_Model->queryById($id);
+			$info = $this->Goods_Category_Model->getFirstByKey($id);
+			$this->assign('info',$info);
+        	$this->display('goods_category/add');
 		}
-		
-		
-		$this->assign('info',$info);
-		$this->assign('gobackUrl', $this->getGobackUrl());
-        $this->display('add');
     }
     
     public function delete(){
     	
-    	//$id = $this->uri->segment(4);
+    	$id = $this->input->post('id');
     	
     	if($this->isPostRequest()){
-    		
-    		$id = $_POST['id'];
-    		
     		$subIds = $this->Goods_Category_Model->getListByTree($id);
     		
     		$ids = array();
     		$ids[] = $id;
     		if($subIds){
-    			
     			foreach($subIds as $item){
     				$ids[] = $item['id'];
     			}
     		}
+    		
     		$ids = array_unique($ids);
     		
-    		$this->Goods_Category_Model->fake_delete(array('id' => $ids , 'updator' => $this->_userProfile['name']));
+    		$this->Goods_Category_Model->updateByCondition(array(
+				'status' => '已删除',
+				'updator' => $this->_adminProfile['basic']['name']
+			),
+    		array(
+    			'where_in' => array(
+    				array('key' => 'id','value' => $ids) 
+    			
+    			)
+    		));
     		
     		$this->_writeCache();
-    		$this->sendFormatJson('success',array('operation' => 'delete','id' => $id , 'text' => '删除成功'));
+    		$this->jsonOutput('删除成功');
+    		
     	}else{
-    		$this->sendFormatJson('failed',array('text' => '请求错误'));
+    		$this->jsonOutput('请求参数错误');
     	}
     }
     
     
+    
     public function add()
     {
-    	phpinfo();
 		if($this->isPostRequest()){
-			$this->form_validation->set_rules('name','类别名称',  'required|max_length[30]');
+			$this->form_validation->set_rules('name','分类名称',  'required|max_length[30]');
 			
 			for($i = 0; $i < 1; $i++){
-				if($this->form_validation->run()){
+				if(!$this->form_validation->run()){
 					$d['errors'] = $this->form_validation->error_array();
 					$this->jsonOutput('数据不能通过校验,添加失败',$d);
 					break;	

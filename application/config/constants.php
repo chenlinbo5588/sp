@@ -97,7 +97,7 @@ define('WEBSITE_FOUNDER',1);
 define('LAB_FOUNDER_ID' ,1);
 
 define('CACHE_ONE_DAY',86400);
-
+define('TREE_IMG_PATH','/static/js/dhtmlxTree_v413_std/skins/web/imgs/dhxtree_web/');
 
 define('CACHE_KEY_SeoSetting','seoSettingList');
 define('CACHE_KEY_SiteSetting','siteSettingList');

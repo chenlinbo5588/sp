@@ -27,9 +27,11 @@
 	    </div>
 	  </div>
 	  
-	<div id="dialog-confirm" title="移除成员" style="display:none;"><p><span class="ui-icon ui-icon-alert" style="float:left;"></span>确定要移除成员<span class="memberName hightlight"></span>吗?</p></div>
+	<div id="dialog-confirm" title="删除{#category_title#}" style="display:none;"><p><span class="ui-icon ui-icon-alert" style="float:left;"></span>确定删除<span class="categoryName hightlight"></span>吗?</p></div>
+	<div id="dialog-confirm2" title="删除{#category_title#}" style="display:none;"><p><span class="ui-icon ui-icon-alert" style="float:left;"></span>确定移动<span class="categoryName hightlight"></span>吗?</p></div>
 	
 	{include file="common/dhtml_tree.tpl"}
+	{include file="common/jquery_dlg.tpl"}
     <script>
 	    var tree=new dhtmlXTreeObject("treeboxbox_tree1","100%","100%",0);
 	    tree.setImagePath("/static/js/dhtmlxTree_v413_std/skins/web/imgs/dhxtree_web/");
@@ -37,6 +39,16 @@
 	    tree.enableDragAndDrop(1);
 	    tree.enableSmartXMLParsing(true);
 	    
+	    var dialog = null;
+	    var successHandler = function(json){
+        	alert(json.message);
+        	
+        	if(json.message.indexOf('成功') != -1){
+        		location.href = "{admin_site_url('goods_category/index')}";
+        	}
+        	
+        };
+        
 	    function tonclick(id){
 	    }
 	    
@@ -47,63 +59,65 @@
 	        location.href= "{admin_site_url('goods_category/edit?id=')}" + id + "&t" + Math.random();
 	    }
 	    
-	    function toncheck(id,state){
-	    
-	    }
-	    
 	    function tondrag(id,id2){
 	    	
-	    	
-	    	
-	    	
-	    	
-	    
-	    	
-	        //console.log(id2);
 	        if(0 == id2){
-	            var submit = function (v, h, f) {
-				    if (v == 'ok'){
-				         $.ajax({
-				              type:"POST",
-				              url:"{base_url('lab_category/delete')}",
-				              data: { id: id },
-				              success:function(data){
-				                  //console.log(data);
-				                  location.reload();
-				              }
-				         });
-				    }
-				
-				    return true;
-				};
-				
-				$.jBox.confirm("确定删除 " + tree.getItemText(id) + " 吗？", "提示", submit);
-				
-	            //var flag = confirm("确定要删除 "+tree.getItemText(id)+" to item "+tree.getItemText(id2)+"?");
-	            
-	        }else{
 	        
-	            var submit2 = function (v, h, f) {
-	                if (v == 'ok'){
-	                     $.ajax({
+	        	$( "#dialog-confirm .categoryName" ).html(tree.getItemText(id));
+	        	
+	        	$( "#dialog-confirm" ).dialog({
+			      resizable: false,
+			      height: "auto",
+			      width: 400,
+			      modal: true,
+			      buttons: {
+			        "确定": function() {
+			          	$.ajax({
 	                          type:"POST",
-	                          url:"{base_url('lab_category/edit')}",
-	                          data: { id: id , name : tree.getItemText(id) , pid: id2 },
-	                          success:function(data){
-	                              location.reload();
-	                          }
+	                          url:"{admin_site_url('goods_category/delete')}",
+	                          dataType:"json",
+	                          data: { id: id },
+	                          success:successHandler,
+	                          error:function(XMLHttpRequest, textStatus, errorThrown){ }
 	                     });
-	                }
-	            
-	                return true;
-	            };
-	            
-	            $.jBox.confirm("确定移动 " + tree.getItemText(id) + " 到 " + tree.getItemText(id2) + " 吗？", "提示", submit2);
-	        
-	            return false;
+	                     
+			          	$( this ).dialog( "close" );
+			        },
+			        "取消": function() {
+			          $( this ).dialog( "close" );
+			        }
+			      }
+			    });
+	        }else{
+	        	
+	        	$( "#dialog-confirm2 .categoryName" ).html(tree.getItemText(id) + "到" + tree.getItemText(id2) + "下");
+	        	
+	        	$( "#dialog-confirm2" ).dialog({
+	        	  title:'移动{#category_title#}',
+			      resizable: false,
+			      height: "auto",
+			      width: 400,
+			      modal: true,
+			      buttons: {
+			        "确定": function() {
+			          	$.ajax({
+	                          type:"POST",
+	                          url:"{admin_site_url('goods_category/edit')}",
+	                          dataType:"json",
+	                          data: { id: id , name : tree.getItemText(id) , pid: id2 },
+	                          success:successHandler,
+	                          error:function(XMLHttpRequest, textStatus, errorThrown){ }
+	                     });
+	                     
+			          	$( this ).dialog( "close" );
+			        },
+			        "取消": function() {
+			          $( this ).dialog( "close" );
+			        }
+			      }
+			    });
 	        }
 	    }
-	    
 	    
 	    function treeLoading(){
 	        $("#loading_img").show();
@@ -122,7 +136,7 @@
 	    });
 	    
 	    $(function(){
-	        $.loadingbar({ templateData:{ message:"努力加载中..."} });
+	        $.loadingbar({ templateData:{ message:"努力加载中..."} , container: "#catelist"});
 	    });
     </script>
 {include file="common/main_footer.tpl"}
