@@ -5,24 +5,19 @@ class Goods extends Ydzj_Admin_Controller {
     public function __construct(){
 		parent::__construct();
 		
-		$this->load->model('Goods_Model');
 		$this->load->model('Lab_Model');
-		$this->load->model('Goods_Category_Model');
 		
 		$this->load->helper('cookie');
-		
-		$this->assign('currentMenu',strtolower(get_class($this)));
-		
+		$this->load->library('Goods_service');
 		
 		$this->assign('isSystemManager',$this->_checkIsSystemManager());
-
 		
-		//$this->assign('');
+		$this->assign('action',$this->uri->rsegment(2));
+
     }
     
     public function index()
     {
-    	$this->assign('action','index');
     	
     	$this->_getPageData();
     	$this->assign('queryStr',$_SERVER['QUERY_STRING']);
@@ -274,27 +269,15 @@ class Goods extends Ydzj_Admin_Controller {
     }
     
     
-    
-    
     public function import(){
-    	$this->assign('action','import');
-    	
-    	
     	$this->assign('labList',$this->_getUserLab());
-    	
         $this->display();
     }
     
     
     public function empty_goods(){
-    	$this->assign('action','empty_goods');
-    	
-    	if(!$this->_checkIsLabManager()){
-    		$this->show_access_deny();
-    	}
     	
     	$this->assign('labList',$this->_getUserLab());
-    	
     	
     	$message = "";
     	if($this->isPostRequest()){
@@ -310,7 +293,6 @@ class Goods extends Ydzj_Admin_Controller {
     				$valid_id[] = $id;
     			}
     		}
-    		
     		
     		if($valid_id){
     			$condition = array(
@@ -548,11 +530,11 @@ EOF;
     
     private function _addRules(){
     	
-    	$this->form_validation->set_rules('lab_id','实验室',  'required|is_natural_no_zero');
+    	$this->form_validation->set_rules('lab_id','实验室地址',  'required|is_natural_no_zero');
     	$this->form_validation->set_rules('code','药品柜/试验台编号',  'required|max_length[100]');
 		$this->form_validation->set_rules('name','名称',  'required|max_length[100]');
-		$this->form_validation->set_rules('category_id','类别',  'required|callback_check_category');
-		$this->form_validation->set_rules('measure','单位',  'required');
+		$this->form_validation->set_rules('category_id','分类名称',  'required|callback_check_category');
+		$this->form_validation->set_rules('measure','度量单位',  'required');
 		
 		if(!empty($_POST['specific'])){
 			$this->form_validation->set_rules('specific','规格',  'max_length[50]');
@@ -575,16 +557,16 @@ EOF;
 		
 		
 		if(!empty($_POST['threshold'])){
-			$this->form_validation->set_rules('threshold','低库存预警',  'greater_than[0]');
+			$this->form_validation->set_rules('threshold','低库存预警阀值',  'greater_than[0]');
 		}
 		
 		
 		if(!empty($_POST['subject_name'])){
-			$this->form_validation->set_rules('subject_name','实验名称/课程名称',  'max_length[100]');
+			$this->form_validation->set_rules('subject_name','实验名称/课程名称',  'max_length[50]');
 		}
 		
 		if(!empty($_POST['project_name'])){
-			$this->form_validation->set_rules('project_name','备注',  'max_length[100]');
+			$this->form_validation->set_rules('project_name','备注',  'max_length[50]');
 		}
 			
     	
@@ -595,10 +577,11 @@ EOF;
     private function _getPageData(){
     	try {
             
-            if(empty($_GET['page'])){
-                $_GET['page'] = 1;
-            }
             
+            $page = $this->input->get_post('page');
+            if(empty($page)){
+                $page = 1;
+            }
             
             $page_size = get_cookie('page_size');
             
@@ -606,12 +589,18 @@ EOF;
             	$page_size = config_item('page_size');
             }
             
+            if($page_size > 100){
+            	$page_size = config_item('page_size');
+            }
+            
             //$condition['select'] = 'a,b';
             $condition['order'] = "gmt_modify DESC";
             $condition['pager'] = array(
                 'page_size' => $page_size,
-                'current_page' => $_GET['page'],
-                'query_param' => ''
+                'current_page' => $page,
+                'query_param' => '',
+                'call_js' => 'search_page',
+				'form_id' => '#formSearch'
             );
             
             
@@ -677,99 +666,107 @@ EOF;
     }
     
     
-    
+    private function _prepareData(){
+    	
+    	
+    	$categoryName = $this->Goods_Category_Model->getFirstByKey($_POST['category_id']);
+		$labName = $this->Lab_Model->getFirstByKey($_POST['lab_id']);
+		
+		$_POST['category_name'] = $categoryName['name'];
+		$_POST['lab_address'] = $labName['address'];
+		
+		//实验室地址 + 药品柜/试验台编号 + 名称 + 规格  确定唯一性
+		$_POST['hash'] = $this->_getGoodsHash(
+			array(
+				'lab_address' => $_POST['lab_address'],
+				'code' => $_POST['code'],
+				'name' => $_POST['name'],
+				'specific' => strtoupper($_POST['specific'])
+			)
+		);
+		
+		$_POST['threshold'] = intval($_POST['threshold']);
+    	
+    }
     
     public function edit(){
-    	$this->assign('action','edit');
+		
+		$id = $this->input->get_post('id');
 		
 		
 		if($this->isPostRequest()){
 			$this->_addRules();
 			
-			if($this->form_validation->run()){
-				$_POST['updator'] = $this->_userProfile['name'];
-				
-				$categoryName = $this->Goods_Category_Model->queryById($_POST['category_id']);
-				$labName = $this->Lab_Model->queryById($_POST['lab_id']);
-				
-				$_POST['category_name'] = $categoryName['name'];
-				$_POST['lab_name'] = $labName['name'];
-				$_POST['lab_address'] = $labName['address'];
-				
-				$_POST['hash'] = $this->_getGoodsHash(
-					array(
-						'lab_address' => $_POST['lab_address'],
-						'code' => $_POST['code'],
-						'name' => $_POST['name'],
-						'specific' => strtoupper($_POST['specific'])
-					)
-				);
-				
-				
-				$flag = $this->Goods_Model->update($_POST);
-				if(1 == $flag){
-					$this->assign('success','1');
-					$this->assign('message','修改成功');
-				}else{
-					if($this->db->_error_number() == 1062){
-						$this->assign('message','您修改后的货品已经存在,修改失败');
-					}else{
-						$this->assign('message','修改失败');
-					}
-				}
-				
-			}else{
-				$this->assign('message','数据不能通过校验,修改失败');
+			if(!$this->form_validation->run()){
+				$d['errors'] = $this->form_validation->error_array();
+				$this->jsonOutput('数据不能通过校验,添加失败',$d);
+				break;
 			}
 			
+			$_POST['updator'] = $this->_adminProfile['basic']['name'];
+			$this->_prepareData();
 			
-			$id = $_POST['id'];
-			$info = $this->Goods_Model->queryById($id);
-			$info['name'] = $_POST['name'];
+			$flag = $this->Goods_Model->update($_POST,array('id' => $id));
+			
+			if($flag >= 0){
+				$this->jsonOutput('保存成功');
+			}else{
+				$errorInfo = $this->db->get_error_info();
+				
+				if($errorInfo['code'] == 1062){
+					$this->jsonOutput('您修改后的货品已经存在,保存失败');
+				}else{
+					$this->jsonOutput('保存失败');
+				}
+				
+				/*
+				if($this->db->_error_number() == 1062){
+					$this->assign('message','您修改后的货品已经存在,修改失败');
+				}else{
+					$this->assign('message','修改失败');
+				}
+				*/
+			}
 			
 		}else{
-			$id = $this->uri->segment(4);
-			$info = $this->Goods_Model->queryById($id);
+			$this->_initBasicData();
+			$info = $this->Goods_Model->getFirstByKey($id);
+			$this->assign('info',$info);
+			
+			$this->display('goods/add');
 		}
-		
-		
-		$this->_initBasicData();
-		$this->assign('info',$info);
-		$this->assign('gobackUrl', $this->getGobackUrl());
-		
-        $this->display('add');
     }
     
     
     public function info(){
     	
-    	$this->assign('action','info');
-    	$id = $this->uri->segment(4);
+    	$id = $this->input->get_post('id');
     	
-		$info = $this->Goods_Model->queryById(intval($id));
+		$info = $this->Goods_Model->getFirstByKey(intval($id));
     	$this->assign('info',$info);
     	$this->display();
     }
     
     public function delete(){
     	
-    	$id = $this->uri->segment(4);
-    	
-    	if($this->isPostRequest()){
+    	$id = $this->input->post('id');
+    	if($id && $this->isPostRequest()){
+			for($i = 0; $i < 1; $i++){
+				$info = $this->Goods_Model->getFirstByKey($id);
 			
-			$info = $this->Goods_Model->queryById($id);
-			
-			if($this->_userProfile['id'] != LAB_FOUNDER_ID){
-				$labManager = $this->Lab_Member_Model->getLabManager($this->_userProfile['id'],$info['lab_id']);
-	    		if(empty($labManager)){
-	    			$this->sendFormatJson('failed',array('text' => '您不是该实验室管理员，不能删除'));
-	    		}
+				if($this->_loginUID != LAB_FOUNDER_ID){
+					$labManager = $this->Lab_Member_Model->getLabManager($this->_loginUID,$info['lab_id']);
+		    		if(empty($labManager)){
+		    			$this->jsonOutput('您不是该实验室管理员，不能删除');
+		    			break;
+		    		}
+				}
+				
+	    		$this->Goods_Model->deleteByWhere(array('id' => $id));
+	    		$this->jsonOutput('删除成功');
 			}
-			
-    		$this->Goods_Model->delete(array('id' => $id , 'updator' => $this->_userProfile['name']));
-    		$this->sendFormatJson('success',array('operation' => 'delete','id' => $id , 'text' => '删除成功'));
     	}else{
-    		$this->sendFormatJson('failed',array('text' => '请求错误'));
+    		$this->jsonOutput('请求错误');
     	}
     }
     
@@ -779,7 +776,7 @@ EOF;
     	
     	$val = intval($val);
     	
-    	$info = $this->Goods_Category_Model->queryById($val);
+    	$info = $this->Goods_Category_Model->getFirstByKey($val);
     	
     	if(empty($info)){
     		$this->form_validation->set_message('check_category', '%s 无效');
@@ -810,8 +807,7 @@ EOF;
     }
     
     private function _initBasicData(){
-    	$this->load->model('Measure_Model');
-		
+    	
 		$categoryList = $this->Goods_Category_Model->getListByTree();
 		$measureList = $this->Measure_Model->getList(array(
 			'where' => array(
@@ -829,63 +825,39 @@ EOF;
     
     public function add()
     {
-    	$this->assign('action','add');
-		
-		
-		
 		if($this->isPostRequest()){
 			
 			$this->_addRules();
 			
-			
 			for($i = 0; $i < 1; $i++){
 				if(!$this->form_validation->run()){
-					$info = $_POST;
-					$this->assign('message','数据不能通过校验,添加失败');
+					$d['errors'] = $this->form_validation->error_array();
+					$this->jsonOutput('数据不能通过校验,添加失败',$d);
 					break;
 				}
 				
-				$_POST['creator'] = $this->_userProfile['name'];
+				$_POST['creator'] = $this->_adminProfile['basic']['name'];
 				
-				$categoryName = $this->Goods_Category_Model->queryById($_POST['category_id']);
-				$labName = $this->Lab_Model->queryById($_POST['lab_id']);
-				
-				$_POST['category_name'] = $categoryName['name'];
-				$_POST['lab_address'] = $labName['address'];
-				
-				//名称 + 规格 + 单位  确定
-				$_POST['hash'] = $this->_getGoodsHash(
-					array(
-						'lab_address' => $_POST['lab_address'],
-						'code' => $_POST['code'],
-						'name' => $_POST['name'],
-						'specific' => strtoupper($_POST['specific'])
-					)
-				);
-				
-				$flag = $this->Goods_Model->add($_POST);
+				$this->_prepareData();
+				$flag = $this->Goods_Model->_add($_POST);
 				
 				if($flag > 0){
-					$this->assign('success','1');
-					$this->assign('message','添加成功');
+					$this->jsonOutput('保存成功');
 				}else{
-					$info = $_POST;
+					$errorInfo = $this->db->get_error_info();
 					
-					if($this->db->_error_number() == 1062){
-						$this->assign('message','该货品已经存在,添加失败');
+					if($errorInfo['code'] == 1062){
+						$this->jsonOutput('该货品已经存在,添加失败');
 					}else{
-						$this->assign('message','添加失败');
+						$this->jsonOutput('保存失败');
 					}
 				}
 			}
 			
+		}else{
+			$this->_initBasicData();
+	        $this->display();
 		}
-		
-		
-		$this->_initBasicData();
-		$this->assign('info',$info);
-		$this->assign('gobackUrl', $this->getGobackUrl());
-        $this->display();
     }
     
 }

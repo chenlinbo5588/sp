@@ -476,7 +476,8 @@ class Lab_User extends Ydzj_Admin_Controller {
 				}
 				
 				$this->_setUserLabs($uid , $_POST['lab_id'] );
-				$this->jsonOutput('保存成功');
+				//$this->jsonOutput('保存成功',array('redirectUrl' => admin_site_url('lab_user/add')));
+				$this->jsonOutput('保存成功',array('redirectUrl' => admin_site_url('lab_user/add')));
 			}
 			
 		}else{

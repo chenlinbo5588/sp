@@ -14,7 +14,7 @@
 	   <table class="table tb-type2">
       	<tbody>
 	      	<tr class="noborder">
-	          <td colspan="2" class="required"><label class="validation">{#name#}:</label></td>
+	          <td colspan="2" class="required"><label class="validation">{#category_name#}:</label></td>
 	        </tr>
 	        <tr class="noborder">
 	          <td class="vatop rowform"><input type="text" value="{$info['name']|escape}" name="name" class="txt"></td>

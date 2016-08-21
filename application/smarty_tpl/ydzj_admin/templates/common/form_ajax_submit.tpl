@@ -37,7 +37,13 @@ var formLock = [];
 								}
 								$("#error_" + f).html(errors[f]).addClass("error").show();
 							}
-							$("input[name=" + first + "]").focus();
+							
+							if($("input[name=" + first + "]").size()){
+								$("input[name=" + first + "]").focus();
+							}else if($("select[name=" + first + "]").size()){
+								$("select[name=" + first + "]").focus();
+							}
+							
 							
 						}else{
 							$("label.errtip").hide();

@@ -562,6 +562,13 @@ form label.valid { font-weight: normal; color:#390; background: transparent url(
 
 .pagination a:hover ,.pagination a.active {background:#0D93BF;color:#fff;cursor:pointer;}
 
+.pagination a.deactive {
+	background: #C8C7CE;
+    border: 1px solid #BDC2C3;
+    color: #9A9999;
+    text-decoration:none;
+}
+
 
 .paixv a {text-decoration:none; color:#000}
 .paixv a:hover {color:#06F}

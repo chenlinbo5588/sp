@@ -4,7 +4,7 @@
   <div class="fixed-empty"></div>
   <div class="feedback">{$feedback}</div>
   {form_open(admin_site_url('lab_user/index'),'id="formSearch"')}
-      <input type="hidden" name="page" value="{$currentPage}"/>
+      <input type="hidden" name="page" value=""/>
       <table class="tb-type1 noborder search">
       <tbody>
         <tr>
@@ -19,7 +19,6 @@
     </table>
   </form>
 	<table class="table tb-type2">
-	    
 	    <thead>
 	        <tr>
 	            <th>序号</th>

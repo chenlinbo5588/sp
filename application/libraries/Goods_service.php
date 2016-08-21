@@ -6,6 +6,9 @@ class Goods_service extends Base_service {
 	
 	private $_goodsModel = null;
 	private $_goodsCategoryModel = null;
+	private $_measureModel = null;
+	
+	
 	
 	private $_brandModel = null;
 	private $_parentList = array();
@@ -13,10 +16,11 @@ class Goods_service extends Base_service {
 	public function __construct(){
 		parent::__construct();
 		
-		self::$CI->load->model(array('Goods_Model', 'Goods_Category_Model'));
+		self::$CI->load->model(array('Goods_Model', 'Goods_Category_Model','Measure_Model'));
 		
 		$this->_goodsModel = self::$CI->Goods_Model;
 		$this->_goodsCategoryModel = self::$CI->Goods_Category_Model;
+		$this->_measureModel = self::$CI->Measure_Model;
 	}
 	
 	public function getParentsById($id = 0,$field = '*'){

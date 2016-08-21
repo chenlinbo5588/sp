@@ -1,15 +1,9 @@
 {include file="common/main_header.tpl"}
-  <div class="fixed-bar">
-    <div class="item-title">
-      <h3>货品</h3>
-      <ul class="tab-base">
-        <li><a href="JavaScript:void(0);" class="current"><span>管理</span></a></li>
-        <li><a href="{admin_site_url('goods/add')}"><span>新增</span></a></li>
-      </ul>
-    </div>
-  </div>
+  {config_load file="goods.conf"}
+  {include file="./goods_common.tpl"}
+  <div class="feedback">{$feedback}</div>
   <div class="fixed-empty"></div>
-  {form_open(admin_site_url('lab_goods/index'),'id="formSearch"')}
+  <form name="formSearch" id="formSearch" action="{admin_site_url('goods/index')}" method="get">
   <input type="hidden" name="page" value="{$currentPage}"/>
     <table class="tb-type1 noborder search">
       <tbody>
@@ -40,23 +34,7 @@
       </tbody>
     </table>
   </form>
-  {*
-  <table class="table tb-type2" id="prompt">
-    <tbody>
-      <tr class="space odd">
-        <th colspan="12"><div class="title"><h5>操作提示</h5><span class="arrow"></span></div>
-        </th>
-      </tr>
-      <tr>
-        <td>
-        	<ul>
-              <li>上架，当商品处于非上架状态时，前台将不能浏览该商品，管理员可控制商品上架状态</li>
-            </ul>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  *}
+  
   <table class="table tb-type2">
 	    <colgroup>
 	        <col style="width:10%"/>
@@ -111,7 +89,7 @@
 	                <a href="{base_url('lab_goods/edit/id/')}{$item['id']}">编辑</a>&nbsp;
 	            {/if}
 	            {if in_array($item['lab_id'],$managedLabs)}
-	                <a class="delete" href="javascript:void(0);" data-href="{base_url('lab_goods/delete/id/')}{$item['id']}" data-title="确定删除{$item['name']|escape}吗?">删除</a>
+	                <a class="delete" href="javascript:void(0);" data-id="{$item['id']}" data-url="{base_url('lab_goods/delete/id/')}{$item['id']}" data-title="确定删除{$item['name']|escape}吗?">删除</a>
 	            {/if}
 	            </td>
 	        </tr>
