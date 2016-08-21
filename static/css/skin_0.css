@@ -438,8 +438,7 @@ background: #dde8f0;
 
 
 .tb-type1{}
-.tb-type1 th{ padding:5px 5px 3px 0; line-height:21px; color: #333;}
-.tb-type1 td{ padding:5px 5px 3px 0;}
+.tb-type1 th{line-height:21px; color: #333;}
 .tb-type1 td input[type="text"], .tb-type1 td select{ margin-right:4px; _margin-right:2px; margin-left:4px; _margin-left:2px; }
 .tb-type1 td select { width:auto;}
 .tb-type1 .txt-short { width:80px;}
@@ -457,12 +456,13 @@ background: #dde8f0;
     .tb-type2 tr.hover:hover .tips2{ color:#333; }
     .tb-type2 td, tb-type2 th.td{ padding:5px 5px 3px 0; border-top: 1px dotted #CBE9F3; }
     .tb-type2 .tfoot td {padding:5px 5px 3px 0; border-top: 1px solid #CBE9F3;}
-    .tb-type2 th{ padding:5px 5px 3px 0; line-height:21px; font-size: 12px; }
+    .tb-type2 th{ padding:5px 5px 3px 0; line-height:21px; font-size: 12px; font-weight:bold; }
     .tb-type2 .txt, .tb-type2 .txtnobd{ width:100px; margin-right:10px; }
     .tb-type2 .smtxt { margin-right: 5px; width: 25px; }
     .nowrap { white-space: nowrap; }
     .tb-type2 .required { padding:3px 0 3px 5px; font-weight:700; }
 .tb-type2 .rowform{ padding-left:5px; vertical-align: middle;}
+
 /*配送地区*/
 #table_area_box tbody td { height: auto; padding: 16px 2px 6px 2px !important;}
 #table_area_box tbody tr:nth-child(even) td { background-color: #F3FBFE;}

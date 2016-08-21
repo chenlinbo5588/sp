@@ -15,15 +15,15 @@
       <tbody>
       	<tr>
           <td><label>实验室地址:</label></td>
-          <td><input type="text" class="form_input" name="lab_address" value="{$smarty.get.lab_address}" placeholder="请输入实验室地址" /></td>
+          <td><input type="text" class="txt" name="lab_address" value="{$smarty.get.lab_address}" placeholder="请输入实验室地址" /></td>
           <td><label>货品名称:</label></td>
-          <td><input type="text" class="form_input" name="name" value="{$smarty.get.name}" placeholder="请输入货品名称" /></td>
+          <td><input type="text" class="txt" name="name" value="{$smarty.get.name}" placeholder="请输入货品名称" /></td>
           <td><label>实验名称/课程名称:</label></td>
-          <td><input type="text" class="form_input" name="subject_name" value="{$smarty.get.subject_name}" placeholder="请输入实验名称/课程名称" /></td>
+          <td><input type="text" class="txt" name="subject_name" value="{$smarty.get.subject_name}" placeholder="请输入实验名称/课程名称" /></td>
      </tr>
      <tr>
           <td><label>备注:</label></td>
-          <td><input type="text" class="form_input" name="project_name" value="{$smarty.get.project_name}" placeholder="请输入备注" /></td>
+          <td><input type="text" class="txt" name="project_name" value="{$smarty.get.project_name}" placeholder="请输入备注" /></td>
           <td><label>分类:</label></td>
           <td><select class="form_select" name="category_id">
             <option value="0">全部</option>
@@ -33,7 +33,7 @@
           </select>
           </td>
           <td><label>已达到预警:<input type="checkbox" name="threshold_active" value="y" {if $smarty.get.threshold_active}checked{/if}/></label></td>
-          <td><input type="submit" class="form_submit" value="查询" />
+          <td><input type="submit" class="msbtn" value="查询" />
               <a href="{base_url('lab_goods/export/?')}{$queryStr}" title="导出到EXCEL">导出到EXCEL</a>
               <span class="tip">&lt;&lt;&lt;请右键目标另存为</span></td>
        	</tr>

@@ -1,10 +1,13 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 
-class Lab_Measure extends Lab_Admin_Controller {
+
+class Lab_Measure extends Ydzj_Admin_Controller {
     public function __construct(){
 		parent::__construct();
 		$this->load->model('Measure_Model');
+		
+		$this->assign('action',$this->uri->rsegment(2));
     }
     
     public function index()
@@ -16,56 +19,25 @@ class Lab_Measure extends Lab_Admin_Controller {
     
     private function _getPageData(){
     	try {
+            $page = $this->input->get_post('page');
             
-            if(empty($_GET['page'])){
-                $_GET['page'] = 1;
+            if(empty($page)){
+                $page = 1;
             }
             
             //$condition['select'] = 'a,b';
             $condition['order'] = "gmt_create DESC";
             $condition['pager'] = array(
                 'page_size' => config_item('page_size'),
-                'current_page' => $_GET['page'],
-                'query_param' => ''
+                'current_page' => $page,
+                'query_param' => '',
+                'call_js' => 'search_page',
+				'form_id' => '#formSearch'
             );
             
             if(!empty($_GET['name'])){
                 $condition['like']['name'] = $_GET['name'];
             }
-            
-            /*
-            if(!empty($_GET['project_no'])){
-                $condition['like']['project_no'] = $_GET['project_no'];
-            }
-            
-            $condition['where'] = array(
-                'status !=' => '已删除'
-            );
-            
-            if(!empty($_GET['status'])){
-                $condition['where']['status'] = $_GET['status'];
-            }
-            
-            if(!empty($_GET['type'])){
-                $condition['where']['type'] = $_GET['type'];
-            }
-            
-            if(!empty($_GET['sdate'])){
-                $condition['where']['createtime >='] = strtotime($_GET['sdate']);
-            }
-            
-            if(!empty($_GET['edate'])){
-                $condition['where']['createtime <='] = strtotime($_GET['edate']) + 86400;
-            }
-            
-            if(!empty($_GET['region_name'])){
-                $condition['where']['region_name'] = trim($_GET['region_name']);
-            }
-            
-            if($_GET['view'] == 'my'){
-                $condition['where']['user_id'] = $this->_userProfile['id'];
-            }
-            */
             
             $condition['where']['status'] = '正常';
             $data = $this->Measure_Model->getList($condition);
@@ -94,79 +66,93 @@ class Lab_Measure extends Lab_Admin_Controller {
     
     
     public function edit(){
-    	$this->assign('action','edit');
+		
+		$id = $this->input->get_post('id');
 		
 		if($this->isPostRequest()){
-			$this->form_validation->set_rules('name','度量名称',   'required|max_length[20]|is_unique_not_self['.$this->Measure_Model->_tableName.'.name.id.'.$_POST['id'].'.status.正常]');
+			$this->form_validation->set_rules('name','度量单位名称',   'required|max_length[20]|is_unique_not_self['.$this->Measure_Model->getTableRealName().'.name.id.'.$id.']');
 			
-			if($this->form_validation->run()){
-				$_POST['updator'] = $this->_userProfile['name'];
-				$flag = $this->Measure_Model->update($_POST);
+			
+			for($i = 0; $i < 1; $i++){
 				
-				if($flag){
-					$this->assign('success','1');
-					$this->assign('message','修改成功');
-				}else{
-					$info = $_POST;
-					$this->assign('message','修改失败');
+				if(!$this->form_validation->run()){
+					$d['errors'] = $this->form_validation->error_array();
+					$this->jsonOutput('数据不能通过校验,添加失败',$d);
+					break;
 				}
 				
-			}else{
-				$this->assign('message','数据不能通过校验,修改失败');
+				$_POST['updator'] = $this->_adminProfile['basic']['name'];
+				
+				$flag = $this->Measure_Model->update($_POST,array('id' => $id));
+				
+				if($flag < 0){
+					$this->jsonOutput($this->db->get_error_info());
+					break;
+				}
+				
+				$this->jsonOutput('保存成功');
 			}
 			
-			
-			$id = $_POST['id'];
-			$info = $this->Measure_Model->queryById($id);
-			$info['name'] = $_POST['name'];
-			
 		}else{
-			$id = $this->uri->segment(4);
-			$info = $this->Measure_Model->queryById($id);
+			$info = $this->Measure_Model->getFirstByKey($id);
+			
+			$this->assign('info',$info);
+        	$this->display('lab_measure/add');
 		}
-		
-		$this->assign('info',$info);
-		$this->assign('gobackUrl', $this->getGobackUrl());
-        $this->display('add');
     }
     
     public function delete(){
-    	$id = $this->uri->segment(4);
+    	$id = $this->input->post('id');
     	
-    	if($this->isPostRequest()){
-    		$this->Measure_Model->delete(array('id' => $id , 'updator' => $this->_userProfile['name']));
-    		$this->sendFormatJson('success',array('operation' => 'delete','id' => $id , 'text' => '删除成功'));
+    	if($id && $this->isPostRequest()){
+    		if(is_array($id)){
+    			$rows = $this->Measure_Model->deleteByCondition(array(
+    				'where_in' => array(
+    					array('key' => 'id','value' => $id)
+    				
+    				)
+    			));
+    		}else{
+    			$rows = $this->Measure_Model->delete(array('id' => $id));
+    		}
+    		
+    		
+    		if($rows > 0){
+    			$this->jsonOutput('删除成功');
+    		}else{
+    			$this->jsonOutput($this->db->get_error_info());
+    		}
+    		
     	}else{
-    		$this->sendFormatJson('failed',array('text' => '请求错误'));
+    		$this->jsonOutput('请求错误');
     	}
     }
     
     public function add()
     {
-    	$this->assign('action','add');
-		
 		if($this->isPostRequest()){
-			$this->form_validation->set_rules('name','度量名称',  'required|max_length[20]|is_unique_by_status['.$this->Measure_Model->_tableName.'.name.status.正常]');
+			$this->form_validation->set_rules('name','度量名称',  'required|max_length[20]|is_unique['.$this->Measure_Model->getTableRealName().'.name]');
 			
-			if($this->form_validation->run()){
-				$_POST['creator'] = $this->_userProfile['name'];
-				$flag = $this->Measure_Model->add($_POST);
-				
-				if($flag){
-					$this->assign('success','1');
-					$this->assign('message','添加成功');
-				}else{
-					$info = $_POST;
-					$this->assign('message','添加失败');
+			for($i = 0; $i < 1; $i++){
+				if(!$this->form_validation->run()){
+					$d['errors'] = $this->form_validation->error_array();
+					$this->jsonOutput('数据不能通过校验,添加失败',$d);
+					break;
 				}
 				
-			}else{
-				$this->assign('message','数据不能通过校验,添加失败');
+				$_POST['creator'] = $this->_adminProfile['basic']['name'];
+				$flag = $this->Measure_Model->_add($_POST);
+				
+				if($flag > 0){
+					$this->jsonOutput('保存成功',array('redirectUrl' => admin_site_url('lab_measure/add')));
+				}else{
+					$this->jsonOutput($this->db->get_error_info());
+				}
 			}
+			
+		}else{
+			$this->display();
 		}
-		
-		$this->assign('gobackUrl', $this->getGobackUrl());
-        $this->display();
     }
     
 }

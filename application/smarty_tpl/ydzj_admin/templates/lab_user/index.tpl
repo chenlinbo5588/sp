@@ -34,7 +34,7 @@
 	    </thead>
 	    <tbody>
 	        {foreach from=$data['data'] key=key item=item}
-            <tr id="row{$item['id']}" {if $key % 2 == 0}class="odd"{else}class="even"{/if}>
+            <tr id="row{$item['id']}">
                 <td>{$item['id']}</td>
                 <td>{$item['account']|escape}</td>
                 <td>{$item['name']|escape}</td>

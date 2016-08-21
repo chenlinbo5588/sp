@@ -41,6 +41,10 @@ var formLock = [];
 							
 						}else{
 							$("label.errtip").hide();
+							if(typeof(resp.data.redirectUrl) != "undefined"){
+								location.href = resp.data.redirectUrl;
+								
+							}
 						}
 					
 					},

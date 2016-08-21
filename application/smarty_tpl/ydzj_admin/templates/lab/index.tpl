@@ -1,5 +1,5 @@
 {include file="common/main_header.tpl"}
-{config_load file="lab.conf"}
+  {config_load file="lab.conf"}
   {include file="./lab_common.tpl"}
   <div class="fixed-empty"></div>
   <div class="feedback">{$feedback}</div>
