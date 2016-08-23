@@ -291,7 +291,7 @@ class Lab_User extends Ydzj_Admin_Controller {
 		}else{
 			$info = $this->Adminuser_Model->getFirstByKey($id);
 			
-			$labIds = $this->_getUserLabs($id);
+			$labIds = $this->lab_service->getUserJoinedLabList($id);
 			$ids = array();
 			foreach($labIds as $lab){
 				$ids[] = $lab['lab_id'];
@@ -445,11 +445,6 @@ class Lab_User extends Ydzj_Admin_Controller {
     }
     
     
-    private function _getUserLabs($user_id){
-    	return $this->lab_service->getUserLabList($user_id);
-    }
-    
-    
     public function add()
     {
 		if($this->isPostRequest()){
@@ -493,23 +488,31 @@ class Lab_User extends Ydzj_Admin_Controller {
     
     
     private function _searchUser(){
-    	if(empty($_GET['page'])){
-            $_GET['page'] = 1;
+    	
+    	$page = $this->input->get_post('page');
+    	
+    	
+    	if(empty($page)){
+            $page = 1;
         }
         
-        $lab_id = $_GET['id'];
+        $lab_id = $this->input->get_post('id');
         $isManager = false;
         
         //$condition['select'] = 'a,b';
         $condition['order'] = "gmt_create DESC";
         $condition['pager'] = array(
             'page_size' => 10,
-            'current_page' => $_GET['page'],
-            'query_param' => ''
+            'current_page' => $page,
+            'query_param' => '',
+            'shortStyle' => true
         );
         
-        if(!empty($_GET['username'])){
-            $condition['like']['name'] = $_GET['username'];
+        
+        $username = trim($this->input->get_post('username'));
+        
+        if(!empty($username)){
+            $condition['like']['name'] = $username;
         }
         
         $condition['where']['status'] = '正常';
@@ -561,6 +564,8 @@ class Lab_User extends Ydzj_Admin_Controller {
         
         $this->assign('isManager',$isManager);
         $this->assign('memberList',$memberList);
+        
+        ///$data['pager']['shortStyle'] = true;
         $this->assign('page',$data['pager']);
         $this->assign('data',$data);
     }

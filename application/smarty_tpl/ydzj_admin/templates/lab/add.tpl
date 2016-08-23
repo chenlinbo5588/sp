@@ -123,7 +123,7 @@
 	  <div id="labMemberDlg" title="成员管理"><div id="userlist"></div></div>
 	  <div id="dialog-confirm" title="移除成员" style="display:none;"><p><span class="ui-icon ui-icon-alert" style="float:left;"></span>确定要移除成员<span class="memberName hightlight"></span>吗?</p></div>
 
-	 {include file="common/jquery_dlg.tpl"}
+	 {include file="common/jquery_ui.tpl"}
 
       <script>
 	    var user_labs = {$user_labs};

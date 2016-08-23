@@ -6,6 +6,7 @@
     {if $info['id']}
     <form name="goodsForm" method="post" action="{admin_site_url('goods/edit?id=')}{$info['id']}">
     <input type="hidden" name="id" value="{$info['id']}"/>
+    <input type="hidden" name="lab_id" value="{$info['lab_id']}"/>
 	{else}
 	<form name="goodsForm" method="post" action="{admin_site_url('goods/add')}">
 	{/if}
@@ -20,7 +21,7 @@
 	        <select name="lab_id">
 	            <option value="">请选择</option>
 	            {foreach from=$labList item=item}
-	            <option value="{$item['id']}" {if $info['lab_id'] == $item['id']}selected{/if}>{$item['address']|escape}</option>
+	            <option value="{$item['id']}" {if $info['lab_id'] == $item['id']}selected{/if}>{str_repeat('----',$item['level'])}{$item['address']|escape}</option>
 	            {/foreach}
 	        </select>
 	        {else}
@@ -108,7 +109,7 @@
           <td class="vatop tips"><label class="errtip" id="error_manufacturer"></label> </td>
         </tr>
         <tr class="noborder">
-          <td colspan="2" class="required"><label class="validation">{#price#}:</label></td>
+          <td colspan="2" class="required"><label class="validation">{#price#}(元):</label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform">

@@ -18,22 +18,22 @@
       </tbody>
     </table>
   </form>
-	<table class="table tb-type2">
+	<table class="rounded-corner">
 	    <thead>
 	        <tr>
-	            <th>序号</th>
+	            <th class="first">序号</th>
 	            <th>登陆账号</th>
 	            <th>名称</th>
 	            <th>实验室管理员</th>
 	            <th>状态</th>
 	            <th>录入人</th>
 	            <th>录入时间</th>
-	            <th>操作</th>
+	            <th class="last">操作</th>
 	        </tr>
 	    </thead>
 	    <tbody>
 	        {foreach from=$data['data'] key=key item=item}
-            <tr id="row{$item['id']}">
+            <tr id="row{$item['id']}" class="{if $key % 2 == 0}odd{else}even{/if}">
                 <td>{$item['id']}</td>
                 <td>{$item['account']|escape}</td>
                 <td>{$item['name']|escape}</td>
@@ -50,12 +50,12 @@
 	    </tbody>
 	    <tfoot>
             <tr>
-                <td colspan="7">{include file="common/pagination.tpl"}</td>
+                <td colspan="9">{include file="common/pagination.tpl"}</td>
             </tr>
         </tfoot>
 	</table>
 	<div id="dialog-confirm" title="删除{#title#}" style="display:none;"></div>
-	{include file="common/jquery_dlg.tpl"}
+	{include file="common/jquery_ui.tpl"}
 	<script>
 	$(function(){
 		bindDeleteEvent();

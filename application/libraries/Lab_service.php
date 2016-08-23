@@ -191,16 +191,12 @@ class Lab_service extends Base_service {
 	}
 	
 	
-	
 	/**
-	 * 获得用户lab XML
+	 * 
 	 */
-	public function getUserLabXML($uid = 0){
+	public function getUserOwnedLabs($uid = 0){
 		
-		$str = array();
-		
-		$str[] = '<?xml version="1.0" ?><tree id="0">';
-   		$list = array();
+		$list = array();
    		
    		$condition = array(
    			'where' => array(
@@ -220,13 +216,53 @@ class Lab_service extends Base_service {
    		}
    		
    		$list = $this->_labModel->getList($condition);
-		$tree = array();
+   		
+   		return $list;
+	}
+	
+	
+	/**
+	 * 
+	 */
+	public function getUserOwnedLabsHTML($uid = 0){
 		
+		$tree = $this->makeNodeReachable($this->getUserOwnedLabs($uid));
 		
+		return self::$CI->phptree->makeTreeForHtml($tree,array(
+			'primary_key' => 'id',
+			'parent_key' => 'pid',
+			'expanded' => true
+		));
+		
+	}
+	
+	/**
+	 * 
+	 */
+	public function makeNodeReachable($nodeList){
+		
+		$tempTree = array();
+		
+		$this->_labModel->_parentList = array();
 		//获得 祖先，才能将树构建起来 重要
-		foreach($list as $node){
-			$tree = $this->_labModel->getParents($node['id']);
+		//由于是递归产生，始终返回的是 _parentList
+		foreach($nodeList as $node){
+			$tempTree = $this->_labModel->getParents($node['id']);
 		}
+		
+		return $tempTree;
+	}
+	
+	
+	/**
+	 * 获得用户lab XML
+	 */
+	public function getUserLabXML($uid = 0){
+		
+		$str = array();
+		$str[] = '<?xml version="1.0" ?><tree id="0">';
+   		
+		$tree = $this->makeNodeReachable($this->getUserOwnedLabs($uid));
 		
 		$tree = self::$CI->phptree->makeTree($tree,array(
 			'primary_key' => 'id',
@@ -320,7 +356,7 @@ class Lab_service extends Base_service {
 	/**
 	 * 
 	 */
-	public function getUserLabList($user_id){
+	public function getUserJoinedLabList($user_id){
     	return $this->_labMemberModel->getList(array(
     		'where' => array(
     			'user_id' => $user_id

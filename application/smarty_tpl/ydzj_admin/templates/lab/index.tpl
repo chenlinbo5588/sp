@@ -29,7 +29,7 @@
       </div>
       <div id="dialog-confirm" title="删除{#title#}" style="display:none;"><p><span class="ui-icon ui-icon-alert" style="float:left;"></span>确定要移除<span class="categoryName hightlight"></span>吗?</p></div>
 	 {include file="common/dhtml_tree.tpl"}
-	 {include file="common/jquery_dlg.tpl"}
+	 {include file="common/jquery_ui.tpl"}
 	
       <script>
         var tree=new dhtmlXTreeObject("treeboxbox_tree1","100%","100%",0);

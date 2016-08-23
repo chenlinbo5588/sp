@@ -148,7 +148,7 @@ class Goods extends Ydzj_Admin_Controller {
     	require_once PHPExcel_PATH.'PHPExcel.php';
     	
     	$cacheMethod = PHPExcel_CachedObjectStorageFactory::cache_to_discISAM; 
-        $cacheSettings = array( 'dir'  => ROOT_DIR.'/temp' );
+        $cacheSettings = array( 'dir'  => PHPExcel_TEMP_PATH );
         PHPExcel_Settings::setLocale('zh_CN');
         PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
         
@@ -170,12 +170,12 @@ class Goods extends Ydzj_Admin_Controller {
     	$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
     	
         $showFilename = "{$title}.xls";
-        $filename = "{$title}".$this->_userProfile['id'].".xls";
+        $filename = "{$title}".$this->_loginUID.".xls";
         
-        $objWriter->save(ROOT_DIR.'/temp/'.$filename);
+        $objWriter->save(PHPExcel_TEMP_PATH.$filename);
         $objPHPExcel->disconnectWorksheets(); 
         unset($objPHPExcel,$objWriter); 
-        force_download($showFilename,  file_get_contents(ROOT_DIR.'/temp/'.$filename));
+        force_download($showFilename,  file_get_contents(PHPExcel_TEMP_PATH.$filename));
     }
     
     private function _writeTitleLine($objPHPExcel){
@@ -209,12 +209,12 @@ class Goods extends Ydzj_Admin_Controller {
     }
     
     private function _writeDetailLine($objPHPExcel, $row_start , $list){
-    	if(empty($list['data'])){
+    	if(empty($list)){
     		return;
     	}
     	
         $i = 0;
-        foreach($list['data'] as $p){
+        foreach($list as $p){
             $current_row = $i + $row_start;
             
             $objPHPExcel->getActiveSheet()->setCellValue('A'.$current_row,$p['lab_address']);
@@ -270,8 +270,223 @@ class Goods extends Ydzj_Admin_Controller {
     
     
     public function import(){
-    	$this->assign('labList',$this->_getUserLab());
-        $this->display();
+    	
+    	
+    	if($this->isPostRequest()){
+    		
+    		ob_end_flush();//关闭缓存
+
+			$this->load->helper('text');
+	    	
+	    	//header("Content-Type: text/html; charset=utf-8");
+	    	echo '<style type="text/css"> .import_result { border-collapse: collapse; } .import_result td { border: 1px solid black; }  .success td {color:blue;} .failed td {color:red;}</style>';
+	    	//flush();
+	    	$id = $_POST['file_id'];
+	    	
+	    	if(!empty($id)){
+	    		$this->load->model('Attachment_Model');
+	    		//$this->load->model('Goods_Import_Model');
+	    		$excelFile = $this->Attachment_Model->queryById($id);
+	    		
+	    		$filePath = config_item('filestore_dir') . $excelFile['file_url'];
+	    		
+	    		if(is_file($filePath)){
+	    			
+	    			//init basic data
+	    			$categoryList = $this->Goods_Category_Model->getList();
+					$hashCategory = array();
+					foreach($categoryList['data'] as $item){
+						$hashCategory[$item['name']] = $item['id'];
+					}
+					
+					$keyConfig = $this->_getExcelColumnConfig();
+					
+					$userLabs = $this->_getUserLab();
+					$hashLabs = array();
+					foreach($userLabs['data'] as $lab){
+						$lab['address'] = sbc_to_dbc(str_replace(array("\n","\r","\r\n"),"",trim($lab['address'])));
+						$hashLabs[$lab['address']] = $lab;
+					}
+					
+					// begin
+	    			require_once PHPExcel_PATH.'PHPExcel.php';
+	    			$objPHPexcel = PHPExcel_IOFactory::load($filePath); 
+					$objWorksheet = $objPHPexcel->getActiveSheet(0); 
+					$startRow = 0;
+					$readAddOn = 2; //标题行下再两行开始读  hard code , need make it configureable
+					$keyword = '实验室';
+					$findKeyword = false;
+					$highestRow = $objWorksheet->getHighestRow();
+					
+					$result = array('success' => 0 , 'failed' => 0 ,'duplicate' => 0 );
+					echo '<table class="import_result"><tbody><tr>';
+					$temp = array();
+					
+					foreach($keyConfig as $config){
+						$temp[] = "<td>".$config['name']."</td>";
+					}
+					echo implode('',$temp);
+					echo '</tr>';
+					
+					flush();
+					
+					
+					
+					foreach ($objWorksheet->getRowIterator() as $row) { 
+						 $cellIterator = $row->getCellIterator();
+						 $startRow++;
+						 
+						 foreach ($cellIterator as $cell) {
+						    if(str_replace(array("\n","\r","\r\n"),"",trim($cell->getValue())) == $keyword){
+						    	$findKeyword = true;
+						    	break;
+						    }
+						 }
+						 
+						 if($findKeyword){
+						 	break;
+						 }
+					}
+					
+					$extraMessage = '';
+					
+					for($rowIndex = ($startRow + $readAddOn); $rowIndex <= $highestRow; $rowIndex++){
+						$rowValue = array();
+						$flag = false;
+						$affectRow = 0;
+						$classname ="failed";
+						
+						$rowValue['id'] = NULL;
+						$rowValue['file_id'] = $id;
+						
+						foreach($keyConfig as $config){
+							$rowValue[$config['db_key']] = sbc_to_dbc(str_replace(array("\n","\r","\r\n"),"",trim($objWorksheet->getCell($config['col'].$rowIndex)->getValue())));
+						}
+						
+						//important , do not drop this line
+						if(empty($rowValue['lab_address'])){
+							break;
+						}
+						
+						//实验室地址不存在
+						if(empty($hashLabs[$rowValue['lab_address']])){
+							$temp = array();
+							$temp[] = '<tr class="failed">';
+							foreach($keyConfig as $config){
+								$temp[] = "<td>".$rowValue[$config['db_key']]."</td>";
+							}
+							$temp[] = "</tr>";
+							
+							echo implode('',$temp);
+							flush();
+							
+							$result['failed']++;
+							continue;
+						}
+						
+						$rowValue['lab_id'] = empty($hashLabs[$rowValue['lab_address']]['id']) ? 0 : $hashLabs[$rowValue['lab_address']]['id'];
+						$rowValue['category_id'] = empty($hashCategory[$rowValue['category_name']]) ? 0 : $hashCategory[$rowValue['category_name']];
+						$rowValue['specific'] = strtoupper($rowValue['specific']);
+						if(preg_match("/^-+$/",$rowValue['specific'])){
+							$rowValue['specific'] = '';
+						}
+						
+						$rowValue['quantity'] = intval($rowValue['quantity']);
+						$rowValue['price'] = (double)$rowValue['price'];
+						$rowValue['creator'] = $this->_userProfile['name'];
+						
+						$rowValue['hash'] = $this->_getGoodsHash(
+							array(
+								'lab_address' => $rowValue['lab_address'],
+								'code' => $rowValue['code'],
+								'name' => $rowValue['name'],
+								'specific' => strtoupper($rowValue['specific'])
+							)
+						);
+						
+						
+						//检查是否已经存在
+						$flag = $this->Goods_Model->add($rowValue);
+						if($flag > 0){
+							//
+							$result['success']++;
+							$classname = "success";
+						}else{
+							if($this->db->_error_number() == 1062){
+								foreach($rowValue as $rowKey => $rowV){
+									$this->db->set($rowKey, $rowV);
+								}
+								
+								//hash key duplicate
+								if($_POST['import_mode'] == '累加模式'){
+									$this->db->set('quantity', "quantity + {$rowValue['quantity']}",false);
+								}else{
+									$this->db->set('quantity', $rowValue['quantity']);
+								}
+								
+								
+								$this->db->set('status', '正常');
+								$this->db->set('updator', $this->_userProfile['name']);
+								$this->db->set('gmt_modify', time());
+								
+								$this->db->where(array('hash' => $rowValue['hash']));
+								$affectRow = $this->db->update($this->Goods_Model->_tableName);
+								
+								if($affectRow >= 0){
+									$classname = "success";
+									$result['duplicate']++;
+								}else{
+									$classname = "failed";
+									$result['failed']++;
+								}
+								
+							}else{
+								$classname = "failed";
+								$result['failed']++;
+							}
+						}
+						
+						$trRow = array();;
+						$trRow[] = "<tr class=\"{$classname}\">";
+						foreach($keyConfig as $config){
+							$trRow[] = "<td>".$rowValue[$config['db_key']]."</td>";
+						}
+						$trRow[] = "</tr>";
+						
+						echo implode('',$trRow);
+						
+						unset($trRow);
+						
+						flush();
+					}
+					
+					echo '</tbody></table>';
+					echo '<p>导入结果</p>';
+					echo '<p><span style="color:blue">新建'.($result['success']).'行</span>';
+					echo '&nbsp;<span style="color:blue">更新(含重复数据行)'.($result['duplicate']).'行</span>';
+					echo '&nbsp;<span style="color:red">失败'.$result['failed'].'行</span></p>';
+					
+					$script = <<< EOF
+					<script>
+						window.onload = function(){
+							parent.document.getElementById("begin_import").disabled = false;
+						}
+					</script>
+EOF;
+
+					echo $script;
+					flush();
+	    		}
+	    	}
+    		
+    	}else{
+    		
+    		$this->assign('labList',$this->_getUserLab());
+    		$this->display();
+    	}
+    	
+    	
+        
     }
     
     
@@ -318,218 +533,8 @@ class Goods extends Ydzj_Admin_Controller {
         $this->display();
     }
     
-    public function import_goods() {
-    	
-    	ob_end_flush();//关闭缓存
-
-		$this->load->helper('text');
-    	
-    	//header("Content-Type: text/html; charset=utf-8");
-    	echo '<style type="text/css"> .import_result { border-collapse: collapse; } .import_result td { border: 1px solid black; }  .success td {color:blue;} .failed td {color:red;}</style>';
-    	//flush();
-    	$id = $_POST['file_id'];
-    	
-    	if(!empty($id)){
-    		$this->load->model('Attachment_Model');
-    		//$this->load->model('Goods_Import_Model');
-    		$excelFile = $this->Attachment_Model->queryById($id);
-    		
-    		$filePath = config_item('filestore_dir') . $excelFile['file_url'];
-    		
-    		if(is_file($filePath)){
-    			
-    			//init basic data
-    			$categoryList = $this->Goods_Category_Model->getList();
-				$hashCategory = array();
-				foreach($categoryList['data'] as $item){
-					$hashCategory[$item['name']] = $item['id'];
-				}
-				
-				$keyConfig = $this->_getExcelColumnConfig();
-				
-				$userLabs = $this->_getUserLab();
-				$hashLabs = array();
-				foreach($userLabs['data'] as $lab){
-					$lab['address'] = sbc_to_dbc(str_replace(array("\n","\r","\r\n"),"",trim($lab['address'])));
-					$hashLabs[$lab['address']] = $lab;
-				}
-				
-				// begin
-    			require_once PHPExcel_PATH.'PHPExcel.php';
-    			$objPHPexcel = PHPExcel_IOFactory::load($filePath); 
-				$objWorksheet = $objPHPexcel->getActiveSheet(0); 
-				$startRow = 0;
-				$readAddOn = 2; //标题行下再两行开始读  hard code , need make it configureable
-				$keyword = '实验室';
-				$findKeyword = false;
-				$highestRow = $objWorksheet->getHighestRow();
-				
-				$result = array('success' => 0 , 'failed' => 0 ,'duplicate' => 0 );
-				echo '<table class="import_result"><tbody><tr>';
-				$temp = array();
-				
-				foreach($keyConfig as $config){
-					$temp[] = "<td>".$config['name']."</td>";
-				}
-				echo implode('',$temp);
-				echo '</tr>';
-				
-				flush();
-				
-				
-				
-				foreach ($objWorksheet->getRowIterator() as $row) { 
-					 $cellIterator = $row->getCellIterator();
-					 $startRow++;
-					 
-					 foreach ($cellIterator as $cell) {
-					    if(str_replace(array("\n","\r","\r\n"),"",trim($cell->getValue())) == $keyword){
-					    	$findKeyword = true;
-					    	break;
-					    }
-					 }
-					 
-					 if($findKeyword){
-					 	break;
-					 }
-				}
-				
-				$extraMessage = '';
-				
-				for($rowIndex = ($startRow + $readAddOn); $rowIndex <= $highestRow; $rowIndex++){
-					$rowValue = array();
-					$flag = false;
-					$affectRow = 0;
-					$classname ="failed";
-					
-					$rowValue['id'] = NULL;
-					$rowValue['file_id'] = $id;
-					
-					foreach($keyConfig as $config){
-						$rowValue[$config['db_key']] = sbc_to_dbc(str_replace(array("\n","\r","\r\n"),"",trim($objWorksheet->getCell($config['col'].$rowIndex)->getValue())));
-					}
-					
-					//important , do not drop this line
-					if(empty($rowValue['lab_address'])){
-						break;
-					}
-					
-					//实验室地址不存在
-					if(empty($hashLabs[$rowValue['lab_address']])){
-						$temp = array();
-						$temp[] = '<tr class="failed">';
-						foreach($keyConfig as $config){
-							$temp[] = "<td>".$rowValue[$config['db_key']]."</td>";
-						}
-						$temp[] = "</tr>";
-						
-						echo implode('',$temp);
-						flush();
-						
-						$result['failed']++;
-						continue;
-					}
-					
-					$rowValue['lab_id'] = empty($hashLabs[$rowValue['lab_address']]['id']) ? 0 : $hashLabs[$rowValue['lab_address']]['id'];
-					$rowValue['category_id'] = empty($hashCategory[$rowValue['category_name']]) ? 0 : $hashCategory[$rowValue['category_name']];
-					$rowValue['specific'] = strtoupper($rowValue['specific']);
-					if(preg_match("/^-+$/",$rowValue['specific'])){
-						$rowValue['specific'] = '';
-					}
-					
-					$rowValue['quantity'] = intval($rowValue['quantity']);
-					$rowValue['price'] = (double)$rowValue['price'];
-					$rowValue['creator'] = $this->_userProfile['name'];
-					
-					$rowValue['hash'] = $this->_getGoodsHash(
-						array(
-							'lab_address' => $rowValue['lab_address'],
-							'code' => $rowValue['code'],
-							'name' => $rowValue['name'],
-							'specific' => strtoupper($rowValue['specific'])
-						)
-					);
-					
-					
-					//检查是否已经存在
-					$flag = $this->Goods_Model->add($rowValue);
-					if($flag > 0){
-						//
-						$result['success']++;
-						$classname = "success";
-					}else{
-						if($this->db->_error_number() == 1062){
-							foreach($rowValue as $rowKey => $rowV){
-								$this->db->set($rowKey, $rowV);
-							}
-							
-							//hash key duplicate
-							if($_POST['import_mode'] == '累加模式'){
-								$this->db->set('quantity', "quantity + {$rowValue['quantity']}",false);
-							}else{
-								$this->db->set('quantity', $rowValue['quantity']);
-							}
-							
-							
-							$this->db->set('status', '正常');
-							$this->db->set('updator', $this->_userProfile['name']);
-							$this->db->set('gmt_modify', time());
-							
-							$this->db->where(array('hash' => $rowValue['hash']));
-							$affectRow = $this->db->update($this->Goods_Model->_tableName);
-							
-							if($affectRow >= 0){
-								$classname = "success";
-								$result['duplicate']++;
-							}else{
-								$classname = "failed";
-								$result['failed']++;
-							}
-							
-						}else{
-							$classname = "failed";
-							$result['failed']++;
-						}
-					}
-					
-					$trRow = array();;
-					$trRow[] = "<tr class=\"{$classname}\">";
-					foreach($keyConfig as $config){
-						$trRow[] = "<td>".$rowValue[$config['db_key']]."</td>";
-					}
-					$trRow[] = "</tr>";
-					
-					echo implode('',$trRow);
-					
-					unset($trRow);
-					
-					flush();
-				}
-				
-				echo '</tbody></table>';
-				echo '<p>导入结果</p>';
-				echo '<p><span style="color:blue">新建'.($result['success']).'行</span>';
-				echo '&nbsp;<span style="color:blue">更新(含重复数据行)'.($result['duplicate']).'行</span>';
-				echo '&nbsp;<span style="color:red">失败'.$result['failed'].'行</span></p>';
-				
-				$script = <<< EOF
-				<script>
-					window.onload = function(){
-						parent.document.getElementById("begin_import").disabled = false;
-					}
-				</script>
-				
-EOF;
-				echo $script;
-				flush();
-    		}
-    	}
-    }
-    
-    
     
     private function _addRules(){
-    	
     	$this->form_validation->set_rules('lab_id','实验室地址',  'required|is_natural_no_zero');
     	$this->form_validation->set_rules('code','药品柜/试验台编号',  'required|max_length[100]');
 		$this->form_validation->set_rules('name','名称',  'required|max_length[100]');
@@ -568,9 +573,6 @@ EOF;
 		if(!empty($_POST['project_name'])){
 			$this->form_validation->set_rules('project_name','备注',  'max_length[50]');
 		}
-			
-    	
-    	
     }
     
     
@@ -693,40 +695,45 @@ EOF;
 		
 		$id = $this->input->get_post('id');
 		
-		
 		if($this->isPostRequest()){
-			$this->_addRules();
 			
-			if(!$this->form_validation->run()){
-				$d['errors'] = $this->form_validation->error_array();
-				$this->jsonOutput('数据不能通过校验,添加失败',$d);
-				break;
-			}
-			
-			$_POST['updator'] = $this->_adminProfile['basic']['name'];
-			$this->_prepareData();
-			
-			$flag = $this->Goods_Model->update($_POST,array('id' => $id));
-			
-			if($flag >= 0){
-				$this->jsonOutput('保存成功');
-			}else{
-				$errorInfo = $this->db->get_error_info();
+			for($i = 0; $i < 1; $i++){
+				$this->_addRules();
 				
-				if($errorInfo['code'] == 1062){
-					$this->jsonOutput('您修改后的货品已经存在,保存失败');
-				}else{
-					$this->jsonOutput('保存失败');
+				if(!$this->form_validation->run()){
+					$d['errors'] = $this->form_validation->error_array();
+					$this->jsonOutput('数据不能通过校验,添加失败',$d);
+					break;
 				}
 				
-				/*
-				if($this->db->_error_number() == 1062){
-					$this->assign('message','您修改后的货品已经存在,修改失败');
+				$_POST['updator'] = $this->_adminProfile['basic']['name'];
+				$this->_prepareData();
+				
+				unset($_POST['lab_id']);
+				
+				$flag = $this->Goods_Model->update($_POST,array('id' => $id));
+				
+				if($flag >= 0){
+					$this->jsonOutput('保存成功');
 				}else{
-					$this->assign('message','修改失败');
+					$errorInfo = $this->db->get_error_info();
+					
+					if($errorInfo['code'] == 1062){
+						$this->jsonOutput('您修改后的货品已经存在,保存失败');
+					}else{
+						$this->jsonOutput('保存失败');
+					}
+					
+					/*
+					if($this->db->_error_number() == 1062){
+						$this->assign('message','您修改后的货品已经存在,修改失败');
+					}else{
+						$this->assign('message','修改失败');
+					}
+					*/
 				}
-				*/
 			}
+			
 			
 		}else{
 			$this->_initBasicData();
@@ -797,13 +804,8 @@ EOF;
     
     
     private function _getUserLab(){
-    	$labList = $this->Lab_Model->getList(array(
-			'where_in' => array(
-				array('key' => 'id', 'value' => $this->session->userdata('user_labs'))
-			)
-		));
-		
-		return $labList;
+    	return $this->lab_service->getUserOwnedLabsHTML($this->_loginUID);
+    	
     }
     
     private function _initBasicData(){
@@ -814,7 +816,6 @@ EOF;
 				'status' => '正常'
 			)
 		));
-		
 		
 		$this->assign('labList',$this->_getUserLab());
 		$this->assign('categoryList',$categoryList);

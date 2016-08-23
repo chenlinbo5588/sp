@@ -15,7 +15,7 @@
 	      </tbody>
 	    </table>
 	  
-		<table class="table tb-type2">
+		<table class="rounded-corner">
 		    <colgroup>
 		        <col style="width:10%"/>
 		        <col style="width:30%"/>
@@ -25,16 +25,16 @@
 		    </colgroup>
 		    <thead>
 		        <tr>
-		            <th>序号</th>
+		            <th class="first">序号</th>
 		            <th>度量名称</th>
 		            <th>录入时间</th>
 		            <th>录入人</th>
-		            <th>操作</th>
+		            <th class="last">操作</th>
 		        </tr>
 		    </thead>
 		    <tbody>
 		        {foreach from=$data['data'] key=key item=item}
-	            <tr id="row{$item['id']}">
+	            <tr id="row{$item['id']}" class="{if $key % 2 == 0}odd{else}even{/if}">
 	                <td>{$item['id']}</td>
 	                <td>{$item['name']|escape}</td>
 	                <td>{time_tran($item['gmt_create'])}</td>
