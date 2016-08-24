@@ -281,21 +281,27 @@ class Goods extends Ydzj_Admin_Controller {
 	    	//header("Content-Type: text/html; charset=utf-8");
 	    	echo '<style type="text/css"> .import_result { border-collapse: collapse; } .import_result td { border: 1px solid black; }  .success td {color:blue;} .failed td {color:red;}</style>';
 	    	//flush();
-	    	$id = $_POST['file_id'];
+	    	$id = $this->input->post('file_id');
 	    	
 	    	if(!empty($id)){
+	    		
 	    		$this->load->model('Attachment_Model');
 	    		//$this->load->model('Goods_Import_Model');
-	    		$excelFile = $this->Attachment_Model->queryById($id);
+	    		$excelFile = $this->Attachment_Model->getById(array(
+	    			'select' => 'file_url',
+	    			'where' => array(
+	    				'id' => $id
+	    			)
+	    		));
 	    		
-	    		$filePath = config_item('filestore_dir') . $excelFile['file_url'];
+	    		$filePath = ROOTPATH.$excelFile['file_url'];
 	    		
 	    		if(is_file($filePath)){
 	    			
 	    			//init basic data
 	    			$categoryList = $this->Goods_Category_Model->getList();
 					$hashCategory = array();
-					foreach($categoryList['data'] as $item){
+					foreach($categoryList as $item){
 						$hashCategory[$item['name']] = $item['id'];
 					}
 					
@@ -303,7 +309,7 @@ class Goods extends Ydzj_Admin_Controller {
 					
 					$userLabs = $this->_getUserLab();
 					$hashLabs = array();
-					foreach($userLabs['data'] as $lab){
+					foreach($userLabs as $lab){
 						$lab['address'] = sbc_to_dbc(str_replace(array("\n","\r","\r\n"),"",trim($lab['address'])));
 						$hashLabs[$lab['address']] = $lab;
 					}

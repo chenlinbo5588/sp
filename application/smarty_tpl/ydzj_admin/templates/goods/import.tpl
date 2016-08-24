@@ -12,7 +12,7 @@
 	        <tr class="noborder">
 	          <td class="vatop rowform">
 	              <input type="hidden" name="file_id" id="file_id" value=""/>
-	              <div class="upload"><input type="text" name="goods_file" id="goods_file" style="width:200px;" value="" /><input type="button" id="uploadButton" value="选择Excel文件" /></div>
+	              <div class="upload"><input class="txt" type="text" name="goods_file" id="goods_file" value="" /><input type="button" id="uploadButton" value="选择Excel文件" /></div>
 	          </td>
 	          <td class="vatop tips"><span class="warning"> 文件最大6M</span></td>
 	        </tr>
@@ -20,7 +20,8 @@
 	          <td colspan="2" class="required"><label class="validation">模式:</label></td>
 	        </tr>
 	        <tr class="noborder">
-	          <td class="vatop rowform"><select name="import_mode">
+	          <td class="vatop rowform">
+	          	  <select name="import_mode">
 	                <option value="覆盖模式">覆盖模式</option>
 	                <option value="累加模式">累加模式</option>
 	              </select>
@@ -30,7 +31,7 @@
 	       </tbody>
 	       <tfoot>
 	        <tr>
-	          <td colspan="2"><input type="submit" name="submit" value="开始导入" class="msbtn btndisabled"/></td>
+	          <td colspan="2"><input type="submit" id="begin_import" name="submit" value="开始导入" class="msbtn btndisabled"/></td>
 	        </tr>
       		</tfoot>
     	</table>
@@ -48,11 +49,13 @@
                 var uploadbutton = K.uploadbutton({
                         button : K('#uploadButton')[0],
                         fieldName : 'imgFile',
-                        url : '{admin_site_url('attachment/upload/?expire_time=86400')}',
+                        url : '{admin_site_url('common/upload_excel/?mod=goods')}',
                         afterUpload : function(data) {
                             if (data.error === 0) {
                                  $("#file_id").val(data.id);
                                  $("#goods_file").val(data.title);
+                                 
+                                 $("#begin_import").removeClass("btndisabled");
                             } else {
                             	alert(data.message);
                             }
@@ -69,9 +72,8 @@
                 	alert("请先上传文件");
                     return false;
                 }
-               
+                
                 $("#process_area").fadeIn();
-                $("#begin_import").prop("disabled",true);
                 
                 return true;
             }
