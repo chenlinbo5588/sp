@@ -746,12 +746,13 @@ EOF;
     
     
     public function info(){
-    	
     	$id = $this->input->get_post('id');
     	
+    	$this->_initBasicData();
 		$info = $this->Goods_Model->getFirstByKey(intval($id));
-    	$this->assign('info',$info);
-    	$this->display();
+		$this->assign('info',$info);
+		
+    	$this->display('goods/add_body');
     }
     
     public function delete(){
@@ -759,7 +760,18 @@ EOF;
     	$id = $this->input->post('id');
     	if($id && $this->isPostRequest()){
 			for($i = 0; $i < 1; $i++){
+				
+				if(is_array($id)){
+					$id = $id[0];
+				}
+				
 				$info = $this->Goods_Model->getFirstByKey($id);
+				
+				
+				if(empty($info)){
+					$this->jsonOutput('参数错误');
+					break;
+				}
 			
 				if($this->_loginUID != LAB_FOUNDER_ID){
 					$labManager = $this->Lab_Member_Model->getLabManager($this->_loginUID,$info['lab_id']);

@@ -196,11 +196,11 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
      */
     protected function _checkIsSystemManager(){
     	
-    	if($this->_userProfile['id'] == LAB_FOUNDER_ID){
+    	if($this->_loginUID == LAB_FOUNDER_ID){
     		return true;
     	}
     	
-    	if($this->_userProfile['is_manager'] != 'y'){
+    	if($this->_adminProfile['basic']['is_manager'] != 'y'){
 			return false;
 		}else{
 			return true;

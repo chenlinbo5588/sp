@@ -1,10 +1,10 @@
 {include file="common/main_header.tpl"}
   <div class="fixed-bar">
     <div class="item-title">
-      <h3>管理员管理</h3>
+      <h3>用户管理</h3>
       <ul class="tab-base">
-      	<li><a class="current"><span>管理员</span></a></li>
-      	<li><a href="{admin_site_url('authority/user_add')}"><span>添加管理员</span></a></li>
+      	<li><a href="{admin_site_url('authority/user')}" class="current"><span>用户</span></a></li>
+      	<li><a href="{admin_site_url('authority/user_add')}"><span>添加</span></a></li>
       </ul>
      </div>
   </div>
@@ -15,9 +15,11 @@
     <table class="tb-type1 noborder search">
       <tbody>
         <tr>
-          <td>管理员名称</td>
-          <td><input type="text" value="{$smarty.post['username']}" name="username" class="txt"></td>
-          <td>管理员邮箱</td>
+          <td>登陆账号</td>
+          <td><input type="text" value="{$smarty.post['accout']}" name="accout" class="txt"></td>
+          <td>用户名称</td>
+          <td><input type="text" value="{$smarty.post['name']}" name="name" class="txt"></td>
+          <td>用户邮箱</td>
           <td><input type="text" value="{$smarty.post['email']}" name="email" class="txt"></td>
           <td>
             <input type="submit" class="msbtn" name="tijiao" value="查询"/>

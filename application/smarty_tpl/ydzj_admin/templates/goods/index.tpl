@@ -78,10 +78,10 @@
 	    </thead>
 	    <tbody>
 	        {foreach from=$data['data'] key=key item=item}
-	        <tr id="row_{$item['id']}" class="{if $key % 2 == 0}odd{else}even{/if}">
+	        <tr id="row{$item['id']}" title="双击记录开始编辑" data-url="{admin_site_url('goods/edit?id=')}{$item['id']}" class="{if $key % 2 == 0}odd{else}even{/if}">
 	            <td>{$item['lab_address']|escape}</td>
 	            <td>{$item['code']|escape}</td>
-	            <td><a class="popwin asblock" data-width="500"  data-href="{admin_site_url('lab_goods/info/id/')}{$item['id']}" data-title="{$item['name']|escape}" href="javascript:void(0);">{$item['name']|escape}</a></td>
+	            <td><a class="popwin asblock" data-url="{admin_site_url('goods/info?id=')}{$item['id']}" data-title="{$item['name']|escape}" href="javascript:void(0);">{$item['name']|escape}</a></td>
 	            <td>{$item['specific']|escape}</td>
 	            <td {if $item['threshold'] > 0 && $item['threshold'] >= $item['quantity']}class="warning" title="低库存 阀值{$item['threshold']}"{/if}>{$item['quantity']|escape}{$item['measure']|escape}</td>
 	            <td>{$item['price']|escape}</td>
@@ -101,8 +101,8 @@
 	            {if $isSystemManager || in_array($item['lab_id'],$joinedLabs)}
 	                <a href="{admin_site_url('goods/edit?id=')}{$item['id']}">编辑</a>&nbsp;
 	            {/if}
-	            {if in_array($item['lab_id'],$managedLabs)}
-	                <a class="delete" href="javascript:void(0);" data-id="{$item['id']}" data-url="{admin_site_url('lab_goods/delete/id/')}{$item['id']}" data-title="确定删除{$item['name']|escape}吗?">删除</a>
+	            {if $admin_profile['basic']['id'] == $smarty.const.LAB_FOUNDER_ID || in_array($item['lab_id'],$managedLabs)}
+	                <a class="delete" href="javascript:void(0);" data-id="{$item['id']}" data-url="{admin_site_url('goods/delete?id=')}{$item['id']}" data-title="确定删除{$item['name']|escape}吗?">删除</a>
 	            {/if}
 	            </td>
 	        </tr>
@@ -118,9 +118,39 @@
 	</table>
   </form>
   {include file="common/jquery_ui.tpl"}
+  <div id="goodsDetail" title="{#title#}详情"></div>
+  
 <script>
 $(function(){
     bindDeleteEvent();
+    
+    
+    $(".rounded-corner tr").bind("dblclick",function(){
+    	var url = $(this).attr('data-url');
+    	location.href=url;
+    });
+    
+    $("a.popwin").bind("click",function(){
+    	var url = $(this).attr('data-url');
+    	
+    	var dialog = $( "#goodsDetail" ).dialog({
+		      autoOpen: false,
+		      height: '600',
+		      width: '80%',
+		      modal: true
+		});
+		
+		$.ajax({
+			url:url,
+			dataType:'html',
+			cache:false,
+			success:function(resp){
+				dialog.html(resp).dialog( "open" );
+			}
+		});
+		
+    });
+    
 });
 </script>
 {include file="common/main_footer.tpl"}

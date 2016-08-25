@@ -1,10 +1,10 @@
 {include file="common/main_header.tpl"}
   <div class="fixed-bar">
     <div class="item-title">
-      <h3>{if $info['uid']}维护{else}添加{/if}管理员</h3>
+      <h3>{if $info['id']}维护{else}添加{/if}用户</h3>
       <ul class="tab-base">
-      	<li><a href="{admin_site_url('authority/user')}"><span>管理员</span></a></li>
-      	<li><a class="current" ><span>{if $info['uid']}编辑{else}添加{/if}管理员</span></a></li>
+      	<li><a href="{admin_site_url('authority/user')}"><span>用户</span></a></li>
+      	<li><a class="current" ><span>{if $info['uid']}编辑{else}添加{/if}用户</span></a></li>
       </ul>
      </div>
   </div>
@@ -15,7 +15,7 @@
   {else}
   {form_open(admin_site_url('authority/user_add'),'id="add_form"')}
   {/if}
-  <input type="hidden" name="uid" value="{$info['uid']}"/>
+  <input type="hidden" name="id" value="{$info['id']}"/>
     <table class="table tb-type2 nobdb">
       <tbody>
         <tr class="noborder">
