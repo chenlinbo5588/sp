@@ -724,13 +724,6 @@ EOF;
 						$this->jsonOutput('保存失败');
 					}
 					
-					/*
-					if($this->db->_error_number() == 1062){
-						$this->assign('message','您修改后的货品已经存在,修改失败');
-					}else{
-						$this->assign('message','修改失败');
-					}
-					*/
 				}
 			}
 			

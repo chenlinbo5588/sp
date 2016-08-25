@@ -195,7 +195,7 @@ input[type=checkbox],input[type=radio] {
 
 .lightbox-content {
 	background-color: #fff;
-	width: 80%;
+	width: 50%;
 	margin: 0 auto;
 	position: relative;
 	padding: 5px 0;
