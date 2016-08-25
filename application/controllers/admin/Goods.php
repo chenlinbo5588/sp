@@ -271,15 +271,11 @@ class Goods extends Ydzj_Admin_Controller {
     
     public function import(){
     	
-    	
     	if($this->isPostRequest()){
-    		
     		ob_end_flush();//关闭缓存
-
-			$this->load->helper('text');
+	    	header("Content-Type: text/html; charset=utf-8");
 	    	
-	    	//header("Content-Type: text/html; charset=utf-8");
-	    	echo '<style type="text/css"> .import_result { border-collapse: collapse; } .import_result td { border: 1px solid black; }  .success td {color:blue;} .failed td {color:red;}</style>';
+	    	echo '<style type="text/css"> body { font: 62.5% "Microsoft Yahei", "Lucida Grande", Verdana, Lucida, Helvetica, Arial, "Simsun", sans-serif; } .import_result { border-collapse: collapse; } .import_result td { font-size:100%; border: 1px solid black; }  .success td {color:blue;} .failed td {color:red;}</style>';
 	    	//flush();
 	    	$id = $this->input->post('file_id');
 	    	
@@ -294,7 +290,7 @@ class Goods extends Ydzj_Admin_Controller {
 	    			)
 	    		));
 	    		
-	    		$filePath = ROOTPATH.$excelFile['file_url'];
+	    		$filePath = ROOTPATH.'/'.$excelFile['file_url'];
 	    		
 	    		if(is_file($filePath)){
 	    			
@@ -336,8 +332,6 @@ class Goods extends Ydzj_Admin_Controller {
 					
 					flush();
 					
-					
-					
 					foreach ($objWorksheet->getRowIterator() as $row) { 
 						 $cellIterator = $row->getCellIterator();
 						 $startRow++;
@@ -362,7 +356,7 @@ class Goods extends Ydzj_Admin_Controller {
 						$affectRow = 0;
 						$classname ="failed";
 						
-						$rowValue['id'] = NULL;
+						///$rowValue['id'] = NULL;
 						$rowValue['file_id'] = $id;
 						
 						foreach($keyConfig as $config){
@@ -399,7 +393,7 @@ class Goods extends Ydzj_Admin_Controller {
 						
 						$rowValue['quantity'] = intval($rowValue['quantity']);
 						$rowValue['price'] = (double)$rowValue['price'];
-						$rowValue['creator'] = $this->_userProfile['name'];
+						$rowValue['creator'] = $this->_adminProfile['basic']['name'];
 						
 						$rowValue['hash'] = $this->_getGoodsHash(
 							array(
@@ -410,15 +404,17 @@ class Goods extends Ydzj_Admin_Controller {
 							)
 						);
 						
-						
 						//检查是否已经存在
-						$flag = $this->Goods_Model->add($rowValue);
+						$flag = $this->Goods_Model->_add($rowValue);
 						if($flag > 0){
-							//
 							$result['success']++;
 							$classname = "success";
 						}else{
-							if($this->db->_error_number() == 1062){
+							$errorInfo = $this->db->get_error_info();
+							
+							///file_put_contents('debug.txt',print_r($errorInfo,true));
+							
+							if($errorInfo['code'] == 1062){
 								foreach($rowValue as $rowKey => $rowV){
 									$this->db->set($rowKey, $rowV);
 								}
@@ -432,12 +428,12 @@ class Goods extends Ydzj_Admin_Controller {
 								
 								
 								$this->db->set('status', '正常');
-								$this->db->set('updator', $this->_userProfile['name']);
+								$this->db->set('updator', $this->_adminProfile['basic']['name']);
 								$this->db->set('gmt_modify', time());
 								
 								$this->db->where(array('hash' => $rowValue['hash']));
-								$affectRow = $this->db->update($this->Goods_Model->_tableName);
 								
+								$affectRow = $this->db->update($this->Goods_Model->getTableRealName());
 								if($affectRow >= 0){
 									$classname = "success";
 									$result['duplicate']++;
@@ -635,8 +631,6 @@ EOF;
             	$condition['where']['threshold !='] = 0;
             }
             
-            
-            
             $this->Goods_Category_Model->clearMenuTree();
             $list = $this->Goods_Category_Model->getListByTree($_GET['category_id']);
             
@@ -651,7 +645,7 @@ EOF;
             	)
             );
             
-            if($this->_userProfile['id'] != LAB_FOUNDER_ID){
+            if($this->_loginUID != LAB_FOUNDER_ID){
             	$condition['where_in'][] = array(
             		'key' => 'lab_id',
             		'value' => $this->session->userdata['user_labs']
