@@ -234,6 +234,31 @@ class Lab_User extends Ydzj_Admin_Controller {
             
             $data = $this->Adminuser_Model->getList($condition);
             
+            
+            $roles = array();
+			foreach($data['data'] as $user){
+				$roles[] = $user['group_id'];
+			}
+			
+			//print_r($roles);
+			if($roles){
+				$roleList = $this->Role_Model->getList(
+					array(
+						'where_in' => array(
+							array('key' => 'id','value' => $roles)
+						)
+					)
+				);
+				
+				$roleKeyList = array();
+				foreach($roleList as $role){
+					$roleKeyList[$role['id']] = $role['name'];
+				}
+				
+				$this->assign('roleList',$roleKeyList);
+			}
+            
+            
             $this->assign('page',$data['pager']);
             $this->assign('data',$data);
             
@@ -299,6 +324,9 @@ class Lab_User extends Ydzj_Admin_Controller {
 			
 			$this->assign('lab_id',implode(',',$ids));
 			$this->assign('edit_user_labs',$labIds);
+			
+			$this->assign('roleList',$this->_getRoleAllowList());
+			
 			
 			// 当前登陆用户拥有的实验室
 			$this->assign('user_labs',$this->session->userdata('user_labs'));
@@ -386,6 +414,43 @@ class Lab_User extends Ydzj_Admin_Controller {
     	}
     }
     
+    
+    private function _getRoleAllowList(){
+    	/**
+		 * 只显示自己创建的以及 自己所在角色组
+		 */
+		$roleList = $this->Role_Model->getList(array(
+			'where' => array(
+				'add_uid' => $this->_loginUID
+			),
+			'or_where' => array(
+				'id' => $this->_adminProfile['basic']['group_id']
+			)
+		));
+		
+		return $roleList;
+    	
+    }
+    
+    
+    public function checkrole($roleid){
+    	
+    	$allowRoleList = $this->_getRoleAllowList();
+    	
+    	$roleIds = array();
+    	foreach($allowRoleList as $role){
+    		$roleIds[] = $role['id'];
+    	}
+    	
+    	if(in_array($roleid,$roleIds)){
+    		return true;
+    	}else{
+    		$this->form_validation->set_message('checkrole', '%s 参数无效');
+    		return false;
+    	}
+    	
+    }
+    
     public function checkmanager($val){
     	if($this->_loginUID == LAB_FOUNDER_ID && in_array($val,array('y','n'))){
     		return true;
@@ -429,6 +494,14 @@ class Lab_User extends Ydzj_Admin_Controller {
         
         if(!empty($_POST['is_manager'])){
         	$this->form_validation->set_rules('is_manager','设为管理员',  'callback_checkmanager');
+        }
+        
+        
+        $this->form_validation->set_rules('group_id','角色分组',  'callback_checkrole');
+        
+        
+        if(!empty($_POST['group_id'])){
+        	$this->form_validation->set_rules('group_id','角色分组',  'in_db_list['.$this->Role_Model->getTableRealName().'.id]');
         }
     }
     
@@ -478,6 +551,9 @@ class Lab_User extends Ydzj_Admin_Controller {
 		}else{
 			
 			$currentLabIds = $this->session->userdata('user_labs');
+			
+			$this->assign('roleList',$this->_getRoleAllowList());
+			
 			$this->assign('lab_id',implode(',',$currentLabIds));
 			// 当前登陆用户拥有的实验室
 			$this->assign('user_labs',$currentLabIds);

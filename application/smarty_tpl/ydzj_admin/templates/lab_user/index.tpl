@@ -25,6 +25,7 @@
 	            <th>登陆账号</th>
 	            <th>名称</th>
 	            <th>实验室管理员</th>
+	            <th>角色分组</th>
 	            <th>状态</th>
 	            <th>录入人</th>
 	            <th>录入时间</th>
@@ -38,6 +39,7 @@
                 <td>{$item['account']|escape}</td>
                 <td>{$item['name']|escape}</td>
                 <td>{if $item['is_manager'] == 'y'}是{else}否{/if}</td>
+                <td>{if $item['group_id'] == 0}无权限组{else}{$roleList[$item['group_id']]}{/if}</td>
                 <td>{$item['status']|escape}</td>
                 <td>{$item['creator']|escape}</td>
                 <td>{time_tran($item['gmt_create'])}</td>

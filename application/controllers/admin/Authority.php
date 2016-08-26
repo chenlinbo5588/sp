@@ -285,7 +285,6 @@ class Authority extends Ydzj_Admin_Controller {
 				'call_js' => 'search_page',
 				'form_id' => '#formSearch'
 			)
-			
 		);
 		
 		
@@ -294,7 +293,7 @@ class Authority extends Ydzj_Admin_Controller {
 			$condition['like']['name'] = $keywords;
 		}
 		
-		
+		/*
 		//update status
 		if($this->isPostRequest()){
 			$switchType = $this->input->post('submit_type');
@@ -321,11 +320,13 @@ class Authority extends Ydzj_Admin_Controller {
 				}
 				
 				$this->Role_Model->batchUpdate($updateData,'id');
-				
 			}
-			
 		}
+		*/
 		
+		if($this->_loginUID != LAB_FOUNDER_ID){
+			$condition['where']['add_uid'] = $this->_loginUID;
+		}
 		
 		$list = $this->Role_Model->getList($condition);
 		//print_r($list);
@@ -340,10 +341,9 @@ class Authority extends Ydzj_Admin_Controller {
 	
 	
 	private function _getRoleRules(){
-		
+		$this->form_validation->set_rules('name','角色名称',"required");
 		$this->form_validation->set_rules('status','权限组状态','required|in_list[开启,关闭]');
 		$this->form_validation->set_rules('permission[]','权限','required');
-		
 	}
 	
 	
@@ -355,9 +355,7 @@ class Authority extends Ydzj_Admin_Controller {
 		
 		if($this->isPostRequest()){
 			
-			$this->form_validation->set_rules('name','权限组名称',"required|is_unique[{$this->Role_Model->_tableRealName}.name]");
-			
-			
+			//$this->form_validation->set_rules('name','权限组名称',"required|is_unique[{$this->Role_Model->_tableRealName}.name]");
 			$this->_getRoleRules();
 			
 			for($i = 0; $i < 1; $i++){
@@ -377,6 +375,7 @@ class Authority extends Ydzj_Admin_Controller {
 				$info['permission'] = $this->_getEncodePermision($this->input->post('permission'),$this->input->post('name'));
 				
 				$info = array_merge($info,$this->addWhoHasOperated('add'));
+				$info['add_uid'] = $this->_loginUID;
 				
 				if(($newid = $this->Role_Model->_add($info)) < 0){
 					$feedback = getErrorTip('保存失败');
@@ -386,8 +385,6 @@ class Authority extends Ydzj_Admin_Controller {
 				$action = 'edit';
 				$feedback = getSuccessTip('保存成功');
 				$info = $this->_refreshRoleInfo($newid);
-				
-				
 			}
 		}
 		
@@ -450,7 +447,7 @@ class Authority extends Ydzj_Admin_Controller {
 			$this->assign('ispost',true);
 			$this->_getRoleRules();
 			
-			$this->form_validation->set_rules('name','权限组名称',"required|is_unique_not_self[{$this->Role_Model->_tableRealName}.name.id.{$id}]");
+			//$this->form_validation->set_rules('name','权限组名称',"required|is_unique_not_self[{$this->Role_Model->_tableRealName}.name.id.{$id}]");
 			
 			
 			$info = $this->_prepareRoleData();
@@ -467,9 +464,16 @@ class Authority extends Ydzj_Admin_Controller {
 				
 				$info['permission'] = $this->_getEncodePermision($this->input->post('permission'),$info['name']);
 				
-				$info = array_merge($info,$this->addWhoHasOperated('edit'));
+				$info['updator'] = $this->_adminProfile['basic']['name'];
+				$info['edit_uid'] = $this->_loginUID;
 				
-				if($this->Role_Model->update($info, array('id' => $id)) < 0){
+				$where = array('id' => $id);
+				if($this->_loginUID != LAB_FOUNDER_ID){
+					//防止恶意修改
+					$where['add_uid'] = $this->_loginUID;
+				}
+				
+				if($this->Role_Model->update($info, $where) < 0){
 					$feedback = getErrorTip('保存失败');
 					break;
 				}

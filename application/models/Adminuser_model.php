@@ -31,52 +31,33 @@ class Adminuser_Model extends MY_Model {
         return $row;
     }
     
-    
-    public function add($user){
-        
-        if(!$user['psw']){
+    private function _paramProcess($user){
+    	if(!$user['psw']){
             $user['psw'] = md5(config_item('encryption_key').config_item('default_password'));
         }else{
             $user['psw'] = md5(config_item('encryption_key').$user['psw']);
         }
         
-        $data = array(
-            'id' => NULL,
-            'name' => $user['name'],
-            'account' => $user['account'],
-            'psw' => $user['psw'],
-            'creator' => $user['creator'],
-            'updator' => $user['creator']
-        );
-        
-        if($user['is_manager'] == 'y'){
-        	$data['is_manager'] = $user['is_manager'];
+        if(!in_array($user['is_manager'],array('y','n'))){
+        	$user['is_manager'] = 'n';
         }
         
-        return $this->_add($data);
+        return $user;
+    }
+    
+    public function add($user){
+        $user = $this->_paramProcess($user);
+        
+        return $this->_add($user);
     }
     
     /**
      * 
      */
     public function updateInfo($user){
-        
-        $data = array(
-            'name' => $user['name'],
-            'updator' => $user['updator']
-        );
-        
-        if(!$user['psw']){
-            $data['psw'] = md5(config_item('encryption_key').config_item('default_password'));
-        }else{
-            $data['psw'] = md5(config_item('encryption_key').$user['psw']);
-        }
-        
-        if($user['is_manager'] == 'y'){
-        	$data['is_manager'] = $user['is_manager'];
-        }
-        
-        return $this->update($data,array('id' => $user['id']));
+    	
+        $user = $this->_paramProcess($user);
+        return $this->update($user,array('id' => $user['id']));
     }
     
     

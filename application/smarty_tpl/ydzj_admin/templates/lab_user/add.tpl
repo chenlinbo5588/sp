@@ -52,6 +52,20 @@
           <td class="vatop tips"><label class="errtip" id="error_is_manager"></label> </td>
         </tr>
         {/if}
+        <tr class="noborder">
+          <td colspan="2" class="required"><label class="validation" for="group_id">{#rolename#}:</label><label class="errtip" id="error_group_id"></label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform">
+          	<select name="group_id">
+          		<option value="0">请选择</option>
+          	{foreach from=$roleList item=item}
+          		<option {if $info['group_id'] == $item['id']}selected{/if} value="{$item['id']}">{$item['name']}</option>
+          	{/foreach}
+          	</select>
+          </td>
+          <td class="vatop tips">请选择一个权限组，如果还未设置，{form_error('group_id')} <a href="{admin_site_url('authority/add_role')}">点击马上设置</a></td>
+        </tr>
        </tbody>
     </table>
     <table class="autotable">

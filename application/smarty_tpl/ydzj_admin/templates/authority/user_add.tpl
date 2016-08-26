@@ -57,8 +57,8 @@
           <td class="vatop rowform"><input type="password" id="admin_rpassword" name="admin_rpassword" class="txt"></td>
           <td class="vatop tips">请输入确认密码 {form_error('admin_rpassword')}</td>
         </tr>
-        <tr>
-          <td colspan="2"><label for="group_id">权限组:</label></td>
+        <tr class="noborder">
+          <td class="vatop rowform" colspan="2"><label for="group_id">权限组:</label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform">
@@ -69,7 +69,7 @@
           	{/foreach}
           	</select>
           </td>
-          <td class="vatop tips">请选择一个权限组，如果还未设置，{form_error('gid')} <a href="{admin_site_url('authority/add_role')}">点击马上设置</a></td>
+          <td class="vatop tips">请选择一个权限组，如果还未设置，{form_error('group_id')} <a href="{admin_site_url('authority/add_role')}">点击马上设置</a></td>
         </tr>
       </tbody>
       <tfoot>

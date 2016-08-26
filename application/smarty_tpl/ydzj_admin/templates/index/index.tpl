@@ -390,8 +390,8 @@ $(function(){
                 <dd>
                   <ol>
                     <li><a href="javascript:void(0);" id="index_lab" onclick="openItem('index,lab,lab');">实验室管理</a></li>
-                    <li><a href="javascript:void(0);" id="add_lab" onclick="openItem('add,lab,lab');">添加实验室</a></li>
-                    <li><a href="javascript:void(0);" id="export_lab" onclick="openItem('export,lab,lab');">导出实验室</a></li>
+                    {*<li><a href="javascript:void(0);" id="add_lab" onclick="openItem('add,lab,lab');">添加实验室</a></li>
+                    <li><a href="javascript:void(0);" id="export_lab" onclick="openItem('export,lab,lab');">导出实验室</a></li>*}
                   </ol>
                 </dd>
               </dl>
@@ -403,8 +403,8 @@ $(function(){
                 <dd>
                   <ol>
                     <li><a href="javascript:void(0);" id="index_lab_user" onclick="openItem('index,lab_user,member');">实验员管理</a></li>
-                    <li><a href="javascript:void(0);" id="add_lab_user" onclick="openItem('add,lab_user,member');">添加实验员</a></li>
-                    <li><a href="javascript:void(0);" id="export_lab_user" onclick="openItem('export,lab_user,member');">导出实验员</a></li>
+                    {*<li><a href="javascript:void(0);" id="add_lab_user" onclick="openItem('add,lab_user,member');">添加实验员</a></li>
+                    <li><a href="javascript:void(0);" id="export_lab_user" onclick="openItem('export,lab_user,member');">导出实验员</a></li>*}
                   </ol>
                 </dd>
               </dl>
@@ -598,9 +598,9 @@ $(function(){
               <dl>
                 <dd>
                   <ol>
-                    <li><a href="javascript:void(0);" id="user_authority" onclick="openItem('user,authority,authority');">用户管理</a></li>
                     <li><a href="javascript:void(0);" id="role_authority" onclick="openItem('role,authority,authority');">角色管理</a></li>
-                    {*<li><a href="javascript:void(0);" id="menu_authority" onclick="openItem('menu,authority,authority');">菜单管理</a></li>*}
+                    {*<li><a href="javascript:void(0);" id="user_authority" onclick="openItem('user,authority,authority');">用户管理</a></li>
+                    <li><a href="javascript:void(0);" id="menu_authority" onclick="openItem('menu,authority,authority');">菜单管理</a></li>*}
                   </ol>
                 </dd>
               </dl>
