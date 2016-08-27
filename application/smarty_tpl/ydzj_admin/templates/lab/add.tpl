@@ -105,7 +105,7 @@
 	            <span class="member_color color_sample">图例：实验员</span>
 	            <ul class="lab_users clearfix">
 	                {foreach from=$userList item=item}
-	                <li id="row_{$item['user_id']}"><a {if $item['is_manager'] == 'y'}class="manager_color"{/if}" href="javascript:void(0);" data-width="300" data-title="成员详情"  data-href="{base_url('lab/get_join_info?id=')}{$item['user_id']}" >{$item['name']|escape}</a><span class="close" data-id="{$item['user_id']|escape}" data-title="{$item['name']|escape}">x</span></li>
+	                <li id="row_{$item['user_id']}"><a {if $item['is_manager'] == 'y'}class="manager_color"{/if}" href="javascript:void(0);">{$item['name']|escape}</a><span class="close" data-id="{$item['user_id']|escape}" data-title="{$item['name']|escape}">x</span></li>
 	                {/foreach}
 	            </ul>
 	          </div>
@@ -124,7 +124,6 @@
 	  <div id="dialog-confirm" title="移除成员" style="display:none;"><p><span class="ui-icon ui-icon-alert" style="float:left;"></span>确定要移除成员<span class="memberName hightlight"></span>吗?</p></div>
 
 	 {include file="common/jquery_ui.tpl"}
-
       <script>
 	    var user_labs = {$user_labs};
 	    var current_pid = {if $info['pid']}{$info['pid']}{else}""{/if};

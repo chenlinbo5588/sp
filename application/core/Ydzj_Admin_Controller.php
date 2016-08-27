@@ -17,7 +17,7 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 		$this->_initUserLabsRelate();
 		
 		//@todo 打开检查权限
-		//$this->_checkPermission();
+		$this->_checkPermission();
 	}
 	
 	
@@ -126,12 +126,15 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
         //公共权限
         $this->_permission['admin'] = 1;
         $this->_permission['admin/index'] = 1;
+        $this->_permission['admin/index/profile'] = 1;
         $this->_permission['admin/index/index'] = 1;
         $this->_permission['admin/index/logout'] = 1;
         $this->_permission['admin/index/nopermission'] = 1;
         $this->_permission['admin/dashboard/welcome'] = 1;
         $this->_permission['admin/dashboard/aboutus'] = 1;
 
+		//print_r($this->_permission);
+		
         $this->assign('permission',$this->_permission);
         
         if(!isset($this->_permission[$currentUri])){

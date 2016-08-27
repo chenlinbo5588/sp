@@ -302,7 +302,7 @@ $(function(){
 	            <ul>
 	              <li class="adminid" title="您好:{$admin_profile['basic']['account']|escape}">您好&nbsp;:&nbsp;<strong>{$admin_profile['basic']['account']|escape}</strong></li>
 	              <li><a href="{admin_site_url('index/profile')}" target="workspace" ><span>修改密码</span></a></li>
-	              <li><a href="{admin_site_url('my/logout')}" title="退出"><span>退出</span></a></li>
+	              <li><a href="{admin_site_url('index/logout')}" title="退出"><span>退出</span></a></li>
 	              {*<li><a href="{site_url('index')}" target="_blank" title="{config_item('site_name')}"><span>{config_item('site_name')}</span></a></li>*}
 	            </ul>
 	          </div>

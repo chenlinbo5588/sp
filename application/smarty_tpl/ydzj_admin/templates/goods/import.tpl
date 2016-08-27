@@ -42,6 +42,9 @@
           <div class="tip">【Excel 数据示例如下】</div>
           <img src="{resource_url('img/lab/excel_template.png')}"/>
       </div>
+      
+      <div id="dialog-confirm" title="上传EXCEL文件" style="display:none;"><p><span class="ui-icon ui-icon-alert" style="float:left;"></span><span>请先上传文件</span></p></div>
+      {include file="common/jquery_ui.tpl"}
 	  {include file="common/ke.tpl"}
 		<script>
 		    var editor1;
@@ -68,8 +71,24 @@
             });
             
             function validation(form){
+            	
+            	var submitBtn = $("#begin_import");
+            	
                 if(form['file_id'].value == ''){
-                	alert("请先上传文件");
+                	$("#dialog-confirm").dialog({
+					      autoOpen: false,
+					      height: 100,
+					      width: 200,
+					      modal: false,
+					      resizable: false,
+					      position: { my: "center", at: "right top", of: submitBtn },
+					      show: { effect: "slideDown", duration: 500 }
+                	}).dialog( "open" );
+                	
+                	setTimeout(function(){
+                		$("#dialog-confirm").dialog( "close" );
+                	},2000);
+                	
                     return false;
                 }
                 

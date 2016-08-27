@@ -1,9 +1,9 @@
 {include file="common/main_header.tpl"}
   <div class="fixed-bar">
     <div class="item-title">
-      <h3>角色管理</h3>
+      <h3>角色</h3>
       <ul class="tab-base">
-      	<li><a href="{admin_site_url('authority/role')}" class="current"><span>角色管理</span></a></li>
+      	<li><a href="{admin_site_url('authority/role')}" class="current"><span>管理</span></a></li>
       	<li><a href="{admin_site_url('authority/role_add')}"><span>添加</span></a></li>
       </ul>
      </div>

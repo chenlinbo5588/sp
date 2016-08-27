@@ -56,6 +56,9 @@ class Lab extends Ydzj_Admin_Controller {
 	        }
 	        
 	        $this->Lab_Model->clearMenuTree();
+	        
+	        
+	        // @todo 防止超大记录 ，先预判记录数量 做判断 防止溢出
 	        $data = $this->Lab_Model->getList($condition);
 	
 	    	require_once PHPExcel_PATH.'PHPExcel.php';
@@ -401,11 +404,6 @@ class Lab extends Ydzj_Admin_Controller {
 			$this->assign('info',$info);
 	        $this->display('lab/add');
 		}
-    }
-    
-    
-    public function get_join_info(){
-    	$this->display();
     }
     
     

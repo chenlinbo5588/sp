@@ -3,7 +3,7 @@
     <div class="item-title">
       <h3>角色</h3>
       <ul class="tab-base">
-      	<li><a href="{admin_site_url('authority/role')}" ><span>角色管理</span></a></li>
+      	<li><a href="{admin_site_url('authority/role')}" ><span>管理</span></a></li>
       	<li><a href="{admin_site_url('authority/role_add')}" {if empty($info['id'])}class="current"{/if}><span>添加</span></a></li>
       	{if $info['id']}<li><a href="{admin_site_url('authority/role_edit?id=')}{$info['id']}" class="current"><span>编辑</span></a></li>{/if}
       </ul>
@@ -48,6 +48,7 @@
       </thead>
       <tbody>
         {foreach from=$fnTree item=topItem}
+        {if $admin_profile['basic']['id'] == $smarty.const.LAB_FOUNDER_ID}
         <tr class="modelrow">
           <td class=""><label class="top_fn"><input type="checkbox" name="permission[]" {if isset($info['permission'][$topItem['url']])}checked{/if} value="{$topItem['url']}"><b>{$topItem['name']}</b></label></td>
           <td class="fnrow">
@@ -67,6 +68,31 @@
             </table>
           </td>
         </tr>
+        {else}
+        {if $permission[$topItem['url']]}
+        <tr class="modelrow">
+          <td class=""><label class="top_fn"><input type="checkbox" name="permission[]" {if isset($info['permission'][$topItem['url']])}checked{/if} value="{$topItem['url']}"><b>{$topItem['name']}</b></label></td>
+          <td class="fnrow">
+          	<table class="table">
+              <tbody>
+              	  {foreach from=$topItem['children'] item=secondItem}
+              	  {if $permission[$secondItem['url']]}
+                  <tr>
+                  	<td>
+                    	<label class="side_fn"><input type="checkbox" name="permission[]" {if isset($info['permission'][$secondItem['url']])}checked{/if} value="{$secondItem['url']}"><b>{$secondItem['name']}</b>&nbsp;&nbsp;</label>
+                    	{foreach from=$secondItem['children'] item=subitem}
+                    	{if $permission[$subitem['url']]}<label class="detail_fn"><input type="checkbox" name="permission[]" {if isset($info['permission'][$subitem['url']])}checked{/if} value="{$subitem['url']}">{$subitem['name']}&nbsp;</label>{/if}
+                    	{/foreach}
+                    </td>
+                  </tr>
+                  {/if}
+                {/foreach}
+               </tbody>
+            </table>
+          </td>
+          {/if}
+        </tr>
+        {/if}
         {/foreach}
       </tbody>
   </form>
@@ -87,7 +113,6 @@ $(document).ready(function(){
 		var moduleCheckbox = $(this).parents(".modelrow").find(".top_fn input");
 		
 		
-		
 		if($(this).prop("checked")){
 			moduleCheckbox.prop("checked",true);
 			target.prop("checked",true);
@@ -102,6 +127,14 @@ $(document).ready(function(){
 		}
 		
 		
+	});
+	
+	
+	$(".detail_fn input").bind("click",function(){
+		var target = $(this).parent("label").siblings(".side_fn").find("input");
+		if($(this).prop("checked")){
+			target.prop("checked",true);
+		}
 	});
 	
 
