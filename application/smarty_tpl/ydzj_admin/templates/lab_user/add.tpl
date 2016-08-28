@@ -64,7 +64,7 @@
           	{/foreach}
           	</select>
           </td>
-          <td class="vatop tips">请选择一个权限组，如果还未设置，{form_error('group_id')} <a href="{admin_site_url('authority/add_role')}">点击马上设置</a></td>
+          <td class="vatop tips">请选择一个权限组，如果还未设置，{form_error('group_id')} <a href="{admin_site_url('authority/role_add')}">点击马上设置</a></td>
         </tr>
        </tbody>
     </table>

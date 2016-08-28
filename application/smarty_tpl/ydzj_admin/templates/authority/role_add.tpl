@@ -69,19 +69,19 @@
           </td>
         </tr>
         {else}
-        {if $permission[$topItem['url']]}
+        {if isset($permission[$topItem['url']])}
         <tr class="modelrow">
           <td class=""><label class="top_fn"><input type="checkbox" name="permission[]" {if isset($info['permission'][$topItem['url']])}checked{/if} value="{$topItem['url']}"><b>{$topItem['name']}</b></label></td>
           <td class="fnrow">
           	<table class="table">
               <tbody>
               	  {foreach from=$topItem['children'] item=secondItem}
-              	  {if $permission[$secondItem['url']]}
+              	  {if isset($permission[$secondItem['url']])}
                   <tr>
                   	<td>
                     	<label class="side_fn"><input type="checkbox" name="permission[]" {if isset($info['permission'][$secondItem['url']])}checked{/if} value="{$secondItem['url']}"><b>{$secondItem['name']}</b>&nbsp;&nbsp;</label>
                     	{foreach from=$secondItem['children'] item=subitem}
-                    	{if $permission[$subitem['url']]}<label class="detail_fn"><input type="checkbox" name="permission[]" {if isset($info['permission'][$subitem['url']])}checked{/if} value="{$subitem['url']}">{$subitem['name']}&nbsp;</label>{/if}
+                    	{if isset($permission[$subitem['url']])}<label class="detail_fn"><input type="checkbox" name="permission[]" {if isset($info['permission'][$subitem['url']])}checked{/if} value="{$subitem['url']}">{$subitem['name']}&nbsp;</label>{/if}
                     	{/foreach}
                     </td>
                   </tr>

@@ -7,7 +7,7 @@
 <meta name="description" content="{$SEO_description}" />
 <meta name="keywords" content="{$SEO_keywords}" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,minimal-ui"/>
-<link href="{resource_url('css/skin_0.css')}" rel="stylesheet" type="text/css" id="cssfile2" />
+<link href="{resource_url('css/skin_1.css')}" rel="stylesheet" type="text/css" id="cssfile2" />
 <link href="{resource_url('js/jquery-ui/themes/flick/jquery-ui-1.9.2.custom.css')}" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="{resource_url('js/jquery.js')}" ></script>
 <script type="text/javascript" src="{resource_url('js/jquery.validation.min.js')}"></script>
@@ -29,8 +29,56 @@ if (cookie_skin) {
 </script>
 <script type="text/javascript" src="{resource_url('js/common.js')}"></script>
 <script type="text/javascript" src="{resource_url('js/admincp.js')}"></script>
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+<script type="text/javascript" src="{resource_url('js/html5shiv.js')}"></script>
+<script type="text/javascript" src="{resource_url('js/respond.min.js')}"></script>
+<![endif]-->
 </head>
 <body>
+
+<div class="layout-header"> <!-- Title/Logo - can use text instead of image -->
+  <div id="title"><a href="javascript:void(0);">{config_item('site_name')}-管理中心</a></div>
+      <!-- Top navigation -->
+      <div id="topnav" class="top-nav">
+        <ul>
+          <li><div id="sitemap"><a class="bar-btn" id="siteMapBtn" href="#rhis" onclick="showBg('dialog','dialog_content');"><span>管理地图</span></a></div></li>
+          <li class="adminid" title="您好:{$admin_profile['basic']['account']|escape}">您好&nbsp;:&nbsp;<strong>{$admin_profile['basic']['account']|escape}</strong></li>
+          <li><a href="{admin_site_url('index/profile')}" target="workspace" ><span>修改密码</span></a></li>
+          <li><a href="{admin_site_url('index/logout')}" title="退出"><span>退出</span></a></li>
+          {*<li><a href="{site_url('index')}" target="_blank" title="{config_item('site_name')}"><span>{config_item('site_name')}</span></a></li>*}
+        </ul>
+      </div>
+</div>
+
+<!-- Main navigation -->
+<div id="nav" class="main-nav">
+	<ul>
+	    <li><a class="link actived" id="nav_dashboard" href="{admin_site_url('dashboard/index')}"><span>控制台</span></a></li>
+		<li><a class="link" id="nav_setting" href="{admin_site_url('setting/base')}"><span>设置</span></a></li>
+		<li><a class="link" id="nav_lab" href="{admin_site_url('lab/index')}"><span>实验室</span></a></li>
+		<li><a class="link" id="nav_member" href="{admin_site_url('lab_user/index')}"><span>实验员</span></a></li>
+		<li><a class="link" id="nav_goods" href="{admin_site_url('goods/index')}"><span>货品</span></a></li>
+		<li><a class="link" id="nav_measure" href="{admin_site_url('lab_measure/index')}"><span>度量单位</span></a></li>
+		{*
+		<li><a class="link" id="nav_team" href="javascript:;" onclick="openItem('team');"><span>队伍</span></a></li>
+		<li><a class="link" id="nav_stadium" href="javascript:;" onclick="openItem('stadium');"><span>场馆</span></a></li>
+		<li><a class="link" id="nav_game" href="javascript:;" onclick="openItem('game');"><span>赛事</span></a></li>
+		<li><a class="link" id="nav_goods" href="javascript:;" onclick="openItem('goods');"><span>商品</span></a></li>
+		<li><a class="link" id="nav_trade" href="javascript:;" onclick="openItem('trade');"><span>交易</span></a></li>
+		<li><a class="link" id="nav_website" href="javascript:;" onclick="openItem('website');"><span>网站</span></a></li>
+		<li><a class="link" id="nav_operation" href="javascript:;" onclick="openItem('operation');"><span>运营</span></a></li>
+		<li><a class="link" id="nav_stat" href="javascript:;" onclick="openItem('stat');"><span>统计</span></a></li>
+		<li><a class="link" id="nav_weixin" href="javascript:;" onclick="openItem('weixin');"><span>微信营销</span></a></li>
+		<li><a class="link" id="nav_cms" href="javascript:;" onclick="openItem('cms');"><span>CMS</span></a></li>
+		*}
+		<li><a class="link" id="nav_authority" href="{admin_site_url('authority/role')}"><span>权限</span></a></li>
+	</ul>
+</div>
+<div class="loca clearfix">
+	<strong>您的位置:</strong>
+    <div id="crumbs" class="crumbs"><span>控制台</span><span class="arrow">&nbsp;</span><span>欢迎页面</span></div>
+</div>
 <div id="append_parent"></div>
 <div id="ajaxwaitid"></div>
 <div class="page">
