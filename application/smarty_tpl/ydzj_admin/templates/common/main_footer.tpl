@@ -1,4 +1,5 @@
-</div>
+	</div><!-- end of page -->
+</div><!-- end of main-content -->
 <script>
 {if !empty($feedback)}
 	$(function(){
