@@ -551,7 +551,7 @@
 							$("td:eq(1)",row).html('<label class="error">已在列表中,请更换手机号或者昵称</label>');
 						}else{
 							$("a.saveRow",row).show();
-							//row.prop("id","member_" + resp.data.uid);
+							row.prop("id","member_" + resp.data.uid);
 							
 							$("input[name='uid[]']",row).val(resp.data.uid);
 							$("input[name='username[]']",row).val(resp.data.username);
