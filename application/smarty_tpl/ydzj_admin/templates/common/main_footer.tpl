@@ -1,11 +1,6 @@
-</div>
+	</div><!-- end of page -->
+</div><!-- end of main-content -->
 <script>
-	$(function(){
-	    $("input[name=tijiao]").click(function(){
-	        $("input[name=page]",$(this).parents("form")).val(1);
-	    })
-	})
-	
 {if !empty($feedback)}
 	$(function(){
 		setTimeout(function(){

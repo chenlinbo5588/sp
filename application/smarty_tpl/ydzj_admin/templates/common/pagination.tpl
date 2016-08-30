@@ -4,7 +4,7 @@
             <a href="javascript:void(0)" onclick="{$page['call_js']}(1,'{$page['form_id']}');return false;">第一页</a>
             <a href="javascript:void(0)" onclick="{$page['call_js']}({$page['pageNow'] - 1},'{$page['form_id']}');return false;">上一页</a>
         {else}
-            <a href="javascript:void(0)" onclick="{$page['call_js']}(1);return false;">第一页</a>
+            <a href="javascript:void(0)" onclick="{$page['call_js']}(1,'{$page['form_id']}');return false;">第一页</a>
         {/if}
 
         {section name=a loop=($page['pageAe'] - $page['pageAb'] + 1)}

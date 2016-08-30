@@ -19,11 +19,24 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 		$this->form_validation->set_error_delimiters('<label class="error">','</label>');
 		$this->_initAdminLogin();
 		
-		
-		
 		//@todo 打开检查权限
 		//$this->_checkPermission();
+		$this->_navs();
+		
 	}
+	
+	/**
+     * 导航相关
+     */
+    protected function _navs(){
+        $navs = array_slice($this->uri->segments,1,3);
+        $pathStr = implode('/',$navs);
+
+        $this->assign('pathStr',$pathStr);
+        $this->assign('fnKey',$navs[0]);
+        $this->assign('navs',config_item('navs'));
+    }
+	
 	
 	
 	protected function _initLibrary(){

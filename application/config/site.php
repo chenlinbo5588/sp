@@ -76,3 +76,87 @@ $config['weixin_img_size'] = array(
 );
 
 
+$config['navs'] = array(
+	'main' => array(
+		'dashboard' => array(
+			'title' => '控制台',
+			'url' => 'dashboard/welcome'
+		),
+		'setting' => array(
+			'title' => '设置',
+			'url' => 'setting/base'
+		),
+		'member' => array(
+			'title' => '会员',
+			'url' => 'member/index'
+		),
+		'team' => array(
+			'title' => '队伍',
+			'url' => 'team/index'
+		),
+		'stadium' => array(
+			'title' => '场馆',
+			'url' => 'stadium/index'
+		),
+		'goods' => array(
+			'title' => '商品',
+			'url' => 'goods/index'
+		),
+		'article' => array(
+			'title' => '网站',
+			'url' => 'article/index'
+		),
+		'trade' => array(
+			'title' => '交易',
+			'url' => 'trade/index'
+		),
+		'cms' => array(
+			'title' => 'CMS',
+			'url' => 'cms_article/index'
+		),
+		'weixin' => array(
+			'title' => '微信',
+			'url' => 'weixin/index'
+		),
+		'authority' => array(
+			'title' => '权限',
+			'url' => 'authority/role'
+		),
+	),
+	'side' => array (
+		'dashboard' => array(
+			array('title' => '欢迎页面','url' => 'dashboard/welcome')
+		),
+		
+		'setting' => array(
+			array('title' => '站点设置','url' => 'setting/base'),
+			array('title' => '上传设置','url' => 'upload/param'),
+			array('title' => 'SEO设置','url' => 'setting/seoset'),
+			array('title' => '消息通知','url' => 'message/email'),
+		),
+		'message' => 'setting',
+		'upload' => 'setting',
+		'lab' => array(
+			array('title' => '实验室管理','url' => 'lab/index'),
+			array('title' => '添加实验室','url' => 'lab/add'),
+			array('title' => '导出实验室','url' => 'lab/export'),
+		),
+		'lab_user' => array(
+			array('title' => '实验员管理','url' => 'lab_user/index'),
+			array('title' => '添加实验员','url' => 'lab_user/add'),
+			array('title' => '导出实验员','url' => 'lab_user/export'),
+		),
+		'goods' => array(
+			array('title' => '货品','url' => 'goods/index'),
+			array('title' => '货品分类','url' => 'goods_category/index'),
+		),
+		'goods_category' => 'goods',
+		'lab_measure' => array(
+			array('title' => '度量单位','url' => 'lab_measure/index'),
+		),
+		'authority' => array(
+			array('title' => '角色','url' => 'authority/role'),
+		)
+	)
+);
+

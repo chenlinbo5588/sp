@@ -11,7 +11,7 @@
   <div class="fixed-empty"></div>
   
   {form_open(admin_site_url('message/email_tpl'),'id="formSearch" name="formSearch"')}
-    <input type="hidden" name="page" value="{$currentPage}"/>
+    <input type="hidden" name="page" value=""/>
     <input type="hidden" name="submit_type" id="submit_type" value="" />
     <table class="tb-type1 noborder search">
       <tbody>

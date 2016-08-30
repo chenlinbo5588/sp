@@ -11,7 +11,7 @@
   </div>
   <div class="fixed-empty"></div>
   <form class="formSearch" method="get" name="formSearch" id="formSearch" action="{admin_site_url('member')}">
-    <input type="hidden" name="page" value="{$currentPage}"/>
+    <input type="hidden" name="page" value=""/>
     <table class="tb-type1 noborder search">
       <tbody>
         <tr>

@@ -91,6 +91,39 @@ function refreshFormHash(data){
 }
 
 
+function setcookie(cookieName, cookieValue, seconds, path, domain, secure) {
+	if(cookieValue == '' || seconds < 0) {
+		cookieValue = '';
+		seconds = -2592000;
+	}
+	if(seconds) {
+		var expires = new Date();
+		expires.setTime(expires.getTime() + seconds * 1000);
+	}
+	domain = !domain ? cookiedomain : domain;
+	path = !path ? cookiepath : path;
+	document.cookie = escape(cookiepre + cookieName) + '=' + escape(cookieValue)
+		+ (expires ? '; expires=' + expires.toGMTString() : '')
+		+ (path ? '; path=' + path : '/')
+		+ (domain ? '; domain=' + domain : '')
+		+ (secure ? '; secure' : '');
+}
+
+function getcookie(name, nounescape) {
+	name = cookiepre + name;
+	var cookie_start = document.cookie.indexOf(name);
+	var cookie_end = document.cookie.indexOf(";", cookie_start);
+	if(cookie_start == -1) {
+		return '';
+	} else {
+		var v = document.cookie.substring(cookie_start + name.length + 1, (cookie_end > cookie_start ? cookie_end : document.cookie.length));
+		return !nounescape ? unescape(v) : v;
+	}
+}
+
+function set_pagesize(obj){
+	setcookie('page_size',obj.options[obj.selectedIndex].value);
+}
 /**
  * 分页
  * @param page
@@ -137,7 +170,7 @@ $.loadingbar = function(settings) {
         container: 'body',
         showClose: false,
         wrapperClass:'',
-        text:'数据加载中，请稍候…',
+        text:'正在操作，请稍候…',
         template:''
     };
     var xhr;
@@ -227,6 +260,158 @@ $.loadingbar = function(settings) {
     return spin_wrap;
 };
 
+/** 悬浮条 */
+$.fn.fixedBar = function(settings){
+    var defaults = {
+        inverse:false,
+        fixed:false,  //是否始终固定位置
+        css:"position:fixed;top:0;",
+        endAt:0,
+        offsetTop:0,
+        createShadow:'fixBarShadow'
+    };
+
+    var callback,opts;
+
+    if(this.length==0) return;
+
+    if( Object.prototype.toString.call(settings) == "[object Function]" ){
+        callback = settings;
+    }
+
+    if(settings && settings.inverse){
+        defaults.css = 'position:fixed;bottom:0;';
+    }
+
+    opts = $.extend(defaults, settings);
+
+    if (window.ActiveXObject) {
+        window.isIE = window[window.XMLHttpRequest ? 'isIE7' : 'isIE6'] = true;
+    }
+
+    if (window.isIE6) try {document.execCommand("BackgroundImageCache", false, true);} catch(e){}
+
+    var ele = $(this).length > 1 ? $(this).eq(0) : $(this);
+    var shadow;
+
+    function init(){
+        var eleOffsetTop = ele.offset().top;
+        var elePositionTop = ele.position().top;
+        var endPos;
+
+        if(opts.endAt){
+            if(typeof opts.endAt === 'number'){
+                endPos = opts.endAt;
+            }else{
+                endPos = $(opts.endAt).offset().top + $(opts.endAt).height();
+            }
+        }
+
+        if(opts.createShadow){
+            if(typeof opts.createShadow === 'string'){
+                shadow = $(opts.createShadow).length ? $(opts.createShadow) : $('<div class="'+opts.createShadow+'" />').css({
+                    display:'none',
+                    height:ele.outerHeight(true)+'px'
+                });
+            }
+            ele.before(shadow);
+        }
+
+        if(opts.fixed){
+            eleOffsetTop = -1;
+            if(!ele.hasClass("fixedBar")) ele.addClass("fixedBar").attr("style",opts.css);
+            if(window.isIE6) ele.css({"position":"absolute"});
+        }
+
+        $(window).bind("scroll.fixedBar",function(e){
+            if(ele.is(':hidden')){
+                return;
+            }
+
+            var that = $(this);
+            var scrollTop = that.scrollTop() + opts.offsetTop;
+
+            var changeBar = function(){
+                if(!ele.hasClass("fixedBar")){
+                    opts.createShadow && shadow.show();
+                    ele.addClass("fixedBar").attr("style",opts.css);
+                    if(opts.offsetTop!==0){
+                       ele.css('top',opts.offsetTop);
+                    }
+                }
+                // todo ie6
+                if(window.isIE6) ele.css({"top":scrollTop - eleOffsetTop + elePositionTop + "px","position":"absolute"});
+            };
+
+            var resetBar = function(){
+                opts.createShadow && shadow.hide();
+                ele.removeClass("fixedBar").removeAttr("style");
+            };
+
+            if(ele.data('disabled') !== true){
+                if(!opts.inverse){
+                    if(scrollTop > eleOffsetTop){
+                        changeBar();
+                    }else{
+                        resetBar();
+                    }
+                }else{
+                    var winHeight = $(window).innerHeight();
+                    if(scrollTop + winHeight - ele.outerHeight() < eleOffsetTop){
+                        changeBar();
+                    }else{
+                        resetBar();
+                    }
+                }
+            }
+
+            if(callback) callback.call(ele,scrollTop);
+
+            if(opts.endAt){
+                if(scrollTop >= endPos){
+                    shadow.hide();
+                    ele.removeClass("fixedBar").removeAttr("style").data('disabled',true);
+                }else{
+                    ele.removeData('disabled');
+                }
+            }
+        });
+
+        if(opts.inverse){
+            $(function(){
+                $(window).trigger('scroll.fixedBar');
+            })
+        }
+
+        if(window.isIE){
+            $(document).on('click.fixedBar',function(){
+                if(ele.hasClass("fixedBar")){
+                    $(window).trigger('scroll.fixedBar');
+                }
+            });
+        }
+
+    }
+
+    init();
+
+    var api = {
+        reset:function(){
+            ele.removeClass("fixedBar").removeAttr("style");
+            $(window).unbind("scroll.fixedBar");
+            opts.createShadow && shadow.remove();
+            return this;
+        },
+        init:function(){
+            init();
+            return this;
+        }
+    };
+
+    ele.data('fixedBar',api);
+
+    return this;
+};
 /**
  * 绑定地区下拉联动
  * @param isBind
