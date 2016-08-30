@@ -239,12 +239,12 @@ class Setting extends Ydzj_Admin_Controller {
 		}
 		
 		$currentSetting = $this->seo_service->getCurrentSeoSetting();
-		$goodsClassHTML = $this->goods_service->getGoodsClassTreeHTML();
+		//$goodsClassHTML = $this->goods_service->getGoodsClassTreeHTML();
 		
 		//print_r($currentSetting);
 		
 		$this->assign('currentSetting',$currentSetting);
-		$this->assign('goodsClassHTML',$goodsClassHTML);
+		//$this->assign('goodsClassHTML',$goodsClassHTML);
 		$this->assign('selectedGroup',$selectedGroup);
 		$this->assign('feedback',$feedback);
 		$this->display();

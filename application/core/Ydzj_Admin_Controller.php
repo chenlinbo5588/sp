@@ -13,11 +13,23 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 		
 		$this->form_validation->set_error_delimiters('<label class="error">','</label>');
 		$this->_initAdminLogin();
-		
-		$this->_initUserLabsRelate();
-		
-		//@todo 打开检查权限
 		$this->_checkPermission();
+		$this->_initUserLabsRelate();
+		$this->_navs();
+		
+	}
+	
+	
+	/**
+	 * 导航相关
+	 */
+	protected function _navs(){
+		$navs = array_slice($this->uri->segments,1,3);
+		$pathStr = implode('/',$navs);
+		
+		$this->assign('pathStr',$pathStr);
+		$this->assign('fnKey',$navs[0]);
+		$this->assign('navs',config_item('navs'));
 	}
 	
 	
@@ -155,9 +167,23 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 	 * 记录谁操作得
 	 */
 	public function addWhoHasOperated($action = 'add'){
-		return array(
-			"creator" => $this->_adminProfile['basic']['name']
-		);
+		
+		switch($action){
+			case 'add':
+				$ar = array(
+					"creator" => $this->_adminProfile['basic']['name']
+				);
+				break;
+			case 'edit':
+				$ar = array(
+					"updator" => $this->_adminProfile['basic']['name']
+				);
+				break;
+			default:
+				break;
+		}
+		
+		return $ar;
 	}
 	
 	
@@ -165,35 +191,6 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 		return 'ydzj_admin';
 	}
 	
-	
-	protected function _checkIsFounder(){
-    	if(1 != $this->_userProfile['id']){
-			redirect(base_url("lab_goods"),'javascript:top');
-		}
-    }
-    
-    /**
-     * 检查是否 有管辖实验室 即为某一个或者某几个实验室的管理员
-     */
-    protected function _checkIsLabManager()
-    {
-    	
-    	if($this->_userProfile['id'] == LAB_FOUNDER_ID){
-    		return true;
-    	}
-    	
-    	$managerLabs = $this->session->userdata('user_manager_labs');
-    	
-    	//print_r($managerLabs);
-    	if(empty($managerLabs)){
-    		return false;
-    	}
-    	
-    	return true;
-    	
-    }
-    
-    
     /**
      *  检查是否是 系统管理员
      */
@@ -209,10 +206,5 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 			return true;
 		}
     }
-    
-    protected function show_access_deny(){
-    	$this->display('access_deny','common');
-    }
-	
 }
 

@@ -7,6 +7,7 @@ class Lab extends Ydzj_Admin_Controller {
 		parent::__construct();
 		
 		$this->assign('action',$this->uri->rsegment(2));
+		
     }
     
     public function index()

@@ -12,7 +12,6 @@
 <script type="text/javascript" src="{resource_url('js/jquery.js')}" ></script>
 <script type="text/javascript" src="{resource_url('js/jquery.validation.min.js')}"></script>
 <script type="text/javascript" src="{resource_url('js/jquery.cookie.js')}"></script>
-
 <script>
 var cookiedomain = "{config_item('cookie_domain')}",
     cookiepath = "{config_item('cookie_path')}",
@@ -25,45 +24,36 @@ var cookiedomain = "{config_item('cookie_domain')}",
     
 if (cookie_skin) {
     $('#cssfile2').attr("href","{resource_url('css')}/"+ cookie_skin +".css");
-} 
+}
 </script>
-<script type="text/javascript" src="{resource_url('js/common.js')}"></script>
-<script type="text/javascript" src="{resource_url('js/admincp.js')}"></script>
-<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!--[if lt IE 9]>
 <script type="text/javascript" src="{resource_url('js/html5shiv.js')}"></script>
 <script type="text/javascript" src="{resource_url('js/respond.min.js')}"></script>
 <![endif]-->
+<script type="text/javascript" src="{resource_url('js/common.js')}"></script>
+<script type="text/javascript" src="{resource_url('js/admincp.js')}"></script>
 </head>
 <body>
 <div id="append_parent"></div>
 <div id="ajaxwaitid"></div>
-
 <div id="main-header">
-	  <div id="title"><a href="javascript:void(0);">{config_item('site_name')}-管理中心</a></div>
-	  <!-- Top navigation -->
-	  <div id="topnav" class="top-nav">
-	    <ul>
-	      <li><div id="sitemap"><a class="bar-btn" id="siteMapBtn" href="#rhis" onclick="showBg('dialog','dialog_content');"><span>管理地图</span></a></div></li>
-	      <li class="adminid" title="您好:{$admin_profile['basic']['account']|escape}">您好&nbsp;:&nbsp;<strong>{$admin_profile['basic']['account']|escape}</strong></li>
-	      <li><a href="{admin_site_url('index/profile')}" target="workspace" ><span>修改密码</span></a></li>
-	      <li><a href="{admin_site_url('index/logout')}" title="退出"><span>退出</span></a></li>
-	      {*<li><a href="{site_url('index')}" target="_blank" title="{config_item('site_name')}"><span>{config_item('site_name')}</span></a></li>*}
-	    </ul>
-	  </div>
-	<!-- Main navigation -->
+	<div id="title"><a href="javascript:void(0);">{config_item('site_name')}</a></div>
+    <ul id="topnav" class="top-nav clearfix">
+      <li><div id="sitemap"><a class="bar-btn" id="siteMapBtn" href="#rhis" onclick="showBg('dialog','dialog_content');"><span>快捷导航</span></a></div></li>
+      <li class="adminid" title="您好:{$admin_profile['basic']['account']|escape}"><span>您好&nbsp;:&nbsp;</span><strong>{$admin_profile['basic']['account']|escape}</strong></li>
+      <li><a href="{admin_site_url('index/profile')}"><span>修改密码</span></a></li>
+      <li><a href="{admin_site_url('index/logout')}" title="退出"><span>退出</span></a></li>
+    </ul>
 	<ul id="nav" class="main-nav clearfix">
-	    <li><a class="link actived" id="nav_dashboard" href="{admin_site_url('dashboard/welcome')}">控制台</a></li>
-		<li><a class="link" id="nav_setting" href="{admin_site_url('setting/base')}">设置</a></li>
-		<li><a class="link" id="nav_lab" href="{admin_site_url('lab/index')}">实验室</a></li>
-		<li><a class="link" id="nav_member" href="{admin_site_url('lab_user/index')}">实验员</a></li>
-		<li><a class="link" id="nav_goods" href="{admin_site_url('goods/index')}">货品</a></li>
-		<li><a class="link" id="nav_measure" href="{admin_site_url('lab_measure/index')}">度量单位</a></li>
-		<li><a class="link" id="nav_authority" href="{admin_site_url('authority/role')}">权限</a></li>
+		{foreach from=$navs['main'] item=item}
+		<li><a class="link{if $pathStr == $item['url']} actived{/if}" href="{admin_site_url($item['url'])}">{$item['title']|escape}</a></li>
+		{/foreach}
 	</ul>
 </div>
 <div id="main-content">
-	<div class="side"></div>
+	<div class="side-nav">
+		{include file="common/side.tpl"}
+	</div>
 	<div class="page">
 		<div class="loca clearfix">
 			<strong>您的位置:</strong>
