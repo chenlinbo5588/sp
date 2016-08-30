@@ -1585,7 +1585,7 @@ span.module-assembly-html { background-position: -490px -1040px;}
 .pic-cut-120member .work-layer,
 .pic-cut-200member .work-layer { background: #FFF; padding: 1px; border: dashed 1px #777; position: absolute; z-index: 1; top: 20px; left:0;}
 
-.pic-cut-200member .thumb-title , .pic-cut-200member .work-layer { left: -50px;}
+.pic-cut-200member .thumb-title , .pic-cut-200member .work-layer { left: -150px;}
 
 .pic-cut-150brand .work-layer p,
 .pic-cut-120circle .work-layer p,
@@ -1598,7 +1598,7 @@ span.module-assembly-html { background-position: -490px -1040px;}
 .pic-cut-200member .thumb-layer { padding: 1px; border: dashed 1px #777; position: absolute; z-index: 1; top: 20px; right: 0;}
 
 .pic-cut-150brand .thumb-layer { right: -10px;}
-.pic-cut-200member .thumb-layer { right: -30px;}
+.pic-cut-200member .thumb-layer { right: 40px;}
 
 
 .pic-cut-150brand .thumb-layer p { width: 150px; height: 50px; overflow: hidden;}
@@ -1618,7 +1618,7 @@ span.module-assembly-html { background-position: -490px -1040px;}
 .pic-cut-200member .cut-help { width: 120px; position: absolute; z-index: 1; top: 160px; right: 0;}
 .pic-cut-150brand .cut-help { width: 120px; top: 100px;}
 
-.pic-cut-200member .cut-help { width:160px; top: 220px;}
+.pic-cut-200member .cut-help { width:160px; top: 220px; right: 80px;}
 
 .pic-cut-150brand .cut-help h4,
 .pic-cut-120circle .cut-help h4,
@@ -1628,7 +1628,7 @@ span.module-assembly-html { background-position: -490px -1040px;}
 .pic-cut-150brand .cut-btn,
 .pic-cut-120circle .cut-btn,
 .pic-cut-120member .cut-btn,
-.pic-cut-200member .cut-btn { position: absolute; z-index: 1; top:340px; left: 530px;}
+.pic-cut-200member .cut-btn { position: absolute; z-index: 1; top:340px; left: 420px;}
 .pic-cut-150brand .cut-btn { top:280px;}
 .pic-cut-200member .cut-btn { top:400px;}
 
