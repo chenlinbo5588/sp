@@ -6,13 +6,12 @@ class Goods extends Ydzj_Admin_Controller {
 		parent::__construct();
 		
 		$this->load->model('Lab_Model');
-		
-		$this->load->helper('cookie');
 		$this->load->library('Goods_service');
 		
 		$this->assign('isSystemManager',$this->_checkIsSystemManager());
 		
 		$this->assign('action',$this->uri->rsegment(2));
+		$this->assign('topnav',strtolower(get_class()).'/index');
 
     }
     

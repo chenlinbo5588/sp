@@ -12,6 +12,8 @@ class Message extends Ydzj_Admin_Controller {
 		
 		$this->load->library(array('Admin_service','Message_service'));
 		
+		$this->assign(array('topnav' => 'setting/base'));
+		
 		$this->settingKey = array(
 			'email_enabled',
 			'email_type',

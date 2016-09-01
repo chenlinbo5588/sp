@@ -16,7 +16,6 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 		$this->_checkPermission();
 		$this->_initUserLabsRelate();
 		$this->_navs();
-		
 	}
 	
 	
@@ -34,7 +33,6 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 	
 	
 	private function _friendSiteWelcome(){
-		$this->load->helper('cookie');
 		
 		static $_friendWebsite = array(
 	    	//欢迎进入浙江省农产品加工技术研究重点实验室药品仪器管理中心！

@@ -102,6 +102,10 @@ $config['navs'] = array(
 			'title' => '货品',
 			'url' => 'goods/index'
 		),
+		'goods_category' => array(
+			'title' => '货品分类',
+			'url' => 'goods_category/index'
+		),
 		'lab_measure' => array(
 			'title' => '度量单位',
 			'url' => 'lab_measure/index'
@@ -112,6 +116,7 @@ $config['navs'] = array(
 		),
 	),
 	'side' => array (
+		'index' => 'dashboard',
 		'dashboard' => array(
 			array('title' => '欢迎页面','url' => 'dashboard/welcome')
 		),
@@ -135,12 +140,17 @@ $config['navs'] = array(
 			array('title' => '导出实验员','url' => 'lab_user/export'),
 		),
 		'goods' => array(
-			array('title' => '货品','url' => 'goods/index'),
-			array('title' => '货品分类','url' => 'goods_category/index'),
+			array('title' => '货品管理','url' => 'goods/index'),
+			array('title' => '货品添加','url' => 'goods/add'),
+			array('title' => '货品导入','url' => 'goods/import'),
 		),
-		'goods_category' => 'goods',
+		'goods_category' => array(
+			array('title' => '货品分类管理','url' => 'goods_category/index'),
+			array('title' => '货品分类添加','url' => 'goods_category/add'),
+		),
 		'lab_measure' => array(
-			array('title' => '度量单位','url' => 'lab_measure/index'),
+			array('title' => '度量单位管理','url' => 'lab_measure/index'),
+			array('title' => '度量单位添加','url' => 'lab_measure/add'),
 		),
 		'authority' => array(
 			array('title' => '角色','url' => 'authority/role'),

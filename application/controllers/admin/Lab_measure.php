@@ -8,6 +8,7 @@ class Lab_Measure extends Ydzj_Admin_Controller {
 		$this->load->model('Measure_Model');
 		
 		$this->assign('action',$this->uri->rsegment(2));
+		$this->assign('topnav',strtolower(get_class()).'/index');
     }
     
     public function index()

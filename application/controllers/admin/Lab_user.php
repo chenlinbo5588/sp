@@ -9,9 +9,10 @@ class Lab_User extends Ydzj_Admin_Controller {
     public function __construct(){
 		parent::__construct();
 		
-		$this->load->helper('cookie');
-		
 		$this->assign('action',$this->uri->rsegment(2));
+		$this->assign('topnav',strtolower(get_class()).'/index');
+		
+		
     }
     
     public function index()

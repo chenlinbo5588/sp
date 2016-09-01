@@ -24,10 +24,8 @@ class Index extends Ydzj_Admin_Controller {
 	 */
 	public function profile(){
 		
-		
-		
 		if($this->isPostRequest()){
-			$this->form_validation->set_rules('username','真实名称',"required|min_length[1]|max_length[30]");
+			$this->form_validation->set_rules('name','真实名称',"required|min_length[1]|max_length[30]");
 			
 			
 			if($this->input->post('old_password')){
@@ -36,6 +34,10 @@ class Index extends Ydzj_Admin_Controller {
 				$this->form_validation->set_rules('admin_rpassword','确认密码','required|matches[admin_password]');
 			}
 			
+			$email = trim($this->input->post('email'));
+			if($email){
+				$this->form_validation->set_rules('email','邮箱','required|valid_email');
+			}
 			
 			for($i = 0; $i < 1; $i++){
 				
@@ -46,23 +48,23 @@ class Index extends Ydzj_Admin_Controller {
 				
 				$oldPsw = trim($this->input->post('old_password'));
 				
-				
 				$updateData = array(
-					'username' => trim($this->input->post('username'))
+					'name' => trim($this->input->post('name')),
+					'email' => $this->input->post('email') ? trim($this->input->post('email')) : ''
 				);
 				
 				if($oldPsw){
-					$adminUser = $this->Adminuser_Model->getFirstByKey($this->_adminProfile['basic']['uid'],'uid');
-					if($oldPsw != $this->encrypt->decode($adminUser['password'],config_item('encryption_key').md5($adminUser['email']))){
+					$adminUser = $this->Adminuser_Model->getFirstByKey($this->_adminProfile['basic']['id']);
+					if($adminUser['psw'] != md5(config_item('encryption_key').$oldPsw)){
 						$feedback = getErrorTip('原密码不正确');
 						break;
 					}
 					
-					$updateData['password'] = $this->encrypt->encode(trim($this->input->post('admin_password')),config_item('encryption_key').md5(trim($adminUser['email'])));
+					$updateData['psw'] = md5(config_item('encryption_key').trim($this->input->post('admin_password')));
 				}
 				
 				$this->Adminuser_Model->update($updateData,array(
-					'uid' => $this->_adminProfile['basic']['uid']
+					'id' => $this->_adminProfile['basic']['id']
 				));
 				
 				$feedback = getSuccessTip('保存成功');

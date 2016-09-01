@@ -7,6 +7,8 @@ class Goods_Class extends Ydzj_Admin_Controller {
 		parent::__construct();
 		
 		$this->load->library(array('Goods_service'));
+		
+		
 	}
 	
 	public function category(){

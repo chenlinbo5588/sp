@@ -7,7 +7,9 @@ class Lab extends Ydzj_Admin_Controller {
 		parent::__construct();
 		
 		$this->assign('action',$this->uri->rsegment(2));
+		$nav = strtolower(get_class()).'/index';
 		
+		$this->assign(array('topnav' => $nav));
     }
     
     public function index()

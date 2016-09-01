@@ -4,7 +4,7 @@
 	<div class="fixed-empty"></div>
     <div class="feedback">{$feedback}</div>
 	{form_open(admin_site_url('lab_measure/index'),'id="formSearch"')}
-	    <input type="hidden" name="page" value="{$currentPage}"/>
+	    <input type="hidden" name="page" value=""/>
 	    <table class="tb-type1 noborder search">
 	      <tbody>
 	      	<tr>
@@ -16,13 +16,6 @@
 	    </table>
 	  
 		<table class="rounded-corner">
-		    <colgroup>
-		        <col style="width:10%"/>
-		        <col style="width:30%"/>
-		        <col style="width:10%"/>
-		        <col style="width:10%"/>
-		        <col style="width:10%"/>
-		    </colgroup>
 		    <thead>
 		        <tr>
 		            <th class="first">序号</th>

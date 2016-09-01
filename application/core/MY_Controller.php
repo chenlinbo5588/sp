@@ -185,7 +185,7 @@ class MY_Controller extends CI_Controller {
     
     
     protected function _initLibrary(){
-		$this->load->helper(array('form','directory','file', 'url','string'));
+		$this->load->helper(array('form','directory','file', 'url','string','cookie'));
 		$this->load->driver('cache');
 		$this->load->model(array('Member_Model','Setting_Model','Seo_Model'));
 		$this->load->library(array('user_agent','Form_validation','encrypt','PHPTree','Base_service'));

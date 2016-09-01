@@ -14,25 +14,32 @@
     <table class="table tb-type2 nobdb">
       <tbody>
         <tr class="noborder">
-          <td colspan="2" class="required"><label class="validation" for="email">登录名:</label></td>
+          <td colspan="2" class="required"><label class="validation">登录名:</label></td>
         </tr>
         <tr class="noborder">
-          <td class="vatop rowform">{$admin_profile['basic']['email']}</td>
+          <td class="vatop rowform">{$admin_profile['basic']['account']}</td>
           <td class="vatop tips"></td>
         </tr>
         <tr class="noborder">
-          <td colspan="2" class="required"><label class="validation" for="username">用户真实名称:</label></td>
+          <td colspan="2" class="required"><label class="validation">用户真实名称:</label></td>
         </tr>
         <tr class="noborder">
-          <td class="vatop rowform"><input type="text" id="username" value="{$admin_profile['basic']['username']|escape}" name="username" class="txt"></td>
-          <td class="vatop tips">请输入用户真实名称 {form_error('username')}</td>
+          <td class="vatop rowform"><input type="text" value="{$admin_profile['basic']['name']|escape}" name="name" class="txt"></td>
+          <td class="vatop tips">请输入用户真实名称 {form_error('name')}</td>
+        </tr>
+        <tr class="noborder">
+          <td colspan="2" class="required"><label class="validation">用户邮箱地址:</label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform"><input type="text" value="{$admin_profile['basic']['email']|escape}" name="email" class="txt"></td>
+          <td class="vatop tips"><span class="hightlight">重要：用户找回密码等相关操作</span> 请输入用户邮箱地址 {form_error('email')}</td>
         </tr>
         <tr>
           <td colspan="2" class="required"><label class="validation" for="admin_password">原密码:</label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input type="password" id="old_password" name="old_password" class="txt"></td>
-          <td class="vatop tips">请输入密码 最少六位 只能包含英文字母、数字、下划线、破折号 {form_error('old_password')}</td>
+          <td class="vatop tips"><span class="hightlight">不填表示不做修改</span> 请输入密码 最少六位 只能包含英文字母、数字、下划线、破折号 {form_error('old_password')} </td>
         </tr>
         <tr>
           <td colspan="2" class="required"><label class="validation" for="admin_password">密码:</label></td>

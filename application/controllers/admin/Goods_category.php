@@ -8,9 +8,11 @@ class Goods_Category extends Ydzj_Admin_Controller {
     public function __construct(){
 		parent::__construct();
 		
-		$this->assign('action',$this->uri->rsegment(2));
 		$this->load->library('Goods_service');
    		
+   		$this->assign('action',$this->uri->rsegment(2));
+		$this->assign('topnav',strtolower(get_class()).'/index');
+		
     }
     
     public function index()

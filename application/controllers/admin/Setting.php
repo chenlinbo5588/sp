@@ -7,6 +7,9 @@ class Setting extends Ydzj_Admin_Controller {
 		parent::__construct();
 		$this->load->library(array('Admin_service','Attachment_service'));
 		$this->attachment_service->setUserInfo($this->_adminProfile['basic']);
+		
+		
+		$this->assign(array('topnav' => 'setting/base'));
 	}
 	
 	

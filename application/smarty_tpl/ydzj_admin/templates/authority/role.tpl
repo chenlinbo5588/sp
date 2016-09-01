@@ -11,7 +11,7 @@
   <div class="fixed-empty"></div>
   
   {form_open(admin_site_url('authority/role'),'name="formSearch" id="formSearch"')}
-    <input type="hidden" name="page" value="{$currentPage}"/>
+    <input type="hidden" name="page" value=""/>
     <input type="hidden" name="submit_type" id="submit_type" value="" />
     <table class="tb-type1 noborder search">
       <tbody>
@@ -24,7 +24,7 @@
         </tr>
       </tbody>
     </table>
-    <table class="table tb-type2">
+    <table class="rounded-corner">
       <thead>
         <tr class="space">
           <th colspan="5" class="nobg">列表</th>
@@ -39,8 +39,8 @@
         </tr>
       </thead>
       <tbody>
-      	{foreach from=$list['data'] item=item}
-      	<tr class="hover">
+      	{foreach from=$list['data'] key=key item=item}
+      	<tr class="{if $key % 2 == 0}odd{else}even{/if}">
       	  {*<td class="w24"><input name="id[]" group="chkVal" type="checkbox" value="{$item['id']}"></td>*}
           <td>{$item['name']|escape}</td>
           <td>{$item['creator']|escape}</td>
