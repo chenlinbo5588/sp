@@ -354,7 +354,7 @@ input[type=checkbox],input[type=radio] {
 .top-nav {
 	position: absolute;
     right: 0;
-    bottom: 5px;
+    bottom: 0px;
 }
 
 .top-nav li {float:left;padding:2px;height:25px;line-height:25px;}
@@ -458,21 +458,30 @@ input[type=checkbox],input[type=radio] {
 
 .side-nav li {
     text-indent: 1em;
+    
 }
 
 .side-nav li.actived {
-	border-right: 2px solid #2EBCFF;
+	1border-right: 2px solid #2EBCFF;
 	
 }
 
 .side-nav a {
 	padding: 5px 0;
 	display:block;
+	border-top: 1px solid transparent;
+	border-bottom:1px solid transparent;
 }
 
 
 .side-nav a:hover, .side-nav li.actived a {
-	background: #fff;
+	1background:#fff url(../img/sky/bg_position_03.jpg) no-repeat right center;
+	background:#fff;
+	border-right:1px solid #fff;
+	border-top: 1px solid #2EBCFF;
+	border-bottom:1px solid #2EBCFF;
+	position: relative;
+	left:1px;
 }
 
 .page {     
@@ -583,8 +592,10 @@ input[type=checkbox],input[type=radio] {
 
 /* Page title
 ---------------------------------------------------------------------*/
+#title {
+	
+}
 
-#title {}
 .txt-short, .txt , .txt2 , .select{ height: 20px; line-height: 20px;}
 .thead {line-height: 34px; height: 34px; font-weight: bold; color: #444; text-align: center;}
 .thead td {border-bottom: 1px solid #bbdbf1;}
