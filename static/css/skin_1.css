@@ -453,11 +453,26 @@ input[type=checkbox],input[type=radio] {
     border-right: 1px solid #2EBCFF;
     height: 100%;
     background-color: #DAF4FE;
+    padding: 20px 0 0 0;
 }
 
 .side-nav li {
+    text-indent: 1em;
+}
+
+.side-nav li.actived {
+	border-right: 2px solid #2EBCFF;
 	
-	
+}
+
+.side-nav a {
+	padding: 5px 0;
+	display:block;
+}
+
+
+.side-nav a:hover, .side-nav li.actived a {
+	background: #fff;
 }
 
 .page {     

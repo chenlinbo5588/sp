@@ -124,6 +124,7 @@ $config['navs'] = array(
 		),
 	),
 	'side' => array (
+		'index' => 'dashboard',
 		'dashboard' => array(
 			array('title' => '欢迎页面','url' => 'dashboard/welcome')
 		),
@@ -136,7 +137,7 @@ $config['navs'] = array(
 		),
 		'message' => 'setting',
 		'upload' => 'setting',
-		'lab' => array(
+		'member' => array(
 			array('title' => '实验室管理','url' => 'lab/index'),
 			array('title' => '添加实验室','url' => 'lab/add'),
 			array('title' => '导出实验室','url' => 'lab/export'),
