@@ -143,6 +143,7 @@ $config['navs'] = array(
 			array('title' => '货品管理','url' => 'goods/index'),
 			array('title' => '货品添加','url' => 'goods/add'),
 			array('title' => '货品导入','url' => 'goods/import'),
+			array('title' => '货品清空','url' => 'goods/empty_goods'),
 		),
 		'goods_category' => array(
 			array('title' => '货品分类管理','url' => 'goods_category/index'),

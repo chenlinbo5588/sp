@@ -67,6 +67,16 @@ class Index extends Ydzj_Admin_Controller {
 					'id' => $this->_adminProfile['basic']['id']
 				));
 				
+				
+				$this->_smarty->clearAssign($this->_adminProfileKey);
+				$this->_adminProfile['basic'] = array_merge($this->_adminProfile['basic'],$updateData);
+				
+				$this->session->set_userdata(array(
+					$this->_adminProfileKey => $this->_adminProfile,
+					$this->_adminLastVisitKey => $this->_reqtime
+				));
+				$this->assign($this->_adminProfileKey,$this->_adminProfile);
+				
 				$feedback = getSuccessTip('保存成功');
 			}
 		}

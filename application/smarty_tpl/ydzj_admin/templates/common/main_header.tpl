@@ -39,7 +39,7 @@ if (cookie_skin) {
 <div id="main-header">
 	<div id="title"><a href="javascript:void(0);">{config_item('site_name')}</a></div>
     <ul id="topnav" class="top-nav clearfix">
-      <li><div id="sitemap"><a class="bar-btn" id="siteMapBtn" href="#rhis" onclick="showBg('dialog','dialog_content');"><span>快捷导航</span></a></div></li>
+      {*<li><div id="sitemap"><a class="bar-btn" id="siteMapBtn" href="#rhis" onclick="showBg('dialog','dialog_content');"><span>快捷导航</span></a></div></li>*}
       <li class="adminid" title="您好:{$admin_profile['basic']['account']|escape}"><span>您好&nbsp;:&nbsp;</span><strong>{$admin_profile['basic']['account']|escape}</strong></li>
       <li><a href="{admin_site_url('index/profile')}"><span>修改密码</span></a></li>
       <li><a href="{admin_site_url('index/logout')}" title="退出"><span>退出</span></a></li>

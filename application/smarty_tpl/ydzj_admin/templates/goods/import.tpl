@@ -43,7 +43,7 @@
           <img src="{resource_url('img/lab/excel_template.png')}"/>
       </div>
       
-      <div id="dialog-confirm" title="上传EXCEL文件" style="display:none;"><p><span class="ui-icon ui-icon-alert" style="float:left;"></span><span>请先上传文件</span></p></div>
+      <div id="dialog-confirm" title="上传EXCEL文件" style="display:none;"><p><span class="ui-icon ui-icon-alert" style="float:left;"></span><span>请先上传文件,<span class="hightlight">3秒后自动关闭</span></p></div>
       {include file="common/jquery_ui.tpl"}
 	  {include file="common/ke.tpl"}
 		<script>
@@ -71,18 +71,13 @@
             });
             
             function validation(form){
-            	
-            	var submitBtn = $("#begin_import");
-            	
                 if(form['file_id'].value == ''){
                 	$("#dialog-confirm").dialog({
 					      autoOpen: false,
-					      height: 100,
-					      width: 200,
+					      height: 80,
+					      width: '20%',
 					      modal: false,
-					      resizable: false,
-					      position: { my: "center", at: "right top", of: submitBtn },
-					      show: { effect: "slideDown", duration: 500 }
+					      resizable: false
                 	}).dialog( "open" );
                 	
                 	setTimeout(function(){

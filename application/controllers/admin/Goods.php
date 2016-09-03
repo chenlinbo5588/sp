@@ -404,7 +404,14 @@ class Goods extends Ydzj_Admin_Controller {
 						);
 						
 						//检查是否已经存在
-						$flag = $this->Goods_Model->_add($rowValue);
+						
+						try {
+							$flag = $this->Goods_Model->_add($rowValue);
+						}catch(Exception $re){
+							
+							print_r($re);
+						}
+						
 						if($flag > 0){
 							$result['success']++;
 							$classname = "success";
@@ -497,11 +504,12 @@ EOF;
     	
     	$message = "";
     	if($this->isPostRequest()){
-    		$this->load->helper('text');
     		
-    		$lab_ids = $_POST['lab_id'];
+    		$lab_ids = explode(',',$_POST['lab_id']);
+    		
     		$valid_id = array();
     		$lab_checked = array();
+    		
     		
     		foreach($lab_ids as $id ){
     			$lab_checked[$id] = true;
@@ -524,10 +532,12 @@ EOF;
     			$this->Goods_Model->deleteByCondition($condition);
     		}
     		
+    		//print_r($this->session->all_userdata());
+    		//print_r($valid_id);
+    		//print_r($condition);
     		$message = "清空成功";
     		
-    		$this->assign('success',1);
-    		$this->assign('lab_checked',$lab_checked);
+    		$this->assign('lab_id',$lab_ids);
     		$this->assign('message',$message);
     	}
     	
