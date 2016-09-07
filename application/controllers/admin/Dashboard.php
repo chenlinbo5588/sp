@@ -8,17 +8,12 @@ class Dashboard extends Ydzj_Admin_Controller {
 	}
 	
 	public function welcome(){
-		
-		$this->display('dashboard/aboutus');
-		
 		//$this->display('dashboard/welcome');
+		$this->display();
 	}
 	
-	
-	
 	public function aboutus(){
-		
-		
+		$this->display();
 	}
 	
 }

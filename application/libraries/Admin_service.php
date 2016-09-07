@@ -2,11 +2,9 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Admin_service extends Base_service {
-	
 
 	public function __construct(){
 		parent::__construct();
-		
 	}
     
     /**
@@ -31,9 +29,6 @@ class Admin_service extends Base_service {
 				$message = '用户已被冻结';
 				break;
 			}
-			
-			//print_r($user);
-			//echo self::$CI->encrypt->encode($password,config_item('encryption_key').md5($user['email']));
 			
 			if($password != self::$CI->encrypt->decode($user['password'],config_item('encryption_key').md5($user['email']))){
 				$message = '密码不正确';

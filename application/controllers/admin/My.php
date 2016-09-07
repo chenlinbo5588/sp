@@ -7,11 +7,10 @@ class My extends Ydzj_Admin_Controller {
 		parent::__construct();
 	}
 	
-	
 	public function index()
 	{
 		//print_r($this->session->all_userdata());
-		$this->display('index/index');
+		$this->display();
 	}
 	
 	public function logout()

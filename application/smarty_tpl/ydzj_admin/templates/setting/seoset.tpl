@@ -7,12 +7,12 @@
         <li><a href="JavaScript:void(0);" nctype="index" class="current"><span>首页</span></a></li>
         {*<li><a href="JavaScript:void(0);" nctype="group"><span>团购</span></a></li>
         <li><a href="JavaScript:void(0);" nctype="brand"><span>品牌</span></a></li>
-        <li><a href="JavaScript:void(0);" nctype="credits"><span>积分中心</span></a></li>*}
+        <li><a href="JavaScript:void(0);" nctype="credits"><span>积分中心</span></a></li>
         <li><a href="JavaScript:void(0);" nctype="article"><span>文章</span></a></li>
-        {*<li><a href="JavaScript:void(0);" nctype="shop"><span>店铺</span></a></li>*}
+        <li><a href="JavaScript:void(0);" nctype="shop"><span>店铺</span></a></li>
         <li><a href="JavaScript:void(0);" nctype="product"><span>商品</span></a></li>
         <li><a href="JavaScript:void(0);" nctype="category"><span>商品分类</span></a></li>
-        {*<li><a href="JavaScript:void(0);" nctype="sns"><span>SNS</span></a></li>*}
+        <li><a href="JavaScript:void(0);" nctype="sns"><span>SNS</span></a></li>*}
       </ul>
     </div>
   </div>

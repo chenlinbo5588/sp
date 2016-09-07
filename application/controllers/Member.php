@@ -114,7 +114,7 @@ class Member extends Ydzj_Controller {
 		
 		if($this->isPostRequest()){
 			$this->form_validation->reset_validation();
-			$this->form_validation->set_rules('email','用户名', 'required|valid_email');
+			$this->form_validation->set_rules('email','登陆邮箱', 'required|valid_email');
 			$this->form_validation->set_rules('password','密码','required|alpha_numeric');
 			$this->form_validation->set_rules('auth_code','验证码','required|callback_validateAuthCode');
 			

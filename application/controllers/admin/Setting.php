@@ -18,7 +18,6 @@ class Setting extends Ydzj_Admin_Controller {
 		
 		$feedback = '';
 		
-		
 		$settingKey = array(
 			'site_name',
 			'site_logo',
@@ -80,7 +79,6 @@ class Setting extends Ydzj_Admin_Controller {
 					$feedback = getSuccessTip('保存成功');
 					
 					$this->_clearCache();
-					
 					if($fileData){
 						//更新成功了，则删除原先的图片
 						$this->attachment_service->deleteByFileUrl($currentSetting['site_logo']);
@@ -200,13 +198,11 @@ class Setting extends Ydzj_Admin_Controller {
 		$feedback = '';
 		
 		$selectedGroup = 'index';
-		$this->load->library(array('Seo_service', 'Goods_service'));
+		$this->load->library(array('Seo_service'));
 		
 		
 		if($this->isPostRequest()){
-			
 			$rows = 0;
-			
 			if($_POST['SEO']){
 				foreach($_POST['SEO'] as $key => $value){
 					$selectedGroup = $key;
@@ -214,19 +210,7 @@ class Setting extends Ydzj_Admin_Controller {
 				}
 			
 				$rows = $this->seo_service->updateSeo($_POST['SEO']);
-				
 				$this->cache->file->delete(CACHE_KEY_SeoSetting);
-			}else{
-				
-				if($this->input->post('category') != '' && $this->input->post('form_name') == 'category'){
-					$selectedGroup = $this->input->post('form_name');
-					
-					$rows = $this->goods_service->getGoodsClassModel()->updateGoodsClassSeoById($this->input->post('category'),array(
-						'gc_title' => $this->input->post('cate_title'),
-						'gc_keywords' => $this->input->post('cate_keywords'),
-						'gc_description' => $this->input->post('cate_description'),
-					));
-				}
 			}
 			
 			if($rows >= 0){
@@ -234,121 +218,16 @@ class Setting extends Ydzj_Admin_Controller {
 			}else{
 				$feedback = getErrorTip('保存失败');
 			}
-			
-			
 		}
 		
 		$currentSetting = $this->seo_service->getCurrentSeoSetting();
-		$goodsClassHTML = $this->goods_service->getGoodsClassTreeHTML();
 		
 		//print_r($currentSetting);
-		
 		$this->assign('currentSetting',$currentSetting);
-		$this->assign('goodsClassHTML',$goodsClassHTML);
 		$this->assign('selectedGroup',$selectedGroup);
 		$this->assign('feedback',$feedback);
 		$this->display();
 	}
-	
-	
-	public function ajax_category(){
-		$this->load->library('Goods_service');
-		$goodsClassInfo = $this->goods_service->getGoodsClassModel()->getGoodsClassById($this->input->get('id'));
-		$this->jsonOutput('获取成功',$goodsClassInfo);
-	}
-	
-	
-	public function express(){
-		$this->load->model('Express_Model');
-		
-		if($this->input->is_ajax_request() && $this->isPostRequest()){
-			
-			$this->form_validation->set_rules('fieldname','状态字段','required|in_list[isfreq,state]');
-			$this->form_validation->set_rules('enabled','状态','required|in_list[0,1]');
-			
-			if($this->form_validation->run()){
-				
-				$upInfo[$this->input->post('fieldname')] = $this->input->post('enabled');
-				
-				$this->Express_Model->update($upInfo,array('id' => $this->input->post('id')));
-				
-				$this->jsonOutput('保存成功');
-				
-			}else{
-				$this->jsonOutput('保存失败 '.$this->form_validation->error_string());
-			}
-			
-		}else{
-			$currentPage = $this->input->get('page') ? $this->input->get('page') : 1;
-			$currentLetter = $this->input->get('letter') ? $this->input->get('letter') : '';
-			$letter = $this->input->get('letter') ? $this->input->get('letter') : '';
-			
-			$rangeAZ = range('A','Z');
-			
-			$where = array();
-			if($currentLetter){
-				$where['where']['letter'] = $currentLetter;
-			}
-			
-			
-			$condition = array(
-				'order' => 'id DESC',
-				'pager' => array(
-					'page_size' => config_item('page_size'),
-					'current_page' => $currentPage,
-					'call_js' => 'search_page',
-					'form_id' => '#formSearch'
-				)
-			);
-			
-			$condition = array_merge($condition,$where);
-			
-			
-			$list = $this->Express_Model->getList($condition);
-			
-			$this->assign('charList',$rangeAZ);
-			$this->assign('list',$list);
-			$this->assign('page',$list['pager']);
-			
-			$this->assign('currentPage',$currentPage);
-			$this->assign('letter',$letter);
-			$this->display();
-			
-		}
-		
-	}
-	
-	public function search(){
-		
-		if($this->isPostRequest()){
-			$this->form_validation->set_rules('hotwords','热门搜索关键词','required');
-			
-			if($this->form_validation->run()){
-				
-				if($this->Setting_Model->update(array('value' => $this->input->post('hotwords')),array('name' => 'hotwords')) >= 0){
-					$feedback = getSuccessTip('保存成功');
-					
-					$this->_clearCache();
-					
-					$currentSetting = $this->admin_service->getSettingList(array(
-						'where' => array('name' => 'hotwords' )
-					));
-							
-				}else{
-					$feedback = getErrorTip('保存失败');
-				}
-			}
-		}else{
-			$currentSetting = $this->admin_service->getSettingList(array(
-				'where' => array('name' => 'hotwords' )
-			));
-		}
-		$this->assign('feedback',$feedback);
-		$this->assign('currentSetting',$currentSetting);
-		$this->display();
-		
-	}
-	
 	
 	
 	private function _getTimeZone(){

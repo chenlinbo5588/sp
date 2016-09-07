@@ -17,7 +17,7 @@ class Captcha extends Ydzj_Controller {
 			'word' => $word,
 	        'img_path'      => ROOTPATH.'/static/img/captcha/',
 	        'img_url'       => base_url('/static/img/captcha/'),
-	        'img_width'     => 150,
+	        'img_width'     => 120,
         	'img_height'    => 30,
         	'expiration'    => 180,
         	'word_length'   => 4,
@@ -36,7 +36,6 @@ class Captcha extends Ydzj_Controller {
 		);
 		
 		$this->load->model('Captcha_Model');
-		
 		//清空数据
 		$this->Captcha_Model->deleteByCondition(array(
 			'where' => array('captcha_time <= ' => $this->input->server('REQUEST_TIME') - 7200),

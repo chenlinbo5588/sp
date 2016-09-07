@@ -38,12 +38,12 @@ $(function(){
 			type:"POST",
 			url:authCodeURL,
 			dataType:"json",
-			data:{phoneNo: mobile , formhash : $("input[name=formhash]").val()},
+			data:{phoneNo: mobile },
 			success:function(resp){
-				$("input[name=formhash]").val(resp.data.formhash);
+				
 			},
 			failed:function(resp){
-				$("input[name=formhash]").val(resp.data.formhash);
+				
 			}
 		})
 		
@@ -53,7 +53,6 @@ $(function(){
 	
 	$("#registerForm").bind("submit",function(e){
 		var mobile = $("input[name=mobile]").val();
-
 		if(!regMobile.test(mobile)){
 			alert("请输入正确的手机号码");
 			$("input[name=mobile]").focus();

@@ -3,11 +3,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 $entity = array(
 'uid' => 'mediumint',
-'body_height' => 'smallint',
-'body_weight' => 'smallint',
-'hand_width' => 'smallint',
-'hundred_cost' => 'float',
-'most_height' => 'smallint',
-'gmt_create' => 'int',
-'gmt_modify' => 'int'
+'weixin' => 'varchar',
+'qq' => 'varchar',
+'reg_date' => 'int',
+'reg_ip' => 'varchar',
+'avatar' => 'varchar',
+'avatar_m' => 'varchar',
+'last_login' => 'int',
+'last_loginip' => 'varchar',
+'group_id' => 'int'
 );

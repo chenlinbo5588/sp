@@ -316,7 +316,7 @@ $config['cache_query_string'] = FALSE;
 | http://codeigniter.com/user_guide/libraries/encryption.html
 |
 */
-$config['encryption_key'] = 'OWZmYWY2ZmVkZWEwZDIzMzQ1NTQzNWM2';
+$config['encryption_key'] = 'OTg0NTQyMmMzMTQ0MzRkOWJhY2EwODA4NTllMTBkZGQ=';
 
 /*
 |--------------------------------------------------------------------------
@@ -439,7 +439,7 @@ $config['global_xss_filtering'] = FALSE;
 | 'csrf_regenerate' = Regenerate token on every submission
 | 'csrf_exclude_uris' = Array of URIs which ignore CSRF checks
 */
-$config['csrf_protection'] = TRUE;
+$config['csrf_protection'] = false;
 $config['csrf_token_name'] = 'formhash';
 $config['csrf_cookie_name'] = 'cformhash';
 $config['csrf_expire'] = 7200;

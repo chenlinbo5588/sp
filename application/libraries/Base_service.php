@@ -10,27 +10,29 @@ class Base_service {
 	public static $districtModel = null;
 	public static $form_validation = null;
 	public static $settingModel = null;
-	public static $auditLogModel = null;
 	
+	
+	public function __construct(){
+		//empty here
+	}
 	
 	public static function initStaticVars(){
 		
 		self::$CI = & get_instance();
-		self::$CI->load->model('Member_Model');
-		self::$CI->load->model('Adminuser_Model');
+		self::$CI->load->model(array(
+			'Setting_Model',
+			'Adminuser_Model',
+			'Common_District_Model'
+		));
 		
-		self::$CI->load->model('Common_District_Model');
 		self::$CI->load->library('form_validation');
-		self::$CI->load->model('Setting_Model');
-		self::$CI->load->model('Audit_Log_Model');
+		
+		self::$form_validation = self::$CI->form_validation;
 		
 		self::$memberModel = self::$CI->Member_Model;
 		self::$adminUserModel = self::$CI->Adminuser_Model;
-		
 		self::$districtModel = self::$CI->Common_District_Model;
-		self::$form_validation = self::$CI->form_validation;
 		self::$settingModel = self::$CI->Setting_Model;
-		self::$auditLogModel = self::$CI->Audit_Log_Model;
 		
 		self::$dbInstance = self::$CI->Member_Model->getDb();
 		
@@ -103,9 +105,7 @@ class Base_service {
 	}
 	
 	
-	public function __construct(){
-		//empty here
-	}
+	
     
 	protected function successRetun($data = array()){
 		return array(

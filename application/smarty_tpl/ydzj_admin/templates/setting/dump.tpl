@@ -37,10 +37,6 @@
                 <input type="checkbox" value="1" name="captcha_status_register" id="captcha_status2" {if $currentSetting['captcha_status_register']['value']}checked="checked"{/if} />
                 <label for="captcha_status2">前台注册</label>
               </li>
-              <li>
-                <input type="checkbox" value="1" name="captcha_status_goodsqa" id="captcha_status3" {if $currentSetting['captcha_status_goodsqa']['value']}checked="checked"{/if} />
-                <label for="captcha_status3">商品咨询</label>
-              </li>
             </ul></td>
           <td class="vatop tips" >&nbsp;</td>
         </tr>

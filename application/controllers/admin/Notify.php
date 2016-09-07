@@ -13,9 +13,6 @@ class Notify extends Ydzj_Admin_Controller {
 	
 	
 	public function team(){
-		
 		$this->display();
 	}
-	
-	
 }

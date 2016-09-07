@@ -56,7 +56,5 @@ class Message_service extends Base_service {
 		}
 		
 		return false;
-		
-		
 	}
 }

@@ -3,18 +3,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Register extends MY_Controller {
 	
-	
 	public function __construct(){
 		parent::__construct();
-		
-		
 	}
-	
-	
-	public function index(){
-		
-	}
-	
 	
 	/**
 	 * 请求手机验证码
@@ -71,7 +62,7 @@ class Register extends MY_Controller {
 					 * 再检查 在验证码有效期内，同一个Ip ，同一个号码只能, 不能超过3次
 					 */
 					if($codeInfo['send_normal'] >= 3){
-						$rt['message'] = "攻击行为，请求失败";
+						$rt['message'] = "您的请求过于频繁,稍后再次尝试";
 						break;
 					}
 				}
@@ -188,8 +179,8 @@ class Register extends MY_Controller {
 				}
 				
 				$rt['code'] = 'success';
-				$this->load->library('ShortMessage_service');
-				if($this->shortmessage_service->sendMessage($phoneNo)){
+				$this->load->library('Sms_service');
+				if($this->sms_service->sendMessage($phoneNo)){
 					$this->verify_service->sendSuccessAddon($codeInfo['id']);
 				}else{
 					$this->verify_service->sendFailedAddon($codeInfo['id']);

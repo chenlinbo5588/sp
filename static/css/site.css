@@ -184,7 +184,7 @@ img.nature {
 .master_btn , .link_btn , .slaveBtn {
 	display:inline-block;
 	cursor:pointer;
-    width:100%;
+    width:95%;
     height:30px;
     line-height:30px;
     background-color:#db3652;
@@ -270,7 +270,7 @@ input[type=text].validation_error {
 }
 
 .handle_area {
-    padding:5px;
+    padding:5px 0px;
 }
 
 /** 表单左侧 标题说明 */
@@ -290,7 +290,7 @@ input[type=text].validation_error {
 }
 
 .at_txt {
-    width:100%;
+    width:95%;
 }
 
 .handle_area .at_txt {
@@ -459,18 +459,68 @@ table.fulltable {
     width:100%;
 }
 
-
 .fulltable thead th , .fulltable tbody td {
 	border:1px solid #1AA169;
 	border-width:1px 0 1px 0;
 }
+
+/* 后台登陆 */
+
+#adminlogin {
+	width:100%;
+	max-width:640px;
+	margin: 0 auto;
+}
+
+#adminlogin .row {
+	position:relative;
+	text-align: center;
+	
+}
+
+#adminlogin h1 {
+	text-align:center;
+}
+
+#adminlogin .side_lb {
+	display:block;
+	position:absolute;
+	width:80px;
+	border: 1px solid #d0d0d0;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -o-border-radius: 5px;
+    
+    
+	left:0px;
+	top:0px;
+	height:100%;
+	line-height: 30px;
+	background:#d0d0d0;
+}
+
+#adminlogin .at_txt {
+	width:95%;
+}
+
+#authImg {
+	position:absolute;
+	right:15px;
+	cursor:pointer;
+}
+
+#adminlogin .form_error {
+	text-align: center;
+    display: block;
+}
+
 
 /** 个人中心 */
 
 #my .side_link {
 	float:right;
 }
-
 
 #my .avatar {
     padding:0;
@@ -525,105 +575,6 @@ table.fulltable {
 }
 
 
-/** 队伍 */
-#categoryList {
-    border:1px solid black;
-    border-width:1px 0 1px 0;
-}
-#categoryList li {
-	width:25%;
-}
-
-
-#categoryList li a {
-    display:block;	
-}
-
-
-/** 球队列表 */
-.team {
-    margin:5px 0;
-    border-bottom: 1px dotted #dcdcdc;
-    padding: 0px 0px 5px 0;
-}
-
-.team .team_title {
-    color:rgb(38, 15, 237);
-    font-weight:bold;
-    font-size:15px;
-}
-
-.team .team_leader {
-    color:rgb(205, 88, 17);
-}
-
-.team .team_pnum {
-}
-
-.team .win_rate {
-    margin-left:20px;	
-}
-
-.team .team_avatar img {
-    width:180px;
-    height:120px;
-}
-
-.team .team_basic {
-	position:relative;
-	padding:0 0 0 10px;
-}
-
-.team_basic li {
-    padding:3px 0;	
-}
-
-.team .order_game {
-    clear:both;
-}
-
-
-/** 注册样式 **/
-#register {
-    padding:5px;    
-}
-
-/** 创建队伍 **/
-#create_team .row {
-    margin:10px 0px
-}
-
-#create_team .side_lb {
-    width:22%;
-}
-
-#create_team .at_txt {
-    width:75%;
-}
-
-.teamCoverImg {
-    
-}
-
-/** 队伍列表 */
-
-#leftBarLink {
-    position:absolute;
-    left:5px;
-    top:10px;
-}
-
-#rightBarLink {
-    position:absolute;
-    right:5px;
-    top:10px;	
-}
-
-#teamList .row img {
-	width:100px;
-    height:100px;
-}
-
 .delmask {
 	position:absolute;
 	font-size:13px;
@@ -641,111 +592,3 @@ table.fulltable {
 }
 
 
-/** 队伍详情 **/
-
-.teamMembers li.member {
-    width:25%;
-    float:left;
-    margin:2px 0;
-}
-
-.teamMembers .member img {
-    width:60px;
-    height:60px;
-}
-
-.teamMembers li.manage {
-    float:none;
-    width:auto;
-    border:1px solid #1AA169;
-    margin:5px 0;
-    position:relative;
-}
-
-.teamMembers li.manage .headerImg {
-	margin:0 5px 0 0;
-	position:relative;
-}
-
-.teamMembers li.manage .headerImg a {
-	float:left;
-	margin: 0 5px 0 0;
-}
-
-
-
-
-.teamMembers li.manage .headerImg strong {
-	vertical-align:top;
-}
-.teamMembers li.manage .headerImg span {
-	vertical-align:top;
-}
-
-
-.teamMembers li.manage .edit_username {
-	width:40%;
-}
-
-.teamMembers li.manage .edit_num {
-	width:25%;
-}
-
-.teamMembers li.manage .positionSet {
-  position: relative;
-}
-
-.teamMembers li.manage .positionSet h3 {
-	text-align: center;
-	background: #D9DAFF;
-	padding: 3px;
-}
-
-
-
-.teamMembers li.manage .positionSet label {
-	display:inline-block;
-    padding:3px 0;
-    margin:2px 0;
-    width:30%;
-}
-
-.teamMembers li.manage .kickoffBtn {
-	margin:3px 0;
-	height:30px;
-}
-
-
-#submitFixedWrap {
-    position:fixed;
-    width:100%;
-    height:30px;
-    bottom:40px;
-    left:0px;
-    margin:5px 0;
-    z-index:2;
-}
-
-/** 场馆 **/
-.img_preview {
-    text-align:center;	
-}
-
-.img_preview a {
-  width: 65%;
-  text-align: center;
-  display: block;
-  margin: 2px auto;
-}
-
-
-#stadium {
-    position:relative;	
-}
-
-#mapDiv {
-    position:absolute;
-    left:0;
-    top:0;
-    z-index: 1;
-}

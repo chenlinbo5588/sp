@@ -1,5 +1,4 @@
 <?php
-
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 /*
@@ -10,19 +9,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Http_Client {
     
     public $_baseURL = 'https://api.weixin.qq.com';
-    public $_CI = null;
+    //public $_CI = null;
     
     public function __construct(){
-        $this->_CI = & get_instance();
-        $this->_CI->load->model('Log_Model');
-    }
-    
-    public function log($level = 1){
-        if('POST' == strtoupper($_SERVER['REQUEST_METHOD'])){
-            $this->_CI->Log_Model->add($_SERVER,$GLOBALS["HTTP_RAW_POST_DATA"]);
-        }else{
-            $this->_CI->Log_Model->add($_SERVER,'');
-        }
+        //$this->_CI = & get_instance();
     }
     
     public function request($param, $return = true){

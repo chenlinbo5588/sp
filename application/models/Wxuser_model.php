@@ -1,14 +1,16 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-
-class Payment_Model extends MY_Model {
-    
-    public $_tableName = 'payment';
+/**
+ * 微信公众 关注者
+ */
+ 
+class Wx_Customer_Model extends MY_Model {
+    public $_tableName = 'wxuser';
     public static $_tableMeta = null;
-
-
+    
     public function __construct(){
         parent::__construct();
+        
         self::$_tableMeta = $this->getTableMeta();
     }
     
@@ -16,7 +18,4 @@ class Payment_Model extends MY_Model {
     	return self::$_tableMeta;
     }
     
-    
-    
-
 }

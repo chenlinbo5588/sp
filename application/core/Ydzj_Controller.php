@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 
 /**
- * 运动之家 控制器
+ * 控制器
  * 
  * 登陆态 和 非登陆态 都可继承
  */
@@ -17,8 +17,6 @@ class Ydzj_Controller extends MY_Controller {
 		parent::__construct();
 		
 		$this->_profileKey = 'profile';
-		
-		$this->load->library('Seo_service');
 		$this->form_validation->set_error_delimiters('<label class="form_error">','</label>');
 		
 		$this->_initLogin();

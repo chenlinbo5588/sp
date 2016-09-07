@@ -16,6 +16,13 @@ class Tools extends MY_Controller {
 		
 	}
 	
+	
+	public function hash_code(){
+		
+		echo base64_encode(md5(mt_rand()));
+	}
+	
+	
 	public function com_address(){
 		$file = 'address.m.csv.txt';
 		
