@@ -17,7 +17,6 @@ class Setting extends Ydzj_Admin_Controller {
 	public function base(){
 		
 		$feedback = '';
-		
 		$settingKey = array(
 			'site_name',
 			'site_logo',

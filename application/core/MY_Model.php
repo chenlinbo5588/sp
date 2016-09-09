@@ -15,11 +15,13 @@ class MY_Model extends CI_Model {
 	//数据来源  比如后台 , 手机网页版 等等
 	public static $channel;
 	
+	
     public function __construct(){
         parent::__construct();
         $this->_tableRealName = $this->getTableRealName();
     }
     
+	
     /**
      * 获得表实体
      * @return type 

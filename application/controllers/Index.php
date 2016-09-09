@@ -6,14 +6,16 @@ class Index extends Ydzj_Controller {
 	public function __construct(){
 		parent::__construct();
 		
-		$this->load->library('Team_Service');
+		//$this->load->library('Team_Service');
 	}
 	
 	/**
 	 * 首页
 	 */
 	public function index()
-	{
+	{	
+		$this->display();
+		/*
 		//$availableCity = $this->district_stat_service->getAvailableCity(1);
 		//print_r($availableCity);
 		//$sportsCategoryList = $this->team_service->getSportsCategory();
@@ -59,6 +61,8 @@ class Index extends Ydzj_Controller {
 		
 		$this->assign('teamList',$teamList);
 		$this->display('team/index');
+		
+		*/
 	}
 	
 

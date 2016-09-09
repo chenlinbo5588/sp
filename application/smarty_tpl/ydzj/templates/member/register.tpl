@@ -1,5 +1,4 @@
 {include file="common/header.tpl"}
-
 <div id="register" class="handle_area">
     <div>{$feedback}</div>
     {form_open(site_url('member/register'),'id="registerForm"')}

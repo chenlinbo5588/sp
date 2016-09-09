@@ -79,7 +79,6 @@ class MY_Controller extends CI_Controller {
     
     
     private function _initMobile(){
-    	//print_r($this->agent);
     	$this->assign('isMobile',$this->agent->is_mobile());
     }
     
@@ -173,7 +172,11 @@ class MY_Controller extends CI_Controller {
     protected function _initLibrary(){
 		$this->load->helper(array('form','directory','file', 'url','string'));
 		$this->load->driver('cache');
-		$this->load->model(array('Member_Model','Setting_Model','Seo_Model'));
+		
+		$this->load->database();
+		//$this->load->model('Setting_Model','',true);
+		
+		$this->load->model(array('Setting_Model','Member_Model','Seo_Model'));
 		$this->load->library(array('user_agent','Form_validation','encrypt','PHPTree','Base_service'));
 		
 		$this->base_service->initStaticVars();

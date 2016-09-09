@@ -20,22 +20,17 @@ class Base_service {
 		
 		self::$CI = & get_instance();
 		self::$CI->load->model(array(
-			'Setting_Model',
 			'Adminuser_Model',
 			'Common_District_Model'
 		));
 		
-		self::$CI->load->library('form_validation');
-		
 		self::$form_validation = self::$CI->form_validation;
-		
 		self::$memberModel = self::$CI->Member_Model;
 		self::$adminUserModel = self::$CI->Adminuser_Model;
 		self::$districtModel = self::$CI->Common_District_Model;
 		self::$settingModel = self::$CI->Setting_Model;
 		
 		self::$dbInstance = self::$CI->Member_Model->getDb();
-		
 	}
 	
 	
