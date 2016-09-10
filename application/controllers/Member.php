@@ -44,8 +44,9 @@ class Member extends Ydzj_Controller {
 			$this->assign('returnUrl',$this->input->post('returnUrl'));
 			$this->form_validation->reset_validation();
 			
-			$this->form_validation->set_rules('loginname','用户名', 'required|valid_mobile');
+			$this->form_validation->set_rules('loginname','用户登陆手机', 'required|valid_mobile');
 			$this->form_validation->set_rules('password','密码','required|alpha_numeric');
+			$this->form_validation->set_rules('auth_code','验证码','required|callback_validateAuthCode');
 			
 			//$this->form_validation->set_rules('returnUrl','返回地址','valid_url');
 			
@@ -103,7 +104,7 @@ class Member extends Ydzj_Controller {
 		}
 		
 		$this->seoTitle('登陆');
-		$this->display("member/login");
+		$this->display();
 	}
 
 	/**
@@ -111,6 +112,10 @@ class Member extends Ydzj_Controller {
 	 */
 	public function admin_login(){
 		
+		if($this->session->get_userdata()){
+			
+			
+		}
 		
 		if($this->isPostRequest()){
 			$this->form_validation->reset_validation();
@@ -134,8 +139,8 @@ class Member extends Ydzj_Controller {
 				}
 				
 				$this->session->set_userdata(array(
-					'admin_profile' => $result['data'],
-					'lastvisit' => $this->_reqtime
+					$this->_adminProfileKey => $result['data'],
+					$this->_adminLastVisitKey => $this->_reqtime
 				));
 				
 				$this->admin_service->updateUserInfo(
@@ -152,7 +157,7 @@ class Member extends Ydzj_Controller {
 		}
 		
 		$this->seoTitle('后台登陆');
-		$this->display('member/admin_login');
+		$this->display();
 	}
 	
 	
@@ -166,6 +171,7 @@ class Member extends Ydzj_Controller {
 	{
 		
 		$registerOk = false;
+		$feedback = '';
 		
 		if($this->isPostRequest()){
 			$inviter = $this->input->post('inviter');
@@ -174,7 +180,6 @@ class Member extends Ydzj_Controller {
 			$this->assign('inviter', $inviter);
 			$this->assign('inviteFrom',$inviteFrom);
 			$this->assign('returnUrl',$this->input->post('returnUrl'));
-			
 			
 			$this->form_validation->reset_validation();
 			$this->form_validation->set_rules('mobile','手机号',array(
@@ -226,92 +231,71 @@ class Member extends Ydzj_Controller {
 			
 			$this->form_validation->set_rules('psw','密码','required|alpha_dash|min_length[6]|max_length[12]');
 			$this->form_validation->set_rules('psw_confirm','密码确认','required|matches[psw]');
-			$this->form_validation->set_rules('agreee_licence','同意注册条款','required');
+			//$this->form_validation->set_rules('agreee_licence','同意注册条款','required');
 			
-			if($this->form_validation->run() !== FALSE){
+			for($i = 0; $i < 1; $i++){
 				
-				$this->load->library('Member_service');
-				$this->load->library('Register_service');
+				if(!$this->form_validation->run()){
+					break;
+				}
 				
+				$this->load->library(array('Member_service','Register_service'));
 				$todayRegistered = $this->register_service->getIpLimit($this->input->ip_address());
 				
-				if($todayRegistered < 3){
-					
-					$addParam = array(
-						'mobile' => $this->input->post('mobile'),
-						'nickname' => $this->input->post('mobile'),
-						'password' => $this->input->post('psw'),
-						'status' => -2,
-						'inviter' => empty($inviter) == true ? 0 : intval($inviter)
-					);
-					
-					$this->assign('default_avatar',$addParam['avatar_big']);
-					
-					
-					//来源为队伍邀请链接
-					if('teamInvite' == $inviteFrom){
-						$inviterInfo = $this->Member_Model->getById(array(
-							'where' => array('uid' => $inviter)
-						));
-						
-						$addParam['district_bind'] = 1;
-						$addParam['d1'] = $inviterInfo['d1'];
-						$addParam['d2'] = $inviterInfo['d2'];
-						$addParam['d3'] = $inviterInfo['d3'];
-						$addParam['d4'] = $inviterInfo['d4'];
-						
-						//只需要设置头像
-						$addParam['status'] = -1;
-					}
-					
-					$result = $this->register_service->createMember($addParam);
-				
-					if($result['code'] == 'success'){
-						
-						$userInfo = $this->member_service->getUserInfoByMobile($this->input->post('mobile'));
-						$this->_rememberLoginName($this->input->post('mobile'));
-						
-						$this->session->set_userdata(array(
-							'profile' => array('basic' => $userInfo)
-						));
-						
-						
-						$registerOk = true;
-					}else{
-						
-						$this->assign('feedback',$result['message']);
-					}
-				}else{
-					$this->assign('feedback','<div class="warning">很抱歉，您今日注册数量已经用完</div>');
+				if($todayRegistered > 5){
+					$feedback = getWarningTip('很抱歉，您今日注册数量已经用完');
+					break;
 				}
+				
+				$addParam = array(
+					'sid' => $this->session->session_id,
+					'mobile' => $this->input->post('mobile'),
+					'nickname' => $this->input->post('mobile'),
+					'password' => $this->input->post('psw'),
+					'status' => -2,
+					'inviter' => empty($inviter) == true ? 0 : intval($inviter)
+				);
+				
+				$result = $this->register_service->createMember($addParam);
+				
+				if($result['code'] != 'success'){
+					$feedback = getErrorTip($result['message']);
+					break;
+				}
+				
+				$userInfo = $this->member_service->getUserInfoByMobile($this->input->post('mobile'));
+				$this->_rememberLoginName($this->input->post('mobile'));
+				
+				$this->session->set_userdata(array(
+					'profile' => array('basic' => $userInfo)
+				));
+				
+				$registerOk = true;
 			}
-		
+			
 		}else{
+			/* 邀请人 */
 			$this->assign('inviter', $this->input->get('inviter'));
 		}
 		
+		$this->assign('feedback',$feedback);
 		
 		if($registerOk){
-			$this->seoTitle('设置头像');
-			$this->display('my/set_avatar');
-			
+			redirect('my');
 		}else{
-			
 			$this->seoTitle('用户注册');
-			$this->display("member/register");
+			$this->display();
 		}
-		
 	}
-	
 	
 	/**
 	 * 登出
 	 */
 	public function logout(){
 		
-		$this->session->unset_userdata('profile');
-		//$this->session->sess_destroy();
-		//$this->jsonOutput('');
+		if($this->isLogin()){
+			$this->session->unset_userdata('profile');
+		}
 		
 		redirect('member/login');
 	}

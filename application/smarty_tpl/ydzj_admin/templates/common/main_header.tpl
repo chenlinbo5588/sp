@@ -8,7 +8,7 @@
 <meta name="keywords" content="{$SEO_keywords}" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,minimal-ui"/>
 <link href="{resource_url('css/skin_1.css')}" rel="stylesheet" type="text/css" id="cssfile2" />
-<link href="{resource_url('js/jquery-ui/themes/flick/jquery-ui-1.9.2.custom.css')}" rel="stylesheet" type="text/css" />
+<link href="{resource_url('js/jquery-ui/themes/redmond/jquery-ui-1.9.2.custom.css')}" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="{resource_url('js/jquery.js')}" ></script>
 <script type="text/javascript" src="{resource_url('js/jquery.validation.min.js')}"></script>
 <script type="text/javascript" src="{resource_url('js/jquery.cookie.js')}"></script>

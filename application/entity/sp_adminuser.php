@@ -20,7 +20,6 @@ $entity = array(
 'last_loginip' => 'varchar',
 'sid' => 'varchar',
 'newpm' => 'smallint',
-'newprompt' => 'smallint',
 'freeze' => 'tinyint',
 'add_uid' => 'int',
 'edit_uid' => 'int',

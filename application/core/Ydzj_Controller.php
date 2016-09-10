@@ -9,14 +9,22 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 class Ydzj_Controller extends MY_Controller {
 	
-	public $_profile = array();
-	public $_profileKey = '';
+	public $_profile;
+	public $_profileKey;
+	public $_adminProfile;
+	public $_adminProfileKey;
+	public $_adminLastVisitKey;
 	
 	
 	public function __construct(){
 		parent::__construct();
 		
 		$this->_profileKey = 'profile';
+		$this->_adminProfileKey = 'admin_profile';
+		$this->_adminLastVisitKey = 'admin_lastvisit';
+		$this->_profile = array();
+		$this->_adminProfile = array() ;
+		
 		$this->form_validation->set_error_delimiters('<label class="form_error">','</label>');
 		
 		$this->_initLogin();
@@ -29,36 +37,35 @@ class Ydzj_Controller extends MY_Controller {
 	}
 	
 	private function _initLogin(){
-		//print_r($this->session->all_userdata());
-		$this->_profile = $this->session->userdata($this->_profileKey);
-		if(empty($this->_profile)){
-			$this->_profile = array();
-		}
-		
-		$lastVisit = $this->session->userdata($this->_lastVisitKey);
+		$userData =  $this->session->get_userdata();
+		//print_r($userData);
+		$lastVisit = $userData[$this->_lastVisitKey];
 		
 		if(empty($lastVisit)){
-			$this->_lastVisit = $this->_reqtime;
-			$this->session->set_userdata(array($this->_lastVisitKey => $this->_lastVisit));
-		}else{
-			$this->_lastVisit = $lastVisit;
+			$lastVisit = 0;
 		}
 		
-		if($this->isLogin()){
-			$this->assign($this->_profileKey,$this->session->userdata($this->_profileKey));
+		if($userData[$this->_profileKey]){
+			$this->_profile = $userData[$this->_profileKey];
 		}
 		
-		
-		if(!empty($lastVisit)){
-			//前台登陆
+		/* 如果已登陆 或者 首次登陆 则刷新上次访问时间 */
+		if($this->_profile && $lastVisit == 0){
 			$this->session->set_userdata(array($this->_lastVisitKey => $this->_reqtime));
 		}
+		
+		$this->assign($this->_profileKey,$this->_profile);
 		
 	}
 	
 	
-	public function isLogin(){
-		if($this->_profile && ($this->_reqtime - $this->session->userdata($this->_lastVisitKey)) < 86400 * 30){
+	public function isLogin($session = array()){
+		if(!$session){
+			$session = $this->session->get_userdata();
+		}
+		
+		$lastVisit = empty($session[$this->_lastVisitKey]) ? 0 : $session[$this->_lastVisitKey];	
+		if($session[$this->_profileKey] && ($this->_reqtime - $lastVisit) < CACHE_ONE_MONTH){
 			return true;
 		}
 		

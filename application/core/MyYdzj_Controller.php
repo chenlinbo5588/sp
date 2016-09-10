@@ -11,10 +11,8 @@ class MyYdzj_Controller extends Ydzj_Controller {
 		
 		if(!$this->isLogin()){
 			$this->session->unset_userdata(array($this->_lastVisitKey,$this->_profileKey));
-			
 			redirect('member/login');
 		}
-		
 	}
 }
 

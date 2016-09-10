@@ -6,17 +6,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 class Ydzj_Admin_Controller extends Ydzj_Controller {
 	
-	public $_adminProfile = array() ;
-	public $_adminProfileKey = '';
-	public $_adminLastVisitKey = '';
+	
 	
 	public function __construct(){
 		parent::__construct();
 		
-		$this->_adminProfileKey = 'admin_profile';
-		$this->_adminLastVisitKey = 'admin_lastvisit';
-		
-		$this->form_validation->set_error_delimiters('<label class="error">','</label>');
 		$this->_initAdminLogin();
 		
 		//@todo 打开检查权限
@@ -46,46 +40,39 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 	
 	private function _initAdminLogin(){
 		//print_r($this->session->all_userdata());
-		$adminLastVisit = $this->session->userdata($this->_adminLastVisitKey);
 		
-		if(empty($adminLastVisit)){
-			$this->session->set_userdata(array($this->_adminLastVisitKey => $this->_reqtime));
-		}
+		$alldata = $this->session->get_userdata();
+		$adminLastVisit = $alldata[$this->_adminLastVisitKey];
 		
-		$this->_adminProfile = $this->session->userdata($this->_adminProfileKey);
-		if(empty($this->_adminProfile)){
-			$this->_adminProfile = array();
-		}
-		
-		if(!$this->isAdminLogin($adminLastVisit)){
+		if(!$this->isAdminLogin($alldata)){
 			if($this->input->is_ajax_request()){
 				$this->responseJSON('您尚未登陆',array('url' => site_url('member/admin_login')));
 			}else{
-				$this->session->unset_userdata(array($this->_adminLastVisitKey,$this->_adminProfileKey));
+				$this->session->unset_userdata($this->_adminProfileKey);
 				redirect(site_url('member/admin_login'));
 			}
 		}else{
+			$this->_adminProfile = $alldata[$this->_adminProfileKey];
+			if($this->_adminProfile){
+				$this->session->set_userdata(array(
+					$this->_adminProfileKey => $this->_adminProfile,
+					$this->_adminLastVisitKey => $this->_reqtime
+				));
+			}
+			
 			$this->assign($this->_adminProfileKey,$this->_adminProfile);
 		}
 		
-		//如果没有被刷新，则刷新
-		if($adminLastVisit){
-			$this->session->set_userdata(array($this->_adminLastVisitKey => $this->_reqtime));
-		}
 	}
 	
 	
-	public function isAdminLogin($lastVisitTime){
+	public function isAdminLogin($session = array()){
+		if(!$session){
+			$session = $this->session->get_userdata();
+		}
 		
-		/*
-		echo $this->session->userdata('admin_lastvisit');
-		echo '<br>';
-		echo $this->_reqtime;
-		print_r($this->_adminProfile);
-		echo ($this->_reqtime - $this->session->userdata('admin_lastvisit'));
-		*/
-		
-		if($this->_adminProfile && ($this->_reqtime - $this->session->userdata($this->_adminLastVisitKey)) <= 86400){
+		$lastVisit = empty($session[$this->_adminLastVisitKey]) ? 0 : $session[$this->_adminLastVisitKey];
+		if(!empty($session[$this->_adminProfileKey]) && ($this->_reqtime - $lastVisit) <= CACHE_ONE_DAY){
 			return true;
 		}
 

@@ -3,17 +3,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class MY_Controller extends CI_Controller {
 
-	public $_verifyName = 'verify';
+	public $_verifyName;
 	public $_lastVisit;
-	public $_lastVisitKey = '';
+	public $_lastVisitKey;
 	
-	public $_reqtime ;
-	public $_navigation = array();
+	public $_reqtime;
 	
 	protected $_siteSetting = array();
 	public $_seoSetting = array();
-	
-	
 	public $_seo = array(
 		'SEO_title' => '',
 		'SEO_description' => '',
@@ -26,6 +23,7 @@ class MY_Controller extends CI_Controller {
 		parent::__construct();
 		$this->_reqtime = $this->input->server('REQUEST_TIME');
 		$this->_lastVisitKey = 'lastvisit';
+		$this->_verifyName = 'verify';
 		
 		$this->_initLibrary();
 		$this->_initSmarty();
@@ -170,12 +168,11 @@ class MY_Controller extends CI_Controller {
     
     
     protected function _initLibrary(){
+    	$this->load->database();
+    	
 		$this->load->helper(array('form','directory','file', 'url','string'));
 		$this->load->driver('cache');
-		
-		$this->load->database();
-		//$this->load->model('Setting_Model','',true);
-		
+			
 		$this->load->model(array('Setting_Model','Member_Model','Seo_Model'));
 		$this->load->library(array('user_agent','Form_validation','encrypt','PHPTree','Base_service'));
 		
@@ -221,30 +218,9 @@ class MY_Controller extends CI_Controller {
     }
     
     
-    public function breadcrumb(){
-    	
-    	if($this->_navigation){
-    		$temp = array();
-    		$i = 0;
-    		
-    		foreach($this->_navigation as $key => $item){
-    			if($i == 0){
-    				$temp[] = "<a class=\"first breadlink\" href=\"{$item}\">{$key}</a>";
-    			}else{
-    				$temp[] = "<a class=\"breadlink\" href=\"{$item}\">{$key}</a>";
-    			}
-    			
-    			$i++;
-    		}
-    		
-    		return implode('<em>&gt;</em>',$temp);
-    	}else{
-    		return '';
-    	}
-    }
-    
-    
     public function display($viewname = ''){
+    	global $lang;
+    	
     	//echo $this->uri->uri_string();
     	if($viewname == ''){
     		$tempPath = array();

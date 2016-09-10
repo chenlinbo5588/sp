@@ -958,6 +958,10 @@ if ( ! function_exists('getImgPathArray'))
 }
 
 
+function getWarningTip($message){
+	return "<div class=\"warning\">{$message}</div>";
+}
+
 function getSuccessTip($message = ''){
 	return "<div class=\"tip_success\">{$message}</div>";
 }
@@ -965,6 +969,8 @@ function getSuccessTip($message = ''){
 function getErrorTip($message = ''){
 	return "<div class=\"tip_error\">{$message}</div>";
 }
+
+
 
 
 function validateAuthCode($val){

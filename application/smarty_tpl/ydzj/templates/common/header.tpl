@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="{resource_url('css/site.css')}"/>
 <script type="text/javascript" src="{resource_url('js/jquery.js')}"></script>
 <script>
-var cookiedomain = "",
+var cookiedomain = "{config_item('site_domain')}",
     cookiepath = "{config_item('cookie_path')}",
     cookiepre = "{config_item('cookie_prefix')}",
     formhash = "{$formhash}",
@@ -18,19 +18,22 @@ var cookiedomain = "",
     cityUrl = "{site_url('district/index/')}",
     LOADING_IMAGE = "{resource_url('img/loading/loading.gif')}";
 </script>
-<script type="text/javascript" src="{resource_url('js/common.js')}"></script>
-<!--[if lte IE 9]>
-<script type="text/javascript" src="{resource_url('js/html5shiv.js')}"></script>
-<![endif]-->
-<script type="text/javascript" src="{resource_url('js/respond.min.js')}"></script>
 </head>
 <body {if $bodyClass}class="{$bodyClass}"{/if}>
-   <div id="wrap">
-   		<header>
-            <div id="topBar" class="clearfix">
-                {$LEFT_BUTTON}
-                <h1>{if $TOP_NAV_TITLE}{$TOP_NAV_TITLE}{else}{$SEO_title|escape}{/if}</h1>
-                {$RIGHT_BUTTON}
+    <div id="wrap">
+        <div id="topbar">
+            <div class="boxz">
+                <div id="logo"><a href="{site_url('/')}">{$siteSetting['site_name']}</a></div>
+	            <div id="homeSideLinks">
+	               {if $profile}
+	                   <span>你好:</span><a href="{site_url('my/index')}">{mask_mobile($profile['basic']['nickname']|escape)}</a>
+	                   <a class="action" href="{site_url('member/logout')}">退出</a>
+	               {else}
+	                   <a class="login action" href="{site_url('member/login')}">登陆</a>
+	                   <a class="register action" href="{site_url('member/register')}">注册</a>
+	               {/if}
+	            </div>
             </div>
-        </header>
-   
+        </div>
+        <!-- begin main-content -->
+        <div id="main-content">

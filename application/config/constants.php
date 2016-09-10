@@ -94,7 +94,7 @@ define('FROM_BACKGROUND',1);
 define('WEBSITE_FOUNDER',1);
 
 define('CACHE_ONE_DAY',86400);
-
+define('CACHE_ONE_MONTH',2592000);
 
 define('CACHE_KEY_SeoSetting','seoSettingList');
 define('CACHE_KEY_SiteSetting','siteSettingList');

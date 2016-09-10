@@ -35,6 +35,7 @@ class Admin_service extends Base_service {
 				break;
 			}
 			
+			unset($user['password']);
 			$message = '成功';
 		}
 		

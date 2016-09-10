@@ -15,7 +15,7 @@ body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input
 } 
 /* 要注意表单元素并不继承父级 font 的问题 */ 
 body,button,input,select,textarea { 
-    font:12px arial,sans-serif,SimSun,tahoma; 
+    font:12px "Microsoft Yahei", "Lucida Grande", Verdana, Lucida, Helvetica, Arial, 'Simsun', sans-serif; 
 } 
 input,select,textarea { 
     font-size:100%; 
@@ -77,7 +77,6 @@ sub, sup {
 img { 
     height: auto; 
     width: auto\9; 
-    width:100%;
 }
 sup { 
     top:-0.5em; 
@@ -135,15 +134,21 @@ a:focus,*:focus {
     display:inline; 
 }
 
+.rel {
+	position:relative;
+}
+
 /** 通用样式 **/
 input[type=text],input[type=password] {
-    height:28px;
+    height:25px;
+    padding: 5px 0;
     border:1px solid #d0d0d0;
     border-radius:5px;
     -webkit-border-radius:5px;
     -moz-border-radius:5px;
     -o-border-radius:5px;
     text-indent:3px;
+    
 }
 
 input[type=checkbox],input[type=radio] {
@@ -153,7 +158,7 @@ input[type=checkbox],input[type=radio] {
 }
 
 input[type=text]:focus , input[type=password]:focus ,textarea:focus {
-    border:1px solid #1AA169;
+    border:1px solid #473e86;
 }
 
 .disabled {
@@ -176,17 +181,42 @@ input[type=text]:focus , input[type=password]:focus ,textarea:focus {
     background:url(../img/logo.jpg) no-repeat 50% 50%;
 }
 
-img.nature {
-    width:auto;
-    height:auto;	
+.placeholder { color: #aaa; }
+
+
+.nav ,.control ,.action {
+    display: inline-block;
+    border: 1px solid #473e86;
+    height: 26px;
+    padding: 0 5px;
+    margin-left: 10px;
+    line-height: 26px;
+    color: #473e86;
+    font-size: 16px;
+    background-color: white;
+    border-radius:5px;
+    -webkit-border-radius:5px;
+    -moz-border-radius:5px;
+    -o-border-radius:5px;
+    transition-duration: 0.2s;
+    cursor: pointer;
+    font-family:  helvetica, "microsoft yahei", sans-serif;
+    text-align: center;
+}
+.nav:hover,.control:hover,.action:hover {
+    background-color: #473e86;
+    color: white;
+    text-decoration:none;
 }
 
+
 .master_btn , .link_btn , .slaveBtn {
-	display:inline-block;
+	display:block;
 	cursor:pointer;
-    width:95%;
-    height:30px;
-    line-height:30px;
+    width:100%;
+    margin:0 auto;
+    height: 35px;
+    line-height:35px;
     background-color:#db3652;
     color:#fff;
     font-size:14px;
@@ -196,8 +226,8 @@ img.nature {
     -webkit-border-radius:5px;
     -moz-border-radius:5px;
     -o-border-radius:5px;
+    text-indent:3px;
 }
-
 
 .greenBtn {
     background:#34AB75;
@@ -207,23 +237,10 @@ img.nature {
 	background:#34AB75;
     font-size:13px;
     padding:3px;
-    
-}
-
-.col2 {
-    width:50%;	
-}
-
-.link_btn:hover {
-    text-decoration:none;
 }
 
 .grayed {
 	background:#6C6969;
-}
-
-.link_btn {
-    display:block;
 }
 
 .pd5 {
@@ -253,51 +270,27 @@ img.nature {
     text-align:center;
 }
 
-.validation_error {
-	border:1px solid red;
-}
-
 input[type=text].validation_error {
 	border:1px solid red;
 }
 
-.row {
-    margin:0 0 5px 0;
-}
-
-.center {
-    text-align:center;
-}
 
 .handle_area {
     padding:5px 0px;
 }
 
-/** 表单左侧 标题说明 */
-.handle_area .side_lb {
-    display:inline-block;
-    width:22%;
-    text-align:right;
-}
 
 .handle_area .side_lb em {
     color:red;	
 }
 
 .vtop {
-	
 	vertical-align:top;
 }
 
 .at_txt {
-    width:95%;
+    width:100%;
 }
-
-.handle_area .at_txt {
-    width:75%;
-    height:28px;
-}
-
 
 /** ajax 加载中样式 **/
 .lightbox {
@@ -372,88 +365,29 @@ input[type=text].validation_error {
 	top: 5px;
 }
 
-.type-file-file { position:absolute; top:0px; right:0px; height:25px; width:256px; filter:alpha(opacity:0); opacity: 0; cursor: pointer;}
-.type-file-button , input.type-file-button:focus { background: url(../img/sky/bg_position.gif) no-repeat -50px -450px; width: 57px; height: 25px; border: 0; display:inline; float:right;}
 
 #wrap {
-	max-width:640px;
-	margin:0 auto;
-	position:relative;
-}
-
-#main_menu {
-	
 	width:100%;
 }
 
-/** 页脚和顶部 */
-#footer {
-    margin-bottom:80px;
-    text-align:center;
+#topbar {
+	background-color:#fff;
+    height: 50px;
+    width: 100%;
+    font-size: 16px;
+    position: relative;
+    z-index: 20;
+    padding: 10px 0 0 0;
+    border-bottom: 1px solid #E7E7E7;
 }
 
-#main_menu {
-    position:fixed;
-    z-index: 10;
-    bottom:0;
-    left:0;
-    height:40px;
-    background:#000;
-    filter:alpha(opacity=60);       /* IE */
-    -moz-opacity:0.6;              /* 老版Mozilla */
-    -khtml-opacity:0.6;              /* 老版Safari */
-    opacity: 0.6;           /* 支持opacity的浏览器*/
-}
-
-
-#topBar {
-    border-bottom:1px solid #1AA169;
-    padding:10px 0;
+.boxz {
+    width:980px;
+    margin:0 auto;
     position:relative;
 }
 
-#topBar h1 {
-    font-size:14px;
-    text-align:center;
-}
 
-
-.searchbar {
-    border-bottom:1px solid #1AA169;
-}
-
-.searchbar label {
-    width: 20%;
-    display: inline-block;
-    height: 30px;
-    line-height: 30px;
-}
-
-.searchbar .primaryBtn {
-    margin:0 0 0 10px;
-}
-
-
-.navbar li {
-    float:left;
-    width:33%;
-    text-align: center;
-    line-height: 40px;
-}
-
-.navbar li a {
-    color:#fff;	
-}
-
-.bordered .row {
-    border-bottom:1px solid #E0E0E0;
-    padding:8px 0px;
-}
-
-.subTitle {
-	text-align:center;
-	padding:3px 0;
-}
 
 table.fulltable {
     width:100%;
@@ -464,8 +398,187 @@ table.fulltable {
 	border-width:1px 0 1px 0;
 }
 
-/* 后台登陆 */
+.cityList {
+    
+}
 
+.cityList .row {
+    height:30px;
+    line-height:30px;
+    border-bottom:1px solid #d0d0d0;
+}
+
+.cityList .row a {
+    color:black;
+    text-indent:10px;
+    display:block;
+}
+
+    
+.cityList .goback {
+    background-color:rgb(202, 225, 229);
+}
+    
+
+.cityList .goback a {
+    color:blue;
+    text-align:center;
+}
+
+.cityList .current {
+    background-color:rgb(255, 223, 0);
+}
+
+.title-zh {
+    text-align: center;
+    padding: 180px 0 0 0;
+}
+
+.title-zh .dot {
+	font-size:4em;
+	display: block;
+    float: left;
+    width: 33%;
+    color: #FFE6E6;
+}
+
+/**================================================footer样式================================================**/
+.foot {
+	background-color:#E0E0E0;
+}
+.foot .part-one {
+    text-align: center;
+    height: 88px;
+    line-height: 88px;
+    background-color: #130e32;
+}
+.foot .part-one .phone-number {
+    color: #dcdddd;
+    font-size: 28px;
+    margin-left: 15px;
+}
+.foot .part-two {
+    
+    color: #212424;
+    height: 440px;
+}
+.foot .part-two .center-block {
+    padding-top: 70px;
+}
+.foot .part-two .column {
+    display: inline-block;
+    float: left;
+}
+.foot .part-two .column-one {
+    width: 31%;
+}
+.foot .part-two .column-two {
+    width: 33%;
+}
+.foot .part-two .column-three {
+    width: 24%;
+}
+.foot .part-two .column-four {
+    width: 12%;
+}
+.foot .part-two .column .title {
+    font-size: 18px;
+}
+.foot .part-two .column ul {
+    padding-left: 0;
+}
+.foot .part-two .column li {
+    list-style: none;
+    line-height: 2;
+    font-size: 14px;
+}
+.foot .part-two .column li a {
+    color: #25a597;
+}
+.foot .part-two .column li a:hover {
+    color: #25a597;
+}
+.foot .part-two .info-wrapper {
+    clear: both;
+    text-align: center;
+    padding-top: 22px;
+}
+.foot .part-two .info-wrapper .check-version {
+    font-size: 14px;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+.foot .part-two .info-wrapper a {
+    text-decoration: underline;
+}
+.foot .part-two .info-wrapper a:hover {
+    color: #25a597;
+}
+.foot .part-two .info-wrapper .copyright {
+    font-size: 12px;
+    margin-top: 5px;
+}
+.foot .part-two .info-wrapper .copyright-link {
+    color: #dcdddd;
+}
+
+
+#logo {
+	position:absolute;
+	top:0px;
+	left:0px;
+	
+}
+
+#logo a {
+	color:#473e86;
+}
+
+
+#homeSideLinks {
+	position:absolute;
+	right:0px;
+	top:0px;
+}
+
+/* 前台登陆  */
+#loginPanel,#register {
+	width: 30%;
+    
+    padding: 30px 20px 60px;
+    margin: 30px auto;
+}
+
+.panel {
+	margin: 0 auto;
+    border: 1px solid #CECECE;
+}
+
+.panel .title {
+	font-size: 2em;
+    border-left: 10px solid #25a597;
+    text-indent: 20px;
+}
+
+.panel .row {
+	padding: 10px 5px;
+}
+
+#loginPanel .codeimg {
+    position: absolute;
+    right: 15px;
+    cursor: pointer;
+    top: 14px;
+}
+
+#mobile_authcode {
+	position: absolute;
+    width: 115px;
+    right: 3px;
+    top: 11px;
+}
+
+/* 后台登陆  */
 #adminlogin {
 	width:100%;
 	max-width:640px;
@@ -492,7 +605,6 @@ table.fulltable {
     -moz-border-radius: 5px;
     -o-border-radius: 5px;
     
-    
 	left:0px;
 	top:0px;
 	height:100%;
@@ -504,11 +616,6 @@ table.fulltable {
 	width:95%;
 }
 
-#authImg {
-	position:absolute;
-	right:15px;
-	cursor:pointer;
-}
 
 #adminlogin .form_error {
 	text-align: center;
@@ -516,8 +623,7 @@ table.fulltable {
 }
 
 
-/** 个人中心 */
-
+/* 个人中心  */
 #my .side_link {
 	float:right;
 }
@@ -543,52 +649,28 @@ table.fulltable {
     width:65%;
 }
 
-.cityList {
-	
+
+@media (min-width: 1440px) {
+    .boxz {
+        width:1200px;
+    }
 }
 
-.cityList .row {
-    height:30px;
-    line-height:30px;
-    border-bottom:1px solid #d0d0d0;
-}
-
-.cityList .row a {
-	color:black;
-	text-indent:10px;
-    display:block;
-}
-
+@media (max-width: 1024px) {
+    .boxz {
+        width:640px;
+    }
     
-.cityList .goback {
-	background-color:rgb(202, 225, 229);
-}
-    
-
-.cityList .goback a {
-    color:blue;
-    text-align:center;
-}
-
-.cityList .current {
-    background-color:rgb(255, 223, 0);
+    #loginPanel,#register {
+        width:98%;
+        padding:20px 0;
+    }
 }
 
 
-.delmask {
-	position:absolute;
-	font-size:13px;
-	width:100%;
-	height:100%;
-	filter:alpha(opacity=30);       /* IE */
-	-moz-opacity:0.3;              /* 老版Mozilla */
-	-khtml-opacity:0.3;              /* 老版Safari */
-	opacity: 0.3;           /* 支持opacity的浏览器*/
-	z-index:2;
-	background:rgb(4, 4, 5);
-	display:none;
-	text-align:right;
-	color:#fff;
+@media (max-width: 640px) {
+    .boxz {
+        width:100%;
+        max-width:640px;
+    }
 }
-
-

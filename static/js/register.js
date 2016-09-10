@@ -46,8 +46,6 @@ $(function(){
 				
 			}
 		})
-		
-		
 	});
 	
 	
@@ -67,16 +65,7 @@ $(function(){
 		}
 		
 		
-		if(!$("input[name=agreee_licence]").prop("checked") ){
-			alert("请勾选同意注册条款");
-			$("input[name=agreee_licence]").focus();
-			return false;
-		}
-		
-		
+		return true;
 	});
-	
-	
-	
 	
 });

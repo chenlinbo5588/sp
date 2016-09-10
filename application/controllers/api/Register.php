@@ -48,7 +48,7 @@ class Register extends MY_Controller {
 				 */
 				$count = $this->verify_service->getIpCount($this->input->ip_address());
 				if($count > 3){
-					$rt['message'] = "攻击行为，请求失败";
+					$rt['message'] = "您的请求过于频繁，请稍后尝试";
 					break;
 				}
 				
