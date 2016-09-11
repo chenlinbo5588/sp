@@ -45,6 +45,7 @@ class Member extends Ydzj_Controller {
 			$this->form_validation->reset_validation();
 			
 			$this->form_validation->set_rules('loginname','用户登陆手机', 'required|valid_mobile');
+			
 			$this->form_validation->set_rules('password','密码','required|alpha_numeric');
 			$this->form_validation->set_rules('auth_code','验证码','required|callback_validateAuthCode');
 			
@@ -81,7 +82,7 @@ class Member extends Ydzj_Controller {
 					if(!empty($url) && isLocalUrl($url)){
 						redirect($url);
 					}else{
-						redirect('team');
+						redirect('my/index');
 					}
 					
 				}else{
@@ -112,10 +113,10 @@ class Member extends Ydzj_Controller {
 	 */
 	public function admin_login(){
 		
-		if($this->session->get_userdata()){
-			
-			
-		}
+		
+		$adminData = $this->session->get_userdata($this->_adminProfileKey);
+		$this->assign($this->_adminProfileKey,$adminData);
+		
 		
 		if($this->isPostRequest()){
 			$this->form_validation->reset_validation();
@@ -228,7 +229,7 @@ class Member extends Ydzj_Controller {
 				);
 			*/
 			
-			
+			$this->form_validation->set_rules('qq','用户QQ号码', 'required|numeric|min_length[4]|max_length[15]');
 			$this->form_validation->set_rules('psw','密码','required|alpha_dash|min_length[6]|max_length[12]');
 			$this->form_validation->set_rules('psw_confirm','密码确认','required|matches[psw]');
 			//$this->form_validation->set_rules('agreee_licence','同意注册条款','required');
@@ -251,6 +252,7 @@ class Member extends Ydzj_Controller {
 					'sid' => $this->session->session_id,
 					'mobile' => $this->input->post('mobile'),
 					'nickname' => $this->input->post('mobile'),
+					'qq' => $this->input->post('qq'),
 					'password' => $this->input->post('psw'),
 					'status' => -2,
 					'inviter' => empty($inviter) == true ? 0 : intval($inviter)

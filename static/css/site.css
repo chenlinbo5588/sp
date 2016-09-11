@@ -83,19 +83,27 @@ sup {
 } 
 sub { 
     bottom:-0.25em; 
-} 
+}
+
+a {
+	color:#333;
+}
+
 /* 让链接在 hover 状态下显示下划线 */ 
 a:hover { 
     text-decoration:underline; 
+    color:#0800DB;
 } 
 /* 默认不显示下划线，保持页面简洁 */ 
 ins,a { 
     text-decoration:none; 
-} 
+}
+
 /* IE6,7焦点点状线去除 */ 
 a:focus,*:focus { 
     outline:none; 
-} 
+}
+
 /* 清除浮动 */ 
 .clearfix:before,.clearfix:after { 
     content:""; 
@@ -366,6 +374,15 @@ input[type=text].validation_error {
 }
 
 
+.qqchat {
+	display:block;
+	background:url(../img/qqchat.png) no-repeat;
+	width:77px;
+	height:22px;
+	text-indent:-1000em;
+}
+
+
 #wrap {
 	width:100%;
 }
@@ -393,9 +410,17 @@ table.fulltable {
     width:100%;
 }
 
+.fulltable thead th {
+	background-color:#CDECD5;
+}
+
+
+
 .fulltable thead th , .fulltable tbody td {
 	border:1px solid #1AA169;
 	border-width:1px 0 1px 0;
+	font-size:15px;
+	padding: 3px;
 }
 
 .cityList {
@@ -624,29 +649,37 @@ table.fulltable {
 
 
 /* 个人中心  */
-#my .side_link {
-	float:right;
+
+#my {
+	
+	margin:10px auto;
 }
 
-#my .avatar {
-    padding:0;
-    margin:0;
-    border-bottom:0px;
-    text-align: center;
-    padding: 5px;
+
+.mynav {
+	width: 150px;
+    float: left;
+    display: block;
+    border: 1px solid #CDCDCD;
 }
 
-#my .icon {
-    display:inline-block;
-    width:65px;	
+.mynav li {
+	padding:10px 5px;
 }
 
-#profile_avatar .side_lb {
-    width:25%;
+.mynav .segment {
+	background-color:#C8EBE9;
 }
 
-#profile_avatar .at_txt {
-    width:65%;
+#my .panel_content {
+	margin-left:160px;
+}
+
+
+.searcharea {
+	
+	padding:5px;
+	margin:10px 0;
 }
 
 

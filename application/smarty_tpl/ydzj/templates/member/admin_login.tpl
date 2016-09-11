@@ -18,11 +18,18 @@
 		            <img class="codeimg" id="authImg" src="{site_url('captcha')}" title="点击图片刷新"/>
 		        </li>
 		        <li class="row"><input class="master_btn" type="submit" name="login" value="登陆"/></li>
-		        <li class="row"><a class="action" href="{site_url('member/login')}" title="去前台登陆">去前台登陆</a></li>
+		        <li class="row clearfix">
+		          {if empty($profile)}
+		          <a class="fl" href="{site_url('member/login')}" title="去前台登陆">去前台登陆</a>
+		          {/if}
+		          {if $admin_profile}
+		          <a class="fr" href="{admin_site_url('index/index')}">进入管理中心 </a>
+		          {/if}
+		        </li>
 		    </form>
 	    </ul>
 	</div>
-您已登陆 ,点击进入<a href="{admin_site_url('index/index')}"> 管理中心 </a>
+
 	<script>
 	var imgUrl = "{site_url('captcha')}";
 	$(function(){

@@ -101,6 +101,8 @@ class MY_Model extends CI_Model {
      * 设置条件
      */
     protected function _setCondition($condition){
+    	
+    	/*
     	if($condition['where']){
             $this->db->where($condition['where']);
         }
@@ -119,6 +121,53 @@ class MY_Model extends CI_Model {
         
         if($condition['limit']){
         	$this->db->limit($condition['limit']);
+        }
+        */
+        
+        
+        if($condition['select']){
+            $this->db->select($condition['select']);
+        }
+        
+        if($condition['like']){
+            $this->db->like($condition['like']);
+        }
+        
+        if($condition['where']){
+            $this->db->where($condition['where']);
+        }
+        
+        if($condition['or_where']){
+            $this->db->or_where($condition['or_where']);
+        }
+        
+        if($condition['where_in']){
+            foreach($condition['where_in'] as $val){
+                $this->db->where_in($val['key'],$val['value']);
+            }
+        }
+        
+        if($condition['where_not_in']){
+            foreach($condition['where_not_in'] as $val){
+                $this->db->where_not_in($val['key'],$val['value']);
+            }
+        }
+        
+        if($condition['group_by']){
+            $this->db->group_by($condition['group_by']); 
+        }
+        
+        if($condition['order']){
+            $this->db->order_by($condition['order']);
+        }
+        
+        
+        if($condition['limit']){
+            if(is_array($condition['limit'])){
+                $this->db->limit($condition['limit'][0],$condition['limit'][1]);
+            }else{
+                $this->db->limit($condition['limit']);
+            }
         }
     }
     
@@ -324,83 +373,30 @@ class MY_Model extends CI_Model {
     public function getList($condition = array()){
         
         $data = array();
+        $total_rows = 0;
         
-        if($condition['select']){
-            $this->db->select($condition['select']);
-        }
-        
-        if($condition['like']){
-            $this->db->like($condition['like']);
-        }
-        
-        if($condition['where']){
-            $this->db->where($condition['where']);
-        }
-        
-        if($condition['or_where']){
-            $this->db->or_where($condition['or_where']);
-        }
-        
-        if($condition['where_in']){
-            foreach($condition['where_in'] as $val){
-                $this->db->where_in($val['key'],$val['value']);
-            }
-        }
-        
-        if($condition['where_not_in']){
-            foreach($condition['where_not_in'] as $val){
-                $this->db->where_not_in($val['key'],$val['value']);
-            }
-        }
-        
-        if($condition['group_by']){
-            $this->db->group_by($condition['group_by']); 
-        }
-        
-        if($condition['order']){
-            $this->db->order_by($condition['order']);
-        }
+        $this->_setCondition($condition);
         
         if($condition['pager']){
-            $query = $this->db->get($this->_tableRealName,$condition['pager']['page_size'],($condition['pager']['current_page'] - 1) * $condition['pager']['page_size']);
-        }else{
-            if($condition['limit']){
-                if(is_array($condition['limit'])){
-                    $this->db->limit($condition['limit'][0],$condition['limit'][1]);
-                }else{
-                    $this->db->limit($condition['limit']);
-                }
-            }
-            
-            $query = $this->db->get($this->_tableRealName);
-        }
-        
-        
-        /**
-         * 先获得数据 
-         */
-        if($condition['pager']){
-        	$data['data'] = $query->result_array();
+        	$total_rows = $this->db->count_all_results($this->_tableRealName);
         	
-            if($condition['where']){
-                $this->db->where($condition['where']);
+        	//总页数
+        	$totalPage = ceil($total_rows/$condition['pager']['page_size']);
+            if($condition['pager']['current_page'] > $totalPage){
+            	//不能大于最大页数
+            	$condition['pager']['current_page'] = $totalPage;
             }
             
-            if($condition['where_in']){
-                foreach($condition['where_in'] as $val){
-                    $this->db->where_in($val['key'],$val['value']);
-                }
-            }
-            
-            if($condition['like']){
-                $this->db->like($condition['like']);
-            }
-            
-            $total_rows = $this->db->count_all_results($this->_tableRealName);
             $pager = pageArrayGenerator($condition['pager'],$total_rows);
-            $data['pager'] = $pager['pager'];
+            
+            //print_r($condition);
+            $this->_setCondition($condition);
+            $query = $this->db->get($this->_tableRealName,$condition['pager']['page_size'],($condition['pager']['current_page'] - 1) * $condition['pager']['page_size']);
+        	$data['data'] = $query->result_array();
+        	$data['pager'] = $pager['pager'];
         }else{
-        	$data = $query->result_array();
+            $query = $this->db->get($this->_tableRealName);
+            $data = $query->result_array();
         }
         
         return $data;

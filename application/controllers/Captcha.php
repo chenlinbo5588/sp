@@ -28,23 +28,6 @@ class Captcha extends Ydzj_Controller {
 		$cap = create_captcha($vals);
 		$this->session->set_userdata('auth_code', $word);
 		
-		/*
-		$data = array(
-		        'captcha_time'  => $cap['time'],
-		        'ip_address'    => $this->input->ip_address(),
-		        'word'          => $cap['word']
-		);
-		
-		$this->load->model('Captcha_Model');
-		//清空数据
-		$this->Captcha_Model->deleteByCondition(array(
-			'where' => array('captcha_time <= ' => $this->input->server('REQUEST_TIME') - 7200),
-			'limit' => 10
-		));
-		
-		$this->Captcha_Model->_add($data);
-		*/
-		
 		header('Pragma:no-cache');
 		header('Cache-control:no-cache');
 		header("ContentType: image/jpeg");

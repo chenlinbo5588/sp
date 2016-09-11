@@ -1,9 +1,12 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Captcha_Model extends MY_Model {
+/**
+ * 近期 货品表
+ */
+class Goods_Recent_Model extends MY_Model {
     
-    public $_tableName = 'captcha';
+    public $_tableName = 'goods_recent';
     public static $_tableMeta = null;
 
 
@@ -15,5 +18,6 @@ class Captcha_Model extends MY_Model {
     protected function _metaData(){
     	return self::$_tableMeta;
     }
+    
     
 }

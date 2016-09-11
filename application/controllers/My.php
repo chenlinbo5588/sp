@@ -34,14 +34,6 @@ class My extends MyYdzj_Controller {
 	}
 	
 	
-	/**
-	 * 申请裁判员
-	 */
-	public function apply_judge(){
-		
-		
-		
-	}
 	
 	/**
 	 * 
@@ -94,10 +86,7 @@ class My extends MyYdzj_Controller {
 	 */
 	public function set_username(){
 		
-		$this->setTopNavTitle('设置真实名称');
-		$this->setLeftNavLink('<a id="leftBarLink" class="bar_button" href="'.site_url('my').'" title="返回">返回</a>');
 		if($this->isPostRequest()){
-			
 			$setOk = false;
 			
 			$this->form_validation->reset_validation();
@@ -135,8 +124,6 @@ class My extends MyYdzj_Controller {
 	 */
 	public function set_avatar(){
 		
-		$this->setTopNavTitle('修改头像');
-		$this->setLeftNavLink('<a id="leftBarLink" class="bar_button" href="'.site_url('my').'" title="返回">返回</a>');
 		
 		if($this->isPostRequest()){
 			$setOk = false;
@@ -202,7 +189,7 @@ class My extends MyYdzj_Controller {
 			
 			$this->assign('inviteFrom',$this->input->get('inviteFrom'));
 			$this->assign('default_avatar',$this->_profile['basic']['avatar_m']);
-			$this->display('my/set_avatar');
+			$this->display();
 		}
 		
 		
@@ -304,7 +291,7 @@ class My extends MyYdzj_Controller {
 			$this->_prepareSetCity();
 			
 			$this->seoTitle('设置您的所在地');
-			$this->display('my/set_city');
+			$this->display();
 		}
 		
 	}

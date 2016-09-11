@@ -8,4 +8,4 @@ $config['base_url'] = '';
 $config['site_domain'] = $_SERVER['SERVER_NAME'];
 
 //$config['csrf_protection'] = FALSE;
-$config['page_size'] = 10;
+$config['page_size'] = 20;

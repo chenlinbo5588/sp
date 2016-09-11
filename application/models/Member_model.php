@@ -28,6 +28,24 @@ class Member_Model extends MY_Model {
         }
     }
     
+    public function getUserListByIds($uids,$field = '*'){
+    	if(empty($uids)){
+    		return array();
+    	}
+    	
+    	$this->db->select($field);
+    	$this->db->where_in('uid' , $uids);
+    	$query = $this->db->get($this->getTableRealName());
+    	
+    	$tempList = $query->result_array();
+    	
+    	$userList = array();
+    	foreach($tempList as $user){
+    		$userList[$user['uid']] = $user;
+    	}
+    	return $userList;
+    }
+    
     
     
 }

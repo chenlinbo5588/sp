@@ -17,6 +17,71 @@ class Tools extends MY_Controller {
 	}
 	
 	
+	public function batch_insert(){
+		
+		$goodsName = array(
+			'Nike',
+			'Adidas',
+			'乔丹',
+			'匡威',
+			'特步',
+			'361度',
+			'李宁',
+			'阿迪王'
+		);
+		
+		
+		$this->load->model('Goods_Daily_Model');
+		
+		for($i = 0; $i < 100000; $i++){
+			
+			$str = array(
+				mt_rand(1,9),
+				mt_rand(1,92),
+				mt_rand(1,999),
+				'00'.mt_rand(0,9)
+			
+			);
+			
+			if($str[1] < 10){
+				$str[1] = '0'.$str[1];
+			}
+			
+			if($str[2] < 10){
+				$str[2] = '0'.$str[2];
+			}
+			
+			
+			$goodsCode = implode('',$str);
+			$insert = array(
+				'goods_name' => $goodsName[mt_rand(0,(count($goodsName) - 1))],
+				'goods_code' => $goodsCode,
+				'goods_size' => mt_rand(10,48),
+				'quantity' => mt_rand(1,10),
+				'uid' => mt_rand(1,200),
+			);
+			
+			$insert['cnum'] = $insert['quantity'];
+			
+			//print_R($insert);
+			
+			$id = $this->Goods_Daily_Model->_add($insert);
+			
+			if($id){
+				
+				echo $id.'<br/>';
+			}else{
+				
+				echo $i.'failed';
+			}
+		}
+		
+		
+		
+	}
+	
+	
+	
 	public function hash_code(){
 		
 		echo base64_encode(md5(mt_rand()));

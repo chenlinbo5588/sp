@@ -11,7 +11,7 @@
             {if ($page['pageNow'] == ($smarty.section.a.index + $page['pageAb']))}
                 <a class="active" href="javascript:void(0)">{$smarty.section.a.index + $page['pageAb']}</a>
             {else}
-                <a href="javascript:void(0)" onclick="{$page['call_js']}({{$smarty.section.a.index + $page['pageAb']}},'{$page['form_id']}');return false;">{{$smarty.section.a.index + $page['pageAb']}}</a>
+                <a href="javascript:void(0)" onclick="{$page['call_js']}({$smarty.section.a.index + $page['pageAb']},'{$page['form_id']}');return false;">{{$smarty.section.a.index + $page['pageAb']}}</a>
             {/if}
         {/section}
 

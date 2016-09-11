@@ -1,30 +1,8 @@
-{include file="common/header.tpl"}
-<div id="my" class="bordered">
-    
-    
-    
-    <div class="row avatar">
-        <img class="nature" src="{resource_url($profile['basic']['avatar_m'])}" alt="{resource_url($profile['basic']['nickname'])}"/>
-        <div class="pd5"><a class="link_btn grayed" href="{site_url('my/set_avatar?inviteFrom=my')}">修改头像</a></div>
-    </div>
-    <div class="pd5">
-        <div class="row first"><span class="icon ico_username">真实名称:</span><span>{$profile['basic']['username']}</span><a class="side_link" href="{site_url('my/set_username')}">修改</a></div>
-	    <div class="row"><span class="icon ico_nickname">昵称:</span><span>{$profile['basic']['nickname']}</span></div>
-	    <div class="row"><span class="icon ico_mobile">手机:</span><span>{mask_mobile($profile['basic']['mobile'])}</span></div>
-	    <div class="row"><span class="icon ico_email">邮箱:</span><span>{$profile['basic']['email']}</span>{if $profile['basic']['email']}<a class="side_link" href="javascript:void(0)">验证邮箱</a>{else}<a class="side_link" href="{site_url('my/set_email')}">绑定邮箱</a>{/if}</div>
-	    <div class="row"><span class="icon ico_email">QQ:</span><span>{$profile['basic']['qq']}</span>{if $profile['basic']['qq'] == ''}<a class="side_link" href="{site_url('my/set_email')}">设置QQ</a>{/if}</div>
-        <div class="row"><span class="icon ico_email">微信号:</span><span>{$profile['basic']['weixin']}</span>{if $profile['basic']['weixin'] == ''}<a class="side_link" href="{site_url('my/set_email')}">设置微信号</a>{/if}</div>
-	    <div class="row"><span class="icon ico_message">消息通知:</span><span>{$profile['basic']['newpm']}</span><a class="side_link" href="javascript:void(0)">详情</a></div>
-	    <div class="row"><span class="icon ico_district">所在地区:</span><span>{if $profile['basic']['district_bind'] == 0}未设置{else}{$userDs[$profile['basic']['d1']]['name']}{$userDs[$profile['basic']['d2']]['name']}{$userDs[$profile['basic']['d3']]['name']}{$userDs[$profile['basic']['d4']]['name']}{/if}</span><a class="side_link" href="{site_url('my/set_city')}">{if $profile['basic']['district_bind'] == 1}修改{else}设置{/if}</a></div>
-	    <div class="row"><span class="icon ico_credits">我的积分:</span><span>{$profile['basic']['credits']}</span><a class="side_link" href="{site_url('credits/details')}">积分明细</a></div>
-	    <div class="row"><span class="icon ico_team">我的队伍:</span><span>0</span><a class="side_link" href="{site_url('team/create_team')}">创建队伍</a></div>
-	    <div class="row">
-	        <span class="icon ico_invite">推广链接:</span><span>
-	        <input style="width:50%" type="text" name="inviteUrl" value="{$inviteUrl}"/></span>
-            <input type="button" style="width:20%;font-size:12px;" class="master_btn greenBtn" name="inviteUrl" value="复制链接"/>
-        </div>
-    </div>
-</div>
-<script src="{resource_url('js/user/my.js')}" type="text/javascript"></script>
+{include file="./my_header.tpl"}
 
-{include file="common/footer.tpl"}
+
+
+
+
+{include file="./my_footer.tpl"}
+

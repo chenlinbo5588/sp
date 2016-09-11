@@ -12,6 +12,10 @@
 	            <input id="mobile_text" class="at_txt" type="text" name="mobile" value="{set_value('mobile')}" placeholder="请输入您常用的11位手机号码"/>
 	            <input id="mobile_authcode" class="master_btn greenBtn" type="button" name="authCodeBtn" value="免费获取验证码"/>
 	        </li>
+	        <li class="tip">{form_error('qq')}</li>
+            <li class="row">
+                <input id="qq_text" class="at_txt" type="text" name="qq" value="{set_value('qq')}" placeholder="请输入QQ号码"/>
+            </li>
 	        <li class="tip">{form_error('psw')}</li>
 	        <li class="row">
 	            <input id="password_text" class="at_txt" type="password" name="psw" value="{set_value('psw')}" placeholder="请输入登陆密码"/>

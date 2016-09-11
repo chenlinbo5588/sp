@@ -90,9 +90,9 @@ $config['navs'] = array(
 			'title' => '会员',
 			'url' => 'member/index'
 		),
-		'info' => array(
+		'exinfo' => array(
 			'title' => '信息',
-			'url' => 'info/index'
+			'url' => 'exinfo/index'
 		),
 		'weixin' => array(
 			'title' => '微信',

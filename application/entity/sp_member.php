@@ -7,6 +7,7 @@ $entity = array(
 'username' => 'varchar',
 'password' => 'char',
 'mobile' => 'char',
+'qq' => 'varchar',
 'sex' => 'char',
 'nickname' => 'varchar',
 'status' => 'tinyint',
