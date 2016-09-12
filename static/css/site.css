@@ -300,6 +300,15 @@ input[type=text].validation_error {
     width:100%;
 }
 
+.pagination { padding: 2px; }
+.pagination a {
+  padding: 5px 10px;
+  background:#fff;
+  border:1px solid #1AA169;
+}
+
+.pagination a:hover ,.pagination a.active {background:#0D93BF;color:#fff;cursor:pointer;}
+
 /** ajax 加载中样式 **/
 .lightbox {
 	display: none;
@@ -419,7 +428,7 @@ table.fulltable {
 .fulltable thead th , .fulltable tbody td {
 	border:1px solid #1AA169;
 	border-width:1px 0 1px 0;
-	font-size:15px;
+	font-size:14px;
 	padding: 3px;
 }
 

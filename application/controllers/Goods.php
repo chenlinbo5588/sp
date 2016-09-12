@@ -22,8 +22,16 @@ class Goods extends MyYdzj_Controller {
 				'call_js' => 'search_page',
 				'form_id' => '#formSearch'
 			)
-			
 		);
+		
+		$s = new SphinxClient;
+		$s->setServer("localhost",9312 );
+		$s->setMatchMode(SPH_MATCH_EXTENDED);
+		$s->setRankingMode(SPH_RANK_NONE);
+		$s->setMaxQueryTime(3);
+		$result = $s->query("乔");
+		
+		//var_dump($result);
 		
 		
 		$searchKeys['name'] = $this->input->get_post('name');
@@ -31,6 +39,8 @@ class Goods extends MyYdzj_Controller {
 		$searchKeys['size'] = $this->input->get_post('size');
 		$searchKeys['cnum'] = $this->input->get_post('cnum');
 		
+		
+		/*
 		foreach($searchKeys as $sk => $sv){
 			if(empty($sv)){
 				continue;
@@ -42,7 +52,7 @@ class Goods extends MyYdzj_Controller {
 				$condition['where'][$sk] = trim($sv);
 			}
 		}
-		
+		*/
 		
 		$list = $this->Goods_Recent_Model->getList(
 			$condition

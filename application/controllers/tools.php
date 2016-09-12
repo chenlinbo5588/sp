@@ -30,8 +30,10 @@ class Tools extends MY_Controller {
 			'阿迪王'
 		);
 		
+		$dateKeys = array('20160910','20160911','20160912');
 		
-		$this->load->model('Goods_Daily_Model');
+		
+		$this->load->model('Goods_Recent_Model');
 		
 		for($i = 0; $i < 100000; $i++){
 			
@@ -59,13 +61,14 @@ class Tools extends MY_Controller {
 				'goods_size' => mt_rand(10,48),
 				'quantity' => mt_rand(1,10),
 				'uid' => mt_rand(1,200),
+				'date_key' => $dateKeys[mt_rand(0,2)]
 			);
 			
 			$insert['cnum'] = $insert['quantity'];
 			
 			//print_R($insert);
 			
-			$id = $this->Goods_Daily_Model->_add($insert);
+			$id = $this->Goods_Recent_Model->_add($insert);
 			
 			if($id){
 				

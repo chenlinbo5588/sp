@@ -32,7 +32,7 @@
 		           <td>{$item['quantity']}&nbsp;({$item['cnum']})</td>
 		           <td>
 		              {if $userList[$item['uid']]['qq']}
-		              <a class="qqchat" href="http://wpa.qq.com/msgrd?v=3&uin={$userList[$item['uid']]['qq']}&site=qq&menu=yes" alt="点击这里给我发消息" title="点击这里给我发消息">{$userList[$item['uid']]['nickname']}</a>
+		              <a target="_blank" class="qqchat" href="http://wpa.qq.com/msgrd?v=3&uin={$userList[$item['uid']]['qq']}&site=qq&menu=yes" alt="点击这里给我发消息" title="点击这里给我发消息">{$userList[$item['uid']]['nickname']}</a>
 		              {else}
 		              {$userList[$item['uid']]['mobile']}
 		              {/if}
