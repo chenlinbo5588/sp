@@ -384,11 +384,10 @@ class MY_Model extends CI_Model {
         	$totalPage = ceil($total_rows/$condition['pager']['page_size']);
             if($condition['pager']['current_page'] > $totalPage){
             	//不能大于最大页数
-            	$condition['pager']['current_page'] = $totalPage;
+            	$condition['pager']['current_page'] = $totalPage == 0 ? 1 : $totalPage;
             }
             
             $pager = pageArrayGenerator($condition['pager'],$total_rows);
-            
             //print_r($condition);
             $this->_setCondition($condition);
             $query = $this->db->get($this->_tableRealName,$condition['pager']['page_size'],($condition['pager']['current_page'] - 1) * $condition['pager']['page_size']);

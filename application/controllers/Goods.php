@@ -140,8 +140,9 @@ class Goods extends MyYdzj_Controller {
 			$this->assign('page',$pager['pager']);
 			
 		}else{
+
+			//print_r($condition);
 			$list = $this->Goods_Recent_Model->getList($condition);
-			//print_r($pager);
 			$this->assign('page',$list['pager']);
 			$this->assign('list',$list['data']);
 		}
