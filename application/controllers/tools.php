@@ -27,22 +27,21 @@ class Tools extends MY_Controller {
 			'特步',
 			'361度',
 			'李宁',
-			'阿迪王'
+			'阿迪王',
+			'匹克'
 		);
 		
-		$dateKeys = array('20160910','20160911','20160912');
-		
+		//2016/9/1 12:16:25
+		//2016/9/13 12:16:25
+		$timestamp = array(1472703385,1473740185);
 		
 		$this->load->model('Goods_Recent_Model');
-		
 		for($i = 0; $i < 100000; $i++){
-			
 			$str = array(
 				mt_rand(1,9),
 				mt_rand(1,92),
 				mt_rand(1,999),
 				'00'.mt_rand(0,9)
-			
 			);
 			
 			if($str[1] < 10){
@@ -54,6 +53,9 @@ class Tools extends MY_Controller {
 			}
 			
 			
+			$gmtcreate = mt_rand($timestamp[0],$timestamp[1]);
+			
+			
 			$goodsCode = implode('',$str);
 			$insert = array(
 				'goods_name' => $goodsName[mt_rand(0,(count($goodsName) - 1))],
@@ -61,17 +63,19 @@ class Tools extends MY_Controller {
 				'goods_size' => mt_rand(10,48),
 				'quantity' => mt_rand(1,10),
 				'uid' => mt_rand(1,200),
-				'date_key' => $dateKeys[mt_rand(0,2)]
+				'date_key' => date("Ymd",$gmtcreate),
+				'gmt_create' => $gmtcreate,
+				'gmt_modify' => $gmtcreate
 			);
 			
-			$insert['cnum'] = $insert['quantity'];
+			$insert['kw'] = $insert['goods_name'].'_'.$insert['goods_code'].'_'.$insert['goods_size'];
+			$insert['cnum'] = mt_rand(0,$insert['quantity']);
 			
-			//print_R($insert);
+			$sql = $this->db->insert_string($this->Goods_Recent_Model->getTableRealName(),$insert);
+			$this->db->query($sql);
 			
-			$id = $this->Goods_Recent_Model->_add($insert);
-			
+			$id = $this->db->insert_id();
 			if($id){
-				
 				echo $id.'<br/>';
 			}else{
 				

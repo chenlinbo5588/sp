@@ -94,25 +94,6 @@ class Ydzj_Controller extends MY_Controller {
 		$this->email->initialize($config);
 	}
 	
-	/**
-	 * 左快捷导航
-	 */
-	public function setLeftNavLink($link){
-		$this->_smarty->assign('LEFT_BUTTON',$link);
-	}
-	
-	/**
-	 * 右快捷导航
-	 */
-	public function setRightNavLink($link){
-		$this->_smarty->assign('RIGHT_BUTTON',$link);
-	}
-	
-	
-	public function setTopNavTitle($title,$css = ''){
-		$this->_smarty->assign('TOP_NAV_TITLE',$title);
-		$this->_smarty->assign('TOP_NAV_CSS',$css);
-	}
 	
 	protected function _getCity(){
 		

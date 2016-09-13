@@ -105,8 +105,22 @@ class MY_Controller extends CI_Controller {
     	}
     }
     
+    public function getCacheObject(){
+    	
+    	$isSupport = $this->cache->redis->is_supported();
+    	if($isSupport){
+    		return $this->cache->redis;
+    	}else{
+    		
+    		return $this->cache->file;
+    	}
+    	
+    	
+    }
+    
+    
     private function _initSiteSetting(){
-    	$settingList = $this->cache->file->get(CACHE_KEY_SiteSetting);
+    	$settingList = $this->getCacheObject()->get(CACHE_KEY_SiteSetting);
     	if(empty($settingList)){
     		$temp = $this->Setting_Model->getList();
     		//print_r($list);
@@ -115,7 +129,7 @@ class MY_Controller extends CI_Controller {
 	    		$settingList[$item['name']] = $item['value'];
 	    	}
 	    	
-	    	$this->cache->file->save(CACHE_KEY_SiteSetting,$settingList);
+	    	$this->getCacheObject()->save(CACHE_KEY_SiteSetting,$settingList);
     	}
     	
     	$this->_siteSetting = $settingList;
@@ -126,7 +140,7 @@ class MY_Controller extends CI_Controller {
     
     private function _initSeoSetting(){
     	
-    	$seoList = $this->cache->file->get(CACHE_KEY_SeoSetting);
+    	$seoList = $this->getCacheObject()->get(CACHE_KEY_SeoSetting);
     	
     	
     	if(empty($seoList)){
@@ -142,7 +156,7 @@ class MY_Controller extends CI_Controller {
 	    	}
 	    	
 	    	//print_r($seoList);
-	    	$this->cache->file->save(CACHE_KEY_SeoSetting,$seoList);
+	    	$this->getCacheObject()->save(CACHE_KEY_SeoSetting,$seoList);
     	}
     	
     	$this->_seoSetting = $seoList;
@@ -172,7 +186,9 @@ class MY_Controller extends CI_Controller {
     	
 		$this->load->helper(array('form','directory','file', 'url','string'));
 		$this->load->driver('cache');
-			
+		
+		
+		
 		$this->load->model(array('Setting_Model','Member_Model','Seo_Model'));
 		$this->load->library(array('user_agent','Form_validation','encrypt','PHPTree','Base_service'));
 		

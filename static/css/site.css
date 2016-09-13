@@ -104,7 +104,14 @@ a:focus,*:focus {
     outline:none; 
 }
 
-/* 清除浮动 */ 
+/* 清除浮动 */
+.simpleclearfix {
+    o\verflow: auto;
+}
+* html .simpleclearfix {
+    height: 1%; /* IE5-6 */
+}
+
 .clearfix:before,.clearfix:after { 
     content:""; 
     display:table; 
@@ -684,13 +691,35 @@ table.fulltable {
 	margin-left:160px;
 }
 
-
 .searcharea {
-	
 	padding:5px;
 	margin:10px 0;
 }
 
+.searchtip {
+	width:28%;
+	right:0px;
+	top:0px;
+	padding-left:5px;
+}
+
+.searchtip .tip {
+	padding:5px 0;
+}
+
+.codewrap {
+	width:67%;
+}
+
+.codewrap textarea {
+	border:1px solid #1AA169;
+	width:100%;
+	height:110px
+}
+
+.otherwrap .master_btn {
+	display:inline;
+}
 
 @media (min-width: 1440px) {
     .boxz {

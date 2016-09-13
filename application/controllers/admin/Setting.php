@@ -11,7 +11,7 @@ class Setting extends Ydzj_Admin_Controller {
 	
 	
 	private function _clearCache(){
-		$this->cache->file->delete(CACHE_KEY_SiteSetting);
+		$this->getCacheObject()->delete(CACHE_KEY_SiteSetting);
 	}
 	
 	public function base(){
@@ -209,7 +209,7 @@ class Setting extends Ydzj_Admin_Controller {
 				}
 			
 				$rows = $this->seo_service->updateSeo($_POST['SEO']);
-				$this->cache->file->delete(CACHE_KEY_SeoSetting);
+				$this->getCacheObject()->delete(CACHE_KEY_SeoSetting);
 			}
 			
 			if($rows >= 0){
