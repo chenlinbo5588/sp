@@ -9,7 +9,7 @@ class Goods extends MyYdzj_Controller {
 	public function __construct(){
 		parent::__construct();
 		
-		$this->load->library('Goods_service');
+		$this->load->model('Goods_Recent_Model');
 	}
 	
 	
