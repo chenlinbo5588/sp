@@ -87,8 +87,8 @@ class MY_Controller extends CI_Controller {
     	$this->_smarty = new Smarty();
         if(ENVIRONMENT == 'production'){
             //运行一段时间后再修改
-            //$this->_smarty->compile_check = false;
-            $this->_smarty->compile_check = true;
+            $this->_smarty->compile_check = false;
+            //$this->_smarty->compile_check = true;
         }else{
             $this->_smarty->compile_check = true;
         }

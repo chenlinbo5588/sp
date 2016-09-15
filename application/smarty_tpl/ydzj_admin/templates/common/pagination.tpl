@@ -24,6 +24,6 @@
         {/if}
         <span>第{$page['pageNow']}页/共{$page['pageLastNum']}页</span></strong>
     {else}
-        {if $page['pageSum'] > 0}<strong><label>找到{$page['pageSum']}{$page['pageUnit']}{$page['pageTit']}</label>{/if}
+        {if $page['pageSum'] > 0}<strong><label>找到{$page['pageSum']}{$page['pageUnit']}{$page['pageTit']}</label></strong>{/if}
     {/if}
 </div>

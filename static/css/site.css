@@ -151,11 +151,12 @@ a:focus,*:focus {
 
 .rel {
 	position:relative;
+	overflow:hidden;
 }
 
 /** 通用样式 **/
 input[type=text],input[type=password] {
-    height:25px;
+    height:20px;
     padding: 5px 0;
     border:1px solid #d0d0d0;
     border-radius:5px;
@@ -172,9 +173,12 @@ input[type=checkbox],input[type=radio] {
     margin-bottom:1px;
 }
 
+/*
 input[type=text]:focus , input[type=password]:focus ,textarea:focus {
     border:1px solid #473e86;
 }
+*/
+
 
 .disabled {
 	background:#d0d0d0;
@@ -590,6 +594,12 @@ table.fulltable {
     margin: 30px auto;
 }
 
+.panel .at_txt {
+	height:25px;
+	line-height:25px;
+	
+}
+
 .panel {
 	margin: 0 auto;
     border: 1px solid #CECECE;
@@ -607,15 +617,15 @@ table.fulltable {
 
 #loginPanel .codeimg {
     position: absolute;
-    right: 15px;
+    right: 8px;
     cursor: pointer;
-    top: 14px;
+    top: 13px;
 }
 
 #mobile_authcode {
 	position: absolute;
     width: 115px;
-    right: 3px;
+    right: 0px;
     top: 11px;
 }
 
@@ -691,35 +701,14 @@ table.fulltable {
 	margin-left:160px;
 }
 
-.searcharea {
-	padding:5px;
-	margin:10px 0;
-}
 
-.searchtip {
-	width:28%;
-	right:0px;
-	top:0px;
-	padding-left:5px;
-}
-
-.searchtip .tip {
-	padding:5px 0;
-}
-
-.codewrap {
-	width:67%;
-}
-
-.codewrap textarea {
-	border:1px solid #1AA169;
+.goods_search textarea {
+	
 	width:100%;
-	height:110px
+	height:110px;
 }
 
-.otherwrap .master_btn {
-	display:inline;
-}
+
 
 @media (min-width: 1440px) {
     .boxz {

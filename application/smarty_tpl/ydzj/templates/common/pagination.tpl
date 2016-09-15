@@ -20,6 +20,6 @@
         {if !$isMobile}<strong><label>找到{$page['pageSum']}{$page['pageUnit']}{$page['pageTit']}</label>{if $page['shortStyle'] == false}<input type="text" style="width:40px" name="jumpPage" value="{$page['pageNow']}" />&nbsp;<input type="button" name="jumpBtn" value="跳转" class="btn orangeBtn jumpBtn" />&nbsp;{/if}
         <span>第{$page['pageNow']}页/共{$page['pageLastNum']}页</span></strong>{/if}
     {else}
-        {if $page['pageSum'] > 0}<strong><label>找到{$page['pageSum']}{$page['pageUnit']}{$page['pageTit']}</label>{/if}
+        {if $page['pageSum'] > 0}<strong><label>找到{$page['pageSum']}{$page['pageUnit']}{$page['pageTit']}</label></strong>{/if}
     {/if}
 </div>

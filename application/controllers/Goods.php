@@ -15,7 +15,7 @@ class Goods extends MyYdzj_Controller {
 	
 	private function _processCode($code){
 		//print_r($code);
-		$code = str_replace(array("\r\n","\n",'-',' ',"\t"),'',trim($code));
+		$code = str_replace(array("\r\n","\n",'-',' ',"\t",'|'),'',trim($code));
 		$code = str_replace('，',',',$code);
 		
 		return trim($code,',');

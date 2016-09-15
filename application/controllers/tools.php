@@ -20,6 +20,9 @@ class Tools extends MY_Controller {
 	public function batch_insert(){
 		
 		$goodsName = array(
+			'卫衣',
+			'护腕',
+			'护膝',
 			'Nike',
 			'Adidas',
 			'乔丹',
@@ -31,12 +34,35 @@ class Tools extends MY_Controller {
 			'匹克'
 		);
 		
+		$color = array(
+			'黑',
+			'灰',
+			'银',
+			'白',
+			'棕',
+			'香槟',
+			'绿',
+			'蓝',
+			'紫',
+			'红',
+			'黄',
+			'金',
+			'橙',
+			'金属金'
+		);
+		
+		$sex = array('M','F');
+		
 		//2016/9/1 12:16:25
 		//2016/9/13 12:16:25
-		$timestamp = array(1472703385,1473740185);
+		$timestamp = array(1472703385,time());
 		
 		$this->load->model('Goods_Recent_Model');
 		for($i = 0; $i < 100000; $i++){
+			
+			
+			
+			/*
 			$str = array(
 				mt_rand(1,9),
 				mt_rand(1,92),
@@ -51,24 +77,33 @@ class Tools extends MY_Controller {
 			if($str[2] < 10){
 				$str[2] = '0'.$str[2];
 			}
-			
-			
+			*/
 			$gmtcreate = mt_rand($timestamp[0],$timestamp[1]);
 			
 			
-			$goodsCode = implode('',$str);
+			//$goodsCode = implode('',$str);
+			$goodsCode = random_string('alnum',mt_rand(5,9));
+			
 			$insert = array(
 				'goods_name' => $goodsName[mt_rand(0,(count($goodsName) - 1))],
 				'goods_code' => $goodsCode,
 				'goods_size' => mt_rand(10,48),
+				'goods_color' => $color[mt_rand(0,count($color) - 1)],
 				'quantity' => mt_rand(1,10),
+				'sex' => $sex[mt_rand(0,count($sex) - 1)],
+				'price_min' => mt_rand(0,2000) * mt_rand(0,1),
 				'uid' => mt_rand(1,200),
 				'date_key' => date("Ymd",$gmtcreate),
 				'gmt_create' => $gmtcreate,
 				'gmt_modify' => $gmtcreate
 			);
 			
-			$insert['kw'] = $insert['goods_name'].'_'.$insert['goods_code'].'_'.$insert['goods_size'];
+			$insert['price_max'] = $insert['price_min'] * 2;
+			
+			$insert['send_day'] = $gmtcreate + mt_rand(0,3) * 86400;
+			$insert['ip'] = $this->input->ip_address();
+			
+			//$insert['kw'] = $insert['goods_name'].'_'.$insert['goods_code'].'_'.$insert['goods_size'];
 			$insert['cnum'] = mt_rand(0,$insert['quantity']);
 			
 			$sql = $this->db->insert_string($this->Goods_Recent_Model->getTableRealName(),$insert);
