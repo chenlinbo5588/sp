@@ -375,7 +375,7 @@ input[type=checkbox],input[type=radio] {
 * html .fixedbar { width: 100%; margin-top: -10px; position: relative; left: -20px;}
 
 .fixed-empty {}
-.item-title { line-height: 20px; margin-bottom: 0 !important; clear: both; overflow: hidden; _padding-bottom: 10px; +padding-bottom: 10px;}
+.item-title { line-height: 20px; margin-bottom: 0 !important; clear: both; overflow: hidden; }
     .item-title h3 { float: left; margin-right:20px; }
 .tab-base {overflow: hidden; padding-top:16px; }
     .tab-base li { float: left;}
@@ -568,9 +568,11 @@ input[type="text"], input[type="password"], textarea, select, .type-file-text , 
 input[type="text"], input[type="password"], textarea, select, .type-file-text , .editable, .editable2, .editable-tarea, .editable-tarea2 { padding: 2px 4px; -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px;/*Firefox\Chrome\Safari\IE9\元素圆角效果*/ resize: none;/*禁止调节元素的尺寸*/}
 input[type="text"]:focus, input[type="text"]:hover, input[type="text"]:active, input[type="password"]:focus, input[type="password"]:hover, input[type="password"]:active, textarea:hover, textarea:focus, textarea:active { color: #33464F; background-color: #fff; border: 1px solid ; border-color:#71CBEF /*#CBE9F3 #CBE9F3 #71CBEF*/;-moz-box-shadow:0 0 5px rgba(82, 168, 236, 0.5); -webkit-box-shadow: 0 0 5px rgba(82, 168, 236, 0.5); box-shadow: 0 0 5px rgba(82, 168, 236, 0.5);}
 .editable2, .editable-tarea2 { color: #33464F; background-color: #FFF; border: 1px dotted ; border-color:#71CBEF;}
-textarea{ resize: vertical !important;/*Textarea支持调节元素的高度*/}
+textarea{ resize: vertical !important;}
 .editable, .editable2, input[type="text"], input[type="password"] { line-height:20px; white-space: nowrap; display:inline-block; height:20px; overflow: hidden; cursor:text;}
 .editable-tarea, .editable-tarea2, textarea { line-height:18px; display:inline-block; height:36px; cursor:text; overflow:auto;}
+
+
 .tarea { height: 75px; width: 400px;}
 .sort input , .sort .editable , .sort .editable2 { width:36px;}
 .name input , .name .editable , .name .editable2 { width:250px;}

@@ -25,6 +25,14 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
     protected function _navs(){
         $navs = array_slice($this->uri->segments,1,3);
         $pathStr = implode('/',$navs);
+		
+		//echo site_url($_SERVER['REQUEST_URI']);
+		$currentUri = $_SERVER['REQUEST_URI'];
+		if(preg_match("/^\/index.php\/admin\//",$currentUri,$match)){
+			$currentUri = substr($currentUri,17);
+		}
+		
+		$this->assign('currentURL',$currentUri);
 
         $this->assign('pathStr',$pathStr);
         $this->assign('fnKey',$navs[0]);

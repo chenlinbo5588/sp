@@ -1,23 +1,8 @@
 {include file="common/main_header.tpl"}
-  <div class="fixed-bar">
-    <div class="item-title">
-      <h3>商品分类</h3>
-      <ul class="tab-base">
-      	<li><a href="{admin_site_url('goods_class/category')}"><span>管理</span></a></li>
-      	<li><a class="current"><span>{if $info['gc_id']}编辑{else}新增{/if}</span></a></li>
-      	<li><a href="{admin_site_url('goods_class/export')}"><span>导出</span></a></li>
-      	<li><a href="{admin_site_url('goods_class/import')}"><span>导入</span></a></li>
-      	<li><a href="{admin_site_url('goods_class/tag')}"><span>TAG管理</span></a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="fixed-empty"></div>
-  <div class="feedback">{$feedback}</div>
-  
   {if $info['gc_id']}
-  {form_open(admin_site_url('goods_class/edit'),'id="goods_class_form"')}
+  {form_open_multipart(admin_site_url('goods_class/edit?gc_id='|cat:$info['gc_id']),'id="goods_class_form"')}
   {else}
-  {form_open(admin_site_url('goods_class/add'),'id="goods_class_form"')}
+  {form_open_multipart(admin_site_url('goods_class/add'),'id="goods_class_form"')}
   {/if}
   	<input type="hidden" name="gc_id" value="{$info['gc_id']}"/>
     <table class="table tb-type2">
@@ -48,18 +33,15 @@
         </tr>
         <tr class="noborder">
           <td class="vatop rowform">
-            <input type="hidden" name="article_pic_id" value="{$info['gc_pic_id']}"/>
+            <input type="hidden" name="old_pic" value="{if $info['gc_pic']}{$info['gc_pic']}{/if}"/>
             <span class="type-file-show">
-          		<img class="show_image" src="{resource_url('img/preview.png')}">
-          		<div id="previewPic" class="type-file-preview">{if !empty($info['gc_pic'])}<img src="{resource_url($info['gc_pic'])}">{else}<img src="{resource_url('img/default.jpg')}">{/if}</div>
+                <img class="show_image" src="{resource_url('img/preview.png')}">
+                <div class="type-file-preview">{if !empty($info['gc_pic'])}<img src="{resource_url($info['gc_pic'])}">{/if}</div>
             </span>
-            <span class="type-file-box">
-              <input type='text' name='gc_pic' value="{$info['gc_pic']}" id='article_pic' class='type-file-text' />
-              <input type='button' name='button' id='button' value='' class='type-file-button' />
-              <input name="_pic" type="file" class="type-file-file" id="_pic" size="30" hidefocus="true" />
-            </span>
-            </td>
-          <td class="vatop tips">支持格式jpg</td>
+            <span class="type-file-box"><input type='text' name='gc_pic' value="{if $info['gc_pic']}{$info['gc_pic']}{/if}" id='gc_pic' class='type-file-text' /><input type='button' name='button' id='button1' value='' class='type-file-button' />
+            <input name="gc_logo" type="file" class="type-file-file" id="gc_logo" size="30" hidefocus="true" nc_type="change_gc_logo">
+            </span></td>
+          <td class="vatop tips"><span class="vatop rowform">商品分类图片LOGO尺寸要求宽度为120像素，高度为120像素、比例为1:1的图片；支持格式jpg</span></td>
         </tr>
         <tr>
           <td colspan="2" class="required"><label>排序:</label></td>
@@ -76,55 +58,11 @@
       </tfoot>
     </table>
   </form>
-  {include file="common/ajaxfileupload.tpl"}
   <script type="text/javascript">
-	$(function(){
-		$('input[class="type-file-file"]').change(uploadChange);
-	    function uploadChange(){
-	        var filepatd=$(this).val();
-	        var extStart=filepatd.lastIndexOf(".");
-	        var ext=filepatd.substring(extStart,filepatd.lengtd).toUpperCase();     
-	        if(ext!=".JPG"&&ext!=".JPEG"){
-	            alert("file type error");
-	            $(this).attr('value','');
-	            return false;
-	        }
-	        if ($(this).val() == '') return false;
-	        ajaxFileUpload();
-	    }
-	    
-	    function ajaxFileUpload()
-	    {
-	        $.ajaxFileUpload
-	        (
-	            {
-	                url:'{admin_site_url("common/pic_upload")}?mod=goods_class',
-	                secureuri:false,
-	                fileElementId:'_pic',
-	                dataType: 'json',
-	                data: { formhash : formhash , id : $("input[name=gc_pic_id]").val() },
-	                success: function (resp, status)
-	                {
-	                	refreshFormHash(resp);
-	                	
-	                    if (resp.error == 0){
-	                        $("input[name=gc_pic_id]").val(resp.id);
-	                        $("input[name=gc_pic]").val(resp.url);
-	                        $("#previewPic img").attr("src",resp.url);
-	                    }else
-	                    {
-	                        alert(resp.msg);
-	                    }
-	                    $('input[class="type-file-file"]').bind('change',uploadChange);
-	                },
-	                error: function (resp, status, e)
-	                {
-	                    alert('upload failed');
-	                    $('input[class="type-file-file"]').bind('change',uploadChange);
-	                }
-	            }
-	        )
-	    }
-	})
- </script>
+    $(function(){
+        $("#gc_logo").change(function(){
+            $("#gc_pic").val($(this).val());
+        });
+    })
+  </script>
 {include file="common/main_footer.tpl"}

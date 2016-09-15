@@ -449,6 +449,24 @@ $config['csrf_regenerate'] = TRUE;
 $config['csrf_exclude_uris'] = array();
 
 /*
+|------------------------------------------------------------- 
+| attack protected
+| 
+| defined by clb
+| 
+| 0表示不启用此功能
+| 1表示频繁刷新限制
+| 2表示代理服务器访问限制
+| 4表示页面重载开启
+| 8表示验证问答
+|
+*/
+$config['security']['attackevasive'] = '1|2|4|8';
+$config['security']['authkey'] = 'uuAj611ccaWq1d2m';
+$config['security']['visitkey'] = 'vs';
+$config['security']['visitcode'] = 'visitcode';
+
+/*
 |--------------------------------------------------------------------------
 | Output Compression
 |--------------------------------------------------------------------------

@@ -5,9 +5,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * api 密钥配置
  */
 $config['api_secret'] = 'b53209f0e4d2b2335d726e4e381511d59d22a31f';
-
-
-$config['allowed_img_types'] = 'jpg|jpeg|png';
+$config['allowed_img_types'] = 'jpg|jpeg';
 
 /**
  * 默认图片大小
@@ -90,9 +88,9 @@ $config['navs'] = array(
 			'title' => '会员',
 			'url' => 'member/index'
 		),
-		'exinfo' => array(
-			'title' => '信息',
-			'url' => 'exinfo/index'
+		'goods' => array(
+			'title' => '货品',
+			'url' => 'goods/index'
 		),
 		'weixin' => array(
 			'title' => '微信',
@@ -115,6 +113,17 @@ $config['navs'] = array(
 			array('title' => 'SEO设置','url' => 'setting/seoset'),
 			array('title' => '消息通知','url' => 'message/email'),
 		),
+		
+		'goods' => array(
+			array('title' => '今日求货','url' => 'goods/index'),
+			array('title' => '历史求货','url' => 'goods/history'),
+			array('title' => '品牌管理','url' => 'brand/index'),
+			array('title' => '颜色管理','url' => 'color/index'),
+			array('title' => '货品分类','url' => 'goods_class/category'),
+		),
+		'brand' => 'goods',
+		'goods_class' => 'goods',
+		'color' => 'goods',
 		'message' => 'setting',
 		'upload' => 'setting',
 		'member' => array(

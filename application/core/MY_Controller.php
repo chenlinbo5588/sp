@@ -3,14 +3,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class MY_Controller extends CI_Controller {
 
-	public $_verifyName;
+	//public $_verifyName;
 	public $_lastVisit;
-	public $_lastVisitKey;
 	
 	public $_reqtime;
 	
 	protected $_siteSetting = array();
 	public $_seoSetting = array();
+	
 	public $_seo = array(
 		'SEO_title' => '',
 		'SEO_description' => '',
@@ -22,12 +22,11 @@ class MY_Controller extends CI_Controller {
 	public function __construct(){
 		parent::__construct();
 		$this->_reqtime = $this->input->server('REQUEST_TIME');
-		$this->_lastVisitKey = 'lastvisit';
-		$this->_verifyName = 'verify';
+		//$this->_verifyName = 'verify';
 		
 		$this->_initLibrary();
 		$this->_initSmarty();
-		$this->_security();
+		
 		$this->_initMobile();
 		$this->_initSiteSetting();
 		$this->_initSeoSetting();
@@ -37,7 +36,7 @@ class MY_Controller extends CI_Controller {
 		$this->smartyConfig();
 	}
 
-
+	/*
 	protected function _verify($type = 'alnum' ,$len = 5 , $seconds = 120){
 		$string = random_string($type,$len);
 		$expire = $this->input->server('REQUEST_TIME') + $seconds;
@@ -47,25 +46,10 @@ class MY_Controller extends CI_Controller {
 		
 		return $string;
 	}
-	
+	*/
 	
 	public function getFormHash(){
-		return array(config_item('csrf_token_name') => $this->security->get_csrf_hash(), $this->_verifyName => $this->_verify());
-	}
-	
-	protected function _checkVerify(){
-		if($this->isPostRequest()){
-			$verfiycode = $this->input->cookie($this->_verifyName);
-			if($verfiycode){
-				$string = $this->encrypt->decode($verfiycode,$this->config->item('encryption_key'));
-				$info = explode("\t",$string);
-				if($this->input->post($this->_verifyName) == $info[0] && $this->input->server('REQUEST_TIME') < $info[1]){
-					return true;
-				}
-			}
-		}
-		
-		return false;
+		return array(config_item('csrf_token_name') => $this->security->get_csrf_hash());
 	}
 	
 	public function isGetRequest(){
@@ -114,13 +98,12 @@ class MY_Controller extends CI_Controller {
     		
     		return $this->cache->file;
     	}
-    	
-    	
     }
     
     
     private function _initSiteSetting(){
     	$settingList = $this->getCacheObject()->get(CACHE_KEY_SiteSetting);
+    	//print_r($settingList);
     	if(empty($settingList)){
     		$temp = $this->Setting_Model->getList();
     		//print_r($list);
@@ -182,48 +165,18 @@ class MY_Controller extends CI_Controller {
     
     
     protected function _initLibrary(){
+    	/* @todo 需要更改为 lazy connection */
     	$this->load->database();
     	
 		$this->load->helper(array('form','directory','file', 'url','string'));
 		$this->load->driver('cache');
 		
-		
-		
 		$this->load->model(array('Setting_Model','Member_Model','Seo_Model'));
-		$this->load->library(array('user_agent','Form_validation','encrypt','PHPTree','Base_service'));
+		$this->load->library(array('session', 'user_agent','Form_validation','encrypt','PHPTree','Base_service'));
 		
 		$this->base_service->initStaticVars();
 		
     }
-    
-    
-    private function _security(){
-    	$this->assign(config_item('csrf_token_name'),$this->security->get_csrf_hash());
-    	
-    	/*
-    	if($this->input->cookie($this->_lastVisitKey) != ''){
-			$elapsed_time = number_format(microtime(TRUE) -  $this->input->cookie($this->_lastVisitKey), 2);
-			if($elapsed_time < 0.2){
-				if($this->input->is_ajax_request()){
-					$this->responseJSON('请求过于频繁');
-				}else{
-					show_error('请求过于频繁',200);
-				}
-			}
-		}
-		
-		$this->input->set_cookie($this->_lastVisit,microtime(TRUE),time() + 86400);
-		
-		if($this->isPostRequest() && !$this->_checkVerify()){
-			if($this->input->is_ajax_request()){
-				$this->responseJSON('请求失效');
-			}else{
-				show_error('请求失效',500);
-			}
-		}
-		*/
-    }
-    
     
     public function assign($name , $value = ''){
         if(is_array($name)){
@@ -235,8 +188,6 @@ class MY_Controller extends CI_Controller {
     
     
     public function display($viewname = ''){
-    	global $lang;
-    	
     	//echo $this->uri->uri_string();
     	if($viewname == ''){
     		$tempPath = array();
@@ -272,6 +223,9 @@ class MY_Controller extends CI_Controller {
     	
     	$realPath = $tplDir.$viewname.'.tpl';
     	//echo $realPath;
+    	
+    	$this->assign('subNavs',$this->_subNavs);
+    	
     	if(file_exists($realPath)){
     		$this->output->set_output($this->_smarty->fetch($realPath));
     	}else{

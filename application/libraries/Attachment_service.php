@@ -24,19 +24,26 @@ class Attachment_service extends Base_service {
 	}
 	
 	/**
+	 * 默认的上传设置
+	 */
+	public function getUploadConfig(){
+		$config['file_path'] = 'static/attach/'.date("Y/m/d/");
+        $config['upload_path'] = ROOTPATH . '/'.$config['file_path'];
+        make_dir($config['upload_path']);
+        $config['file_ext_tolower'] = true;
+		$config['encrypt_name'] = true;
+		$config['max_size'] = 4096;
+		
+		
+		return $config;
+	
+	}
+	
+	/**
 	 * 获得图片上传配置
 	 */
 	public function getImageUploadConfig(){
-		
-		$config['file_path'] = 'static/attach/'.date("Y/m/d/");
-        $config['upload_path'] = ROOTPATH . '/'.$config['file_path'];
-        
-        make_dir($config['upload_path']);
-        
 		$config['allowed_types'] = config_item('allowed_img_types');
-		$config['file_ext_tolower'] = true;
-		$config['encrypt_name'] = true;
-		$config['max_size'] = 4096;
 		
 		return $config;
 	}
@@ -173,23 +180,10 @@ class Attachment_service extends Base_service {
 	}
 	
 	
-	
-	
-	
-	
 	/**
-	 * 添加图片附件信息
 	 * 
 	 */
-	public function addImageAttachment($filename, $moreConfig = array(),$from = 0,$mod = ''){
-		//处理照片
-		$config = $this->getImageUploadConfig();
-		
-		if(!empty($moreConfig)){
-			$config = array_merge($config,$moreConfig);
-		}
-		
-		//print_r($config);
+	public function addAttachment($filename, $config = array(),$from = 0,$mod = ''){
 		self::$CI->load->library('upload', $config);
 		if(self::$CI->upload->do_upload($filename)){
 			$fileData = self::$CI->upload->data();
@@ -225,6 +219,25 @@ class Attachment_service extends Base_service {
 		
 	}
 	
+	
+	
+	/**
+	 * 添加图片附件信息
+	 * 
+	 */
+	public function addImageAttachment($filename, $moreConfig = array(),$from = 0,$mod = ''){
+		//处理照片
+		$config = $this->getUploadConfig();
+		$config['allowed_types'] = config_item('allowed_img_types');
+		
+		if(!empty($moreConfig)){
+			$config = array_merge($config,$moreConfig);
+		}
+		
+		return $this->addAttachment($filename,$config,$from,$mod);
+		
+	}
+	
 	/**
 	 *  显示错误信息
 	 */
@@ -234,7 +247,7 @@ class Attachment_service extends Base_service {
 	
 	
 	/**
-	 * 前后台上传图片公告逻辑
+	 * 前后台上传图片公共逻辑
 	 * 
 	 * @param datatype $uid 操作人
 	 * @param datatype $uploadName 上传名

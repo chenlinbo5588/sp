@@ -6,7 +6,17 @@ class Goods_Class extends Ydzj_Admin_Controller {
 	public function __construct(){
 		parent::__construct();
 		
-		$this->load->library(array('Goods_service'));
+		$this->load->library(array('Goods_service','Attachment_service'));
+		$this->attachment_service->setUserInfo($this->_adminProfile['basic']);
+		
+		$this->assign('moduleTitle','货品分类');
+		
+		$this->_subNavs = array(
+			array('url' => 'goods_class/category', 'title' => '管理'),
+			array('url' => 'goods_class/add','title' => '添加'),
+			array('url' => 'goods_class/export','title' => '导出'),
+			array('url' => 'goods_class/import','title' => '导入'),
+		);
 	}
 	
 	public function category(){
@@ -68,12 +78,14 @@ class Goods_Class extends Ydzj_Admin_Controller {
 			
 			for($i = 0; $i < 1; $i++){
 				
-				$info = $this->_prepareGoodClassData();
+				$info = $this->_prepareData();
 				
 				if(!$this->form_validation->run()){
 					$feedback = $this->form_validation->error_string();
 					break;
 				}
+				
+				$info = array_merge($info,$this->addWhoHasOperated());
 				
 				if(($newid = $this->Goods_Class_Model->_add($info)) < 0){
 					$feedback = getErrorTip('保存失败');
@@ -161,12 +173,6 @@ class Goods_Class extends Ydzj_Admin_Controller {
 			$this->form_validation->set_rules('gc_parent_id','上级分类', "in_db_list[{$this->Goods_Class_Model->_tableRealName}.gc_id]|callback_checkpid[{$action}]");
 		}
 		
-		
-		if($this->input->post('gc_pic')){
-			$this->form_validation->set_rules('gc_pic','分类图片',"required|valid_url");
-		}
-		
-			
 		if($this->input->post('gc_sort')){
 			$this->form_validation->set_rules('gc_sort','排序',"is_natural|less_than[256]");
 		}
@@ -174,15 +180,19 @@ class Goods_Class extends Ydzj_Admin_Controller {
 	}
 	
 	
-	private function _prepareGoodClassData(){
+	private function _prepareData(){
+		$fileInfo = $this->attachment_service->addImageAttachment('gc_logo',array(),FROM_BACKGROUND,'goods_class');
 		
 		$info = array(
 			'gc_name' => $this->input->post('gc_name'),
 			'gc_parent_id' => $this->input->post('gc_parent_id') ? $this->input->post('gc_parent_id') : 0,
-			'gc_pic_id' => $this->input->post('gc_pic_id') ? $this->input->post('gc_pic_id') : 0,
-			'gc_pic' => $this->input->post('gc_pic') ? $this->input->post('gc_pic') : '',
 			'gc_sort' => $this->input->post('gc_sort') ? $this->input->post('gc_sort') : 255
 		);
+		
+		if($fileInfo){
+			$info['gc_pic'] = $fileInfo['file_url'];
+			$info['gc_pic_id'] = $fileInfo['id'];
+		}
 		
 		return $info;
 	}
@@ -194,28 +204,35 @@ class Goods_Class extends Ydzj_Admin_Controller {
 		$treelist = $this->goods_service->getGoodsClassTreeHTML();
 		
 		$gc_id = $this->input->get_post('gc_id');
-		
 		$info = $this->Goods_Class_Model->getFirstByKey($gc_id,'gc_id');
 		
+		$this->_subNavs[] = array('url' => 'goods_class/edit?gc_id='.$gc_id, 'title' => '编辑');
 		
 		if($this->isPostRequest()){
 			
 			$this->_getRules('edit');
 			for($i = 0; $i < 1; $i++){
 				
-				$info = $this->_prepareGoodClassData();
+				$orignalImage = $info['gc_pic'];
+				$info = $this->_prepareData();
 				$info['gc_id'] = $gc_id;
 				
 				if(!$this->form_validation->run()){
 					$feedback = $this->form_validation->error_string();
+					if(empty($info['gc_pic'])){
+						$info['gc_pic'] = $orignalImage;
+					}
+					
 					break;
 				}
 				
+				
+				$info = array_merge($info,$this->addWhoHasOperated('edit'));
 				if($this->Goods_Class_Model->update($info,array('gc_id' => $gc_id)) < 0){
 					$feedback = getErrorTip('保存失败');
 					break;
 				}
-				
+				$this->attachment_service->deleteByFileUrl($orignalImage);
 				$feedback = getSuccessTip('保存成功');
 			}
 		}
@@ -387,6 +404,8 @@ class Goods_Class extends Ydzj_Admin_Controller {
 		
 	}
 	
+	
+	/*
 	public function tag_reset(){
 		
 		//商品分类
@@ -542,4 +561,5 @@ class Goods_Class extends Ydzj_Admin_Controller {
 		
 		$this->display();
 	}
+	*/
 }

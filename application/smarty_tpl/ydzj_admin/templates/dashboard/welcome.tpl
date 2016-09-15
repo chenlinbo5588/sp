@@ -18,6 +18,19 @@
         </ul>
       </dd>
     </dl>
+    <dl class="goods">
+      <dt>
+        <div class="ico"><i></i><sub title="货品总数"><span><em id="statistics_goods"></em></span></sub></div>
+        <h3>货品</h3>
+        <h5>新增货品</h5>
+      </dt>
+      <dd>
+        <ul>
+          <li class="w50pre normal"><a href="index.php?act=goods&op=goods">本周新增<sub title=""><em id="statistics_week_add_product"></em></sub></a></li>
+          <li class="w50pre none"><a href="index.php?act=inform&op=inform_list">举报<sub><em id="statistics_inform_list">0</em></sub></a></li>
+        </ul>
+      </dd>
+    </dl>
     {*
     <dl class="shop">
       <dt>
@@ -33,20 +46,7 @@
         </ul>
       </dd>
     </dl>
-    <dl class="goods">
-      <dt>
-        <div class="ico"><i></i><sub title="商品总数"><span><em id="statistics_goods"></em></span></sub></div>
-        <h3>商品</h3>
-        <h5>新增商品/品牌申请审核</h5>
-      </dt>
-      <dd>
-        <ul>
-          <li class="w33pre normal"><a href="index.php?act=goods&op=goods">本周新增<sub title=""><em id="statistics_week_add_product"></em></sub></a></li>
-          <li class="w33pre none"><a href="http://www.nzbestprice.com/admin/index.php?act=goods&op=goods&type=waitverify&search_verify=10">商品审核<sub><em id="statistics_product_verify">0</em></sub></a></li>
-          <li class="w33pre none"><a href="index.php?act=inform&op=inform_list">举报<sub><em id="statistics_inform_list">0</em></sub></a></li>
-        </ul>
-      </dd>
-    </dl>
+    
     <dl class="team">
       <dt>
         <div class="ico"><i></i></div>

@@ -1,19 +1,6 @@
 {include file="common/main_header.tpl"}
-  <div class="fixed-bar">
-    <div class="item-title">
-      <h3>品牌</h3>
-      <ul class="tab-base">
-      	<li><a href="{admin_site_url('brand/index')}"><span>管理</span></a></li>
-      	<li><a href="{admin_site_url('brand/add')}" {if !$info['brand_id']}class="current"{/if}><span>新增</span></a></li>
-      	{if $info['brand_id']}<li><a href="{admin_site_url('brand/edit?brand_id=')}{$info['brand_id']}" class="current"><span>编辑</span></a></li>{/if}
-      </ul>
-    </div>
-  </div>
-  <div class="fixed-empty"></div>
-  <div class="feedback">{$feedback}</div>
-  
   {if $info['brand_id']}
-  {form_open_multipart(admin_site_url('brand/edit'),'id="brand_form"')}
+  {form_open_multipart(admin_site_url('brand/edit?brand_id='|cat:$info['brand_id']),'id="brand_form"')}
   {else}
   {form_open_multipart(admin_site_url('brand/add'),'id="brand_form"')}
   {/if}
@@ -54,7 +41,7 @@
             <span class="type-file-box"><input type='text' name='brand_pic' value="{if $info['brand_pic']}{$info['brand_pic']}{/if}" id='brand_pic' class='type-file-text' /><input type='button' name='button' id='button1' value='' class='type-file-button' />
             <input name="brand_logo" type="file" class="type-file-file" id="brand_logo" size="30" hidefocus="true" nc_type="change_brand_logo">
             </span></td>
-          <td class="vatop tips"><span class="vatop rowform">品牌LOGO尺寸要求宽度为150像素，高度为50像素、比例为3:1的图片；支持格式gif,jpg,png</span></td>
+          <td class="vatop tips"><span class="vatop rowform">品牌LOGO尺寸要求宽度为150像素，高度为50像素、比例为3:1的图片；支持格式jpg</span></td>
         </tr>
         <tr>
           <td colspan="2" class="required">是否推荐: </td>
@@ -87,5 +74,5 @@
 			$("#brand_pic").val($(this).val());
 		});
 	})
- </script>
+  </script>
 {include file="common/main_footer.tpl"}

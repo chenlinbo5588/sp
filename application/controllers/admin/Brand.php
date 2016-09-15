@@ -8,6 +8,15 @@ class Brand extends Ydzj_Admin_Controller {
 		parent::__construct();
 		
 		$this->load->library(array('Goods_service','Attachment_service'));
+		$this->attachment_service->setUserInfo($this->_adminProfile['basic']);
+		
+		$this->assign('moduleTitle','品牌管理');
+		
+		$this->_subNavs = array(
+			array('url' => 'brand/index', 'title' => '管理'),
+			array('url' => 'brand/add','title' => '添加'),
+		);
+		
 	}
 	
 	
@@ -106,23 +115,30 @@ class Brand extends Ydzj_Admin_Controller {
 	}
 	
 	
-	private function _prepareBrandData(){
-		$fileInfo = $this->attachment_service->addImageAttachment('brand_logo',array(),FROM_BACKGROUND,'brand');
+	private function _prepareData(){
+		
+		$fileInfo = $this->attachment_service->addImageAttachment('brand_logo',array(
+			/*
+			'min_width' => 150,
+			'min_height' => 50,
+			'max_width' => 150,
+			'max_height' => 50,*/
+		),FROM_BACKGROUND,'brand');
 		
 		//print_r($fileInfo);
 		$info = array(
 			'brand_name' => $this->input->post('brand_name'),
 			'class_id' => $this->input->post('class_id') ? $this->input->post('class_id') : 0,
-			'brand_sort' => $this->input->post('brand_sort') ? $this->input->post('brand_sort') : 255
+			'brand_sort' => $this->input->post('brand_sort') ? intval($this->input->post('brand_sort')) : 255
 		);
 		
-		
-		if(empty($info['brand_sort'])){
-			$info['brand_sort'] = 0;
+		if(empty($info['brand_sort']) || $info['brand_sort'] > 255){
+			$info['brand_sort'] = 255;
 		}
 		
 		if($fileInfo){
 			$info['brand_pic'] = $fileInfo['file_url'];
+			$info['brand_pic_id'] = $fileInfo['id'];
 		}
 		
 		if($info['class_id']){
@@ -144,11 +160,13 @@ class Brand extends Ydzj_Admin_Controller {
 			
 			for($i = 0; $i < 1; $i++){
 				
-				$info = $this->_prepareBrandData();
+				$info = $this->_prepareData();
 				if(!$this->form_validation->run()){
 					$feedback = $this->form_validation->error_string();
 					break;
 				}
+				
+				$info = array_merge($info,$this->addWhoHasOperated());
 				
 				if(($newid =$this->Brand_Model->_add($info)) < 0){
 					$feedback = getErrorTip('保存失败');
@@ -175,16 +193,17 @@ class Brand extends Ydzj_Admin_Controller {
 		$id = $this->input->get_post('brand_id');
 		
 		$treelist = $this->goods_service->getGoodsClassTreeHTML();
-		
 		$info = $this->Brand_Model->getFirstByKey($id,'brand_id');
+		
+		$this->_subNavs[] = array('url' => 'brand/edit?brand_id='.$id, 'title' => '编辑');
 		
 		if($this->isPostRequest()){
 			
 			$this->_getRules();
 			
 			for($i = 0; $i < 1; $i++){
-				
-				$info = $this->_prepareBrandData();
+				$orignalImage = $info['brand_pic'];
+				$info = $this->_prepareData();
 				$info['brand_id'] = $id;
 				
 				if(!$this->form_validation->run()){
@@ -192,13 +211,14 @@ class Brand extends Ydzj_Admin_Controller {
 					break;
 				}
 				
-				
+				$info = array_merge($info,$this->addWhoHasOperated('edit'));
 				
 				if($this->Brand_Model->update($info,array('brand_id' => $id)) < 0){
 					$feedback = getErrorTip('保存失败');
 					break;
 				}
 				
+				$this->attachment_service->deleteByFileUrl($orignalImage);
 				$feedback = getSuccessTip('保存成功');
 			}
 		}

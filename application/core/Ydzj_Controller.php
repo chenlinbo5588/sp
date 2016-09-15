@@ -14,6 +14,8 @@ class Ydzj_Controller extends MY_Controller {
 	public $_adminProfile;
 	public $_adminProfileKey;
 	public $_adminLastVisitKey;
+	public $_subNavs;
+	
 	
 	
 	public function __construct(){
@@ -97,7 +99,7 @@ class Ydzj_Controller extends MY_Controller {
 	
 	protected function _getCity(){
 		
-		$city_id = $this->input->cookie('city');
+		$city_id = $this->input->get_cookie('city');
 		if($city_id == NULL){
 			if($this->_profile['basic']['district_bind'] != 0){
 				$city_id = $this->_profile['basic']['d2'];
@@ -133,10 +135,6 @@ class Ydzj_Controller extends MY_Controller {
 		//通过md5算法为签名字符串生成一个md5签名，该签名就是我们要追加的sign参数值
 	    return md5($str);
 	}
-	
-	
- 	
- 
  
 	/**
 	 * 校验 hash 值

@@ -451,6 +451,9 @@ if ( ! function_exists('show_404'))
 	}
 }
 
+
+
+
 // ------------------------------------------------------------------------
 
 if ( ! function_exists('log_message'))
@@ -956,6 +959,15 @@ if ( ! function_exists('getImgPathArray'))
 		return $img;
 	}
 }
+
+
+function show_custom_error($message, $status_code = 500, $heading = '提示'){
+	
+	$_error =& load_class('Exceptions', 'core');
+	echo $_error->show_error($heading, $message, 'error_custom', $status_code);
+	exit($status_code);
+}
+
 
 
 function getWarningTip($message){
