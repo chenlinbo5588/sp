@@ -116,9 +116,9 @@ class MY_Input extends CI_Input {
 		$subject = $scuritylang[$subject] ? $scuritylang[$subject] : $subject;
 		$message = $scuritylang[$message] ? $scuritylang[$message] : $message;
 		if($this->is_ajax_request()) {
-			security_ajaxshowheader();
+			$this->security_ajaxshowheader();
 			echo '<div id="attackevasive_1" class="popupmenu_option"><b style="font-size: 16px">'.$subject.'</b><br /><br />'.$message.'</div>';
-			security_ajaxshowfooter();
+			$this->security_ajaxshowfooter();
 		} else {
 			echo '<html>';
 			echo '<head>';

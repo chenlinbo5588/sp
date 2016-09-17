@@ -5,7 +5,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Goods extends MyYdzj_Controller {
 	
-	
 	public function __construct(){
 		parent::__construct();
 		
@@ -17,6 +16,12 @@ class Goods extends MyYdzj_Controller {
 		//print_r($code);
 		$code = str_replace(array("\r\n","\n",'-',' ',"\t",'|'),'',trim($code));
 		$code = str_replace('，',',',$code);
+		$code = trim($code,',');
+		
+		$tmpCode = explode(',',$code);
+		if(count($tmpCode) > 50){
+			return implode(',',array_slice($tmpCode,0,50));
+		}
 		
 		return trim($code,',');
 		
@@ -59,12 +64,18 @@ class Goods extends MyYdzj_Controller {
 			'pager' => $pageParam
 		);
 		
-		//$searchKeys['gn'] = $this->input->get_post('gn');
-		$searchKeys['gc'] = $this->input->get_post('gc');
-		$searchKeys['s1'] = $this->input->get_post('s1');
-		$searchKeys['s2'] = $this->input->get_post('s2');
-		$searchKeys['cnum'] = $this->input->get_post('cnum');
 		
+		$searchKeys['gn'] = $this->input->get_post('gn');
+		$searchKeys['gc'] = $this->input->get_post('gc');
+		$searchKeys['sex'] = intval($this->input->get_post('sex'));
+		
+		//尺码
+		$searchKeys['s1'] = floatval($this->input->get_post('s1'));
+		$searchKeys['s2'] = floatval($this->input->get_post('s2'));
+		
+		//剩余数量
+		$searchKeys['cn1'] = intval($this->input->get_post('cn1'));
+		$searchKeys['cn2'] = intval($this->input->get_post('cn2'));
 		
 		$avaibleCode = $this->_processCode($searchKeys['gc']);
 		
@@ -76,34 +87,62 @@ class Goods extends MyYdzj_Controller {
 		//$client->setSortMode(SPH_SORT_ATTR_ASC,'uid');
 		$client->setSortMode(SPH_SORT_ATTR_DESC,'gmt_modify');
 		$client->SetLimits(($pageParam['current_page'] - 1) * $pageParam['page_size'], $pageParam['page_size']);
-		$client->SetFilter ('status', array (0));
+		//$client->SetFilter ('status', array (0));
 		
 		
-		if(empty($searchKeys['s1']) && !empty($searchKeys['s2'])){
-			$client->SetFilterRange('goods_size',0,floatval($searchKeys['s2']));
-		}else if(!empty($searchKeys['s1']) && empty($searchKeys['s2'])){
-			$client->SetFilterRange('goods_size',floatval($searchKeys['s2']),50);
-		}else if(!empty($searchKeys['s1']) && !empty($searchKeys['s2'])){
-			$s1 = floatval($searchKeys['s1']);
-			$s2 = floatval($searchKeys['s2']);
-			
-			if($s1 > $s2){
-				$client->SetFilterRange('goods_size',$s2,$s1);
-			}else{
-				$client->SetFilterRange('goods_size',$s1,$s2);
-			}
+		if($searchKeys['sex']){
+			$client->SetFilter ('sex', array($searchKeys['sex']));
 		}
 		
+		if(empty($searchKeys['s1']) && !empty($searchKeys['s2'])){
+			if($searchKeys['s2'] > 50){
+				$searchKeys['s2'] = 50;
+			}
+		}else if(!empty($searchKeys['s1']) && empty($searchKeys['s2'])){
+			$searchKeys['s2'] = 50;
+		}
 		
-		if($searchKeys['cnum']){
-			$client->SetFilterRange('cnum',intval($searchKeys['cnum']),1000);
+		if($searchKeys['s1'] > $searchKeys['s2']){
+			$tmp = $searchKeys['s1'];
+			$searchKeys['s1'] = $searchKeys['s2'];
+			$searchKeys['s2'] = $tmp;
+		}
+		
+		if($searchKeys['s1'] || $searchKeys['s2'] ){
+			$client->SetFilterFloatRange('goods_size',$searchKeys['s1'],$searchKeys['s1']);
+		}
+		
+		if(empty($searchKeys['cn1']) && !empty($searchKeys['cn2'])){
+			if($searchKeys['cn2'] > 50){
+				$searchKeys['cn2'] = 50;
+			}
+		}else if(!empty($searchKeys['cn1']) && empty($searchKeys['cn2'])){
+			$searchKeys['cn2'] = 50;
+		}
+		
+		if($searchKeys['cn1'] > $searchKeys['cn2']){
+			$tmp2 = $searchKeys['cn1'];
+			$searchKeys['cn1'] = $searchKeys['cn2'];
+			$searchKeys['cn2'] = $tmp2;
+		}
+		
+		if($searchKeys['cn1'] || $searchKeys['cn2'] ){
+			$client->SetFilterRange('cnum',$searchKeys['cn1'],$searchKeys['cn2']);
 		}
 		
 		
 		//print_r($avaibleCode);
+		$queryStr = array();
+		if($searchKeys['gn']){
+			$queryStr[] = "@goods_name {$searchKeys['gn']}";
+		}
 		
 		if($avaibleCode){
-			$results = $client->query(str_replace(',','|',$avaibleCode),'goods_recent');
+			$queryStr[] = "@goods_code ".str_replace(',','|',$avaibleCode);
+		}
+		
+		if($queryStr){
+			$results = $client->query(implode(' ',$queryStr),'goods_recent');
 			/*
 			 * 
 			 * 多个查询
@@ -115,13 +154,13 @@ class Goods extends MyYdzj_Controller {
 			
 			$results = $client->RunQueries();
 			*/
-			
 		}else{
-			
 			$results = $client->query('','goods_recent');
 		}
 		
-		//var_dump($results);
+		
+		//print_r($results);
+		//file_put_contents('debug.txt',print_r($results,true));
 		
 		if($results['matches'] && $results['status'] === 0){
 			$condition['where_in'][] = array(
@@ -147,7 +186,6 @@ class Goods extends MyYdzj_Controller {
 			$this->assign('list',$list['data']);
 		}
 		
-		//print_r($result);
 		
 		/*
 		foreach($searchKeys as $sk => $sv){
@@ -168,7 +206,9 @@ class Goods extends MyYdzj_Controller {
 		}
 		$userList = $this->Member_Model->getUserListByIds($uid,'uid,nickname,qq,mobile');
 		//print_r($userList);
+		
 		$this->assign('userList',$userList);
+		
 		
 		$this->display();
 	}

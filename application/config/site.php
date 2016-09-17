@@ -110,10 +110,9 @@ $config['navs'] = array(
 		'setting' => array(
 			array('title' => '站点设置','url' => 'setting/base'),
 			array('title' => '上传设置','url' => 'upload/param'),
-			array('title' => 'SEO设置','url' => 'setting/seoset'),
+			array('title' => 'SEO设置','url' => 'seo/index'),
 			array('title' => '消息通知','url' => 'message/email'),
 		),
-		
 		'goods' => array(
 			array('title' => '今日求货','url' => 'goods/index'),
 			array('title' => '历史求货','url' => 'goods/history'),
@@ -126,6 +125,8 @@ $config['navs'] = array(
 		'color' => 'goods',
 		'message' => 'setting',
 		'upload' => 'setting',
+		'seo' => 'setting',
+		
 		'member' => array(
 			array('title' => '会员管理','url' => 'member/index'),
 		),

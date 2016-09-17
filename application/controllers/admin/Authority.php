@@ -8,6 +8,8 @@ class Authority extends Ydzj_Admin_Controller {
 		parent::__construct();
 		
 		$this->load->model(array('Adminuser_Model','Fn_Model','Role_Model'));
+		
+		
 	}
 	
 	public function user(){

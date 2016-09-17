@@ -17,7 +17,7 @@
 	        <li>{form_error('auth_code')}</li>
             <li class="row rel">
 	            <input id="authcode_text" class="at_txt" type="text" autocomplete="off" name="auth_code" value="{set_value('auth_code')}" placeholder="请输入4位验证码"/>
-	            <img class="codeimg" src="{site_url('captcha')}" title="点击图片刷新"/>
+	            <div class="codeimg" title="点击图片刷新">正在获取验证码...</div>
 	        </li>
 	        <li class="row"><input class="master_btn" type="submit" name="login" value="登陆"/></li>
 	        <li class="row clearfix">
@@ -27,6 +27,17 @@
 	    </form>
 	</ul>
 </div>
+
+<script>
+    $(function(){
+        setTimeout(function(){
+            $.getJSON('{site_url('captcha/index')}',function(json){
+	            $(".codeimg").html(json.img);
+	        });
+        },500);
+    });
+</script>
+
 {else}
 您已登陆 ,点击进入<a href="{site_url('my')}"> 个人中心 </a>  <a href="{site_url('member/logout')}">退出</a>
 {/if}

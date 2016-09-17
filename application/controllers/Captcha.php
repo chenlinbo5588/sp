@@ -28,11 +28,14 @@ class Captcha extends Ydzj_Controller {
 		$cap = create_captcha($vals);
 		$this->session->set_userdata('auth_code', $word);
 		
+		//print_r($cap);
+		
 		header('Pragma:no-cache');
 		header('Cache-control:no-cache');
-		header("ContentType: image/jpeg");
+		header('Content-Type: text/json');
 		
-		echo file_get_contents(ROOTPATH.'/static/img/captcha/'.$cap['filename']);
+		echo json_encode(array('img' => $cap['image']));
+		//echo file_get_contents(ROOTPATH.'/static/img/captcha/'.$cap['filename']);
     }
 
 }

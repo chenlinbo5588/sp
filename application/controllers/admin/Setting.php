@@ -7,6 +7,12 @@ class Setting extends Ydzj_Admin_Controller {
 		parent::__construct();
 		$this->load->library(array('Admin_service','Attachment_service'));
 		$this->attachment_service->setUserInfo($this->_adminProfile['basic']);
+		
+		$this->assign('moduleTitle','站点设置');
+		$this->_subNavs = array(
+			array('url' => 'setting/base', 'title' => '基本设置'),
+			array('url' => 'setting/dump','title' => '防灌水设置'),
+		);
 	}
 	
 	

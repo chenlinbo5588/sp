@@ -99,8 +99,7 @@ class Member extends Ydzj_Controller {
 				$this->assign('returnUrl', $this->input->get('returnUrl'));
 			}
 			
-			$this->assign('loginname',get_cookie('loginname'));
-			
+			$this->assign('loginname',$this->input->get_cookie('loginname'));
 			
 		}
 		

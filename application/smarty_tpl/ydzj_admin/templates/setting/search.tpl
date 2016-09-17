@@ -1,14 +1,4 @@
 {include file="common/main_header.tpl"}
-  <div class="fixed-bar">
-    <div class="item-title">
-      <h3>搜索设置</h3>
-      <ul class="tab-base">
-      	<li><a class="current"><span>搜索设置</span></a></li>
-      </ul>
-     </div>
-  </div>
-  <div class="fixed-empty"></div>
-  <div class="feedback">{$feedback}</div>
   {form_open(admin_site_url('setting/search'),'name="form1"')}
     <table class="table tb-type2">
       <tbody>

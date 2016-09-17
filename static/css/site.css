@@ -311,6 +311,10 @@ input[type=text].validation_error {
     width:100%;
 }
 
+.stxt {
+	width:60px;
+}
+
 .pagination { padding: 2px; }
 .pagination a {
   padding: 5px 10px;
@@ -435,9 +439,8 @@ table.fulltable {
 }
 
 
-
 .fulltable thead th , .fulltable tbody td {
-	border:1px solid #1AA169;
+	border:1px solid #CBCBCB;
 	border-width:1px 0 1px 0;
 	font-size:14px;
 	padding: 3px;
@@ -701,11 +704,26 @@ table.fulltable {
 	margin-left:160px;
 }
 
+.goods_search {
+	position:relative;
+}
+
+.goods_search .ftitle {
+	display:inline-block;
+	width:120px;
+	
+}
+
 
 .goods_search textarea {
-	
 	width:100%;
 	height:110px;
+}
+
+.goods_search .searchtip {
+	position:absolute;
+	right:0px;
+	top:0px;
 }
 
 

@@ -1,15 +1,4 @@
 {include file="common/main_header.tpl"}
-  <div class="fixed-bar">
-    <div class="item-title">
-      <h3>上传设置</h3>
-      	<ul class="tab-base">
-	      	<li><a class="current"><span>上传参数</span></a></li>
-	      	<li><a href="{admin_site_url('upload/default_image')}" ><span>默认图片</span></a></li>
-      	</ul>
-      </div>
-  </div>
-  <div class="fixed-empty"></div>
-  <div class="feedback">{$feedback}</div>
   {form_open(admin_site_url('upload/param'),'name="settingForm"')}
     <table class="table tb-type2">
       <tbody>

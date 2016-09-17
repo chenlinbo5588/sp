@@ -1,15 +1,4 @@
 {include file="common/main_header.tpl"}
-  <div class="fixed-bar">
-    <div class="item-title">
-      <h3>消息通知</h3>
-      <ul class="tab-base">
-      	<li><a href="{admin_site_url('message/email')}" ><span>邮件设置</span></a></li>
-      	<li><a  class="current"><span>消息模板</span></a></li>
-      </ul>
-     </div>
-  </div>
-  <div class="fixed-empty"></div>
-  
   {form_open(admin_site_url('message/email_tpl'),'id="formSearch" name="formSearch"')}
     <input type="hidden" name="page" value=""/>
     <input type="hidden" name="submit_type" id="submit_type" value="" />

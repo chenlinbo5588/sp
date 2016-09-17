@@ -15,7 +15,7 @@
 		        <li class="tip">{form_error('auth_code')}</li>
 		        <li class="row rel">
 		            <input id="authcode_text" class="at_txt" type="text" autocomplete="off" name="auth_code" value="{set_value('auth_code')}" placeholder="请输入4位验证码"/>
-		            <img class="codeimg" id="authImg" src="{site_url('captcha')}" title="点击图片刷新"/>
+		            <div class="codeimg" id="authImg" title="点击图片刷新">正在获取验证码...</div>
 		        </li>
 		        <li class="row"><input class="master_btn" type="submit" name="login" value="登陆"/></li>
 		        <li class="row clearfix">
@@ -29,13 +29,22 @@
 		    </form>
 	    </ul>
 	</div>
-
-	<script>
-	var imgUrl = "{site_url('captcha')}";
-	$(function(){
-		$("#authImg").bind("click",function(){
-			$("#authImg").attr("src",imgUrl + "?t=" + Math.random());
-		});
-	});
+    <script>
+        var imgUrl = "{site_url('captcha/index')}";
+	    $(function(){
+	        var refreshImg = function(json){
+	           $(".codeimg").html(json.img);
+	        };
+	        
+	        setTimeout(function(){
+	            $.getJSON(imgUrl,refreshImg);
+	        },500);
+	        
+	        $("#authImg").bind("click",function(){
+	            setTimeout(function(){
+	                $.getJSON(imgUrl + "?t=" + Math.random(),refreshImg);
+	            },500);
+	        });
+	    });
 	</script>
 {include file="common/footer.tpl"}
