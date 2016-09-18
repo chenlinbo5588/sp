@@ -989,7 +989,7 @@ function validateAuthCode($val){
 	
 	$ci = & get_instance();
 	$word = $ci->session->userdata('auth_code');
-	if(strtolower($val) == strtolower($word)){
+	if(!empty(trim($word)) &&  strtolower($val) == strtolower($word)){
 		return true;
 	}else{
 		$ci->form_validation->set_message('validateAuthCode', '对不起,{field} 输入不正确');

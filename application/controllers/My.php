@@ -69,7 +69,7 @@ class My extends MyYdzj_Controller {
 			}
 			
 			if($setOk){
-				redirect('my');
+				js_redirect('my');
 			}else{
 				$this->display('my/set_username');
 			}
@@ -172,7 +172,7 @@ class My extends MyYdzj_Controller {
 					//不需要设置地区了
 					$this->_jumpToTeam();
 				}else if('my' == $inviteFrom){
-					redirect('my');
+					js_redirect('my');
 				}else{
 					$this->load->library('Common_District_service');
 					$this->_prepareSetCity();
@@ -209,7 +209,7 @@ class My extends MyYdzj_Controller {
 			$targetUrl = $match[1].'?param='.urlencode($match[2]);
 		}
 		
-		redirect($targetUrl);
+		js_redirect($targetUrl);
 	}
 	
 	

@@ -16,8 +16,8 @@
 	        </li>
 	        <li>{form_error('auth_code')}</li>
             <li class="row rel">
-	            <input id="authcode_text" class="at_txt" type="text" autocomplete="off" name="auth_code" value="{set_value('auth_code')}" placeholder="请输入4位验证码"/>
-	            <div class="codeimg" title="点击图片刷新">正在获取验证码...</div>
+	            <input id="authcode_text" class="at_txt" type="text" autocomplete="off" name="auth_code" value="{set_value('auth_code')}" placeholder="请输入右侧图片中4位验证码"/>
+	            <div class="codeimg" id="authImg" title="点击图片刷新">正在获取验证码...</div>
 	        </li>
 	        <li class="row"><input class="master_btn" type="submit" name="login" value="登陆"/></li>
 	        <li class="row clearfix">
@@ -29,12 +29,23 @@
 </div>
 
 <script>
+    var imgUrl = "{site_url('captcha/index')}";
+    var refreshImg = function(json){
+       $(".codeimg").html(json.img);
+    };
+
     $(function(){
         setTimeout(function(){
-            $.getJSON('{site_url('captcha/index')}',function(json){
-	            $(".codeimg").html(json.img);
-	        });
+            $.getJSON(imgUrl,refreshImg);
+            $(".codeimg").html("正在刷新....");
         },500);
+        
+        $("#authImg").bind("click",function(){
+            setTimeout(function(){
+                $.getJSON(imgUrl + "?t=" + Math.random(),refreshImg);
+                $(".codeimg").html("正在刷新....");
+            },500);
+        });
     });
 </script>
 

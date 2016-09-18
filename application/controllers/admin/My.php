@@ -9,13 +9,12 @@ class My extends Ydzj_Admin_Controller {
 	
 	public function index()
 	{
-		//print_r($this->session->all_userdata());
 		$this->display();
 	}
 	
 	public function logout()
 	{
 		$this->session->unset_userdata($this->_adminProfileKey);
-		redirect(site_url('member/admin_login'));
+		js_redirect('member/admin_login');
 	}
 }

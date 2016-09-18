@@ -1,6 +1,3 @@
-/**
- * 注册
- */
 $(function(){
 	$("input[name=authCodeBtn]").bind("click",function(e){
 		
@@ -47,25 +44,4 @@ $(function(){
 			}
 		})
 	});
-	
-	
-	$("#registerForm").bind("submit",function(e){
-		var mobile = $("input[name=mobile]").val();
-		if(!regMobile.test(mobile)){
-			alert("请输入正确的手机号码");
-			$("input[name=mobile]").focus();
-			return false;
-		}
-		
-		
-		if($("input[name=auth_code]").val() == '' ){
-			alert("请输入手机验证码");
-			$("input[name=auth_code]").focus();
-			return false;
-		}
-		
-		
-		return true;
-	});
-	
 });

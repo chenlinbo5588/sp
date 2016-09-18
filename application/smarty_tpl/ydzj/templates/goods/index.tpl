@@ -7,7 +7,7 @@
                 <li>
                     <label class="ftitle">名称</label>
                     <input type="text" class="mtxt" name="gn" value="{$smarty.post.gn}"/>
-                    <label class="ftitle">尺寸(CN)留空不限定</label>
+                    <label class="ftitle">尺寸</label>
                     <input type="text" name="s1" class="stxt" value="{$smarty.post.s1}" placeholder="尺寸下限"/>
                     <input type="text" name="s2" class="stxt" value="{$smarty.post.s2}" placeholder="尺寸上限(CN)"/>
                     <label class="ftitle">性别</label>
@@ -16,10 +16,10 @@
                     <label><input type="radio" name="sex" value="2" {if $smarty.post.sex == 2}checked{/if}/>女</label>
                 </li>
                 <li>
-                    <label class="ftitle">期望价格范围(留空不限定)</label>
+                    <label class="ftitle">价格范围</label>
                     <input type="text" name="pr1" class="stxt" value="{if $smarty.post.pr1}{$smarty.post.pr1}{/if}" placeholder="最低价"/>
                     <input type="text" name="pr2" class="stxt" value="{if $smarty.post.pr2}{$smarty.post.pr2}{/if}" placeholder="最高价"/>
-                    <label class="ftitle">剩余数量范围</label>
+                    <label class="ftitle">剩余数量</label>
                     <input type="text" name="cn1" class="stxt" value="{if $smarty.post.cn1}{$smarty.post.cn1}{/if}" placeholder="最低剩余"/>
                     <input type="text" name="cn2" class="stxt" value="{if $smarty.post.cn2}{$smarty.post.cn2}{/if}" placeholder="最高剩余"/>
                 </li>

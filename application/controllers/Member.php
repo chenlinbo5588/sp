@@ -36,7 +36,7 @@ class Member extends Ydzj_Controller {
 	{
 		
 		if($this->isLogin()){
-			redirect('my');
+			js_redirect('my');
 		}
 		
 		if($this->isPostRequest()){
@@ -80,9 +80,9 @@ class Member extends Ydzj_Controller {
 					
 					$url = $this->input->post('returnUrl');
 					if(!empty($url) && isLocalUrl($url)){
-						redirect($url);
+						js_redirect($url);
 					}else{
-						redirect('my/index');
+						js_redirect('my/index');
 					}
 					
 				}else{
@@ -198,7 +198,7 @@ class Member extends Ydzj_Controller {
 				);
 				
 			$this->load->library('Verify_service');
-			$this->form_validation->set_rules('auth_code','验证码', array(
+			$this->form_validation->set_rules('mobile_auth_code','手机验证码', array(
 						'required',
 						array(
 							'authcode_callable['.$this->input->post('mobile').']',
@@ -208,7 +208,7 @@ class Member extends Ydzj_Controller {
 						)
 					),
 					array(
-						'authcode_callable' => '验证码不正确'
+						'authcode_callable' => '手机验证码不正确'
 					)
 				);
 			
@@ -229,8 +229,11 @@ class Member extends Ydzj_Controller {
 			*/
 			
 			$this->form_validation->set_rules('qq','用户QQ号码', 'required|numeric|min_length[4]|max_length[15]');
+			$this->form_validation->set_rules('email','用户常用邮箱', 'required|valid_email');
 			$this->form_validation->set_rules('psw','密码','required|alpha_dash|min_length[6]|max_length[12]');
 			$this->form_validation->set_rules('psw_confirm','密码确认','required|matches[psw]');
+			$this->form_validation->set_rules('auth_code','验证码','required|callback_validateAuthCode');
+			
 			//$this->form_validation->set_rules('agreee_licence','同意注册条款','required');
 			
 			for($i = 0; $i < 1; $i++){
@@ -251,6 +254,7 @@ class Member extends Ydzj_Controller {
 					'sid' => $this->session->session_id,
 					'mobile' => $this->input->post('mobile'),
 					'nickname' => $this->input->post('mobile'),
+					'email' => $this->input->post('email'),
 					'qq' => $this->input->post('qq'),
 					'password' => $this->input->post('psw'),
 					'status' => -2,
@@ -267,9 +271,16 @@ class Member extends Ydzj_Controller {
 				$userInfo = $this->member_service->getUserInfoByMobile($this->input->post('mobile'));
 				$this->_rememberLoginName($this->input->post('mobile'));
 				
+				
+				$this->load->library('Message_service');
+				//$this->message_service->sendEmail('email_active',$addParam['email']);
+				
+				/*
 				$this->session->set_userdata(array(
 					'profile' => array('basic' => $userInfo)
 				));
+				*/
+				
 				
 				$registerOk = true;
 			}
@@ -282,7 +293,7 @@ class Member extends Ydzj_Controller {
 		$this->assign('feedback',$feedback);
 		
 		if($registerOk){
-			redirect('my');
+			js_redirect('member/login');
 		}else{
 			$this->seoTitle('用户注册');
 			$this->display();
@@ -298,8 +309,14 @@ class Member extends Ydzj_Controller {
 			$this->session->unset_userdata('profile');
 		}
 		
-		redirect('member/login');
+		js_redirect('member/login');
 	}
 	
+	
+	public function forget(){
+		
+		
+		$this->display();
+	}
 	
 }

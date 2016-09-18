@@ -618,7 +618,7 @@ table.fulltable {
 	padding: 10px 5px;
 }
 
-#loginPanel .codeimg {
+#loginPanel .codeimg ,#register .codeimg {
     position: absolute;
     right: 8px;
     cursor: pointer;
@@ -717,7 +717,7 @@ table.fulltable {
 
 .goods_search textarea {
 	width:100%;
-	height:110px;
+	height:40px;
 }
 
 .goods_search .searchtip {

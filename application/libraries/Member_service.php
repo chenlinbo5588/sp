@@ -30,21 +30,32 @@ class Member_service extends Base_service {
 		
 		$userInfo = self::$memberModel->getFirstByKey($param['mobile'],'mobile');
 		
-		if(!empty($userInfo)){
-			if($userInfo['password'] == $param['password']){
-				unset($userInfo['password']);
-				
-				if($userInfo['freeze'] == 'Y'){
-					$result['message'] = '您的账号已被冻结,请联系网站客服人员';
-				}else{
-					$result = $this->successRetun(array('basic' => $userInfo));
-				}
-				
-			}else{
-				$result['message'] = '密码错误';
+		
+		for($i = 0; $i < 1; $i++){
+			
+			if(empty($userInfo)){
+				$result['message'] = '用户不存在';
+				break;
 			}
-		}else{
-			$result['message'] = '用户不存在';
+			
+			if($userInfo['freeze'] == 'Y'){
+				$result['message'] = '您的账号已被冻结,请联系网站客服人员';
+				break;
+			}
+			
+			/*
+			if($userInfo['email_status'] == 0){
+				$result['message'] = '您的账号尚未验证邮箱,暂时不能登录';
+				break;
+			}
+			*/
+			
+			if($userInfo['password'] != $param['password']){
+				$result['message'] = '密码错误';
+				break;
+			}
+			
+			$result = $this->successRetun(array('basic' => $userInfo));
 		}
 		
 		return $result;

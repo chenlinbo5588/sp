@@ -14,6 +14,7 @@ $entity = array(
 'aid' => 'mediumint',
 'avatar_s' => 'varchar',
 'avatar_status' => 'tinyint',
+'email_status' => 'tinyint',
 'inviter_uid' => 'mediumint',
 'expired' => 'int',
 'last_login' => 'int',
