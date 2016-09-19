@@ -15,6 +15,11 @@ class Http_Client {
         //$this->_CI = & get_instance();
     }
     
+    
+    public function getDefaultHttpHeader(){
+    	return array();
+    }
+    
     public function request($param, $return = true){
         
         $curl = curl_init();
@@ -40,8 +45,18 @@ class Http_Client {
 		} else {
 			$param['header'] = true;
 		}
+		
 		@curl_setopt($curl, CURLOPT_HEADER, $param['header']);
         //curl_setopt($curl, CURLOPT_USERAGENT, array_rand($useragent));
+        
+        
+        $defaultHeader = $this->getDefaultHttpHeader();
+        
+        if($defaultHeader){
+        	curl_setopt($curl, CURLOPT_HTTPHEADER, $defaultHeader);
+        }
+        
+        
         /*
 		 * 处理302
 		 */
@@ -50,7 +65,7 @@ class Http_Client {
 		} else {
 			$param['location'] = true;
 		}
-		@curl_setopt($curl, CURLOPT_FOLLOWLOCATION, $param['location']);
+		curl_setopt($curl, CURLOPT_FOLLOWLOCATION, $param['location']);
 
 		unset($param['location']);
         
@@ -58,7 +73,7 @@ class Http_Client {
 		 * exec执行结果是否保存到变量中
 		 */
 		if (true === $return) {
-			@curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 		}
 
         if(strpos($param['url'],'http') === false){

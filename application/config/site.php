@@ -7,6 +7,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $config['api_secret'] = 'b53209f0e4d2b2335d726e4e381511d59d22a31f';
 $config['allowed_img_types'] = 'jpg|jpeg';
 
+
+
 /**
  * 默认图片大小
  */

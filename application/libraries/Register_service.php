@@ -7,6 +7,7 @@ class Register_service extends Base_service {
 		parent::__construct();
 		
 		self::$CI->load->model('Security_Control_Model');
+		self::$CI->load->library('Verify_service');
 	}
 	
 	
@@ -49,6 +50,71 @@ class Register_service extends Base_service {
 		
 		return $count;
 	}
+	
+	
+	/**
+	 * 会员增加公共验证规则
+	 */
+	public function memberAddRules(){
+		
+		
+		self::$form_validation->reset_validation();
+		self::$form_validation->set_rules('mobile','手机号',array(
+					'required',
+					'valid_mobile',
+					array(
+						'loginname_callable[mobile]',
+						array(
+							self::$memberModel,'isUnqiueByKey'
+						)
+					)
+				),
+				array(
+					'loginname_callable' => '%s已经被注册'
+				)
+			);
+			
+		
+		self::$form_validation->set_rules('mobile_auth_code','手机验证码', array(
+					'required',
+					array(
+						'authcode_callable['.self::$CI->input->post('mobile').']',
+						array(
+							self::$CI->verify_service,'validateAuthCode'
+						)
+					)
+				),
+				array(
+					'authcode_callable' => '手机验证码不正确'
+				)
+			);
+		
+		/*
+		$this->form_validation->set_rules('nickname','昵称', array(
+					'required',
+					array(
+						'nickname_callable[nickname]',
+						array(
+							$this->Member_Model,'isUnqiueByKey'
+						)
+					)
+				),
+				array(
+					'nickname_callable' => '%s已经被占用'
+				)
+			);
+		*/
+		
+		self::$form_validation->set_rules('qq','用户QQ号码', 'required|numeric|min_length[4]|max_length[15]');
+		self::$form_validation->set_rules('email','用户常用邮箱', 'required|valid_email');
+		self::$form_validation->set_rules('psw','密码','required|alpha_dash|min_length[6]|max_length[12]');
+		self::$form_validation->set_rules('psw_confirm','密码确认','required|matches[psw]');
+		self::$form_validation->set_rules('auth_code','验证码','required|callback_validateAuthCode');
+		
+		//self::$form_validation->set_rules('agreee_licence','同意注册条款','required');
+		
+	}
+	
 	
 	
 	/**

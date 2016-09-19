@@ -17,8 +17,7 @@ class My extends MyYdzj_Controller {
 	
 	public function index()
 	{
-		//$this->assign('teamCount',$this->);
-		//phpinfo();
+		//print_r($this->session->all_userdata());
 		$this->load->library('Common_District_service');
 		
 		$ds = array();
@@ -30,7 +29,9 @@ class My extends MyYdzj_Controller {
 		$this->seoTitle('个人中心');
 		$this->assign('userDs',$this->common_district_service->getDistrictByIds($ds));
 		$this->assign('inviteUrl',site_url('member/register?inviter='.$this->_profile['basic']['uid']));
-		$this->display('my/index');
+		
+		
+		$this->display();
 	}
 	
 	

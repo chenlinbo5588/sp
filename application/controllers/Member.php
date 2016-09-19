@@ -60,22 +60,9 @@ class Member extends Ydzj_Controller {
 					'password' => $this->input->post('password')
 				));
 				
-				
 				if($result['code'] == 'success'){
-					$this->session->set_userdata(array(
-						'profile' => $result['data'],
-						'lastvisit' => $this->_reqtime
-					));
 					
-					$this->member_service->updateUserInfo(
-						array(
-							'sid' => $this->session->session_id,
-							'last_login' => $this->_reqtime,
-							'last_loginip' => $this->input->ip_address()
-						),
-						$result['data']['basic']['uid']);
-						
-						
+					$this->member_service->beginUserSession($result['data']);
 					$this->_rememberLoginName($this->input->post('loginname'));
 					
 					$url = $this->input->post('returnUrl');
@@ -90,17 +77,8 @@ class Member extends Ydzj_Controller {
 				}
 			}
 		}else{
-			//记住用户点击时  因为需要登录的返回链接
-			$teamJoinParam = $this->input->get('teamjoin');
-			//$string = $this->encrypt->decode($teamJoinParam,$this->config->item('encryption_key'));
-			if($teamJoinParam){
-				$this->assign('returnUrl',site_url('team/invite/?param='.$teamJoinParam));
-			}else{
-				$this->assign('returnUrl', $this->input->get('returnUrl'));
-			}
-			
+			$this->assign('returnUrl', $this->input->get('returnUrl'));
 			$this->assign('loginname',$this->input->get_cookie('loginname'));
-			
 		}
 		
 		$this->seoTitle('登陆');
@@ -181,68 +159,14 @@ class Member extends Ydzj_Controller {
 			$this->assign('inviteFrom',$inviteFrom);
 			$this->assign('returnUrl',$this->input->post('returnUrl'));
 			
-			$this->form_validation->reset_validation();
-			$this->form_validation->set_rules('mobile','手机号',array(
-						'required',
-						'valid_mobile',
-						array(
-							'loginname_callable[mobile]',
-							array(
-								$this->Member_Model,'isUnqiueByKey'
-							)
-						)
-					),
-					array(
-						'loginname_callable' => '%s已经被注册'
-					)
-				);
-				
-			$this->load->library('Verify_service');
-			$this->form_validation->set_rules('mobile_auth_code','手机验证码', array(
-						'required',
-						array(
-							'authcode_callable['.$this->input->post('mobile').']',
-							array(
-								$this->verify_service,'validateAuthCode'
-							)
-						)
-					),
-					array(
-						'authcode_callable' => '手机验证码不正确'
-					)
-				);
-			
-			/*
-			$this->form_validation->set_rules('nickname','昵称', array(
-						'required',
-						array(
-							'nickname_callable[nickname]',
-							array(
-								$this->Member_Model,'isUnqiueByKey'
-							)
-						)
-					),
-					array(
-						'nickname_callable' => '%s已经被占用'
-					)
-				);
-			*/
-			
-			$this->form_validation->set_rules('qq','用户QQ号码', 'required|numeric|min_length[4]|max_length[15]');
-			$this->form_validation->set_rules('email','用户常用邮箱', 'required|valid_email');
-			$this->form_validation->set_rules('psw','密码','required|alpha_dash|min_length[6]|max_length[12]');
-			$this->form_validation->set_rules('psw_confirm','密码确认','required|matches[psw]');
-			$this->form_validation->set_rules('auth_code','验证码','required|callback_validateAuthCode');
-			
-			//$this->form_validation->set_rules('agreee_licence','同意注册条款','required');
+			$this->load->library(array('Register_service'));
 			
 			for($i = 0; $i < 1; $i++){
-				
+				$this->register_service->memberAddRules();
 				if(!$this->form_validation->run()){
 					break;
 				}
 				
-				$this->load->library(array('Member_service','Register_service'));
 				$todayRegistered = $this->register_service->getIpLimit($this->input->ip_address());
 				
 				if($todayRegistered > 5){
@@ -268,11 +192,27 @@ class Member extends Ydzj_Controller {
 					break;
 				}
 				
-				$userInfo = $this->member_service->getUserInfoByMobile($this->input->post('mobile'));
+				$this->load->library(array('Yunxin_api','Message_service'));
+				$resp = $this->yunxin_api->createId($addParam['mobile'],$addParam['nickname']);
+				
+				//print_r($resp);
+				$this->load->model(array('Yunxin_Model','Yunxin_Retry_Model'));
+				
+				if($resp['code'] != YunXin_RESP_OK){
+					$this->Yunxin_Retry_Model->_add(array(
+						'uid' => $result['data']['uid'],
+					));
+				}else{
+					$this->Yunxin_Model->_add(array(
+						'uid' => $result['data']['uid'],
+						'token' => $resp['info']['token'],
+						'accid' => $resp['info']['accid']
+					));
+				}
+				
+				$userInfo = $this->Member_Model->getFirstByKey($this->input->post('mobile'),'mobile');
 				$this->_rememberLoginName($this->input->post('mobile'));
 				
-				
-				$this->load->library('Message_service');
 				//$this->message_service->sendEmail('email_active',$addParam['email']);
 				
 				/*
@@ -280,7 +220,6 @@ class Member extends Ydzj_Controller {
 					'profile' => array('basic' => $userInfo)
 				));
 				*/
-				
 				
 				$registerOk = true;
 			}

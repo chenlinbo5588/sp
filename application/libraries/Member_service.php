@@ -115,4 +115,25 @@ class Member_service extends Base_service {
 		),array('uid' => $param['uid']));
 	}
 	
+	
+	public function beginUserSession($user){
+		
+		self::$CI->load->model('Yunxin_Model');
+		$pushUser = self::$CI->Yunxin_Model->getFirstByKey($user['basic']['uid'],'uid');
+		$user['push'] = $pushUser;
+		
+		self::$CI->session->set_userdata(array(
+			self::$CI->_profileKey => $user,
+			$this->_lastVisitKey => $this->_reqtime
+		));
+		
+		$this->updateUserInfo(
+			array(
+				'sid' => self::$CI->session->session_id,
+				'last_login' => self::$CI->input->server('REQUEST_TIME'),
+				'last_loginip' => self::$CI->input->ip_address()
+			),
+			$user['basic']['uid']);
+			
+	}
 }

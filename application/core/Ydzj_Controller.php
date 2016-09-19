@@ -11,6 +11,7 @@ class Ydzj_Controller extends MY_Controller {
 	
 	public $_profile;
 	public $_profileKey;
+	
 	public $_adminProfile;
 	public $_adminProfileKey;
 	public $_adminLastVisitKey;
@@ -21,9 +22,12 @@ class Ydzj_Controller extends MY_Controller {
 	public function __construct(){
 		parent::__construct();
 		
+		$this->_lastVisitKey = 'lastvisit';
 		$this->_profileKey = 'profile';
+		
 		$this->_adminProfileKey = 'admin_profile';
 		$this->_adminLastVisitKey = 'admin_lastvisit';
+		
 		$this->_profile = array();
 		$this->_adminProfile = array() ;
 		

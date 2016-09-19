@@ -17,6 +17,8 @@ class Tools extends MY_Controller {
 	}
 	
 	
+	
+	
 	public function batch_insert(){
 		
 		$goodsName = array(
@@ -482,6 +484,18 @@ EOT;
 		
 	}
 	
+	
+	public function test_yunxin(){
+		
+		
+		$this->load->config('site');
+		$this->load->library(array('Yunxin_api'));
+		
+		//foreach()
+		$resp = $this->yunxin_api->createId('15689895424','15689895424');
+		
+		var_dump($resp);
+	}
 	
 	/**
 	 * 首页
