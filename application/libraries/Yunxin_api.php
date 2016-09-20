@@ -8,27 +8,27 @@ define('YunXin_RESP_OK',200);
  * 
  */
 class Yunxin_api extends Http_Client {
-    
     public $appKey;
+    public $appSecret;
     
-    public function __construct(){
+    public function __construct($config = array()){
     	parent::__construct();
     	
-    	$ci = get_instance();
-    	
-    	$ci->load->config('yunxin');
-    	$yunxin = config_item('yunxin');
-    	$this->_baseURL = $yunxin['url'];
+    	if($config){
+    		$this->initConfig($config);
+    	}
+    }
+    
+    public function initConfig($yunxin){
+    	$this->baseURL = $yunxin['url'];
     	$this->appKey = $yunxin['appkey'];
     	$this->appSecret = $yunxin['secret'];
     }
     
     
-    
     public function getDefaultHttpHeader(){
     	$headers = $this->custom_header();
     	$headers[] = 'Content-Type: application/x-www-form-urlencoded;charset=utf-8';
-    	
     	
     	//print_r($headers);
     	return $headers;
@@ -83,7 +83,6 @@ class Yunxin_api extends Http_Client {
     
     
     public function getToken($mobile){
-    	
     	$str = http_build_query(array(
     		'accid' => $mobile
     	
@@ -96,10 +95,7 @@ class Yunxin_api extends Http_Client {
         );
         
         $respone = $this->request($param);
-        
-        
         return json_decode($respone,true);
-         
     }
     
 }

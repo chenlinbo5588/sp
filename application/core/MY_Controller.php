@@ -167,6 +167,8 @@ class MY_Controller extends CI_Controller {
     
     protected function _initLibrary(){
     	/* @todo 需要更改为 lazy connection */
+    	$this->load->config('site');
+    	
     	$this->load->database();
     	
 		$this->load->helper(array('form','directory','file', 'url','string'));

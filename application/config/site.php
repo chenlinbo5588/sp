@@ -7,6 +7,20 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $config['api_secret'] = 'b53209f0e4d2b2335d726e4e381511d59d22a31f';
 $config['allowed_img_types'] = 'jpg|jpeg';
 
+$config['yunxin'] = array(
+	'url' => 'https://api.netease.im/nimserver/',
+	'appkey' => 'a54919705abd0863a8d3cc49cf8eb14e',
+	'secret' => 'e4294723dba9'
+);
+
+$config['huanxin'] = array(
+	'url' => 'https://a1.easemob.com/',
+	'appid' => 1,
+	'appkey' => 'shonex#sh1',
+	'client_id' => 'YXA6-XsmMH2XEeaP9mOxWdAA3Q',
+	'secret' => 'YXA6gvDBESUMtptDHPZearXT4d8YdVE',
+	'open_type' => 1
+);
 
 
 /**

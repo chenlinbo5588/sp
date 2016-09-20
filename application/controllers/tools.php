@@ -485,9 +485,21 @@ EOT;
 	}
 	
 	
+	public function test_huanxin(){
+		$memberList = $this->Member_Model->getList();
+		$pushApi = $this->base_service->getPushObject();
+		//var_dump($pushApi);
+		
+		foreach($memberList as $member){
+			//print_r($member);
+			//$json = $pushApi->createId($member['uid'],$member['mobile'],$member['nickname'],$member['password']);
+			//print_r($json);
+		}
+		
+	}
+	
+	
 	public function test_yunxin(){
-		
-		
 		$this->load->config('site');
 		$this->load->library(array('Yunxin_api'));
 		

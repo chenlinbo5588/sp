@@ -192,35 +192,13 @@ class Member extends Ydzj_Controller {
 					break;
 				}
 				
-				$this->load->library(array('Yunxin_api','Message_service'));
-				$resp = $this->yunxin_api->createId($addParam['mobile'],$addParam['nickname']);
-				
-				//print_r($resp);
-				$this->load->model(array('Yunxin_Model','Yunxin_Retry_Model'));
-				
-				if($resp['code'] != YunXin_RESP_OK){
-					$this->Yunxin_Retry_Model->_add(array(
-						'uid' => $result['data']['uid'],
-					));
-				}else{
-					$this->Yunxin_Model->_add(array(
-						'uid' => $result['data']['uid'],
-						'token' => $resp['info']['token'],
-						'accid' => $resp['info']['accid']
-					));
-				}
+				$this->load->library(array('Message_service'));
+				$pushApi = $this->register_service->getPushObject();
+				$resp = $pushApi->createId($result['data']['uid'],$addParam['mobile'],$addParam['nickname'],$addParam['password']);
 				
 				$userInfo = $this->Member_Model->getFirstByKey($this->input->post('mobile'),'mobile');
 				$this->_rememberLoginName($this->input->post('mobile'));
-				
 				//$this->message_service->sendEmail('email_active',$addParam['email']);
-				
-				/*
-				$this->session->set_userdata(array(
-					'profile' => array('basic' => $userInfo)
-				));
-				*/
-				
 				$registerOk = true;
 			}
 			

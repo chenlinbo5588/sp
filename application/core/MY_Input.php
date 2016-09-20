@@ -79,7 +79,10 @@ class MY_Input extends CI_Input {
 		if($attackevasive & 8) {
 			//echo $encryptObject->decode($this->get_cookie($visitCode), $securitySetting['authkey']);
 			list($visitcode, $visitcheck, $visittime) = explode('|', $encryptObject->decode($this->get_cookie($visitCode), $securitySetting['authkey']));
-			if(!$visitcode || !$visitcheck || !$visittime || $nowstamp - $visittime > 60 * 60 * 4 ) {
+			//var_dump($visitcode, $visitcheck, $visittime);
+			//echo $nowstamp - $visittime;
+			
+			if($visitcode && !$visitcheck && ($nowstamp - $visittime) > 14400 ) {
 				if(empty($_POST['secqsubmit']) || ($visitcode != md5($_POST['answer']))) {
 					$answer = 0;
 					$question = '';
@@ -97,6 +100,8 @@ class MY_Input extends CI_Input {
 					$this->set_cookie($visitCode,$encryptObject->encode($visitcode.'|1|'.$nowstamp,$securitySetting['authkey']), 86400);
 					//dsetcookie('visitcode', authcode($visitcode.'|1|'.TIMESTAMP, 'ENCODE'), TIMESTAMP + 816400, 1, true);
 				}
+			}else{
+				$this->set_cookie($visitCode,$encryptObject->encode($visitcode.'|0|'.$nowstamp,$securitySetting['authkey']), 86400);
 			}
 		}
 	}

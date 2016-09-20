@@ -18,7 +18,7 @@ class Base_service {
 	
 	public static function initStaticVars(){
 		
-		self::$CI = & get_instance();
+		self::$CI = get_instance();
 		self::$CI->load->model(array(
 			'Adminuser_Model',
 			'Common_District_Model'
@@ -33,6 +33,14 @@ class Base_service {
 		self::$dbInstance = self::$CI->Member_Model->getDb();
 	}
 	
+	
+	public function getPushObject(){
+		self::$CI->load->library('Huanxin_api');
+		self::$CI->huanxin_api->initConfig(config_item('huanxin'));
+		self::$CI->huanxin_api->refreshAccessToken();
+		
+		return self::$CI->huanxin_api;
+	}
 	
 	/**
      * 解析 地址名称 反过来得到 id

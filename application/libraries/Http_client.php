@@ -8,11 +8,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Http_Client {
     
-    public $_baseURL = 'https://api.weixin.qq.com';
-    //public $_CI = null;
+    public $baseURL = 'https://api.weixin.qq.com';
+    public $_CI = null;
     
     public function __construct(){
-        //$this->_CI = & get_instance();
+        $this->_CI = get_instance();
     }
     
     
@@ -77,7 +77,7 @@ class Http_Client {
 		}
 
         if(strpos($param['url'],'http') === false){
-            $param['url'] = $this->_baseURL . $param['url'];
+            $param['url'] = $this->baseURL . $param['url'];
         }
         
         if (false !== strstr($param['url'], 'https://', true)) {
