@@ -632,6 +632,18 @@ table.fulltable {
     top: 11px;
 }
 
+
+/* 客服入口 */
+.service-entry {position:fixed;bottom:0px;right:10px;z-index:2}
+.service-entry a {background-color:rgb(50, 77, 255);color:#FFF;border-radius:5px;padding:5px 8px;text-align:center;text-decoration:none;display:block;margin-bottom:10px;position:relative}
+.service-entry a:hover {
+	background-color:rgb(50, 77, 255);
+}
+.service-entry a.hint::after {content:"";background-color:#FF005D;border-radius:5px;position:absolute;width:10px;height:10px;top:-3px}
+.service-entry .icon {background:transparent url("../img/footer-icon.png") no-repeat scroll 0px 0px / 20px 75px;width:20px;height:20px;display:inline-block;vertical-align:middle}
+.service-entry .visitor {background-color:#FFF;border-radius:5px;padding:5px 8px;margin-bottom:10px;display:none;border:2px solid #4eb1f4}
+
+
 /* 后台登陆  */
 #adminlogin {
 	width:100%;

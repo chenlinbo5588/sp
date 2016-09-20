@@ -118,9 +118,11 @@ class Member_service extends Base_service {
 	
 	public function beginUserSession($user){
 		
+		/*
 		self::$CI->load->model('Yunxin_Model');
 		$pushUser = self::$CI->Yunxin_Model->getFirstByKey($user['basic']['uid'],'uid');
 		$user['push'] = $pushUser;
+		*/
 		
 		self::$CI->session->set_userdata(array(
 			self::$CI->_profileKey => $user,
