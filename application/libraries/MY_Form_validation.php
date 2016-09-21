@@ -44,6 +44,15 @@ class MY_Form_validation extends CI_Form_validation {
         
     }
     
+    
+    public function valid_nickname($nickname){
+    	if(!preg_match('/^[\x{4e00}-\x{9fa5}a-zA-Z0-9_]+$/u',$nickname)){
+    		return false;
+    	}
+    	
+    	return true;
+    }
+    
     public function valid_mobile($mobile){
         if(preg_match("/^(\+?86)?1[0-9][0-9]{1}[0-9]{8}$|15[0189]{1}[0-9]{8}$|189[0-9]{8}$/",$mobile)){   
             return true;

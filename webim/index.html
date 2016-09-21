@@ -4,14 +4,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0" />
-    <title>WebIM-DEMO</title>
+    <title>清风信息 聊天</title>
     <!--sdk-->
     <script src='sdk/dist/strophe.js'></script>
     <script src='sdk/dist/websdk-1.1.2.js'></script>
-
     <!--config-->
     <script src="demo/javascript/dist/webim.config.js"></script>
-
     <!--[if lte IE 9]>
     <script src="demo/javascript/dist/swfupload/swfupload.min.js"></script>
     <![endif]-->
@@ -21,8 +19,20 @@
         <article id='demo'></article>
         <article id='components'></article>
     </section>
-
-    <!--demo javascript-->
+    <script>
+	    function getQueryStringByName(name){
+	        var result = location.search.match(new RegExp("[\?\&]" + name+ "=([^\&]+)","i"));
+	        if(result == null || result.length < 1){
+	            return "";
+	        }
+	        return result[1];
+	    }
+	    
+	    var username = getQueryStringByName('username'),token = getQueryStringByName('token');
+    </script>
 	<script src="demo/javascript/dist/demo.js"></script>
+	<script>
+		Demo.api.dologin();
+	</script>
 </body>
 </html>

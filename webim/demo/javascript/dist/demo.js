@@ -71,7 +71,7 @@
 
 	Demo.roster = {};
 	Demo.strangers = {};
-
+	
 	Demo.IMGTYPE = {
 	    gif: 1,
 	    bmp: 1,
@@ -101,7 +101,7 @@
 	    isMultiLoginSessions: WebIM.config.isMultiLoginSessions,
 	    https: typeof WebIM.config.https === 'boolean' ? WebIM.config.https : location.protocol === 'https:',
 	    url: WebIM.config.xmppURL,
-	    isAutoLogin: false
+	    isAutoLogin: WebIM.config.isAutoLogin
 	});
 
 	Demo.api.render(document.getElementById('demo'));
@@ -528,6 +528,19 @@
 	        } else {
 	            ReactDOM.render(React.createElement(Webim, { config: WebIM.config, close: this.logout }), this.node);
 	        }
+	    },
+	    
+	    dologin : function(){
+	    	//console.log(this.api);
+	    	var options = {
+	            apiUrl: WebIM.config.apiURL,
+	            user: username,
+	            accessToken: token,
+	            pwd: token,
+	            appKey: WebIM.config.appkey
+	        };
+	    	//console.log(Demo.conn.props);
+	    	Demo.conn.open(options);
 	    },
 
 	    logout: function logout() {
@@ -22610,6 +22623,8 @@
 
 	        Demo.conn.listen({
 	            onOpened: function onOpened() {
+	            	Demo.conn.setPresence();
+	            	
 	                me.props.update({
 	                    signIn: false,
 	                    signUp: false,
@@ -24189,7 +24204,7 @@
 	    requests: {},
 	    show: function show(data) {
 
-	        !this.requests[data.from] && (this.requests[data.from] = data.from + ': ' + data.status);
+	        !this.requests[data.from] && (this.requests[data.from] = data.from + ': ' + (typeof(data.status) != "undefined" ? data.status.replace(/undefined/i,'') : ''));
 
 	        ReactDOM.render(React.createElement(Subscribe, { onClose: this.close, data: this.requests }), dom);
 	    },

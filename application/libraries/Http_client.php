@@ -103,12 +103,16 @@ class Http_Client {
             curl_setopt($curl, CURLOPT_POSTFIELDS, $param['data']);
             
         }else{
-            if($param['data']){
-                foreach($param['data'] as $key => $value){
-                    $extraParam[] = $key.'='.urlencode($value);
-                }
-            }
-            
+        	if(strtolower($param['method']) == 'put'){
+        		curl_setopt($curl, CURLOPT_PUT, true);
+        		curl_setopt($curl, CURLOPT_POSTFIELDS, $param['data']);
+        	}else{
+        		if($param['data']){
+		            foreach($param['data'] as $key => $value){
+		                $extraParam[] = $key.'='.urlencode($value);
+		            }
+		        }
+        	}
         }
         
         if($extraParam){

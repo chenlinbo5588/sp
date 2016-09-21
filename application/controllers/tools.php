@@ -18,7 +18,6 @@ class Tools extends MY_Controller {
 	
 	
 	
-	
 	public function batch_insert(){
 		
 		$goodsName = array(
@@ -482,6 +481,71 @@ EOT;
 			echo '<br/>';
 		}
 		
+	}
+	
+	
+	
+	public function test_sendtext(){
+		$pushApi = $this->base_service->getPushObject();
+		
+		$json = $pushApi->sendText(array(
+			'15689523612'
+		),random_string('alnum',5),'清风信息系统管理员');
+		
+		
+		
+		print_r($json);
+	}
+	
+	
+	
+	public function update_localpsw(){
+		$memberList = $this->Member_Model->getList();
+		//var_dump($pushApi);
+		
+		foreach($memberList as $member){
+			$newpassword = $this->encrypt->encode($member['password']);
+			$this->Member_Model->update(array(
+				'password' => $newpassword
+			),array('uid' => $member['uid']));
+			
+			//$json = $this->->updatePassword($member['uid'],$member['mobile'],$member['password']);
+			//print_r($json);
+		}
+	}
+	
+	public function update_hxpsw(){
+		set_time_limit(0);
+		
+		$memberList = $this->Member_Model->getList();
+		$pushApi = $this->base_service->getPushObject();
+		//var_dump($pushApi);
+		
+		foreach($memberList as $member){
+			$psw = $this->encrypt->decode($member['password']);
+			$json = $pushApi->updatePassword($member['uid'],$member['mobile'],$psw);
+			print_r($json);
+			
+			sleep(5);
+		}
+	}
+	
+	
+	public function test_gethxpsw(){
+		$memberList = $this->Member_Model->getList();
+		
+		foreach($memberList as $member){
+			$psw = $this->encrypt->decode($member['password']);
+			echo "{$member['mobile']}={$psw}=".md5(config_item('encryption_key').$psw)."\n";
+		}
+		
+	}
+	
+	public function test_updatepsw(){
+		$pushApi = $this->base_service->getPushObject();
+		$json = $pushApi->updatePassword(120,'15689523612','654321');
+		
+		print_r($json);
 	}
 	
 	

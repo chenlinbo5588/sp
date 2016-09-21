@@ -1,4 +1,4 @@
-{include file="common/header.tpl"}
+{include file="./my_header.tpl"}
 <div class="row warning">照片格式JPG,不大于4M,最小尺寸800x800</div>
 <div class="handle_area">
     {form_open_multipart(site_url('my/set_avatar'),"id='setAvatarForm'")}
@@ -18,7 +18,7 @@
             <label class="side_lb" for="_pic"><em>*</em>用户头像：</label>
             <input type="file" class="type-file-file" id="_pic" name="_pic" value=""  hidefocus="true"/>
             <input type='text' name='member_avatar' id='member_avatar' class='type-file-text' />
-            <input type='button' name='button' id='button' value='' class='type-file-button' />
+            <input type='button' name='button' id='button' value='' />
         </div>
         <div id="wait_loading" style="text-align:center;display:none;">
 	        <div><img class="nature" src="{resource_url('img/loading/loading.gif')}"/></div>
@@ -33,10 +33,9 @@
     </form>
 </div>
 <link href="{resource_url('js/jquery.Jcrop/jquery.Jcrop.min.css')}" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="{resource_url('js/ajaxfileupload/ajaxfileupload.js')}"></script>
 <script type="text/javascript" src="{resource_url('js/jquery.Jcrop/jquery.Jcrop.js')}"></script>
+{include file="common/ke.tpl"}
 <script>
-
 function showPreview(coords)
 {
     $('#x1').val(coords.x);
@@ -48,7 +47,9 @@ function showPreview(coords)
 }
 
 $(function(){
-    
+	
+	
+	/*
     $('input[class="type-file-file"]').change(uploadChange);
     function uploadChange(){
         var filepatd=$(this).val();
@@ -118,7 +119,7 @@ $(function(){
             }
         )
     }
-
+	*/
 });
 </script>
-{include file="common/footer.tpl"}
+{include file="./my_footer.tpl"}

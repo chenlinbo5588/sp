@@ -38,7 +38,18 @@ class Register_service extends Base_service {
 	 * 业务逻辑 用统一个 IP 不能 ，在一天只内最多只能注册 3 个
 	 */
 	public function getIpLimit($ip, $time = 86400){
+		
 		$now = self::$CI->input->server('REQUEST_TIME');
+		
+		/*
+		 * do it mannally at first
+		self::$CI->Security_Control_Model->deleteByCondition(array(
+			'where' => array(
+				'gmt_create <= ' => $now - 259200 // clear tree days before
+			),
+			'limit' => 10
+		));
+		*/
 		
 		$count = self::$CI->Security_Control_Model->getCount(array(
 			'where' => array(
@@ -89,23 +100,24 @@ class Register_service extends Base_service {
 				)
 			);
 		
-		/*
-		$this->form_validation->set_rules('nickname','昵称', array(
+		self::$form_validation->set_rules('nickname','昵称',array(
 					'required',
+					'min_length[2]',
+					'max_length[8]',
+					'valid_nickname',
 					array(
 						'nickname_callable[nickname]',
 						array(
-							$this->Member_Model,'isUnqiueByKey'
+							self::$memberModel,'isUnqiueByKey'
 						)
 					)
 				),
 				array(
-					'nickname_callable' => '%s已经被占用'
+					'nickname_callable' => '%s已经被注册'
 				)
 			);
-		*/
-		
-		self::$form_validation->set_rules('qq','用户QQ号码', 'required|numeric|min_length[4]|max_length[15]');
+			
+		self::$form_validation->set_rules('qq','用户QQ号码', 'required|numeric|min_length[5]|max_length[12]');
 		self::$form_validation->set_rules('email','用户常用邮箱', 'required|valid_email');
 		self::$form_validation->set_rules('psw','密码','required|alpha_dash|min_length[6]|max_length[12]');
 		self::$form_validation->set_rules('psw_confirm','密码确认','required|matches[psw]');
@@ -125,6 +137,8 @@ class Register_service extends Base_service {
 		
 		$regParam['reg_ip'] = self::$CI->input->ip_address();
 		$regParam['reg_date'] = self::$CI->input->server('REQUEST_TIME');
+		$regParam['password'] = self::$CI->encrypt->encode($regParam['password']);
+		
 		
 		$uid = self::$memberModel->_add($regParam);
 		

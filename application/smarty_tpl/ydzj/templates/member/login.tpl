@@ -12,7 +12,7 @@
 	        </li>
 	        <li>{form_error('password')}</li>
 	        <li class="row">
-	            <input id="password_text" class="at_txt" type="password" name="password" value="{set_value('password')}" placeholder="请输登陆密码"/>
+	            <input id="password_text" class="at_txt" type="password" name="password" value="" placeholder="请输登陆密码"/>
 	        </li>
 	        <li>{form_error('auth_code')}</li>
             <li class="row rel">

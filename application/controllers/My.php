@@ -30,7 +30,6 @@ class My extends MyYdzj_Controller {
 		$this->assign('userDs',$this->common_district_service->getDistrictByIds($ds));
 		$this->assign('inviteUrl',site_url('member/register?inviter='.$this->_profile['basic']['uid']));
 		
-		
 		$this->display();
 	}
 	

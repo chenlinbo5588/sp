@@ -27,7 +27,7 @@ class Huanxin_api extends Http_Client {
     
     
     /*
-     * 刷新
+     * 刷新 管理员 token
      */
     public function refreshAccessToken(){
         /**
@@ -38,7 +38,8 @@ class Huanxin_api extends Http_Client {
         if(!empty($tickets)){
         	self::$accessToken = $tickets['access_token'];
         	
-        	if(($tickets['gmt_modify'] + $tickets['expires_in']) <= $this->_CI->input->server('REQUEST_TIME')){
+        	//防止对方已经过期， 这里先提前一天重新更新
+        	if(($tickets['gmt_modify'] + $tickets['expires_in'] + 86400) <= $this->_CI->input->server('REQUEST_TIME')){
         		//过期了
         		$resp = $this->getAccessToken();
         		
@@ -80,16 +81,16 @@ class Huanxin_api extends Http_Client {
      * 
      */
     public function createId($uid,$mobile,$nickname,$password = ''){
-    	$str = json_encode(array(
+    	$str = array(
     		'username' => $mobile,
     		'nickname' => $nickname,
-    		'password' => $password
-    	));
+    		'password' => md5(config_item('encryption_key').$password)
+    	);
     	
     	$param = array(
     		'url' => '/users',
     		'method' => 'post',
-    		'data' => $str
+    		'data' => json_encode($str)
     	);
     	
     	$resp = $this->request($param);
@@ -97,29 +98,25 @@ class Huanxin_api extends Http_Client {
     	
     	//file_put_contents('debug.txt',print_r($json,true));
     	
-    	if($json['entities']){
-    		/*
-    		$this->_CI->Huanxin_Model->_add(array(
-				'uid' => $uid,
-				'username' => $json['entities'][0]['username']
-			),true);
-			*/
-    	}else{
+    	if(!$json['entities']){
     		if($json['error'] == 'duplicate_unique_property_exists'){
     			$this->_CI->Huanxin_Retry_Model->deleteByWhere(array(
 	    			'uid' => $uid
 	    		));
     		}else{
-    			$this->_CI->Huanxin_Retry_Model->_add(array(
-	    			'uid' => $uid
-	    		),true);
+    			$this->_CI->Huanxin_Retry_Model->_add(array_merge(array(
+	    			'uid' => $uid,
+	    			'action' => 'create'
+	    		),$str),true);
     		}
     	}
     	
     	return $json;
     }
     
-    
+    /**
+     * 获得管理员 token
+     */
     public function getAccessToken(){
     	$str = '{"grant_type":"client_credentials","client_id":"'.$this->client_id.'","client_secret":"'.$this->appSecret.'"}';
     	
@@ -134,20 +131,62 @@ class Huanxin_api extends Http_Client {
     	
     }
     
-    
-    public function getToken($mobile){
-    	$str = http_build_query(array(
-    		'accid' => $mobile
-    	));
+    /**
+     * 更新密码
+     */
+    public function updatePassword($uid,$username,$newpassword){
+    	$str = array(
+    		'newpassword' => md5(config_item('encryption_key').$newpassword)
+    	);
     	
     	$param = array(
-            'url' => '/user/refreshToken.action',
+    		'url' => "/users/{$username}/password",
+    		'method' => 'post',
+    		'data' => json_encode($str)
+    	);
+    	
+    	$resp = $this->request($param);
+    	$json = json_decode($resp,true);
+    	
+    	if($json['action'] != 'set user password'){
+    		$this->_CI->Huanxin_Retry_Model->_add(array_merge(array(
+    			'uid' => $uid,
+    			'password' => $str['newpassword'],
+    			'action' => 'password'
+    		),$str),true);
+    	}
+    	
+    	return $json;
+    }
+    
+    
+    
+    /**
+     * 发送文本消息
+     */
+    public function sendText($userList,$message = '',$from = ''){
+    	$str = array(
+    		"target_type" => "users",
+    		"target" => $userList, // 注意这里需要用数组，数组长度建议不大于20，即使只有一个用户，
+                                   // 也要用数组 ['u1']，给用户发送时数组元素是用户名，给群组发送时  
+                                   // 数组元素是groupid
+           "msg" => array(
+		        "type" => "txt",
+		        "msg" => $message //消息内容，参考[[start:100serverintegration:30chatlog|聊天记录]]里的bodies内容
+		   )
+    	);
+    	
+    	if($str){
+    		$str['from'] = $from;
+    	}
+    	
+    	$param = array(
+            'url' => '/messages',
             'method' => 'post',
-            'data' => $str
+            'data' => json_encode($str)
         );
         
         $respone = $this->request($param);
         return json_decode($respone,true);
     }
-    
 }

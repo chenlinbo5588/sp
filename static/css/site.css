@@ -442,9 +442,16 @@ table.fulltable {
 .fulltable thead th , .fulltable tbody td {
 	border:1px solid #CBCBCB;
 	border-width:1px 0 1px 0;
-	font-size:14px;
-	padding: 3px;
+	padding: 5px 0;
 }
+
+
+.fulltable tbody tr:hover {
+	background-color:#F3F3F3;
+}
+
+
+
 
 .cityList {
     

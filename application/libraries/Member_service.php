@@ -50,7 +50,8 @@ class Member_service extends Base_service {
 			}
 			*/
 			
-			if($userInfo['password'] != $param['password']){
+			$newpsw = self::$CI->encrypt->decode($userInfo['password']);
+			if($param['password'] != $newpsw){
 				$result['message'] = '密码错误';
 				break;
 			}
