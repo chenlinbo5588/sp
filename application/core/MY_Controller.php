@@ -9,6 +9,9 @@ class MY_Controller extends CI_Controller {
 	
 	public $_reqtime;
 	
+	protected $_subNavs;
+	protected $_breadCrumbs;
+	
 	protected $_siteSetting = array();
 	public $_seoSetting = array();
 	
@@ -23,6 +26,8 @@ class MY_Controller extends CI_Controller {
 	public function __construct(){
 		parent::__construct();
 		$this->_reqtime = $this->input->server('REQUEST_TIME');
+		$this->_subNavs = array();
+		$this->_breadCrumbs = array();
 		//$this->_verifyName = 'verify';
 		
 		$this->_initLibrary();
@@ -226,8 +231,7 @@ class MY_Controller extends CI_Controller {
     	
     	$realPath = $tplDir.$viewname.'.tpl';
     	//echo $realPath;
-    	
-    	$this->assign('subNavs',$this->_subNavs);
+    	$this->assign(array('subNavs' => $this->_subNavs,'breadCrumbs' => $this->_breadCrumbs));
     	
     	if(file_exists($realPath)){
     		$this->output->set_output($this->_smarty->fetch($realPath));

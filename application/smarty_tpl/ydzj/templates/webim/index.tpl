@@ -25,7 +25,7 @@
 			    //console.log(message);
 			    conn.setPresence();
 			    setTimeout(function(){
-			    	location.href="{base_url('webim/index.html?token=')}" + message.accessToken + "&username={$profile['basic']['mobile']}"; 
+			    	location.href="{base_url('webim/index.html?token=')}" + message.accessToken + "&username={$profile['chat']['username']}"; 
 			    },500)
 			  },  
 			  onClosed: function ( message ) {},         //连接关闭回调
@@ -47,8 +47,8 @@
 		
 		var options = { 
 			  apiUrl: WebIM.config.apiURL,
-			  user: "{$profile['basic']['mobile']}",
-			  pwd: "{$hxpsw}",
+			  user: "{$profile['chat']['username']}",
+			  pwd: "{$profile['chat']['password']}",
 			  appKey: WebIM.config.appkey
 		};
 		

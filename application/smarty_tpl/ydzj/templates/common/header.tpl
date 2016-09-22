@@ -8,6 +8,7 @@
 <meta name="keywords" content="{$SEO_keywords}" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,minimal-ui">
 <link rel="stylesheet" href="{resource_url('css/site.css')}"/>
+<link rel="stylesheet" href="{resource_url('font-awesome/css/font-awesome.min.css')}"/>
 <script type="text/javascript" src="{resource_url('js/jquery.js')}"></script>
 <script>
 var cookiedomain = "{config_item('site_domain')}",
@@ -16,7 +17,9 @@ var cookiedomain = "{config_item('site_domain')}",
     formhash = "{$formhash}",
     SITEURL = '{base_url()}',
     cityUrl = "{site_url('district/index/')}",
-    LOADING_IMAGE = "{resource_url('img/loading/loading.gif')}";
+    LOADING_IMAGE = "{resource_url('img/loading/loading.gif')}",
+    authCodeURL ="{site_url('api/register/authcode')}",
+    imgUrl = "{site_url('captcha/index')}";
 </script>
 </head>
 <body {if $bodyClass}class="{$bodyClass}"{/if}>

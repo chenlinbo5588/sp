@@ -534,9 +534,20 @@ EOT;
 	public function test_gethxpsw(){
 		$memberList = $this->Member_Model->getList();
 		
+		$this->load->model('Huanxin_Model');
+		
 		foreach($memberList as $member){
 			$psw = $this->encrypt->decode($member['password']);
 			echo "{$member['mobile']}={$psw}=".md5(config_item('encryption_key').$psw)."\n";
+			
+			/*
+			$this->Huanxin_Model->_add(array(
+				'uid' => $member['uid'],
+				'username' => $member['mobile'],
+				'nickname' => $member['nickname'],
+				'password' => md5(config_item('encryption_key').$psw)
+			),true);
+			*/
 		}
 		
 	}
@@ -547,6 +558,9 @@ EOT;
 		
 		print_r($json);
 	}
+	
+	
+	
 	
 	
 	public function test_huanxin(){

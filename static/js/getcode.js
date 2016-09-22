@@ -1,9 +1,10 @@
 $(function(){
-	$("input[name=authCodeBtn]").bind("click",function(e){
-		
-		var mobile = $("input[name=mobile]").val();
-		var timer = null;
+	$("input.mcode").bind("click",function(e){
 		var that = $(this);
+		var srcInputID = that.attr('data-mcode');
+		
+		var mobile = $(srcInputID).val();
+		var timer = null;
 		
 		if(!regMobile.test(mobile)){
 			alert("请输入正确的手机号码");
@@ -30,17 +31,16 @@ $(function(){
 			},1000);
 		}
 		
-		
 		$.ajax({
 			type:"POST",
 			url:authCodeURL,
 			dataType:"json",
 			data:{phoneNo: mobile },
 			success:function(resp){
-				
+				refreshFormHash(resp);
 			},
 			failed:function(resp){
-				
+				refreshFormHash(resp);
 			}
 		})
 	});

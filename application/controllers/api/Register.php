@@ -146,7 +146,7 @@ class Register extends MY_Controller {
 				
 				if($this->form_validation->run()){
 					/**
-					 * @todo 同一个IP 不能进行连续注册
+					 * @todo 同一个IP 不能进行连续发送
 					 */
 					$result = $this->register_service->createHalfRegisterMemebr(array(
 						'mobile' => $phoneNo,
@@ -170,7 +170,7 @@ class Register extends MY_Controller {
 					));
 				}else{
 					/**
-					 * 再检查 在验证码有效期内，同一个Ip ，同一个号码只能, 不能超过3次
+					 * 再检查 在验证码有效期内，同一个Ip ，同一个号码只能不能超过3次
 					 */
 					if($codeInfo['send_normal'] >= 3){
 						$rt['message'] = "攻击行为，请求失败";

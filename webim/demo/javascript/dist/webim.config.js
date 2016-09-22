@@ -25,5 +25,5 @@ WebIM.config = {
     /*
      * Set to auto sign-in
      */
-    isAutoLogin: true 
+    isAutoLogin: false 
 };

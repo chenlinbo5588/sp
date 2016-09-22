@@ -28,8 +28,15 @@ class Member_service extends Base_service {
 		$result = $this->formatArrayReturn();
 		$result['message'] = '登陆失败';
 		
-		$userInfo = self::$memberModel->getFirstByKey($param['mobile'],'mobile');
+		$findField = '';
 		
+		if(preg_match('/^\d+$/i',$param['loginname'])){
+			$findField = 'mobile';
+		}else{
+			$findField = 'nickname';
+		}
+		
+		$userInfo = self::$memberModel->getFirstByKey($param['loginname'],$findField);
 		
 		for($i = 0; $i < 1; $i++){
 			
@@ -116,27 +123,4 @@ class Member_service extends Base_service {
 		),array('uid' => $param['uid']));
 	}
 	
-	
-	public function beginUserSession($user){
-		
-		/*
-		self::$CI->load->model('Yunxin_Model');
-		$pushUser = self::$CI->Yunxin_Model->getFirstByKey($user['basic']['uid'],'uid');
-		$user['push'] = $pushUser;
-		*/
-		
-		self::$CI->session->set_userdata(array(
-			self::$CI->_profileKey => $user,
-			$this->_lastVisitKey => $this->_reqtime
-		));
-		
-		$this->updateUserInfo(
-			array(
-				'sid' => self::$CI->session->session_id,
-				'last_login' => self::$CI->input->server('REQUEST_TIME'),
-				'last_loginip' => self::$CI->input->ip_address()
-			),
-			$user['basic']['uid']);
-			
-	}
 }

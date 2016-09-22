@@ -9,8 +9,8 @@
 	        <li class="tip">{$feedback}</li>
 	        <li class="tip">{form_error('mobile')}</li>
 	        <li class="row rel">
-	            <input class="at_txt" type="text" name="mobile" value="{set_value('mobile')}" placeholder="请输入您常用的11位手机号码"/>
-	            <input id="mobile_authcode" class="master_btn greenBtn" type="button" name="authCodeBtn" value="免费获取验证码"/>
+	            <input class="at_txt" type="text" id="mobile" name="mobile" value="{set_value('mobile')}" placeholder="请输入您常用手机号码，如13868880088"/>
+	            <input id="mobile_authcode" class="master_btn greenBtn mcode" data-mcode="#mobile" type="button" name="authCodeBtn" value="免费获取验证码"/>
 	        </li>
 	        <li class="tip">{form_error('mobile_auth_code')}</li>
             <li class="row">
@@ -18,7 +18,7 @@
             </li>
             <li class="tip">{form_error('nickname')}</li>
             <li class="row">
-                <input class="at_txt" type="text" name="nickname" value="{set_value('nickname')}" placeholder="请输入您的昵称,字母、数字、中文,最长10个字"/>
+                <input class="at_txt" type="text" name="nickname" value="{set_value('nickname')}" placeholder="登陆账号,中文、字母、数字,中文最长10个字"/>
             </li>
             <li class="tip">{form_error('email')}</li>
             <li class="row">
@@ -41,19 +41,16 @@
                 <input class="at_txt" type="text" autocomplete="off" name="auth_code" value="{set_value('auth_code')}" placeholder="请输入右侧图片中4位验证码"/>
                 <div class="codeimg" title="点击图片刷新">正在获取验证码...</div>
             </li>
-	        <li class="row"><input class="master_btn" type="submit" name="register" value="注册"/></li>
+	        <li class="row"><input class="master_btn w100pre" type="submit" name="register" value="注册"/></li>
 	    </form>
 	    </ul>
 	</div>
 	<script>
-	   var authCodeURL ="{site_url('api/register/authcode')}",imgUrl = "{site_url('captcha/index')}";
 	   var refreshImg = function(json){
            $(".codeimg").html(json.img);
         };
         
-        
 	   $(function(){
-	   
 	       $(".codeimg").bind("click",function(){
                 setTimeout(function(){
                     $.getJSON(imgUrl + "?t=" + Math.random(),refreshImg);
@@ -88,5 +85,5 @@
 		    });
 	   });
 	</script>
-	<script src="{resource_url('js/register.js')}" type="text/javascript"></script>
+	<script src="{resource_url('js/getcode.js')}" type="text/javascript"></script>
 {include file="common/footer.tpl"}

@@ -2,14 +2,18 @@
 	<form action="{site_url('goods/index')}" method="post" id="formSearch">
         <input type="hidden" name="page" value=""/>
         <div class="goods_search">
-             <ul>
-                <li><textarea name="gc" placeholder="输入货号，每行一个货号或者单行按逗号分隔，一次最多可同时50个">{$smarty.post.gc}</textarea></li>
+             <ul class="search_con">
+                <li class="first"><textarea name="gc" placeholder="输入货号，每行一个货号或者单行按逗号分隔，一次最多可同时50个">{$smarty.post.gc}</textarea></li>
                 <li>
                     <label class="ftitle">名称</label>
                     <input type="text" class="mtxt" name="gn" value="{$smarty.post.gn}"/>
+                </li>
+                <li>
                     <label class="ftitle">尺寸</label>
                     <input type="text" name="s1" class="stxt" value="{$smarty.post.s1}" placeholder="尺寸下限"/>
                     <input type="text" name="s2" class="stxt" value="{$smarty.post.s2}" placeholder="尺寸上限(CN)"/>
+                </li>
+                <li>
                     <label class="ftitle">性别</label>
                     <label><input type="radio" name="sex" value="0" {if $smarty.post.sex == 0}checked{/if}/>不限</label>
                     <label><input type="radio" name="sex" value="1" {if $smarty.post.sex == 1}checked{/if}/>男</label>
@@ -19,6 +23,8 @@
                     <label class="ftitle">价格范围</label>
                     <input type="text" name="pr1" class="stxt" value="{if $smarty.post.pr1}{$smarty.post.pr1}{/if}" placeholder="最低价"/>
                     <input type="text" name="pr2" class="stxt" value="{if $smarty.post.pr2}{$smarty.post.pr2}{/if}" placeholder="最高价"/>
+                </li>
+                <li>
                     <label class="ftitle">剩余数量</label>
                     <input type="text" name="cn1" class="stxt" value="{if $smarty.post.cn1}{$smarty.post.cn1}{/if}" placeholder="最低剩余"/>
                     <input type="text" name="cn2" class="stxt" value="{if $smarty.post.cn2}{$smarty.post.cn2}{/if}" placeholder="最高剩余"/>
@@ -32,7 +38,6 @@
                 <div class="tip">多行莫斯: <br/>229284000<br/>884926-006<br/>148777000<br/>....</div>
             </div>
 	    </div>
-        <div class="warning">用户在线沟通成交后，请求货信息发布方点击成交链接完成交易.为了平台的信息的准确性和实时性。请在交易完成后及时点击完成交易。</div>
         <div>{include file="common/pagination.tpl"}</div>
         <table class="fulltable">
             <thead>

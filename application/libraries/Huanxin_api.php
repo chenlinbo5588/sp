@@ -19,7 +19,7 @@ class Huanxin_api extends Http_Client {
     
     public function __construct($config = array()){
     	parent::__construct();
-    	$this->_CI->load->model(array('Huanxin_Token_Model','Huanxin_Retry_Model'));
+    	$this->_CI->load->model(array('Huanxin_Token_Model','Huanxin_Model','Huanxin_Retry_Model'));
     	if($config){
     		$this->initConfig($config);
     	}
@@ -109,6 +109,10 @@ class Huanxin_api extends Http_Client {
 	    			'action' => 'create'
 	    		),$str),true);
     		}
+    	}else{
+    		$this->_CI->Huanxin_Model->_add(array_merge(array(
+    			'uid' => $uid
+    		),$str),true);
     	}
     	
     	return $json;
@@ -158,8 +162,6 @@ class Huanxin_api extends Http_Client {
     	
     	return $json;
     }
-    
-    
     
     /**
      * 发送文本消息

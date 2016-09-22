@@ -17,7 +17,7 @@
 		            <input id="authcode_text" class="at_txt" type="text" autocomplete="off" name="auth_code" value="{set_value('auth_code')}" placeholder="请输入右侧图片中4位验证码"/>
 		            <div class="codeimg" id="authImg" title="点击图片刷新">正在获取验证码...</div>
 		        </li>
-		        <li class="row"><input class="master_btn" type="submit" name="login" value="登陆"/></li>
+		        <li class="row"><input class="master_btn w100pre" type="submit" name="login" value="登陆"/></li>
 		        <li class="row clearfix">
 		          {if empty($profile)}
 		          <a class="fl" href="{site_url('member/login')}" title="去前台登陆">去前台登陆</a>

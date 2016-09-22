@@ -5,8 +5,7 @@ class Webim extends MyYdzj_Controller {
 	
 	public function __construct(){
 		parent::__construct();
-		$this->assign('hxpsw',md5(config_item('encryption_key').$this->encrypt->decode($this->_profile['basic']['password'])));
-		
+		$this->assign('chatConfig',$this->_profile['chat']);
 	}
 	
 	

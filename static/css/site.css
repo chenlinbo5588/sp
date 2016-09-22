@@ -40,7 +40,7 @@ iframe {
 /* 去掉 firefox 下此元素的边框 */ 
 abbr,acronym { 
     border:none; 
-    font-variant:normal; 
+    font-variant:normal;
 } 
 /* 一致的 del 样式 */ 
 del { 
@@ -180,6 +180,49 @@ input[type=text]:focus , input[type=password]:focus ,textarea:focus {
 */
 
 
+.w12 { width: 12px; }
+.w24 { width: 24px; }
+.w36 { width: 36px; }
+.w48 { width: 48px; }
+.w60 { width: 60px; }
+.w72 { width: 72px; }
+.w84 { width: 84px; }
+.w96 { width: 96px; }
+.w108 { width: 108px; }
+.w120 { width: 120px; }
+.w132 { width: 132px; }
+.w144 { width: 144px; }
+.w156 { width: 156px; }
+.w150 { width: 150px;}
+.w200 { width: 200px;}
+.w270 { width: 270px;}
+.w300 { width: 300px;}
+.w830 { width: 830px;}
+
+.w18pre { width: 18%;}
+.w33pre  { width: 33%;}
+.w34pre  { width: 34%;}
+.w25pre { width: 25%;}
+.w40pre { width: 40%;}
+.w50pre { width: 50%;}
+.w100pre { width: 100%; }
+
+.h36 { height: 36px;}
+
+.size-64x64 { width: 64px; height: 64px;}
+.size-56x56 { width: 56px; height: 56px;}
+.size-32x32 { width: 32px; height: 32px;}
+.size-44x44 { width: 44px; height: 44px;}
+.size-80x40 { width: 80px; height: 40px;}
+.size-88x31 { width: 88px; height: 31px;}
+.size-88x29 { width: 88px; height: 29px;}
+.size-68x34 { width: 68px; height: 34px;}
+.size-72x72 { width: 72px; height: 72px;}
+.size-106x106 { width: 106px; height: 106px;}
+
+.size-200x200 { width: 200px; height: 200px;}
+
+
 .disabled {
 	background:#d0d0d0;
 }
@@ -228,24 +271,19 @@ input[type=text]:focus , input[type=password]:focus ,textarea:focus {
     text-decoration:none;
 }
 
-
 .master_btn , .link_btn , .slaveBtn {
-	display:block;
-	cursor:pointer;
-    width:100%;
-    margin:0 auto;
-    height: 35px;
-    line-height:35px;
+	display:inline-block;
+    cursor:pointer;
     background-color:#db3652;
-    color:#fff;
     font-size:14px;
-    border:0px;
+    color:#fff;
+    border:0;
+    padding:8px 10px;
     text-align:center;
     border-radius:5px;
     -webkit-border-radius:5px;
     -moz-border-radius:5px;
     -o-border-radius:5px;
-    text-indent:3px;
 }
 
 .greenBtn {
@@ -268,6 +306,15 @@ input[type=text]:focus , input[type=password]:focus ,textarea:focus {
 
 .tip {
     color:rgb(250, 0, 218);
+}
+
+.red {color: red;}
+.blue { color: blue;}
+.orange { color: #F60;}
+.bold {font-weight: bold; color: #545454}
+
+.hightlight {
+	color:#DA1CC1;
 }
 
 .success {
@@ -434,8 +481,10 @@ table.fulltable {
     width:100%;
 }
 
+
+
 .fulltable thead th {
-	background-color:#CDECD5;
+	background-color:#C8EBE9;
 }
 
 
@@ -450,6 +499,9 @@ table.fulltable {
 	background-color:#F3F3F3;
 }
 
+.style1 thead th , .style1 tbody td {
+	padding:8px 0;
+}
 
 
 
@@ -578,6 +630,27 @@ table.fulltable {
 }
 
 
+.w-step-row{margin: 10px 0;font-size:14px;color:#fff;text-align:center;width:100%;height:25px;line-height:25px}
+.w-step3{width:33.2%;height:25px;float:left}
+.w-step4{width:24.9%;height:25px;float:left}
+.w-step5{width:19.9%;height:25px;float:left}
+.w-step6{width:16.5%;height:25px;float:left}
+.w-step7{width:14.1%;height:25px;float:left}
+.w-step8{width:12.4%;height:25px;float:left}
+.w-step-cur{background-color:#ed5b5b;text-align:center;}
+.w-step-past{background-color:#f79e9e;text-align:center;}
+.w-step-cur-future{background:url(../img/red-grey.png) no-repeat #cbcbcb;text-align:center}
+.w-step-future-future{background:url(../img/grey-grey.png) no-repeat #cbcbcb;text-align:center}
+.w-step-past-past{background:url(../img/pink-pink.png) no-repeat #f79e9e;text-align:center}
+.w-step-past-cur{background:url(../img/pink-red.png) no-repeat #ed5b5b;text-align:center}
+
+
+.loca { line-height:24px; color:#7292A4; }
+.loca div, .loca strong, .crumbs a, a.arrow { float:left; margin-left: 2px;}
+.loca a.arrow { background: url(../img/sky/bg_position.gif) no-repeat scroll -50px -155px; width: 4px; height:8px; margin: 9px 6px 7px 6px; _margin:9px 3px 7px 3px; /* IE6 */}
+
+
+
 #logo {
 	position:absolute;
 	top:0px;
@@ -699,16 +772,15 @@ table.fulltable {
 /* 个人中心  */
 
 #my {
-	
 	margin:10px auto;
+	min-height:500px;
 }
 
 
 .mynav {
 	width: 150px;
-    float: left;
-    display: block;
     border: 1px solid #CDCDCD;
+    position: absolute;;
 }
 
 .mynav li {
@@ -727,9 +799,18 @@ table.fulltable {
 	position:relative;
 }
 
+.search_con li.first {
+	
+	width:100%;
+}
+
+.search_con li {
+	
+} 
+
 .goods_search .ftitle {
 	display:inline-block;
-	width:120px;
+	width:60px;
 	
 }
 

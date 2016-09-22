@@ -3,15 +3,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class My extends MyYdzj_Controller {
 	
-	private $_avatarImageSize ;
-	private $_avatarSizeKeys;
-	
-	
 	public function __construct(){
 		parent::__construct();
-		
-		$this->_avatarImageSize = config_item('avatar_img_size');
-		$this->_avatarSizeKeys = array_keys($this->_avatarImageSize);
+		$this->_breadCrumbs[] = array('title' => '个人中心','url' => 'my/index');
 	}
 	
 	
@@ -30,9 +24,39 @@ class My extends MyYdzj_Controller {
 		$this->assign('userDs',$this->common_district_service->getDistrictByIds($ds));
 		$this->assign('inviteUrl',site_url('member/register?inviter='.$this->_profile['basic']['uid']));
 		
+		$this->_breadCrumbs[] = array('title' => '基本资料' ,'url' => 'my/index');
+		
 		$this->display();
 	}
 	
+	/**
+	 * 
+	 */
+	public function edit_base(){
+		$this->_breadCrumbs[] = array('title' => '修改基本资料' ,'url' => $this->uri->uri_string);
+		$this->display();
+	}
+	
+	
+	/**
+	 * 
+	 */
+	public function change_mobile(){
+		$step = $this->input->get_post('step');
+		
+		if(empty($step)){
+			$step = 1;
+		}
+		
+		$this->_breadCrumbs[] = array('title' => '更改手机' ,'url' => $this->uri->uri_string);
+		$this->display();
+	}
+	
+	
+	public function change_psw(){
+		$this->_breadCrumbs[] = array('title' => '修改密码' ,'url' => $this->uri->uri_string);
+		$this->display();
+	}
 	
 	
 	/**
@@ -138,8 +162,12 @@ class My extends MyYdzj_Controller {
 				$newAvatar = $this->input->post('new_avatar');
 				$newAvatar = str_replace(base_url(),'',$newAvatar);
 				
+				
+				$avatarImageSize = config_item('avatar_img_size');
+				$avatarSizeKeys = array_keys($avatarImageSize);
+		
 				$this->load->library('Attachment_service');
-				$this->attachment_service->setImageSizeConfig($this->_avatarImageSize);
+				$this->attachment_service->setImageSizeConfig($avatarImageSize);
 				$fileData = $this->attachment_service->resize(
 					$newAvatar,
 					array('m') , 

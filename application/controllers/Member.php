@@ -29,6 +29,29 @@ class Member extends Ydzj_Controller {
 		
 	}
 	
+	private function _autologin($profile){
+		$this->load->model('Huanxin_Model');
+		$chatConfig = $this->Huanxin_Model->getFirstByKey($profile['basic']['uid'],'uid');
+		
+		$profile['chat'] = empty($chatConfig) ? array() : $chatConfig;
+		
+		$this->session->set_userdata(array(
+			$this->_profileKey => $profile,
+			$this->_lastVisitKey => $this->_reqtime
+		));
+		
+		$this->member_service->updateUserInfo(
+			array(
+				'sid' => $this->session->session_id,
+				'last_login' => $this->_reqtime,
+				'last_loginip' => $this->input->ip_address()
+			),
+			$profile['basic']['uid']);
+
+		$this->_rememberLoginName($this->input->post('loginname'));
+					
+	}
+	
 	/**
 	 * 前台 登陆
 	 */
@@ -44,7 +67,7 @@ class Member extends Ydzj_Controller {
 			$this->assign('returnUrl',$this->input->post('returnUrl'));
 			$this->form_validation->reset_validation();
 			
-			$this->form_validation->set_rules('loginname','用户登陆手机', 'required|valid_mobile');
+			$this->form_validation->set_rules('loginname','登陆账号', 'required');
 			
 			$this->form_validation->set_rules('password','密码','required|alpha_numeric');
 			$this->form_validation->set_rules('auth_code','验证码','required|callback_validateAuthCode');
@@ -56,14 +79,13 @@ class Member extends Ydzj_Controller {
 				$this->load->library('Member_service');
 				
 				$result = $this->member_service->do_login(array(
-					'mobile' => $this->input->post('loginname'),
+					'loginname' => $this->input->post('loginname'),
 					'password' => $this->input->post('password')
 				));
 				
+				
 				if($result['code'] == 'success'){
-					
-					$this->member_service->beginUserSession($result['data']);
-					$this->_rememberLoginName($this->input->post('loginname'));
+					$this->_autologin($result['data']);
 					
 					$url = $this->input->post('returnUrl');
 					if(!empty($url) && isLocalUrl($url)){
@@ -143,11 +165,9 @@ class Member extends Ydzj_Controller {
 	
 	/**
 	 * 用户注册
-	 * 
 	 */
 	public function register()
 	{
-		
 		$registerOk = false;
 		$feedback = '';
 		
@@ -156,7 +176,7 @@ class Member extends Ydzj_Controller {
 			$inviteFrom = $this->input->post('inviteFrom');
 			
 			$this->assign('inviter', $inviter);
-			$this->assign('inviteFrom',$inviteFrom);
+			//$this->assign('inviteFrom',$inviteFrom);
 			$this->assign('returnUrl',$this->input->post('returnUrl'));
 			
 			$this->load->library(array('Register_service'));
@@ -197,20 +217,24 @@ class Member extends Ydzj_Controller {
 				$resp = $pushApi->createId($result['data']['uid'],$addParam['mobile'],$addParam['nickname'],$addParam['password']);
 				
 				$userInfo = $this->Member_Model->getFirstByKey($this->input->post('mobile'),'mobile');
+				$this->_autologin(array('basic' => $userInfo));
+				
 				$this->_rememberLoginName($this->input->post('mobile'));
 				//$this->message_service->sendEmail('email_active',$addParam['email']);
 				$registerOk = true;
+				
 			}
 			
 		}else{
 			/* 邀请人 */
 			$this->assign('inviter', $this->input->get('inviter'));
+			$this->assign('returnUrl',$this->input->get('returnUrl'));
 		}
 		
 		$this->assign('feedback',$feedback);
 		
 		if($registerOk){
-			js_redirect('member/login');
+			js_redirect('goods/index');
 		}else{
 			$this->seoTitle('用户注册');
 			$this->display();
@@ -231,7 +255,6 @@ class Member extends Ydzj_Controller {
 	
 	
 	public function forget(){
-		
 		
 		$this->display();
 	}

@@ -32,7 +32,9 @@
     </script>
 	<script src="demo/javascript/dist/demo.js"></script>
 	<script>
-		Demo.api.dologin();
+		if(token){
+			Demo.api.dologin();
+		}
 	</script>
 </body>
 </html>

@@ -20,7 +20,7 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 	}
 	
 	/**
-     * 导航相关
+     * 初始话导航相关参数
      */
     protected function _navs(){
         $navs = array_slice($this->uri->segments,1,3);
@@ -36,6 +36,7 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 
         $this->assign('pathStr',$pathStr);
         $this->assign('fnKey',$navs[0]);
+        
         $this->assign('navs',config_item('navs'));
     }
 	
@@ -57,7 +58,7 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 				$this->responseJSON('您尚未登陆',array('url' => site_url('member/admin_login')));
 			}else{
 				$this->session->unset_userdata($this->_adminProfileKey);
-				redirect(site_url('member/admin_login'));
+				js_redirect(site_url('member/admin_login'));
 			}
 		}else{
 			$this->_adminProfile = $alldata[$this->_adminProfileKey];
