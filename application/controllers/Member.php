@@ -69,7 +69,7 @@ class Member extends Ydzj_Controller {
 			
 			$this->form_validation->set_rules('loginname','登陆账号', 'required');
 			
-			$this->form_validation->set_rules('password','密码','required|alpha_numeric');
+			$this->form_validation->set_rules('password','密码','required|valid_password');
 			$this->form_validation->set_rules('auth_code','验证码','required|callback_validateAuthCode');
 			
 			//$this->form_validation->set_rules('returnUrl','返回地址','valid_url');
@@ -120,7 +120,7 @@ class Member extends Ydzj_Controller {
 		if($this->isPostRequest()){
 			$this->form_validation->reset_validation();
 			$this->form_validation->set_rules('email','登陆邮箱', 'required|valid_email');
-			$this->form_validation->set_rules('password','密码','required|alpha_numeric');
+			$this->form_validation->set_rules('password','密码','required|valid_password');
 			$this->form_validation->set_rules('auth_code','验证码','required|callback_validateAuthCode');
 			
 			
@@ -134,7 +134,7 @@ class Member extends Ydzj_Controller {
 				$result = $this->admin_service->do_adminlogin($this->input->post('email'),$this->input->post('password'));
 				
 				if($result['message'] != '成功'){
-					$this->assign('feedback','<div class="form_error">' .$result['message'].'</div>');
+					$this->assign('feedback',getErrorTip($result['message']));
 					break;
 				}
 				
@@ -197,13 +197,15 @@ class Member extends Ydzj_Controller {
 				$addParam = array(
 					'sid' => $this->session->session_id,
 					'mobile' => $this->input->post('mobile'),
-					'nickname' => $this->input->post('nickname'),
+					'username' => $this->input->post('username'),
 					'email' => $this->input->post('email'),
 					'qq' => $this->input->post('qq'),
 					'password' => $this->input->post('psw'),
 					'status' => -2,
 					'inviter' => empty($inviter) == true ? 0 : intval($inviter)
 				);
+				
+				$addParam['nickname'] = $addParam['username'];
 				
 				$result = $this->register_service->createMember($addParam);
 				
@@ -216,10 +218,10 @@ class Member extends Ydzj_Controller {
 				$pushApi = $this->register_service->getPushObject();
 				$resp = $pushApi->createId($result['data']['uid'],$addParam['mobile'],$addParam['nickname'],$addParam['password']);
 				
-				$userInfo = $this->Member_Model->getFirstByKey($this->input->post('mobile'),'mobile');
+				$userInfo = $this->Member_Model->getFirstByKey($addParam['username'],'username');
 				$this->_autologin(array('basic' => $userInfo));
 				
-				$this->_rememberLoginName($this->input->post('mobile'));
+				$this->_rememberLoginName($this->input->post('username'));
 				//$this->message_service->sendEmail('email_active',$addParam['email']);
 				$registerOk = true;
 				

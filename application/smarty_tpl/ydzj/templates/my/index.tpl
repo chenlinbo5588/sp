@@ -7,16 +7,20 @@
 				<td>{$profile['basic']['uid']} <a class="hightlight" href="{site_url('my/edit_base')}">修改基本资料</a></td>
 			</tr>
 			<tr>
-				<td>登陆账号</td>
+                <td>登陆账号</td>
+                <td>{$profile['basic']['username']|escape}</td>
+            </tr>
+			<tr>
+				<td>昵称</td>
 				<td>{$profile['basic']['nickname']|escape}</td>
 			</tr>
 			<tr>
 				<td>手机账号</td>
-				<td><i class="fa fa-phone" aria-hidden="true"></i><a href="javascript:void(0);">{$profile['basic']['mobile']|escape}</a><a class="warning"  href="{site_url('my/change_mobile')}">更换手机号码</a></td>
+				<td><i class="fa fa-phone" aria-hidden="true"></i>&nbsp;<a href="javascript:void(0);">{$profile['basic']['mobile']|escape}</a><a class="warning"  href="{site_url('my/change_mobile')}">更换手机号码</a></td>
 			</tr>
 			<tr>
 				<td>邮箱地址</td>
-				<td>{$profile['basic']['email']|escape} {if $profile['basic']['email_status'] == 0}<span class="hightlight">邮箱尚未认证,可能无法收到邮件提醒</span> <a class="warning" href="{site_url('my/verify_email')}" title="马上认证邮箱">马上认证</a>{else}<span>已认证</span> <a href="{site_url('my/change_email')}">更换邮箱地址</a>{/if}</td>
+				<td>{$profile['basic']['email']|escape} {if $profile['basic']['email_status'] == 0}<span class="hightlight">邮箱尚未认证,可能无法收到邮件提醒</span> <a class="warning" href="{site_url('my/verify_email')}" title="马上认证邮箱">马上认证邮箱</a>{else}<span>已认证</span> <a href="{site_url('my/change_email')}">更换邮箱地址</a>{/if}</td>
 			</tr>
 			<tr>
 				<td>头像</td>

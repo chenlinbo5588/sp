@@ -6,7 +6,7 @@
 		        <li class="title"><h1>登陆-{$siteSetting['site_name']}管理中心</h1></li>
 		        <li class="tip">{form_error('email')}</li>
 		        <li class="row">
-		            <input id="email_text" class="at_txt" type="text" name="email" value="{set_value('email')}" placeholder="请输入邮箱"/>
+		            <input id="email_text" class="at_txt" type="text" name="email" value="{set_value('email')}" placeholder="请输入登陆邮箱地址"/>
 		        </li>
 		        <li class="tip">{form_error('password')}</li>
 		        <li class="row">

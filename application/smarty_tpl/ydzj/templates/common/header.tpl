@@ -29,7 +29,7 @@ var cookiedomain = "{config_item('site_domain')}",
                 <div id="logo"><a href="{site_url('/')}">{$siteSetting['site_name']}</a></div>
 	            <div id="homeSideLinks">
 	               {if $profile}
-	                   <a href="{site_url('my/index')}">{mask_mobile($profile['basic']['nickname']|escape)}</a>
+	                   <a href="{site_url('my/index')}">{$profile['basic']['username']|escape}</a>
 	                   <a class="action" href="{site_url('member/logout')}">退出</a>
 	               {else}
 	                   <a class="login action" href="{site_url('member/login')}">登陆</a>

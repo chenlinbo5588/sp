@@ -38,17 +38,99 @@ class My extends MyYdzj_Controller {
 	}
 	
 	
+	
+	
+	
+	
 	/**
 	 * 
 	 */
 	public function change_mobile(){
 		$step = $this->input->get_post('step');
 		
+		
+		$this->load->library('Verify_service');
+		
 		if(empty($step)){
 			$step = 1;
 		}
 		
+		if($step == 1){
+			$this->form_validation->set_rules('mobile_auth_code','手机验证码', array(
+					'required',
+					array(
+						'authcode_callable['.$this->input->post('mobile').']',
+						array(
+							$this->verify_service,'validateAuthCode'
+						)
+					)
+				),
+				array(
+					'authcode_callable' => '手机验证码不正确'
+				)
+			);
+			
+		}else if($step == 2){
+			
+			$this->form_validation->set_rules('newmobile','新手机号',array(
+					'required',
+					'valid_mobile',
+					array(
+						'loginname_callable[mobile]',
+						array(
+							$this->Member_Model,'isUnqiueByKey'
+						)
+					)
+				),
+				array(
+					'loginname_callable' => '%s已经被绑定'
+				)
+			);
+			
+			$this->form_validation->set_rules('mobile_auth_code','手机验证码', array(
+					'required',
+					array(
+						'authcode_callable['.$this->input->post('newmobile').']',
+						array(
+							$this->verify_service,'validateAuthCode'
+						)
+					)
+				),
+				array(
+					'authcode_callable' => '手机验证码不正确'
+				)
+			);
+		}
+		
+		for($i = 0; $i < 1; $i++){
+			if(!$this->form_validation->run()){
+				break;
+			}
+			
+			if($step == 2){
+				//$this->form_validation->set_ruls('mobile','require|valid_mobile');
+				
+				$rows = $this->Member_Model->update(array(
+					'mobile' => $this->input->post('newmobile')
+				),array(
+					'uid' => $this->_profile['basic']['uid']
+				));
+				
+				if($rows > 0){
+					$this->_profile['basic']['mobile'] = $this->input->post('newmobile');
+					$this->session->set_userdata(array(
+						$this->_profileKey => $this->_profile
+					));
+				}
+			}
+			
+			if($step <= 2){
+				$step++;
+			}
+		}
+		
 		$this->_breadCrumbs[] = array('title' => '更改手机' ,'url' => $this->uri->uri_string);
+		$this->assign('step',$step);
 		$this->display();
 	}
 	

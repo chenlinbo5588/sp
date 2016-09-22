@@ -205,7 +205,7 @@ class Register extends MY_Controller {
 			$this->load->library('Register_service');
 			$this->load->library('Verify_service');
 				
-			if($this->verify_service->isAuthCodeValidate($this->input->post('phoneNo'),$this->input->post('code'))){
+			if($this->verify_service->isAuthCodeValidate($this->input->post('code'),$this->input->post('phoneNo'))){
 				$this->jsonOutput('成功');
 			}else{
 				$this->jsonOutput('验证码错误');

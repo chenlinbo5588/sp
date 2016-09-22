@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Verify_service extends Base_service {
 
 	protected $_verifyCodeLogModel;
-	protected $_expiredSeconds = 120;
+	protected $_expiredSeconds = 600;// ten minites
 
 	public function __construct(){
 		parent::__construct();
@@ -87,7 +87,7 @@ class Verify_service extends Base_service {
 		//echo $code;
 		//echo $phone;
 		
-		if($this->isAuthCodeValidate($phone,$code) > 0){
+		if($this->isAuthCodeValidate($code,$phone) > 0){
 			return true;
 		}
 		
@@ -98,7 +98,7 @@ class Verify_service extends Base_service {
 	/**
 	 * 执行验证
 	 */
-	public function isAuthCodeValidate($phone , $code){
+	public function isAuthCodeValidate($code,$phone){
 		
 		$count = $this->_verifyCodeLogModel->getCount(array(
 			'where' => array(

@@ -45,8 +45,18 @@ class MY_Form_validation extends CI_Form_validation {
     }
     
     
-    public function valid_nickname($nickname){
-    	if(!preg_match('/^[\x{4e00}-\x{9fa5}a-zA-Z0-9_]+$/u',$nickname)){
+    public function valid_password($str){
+    	if(preg_match('/^[a-zA-Z0-9~!@#$%^&*()\\\|\\\\-_=+{}\[\];:"\'<,.>?\/]+$/u',$str)){
+    		return true;
+    	}else{
+    		
+    		return false;
+    	}
+    }
+    
+    
+    public function valid_username($str){
+    	if(!preg_match('/^[\x{4e00}-\x{9fa5}a-zA-Z0-9_@]+$/u',$str)){
     		return false;
     	}
     	

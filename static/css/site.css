@@ -278,7 +278,7 @@ input[type=text]:focus , input[type=password]:focus ,textarea:focus {
     font-size:14px;
     color:#fff;
     border:0;
-    padding:8px 10px;
+    padding:6px 10px;
     text-align:center;
     border-radius:5px;
     -webkit-border-radius:5px;
@@ -305,7 +305,7 @@ input[type=text]:focus , input[type=password]:focus ,textarea:focus {
 }
 
 .tip {
-    color:rgb(250, 0, 218);
+    color:#B3B3B3;
 }
 
 .red {color: red;}
@@ -677,12 +677,6 @@ table.fulltable {
     margin: 30px auto;
 }
 
-.panel .at_txt {
-	height:25px;
-	line-height:25px;
-	
-}
-
 .panel {
 	margin: 0 auto;
     border: 1px solid #CECECE;
@@ -695,21 +689,21 @@ table.fulltable {
 }
 
 .panel .row {
-	padding: 10px 5px;
+	padding: 5px;
 }
 
 #loginPanel .codeimg ,#register .codeimg {
     position: absolute;
-    right: 8px;
+    right: 7px;
     cursor: pointer;
-    top: 13px;
+    top: 6px;
 }
 
 #mobile_authcode {
 	position: absolute;
     width: 115px;
-    right: 0px;
-    top: 11px;
+    right: 4px;
+    top: 5px;
 }
 
 

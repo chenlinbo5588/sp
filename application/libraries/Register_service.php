@@ -100,26 +100,26 @@ class Register_service extends Base_service {
 				)
 			);
 		
-		self::$form_validation->set_rules('nickname','昵称',array(
+		self::$form_validation->set_rules('username','昵称',array(
 					'required',
 					'min_length[2]',
 					'max_length[8]',
-					'valid_nickname',
+					'valid_username',
 					array(
-						'nickname_callable[nickname]',
+						'username_callable[username]',
 						array(
 							self::$memberModel,'isUnqiueByKey'
 						)
 					)
 				),
 				array(
-					'nickname_callable' => '%s已经被注册'
+					'username_callable' => '%s已经被注册'
 				)
 			);
 			
 		self::$form_validation->set_rules('qq','用户QQ号码', 'required|numeric|min_length[5]|max_length[12]');
 		self::$form_validation->set_rules('email','用户常用邮箱', 'required|valid_email');
-		self::$form_validation->set_rules('psw','密码','required|alpha_dash|min_length[6]|max_length[12]');
+		self::$form_validation->set_rules('psw','密码','required|valid_password');
 		self::$form_validation->set_rules('psw_confirm','密码确认','required|matches[psw]');
 		self::$form_validation->set_rules('auth_code','验证码','required|callback_validateAuthCode');
 		

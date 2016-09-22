@@ -16,9 +16,9 @@
             <li class="row">
                 <input class="at_txt" type="text" name="mobile_auth_code" value="{set_value('mobile_auth_code')}" placeholder="请输入您手机收到的6位数字验证码"/>
             </li>
-            <li class="tip">{form_error('nickname')}</li>
+            <li class="tip">{form_error('username')}</li>
             <li class="row">
-                <input class="at_txt" type="text" name="nickname" value="{set_value('nickname')}" placeholder="登陆账号,中文、字母、数字,中文最长10个字"/>
+                <input class="at_txt" type="text" name="nickname" value="{set_value('username')}" placeholder="登陆账号,中文、字母、数字,最长8字符"/>
             </li>
             <li class="tip">{form_error('email')}</li>
             <li class="row">
@@ -30,7 +30,7 @@
             </li>
 	        <li class="tip">{form_error('psw')}</li>
 	        <li class="row">
-	            <input class="at_txt" type="password" name="psw" value="{set_value('psw')}" placeholder="密码长度6~12位,字母、数字、半角下划线、@符号"/>
+	            <input class="at_txt" type="password" name="psw" value="{set_value('psw')}" placeholder="密码长度6~12位,英文字母、数字、特殊符号"/>
 	        </li>
 	        <li class="tip">{form_error('psw_confirm')}</li>
 	        <li class="row">

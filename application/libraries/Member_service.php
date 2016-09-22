@@ -24,19 +24,19 @@ class Member_service extends Base_service {
 	 * 登录判断
 	 */
 	public function do_login($param){
-		
 		$result = $this->formatArrayReturn();
 		$result['message'] = '登陆失败';
 		
+		/*
 		$findField = '';
-		
 		if(preg_match('/^\d+$/i',$param['loginname'])){
 			$findField = 'mobile';
 		}else{
 			$findField = 'nickname';
 		}
-		
-		$userInfo = self::$memberModel->getFirstByKey($param['loginname'],$findField);
+		*/
+		//$userInfo = self::$memberModel->getFirstByKey($param['loginname'],$findField);
+		$userInfo = self::$memberModel->getFirstByKey($param['loginname'],'username');
 		
 		for($i = 0; $i < 1; $i++){
 			
@@ -70,29 +70,8 @@ class Member_service extends Base_service {
 	}
 	
 	
-	
-	/**
-	 * 
-	 */
 	public function getUserInfoById($id){
 		return self::$memberModel->getFirstByKey($id,'uid');
-	}
-	
-	public function getUserInfoByKey($value,$key){
-		return self::$memberModel->getFirstByKey($value,$key);
-	}
-	/**
-	 * 
-	 */
-	public function getUserInfoByMobile($mobile){
-		return self::$memberModel->getFirstByKey($mobile,'mobile');
-	}
-	
-	/**
-	 * 获得用户信息
-	 */
-	public function getUserInfoByEmail($email){
-		return self::$memberModel->getFirstByKey($email,'email');
 	}
 	
 	/**
