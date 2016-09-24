@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="{resource_url('css/site.css')}"/>
 <link rel="stylesheet" href="{resource_url('font-awesome/css/font-awesome.min.css')}"/>
 <script type="text/javascript" src="{resource_url('js/jquery.js')}"></script>
+<script type="text/javascript" src="{resource_url('js/common.js')}"></script>
 <script>
 var cookiedomain = "{config_item('site_domain')}",
     cookiepath = "{config_item('cookie_path')}",
@@ -19,7 +20,7 @@ var cookiedomain = "{config_item('site_domain')}",
     cityUrl = "{site_url('district/index/')}",
     LOADING_IMAGE = "{resource_url('img/loading/loading.gif')}",
     authCodeURL ="{site_url('api/register/authcode')}",
-    imgUrl = "{site_url('captcha/index')}";
+    captchaUrl = "{site_url('captcha/index')}";
 </script>
 </head>
 <body {if $bodyClass}class="{$bodyClass}"{/if}>

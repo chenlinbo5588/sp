@@ -261,4 +261,23 @@ class Member extends Ydzj_Controller {
 		$this->display();
 	}
 	
+	
+	public function verify_email(){
+		
+		$this->load->library('Message_service');
+		$param = $this->input->get('p');
+		
+		$isLogin = false;
+		$linkURL = site_url('member/login');
+		if($this->isLogin()){
+			$isLogin = true;
+			$linkURL = site_url('my/index');
+		}
+		
+		$this->assign('linkURL',$linkURL);
+		$this->assign('isLogin',$isLogin);
+		$this->display();
+		
+	}
+	
 }

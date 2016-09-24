@@ -4,7 +4,7 @@
 		<div class="w-step3 {if $step > 2}w-step-past-past{else if $step == 2}w-step-past-cur{else}w-step-cur-future{/if}">绑定新得手机号码</div>		
 		<div class="w-step3 {if $step < 3}w-step-future-future{else}w-step-past-cur{/if}">更换结果</div>
 	</div>
-	<div class="tip">您更换了手机号之后，为了保留原先聊天窗口中好友关系,聊天窗口将还是以原先的手机账号登陆</div>
+	<div class="muted">您更换了手机号之后，为了保留原先聊天窗口中好友关系,聊天窗口将还是以原先的手机账号登陆</div>
 	{form_open(site_url($uri_string),"id='editForm'")}
 	<input type="hidden" name="step" value="{$step}"/>
 	<table class="fulltable style1">

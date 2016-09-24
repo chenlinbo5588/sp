@@ -5,6 +5,8 @@ class Message_service extends Base_service {
 
 	private $_msgTemplateModel = null;
 	private $_email = null;
+	
+	private $_setting ;
 
 	
 	public function __construct(){
@@ -14,46 +16,96 @@ class Message_service extends Base_service {
 		self::$CI->load->library('email');
 		
 		$this->_email = self::$CI->email;
+		
 		$this->_msgTemplateModel = self::$CI->Msg_Template_Model;
+	}
+	
+	
+	/**
+	 * @todo modify when online
+	 */
+	public function initEmail($setting){
+		
+		$this->_setting = $setting;
+		
+		$config['protocol'] = 'smtp';
+		$config['smtp_host'] = $setting['email_host'];
+		$config['smtp_port'] = $setting['email_port'];
+		$config['smtp_user'] = $setting['email_id'];
+		
+		$psw = self::$CI->encrypt->decode($setting['email_pass']);
+		
+		$config['smtp_pass'] = $psw;
+		$config['smtp_timeout'] = 3;
+		$config['charset'] = config_item('charset');
+		
+		
+		//print_r($config);
+		
+		$this->_email->initialize($config);
+	}
+	
+	
+	public function getEncodeParam($param,$expired = 86400){
+		$param[] = self::$CI->input->server('REQUEST_TIME') + $expired;
+		$str = implode("\t",$param);
+		
+		return urlencode(self::$CI->encrypt->encode($str));
+	}
+	
+	
+	/**
+	 * 
+	 */
+	public function sendEmailConfirm($to,$confirm_url){
+		$tpl = $this->getMsgTemplateByCode('email_confirm');
+		
+		$tpl['title'] = str_replace(array(
+			'{site_name}'
+		),array(
+			$this->_setting['site_name']
+		),$tpl['title']);
+		
+		$tpl['content'] = str_replace(array(
+			'{site_name}',
+			'{site_logo}',
+			'{site_url}',
+			'{confirm_url}',
+			'{confirm_url_plain}'
+			
+		),array(
+			$this->_setting['site_name'],
+			resource_url($this->_setting['site_logo']),
+			site_url(),
+			$confirm_url,
+			htmlentities($confirm_url)
+		),$tpl['content']);
+		
+		return $this->sendEmail($to,$tpl['title'],$tpl['content']);
 	}
 	
 	
 	public function sendEmail($to,$subject,$content){
 		
-		$config['protocol'] = 'smtp';
-		$config['smtp_host'] = $this->input->post('email_host');
-		$config['smtp_port'] = $this->input->post('email_port');
-		$config['smtp_user'] = $this->input->post('email_id');
+		/*
+		echo $to;
+		echo $subject;
+		echo $content;
+		print_r($this->_setting);
+		*/
+		$this->_email->to($to);
+		$this->_email->from($this->_setting['email_addr']);
+		$this->_email->subject($subject);
+		$this->_email->message($content);
+		$this->_email->set_mailtype('html');
 		
-		//
+		$flag = $this->_email->send();
+		//var_dump($flag);
+		//$this->_email->print_debugger();
+		//echo 'success ';
 		
-		$config['smtp_pass'] = $this->input->post('email_pass');
-		$config['smtp_timeout'] = 10;
-		$config['charset'] = config_item('charset');
-		
-		$this->email->initialize($config);
-		
-		$emailTitle = config_item('site_name');
-		$emailBody = "你好，这是一封测试邮件，如果您收到该邮件，表示配置已经生效.";
-		
-		
-		$this->email->to($this->input->post('email_test'));
-		$this->email->from($this->input->post('email_addr'));
-		$this->email->subject($emailTitle);
-		$this->email->message($emailBody);
-		
-		//if($this->ext_email->send($this->input->post('email_test'),$emailTitle,$emailBody,$this->input->post('email_addr'))){
-		if($this->email->send()){
-			$feedback = '成功';
-		}else{
-			$feedback = '失败';
-		}
-		
-		
-		return true;
-		
+		return $flag;
 	}
-	
 	
 	
 	public function getMsgTemplateByCode($code){

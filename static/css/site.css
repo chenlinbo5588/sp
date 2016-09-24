@@ -92,7 +92,6 @@ a {
 /* 让链接在 hover 状态下显示下划线 */ 
 a:hover { 
     text-decoration:underline; 
-    color:#0800DB;
 } 
 /* 默认不显示下划线，保持页面简洁 */ 
 ins,a { 
@@ -207,6 +206,8 @@ input[type=text]:focus , input[type=password]:focus ,textarea:focus {
 .w50pre { width: 50%;}
 .w100pre { width: 100%; }
 
+
+
 .h36 { height: 36px;}
 
 .size-64x64 { width: 64px; height: 64px;}
@@ -244,6 +245,69 @@ input[type=text]:focus , input[type=password]:focus ,textarea:focus {
 }
 
 .placeholder { color: #aaa; }
+
+
+
+.pd5 {
+    padding: 5px;	
+}
+
+.pd20 {
+	padding:20px;
+}
+
+.tip {
+    color:#B3B3B3;
+}
+
+
+
+.red {color: red;}
+.blue { color: blue;}
+.orange { color: #F60;}
+.bold {font-weight: bold; color: #545454}
+
+.hightlight {
+	color:#DA1CC1;
+}
+
+.passbg {
+    background: url(../img/pass.png) no-repeat 10px center;
+    padding-left: 50px;
+}
+
+
+.success {
+	font-weight: bold;
+	text-align: center;
+	background-color: green;
+	color: white;
+	padding: 5px;
+}
+
+.warning {
+    background:#FFD500;
+    padding:5px;
+    text-align: center;
+}
+
+.form_error {
+    color:red;
+    text-align:center;
+}
+
+label.error {
+	color:red;
+}
+
+input[type=text].error,input[type=password].error {
+    border:1px solid red;
+    background:url(../img/access_disallow.gif) no-repeat right center;
+}
+
+input[type=text].valid , input[type=password].valid {
+	background:url(../img/access_allow.gif) no-repeat right center;
+}
 
 
 .nav ,.control ,.action {
@@ -299,47 +363,6 @@ input[type=text]:focus , input[type=password]:focus ,textarea:focus {
 .grayed {
 	background:#6C6969;
 }
-
-.pd5 {
-    padding: 5px;	
-}
-
-.tip {
-    color:#B3B3B3;
-}
-
-.red {color: red;}
-.blue { color: blue;}
-.orange { color: #F60;}
-.bold {font-weight: bold; color: #545454}
-
-.hightlight {
-	color:#DA1CC1;
-}
-
-.success {
-	font-weight: bold;
-	text-align: center;
-	background-color: green;
-	color: white;
-	padding: 5px;
-}
-
-.warning {
-    background:#FFD500;
-    padding:5px;
-    text-align: center;
-}
-
-.form_error {
-    color:red;
-    text-align:center;
-}
-
-input[type=text].validation_error {
-	border:1px solid red;
-}
-
 
 .handle_area {
     padding:5px 0px;
@@ -649,6 +672,12 @@ table.fulltable {
 .loca div, .loca strong, .crumbs a, a.arrow { float:left; margin-left: 2px;}
 .loca a.arrow { background: url(../img/sky/bg_position.gif) no-repeat scroll -50px -155px; width: 4px; height:8px; margin: 9px 6px 7px 6px; _margin:9px 3px 7px 3px; /* IE6 */}
 
+.codeimg {
+	width:120px;
+	height:30px;
+	text-align: center;
+    line-height: 30px;
+}
 
 
 #logo {
@@ -672,7 +701,7 @@ table.fulltable {
 /* 前台登陆  */
 #loginPanel,#register {
 	width: 30%;
-    
+    min-width:350px;
     padding: 30px 20px 60px;
     margin: 30px auto;
 }
@@ -691,6 +720,9 @@ table.fulltable {
 .panel .row {
 	padding: 5px;
 }
+
+
+
 
 #loginPanel .codeimg ,#register .codeimg {
     position: absolute;
@@ -820,6 +852,17 @@ table.fulltable {
 	top:0px;
 }
 
+
+.verfiypass {
+	text-align: center;
+    width: 600px;
+    height: 260px;
+    margin: 10px auto;
+}
+
+.verfiypass p {
+	font-size:14px;
+}
 
 
 @media (min-width: 1440px) {

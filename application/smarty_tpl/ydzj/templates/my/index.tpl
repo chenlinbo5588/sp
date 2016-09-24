@@ -1,5 +1,5 @@
 {include file="./my_header.tpl"}
-	{include file="common/dlg.tpl"}
+	{include file="common/jquery_ui.tpl"}
 	<table class="fulltable style1">
 		<tbody>
 			<tr>
@@ -20,7 +20,7 @@
 			</tr>
 			<tr>
 				<td>邮箱地址</td>
-				<td>{$profile['basic']['email']|escape} {if $profile['basic']['email_status'] == 0}<span class="hightlight">邮箱尚未认证,可能无法收到邮件提醒</span> <a class="warning" href="{site_url('my/verify_email')}" title="马上认证邮箱">马上认证邮箱</a>{else}<span>已认证</span> <a href="{site_url('my/change_email')}">更换邮箱地址</a>{/if}</td>
+				<td><span>{$profile['basic']['email']|escape}</span>&nbsp;<a id="edit_email" href="javascript:void(0);">修改</a> {if $profile['basic']['email_status'] == 0}<span class="hightlight">邮箱尚未认证,可能无法收到邮件提醒</span> <a class="warning" href="{site_url('my/verify_email')}" title="马上认证邮箱">马上认证邮箱</a>{else}<span>已认证</span> <a href="{site_url('my/change_email')}">更换邮箱地址</a>{/if}</td>
 			</tr>
 			<tr>
 				<td>头像</td>
@@ -62,5 +62,17 @@
 			</tr>
 		</tbody>
 	</table>
+	{include file="common/jquery_ui.tpl"}
+	{include file="common/jquery_validation.tpl"}
+	
+	<div id="dialog" title="修改邮箱">
+		{form_open(site_url('my/set_email'),"id='editEmailForm'")}
+			<input type="text" class="at_txt" name="newemail" value="" placeholder="请输入新的邮箱地址"/>
+		</form>
+	</div>
+	<script>
+	
+	</script>
+	<script type="text/javascript" src="{resource_url('js/my/index.js')}"></script>
 {include file="./my_footer.tpl"}
 

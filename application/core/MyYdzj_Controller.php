@@ -23,12 +23,27 @@ class MyYdzj_Controller extends Ydzj_Controller {
 	}
 	
 	
+	protected function refreshProfile(){
+		$this->session->set_userdata(array(
+			$this->_profileKey => $this->_profile
+		));
+	}
 	
 	/**
 	 * 初始化 url
 	 */
 	protected function _initURIParameter(){
 		$this->assign('uri_string',$this->uri->uri_string);
+		
+	}
+	
+	/**
+	 * 
+	 */
+	protected function _addBreadCrumbs(){
+		
+		
+		
 		
 	}
 	

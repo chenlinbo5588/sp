@@ -135,33 +135,6 @@ function search_page(page,formid){
     form.submit();
 }
 
-
-/* 显示Ajax表单 */
-function ajax_form(id, title, url, width, model)
-{
-    if (!width)	width = 480;
-    if (!model) model = 1;
-    var d = DialogManager.create(id);
-    d.setTitle(title);
-    d.setContents('ajax', url);
-    d.setWidth(width);
-    d.show('center',model);
-    return d;
-}
-
-//显示一个内容为自定义HTML内容的消息
-function html_form(id, title, _html, width, model) {
-    if (!width)	width = 480;
-    if (!model) model = 0;
-    var d = DialogManager.create(id);
-    d.setTitle(title);
-    d.setContents(_html);
-    d.setWidth(width);
-    d.show('center',model);
-    return d;
-}
-
-
 //加载谈层
 $.loadingbar = function(settings) {
     var defaults = {
@@ -458,9 +431,7 @@ function districtSelect(isBind){
 	}else{
 		$(".cityGroupWrap .citySelect").unbind("change.districtSelect");
 	}
-	
 }
-
 
 
 /**
@@ -493,128 +464,38 @@ function showTips( tips, height, time ){
         'z-index' : '9999'
     }).show();
     setTimeout( function(){$( 'div.tipsClass' ).fadeOut().remove();}, ( time * 1000 ) );
+};
+
+
+
+$.fn.imageCode = function(setting){
+	var wrap = $(setting.wrapId);
+	
+	var isRequesting = false;
+	var _refreshImg = function(){
+		if(isRequesting == true){
+			return ;
+		}
+		
+		wrap.html("正在刷新....");
+		isRequesting = true;
+		$.getJSON(setting.captchaUrl,function(json){
+			isRequesting = false;
+			wrap.html(json.img);
+		});
+    };
+	
+    wrap.bind("click.imageCode",_refreshImg);
+    
+    /*
+	setTimeout(function(){
+        $.getJSON(setting.captchaUrl,_refreshImg);
+        wrap.html("正在刷新....");
+    },500);
+	*/
+	this.refreshImg = _refreshImg;
+	return this;
 }
-
-/*
- * 弹出窗口
- */
-(function($) {
-    $.fn.nc_show_dialog = function(options) {
-
-        var that = $(this);
-        var settings = $.extend({}, {width: 480, title: ''}, options);
-
-        var init_dialog = function(title) {
-            var _div = that;
-            that.addClass("dialog_wrapper");
-            that.wrapInner(function(){
-                return '<div class="dialog_content">';
-            });
-            that.wrapInner(function(){
-                return '<div class="dialog_body" style="position: relative;">';
-            });
-            that.find('.dialog_body').prepend('<h3 class="dialog_head" style="cursor: move;"><span class="dialog_title"><span class="dialog_title_icon">'+settings.title+'</span></span><span class="dialog_close_button">X</span></h3>');
-            that.append('<div style="clear:both;"></div>');
-
-            $(".dialog_close_button").click(function(){
-                _div.hide();
-            });
-
-            that.draggable();
-        };
-
-        if(!$(this).hasClass("dialog_wrapper")) {
-            init_dialog(settings.title);
-        }
-        settings.left = $(window).scrollLeft() + ($(window).width() - settings.width) / 2;
-        settings.top  = ($(window).height() - $(this).height()) / 2;
-        $(this).attr("style","display:none; z-index: 1100; position: fixed; width: "+settings.width+"px; left: "+settings.left+"px; top: "+settings.top+"px;");
-        $(this).show();
-
-    };
-})(jQuery);
-
-
-
-(function($) {
-    $.fn.nc_region = function(options) {
-        var $region = $(this);
-        var settings = $.extend({}, {area_id: 0, region_span_class: "_region_value"}, options);
-
-        return this.each(function() {
-            var $inputArea = $(this);
-            if($inputArea.val() === '') {
-                initArea($inputArea);
-            } else {
-                var $region_span = $('<span class="' + settings.region_span_class + '">' + $inputArea.val() + '</span>');
-                var $region_btn = $('<input type="button" value="编辑" />');
-                $inputArea.after($region_span);
-                $region_span.after($region_btn);
-                $region_btn.on("click", function() {
-                    $region_span.hide();
-                    $region_btn.hide();
-                    initArea($inputArea);
-                });
-            }
-        });
-
-        function initArea($inputArea) {
-            settings.$area = $('<select></select>');
-            $inputArea.after(settings.$area);
-            loadAreaArray(function() {
-                loadArea(settings.$area, settings.area_id);
-            });
-        }
-
-        function loadArea($area, area_id){
-            if($area && nc_a[area_id].length > 0){
-                var areas = [];
-                areas = nc_a[area_id];
-                $area.append("<option>-请选择-</option>");
-                for (i = 0; i <areas.length; i++){
-                    $area.append("<option value='" + areas[i][0] + "'>" + areas[i][1] + "</option>");
-                }
-            }
-
-            $area.on('change', function() {
-                $(this).nextAll("select").remove();
-
-                var region_value = '';
-                $region.nextAll("select").each(function() {
-                    region_value += $(this).find("option:selected").text() + ' ';
-                });
-                $region.val(region_value);
-
-                var area_id = $(this).val();
-                if(area_id > 0) {
-                    if(nc_a[area_id] && nc_a[area_id].length > 0) {
-                        var $newArea = $('<select></select>');
-                        $(this).after($newArea);
-                        loadArea($newArea, area_id);
-                    }
-                }
-            });
-        }
-
-        function loadAreaArray(callback) {
-            if(typeof nc_a === 'undefined') {
-                //取JS目录的地址
-                var area_scripts_src = '';
-                area_scripts_src = $("script[src*='jquery.js']").attr("src");
-                area_scripts_src = area_scripts_src.replace('jquery.js', 'area_array.js');
-                $.ajax({
-                    url: area_scripts_src,
-                    async: false,
-                    dataType: "script"
-                }).done(function(){
-                    callback();
-                });
-            } else {
-                callback();
-            }
-        }
-    };
-})(jQuery);
 
 $(function(){
 	

@@ -10,7 +10,7 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 	
 	public function __construct(){
 		parent::__construct();
-		
+		$this->load->config('admin_site');
 		$this->_initAdminLogin();
 		
 		//@todo 打开检查权限

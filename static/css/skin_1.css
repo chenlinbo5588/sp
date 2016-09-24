@@ -138,12 +138,21 @@ h6 { font-size:12px;}
     text-align:center;
 }
 
+label.error {
+	color:red;
+}
+
 .validation_error {
     border:1px solid red;
 }
 
-input[type=text].validation_error {
+input[type=text].error,input[type=password].error {
     border:1px solid red;
+    background:url(../img/access_disallow.gif) no-repeat right center;
+}
+
+input[type=text].valid , input[type=password].valid {
+	background:url(../img/access_allow.gif) no-repeat right center;
 }
 
 
@@ -505,9 +514,9 @@ td.team a.weibo { background-position: 100% -40px;}
 
 .red_common {font-weight: bold; color: #ff5400;}
 .red_big {font-weight: bold; color: #ff5400; font-size: 16px;}
-form label.error { font-style:normal; font-weight: normal; color:#F00; background: url(../img/error.gif) no-repeat; padding-left: 20px; margin-left:5px;}
+form label.error { font-style:normal; font-weight: normal; color:#F00; background: url(../img/access_disallow.gif) no-repeat; padding-left: 20px; margin-left:5px;}
 form input.error , form textarea.error { background-color: #FFF0F0; background-repeat: repeat border: 1px dotted #FF3300;}
-form label.valid { font-weight: normal; color:#390; background: transparent url(../img/sky/bg_position.gif) no-repeat -625px -690px; float:none; padding-left:18px; margin-left:5px;}
+
 .help { line-height: 24px; color: #666; background-color: #F6F6F6; padding: 6px; border: 1px dashed #CCC;}
 .checkinfo { padding: 8px 0px 0px 0px;}
 .checkbox { margin: 0px; padding: 0px;}

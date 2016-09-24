@@ -1,5 +1,5 @@
 {include file="common/ke.tpl"}
-{include file="common/dlg.tpl"}
+{include file="common/jquery_ui.tpl"}
 {include file="common/jcrop.tpl"}
 <script type="text/javascript">
 //裁剪图片后返回接收函数

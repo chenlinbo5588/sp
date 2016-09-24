@@ -9,6 +9,7 @@ class My extends MyYdzj_Controller {
 	}
 	
 	
+	
 	public function index()
 	{
 		//print_r($this->session->all_userdata());
@@ -22,9 +23,11 @@ class My extends MyYdzj_Controller {
 		$ds = array_unique($ds);
 		$this->seoTitle('个人中心');
 		$this->assign('userDs',$this->common_district_service->getDistrictByIds($ds));
-		$this->assign('inviteUrl',site_url('member/register?inviter='.$this->_profile['basic']['uid']));
 		
+		$this->assign('inviteUrl',site_url('member/register?inviter='.$this->_profile['basic']['uid']));
 		$this->_breadCrumbs[] = array('title' => '基本资料' ,'url' => 'my/index');
+		
+		//print_r($this->session->all_userdata());
 		
 		$this->display();
 	}
@@ -36,10 +39,6 @@ class My extends MyYdzj_Controller {
 		$this->_breadCrumbs[] = array('title' => '修改基本资料' ,'url' => $this->uri->uri_string);
 		$this->display();
 	}
-	
-	
-	
-	
 	
 	
 	/**
@@ -144,46 +143,69 @@ class My extends MyYdzj_Controller {
 	/**
 	 * 
 	 */
+	public function verify_email(){
+		$this->_breadCrumbs[] = array('title' => '邮箱认证' ,'url' => $this->uri->uri_string);
+		//print_r($this->_siteSetting);
+		
+		if($this->isPostRequest()){
+			//$this->form_validation->set_rules('email','邮箱地址','required|valid_email');
+			$this->form_validation->set_rules('auth_code','验证码','required|callback_validateAuthCode');
+			
+			for($i = 0; $i < 1; $i++){
+				if(!$this->form_validation->run()){
+					break;
+				}
+				
+				$this->load->library('Message_service');
+				$this->message_service->initEmail($this->_siteSetting);
+				$param = $this->message_service->getEncodeParam(array(
+					$this->_profile['basic']['uid'],
+					$this->_profile['basic']['email']
+				));
+				
+				$url = site_url('member/verify_email?p=').$param;
+				$flag = $this->message_service->sendEmailConfirm($this->_profile['basic']['email'],$url);
+				
+				$this->assign('send',true);
+			}
+		}
+		
+		$mailServer = explode('@',$this->_profile['basic']['email']);
+		$this->assign('emailServer','mail.'.$mailServer[1]);
+				
+		$this->display();
+	}
+	
+	
+	
+	/**
+	 * 
+	 */
 	public function set_email(){
 		
-		$this->setTopNavTitle('绑定邮箱');
-		$this->setLeftNavLink('<a id="leftBarLink" class="bar_button" href="'.site_url('my').'" title="返回">返回</a>');
 		if($this->isPostRequest()){
-			
-			$setOk = false;
-			$inviteFrom = $this->input->post('inviteFrom');
-			
-			$this->assign('inviteFrom',$inviteFrom);
-			$this->assign('returnUrl',$this->input->post('returnUrl'));
-			
 			$this->form_validation->reset_validation();
-			$this->form_validation->set_rules('email','真实姓名','required|valid_email');
-			
+			$this->form_validation->set_rules('newemail','邮箱地址','required|valid_email');
 			
 			for($i = 0; $i < 1; $i++){
 				if($this->form_validation->run() == FALSE){
 					break;
 				}
 				
-				$this->load->library('Member_service');
-				$result = $this->member_service->updateUserInfo(array(
-					'username' => $this->input->post('username')
-				),$this->_profile['basic']['uid']);
+				$newEmail = $this->input->post('newemail');
+				$result = $this->Member_Model->update(array(
+					'email' => $newEmail,
+					'email_status' => 0
+				),array('uid' => $this->_profile['basic']['uid']));
 				
-				$this->member_service->refreshProfile($this->_profile['basic']['uid']);
-				$setOk = true;
+				if($result){
+					$this->_profile['basic']['email'] = $newEmail;
+					$this->refreshProfile();
+				}
 			}
-			
-			if($setOk){
-				js_redirect('my');
-			}else{
-				$this->display('my/set_username');
-			}
-			
-		}else{
-			$this->assign('default_username',$this->_profile['basic']['username']);
-			$this->display('my/set_username');
 		}
+		
+		redirect('my/index');
 		
 	}
 	

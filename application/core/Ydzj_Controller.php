@@ -82,24 +82,6 @@ class Ydzj_Controller extends MY_Controller {
 		return 'ydzj';
 	}
 	
-	
-	/**
-	 * @todo modify when online
-	 */
-	protected function initEmail(){
-		$config['protocol'] = 'smtp';
-		$config['smtp_host'] = "smtp.163.com";
-		$config['smtp_port'] = 25;
-		$config['smtp_user'] = "tdkc_of_cixi";
-		$config['smtp_pass'] = 'woaitdkc1234';
-		$config['smtp_timeout'] = 10;
-		$config['charset'] = config_item('charset');
-		
-		$this->load->library('email');
-		$this->email->initialize($config);
-	}
-	
-	
 	protected function _getCity(){
 		
 		$city_id = $this->input->get_cookie('city');

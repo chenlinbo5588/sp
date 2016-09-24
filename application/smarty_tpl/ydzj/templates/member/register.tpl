@@ -39,51 +39,15 @@
 	        <li>{form_error('auth_code')}</li>
             <li class="row rel">
                 <input class="at_txt" type="text" autocomplete="off" name="auth_code" value="{set_value('auth_code')}" placeholder="请输入右侧图片中4位验证码"/>
-                <div class="codeimg" title="点击图片刷新">正在获取验证码...</div>
+                <div class="codeimg" id="authImg" title="点击图片刷新">正在获取验证码...</div>
             </li>
 	        <li class="row"><input class="master_btn w100pre" type="submit" name="register" value="注册"/></li>
 	    </form>
 	    </ul>
 	</div>
 	<script>
-	   var refreshImg = function(json){
-           $(".codeimg").html(json.img);
-        };
-        
-	   $(function(){
-	       $(".codeimg").bind("click",function(){
-                setTimeout(function(){
-                    $.getJSON(imgUrl + "?t=" + Math.random(),refreshImg);
-                    $(".codeimg").html("正在刷新....");
-                },300);
-            });
-	       
-	       setTimeout(function(){
-	            $.getJSON('{site_url('captcha/index')}',function(json){
-	                $(".codeimg").html(json.img);
-	            });
-	        },300);
-	        
-        
-	       $("#registerForm").bind("submit",function(e){
-		        var mobile = $("input[name=mobile]").val();
-		        if(!regMobile.test(mobile)){
-		            alert("请输入正确的手机号码");
-		            $("input[name=mobile]").focus();
-		            return false;
-		        }
-		        
-		        
-		        if($("input[name=auth_code]").val() == '' ){
-		            alert("请输入手机验证码");
-		            $("input[name=auth_code]").focus();
-		            return false;
-		        }
-		        
-		        
-		        return true;
-		    });
-	   });
+		var imgCode1 = $.fn.imageCode({ wrapId: "#authImg", captchaUrl : captchaUrl });
+    	imgCode1.refreshImg();
 	</script>
 	<script src="{resource_url('js/getcode.js')}" type="text/javascript"></script>
 {include file="common/footer.tpl"}

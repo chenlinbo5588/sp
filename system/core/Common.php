@@ -986,10 +986,9 @@ function getErrorTip($message = ''){
 
 
 function validateAuthCode($val){
-	
-	$ci = & get_instance();
-	$word = $ci->session->userdata('auth_code');
-	if(!empty(trim($word)) &&  strtolower($val) == strtolower($word)){
+	$ci = get_instance();
+	$word = trim($ci->session->userdata('auth_code'));
+	if(!empty($word) &&  strtolower($val) == strtolower($word)){
 		return true;
 	}else{
 		$ci->form_validation->set_message('validateAuthCode', '对不起,{field} 输入不正确');

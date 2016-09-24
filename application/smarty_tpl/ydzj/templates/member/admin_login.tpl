@@ -30,23 +30,7 @@
 	    </ul>
 	</div>
     <script>
-        var imgUrl = "{site_url('captcha/index')}";
-        var refreshImg = function(json){
-           $(".codeimg").html(json.img);
-        };
-    
-	    $(function(){
-	        setTimeout(function(){
-	            $.getJSON(imgUrl,refreshImg);
-	            $(".codeimg").html("正在刷新....");
-	        },500);
-	        
-	        $("#authImg").bind("click",function(){
-	            setTimeout(function(){
-	                $.getJSON(imgUrl + "?t=" + Math.random(),refreshImg);
-	                $(".codeimg").html("正在刷新....");
-	            },500);
-	        });
-	    });
+    	var imgCode1 = $.fn.imageCode({ wrapId: "#authImg", captchaUrl : captchaUrl });
+    	imgCode1.refreshImg();
 	</script>
 {include file="common/footer.tpl"}
