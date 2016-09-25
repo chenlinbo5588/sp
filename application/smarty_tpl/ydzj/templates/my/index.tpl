@@ -4,7 +4,7 @@
 		<tbody>
 			<tr>
 				<td class="w120">用户UID</td>
-				<td>{$profile['basic']['uid']} <a class="hightlight" href="{site_url('my/edit_base')}">修改基本资料</a></td>
+				<td>{$profile['basic']['uid']}</td>
 			</tr>
 			<tr>
                 <td>登陆账号</td>
@@ -20,13 +20,19 @@
 			</tr>
 			<tr>
 				<td>邮箱地址</td>
-				<td><span>{$profile['basic']['email']|escape}</span>&nbsp;<a id="edit_email" href="javascript:void(0);">修改</a> {if $profile['basic']['email_status'] == 0}<span class="hightlight">邮箱尚未认证,可能无法收到邮件提醒</span> <a class="warning" href="{site_url('my/verify_email')}" title="马上认证邮箱">马上认证邮箱</a>{else}<span>已认证</span> <a href="{site_url('my/change_email')}">更换邮箱地址</a>{/if}</td>
+				<td><span>{$profile['basic']['email']|escape}</span>&nbsp;<a id="edit_email" class="warning" href="javascript:void(0);">修改</a> {if $profile['basic']['email_status'] == 0}<span class="hightlight">邮箱尚未认证,可能无法收到邮件提醒</span> <a class="warning" href="{site_url('my/verify_email')}" title="马上认证邮箱">马上认证邮箱</a>{else}<span>已认证</span>{/if}</td>
 			</tr>
 			<tr>
 				<td>头像</td>
 				<td>
 					<img src="{if $profile['basic']['avatar_s']}{resource_url($profile['basic']['avatar_s'])}{else}{resource_url($siteSetting['default_user_portrait'])}{/if}"/>
-					<a class="warning" href="{site_url('my/set_avatar')}">上传头像</a>
+					<input type="hidden" name="avatar_id" value="{$info['aid']}"/>
+		            <input type="hidden" name="old_avatar_id" value=""/>
+		            <input type="hidden" name="old_avatar" value=""/>
+		            <div class="upload">
+		              <input type='hidden' name='avatar' id='avatar' value="{$info['avatar']}" class='txt' />
+		              <input type="button" id="uploadButton" value="选择图片上传" />
+		            </div>
 				</td>
 			</tr>
 			<tr>
@@ -64,6 +70,8 @@
 	</table>
 	{include file="common/jquery_ui.tpl"}
 	{include file="common/jquery_validation.tpl"}
+	{include file="common/ke.tpl"}
+	{include file="common/jcrop.tpl"}
 	
 	<div id="dialog" title="修改邮箱">
 		{form_open(site_url('my/set_email'),"id='editEmailForm'")}
@@ -71,6 +79,42 @@
 		</form>
 	</div>
 	<script>
+	
+		//裁剪图片后返回接收函数
+		function call_back(resp){
+		    $('#previewWrap').html('<img src="' + resp.url + '"/>');
+		}
+		
+		KindEditor.ready(function(K) {
+			var uploadbutton = K.uploadbutton({
+				button : K('#uploadButton')[0],
+				fieldName : 'imgFile',
+				extraParams : { min_width :{$avatarImageSize['b']['width']},min_height: {$avatarImageSize['b']['height']} },
+				url : '{site_url("common/pic_upload")}?mod=member_avatar',
+				afterUpload : function(data) {
+					refreshFormHash(data);
+					if (data.error === 0) {
+						$("input[name=old_avatar]").val($("input[name=avatar]").val());
+		            	$("input[name=old_avatar_id]").val($("input[name=avatar_id]").val());
+		            	
+		                $("input[name=avatar_id]").val(data.id);
+		                $("input[name=avatar]").val(data.url);
+						
+						ajax_form('cutpic','裁剪','{admin_site_url("member/pic_cut")}?type=member&x={$avatarImageSize['m']['width']}&y={$avatarImageSize['m']['height']}&resize=0&ratio=1&url='+data.url,800);
+						
+					} else {
+						alert(data.msg);
+					}
+				},
+				afterError : function(str) {
+					alert('自定义错误信息: ' + str);
+				}
+			});
+			uploadbutton.fileBox.change(function(e) {
+				uploadbutton.submit();
+			});
+		});
+	
 	
 	</script>
 	<script type="text/javascript" src="{resource_url('js/my/index.js')}"></script>

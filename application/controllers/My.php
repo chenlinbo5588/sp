@@ -25,20 +25,16 @@ class My extends MyYdzj_Controller {
 		$this->assign('userDs',$this->common_district_service->getDistrictByIds($ds));
 		
 		$this->assign('inviteUrl',site_url('member/register?inviter='.$this->_profile['basic']['uid']));
-		$this->_breadCrumbs[] = array('title' => '基本资料' ,'url' => 'my/index');
 		
+		$avatarImageSize = config_item('avatar_img_size');
+		$this->assign('avatarImageSize',$avatarImageSize);
+		
+		$this->_breadCrumbs[] = array('title' => '基本资料' ,'url' => 'my/index');
 		//print_r($this->session->all_userdata());
 		
 		$this->display();
 	}
 	
-	/**
-	 * 
-	 */
-	public function edit_base(){
-		$this->_breadCrumbs[] = array('title' => '修改基本资料' ,'url' => $this->uri->uri_string);
-		$this->display();
-	}
 	
 	
 	/**
@@ -302,7 +298,7 @@ class My extends MyYdzj_Controller {
 			if($setOk){
 				if('teamInvite' == $inviteFrom){
 					//不需要设置地区了
-					$this->_jumpToTeam();
+					//$this->_jumpToTeam();
 				}else if('my' == $inviteFrom){
 					js_redirect('my');
 				}else{
@@ -328,21 +324,7 @@ class My extends MyYdzj_Controller {
 	}
 	
 	
-	private function _jumpToTeam(){
-		
-		$url = $this->input->post('returnUrl');
-		
-		$targetUrl = ''; 
-		if(empty($url) || !isLocalUrl($url)){
-			$targetUrl = site_url('my/index');
-			
-		}else{
-			preg_match('/^(.*)\?param=(.*)$/', $url, $match);
-			$targetUrl = $match[1].'?param='.urlencode($match[2]);
-		}
-		
-		js_redirect($targetUrl);
-	}
+	
 	
 	
 	

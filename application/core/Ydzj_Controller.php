@@ -99,4 +99,11 @@ class Ydzj_Controller extends MY_Controller {
 		return $city_id;
 	}
 	
+	
+	protected function refreshProfile(){
+		$this->session->set_userdata(array(
+			$this->_profileKey => $this->_profile
+		));
+	}
+	
 }

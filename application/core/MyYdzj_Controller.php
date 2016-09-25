@@ -23,11 +23,7 @@ class MyYdzj_Controller extends Ydzj_Controller {
 	}
 	
 	
-	protected function refreshProfile(){
-		$this->session->set_userdata(array(
-			$this->_profileKey => $this->_profile
-		));
-	}
+	
 	
 	/**
 	 * 初始化 url

@@ -257,27 +257,63 @@ class Member extends Ydzj_Controller {
 	
 	
 	public function forget(){
-		
 		$this->display();
 	}
 	
-	
 	public function verify_email(){
+		
+		$isSuccess = false;
 		
 		$this->load->library('Message_service');
 		$param = $this->input->get('p');
+		$realParam = $this->encrypt->decode($param);
+		$realParamArray = array();
+		
+		//print_r($realParamArray);
+		if($realParam){
+			$realParamArray = explode("\t",$realParam);
+			if($this->_reqtime > $realParamArray[2]){
+				//expired
+				$feedback = '很抱歉,链接已过期.';
+			}else{
+				$row = $this->Member_Model->update(array(
+					'email' => $realParamArray[1],
+					'email_status' => 1
+				
+				),array('uid' => $realParamArray[0],'email_status' => 0));
+				
+				if($row >= 0){
+					$isSuccess = true;
+				}
+				
+				$feedback = '恭喜你， 邮箱认证成功';
+			}
+		}
 		
 		$isLogin = false;
 		$linkURL = site_url('member/login');
 		if($this->isLogin()){
 			$isLogin = true;
+			
+			if($isSuccess){
+				$this->_profile['basic']['email'] = $realParamArray[1];
+				$this->_profile['basic']['email_status'] = 1;
+				$this->refreshProfile();
+			}
+			
 			$linkURL = site_url('my/index');
 		}
 		
+		if($isSuccess){
+			$imgUrl = resource_url('img/pass.png');
+		}else{
+			$imgUrl = resource_url('img/warn.png');
+		}
+		$this->assign('isSuccess',$isSuccess);
 		$this->assign('linkURL',$linkURL);
+		$this->assign('imgUrl',$imgUrl);
 		$this->assign('isLogin',$isLogin);
 		$this->display();
-		
 	}
 	
 }
