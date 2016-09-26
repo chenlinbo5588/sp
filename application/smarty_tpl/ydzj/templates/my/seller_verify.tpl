@@ -7,16 +7,17 @@
 	</div>
 	<div class="muted">通过卖家认证之后,将可以获得后台实时的匹配提醒</div>
 	
+	{form_open_multipart(site_url($uri_string),"id='sellerForm'")}
 	<input type="hidden" name="step" value="{$step}"/>
 	<table class="fulltable style1">
 	    <tbody>
 			<tr>
 				<td class="w120"><label>网店链接</label></td>
-				<td><input class="w50pre" type="text" name="store_url" value="" placeholder="请输入网店链接地址"/></td>
+				<td><input class="w50pre" type="text" name="store_url" value="{set_value('store_url')}" placeholder="请输入网店链接地址"/>{form_error('store_url')}</td>
 			</tr>
 			<tr>
 				<td class="w120"><label>卖家最近交易流水</label></td>
-				<td><input class="w50pre" type="file" name="trade_pic" value="网店链接"/></td>
+				<td><input class="w50pre" type="file" name="trade_pic" /><span>请上传尺寸JPG格式的最近交易流水图片,最小尺寸400x400</span></td>
 			</tr>
 			<tr>
                 <td>&nbsp;</td>

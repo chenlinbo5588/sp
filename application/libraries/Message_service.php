@@ -36,7 +36,7 @@ class Message_service extends Base_service {
 		$psw = self::$CI->encrypt->decode($setting['email_pass']);
 		
 		$config['smtp_pass'] = $psw;
-		$config['smtp_timeout'] = 3;
+		$config['smtp_timeout'] = 5;
 		$config['charset'] = config_item('charset');
 		
 		
@@ -81,18 +81,14 @@ class Message_service extends Base_service {
 			htmlentities($confirm_url)
 		),$tpl['content']);
 		
+		//print_r($this->_setting);
+		
 		return $this->sendEmail($to,$tpl['title'],$tpl['content']);
 	}
 	
 	
 	public function sendEmail($to,$subject,$content){
 		
-		/*
-		echo $to;
-		echo $subject;
-		echo $content;
-		print_r($this->_setting);
-		*/
 		$this->_email->to($to);
 		$this->_email->from($this->_setting['email_addr']);
 		$this->_email->subject($subject);

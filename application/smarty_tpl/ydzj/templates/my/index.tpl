@@ -10,10 +10,12 @@
                 <td>登陆账号</td>
                 <td>{$profile['basic']['username']|escape}</td>
             </tr>
+            {*
 			<tr>
 				<td>昵称</td>
 				<td>{$profile['basic']['nickname']|escape}</td>
 			</tr>
+			*}
 			<tr>
 				<td>手机账号</td>
 				<td><i class="fa fa-phone" aria-hidden="true"></i>&nbsp;<a href="javascript:void(0);">{$profile['basic']['mobile']|escape}</a><a class="warning"  href="{site_url('my/change_mobile')}">更换手机号码</a></td>
@@ -43,7 +45,7 @@
 				<td>{$profile['basic']['last_login']|date_format:"%Y-%m-%d %H:%M"}</td>
 			</tr>
 			<tr>
-				<td>注册IP</td>
+				<td>上次登录IP</td>
 				<td>{$profile['basic']['last_loginip']|escape}</td>
 			</tr>
 			<tr>

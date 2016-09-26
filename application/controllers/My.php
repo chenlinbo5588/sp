@@ -54,43 +54,50 @@ class My extends MyYdzj_Controller {
 			$step = 1;
 		}
 		
-		switch($step){
-			case 1:
-			
-				
-				
-				break;
-			case 2:
-				break;
-			default:
-				break;			
-		}
 		
-		
-		for($i = 0; $i < 1; $i++){
-			if(!$this->form_validation->run()){
-				break;
+		if($this->isPostRequest()){
+			$uploadFile = false;
+			switch($step){
+				case 1:
+					$this->form_validation->set_rules('store_url', '网店链接','required|valid_url');
+					
+					$this->load->library('Attachment_service');
+					$this->attachment_service->setUserInfo($this->_profile['basic']);
+					
+					$fileData = $this->attachment_service->addImageAttachment('trade_pic',array(
+						'min_width' => 400,
+						'min_height' => 400,
+					),0,'member_avatar');
+					
+					if($fileData){
+						$cutImage = $this->attachment_service->resize($fileData['file_url'],
+							array('b' => array('width' => 800,'height' => 600,'maintain_ratio' => true,'quality' => 95)
+						));
+						
+						$uploadFile = true;
+					}
+					
+					break;
+				default:
+					break;			
 			}
 			
-			/*
-			if($step == 2){
-				//$this->form_validation->set_ruls('mobile','require|valid_mobile');
-				
-				$rows = $this->Member_Model->update(array(
-					'mobile' => $this->input->post('newmobile')
-				),array(
-					'uid' => $this->_profile['basic']['uid']
-				));
-				
-				if($rows > 0){
-					$this->_profile['basic']['mobile'] = $this->input->post('newmobile');
-					$this->session->set_userdata(array(
-						$this->_profileKey => $this->_profile
-					));
+			
+			for($i = 0; $i < 1; $i++){
+				if(!$this->form_validation->run()){
+					break;
 				}
+				
+				if(1 == $step && !$uploadFile){
+					$feedback = getErrorTip('请上传交易流水图片');
+					break;
+				}
+				
+				$step++;
 			}
-			*/
+			
 		}
+		
 		
 		$this->_breadCrumbs[] = array('title' => '卖家认证' ,'url' => $this->uri->uri_string);
 		$this->assign('step',$step);

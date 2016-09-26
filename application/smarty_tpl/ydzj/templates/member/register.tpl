@@ -18,7 +18,7 @@
             </li>
             <li class="tip">{form_error('username')}</li>
             <li class="row">
-                <input class="at_txt" type="text" name="nickname" value="{set_value('username')}" placeholder="登陆账号,中文、字母、数字,最长8字符"/>
+                <input class="at_txt" type="text" name="username" value="{set_value('username')}" placeholder="登陆账号,中文、字母、数字,最长8字符"/>
             </li>
             <li class="tip">{form_error('email')}</li>
             <li class="row">

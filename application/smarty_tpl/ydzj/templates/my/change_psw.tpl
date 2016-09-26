@@ -8,6 +8,10 @@
 				<td>{$profile['basic']['uid']}</td>
 			</tr>
 			<tr>
+                <td>登录账户</td>
+                <td>{$profile['basic']['username']}</td>
+            </tr>
+			<tr>
 				<td>原密码</td>
 				<td><input type="password" name="old_psw" value="" placeholder="请输入原密码"/>{form_error('old_psw')}</td>
 			</tr>

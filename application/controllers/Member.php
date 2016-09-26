@@ -47,9 +47,7 @@ class Member extends Ydzj_Controller {
 				'last_loginip' => $this->input->ip_address()
 			),
 			$profile['basic']['uid']);
-
-		$this->_rememberLoginName($this->input->post('loginname'));
-					
+		
 	}
 	
 	/**
@@ -83,8 +81,8 @@ class Member extends Ydzj_Controller {
 					'password' => $this->input->post('password')
 				));
 				
-				
 				if($result['code'] == 'success'){
+					$this->_rememberLoginName($this->input->post('loginname'));
 					$this->_autologin($result['data']);
 					
 					$url = $this->input->post('returnUrl');
@@ -214,15 +212,28 @@ class Member extends Ydzj_Controller {
 					break;
 				}
 				
-				$this->load->library(array('Message_service'));
+				
+				$this->load->library(array('Message_service','Member_service'));
 				$pushApi = $this->register_service->getPushObject();
 				$resp = $pushApi->createId($result['data']['uid'],$addParam['mobile'],$addParam['nickname'],$addParam['password']);
 				
-				$userInfo = $this->Member_Model->getFirstByKey($addParam['username'],'username');
-				$this->_autologin(array('basic' => $userInfo));
 				
-				$this->_rememberLoginName($this->input->post('username'));
-				//$this->message_service->sendEmail('email_active',$addParam['email']);
+				$userInfo = $this->Member_Model->getFirstByKey($addParam['username'],'username');
+				
+				$this->_rememberLoginName($addParam['username']);
+				$this->_autologin(array(
+					'basic' => $userInfo
+				));
+				
+				$this->message_service->initEmail($this->_siteSetting);
+				$param = $this->message_service->getEncodeParam(array(
+					$result['data']['uid'],
+					$addParam['email']
+				));
+				
+				$url = site_url('member/verify_email?p=').$param;
+				$flag = $this->message_service->sendEmailConfirm($addParam['email'],$url);
+				
 				$registerOk = true;
 				
 			}
@@ -314,6 +325,7 @@ class Member extends Ydzj_Controller {
 		$this->assign('linkURL',$linkURL);
 		$this->assign('imgUrl',$imgUrl);
 		$this->assign('isLogin',$isLogin);
+		$this->assign('feedback',$feedback);
 		$this->display();
 	}
 	
