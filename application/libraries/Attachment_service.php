@@ -255,9 +255,9 @@ class Attachment_service extends Base_service {
 	 */
 	public function pic_upload($uploadName ,$options = array(), $fromBg = 0,$mod = ''){
 		$fileData = $this->addImageAttachment($uploadName,$options,$fromBg,$mod);
+		
 		//$Orientation[$exif[IFD0][Orientation]];
 		//$exif = exif_read_data($fileData['file_url'],0,true);
-		
 		
 		if($fileData){
 			//上传多次情况下，清理上一次上传的文件

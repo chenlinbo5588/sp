@@ -20,6 +20,8 @@ class Member_service extends Base_service {
 	}
 	
 	
+	
+	
 	/**
 	 * 登录判断
 	 */
@@ -58,6 +60,7 @@ class Member_service extends Base_service {
 			*/
 			
 			$newpsw = self::$CI->encrypt->decode($userInfo['password']);
+			//echo $newpsw;
 			if($param['password'] != $newpsw){
 				$result['message'] = '密码错误';
 				break;

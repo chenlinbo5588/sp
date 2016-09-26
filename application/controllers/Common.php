@@ -15,6 +15,8 @@ class Common extends Ydzj_Controller {
 	public function pic_upload(){
 		
 		$uploadname = '_pic';
+		
+		//print_r($_FILES);
         if(0 === $_FILES['imgFile']['error']){
             $uploadname = 'imgFile';
 		}
@@ -32,7 +34,6 @@ class Common extends Ydzj_Controller {
 		if($this->input->get_post('min_height')){
 			$options['min_height'] = intval($this->input->get_post('min_height'));
 		}
-		
 		
 		$json = $this->attachment_service->pic_upload($uploadname, $options, 0,$mod ? $mod : '');
 		

@@ -46,8 +46,10 @@
 	    </ul>
 	</div>
 	<script>
-		var imgCode1 = $.fn.imageCode({ wrapId: "#authImg", captchaUrl : captchaUrl });
-    	imgCode1.refreshImg();
+		$(function(){
+			var imgCode1 = $.fn.imageCode({ wrapId: "#authImg", captchaUrl : captchaUrl });
+	    	setTimeout(imgCode1.refreshImg,500);
+		});
 	</script>
 	<script src="{resource_url('js/getcode.js')}" type="text/javascript"></script>
 {include file="common/footer.tpl"}

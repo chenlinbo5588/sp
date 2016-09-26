@@ -33,7 +33,7 @@
             </tr>
             <tr>
                 <td>&nbsp;</td>
-                <td><input type="submit" class="master_btn" name="tijiao" value="下一步"/></a></td>
+                <td><input type="submit" class="master_btn" name="tijiao" value="下一步"/></td>
             </tr>
 	{else if $step == 3}
 	        <tr>

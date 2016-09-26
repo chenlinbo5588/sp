@@ -106,4 +106,16 @@ class Ydzj_Controller extends MY_Controller {
 		));
 	}
 	
+	
+	/**
+	 * 上传文件成功与否
+	 */
+	protected function uploadJSONFormat($error = 0, $fileData){
+		if($error){
+			return array('error' => $error, config_item('csrf_token_name') =>$this->security->get_csrf_hash(),'msg'=> $this->upload->display_errors('','') );
+		}else{
+			return array('error' => $error, config_item('csrf_token_name') =>$this->security->get_csrf_hash(),'id' => $fileData['id'], 'url'=>base_url($fileData['file_url']));
+		}
+	}
+	
 }

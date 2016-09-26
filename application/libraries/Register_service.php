@@ -119,7 +119,7 @@ class Register_service extends Base_service {
 			
 		self::$form_validation->set_rules('qq','用户QQ号码', 'required|numeric|min_length[5]|max_length[12]');
 		self::$form_validation->set_rules('email','用户常用邮箱', 'required|valid_email');
-		self::$form_validation->set_rules('psw','密码','required|valid_password');
+		self::$form_validation->set_rules('psw','密码','required|valid_password|min_length[6]|max_length[12]');
 		self::$form_validation->set_rules('psw_confirm','密码确认','required|matches[psw]');
 		self::$form_validation->set_rules('auth_code','验证码','required|callback_validateAuthCode');
 		

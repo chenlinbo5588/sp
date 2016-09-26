@@ -39,9 +39,8 @@
 		    </div>
 		</div><!-- //end of foot -->
     </div><!-- //end of wrap -->
-    <script type="text/javascript" src="{resource_url('js/jquery.cookie.js')}"></script>
     <script type="text/javascript" src="{resource_url('js/respond.min.js')}"></script>
-    <script type="text/javascript" src="{resource_url('js/common.js')}"></script>
+    
     <!--[if lt IE 9]>
 	<script type="text/javascript" src="{resource_url('js/html5shiv.js')}"></script>
 	<![endif]-->

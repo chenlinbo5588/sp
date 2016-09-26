@@ -26,8 +26,10 @@
     </table>
     </form>
     <script>
-    	var imgCode1 = $.fn.imageCode({ wrapId: "#authImg", captchaUrl : captchaUrl });
-    	imgCode1.refreshImg();
+    	$(function(){
+			var imgCode1 = $.fn.imageCode({ wrapId: "#authImg", captchaUrl : captchaUrl });
+	    	setTimeout(imgCode1.refreshImg,500);
+		});
     </script>
     {else}
     <div class="panel pd20 passbg">

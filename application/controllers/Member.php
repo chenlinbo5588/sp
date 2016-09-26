@@ -263,6 +263,7 @@ class Member extends Ydzj_Controller {
 	public function verify_email(){
 		
 		$isSuccess = false;
+		$feedback = '';
 		
 		$this->load->library('Message_service');
 		$param = $this->input->get('p');

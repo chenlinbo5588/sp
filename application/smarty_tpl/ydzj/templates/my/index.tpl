@@ -26,13 +26,12 @@
 				<td>头像</td>
 				<td>
 					<img src="{if $profile['basic']['avatar_s']}{resource_url($profile['basic']['avatar_s'])}{else}{resource_url($siteSetting['default_user_portrait'])}{/if}"/>
-					<input type="hidden" name="avatar_id" value="{$info['aid']}"/>
-		            <input type="hidden" name="old_avatar_id" value=""/>
-		            <input type="hidden" name="old_avatar" value=""/>
+					
 		            <div class="upload">
-		              <input type='hidden' name='avatar' id='avatar' value="{$info['avatar']}" class='txt' />
+		              
 		              <input type="button" id="uploadButton" value="选择图片上传" />
 		            </div>
+		            <div class="hightlight">文件最大2M，JPG PNG格式, 尺寸最多不超过 800x600</div>
 				</td>
 			</tr>
 			<tr>
@@ -78,44 +77,23 @@
 			<input type="text" class="at_txt" name="newemail" value="" placeholder="请输入新的邮箱地址"/>
 		</form>
 	</div>
+	<div id="imgCut" title="头像裁切">
+		<div id="srcImg"></div>
+		<form id="cutForm" action="{site_url('my/set_avatar')}" method="post">
+		  <input type='hidden' name='avatar' id='avatar' value="" class='txt' />
+		  <input type="hidden" name="avatar_id" value="{$info['aid']}"/>
+		  <input type="hidden" name="old_avatar_id" value=""/>
+		  <input type="hidden" name="old_avatar" value=""/>
+          <input type="hidden" id="x" name="x"/>
+          <input type="hidden" id="y" name="y"/>
+          <input type="hidden" id="w" name="w"/>
+          <input type="hidden" id="h" name="h"/>
+       </form>
+	</div>
+	
 	<script>
-	
-		//裁剪图片后返回接收函数
-		function call_back(resp){
-		    $('#previewWrap').html('<img src="' + resp.url + '"/>');
-		}
-		
-		KindEditor.ready(function(K) {
-			var uploadbutton = K.uploadbutton({
-				button : K('#uploadButton')[0],
-				fieldName : 'imgFile',
-				extraParams : { min_width :{$avatarImageSize['b']['width']},min_height: {$avatarImageSize['b']['height']} },
-				url : '{site_url("common/pic_upload")}?mod=member_avatar',
-				afterUpload : function(data) {
-					refreshFormHash(data);
-					if (data.error === 0) {
-						$("input[name=old_avatar]").val($("input[name=avatar]").val());
-		            	$("input[name=old_avatar_id]").val($("input[name=avatar_id]").val());
-		            	
-		                $("input[name=avatar_id]").val(data.id);
-		                $("input[name=avatar]").val(data.url);
-						
-						ajax_form('cutpic','裁剪','{admin_site_url("member/pic_cut")}?type=member&x={$avatarImageSize['m']['width']}&y={$avatarImageSize['m']['height']}&resize=0&ratio=1&url='+data.url,800);
-						
-					} else {
-						alert(data.msg);
-					}
-				},
-				afterError : function(str) {
-					alert('自定义错误信息: ' + str);
-				}
-			});
-			uploadbutton.fileBox.change(function(e) {
-				uploadbutton.submit();
-			});
-		});
-	
-	
+		var uploadUrl = '{site_url("my/upload_avatar")}?mod=member_avatar';
+		var min_width = {$avatarImageSize['m']['width']},min_height = {$avatarImageSize['m']['height']};
 	</script>
 	<script type="text/javascript" src="{resource_url('js/my/index.js')}"></script>
 {include file="./my_footer.tpl"}

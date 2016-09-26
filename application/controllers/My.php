@@ -3,9 +3,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class My extends MyYdzj_Controller {
 	
+	private $_avatarImageSize ;
+	private $_avatarSizeKeys;
+	
+	
 	public function __construct(){
 		parent::__construct();
 		$this->_breadCrumbs[] = array('title' => '个人中心','url' => 'my/index');
+		
+		$this->_avatarImageSize = config_item('avatar_img_size');
+		$this->_avatarSizeKeys = array_keys($this->_avatarImageSize);
+		
+		$this->assign('avatarImageSize',$this->_avatarImageSize);
+		
 	}
 	
 	
@@ -36,14 +46,67 @@ class My extends MyYdzj_Controller {
 	}
 	
 	
+	public function seller_verify(){
+		
+		$step = $this->input->get_post('step');
+		
+		if(empty($step)){
+			$step = 1;
+		}
+		
+		switch($step){
+			case 1:
+			
+				
+				
+				break;
+			case 2:
+				break;
+			default:
+				break;			
+		}
+		
+		
+		for($i = 0; $i < 1; $i++){
+			if(!$this->form_validation->run()){
+				break;
+			}
+			
+			/*
+			if($step == 2){
+				//$this->form_validation->set_ruls('mobile','require|valid_mobile');
+				
+				$rows = $this->Member_Model->update(array(
+					'mobile' => $this->input->post('newmobile')
+				),array(
+					'uid' => $this->_profile['basic']['uid']
+				));
+				
+				if($rows > 0){
+					$this->_profile['basic']['mobile'] = $this->input->post('newmobile');
+					$this->session->set_userdata(array(
+						$this->_profileKey => $this->_profile
+					));
+				}
+			}
+			*/
+		}
+		
+		$this->_breadCrumbs[] = array('title' => '卖家认证' ,'url' => $this->uri->uri_string);
+		$this->assign('step',$step);
+		$this->display();
+		
+		
+		
+	}
+	
+	
 	
 	/**
 	 * 
 	 */
 	public function change_mobile(){
 		$step = $this->input->get_post('step');
-		
-		
 		$this->load->library('Verify_service');
 		
 		if(empty($step)){
@@ -131,7 +194,41 @@ class My extends MyYdzj_Controller {
 	
 	
 	public function change_psw(){
+		if($this->isPostRequest()){
+			
+			$this->form_validation->set_rules('old_psw','原密码','required');
+			$this->form_validation->set_rules('psw','密码','required|valid_password|min_length[6]|max_length[12]');
+			$this->form_validation->set_rules('psw2','确认密码','required|matches[psw]');
+			
+			for($i = 0; $i < 1; $i++){
+				if(!$this->form_validation->run()){
+					$feedback = $this->form_validation->error_string();
+					break;
+				}
+				
+				$oldPsw = trim($this->input->post('old_psw'));
+				$member = $this->Member_Model->getById(array(
+					'where' => array('uid' => $this->_profile['basic']['uid'])
+				));
+				
+				if($oldPsw != $this->encrypt->decode($member['password'])){
+					$feedback = getErrorTip('原密码不正确');
+					break;
+				}
+				
+				$this->Member_Model->update(array(
+					'password' => $this->encrypt->encode($this->input->post('psw'))
+				),array(
+					'uid' => $this->_profile['basic']['uid']
+				));
+				
+				$feedback = getSuccessTip('保存成功');
+			}
+		}
+		
+		
 		$this->_breadCrumbs[] = array('title' => '修改密码' ,'url' => $this->uri->uri_string);
+		$this->assign('feedback',$feedback);
 		$this->display();
 	}
 	
@@ -243,87 +340,6 @@ class My extends MyYdzj_Controller {
 		}
 	}
 	
-	/**
-	 * 设置用户头像
-	 */
-	public function set_avatar(){
-		
-		
-		if($this->isPostRequest()){
-			$setOk = false;
-			
-			$inviteFrom = $this->input->post('inviteFrom');
-			//$this->assign('default_avatar',$this->input->post('default_avatar'));
-			$this->assign('inviteFrom',$inviteFrom);
-			$this->assign('returnUrl',$this->input->post('returnUrl'));
-			
-			for($i = 0; $i < 1; $i++){
-				$avatar_id = $this->input->post('avatar_id');
-				$newAvatar = $this->input->post('new_avatar');
-				$newAvatar = str_replace(base_url(),'',$newAvatar);
-				
-				
-				$avatarImageSize = config_item('avatar_img_size');
-				$avatarSizeKeys = array_keys($avatarImageSize);
-		
-				$this->load->library('Attachment_service');
-				$this->attachment_service->setImageSizeConfig($avatarImageSize);
-				$fileData = $this->attachment_service->resize(
-					$newAvatar,
-					array('m') , 
-					array('x_axis' => $this->input->post('x1'), 'y_axis' => $this->input->post('y1'))
-				);
-				
-				if($fileData['img_m']){
-					$smallImg = $this->attachment_service->resize($fileData['img_m'],array('s'));
-				}
-				
-				//删除原图
-				//unlink($fileData['full_path']);
-				
-				$this->load->library('Member_service');
-				$result = $this->member_service->updateUserInfo(array(
-					'status' => 0,
-					'avatar_status' => 0,
-					'aid' => $avatar_id,
-					'avatar_m' => $fileData['img_m'],
-					'avatar_s' => $smallImg['img_s']
-				),$this->_profile['basic']['uid']);
-				
-				$this->member_service->refreshProfile($this->_profile['basic']['uid']);
-				$setOk = true;
-			}
-			
-			
-			if($setOk){
-				if('teamInvite' == $inviteFrom){
-					//不需要设置地区了
-					//$this->_jumpToTeam();
-				}else if('my' == $inviteFrom){
-					js_redirect('my');
-				}else{
-					$this->load->library('Common_District_service');
-					$this->_prepareSetCity();
-					$this->seoTitle('设置您的所在地');
-					$this->setTopNavTitle('设置您的所在地');
-					$this->display('my/set_city');
-				}
-				
-			}else{
-				$this->display('my/set_avatar');
-			}
-			
-		}else{
-			
-			$this->assign('inviteFrom',$this->input->get('inviteFrom'));
-			$this->assign('default_avatar',$this->_profile['basic']['avatar_m']);
-			$this->display();
-		}
-		
-		
-	}
-	
-	
 	
 	
 	
@@ -406,6 +422,85 @@ class My extends MyYdzj_Controller {
 			
 			$this->seoTitle('设置您的所在地');
 			$this->display();
+		}
+		
+	}
+	
+	
+	
+	public function upload_avatar(){
+		
+		$this->load->library('Attachment_service');
+		$this->attachment_service->setUserInfo($this->_profile['basic']);
+		
+		$fileData = $this->attachment_service->addImageAttachment('imgFile',array(
+			/*'min_width' => $this->_avatarImageSize['m']['width'],
+			'min_height' => $this->_avatarImageSize['m']['height'],*/
+			'max_width' => 800,
+			'max_height' => 800,
+		),0,'member_avatar');
+		
+		
+		$resp  = array();
+		
+		if($fileData){
+			/*
+			$cutImage = $this->attachment_service->resize($fileData['file_url'],
+				array('b' => array('width' => 800,'height' => 600,'maintain_ratio' => true,'quality' => 100)
+			));
+			print_r($cutImage);
+			*/
+			
+			$resp = $this->uploadJSONFormat(0,$fileData);
+		}else{
+			$resp = $this->uploadJSONFormat(1);
+		}
+		
+		echo json_encode($resp);
+	}
+	
+	
+	
+	/**
+	 * 保存头像
+	 */
+	public function set_avatar(){
+		
+		if($this->isPostRequest()){
+			$src_file = str_ireplace(base_url(),'',$this->input->post('avatar'));
+			
+			
+			$avatar_id = $this->input->post('avatar_id');
+			
+			$this->load->library('Attachment_service');
+			
+			$this->attachment_service->setImageSizeConfig($this->_avatarImageSize);
+			$fileData = $this->attachment_service->resize($src_file, 
+				array('m'),
+				array('x_axis' => $this->input->post('x'), 'y_axis' => $this->input->post('y')));
+			
+			// 在中 img_m 的基础上再次裁剪 
+			if($fileData['img_m']){
+				$smallImg = $this->attachment_service->resize($fileData['img_m'], array('s') );
+			}
+			
+			//删除原图
+			@unlink($fileData['full_path']);
+			$this->Member_Model->update(array(
+				'aid' => $avatar_id,
+				'avatar_m' => $fileData['file_url'],
+				'avatar_s' => $smallImg['img_s'],
+				'avatar_status' => 0,
+				
+			),array('uid' => $this->_profile['basic']['uid']));
+			
+			
+			$this->_profile['basic']['avatar_m'] = $fileData['file_url'];
+			$this->_profile['basic']['avatar_s'] = $smallImg['img_s'];
+			
+			$this->refreshProfile();
+			
+			js_redirect('my/index');
 		}
 		
 	}

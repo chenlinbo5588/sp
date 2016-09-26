@@ -6,7 +6,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 $config['api_secret'] = 'b53209f0e4d2b2335d726e4e381511d59d22a31f';
 
-$config['allowed_img_types'] = 'jpg|jpeg';
+$config['allowed_img_types'] = 'jpg|jpeg|png';
 
 $config['mail_list'] = array(
 	'sina.com','126.com','163.com','gmail.com','qq.com','vip.qq.com','hotmail.com','sohu.com','139.com','vip.sina.com','21cn.cn','189.cn','sina.cn'
@@ -49,7 +49,6 @@ $config['default_img_size'] = array(
  * 4:3 或 1:1
  */
 $config['avatar_img_size'] = array(
-	'b' => array('width' => 400,'height' => 300 , 'maintain_ratio' => false,'quality' => 90),
 	'm' => array('width' => 200,'height' => 200,'maintain_ratio' => false,'quality' => 100),
 	's' => array('width' => 100,'height' => 100,'maintain_ratio' => false,'quality' => 100)
 );

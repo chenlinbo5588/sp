@@ -479,20 +479,29 @@ $.fn.imageCode = function(setting){
 		
 		wrap.html("正在刷新....");
 		isRequesting = true;
-		$.getJSON(setting.captchaUrl,function(json){
-			isRequesting = false;
-			wrap.html(json.img);
+		
+		$.ajax({
+			type:'GET',
+			url:setting.captchaUrl,
+			data : { t: Math.random() },
+			success: function( json){
+				isRequesting = false;
+				if(typeof(json.img) != "undefined"){
+					wrap.html(json.img);
+				}else{
+					wrap.html("点击重新刷新");
+				}
+			},
+			error: function(XMLHttpRequest, textStatus, thrownError){
+				isRequesting = false;
+			}
 		});
     };
 	
     wrap.bind("click.imageCode",_refreshImg);
     
-    /*
-	setTimeout(function(){
-        $.getJSON(setting.captchaUrl,_refreshImg);
-        wrap.html("正在刷新....");
-    },500);
-	*/
+	//setTimeout(_refreshImg,500);
+	
 	this.refreshImg = _refreshImg;
 	return this;
 }

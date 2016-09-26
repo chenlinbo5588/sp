@@ -31,7 +31,7 @@
 			</tr>
 			<tr>
 				<td>&nbsp;</td>
-				<td><input type="submit" class="master_btn" name="tijiao" value="修改"/></a></td>
+				<td><input type="submit" class="master_btn" name="tijiao" value="修改"/></td>
 			</tr>
 		</tbody>
 	</table>

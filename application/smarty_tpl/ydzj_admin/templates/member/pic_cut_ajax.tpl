@@ -70,7 +70,7 @@ $(function(){
         var d=$('#form_cut').serialize();
         $.post('{admin_site_url('member/pic_cut')}',d,function(data){
             call_back(data);
-            DialogManager.close('cutpic');
+            //DialogManager.close('cutpic');
         },'json');
     });
 });

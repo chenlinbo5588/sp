@@ -29,11 +29,11 @@
 </div>
 
 <script>
-    var imgCode1 = $.fn.imageCode({ wrapId: "#authImg", captchaUrl : captchaUrl });
-    imgCode1.refreshImg();
-    	
+	$(function(){
+		var imgCode1 = $.fn.imageCode({ wrapId: "#authImg", captchaUrl : captchaUrl });
+    	setTimeout(imgCode1.refreshImg,500);
+	});
 </script>
-
 {else}
 您已登陆 ,点击进入<a href="{site_url('my')}"> 个人中心 </a>  <a href="{site_url('member/logout')}">退出</a>
 {/if}
