@@ -106,7 +106,6 @@ class Ydzj_Controller extends MY_Controller {
 		));
 	}
 	
-	
 	/**
 	 * 上传文件成功与否
 	 */

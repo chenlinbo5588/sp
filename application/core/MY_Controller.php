@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class MY_Controller extends CI_Controller {
 
-	//public $_verifyName;
+	public $_verifyName;
 	public $_lastVisit;
 	public $_lastVisitKey;
 	
@@ -28,7 +28,7 @@ class MY_Controller extends CI_Controller {
 		$this->_reqtime = $this->input->server('REQUEST_TIME');
 		$this->_subNavs = array();
 		$this->_breadCrumbs = array();
-		//$this->_verifyName = 'verify';
+		$this->_verifyName = 'verify';
 		
 		$this->_initLibrary();
 		$this->_initSmarty();
@@ -41,18 +41,18 @@ class MY_Controller extends CI_Controller {
 		
 		$this->smartyConfig();
 	}
-
-	/*
-	protected function _verify($type = 'alnum' ,$len = 5 , $seconds = 120){
+	
+	
+	protected function _verify($type = 'alnum' ,$len = 5 , $seconds = 600){
 		$string = random_string($type,$len);
-		$expire = $this->input->server('REQUEST_TIME') + $seconds;
+		$expire = $this->_reqtime + $seconds;
 		$text = "{$string}\t{$expire}";
 		$encrypted_string = $this->encrypt->encode($text, $this->config->item('encryption_key'));
-		$this->input->set_cookie($this->_verifyName,$encrypted_string, $seconds);
-		
+		//$this->input->set_cookie($this->_verifyName,$encrypted_string, $seconds);
 		return $string;
 	}
-	*/
+	
+	
 	
 	public function getFormHash(){
 		return array(config_item('csrf_token_name') => $this->security->get_csrf_hash());

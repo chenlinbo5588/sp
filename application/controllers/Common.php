@@ -14,7 +14,7 @@ class Common extends Ydzj_Controller {
 	 */
 	public function pic_upload(){
 		
-		$uploadname = '_pic';
+		$uploadname = 'Filedata';
 		
 		//print_r($_FILES);
         if(0 === $_FILES['imgFile']['error']){

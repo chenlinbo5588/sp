@@ -148,11 +148,11 @@ label.error {
 
 input[type=text].error,input[type=password].error {
     border:1px solid red;
-    background:url(../img/access_disallow.gif) no-repeat right center;
+    background:#fff url(../img/access_disallow.gif) no-repeat right center;
 }
 
 input[type=text].valid , input[type=password].valid {
-	background:url(../img/access_allow.gif) no-repeat right center;
+	background:#fff url(../img/access_allow.gif) no-repeat right center;
 }
 
 

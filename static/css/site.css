@@ -326,11 +326,11 @@ label.error {
 
 input[type=text].error,input[type=password].error {
     border:1px solid red;
-    background:url(../img/access_disallow.gif) no-repeat right center;
+    background:#fff url(../img/access_disallow.gif) no-repeat right center;
 }
 
 input[type=text].valid , input[type=password].valid {
-	background:url(../img/access_allow.gif) no-repeat right center;
+	background:#fff url(../img/access_allow.gif) no-repeat right center;
 }
 
 
@@ -888,7 +888,12 @@ table.fulltable {
 	font-size:14px;
 }
 
-
+.trade_previw {
+	margin: 0 auto;
+    width: 380px;
+    padding: 5px;
+	
+}
 
 @media (min-width: 1440px) {
     .boxz {

@@ -8,12 +8,13 @@ class Common extends Ydzj_Admin_Controller {
 
 	}
 	
+	
 	/**
 	 * 
 	 */
 	public function pic_upload(){
+		$uploadname = 'Filedata';
 		
-		$uploadname = '_pic';
         if(0 === $_FILES['imgFile']['error']){
             $uploadname = 'imgFile';
 		}

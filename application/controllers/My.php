@@ -46,6 +46,32 @@ class My extends MyYdzj_Controller {
 	}
 	
 	
+	
+	public function trade_upload(){
+		
+		$this->load->library('Attachment_service');
+		$this->attachment_service->setUserInfo($this->_profile['basic']);
+		
+		$fileData = $this->attachment_service->addImageAttachment('Filedata',array(),0,'seller_verify');
+		
+		$resp  = array();
+		if($fileData){
+			$cutImage = $this->attachment_service->resize($fileData['file_url'],
+				array('m' => array('width' => 300,'height' => 450,'maintain_ratio' => true,'quality' => 100)
+			));
+			
+			$this->jsonOutput('上传成功',array(
+				'id' => $cutImage['id'],
+				'b' => resource_url($cutImage['file_url']),
+				'm' => resource_url($cutImage['img_m'])
+			
+			));
+			
+		}else{
+			$this->jsonOutput('上传失败');
+		}
+	}
+	
 	public function seller_verify(){
 		
 		$step = $this->input->get_post('step');
@@ -53,7 +79,6 @@ class My extends MyYdzj_Controller {
 		if(empty($step)){
 			$step = 1;
 		}
-		
 		
 		if($this->isPostRequest()){
 			$uploadFile = false;
@@ -102,8 +127,6 @@ class My extends MyYdzj_Controller {
 		$this->_breadCrumbs[] = array('title' => '卖家认证' ,'url' => $this->uri->uri_string);
 		$this->assign('step',$step);
 		$this->display();
-		
-		
 		
 	}
 	
