@@ -35,7 +35,6 @@ class Captcha extends Ydzj_Controller {
 		header('Content-Type: text/json');
 		
 		echo json_encode(array('img' => $cap['image']));
-		//echo file_get_contents(ROOTPATH.'/static/img/captcha/'.$cap['filename']);
     }
 
 }

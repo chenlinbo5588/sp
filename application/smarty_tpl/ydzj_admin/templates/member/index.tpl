@@ -1,15 +1,5 @@
 {include file="common/main_header.tpl"}
 {config_load file="member.conf"}
-  <div class="fixed-bar">
-    <div class="item-title">
-      <h3>{#title#}</h3>
-      <ul class="tab-base">
-        <li><a href="javascript:void(0);" class="current"><span>{#manage#}</span></a></li>
-        <li><a href="{admin_site_url('member/add')}" ><span>{#add#}</span></a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="fixed-empty"></div>
   <form class="formSearch" method="get" name="formSearch" id="formSearch" action="{admin_site_url('member')}">
     <input type="hidden" name="page" value=""/>
     <table class="tb-type1 noborder search">

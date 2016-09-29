@@ -100,7 +100,7 @@ class Register_service extends Base_service {
 				)
 			);
 		
-		self::$form_validation->set_rules('username','昵称',array(
+		self::$form_validation->set_rules('username','登陆账号',array(
 					'required',
 					'min_length[2]',
 					'max_length[8]',

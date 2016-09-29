@@ -39,8 +39,7 @@ $(function(){
 			success:function(resp){
 				refreshFormHash(resp);
 			},
-			failed:function(resp){
-				refreshFormHash(resp);
+			error:function(XMLHttpRequest, textStatus, errorThrown){
 			}
 		})
 	});

@@ -70,7 +70,7 @@
               <input type="button" id="uploadButton" value="浏览" />
             </div>
             </td>
-          <td class="vatop tips">支持格式jpg</td>
+          <td class="vatop tips">支持格式jpg,文件最大不要超过1M,最小尺寸 {$avatarImageSize['m']['width']}x{$avatarImageSize['m']['height']}</td>
         </tr>
         <tr>
         	<td colspan="2"><div id="previewWrap"></div></td>

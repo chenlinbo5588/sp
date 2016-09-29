@@ -1,26 +1,32 @@
 {include file="common/main_header.tpl"}
-  <div class="fixed-bar">
-    <div class="item-title">
-      <h3>会员管理</h3>
-      <ul class="tab-base">
-        <li><a href="{admin_site_url('member')}" ><span>管理</span></a></li>
-        <li><a href="{admin_site_url('member/add')}" ><span>新增</span></a></li>
-        <li><a href="JavaScript:void(0);" class="current"><span>编辑</span></a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="fixed-empty"></div>
-  <div class="feedback">{$feedback}</div>
   {form_open_multipart(admin_site_url('member/edit?id='|cat:$info['uid']),'id="user_form"')}
     <table class="table tb-type2">
       <tbody>
+      	<tr class="noborder">
+          <td colspan="2" class="required"><label>用户UID:</label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform">
+            <p>{$info['uid']}</p>
+          </td>
+          <td class="vatop tips"></td>
+        </tr>
         <tr class="noborder">
           <td colspan="2" class="required"><label>登陆账号:</label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform">
-            <p>{$info['mobile']}</p>
+            <p>{$info['username']}</p>
             <p><img src="{resource_url($info['avatar_m'])}"/></p>
+          </td>
+          <td class="vatop tips"></td>
+        </tr>
+        <tr class="noborder">
+          <td colspan="2" class="required"><label>手机号码:</label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform">
+            <p>{$info['mobile']}</p>
           </td>
           <td class="vatop tips"></td>
         </tr>
@@ -61,10 +67,5 @@
       </tfoot>
     </table>
   </form>
-<script type="text/javascript" src="{resource_url('js/dialog/dialog.js')}" id="dialog_js"></script>
-<script type="text/javascript" src="{resource_url('js/jquery-ui/jquery-ui-1.9.2.custom.min.js')}"></script>
-<script type="text/javascript" src="{resource_url('js/ajaxfileupload/ajaxfileupload.js')}"></script>
-<script type="text/javascript" src="{resource_url('js/jquery.Jcrop/jquery.Jcrop.js')}"></script>
-<link href="{resource_url('js/jquery.Jcrop/jquery.Jcrop.min.css')}" rel="stylesheet" type="text/css"/>
 {include file="member/member_common.tpl"}
 {include file="common/main_footer.tpl"}

@@ -10,7 +10,7 @@
 <link href="{resource_url('css/skin_1.css')}" rel="stylesheet" type="text/css" id="cssfile2" />
 <link href="{resource_url('js/jquery-ui/themes/redmond/jquery-ui-1.9.2.custom.css')}" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="{resource_url('js/jquery.js')}" ></script>
-<script type="text/javascript" src="{resource_url('js/validate/jquery.validate.min.js')}"></script>
+<script type="text/javascript" src="{resource_url('js/jquery.validation.min.js')}"></script>
 <script type="text/javascript" src="{resource_url('js/jquery.cookie.js')}"></script>
 <script>
 var cookiedomain = "{config_item('cookie_domain')}",
@@ -20,7 +20,9 @@ var cookiedomain = "{config_item('cookie_domain')}",
     cookie_skin = $.cookie("MyCssSkin"),
     SITEURL = '{base_url()}',
     cityUrl = "{site_url('district/index/')}",
-    LOADING_IMAGE = "{resource_url('img/loading/loading.gif')}";
+    LOADING_IMAGE = "{resource_url('img/loading/loading.gif')}",
+    authCodeURL ="{site_url('api/register/authcode')}",
+    captchaUrl = "{site_url('captcha/index')}";
     
 if (cookie_skin) {
     $('#cssfile2').attr("href","{resource_url('css')}/"+ cookie_skin +".css");

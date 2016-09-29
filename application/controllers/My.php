@@ -499,9 +499,7 @@ class My extends MyYdzj_Controller {
 		if($this->isPostRequest()){
 			$src_file = str_ireplace(base_url(),'',$this->input->post('avatar'));
 			
-			
 			$avatar_id = $this->input->post('avatar_id');
-			
 			$this->load->library('Attachment_service');
 			
 			$this->attachment_service->setImageSizeConfig($this->_avatarImageSize);
@@ -520,12 +518,11 @@ class My extends MyYdzj_Controller {
 				'aid' => $avatar_id,
 				'avatar_m' => $fileData['file_url'],
 				'avatar_s' => $smallImg['img_s'],
-				'avatar_status' => 0,
-				
+				'avatar_status' => 1
 			),array('uid' => $this->_profile['basic']['uid']));
 			
 			
-			$this->_profile['basic']['avatar_m'] = $fileData['file_url'];
+			$this->_profile['basic']['avatar_m'] = $fileData['img_m'];
 			$this->_profile['basic']['avatar_s'] = $smallImg['img_s'];
 			
 			$this->refreshProfile();

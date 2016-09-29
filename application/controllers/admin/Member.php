@@ -13,6 +13,14 @@ class Member extends Ydzj_Admin_Controller {
 		$this->_avatarImageSize = config_item('avatar_img_size');
 		$this->_avatarSizeKeys = array_keys($this->_avatarImageSize);
 		
+		
+		$this->assign('moduleTitle','会员');
+		$this->_subNavs = array(
+			array('url' => 'member/index', 'title' => '会员管理'),
+			array('url' => 'member/add','title' => '添加'),
+		);
+		
+		
 		$this->assign('avatarImageSize',$this->_avatarImageSize);
 	}
 	
@@ -168,6 +176,54 @@ class Member extends Ydzj_Admin_Controller {
 	
 	
 	/**
+	 * 保存头像
+	 */
+	public function cut_avatar(){
+		
+		$uid = $this->input->post('uid');
+		
+		if($this->isPostRequest()){
+			$src_file = str_ireplace(base_url(),'',$this->input->post('avatar'));
+			$avatar_id = $this->input->post('avatar_id');
+			
+			$this->load->library('Attachment_service');
+			
+			$this->attachment_service->setImageSizeConfig($this->_avatarImageSize);
+			$fileData = $this->attachment_service->resize($src_file, 
+				array('m'),
+				array('x_axis' => $this->input->post('x'), 'y_axis' => $this->input->post('y')));
+			
+			// 在中 img_m 的基础上再次裁剪 
+			if($fileData['img_m']){
+				$smallImg = $this->attachment_service->resize($fileData['img_m'], array('s') );
+			}
+			
+			//删除原图
+			@unlink($fileData['full_path']);
+			
+			//print_r($smallImg);
+			/*
+			$this->Member_Model->update(array(
+				'aid' => $avatar_id,
+				'avatar_m' => $fileData['img_m'],
+				'avatar_s' => $smallImg['img_s'],
+				'avatar_status' => 0,
+				
+			),array('uid' => $uid));
+			*/
+			
+			$this->jsonOutput('上传成功',array(
+				'm' => resource_url($fileData['img_m']),
+				's' => resource_url($smallImg['img_s'])
+			));
+		}else{
+			$this->jsonOutput('上传失败');
+		}
+		
+	}
+	
+	
+	/**
 	 * 验证规则
 	 */
 	private function _addRules(){
@@ -204,14 +260,12 @@ class Member extends Ydzj_Admin_Controller {
 	 * 后台创建用户
 	 */
 	public function add(){
-		
-		
 		$info = array();
 		
 		if($this->isPostRequest()){
 			
 			$this->_setMobileRule('mobile');
-			$this->form_validation->set_rules('passwd','密码','required|alpha_dash|min_length[6]|max_length[12]');
+			$this->form_validation->set_rules('passwd','密码','required|valid_password|min_length[6]|max_length[12]');
 			$this->form_validation->set_rules('passwd2','密码确认','required|matches[passwd]');
 			
 			$this->_addRules();
@@ -371,56 +425,4 @@ class Member extends Ydzj_Admin_Controller {
 		$this->assign('info',$info);
 		$this->display();
 	}
-	
-	
-	
-	/**
-	 * 裁剪用户头像
-	 */
-	public function pic_cut(){
-		if($this->isPostRequest()){
-			$src_file = str_ireplace(base_url(),'',$this->input->post('url'));
-			
-			$this->load->library('Attachment_service');
-			
-			$this->attachment_service->setImageSizeConfig($this->_avatarImageSize);
-			$fileData = $this->attachment_service->resize($src_file, 
-				array('m'),
-				array('x_axis' => $this->input->post('x1'), 'y_axis' => $this->input->post('y1')));
-			
-			// 在中 img_m 的基础上再次裁剪 
-			if($fileData['img_m']){
-				$smallImg = $this->attachment_service->resize($fileData['img_m'], array('s') );
-			}
-			
-			//删除原图
-			//unlink($fileData['full_path']);
-			
-			if (empty($fileData['img_m'])){
-				exit(json_encode(array(
-					'status' => 0, 
-					'formhash'=>$this->security->get_csrf_hash(),
-					'msg'=>$this->attachment_service->getErrorMsg('','')
-				)));
-			}else{
-				exit(json_encode(array(
-					'status' => 1, 
-					'formhash'=>$this->security->get_csrf_hash(),
-					'url'=>base_url($fileData['img_m']),
-					'picname' => $src_file
-				)));
-			}
-			
-		}else{
-			$save_file = str_ireplace(base_url(),'',$this->input->get('url'));
-			
-			list($width, $height, $type, $attr) =  getimagesize(ROOTPATH.'/'.$save_file);
-			
-			$this->assign('image_width',$width);
-			$this->assign('image_height',$height);
-			$this->display();
-		}
-		
-	}
-	
 }
