@@ -1,19 +1,6 @@
 {include file="common/main_header.tpl"}
-  <div class="fixed-bar">
-    <div class="item-title">
-      <h3>品牌</h3>
-      <ul class="tab-base">
-      	<li><a href="{admin_site_url('brand/index')}"><span>管理</span></a></li>
-      	<li><a href="{admin_site_url('brand/add')}" {if !$info['brand_id']}class="current"{/if}><span>新增</span></a></li>
-      	{if $info['brand_id']}<li><a href="{admin_site_url('brand/edit?brand_id=')}{$info['brand_id']}" class="current"><span>编辑</span></a></li>{/if}
-      </ul>
-    </div>
-  </div>
-  <div class="fixed-empty"></div>
-  <div class="feedback">{$feedback}</div>
-  
   {if $info['brand_id']}
-  {form_open_multipart(admin_site_url('brand/edit'),'id="brand_form"')}
+  {form_open_multipart(admin_site_url('brand/edit?brand_id='|cat:$info['brand_id']),'id="brand_form"')}
   {else}
   {form_open_multipart(admin_site_url('brand/add'),'id="brand_form"')}
   {/if}

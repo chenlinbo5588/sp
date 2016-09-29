@@ -1,14 +1,4 @@
 {include file="common/main_header.tpl"}
-  <div class="fixed-bar">
-    <div class="item-title">
-      <h3>品牌</h3>
-      <ul class="tab-base">
-        <li><a href="JavaScript:void(0);" class="current"><span>管理</span></a></li>
-        <li><a href="{admin_site_url('brand/add')}"><span>新增</span></a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="fixed-empty"></div>
   {form_open(admin_site_url('brand/index'),'id="formSearch"')}
   	 <input type="hidden" name="page" value="{$currentPage}"/>
 	 <table class="tb-type1 noborder search">

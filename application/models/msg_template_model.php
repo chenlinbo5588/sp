@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Msg_Template_Model extends MY_Model {
     
-    public $_tableName = 'msg_temlate';
+    public $_tableName = 'msg_template';
     public static $_tableMeta = null;
 
 

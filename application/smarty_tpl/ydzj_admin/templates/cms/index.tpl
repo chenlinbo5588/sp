@@ -1,14 +1,4 @@
 {include file="common/main_header.tpl"}
-  <div class="fixed-bar">
-        <div class="item-title">
-        <h3>CMS设置</h3>
-        <ul class="tab-base">
-            <li><a href="{admin_site_url('cms/index')}" class="current"><span>管理</span></a></li>
-          </ul>
-    </div>
-  </div>
-  <div class="fixed-empty"></div>
-  <div class="feedback">{$feedback}</div>
   {form_open(admin_site_url('cms/index'),'id="cms_form"')}
     <table class="table tb-type2">
       <tbody>

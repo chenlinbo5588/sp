@@ -2,7 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
- * 运动之家 管理控制器
+ * 管理控制器
  */
 class Ydzj_Admin_Controller extends Ydzj_Controller {
 	
@@ -11,10 +11,11 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 	public function __construct(){
 		parent::__construct();
 		
-		$this->form_validation->set_error_delimiters('<label class="error">','</label>');
+		//$this->form_validation->set_error_delimiters('<label class="error">','</label>');
 		$this->_initAdminLogin();
-		$this->_checkPermission();
-		$this->_initUserLabsRelate();
+		//$this->_checkPermission();
+		$this->load->config('admin_site');
+		
 		$this->_navs();
 	}
 	
@@ -23,96 +24,77 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 	 * 导航相关
 	 */
 	protected function _navs(){
-		$navs = array_slice($this->uri->segments,1,3);
-		$pathStr = implode('/',$navs);
-		
-		$this->assign('pathStr',$pathStr);
-		$this->assign('fnKey',$navs[0]);
-		$this->assign('navs',config_item('navs'));
-	}
-	
-	
-	private function _friendSiteWelcome(){
-		
-		static $_friendWebsite = array(
-	    	//欢迎进入浙江省农产品加工技术研究重点实验室药品仪器管理中心！
-			'zjufs.zju.edu.cn' => 1,
-	    	//欢迎进入浙江大学生工食品学院实验室药品仪器管理中心！
-	    	'www.caefs.zju.edu.cn' => 2
-	    );
-		
-		$showWelcome = $this->input->cookie('wel');
-		if(!$showWelcome){
-			if($_SERVER['HTTP_REFERER']){
-				$urlParam = parse_url($_SERVER['HTTP_REFERER']);
-				if($this->_friendWebsite[$urlParam['host']]){
-					set_cookie('wel','no,'.$this->_friendWebsite[$urlParam['host']],86400 * 365);
-				}
-			}
+		$navs = $this->uri->segments;
+		if($navs[1] == 'admin'){
+			$navs = array_slice($navs,1,3);
 		}
 		
-	}
-	
-	
-	
-	private function _initUserLabsRelate(){
+		//print_r($navs);
+        $pathStr = implode('/',$navs);
+		//echo site_url($_SERVER['REQUEST_URI']);
+		$currentUri = $_SERVER['REQUEST_URI'];
+		if(preg_match("/^\/index.php\/admin\//",$currentUri,$match)){
+			$currentUri = substr($currentUri,17);
+		}
 		
-		$this->load->library('Lab_service');
-		$ar = $this->lab_service->getUserLabsAssoc($this->_adminProfile['basic']['id']);
-    	
-    	$this->session->set_userdata($ar);
+		
+		$configNav = config_item('navs');
+		$this->_subNavs = $configNav['sub'][$navs[0]];
+		
+		//print_r($this->_subNavs);
+		//echo $pathStr;
+		
+		$this->assign('uri_string',$this->uri->uri_string);
+		$this->assign('currentURL',$currentUri);
+        $this->assign('pathStr',$pathStr);
+        $this->assign('fnKey',$navs[0]);
+        
+        $this->assign('navs',config_item('navs'));
 	}
+	
+	
+	
 	
 	protected function _initLibrary(){
 		parent::_initLibrary();
-		
 		$this->load->model('Role_Model');
 	}
 	
 	private function _initAdminLogin(){
 		//print_r($this->session->all_userdata());
-		$adminLastVisit = $this->session->userdata($this->_adminLastVisitKey);
 		
-		if(empty($adminLastVisit)){
-			$this->session->set_userdata(array($this->_adminLastVisitKey => $this->_reqtime));
-		}
+		$alldata = $this->session->get_userdata();
+		$adminLastVisit = $alldata[$this->_adminLastVisitKey];
 		
-		$this->_adminProfile = $this->session->userdata($this->_adminProfileKey);
-		if(empty($this->_adminProfile)){
-			$this->_adminProfile = array();
-		}
-		
-		if(!$this->isAdminLogin($adminLastVisit)){
+		if(!$this->isAdminLogin($alldata)){
 			if($this->input->is_ajax_request()){
 				$this->responseJSON('您尚未登陆',array('url' => site_url('member/admin_login')));
 			}else{
-				$this->session->unset_userdata(array($this->_adminLastVisitKey,$this->_adminProfileKey));
-				redirect(site_url('member/admin_login'));
+				$this->session->unset_userdata($this->_adminProfileKey);
+				js_redirect(site_url('member/admin_login'));
 			}
 		}else{
-			$this->_loginUID = $this->_adminProfile['basic']['id'];
+			$this->_adminProfile = $alldata[$this->_adminProfileKey];
+			if($this->_adminProfile){
+				$this->session->set_userdata(array(
+					$this->_adminProfileKey => $this->_adminProfile,
+					$this->_adminLastVisitKey => $this->_reqtime
+				));
+			}
+			
 			$this->assign($this->_adminProfileKey,$this->_adminProfile);
-		}
-		
-		//如果没有被刷新，则刷新
-		if($adminLastVisit){
-			$this->session->set_userdata(array($this->_adminLastVisitKey => $this->_reqtime));
 		}
 		
 	}
 	
 	
-	public function isAdminLogin($lastVisitTime){
+	public function isAdminLogin($session = array()){
+		if(!$session){
+			$session = $this->session->get_userdata();
+		}
 		
-		/*
-		echo $this->session->userdata('admin_lastvisit');
-		echo '<br>';
-		echo $this->_reqtime;
-		print_r($this->_adminProfile);
-		echo ($this->_reqtime - $this->session->userdata('admin_lastvisit'));
-		*/
-		
-		if($this->_adminProfile && ($this->_reqtime - $this->session->userdata($this->_adminLastVisitKey)) <= 86400){
+		$lastVisit = empty($session[$this->_adminLastVisitKey]) ? 0 : $session[$this->_adminLastVisitKey];
+		if(!empty($session[$this->_adminProfileKey]) && ($this->_reqtime - $lastVisit) <= CACHE_ONE_DAY){
 			return true;
 		}
 
@@ -189,20 +171,5 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 		return 'ydzj_admin';
 	}
 	
-    /**
-     *  检查是否是 系统管理员
-     */
-    protected function _checkIsSystemManager(){
-    	
-    	if($this->_loginUID == LAB_FOUNDER_ID){
-    		return true;
-    	}
-    	
-    	if($this->_adminProfile['basic']['is_manager'] != 'y'){
-			return false;
-		}else{
-			return true;
-		}
-    }
 }
 

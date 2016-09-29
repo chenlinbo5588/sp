@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Index extends Ydzj_Admin_Controller {
+class Index extends Ydzj_Controller {
 	
 	public function __construct(){
 		parent::__construct();
@@ -12,6 +12,8 @@ class Index extends Ydzj_Admin_Controller {
 	 */
 	public function index()
 	{
+		
+		
 		$this->display();
 	}
 

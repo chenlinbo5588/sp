@@ -26,24 +26,35 @@ class Member_service extends Base_service {
 		$result = $this->formatArrayReturn();
 		$result['message'] = '登陆失败';
 		
-		$userInfo = self::$memberModel->getFirstByKey($param['account'],'account');
+		$userInfo = self::$memberModel->getFirstByKey($param['loginname'],'username');
 		
-		if(!empty($userInfo)){
+		for($i = 0; $i < 1; $i++){
 			
-			if($userInfo['psw'] == md5(config_item('encryption_key').$param['password'])){
-				unset($userInfo['psw']);
-				
-				if($userInfo['locked'] != 0){
-					$result['message'] = '您的账号已被冻结,请联系网站管理人员';
-				}else{
-					$result = $this->successRetun(array('basic' => $userInfo));
-				}
-				
-			}else{
-				$result['message'] = '密码错误';
+			if(empty($userInfo)){
+				$result['message'] = '用户不存在';
+				break;
 			}
-		}else{
-			$result['message'] = '用户不存在';
+			
+			if($userInfo['freeze'] == 'Y'){
+				$result['message'] = '您的账号已被冻结,请联系网站客服人员';
+				break;
+			}
+			
+			/*
+			if($userInfo['email_status'] == 0){
+				$result['message'] = '您的账号尚未验证邮箱,暂时不能登录';
+				break;
+			}
+			*/
+			
+			$newpsw = self::$CI->encrypt->decode($userInfo['password']);
+			//echo $newpsw;
+			if($param['password'] != $newpsw){
+				$result['message'] = '密码错误';
+				break;
+			}
+			
+			$result = $this->successRetun(array('basic' => $userInfo));
 		}
 		
 		return $result;
@@ -55,7 +66,7 @@ class Member_service extends Base_service {
 	 * 
 	 */
 	public function getUserInfoById($id){
-		return self::$memberModel->getFirstByKey($id,'id');
+		return self::$memberModel->getFirstByKey($id,'uid');
 	}
 	
 	public function getUserInfoByKey($value,$key){
@@ -79,13 +90,13 @@ class Member_service extends Base_service {
 	 * 更新用户信息
 	 */
 	public function updateUserInfo($data,$uid){
-		return self::$memberModel->update($data,array('id' => $uid));
+		return self::$memberModel->update($data,array('uid' => $uid));
 	}
 	
 	/**
 	 * 
 	 */
 	public function getListByCondition($condition){
-		return $this->toEasyUseArray(self::$memberModel->getList($condition),'id');
+		return $this->toEasyUseArray(self::$memberModel->getList($condition),'uid');
 	}
 }

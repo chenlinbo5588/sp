@@ -8,7 +8,8 @@ class Upload extends Ydzj_Admin_Controller {
 		$this->load->library('Admin_service');
 		$this->load->library('Attachment_service');
 		
-		$this->assign(array('topnav' => 'setting/base'));
+		$this->attachment_service->setUserInfo($this->_adminProfile['basic']);
+		
 		
 	}
 	

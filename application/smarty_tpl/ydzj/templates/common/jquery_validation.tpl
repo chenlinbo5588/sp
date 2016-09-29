@@ -1,0 +1,2 @@
+<script type="text/javascript" src="{resource_url('js/jquery.validation.min.js')}"></script>
+<script type="text/javascript" src="{resource_url('js/validate/localization/messages_zh.min.js')}"></script>

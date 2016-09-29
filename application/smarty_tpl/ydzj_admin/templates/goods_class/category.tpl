@@ -1,17 +1,4 @@
 {include file="common/main_header.tpl"}
-  <div class="fixed-bar">
-    <div class="item-title">
-      <h3>商品分类</h3>
-      <ul class="tab-base">
-      	<li><a class="current"><span>管理</span></a></li>
-      	<li><a href="{admin_site_url('goods_class/add')}"><span>新增</span></a></li>
-      	<li><a href="{admin_site_url('goods_class/export')}"><span>导出</span></a></li>
-      	<li><a href="{admin_site_url('goods_class/import')}"><span>导入</span></a></li>
-      	<li><a href="{admin_site_url('goods_class/tag')}"><span>TAG管理</span></a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="fixed-empty"></div>
    <table class="table tb-type2" id="prompt">
     <tbody>
       <tr class="space odd">

@@ -1,16 +1,5 @@
 {include file="common/main_header.tpl"}
 {config_load file="article.conf"}
-  <div class="fixed-bar">
-    <div class="item-title">
-      <h3>{#title#}</h3>
-      <ul class="tab-base">
-      	<li><a href="{admin_site_url('article/index')}"><span>管理</span></a></li>
-      	<li><a href="{admin_site_url('article/add')}" {if !$info['article_id']}class="current"{/if}><span>新增</span></a></li>
-      	{if $info['article_id']}<li><a href="{admin_site_url('article/edit?article_id=')}{$info['article_id']}" class="current"><span>编辑</span></a></li>{/if}
-      </ul>
-    </div>
-  </div>
-  <div class="fixed-empty"></div>
   <style type="text/css">
   
   .filelist span {

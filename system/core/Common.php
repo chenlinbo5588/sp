@@ -957,7 +957,6 @@ if ( ! function_exists('getImgPathArray'))
 	}
 }
 
-
 function time_tran($the_time) {
     $dur = time() - $the_time;
     if ($dur < 0) {
@@ -983,6 +982,18 @@ function time_tran($the_time) {
     }
 }
 
+function show_custom_error($message, $status_code = 500, $heading = '提示'){
+	
+	$_error =& load_class('Exceptions', 'core');
+	echo $_error->show_error($heading, $message, 'error_custom', $status_code);
+	exit($status_code);
+}
+
+
+
+function getWarningTip($message){
+	return "<div class=\"warning\">{$message}</div>";
+}
 
 function getSuccessTip($message = ''){
 	return "<div class=\"tip_success\">{$message}</div>";
@@ -993,13 +1004,12 @@ function getErrorTip($message = ''){
 }
 
 
+
+
 function validateAuthCode($val){
-	
-	$ci = & get_instance();
-	$word = $ci->session->userdata('auth_code');
-	if(strtolower($val) == strtolower($word)){
-		//清空
-		$ci->session->unset_userdata('auth_code');
+	$ci = get_instance();
+	$word = trim($ci->session->userdata('auth_code'));
+	if(!empty($word) &&  strtolower($val) == strtolower($word)){
 		return true;
 	}else{
 		$ci->form_validation->set_message('validateAuthCode', '对不起,{field} 输入不正确');

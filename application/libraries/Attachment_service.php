@@ -23,28 +23,28 @@ class Attachment_service extends Base_service {
 		$this->_imageSizeConfig = $config;
 	}
 	
-	
-	private function _uploadConfig(){
+	/**
+	 * 默认的上传设置
+	 */
+	public function getUploadConfig(){
 		$config['file_path'] = 'static/attach/'.date("Y/m/d/");
         $config['upload_path'] = ROOTPATH . '/'.$config['file_path'];
-        
         make_dir($config['upload_path']);
-        
-		
-		$config['file_ext_tolower'] = true;
+        $config['file_ext_tolower'] = true;
 		$config['encrypt_name'] = true;
 		$config['max_size'] = 4096;
 		
-		return $config;
 		
+		return $config;
+	
 	}
 	
 	/**
 	 * 获得图片上传配置
 	 */
 	public function getImageUploadConfig(){
-		$config = $this->_uploadConfig();
 		$config['allowed_types'] = config_item('allowed_img_types');
+		
 		return $config;
 	}
 	
@@ -179,11 +179,12 @@ class Attachment_service extends Base_service {
 		return $fileData;
 	}
 	
-	private function _doUpload($filename, $config = array(),$from = 0,$mod = ''){
-		
-		//print_r($config);
+	
+	/**
+	 * 
+	 */
+	public function addAttachment($filename, $config = array(),$from = 0,$mod = ''){
 		self::$CI->load->library('upload', $config);
-		
 		if(self::$CI->upload->do_upload($filename)){
 			$fileData = self::$CI->upload->data();
 			//print_r($fileData);
@@ -191,15 +192,15 @@ class Attachment_service extends Base_service {
 			$fileData['ip'] = self::$CI->input->ip_address();
 			
 			if($this->_userInfo){
-				$fileData['uid'] = $this->_userInfo['id'];
+				$fileData['uid'] = $this->_userInfo['uid'];
 				
 				if($from == FROM_BACKGROUND){
-					$fileData['username'] = $this->_userInfo['name'];
+					$fileData['username'] = $this->_userInfo['username'];
 				}else{
-					//maybe
-					$fileData['username'] = $this->_userInfo['name'];
+					$fileData['username'] = $this->_userInfo['nickname'];
 				}
 			}
+			
 			
 			$fileData['image_width'] = $fileData['image_width'] ? $fileData['image_width'] : 0;
 			$fileData['image_height'] = $fileData['image_height'] ? $fileData['image_height'] : 0;
@@ -219,15 +220,6 @@ class Attachment_service extends Base_service {
 	}
 	
 	
-	public function addAttachment($filename, $moreConfig = array(),$from = 0,$mod = ''){
-		$config = $this->_uploadConfig();
-		
-		if(!empty($moreConfig)){
-			$config = array_merge($config,$moreConfig);
-		}
-		
-		return $this->_doUpload($filename,$config,$from,$mod);
-	}
 	
 	/**
 	 * 添加图片附件信息
@@ -235,13 +227,15 @@ class Attachment_service extends Base_service {
 	 */
 	public function addImageAttachment($filename, $moreConfig = array(),$from = 0,$mod = ''){
 		//处理照片
-		$config = $this->getImageUploadConfig();
+		$config = $this->getUploadConfig();
+		$config['allowed_types'] = config_item('allowed_img_types');
 		
 		if(!empty($moreConfig)){
 			$config = array_merge($config,$moreConfig);
 		}
 		
-		return $this->_doUpload($filename,$config,$from,$mod);
+		return $this->addAttachment($filename,$config,$from,$mod);
+		
 	}
 	
 	/**
@@ -253,7 +247,7 @@ class Attachment_service extends Base_service {
 	
 	
 	/**
-	 * 前后台上传图片公告逻辑
+	 * 前后台上传图片公共逻辑
 	 * 
 	 * @param datatype $uid 操作人
 	 * @param datatype $uploadName 上传名
@@ -261,9 +255,9 @@ class Attachment_service extends Base_service {
 	 */
 	public function pic_upload($uploadName ,$options = array(), $fromBg = 0,$mod = ''){
 		$fileData = $this->addImageAttachment($uploadName,$options,$fromBg,$mod);
+		
 		//$Orientation[$exif[IFD0][Orientation]];
 		//$exif = exif_read_data($fileData['file_url'],0,true);
-		
 		
 		if($fileData){
 			//上传多次情况下，清理上一次上传的文件

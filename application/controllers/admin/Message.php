@@ -12,8 +12,6 @@ class Message extends Ydzj_Admin_Controller {
 		
 		$this->load->library(array('Admin_service','Message_service'));
 		
-		$this->assign(array('topnav' => 'setting/base'));
-		
 		$this->settingKey = array(
 			'email_enabled',
 			'email_type',
@@ -31,8 +29,6 @@ class Message extends Ydzj_Admin_Controller {
 	public function email(){
 		
 		$feedback = '';
-		
-		
 		
 		$currentSetting = $this->admin_service->getSettingList(array(
 			'where_in' => array(
@@ -86,6 +82,8 @@ class Message extends Ydzj_Admin_Controller {
 					break;
 				}
 				
+				
+				$this->getCacheObject()->delete(CACHE_KEY_SiteSetting);
 				
 				$feedback = getSuccessTip('保存成功');
 				$currentSetting = $this->admin_service->getSettingList(array(
@@ -197,6 +195,9 @@ class Message extends Ydzj_Admin_Controller {
 	public function email_tpl_edit(){
 		
 		$code = $this->input->get_post('code');
+		
+		$this->_subNavs[] = array('url' => 'message/email_tpl_edit?code='.$code, 'title' => '编辑消息模板');
+		
 		$feedback = '';
 		
 		if($this->isPostRequest()){

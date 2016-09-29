@@ -40,13 +40,13 @@ if (cookie_skin) {
 	<div id="title"><a href="javascript:void(0);">{config_item('site_name')}</a></div>
     <ul id="topnav" class="top-nav clearfix">
       {*<li><div id="sitemap"><a class="bar-btn" id="siteMapBtn" href="#rhis" onclick="showBg('dialog','dialog_content');"><span>快捷导航</span></a></div></li>*}
-      <li class="adminid" title="您好:{$admin_profile['basic']['account']|escape}"><span>您好&nbsp;:&nbsp;</span><strong>{$admin_profile['basic']['account']|escape}</strong></li>
+      <li class="adminid" title="您好:{$admin_profile['basic']['username']|escape}"><span>您好&nbsp;:&nbsp;</span><strong>{$admin_profile['basic']['username']|escape}</strong></li>
       <li><a href="{admin_site_url('index/profile')}"><span>修改密码</span></a></li>
-      <li><a href="{admin_site_url('index/logout')}" title="退出"><span>退出</span></a></li>
+      <li><a href="{admin_site_url('my/logout')}" title="退出"><span>退出</span></a></li>
     </ul>
 	<ul id="nav" class="main-nav clearfix">
 		{foreach from=$navs['main'] item=item}
-		<li><a class="link{if $pathStr == $item['url'] || $topnav == $item['url']} actived{/if}" href="{admin_site_url($item['url'])}">{$item['title']|escape}</a></li>
+		<li><a class="link{if $pathStr == $item['url']} actived{/if}" href="{admin_site_url($item['url'])}">{$item['title']|escape}</a></li>
 		{/foreach}
 	</ul>
 </div>
@@ -59,3 +59,4 @@ if (cookie_skin) {
 			<strong>您的位置:</strong>
 		    <div id="crumbs" class="crumbs"><span>控制台</span><span class="arrow">&nbsp;</span><span>欢迎页面</span></div>
 		</div>
+		{include file="common/sub_nav.tpl"}

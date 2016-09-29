@@ -1,17 +1,5 @@
 {include file="common/main_header.tpl"}
 {config_load file="article.conf"}
-  <div class="fixed-bar">
-    <div class="item-title">
-      <h3>{#cms_article#}</h3>
-      <ul class="tab-base">
-      	<li><a href="{admin_site_url('cms_article/index')}"><span>管理</span></a></li>
-      	<li><a href="{admin_site_url('cms_article/add')}" {if !$info['id']}class="current"{/if}><span>新增</span></a></li>
-      	{if $info['id']}<li><a href="{admin_site_url('cms_article/edit?id=')}{$info['id']}" class="current"><span>编辑</span></a></li>{/if}
-      </ul>
-    </div>
-  </div>
-  <div class="fixed-empty"></div>
-  <div class="feedback">{$feedback}</div>
   {if $info['id']}
   {form_open_multipart(admin_site_url('cms_article/edit'),'id="article_form"')}
   {else}

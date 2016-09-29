@@ -1,16 +1,4 @@
 {include file="common/main_header.tpl"}
-  <div class="fixed-bar">
-    <div class="item-title">
-      <h3>文章分类</h3>
-      <ul class="tab-base">
-      	<li><a href="{admin_site_url('article_class/category')}"><span>管理</span></a></li>
-      	<li><a href="{admin_site_url('article_class/add')}" {if !$info['ac_id']}class="current"{/if}><span>新增</span></a></li>
-      	{if $info['ac_id']}<li><a href="{admin_site_url('article_class/edit?ac_id=')}{$info['ac_id']}" class="current"><span>编辑</span></a></li>{/if}
-      </ul>
-    </div>
-  </div>
-  <div class="fixed-empty"></div>
-  <div class="feedback">{$feedback}</div>
   {if $info['ac_id']}
   {form_open(admin_site_url('article_class/edit'),'id="article_class_form"')}
   {else}

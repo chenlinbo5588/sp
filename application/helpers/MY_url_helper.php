@@ -77,7 +77,7 @@ if ( ! function_exists('js_redirect'))
 	 * @param	string	$protocol
 	 * @return	string
 	 */
-	function js_redirect($uri = '',$method = '')
+	function js_redirect($uri = '',$method = '',$wait = 1,$title = '')
 	{
 		header("HTTP/1.1 200 OK");
 		header("Content-Type: text/html");
@@ -86,14 +86,19 @@ if ( ! function_exists('js_redirect'))
 		{
 			$uri = site_url($uri);
 		}
+		header("Content-Type: text/html;charset=utf-8");
 		
+		if(empty($title)){
+			$title = '正在为你跳转,请稍后...';
+		}
+		echo "<p style=\"text-align:center;\">{$title}</p>";
 		
 		switch($method){
 			case 'top':
-				echo '<script type="text/javascript" >window.top.location.href = "'. $uri .'";</script>';
+				echo '<script type="text/javascript" >setTimeout(function(){window.top.location.href = "'. $uri .'";},'.($wait * 1000).');</script>';
 				break;
 			default:
-				echo '<script type="text/javascript" >location.href = "'. $uri .'";</script>';
+				echo '<script type="text/javascript" >setTimeout(function(){location.href = "'. $uri .'";},'.($wait * 1000).');</script>';
 				break;
 		}
 		

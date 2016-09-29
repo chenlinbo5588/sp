@@ -1,0 +1,29 @@
+        </div><!-- end of panel -->
+    </div><!-- // end of my -->
+    <div class="service-entry">
+        <div class="entry-wrap">
+            <a href="javascript:void(0);" class="kf-chat"><span class="icon"></span>站内聊天</a> 
+            <a href="javascript:void(0);" class="kf-biz"><span class="icon"></span>商务咨询</a> 
+        </div>
+        <div class="visitor">
+            <form>
+                <div class="form-group">
+                    <input class="form-control name" placeholder="姓名" type="text">
+                </div>
+                <div class="form-group">
+                    <input class="form-control phone" placeholder="手机" type="telephone">
+                </div>
+                <button type="button" class="submit btn btn-primary btn-block">马上咨询</button>
+                <button type="button" class="cancel btn btn-primary-outline btn-block">取消</button> 
+            </form>
+        </div>
+    </div>
+{include file="common/footer.tpl"}
+<script>
+$(function(){
+	$("a.kf-chat").bind("click",function(){
+		window.open ("{site_url('webim/index')}",'{$siteSetting['site_name']} 聊天窗口','height=650,width=1024,top=0,left=0,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no') 
+	});
+})
+
+</script>

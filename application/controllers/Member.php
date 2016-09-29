@@ -10,6 +10,23 @@ class Member extends Ydzj_Controller {
 	
 	private function _rememberLoginName($loginName, $liveSeconds = 2592000){
 		$this->input->set_cookie('loginname',$loginName, $liveSeconds);
+		
+	}
+	
+	private function _autologin($profile){
+		$this->session->set_userdata(array(
+			$this->_profileKey => $profile,
+			$this->_lastVisitKey => $this->_reqtime
+		));
+		
+		$this->member_service->updateUserInfo(
+			array(
+				'sid' => $this->session->session_id,
+				'last_login' => $this->_reqtime,
+				'last_loginip' => $this->input->ip_address()
+			),
+			$profile['basic']['uid']);
+		
 	}
 	
 	/**
@@ -19,58 +36,52 @@ class Member extends Ydzj_Controller {
 	{
 		
 		if($this->isLogin()){
-			redirect('my');
+			js_redirect('my');
 		}
 		
 		if($this->isPostRequest()){
 			
+			$this->assign('returnUrl',$this->input->post('returnUrl'));
 			$this->form_validation->reset_validation();
 			
-			$this->form_validation->set_rules('username','用户名', 'required|alpha_dash|max_length[15]');
-			$this->form_validation->set_rules('password','密码','required|alpha_dash');
-			$this->form_validation->set_rules('captcha','验证码','required|callback_validateAuthCode');
+			$this->form_validation->set_rules('loginname','登陆账号', 'required');
 			
-			for($i = 0; $i < 1 ; $i++){
-				if(!$this->form_validation->run()){
-					$this->assign('errorMsg',$this->form_validation->error_array());
-					//print_r($this->form_validation->error_string());
-					break;
-				}
+			$this->form_validation->set_rules('password','密码','required|valid_password');
+			$this->form_validation->set_rules('auth_code','验证码','required|callback_validateAuthCode');
+			
+			//$this->form_validation->set_rules('returnUrl','返回地址','valid_url');
+			
+			if($this->form_validation->run() !== FALSE){
 
 				$this->load->library('Member_service');
 				
 				$result = $this->member_service->do_login(array(
-					'account' => $this->input->post('username'),
+					'loginname' => $this->input->post('loginname'),
 					'password' => $this->input->post('password')
 				));
 				
-				
-				if($result['code'] != 'success'){
-					$this->assign('feedback',$result['message']);
-					break;
-				}
-				
-				$this->session->set_userdata(array(
-					'profile' => $result['data'],
-					$this->_lastVisitKey => $this->_reqtime
-				));
-				
-				$this->member_service->updateUserInfo(
-					array(
-						'sid' => $this->session->session_id,
-						'last_login' => $this->_reqtime,
-						'last_loginip' => $this->input->ip_address()
-					),
-					$result['data']['basic']['uid']);
+				if($result['code'] == 'success'){
+					$this->_rememberLoginName($this->input->post('loginname'));
+					$this->_autologin($result['data']);
 					
-				$this->_rememberLoginName($this->input->post('username'));
-				
-				redirect('admin/lab_goods');
+					$url = $this->input->post('returnUrl');
+					if(!empty($url) && isLocalUrl($url)){
+						js_redirect($url);
+					}else{
+						js_redirect('my/index');
+					}
+					
+				}else{
+					$this->assign('feedback',$result['message']);
+				}
 			}
+		}else{
+			$this->assign('returnUrl', $this->input->get('returnUrl'));
+			$this->assign('loginname',$this->input->get_cookie('loginname'));
 		}
 		
 		$this->seoTitle('登陆');
-		$this->display("member/login");
+		$this->display();
 	}
 
 	/**
@@ -78,67 +89,223 @@ class Member extends Ydzj_Controller {
 	 */
 	public function admin_login(){
 		
+		
+		$adminData = $this->session->get_userdata($this->_adminProfileKey);
+		$this->assign($this->_adminProfileKey,$adminData);
+		
+		
 		if($this->isPostRequest()){
 			$this->form_validation->reset_validation();
-			
-			$this->form_validation->set_rules('username','用户名', 'required|alpha_dash|max_length[15]');
-			$this->form_validation->set_rules('password','密码','required|alpha_dash');
-			$this->form_validation->set_rules('captcha','验证码','required|callback_validateAuthCode');
+			$this->form_validation->set_rules('email','登陆邮箱', 'required|valid_email');
+			$this->form_validation->set_rules('password','密码','required|valid_password');
+			$this->form_validation->set_rules('auth_code','验证码','required|callback_validateAuthCode');
 			
 			
 			for($i = 0; $i < 1; $i++){
 				
 				if($this->form_validation->run() == FALSE){
-					$this->assign('errorMsg',$this->form_validation->error_array());
 					break;
 				}
-				
-				
 				
 				$this->load->library('Admin_service');
-				
-				$result = $this->admin_service->do_adminlogin($this->input->post('username'),$this->input->post('password'));
+				$result = $this->admin_service->do_adminlogin($this->input->post('email'),$this->input->post('password'));
 				
 				if($result['message'] != '成功'){
-					$this->assign('feedback',$result['message']);
+					$this->assign('feedback',getErrorTip($result['message']));
 					break;
 				}
 				
-				
-				
 				$this->session->set_userdata(array(
-					'admin_profile' => $result['data'],
-					'lastvisit' => $this->_reqtime
+					$this->_adminProfileKey => $result['data'],
+					$this->_adminLastVisitKey => $this->_reqtime
 				));
-				///print_r($result);
 				
 				$this->admin_service->updateUserInfo(
 					array(
 						'sid' => $this->session->session_id,
 						'last_login' => $this->_reqtime,
 						'last_loginip' => $this->input->ip_address()
-					),
-					$result['data']['basic']['id']);
+					),$result['data']['basic']['uid']);
 				
-				js_redirect(admin_site_url('index/index'),'top');
+				js_redirect(admin_site_url('index'),'top');
 				
 			}
 		}
 		
-		$this->seoTitle('登陆');
-		$this->display('member/admin_login');
+		$this->seoTitle('后台登陆');
+		$this->display();
 	}
 	
 	
 	
 	
 	/**
+	 * 用户注册
+	 */
+	public function register()
+	{
+		$registerOk = false;
+		$feedback = '';
+		
+		if($this->isPostRequest()){
+			$inviter = $this->input->post('inviter');
+			$inviteFrom = $this->input->post('inviteFrom');
+			
+			$this->assign('inviter', $inviter);
+			//$this->assign('inviteFrom',$inviteFrom);
+			$this->assign('returnUrl',$this->input->post('returnUrl'));
+			
+			$this->load->library(array('Register_service'));
+			
+			for($i = 0; $i < 1; $i++){
+				$this->register_service->memberAddRules();
+				if(!$this->form_validation->run()){
+					break;
+				}
+				
+				$todayRegistered = $this->register_service->getIpLimit($this->input->ip_address());
+				
+				if($todayRegistered > 5){
+					$feedback = getWarningTip('很抱歉，您今日注册数量已经用完');
+					break;
+				}
+				
+				$addParam = array(
+					'sid' => $this->session->session_id,
+					'mobile' => $this->input->post('mobile'),
+					'username' => $this->input->post('username'),
+					'email' => $this->input->post('email'),
+					'password' => $this->input->post('psw'),
+					'status' => -2,
+					'inviter' => empty($inviter) == true ? 0 : intval($inviter)
+				);
+				
+				$addParam['nickname'] = $addParam['username'];
+				
+				$result = $this->register_service->createMember($addParam);
+				
+				if($result['code'] != 'success'){
+					$feedback = getErrorTip($result['message']);
+					break;
+				}
+				
+				
+				$this->load->library(array('Message_service','Member_service'));
+				
+				/*
+				$pushApi = $this->register_service->getPushObject();
+				$resp = $pushApi->createId($result['data']['uid'],$addParam['mobile'],$addParam['nickname'],$addParam['password']);
+				*/
+				
+				$userInfo = $this->Member_Model->getFirstByKey($addParam['username'],'username');
+				
+				$this->_rememberLoginName($addParam['username']);
+				$this->_autologin(array(
+					'basic' => $userInfo
+				));
+				
+				$this->message_service->initEmail($this->_siteSetting);
+				$param = $this->message_service->getEncodeParam(array(
+					$result['data']['uid'],
+					$addParam['email']
+				));
+				
+				$url = site_url('member/verify_email?p=').$param;
+				$flag = $this->message_service->sendEmailConfirm($addParam['email'],$url);
+				
+				$registerOk = true;
+				
+			}
+			
+		}else{
+			/* 邀请人 */
+			$this->assign('inviter', $this->input->get('inviter'));
+			$this->assign('returnUrl',$this->input->get('returnUrl'));
+		}
+		
+		$this->assign('feedback',$feedback);
+		
+		if($registerOk){
+			js_redirect('goods/index');
+		}else{
+			$this->seoTitle('用户注册');
+			$this->display();
+		}
+	}
+	
+	/**
 	 * 登出
 	 */
 	public function logout(){
-		$this->session->unset_userdata($this->_profileKey);
-		redirect('member/login');
+		
+		if($this->isLogin()){
+			$this->session->unset_userdata('profile');
+		}
+		
+		js_redirect('member/login');
 	}
 	
+	
+	public function forget(){
+		$this->display();
+	}
+	
+	public function verify_email(){
+		
+		$isSuccess = false;
+		$feedback = '';
+		
+		$this->load->library('Message_service');
+		$param = $this->input->get('p');
+		$realParam = $this->encrypt->decode($param);
+		$realParamArray = array();
+		
+		//print_r($realParamArray);
+		if($realParam){
+			$realParamArray = explode("\t",$realParam);
+			if($this->_reqtime > $realParamArray[2]){
+				//expired
+				$feedback = '很抱歉,链接已过期.';
+			}else{
+				$row = $this->Member_Model->update(array(
+					'email' => $realParamArray[1],
+					'email_status' => 1
+				
+				),array('uid' => $realParamArray[0],'email_status' => 0));
+				
+				if($row >= 0){
+					$isSuccess = true;
+				}
+				
+				$feedback = '恭喜你， 邮箱认证成功';
+			}
+		}
+		
+		$isLogin = false;
+		$linkURL = site_url('member/login');
+		if($this->isLogin()){
+			$isLogin = true;
+			
+			if($isSuccess){
+				$this->_profile['basic']['email'] = $realParamArray[1];
+				$this->_profile['basic']['email_status'] = 1;
+				$this->refreshProfile();
+			}
+			
+			$linkURL = site_url('my/index');
+		}
+		
+		if($isSuccess){
+			$imgUrl = resource_url('img/pass.png');
+		}else{
+			$imgUrl = resource_url('img/warn.png');
+		}
+		$this->assign('isSuccess',$isSuccess);
+		$this->assign('linkURL',$linkURL);
+		$this->assign('imgUrl',$imgUrl);
+		$this->assign('isLogin',$isLogin);
+		$this->assign('feedback',$feedback);
+		$this->display();
+	}
 	
 }

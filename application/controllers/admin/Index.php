@@ -25,7 +25,7 @@ class Index extends Ydzj_Admin_Controller {
 	public function profile(){
 		
 		if($this->isPostRequest()){
-			$this->form_validation->set_rules('name','真实名称',"required|min_length[1]|max_length[30]");
+			$this->form_validation->set_rules('username','真实名称',"required|min_length[1]|max_length[30]");
 			
 			
 			if($this->input->post('old_password')){
