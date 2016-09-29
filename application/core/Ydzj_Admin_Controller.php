@@ -6,7 +6,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 class Ydzj_Admin_Controller extends Ydzj_Controller {
 	
-	
+	protected $_loginUID = 0;
 	
 	public function __construct(){
 		parent::__construct();
@@ -17,25 +17,37 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 		
 		//@todo 打开检查权限
 		//$this->_checkPermission();
-		$this->_navs();
+		$this->load->config('admin_site');
 		
+		$this->_navs();
 	}
 	
 	/**
      * 初始话导航相关参数
      */
     protected function _navs(){
-        $navs = array_slice($this->uri->segments,1,3);
-        $pathStr = implode('/',$navs);
+		$navs = $this->uri->segments;
+		if($navs[1] == 'admin'){
+			$navs = array_slice($navs,1,3);
+		}
 		
+		//print_r($navs);
+        $pathStr = implode('/',$navs);
 		//echo site_url($_SERVER['REQUEST_URI']);
 		$currentUri = $_SERVER['REQUEST_URI'];
 		if(preg_match("/^\/index.php\/admin\//",$currentUri,$match)){
 			$currentUri = substr($currentUri,17);
 		}
 		
+		
+		$configNav = config_item('navs');
+		$this->_subNavs = $configNav['sub'][$navs[0]];
+		
+		//print_r($this->_subNavs);
+		//echo $pathStr;
+		
+		$this->assign('uri_string',$this->uri->uri_string);
 		$this->assign('currentURL',$currentUri);
-
         $this->assign('pathStr',$pathStr);
         $this->assign('fnKey',$navs[0]);
         
@@ -107,6 +119,7 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
         //公共权限
         $this->_permission['admin'] = 1;
         $this->_permission['admin/index'] = 1;
+        $this->_permission['admin/index/profile'] = 1;
         $this->_permission['admin/index/index'] = 1;
         $this->_permission['admin/index/logout'] = 1;
         $this->_permission['admin/index/nopermission'] = 1;

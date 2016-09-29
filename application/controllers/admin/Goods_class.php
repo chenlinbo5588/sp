@@ -9,14 +9,7 @@ class Goods_Class extends Ydzj_Admin_Controller {
 		$this->load->library(array('Goods_service','Attachment_service'));
 		$this->attachment_service->setUserInfo($this->_adminProfile['basic']);
 		
-		$this->assign('moduleTitle','货品分类');
 		
-		$this->_subNavs = array(
-			array('url' => 'goods_class/category', 'title' => '管理'),
-			array('url' => 'goods_class/add','title' => '添加'),
-			array('url' => 'goods_class/export','title' => '导出'),
-			array('url' => 'goods_class/import','title' => '导入'),
-		);
 	}
 	
 	public function category(){

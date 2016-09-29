@@ -57,7 +57,7 @@ if (cookie_skin) {
 		{include file="common/side.tpl"}
 	</div>
 	<div class="page">
-		<div class="loca">
+		<div class="loca clearfix">
 			<strong>您的位置:</strong>
 		    <div id="crumbs" class="crumbs"><span>控制台</span><span class="arrow">&nbsp;</span><span>欢迎页面</span></div>
 		</div>

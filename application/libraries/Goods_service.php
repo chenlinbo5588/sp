@@ -7,6 +7,7 @@ class Goods_service extends Base_service {
 	private $_goodsModel = null;
 	private $_goodsClassModel = null;
 	private $_goodsClassTagModel = null;
+	private $_goodsImagesModel = null;
 	
 	private $_brandModel = null;
 	private $_parentList = array();
@@ -14,11 +15,13 @@ class Goods_service extends Base_service {
 	public function __construct(){
 		parent::__construct();
 		
-		self::$CI->load->model(array( 'Goods_Class_Model','Goods_Class_Tag_Model','Brand_Model'));
+		self::$CI->load->model(array('Goods_Model', 'Goods_Class_Model','Goods_Class_Tag_Model','Brand_Model','Goods_Images_Model'));
 		
+		$this->_goodsModel = self::$CI->Goods_Model;
 		$this->_goodsClassModel = self::$CI->Goods_Class_Model;
 		$this->_goodsClassTagModel = self::$CI->Goods_Class_Tag_Model;
 		$this->_brandModel = self::$CI->Brand_Model;
+		$this->_goodsImagesModel = self::$CI->Goods_Images_Model;
 	}
 	
 	public function getParentsById($id = 0,$field = '*'){
@@ -230,6 +233,7 @@ class Goods_service extends Base_service {
 		$condition_str = trim($condition_str,',');
 		
 		return $this->_goodsClassTagModel->execSQL("insert into `{$this->_goodsClassTagModel->_tableRealName}` (`gc_id_1`,`gc_id_2`,`gc_id_3`,`gc_tag_name`,`gc_tag_value`,`gc_id`,`type_id`) values ".$condition_str);
+	
 	}
 	
 	
@@ -256,5 +260,71 @@ class Goods_service extends Base_service {
 		));
 		
 	}
+	
+	public function getNextByProduct($info){
+		$product = $this->_goodsModel->getList(array(
+			'where' => array('gc_id' => $info['gc_id'], 'goods_id >' => $info['goods_id'] , 'goods_verify' => 1, 'goods_state' => 1),
+			'order' => 'goods_id ASC',
+			'limit' => 1
+		));
+		
+		if($product[0]){
+			return $product[0];
+		}else{
+			return false;
+		}
+	}
+	
+	public function getPreByProduct($info){
+		$product = $this->_goodsModel->getList(array(
+			'where' => array('gc_id' => $info['gc_id'], 'goods_id <' => $info['goods_id'] , 'goods_verify' => 1, 'goods_state' => 1),
+			'order' => 'goods_id DESC',
+			'limit' => 1
+		));
+		
+		
+		if($product[0]){
+			return $product[0];
+		}else{
+			return false;
+		}
+	}
+	
+	/**
+	 * 获得推荐的商品列表
+	 */
+	public function getCommandGoodsList($goodsCate = '产品中心',$moreCondition = array('limit' => 20)){
+		
+		$topClassInfo = $this->_goodsClassModel->getList(array(
+			'where' => array(
+				'gc_name' => $goodsCate,
+				'gc_parent_id' => 0
+			)
+		));
+		
+		
+		$goodsClassIds = $this->getAllChildGoodsClassByPid($topClassInfo[0]['gc_id']);
+		$goodsClassIds[] = $topClassInfo[0]['gc_id'];
+		
+		//print_r($goodsClassIds);
+		
+		$condition = array(
+			'where' => array(
+				'goods_commend' => 1,
+				'goods_verify' => 1,
+				'goods_state' => 1
+			),
+			'where_in' => array(
+				array('key' => 'gc_id' , 'value' => $goodsClassIds )
+			),
+			'order' => 'goods_sort ASC',
+			'limit' => 20
+		);
+		
+		$condition = array_merge($condition,$moreCondition);
+		return $this->_goodsModel->getList($condition);
+	}
+	
+	
 	
 }

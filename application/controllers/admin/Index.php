@@ -29,6 +29,10 @@ class Index extends Ydzj_Admin_Controller {
 				$this->form_validation->set_rules('admin_rpassword','确认密码','required|matches[admin_password]');
 			}
 			
+			$email = trim($this->input->post('email'));
+			if($email){
+				$this->form_validation->set_rules('email','邮箱','required|valid_email');
+			}
 			
 			for($i = 0; $i < 1; $i++){
 				

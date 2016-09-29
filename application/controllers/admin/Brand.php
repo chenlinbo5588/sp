@@ -9,14 +9,6 @@ class Brand extends Ydzj_Admin_Controller {
 		
 		$this->load->library(array('Goods_service','Attachment_service'));
 		$this->attachment_service->setUserInfo($this->_adminProfile['basic']);
-		
-		$this->assign('moduleTitle','品牌管理');
-		
-		$this->_subNavs = array(
-			array('url' => 'brand/index', 'title' => '管理'),
-			array('url' => 'brand/add','title' => '添加'),
-		);
-		
 	}
 	
 	

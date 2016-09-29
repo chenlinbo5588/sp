@@ -13,14 +13,6 @@ class Member extends Ydzj_Admin_Controller {
 		$this->_avatarImageSize = config_item('avatar_img_size');
 		$this->_avatarSizeKeys = array_keys($this->_avatarImageSize);
 		
-		
-		$this->assign('moduleTitle','会员');
-		$this->_subNavs = array(
-			array('url' => 'member/index', 'title' => '会员管理'),
-			array('url' => 'member/add','title' => '添加'),
-		);
-		
-		
 		$this->assign('avatarImageSize',$this->_avatarImageSize);
 	}
 	
