@@ -1,4 +1,4 @@
-{include file="./my_header.tpl"}
+{include file="common/my_header.tpl"}
 	{include file="common/jquery_ui.tpl"}
 	<table class="fulltable style1">
 		<tbody>
@@ -98,5 +98,5 @@
 		var min_width = {$avatarImageSize['m']['width']},min_height = {$avatarImageSize['m']['height']};
 	</script>
 	<script type="text/javascript" src="{resource_url('js/my/index.js')}"></script>
-{include file="./my_footer.tpl"}
+{include file="common/my_footer.tpl"}
 

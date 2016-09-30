@@ -1,4 +1,4 @@
-{include file="./my_header.tpl"}
+{include file="common/my_header.tpl"}
 	<div>{$feedback}</div>
 	{form_open(site_url($uri_string),"id='editForm'")}
 	<table class="fulltable style1">
@@ -30,5 +30,5 @@
 		</tbody>
 	</table>
 	</form>
-{include file="./my_footer.tpl"}
+{include file="common/my_footer.tpl"}
 

@@ -1,4 +1,4 @@
-{include file="./my_header.tpl"}
+{include file="common/my_header.tpl"}
 	{if !$send}
 	{form_open(site_url($uri_string),"id='editForm'")}
 	<table class="fulltable style1">
@@ -36,5 +36,5 @@
     	<span>我们已经发了一封邮件到您的邮箱里， 请点击</span><a class="hightlight" href="{$emailServer}">{htmlentities($emailServer)}</a><span>登录查收,如果您没有收到邮箱请点击</span><a class="warning" href="{site_url('my/verify_email')}"><strong>重新发送</strong></a>
     </div>
     {/if}
-{include file="./my_footer.tpl"}
+{include file="common/my_footer.tpl"}
 

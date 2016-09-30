@@ -10,8 +10,8 @@
 	</script>
 	<script type="text/javascript" src="{base_url('webim/demo/javascript/dist/webim.config.js')}"></script>
 	*}
-    <div id="my" class="boxz clearfix">
-        {include file="./my_nav.tpl"}
+    <div id="my" class="clearfix">
+        {include file="my/my_nav.tpl"}
         <div class="panel_content">
         	<div class="loca clearfix">
 				<strong>您的位置:</strong>

@@ -53,7 +53,9 @@ $config['navs'] = array(
 		'seo' => 'setting',
 		'member' => array(
 			array('title' => '会员管理','url' => 'member/index'),
+			array('title' => '会员通知','url' => 'notify/member'),
 		),
+		'notify' => 'member',
 		'goods' => array(
 			array('title' => '商品','url' => 'goods/index'),
 			array('title' => '商品分类','url' => 'goods_class/category'),
@@ -79,70 +81,75 @@ $config['navs'] = array(
 		)
 	),
 	
+	/* 子导航的父级 */
+	'sub_parent' => array(
+		'setting/base' => array('url' => 'setting/base','title' => '站点设置'),
+		'setting/dump' => array('url' => 'setting/base','title' => '站点设置'),
+		'message/email' => array('url' => 'message/email','title' => '站点设置'),
+		'message/email_tpl' => array('url' => 'message/email','title' => '站点设置'),
+		'upload/param' => array('url' => 'upload/param','title' => '站点设置'),
+		'upload/default_image' => array('url' => 'upload/param','title' => '站点设置'),
+	),
 	'sub' => array (
 		'dashboard' => array(
-			array('title' => '欢迎页面','url' => 'dashboard/welcome')
+			'dashboard/welcome' => '欢迎页面'
 		),
 		'setting' => array(
-			array('title' => '基本设置','url' => 'setting/base'),
-			array('title' => '防灌水设置','url' => 'setting/dump'),
+			'setting/base' => '基本设置',
+			'setting/dump' => '防灌水设置',
 		),
 		'message' => array(
-			array('title' => '基本设置','url' => 'setting/base'),
-			array('title' => '防灌水设置','url' => 'setting/dump'),
+			'message/email' => '邮件设置',
+			'message/email_tpl' => '邮件模版',
 		),
 		'upload' => array(
-			array('title' => '上传参数','url' => 'upload/param'),
-			array('title' => '默认图片','url' => 'upload/default_image'),
+			'upload/param' => '上传参数',
+			'upload/default_image' => '默认图片',
 		),
 		'seo' => array(
 			
 		),
-		'message' => array(
-			array('title' => '基本设置','url' => 'message/email'),
-			array('title' => '防灌水设置','url' => 'message/email_tpl'),
-		),
 		'member' => array(
-			array('title' => '会员管理','url' => 'member/index'),
-			array('title' => '会员添加','url' => 'member/add'),
+			'member/index' => '管理',
+			'member/add' => '添加'
 		),
 		'goods' => array(
-			array('title' => '管理','url' => 'goods/index'),
-			array('title' => '添加','url' => 'goods/add')
+			'goods/index' => '管理',
+			'goods/add' => '添加'
 		),
 		'goods_class' => array(
-			array('title' => '管理','url' => 'goods_class/category'),
-			array('title' => '添加','url' => 'goods_class/add'),
-			array('title' => '导出','url' => 'goods_class/export'),
-			array('title' => '导入','url' => 'goods_class/import'),
-			array('title' => 'TAG管理','url' => 'goods_class/tag'),
+			'goods_class/category' => '管理',
+			'goods_class/add' => '添加',
+			'goods_class/export' => '导出',
+			'goods_class/import' => '导入',
+			'goods_class/tag' => 'TAG管理'
 		),
 		'brand' => array(
-			array('title' => '管理','url' => 'brand/index'),
-			array('title' => '添加','url' => 'brand/add')
+			'brand/index' => '管理',
+			'brand/add' => '添加',
 		),
 		'article' => array(
-			array('title' => '管理','url' => 'article/index'),
-			array('title' => '添加','url' => 'article_class/category'),
+			'article/index' => '管理',
+			'article/add' => '添加',
 		),
 		'article_class' => array(
-			array('title' => '管理','url' => 'article_class/category'),
-			array('title' => '添加','url' => 'article_class/add'),
+			'article_class/category' => '管理',
+			'article_class/add' => '添加',
 		),
-		
 		'cms_article' => array(
-			array('title' => '管理','url' => 'cms_article/index'),
-			array('title' => '添加','url' => 'cms_article/add'),
+			'cms_article/index' => '管理',
+			'cms_article/add' => '添加',
 		),
 		'cms_article_class' => array(
-			array('title' => '管理','url' => 'cms_article_class/index'),
-			array('title' => '添加','url' => 'cms_article_class/add'),
+			'cms_article_class/index' => '管理',
+			'cms_article_class/add' => '添加',
 		),
 		'cms' => array(
-			array('title' => '设置','url' => 'cms/index'),
+			'cms/index' => 'CMS设置',
 		),
 		'authority' => array(
-			array('title' => '角色','url' => 'authority/role'),
+			'authority/role' => '管理',
+			'authority/role_add' => '添加'
 		)
 	)
 );

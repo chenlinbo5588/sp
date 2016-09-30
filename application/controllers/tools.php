@@ -530,7 +530,59 @@ EOT;
 		}
 	}
 	
+	public function test_hash(){
+		$this->load->library('Flexihash');
+		
+		
+		$pm = array(
+	'auth_1' => 1,
+	'auth_2' => 2,
+	'auth_3' => 3,
+	'auth_4' => 4,
+	'auth_5' => 5,
+	'auth_6' => 6,
+	'auth_7' => 7,
+	'auth_8' => 8,
+	'auth_9' => 9,
+	'auth_10' => 10);
 	
+	
+		$this->flexihash->addTargets($pm);
+
+
+
+		
+		$whichTable1 = $constHash->lookup(200);
+		/*$whichTable2 = $constHash->lookup(201);
+		$whichTable3 = $constHash->lookup(202);
+		$whichTable4 = $constHash->lookup(203);
+		$whichTable5 = $constHash->lookup(204);
+		$whichTable6 = $constHash->lookup(205);
+		$whichTable7 = $constHash->lookup(206);
+		$whichTable8 = $constHash->lookup(800);
+		*/
+		
+		echo $whichTable1;
+		echo "<br/>";
+		
+		echo $whichTable2;
+		echo "<br/>";
+		echo $whichTable3;
+		echo "<br/>";
+		echo $whichTable4;
+		echo "<br/>";
+		echo $whichTable5;
+		echo "<br/>";
+		echo $whichTable6;
+		echo "<br/>";
+		echo $whichTable7;
+		echo "<br/>";
+		echo $whichTable8;
+		
+		echo "<br/>";
+		
+		
+	}
 	
 	public function test_emailconfirm(){
 		$this->load->library('Message_service');

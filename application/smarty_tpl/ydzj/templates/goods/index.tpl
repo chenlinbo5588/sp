@@ -1,4 +1,4 @@
-{include file="my/my_header.tpl"}
+{include file="common/my_header.tpl"}
 	<form action="{site_url('goods/index')}" method="post" id="formSearch">
         <input type="hidden" name="page" value=""/>
         <div class="goods_search">
@@ -92,5 +92,5 @@
 		 </table>
 	     <div>{include file="common/pagination.tpl"}</div>
     </form>
-{include file="my/my_footer.tpl"}
+{include file="common/my_footer.tpl"}
 

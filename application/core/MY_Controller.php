@@ -233,7 +233,7 @@ class MY_Controller extends CI_Controller {
     	//echo $realPath;
     	$this->assign(array('subNavs' => $this->_subNavs,'breadCrumbs' => $this->_breadCrumbs));
     	
-    	if(file_exists($realPath)){
+		if(file_exists($realPath)){
     		$this->output->set_output($this->_smarty->fetch($realPath));
     	}else{
     		$this->output->set_output($this->_smarty->fetch($tplDir.$unchangeTplName.'.tpl'));

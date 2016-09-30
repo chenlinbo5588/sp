@@ -4,7 +4,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Message_service extends Base_service {
 
 	private $_msgTemplateModel = null;
+	private $_pmMessageModel = null;
+	
 	private $_email = null;
+	
+	
 	
 	private $_setting ;
 
@@ -12,12 +16,13 @@ class Message_service extends Base_service {
 	public function __construct(){
 		parent::__construct();
 		
-		self::$CI->load->model('Msg_Template_Model');
+		self::$CI->load->model(array('Msg_Template_Model','Pm_Message_Model'));
 		self::$CI->load->library('email');
 		
 		$this->_email = self::$CI->email;
 		
 		$this->_msgTemplateModel = self::$CI->Msg_Template_Model;
+		$this->_pmMessageModel = self::$CI->Pm_Message_Model;
 	}
 	
 	

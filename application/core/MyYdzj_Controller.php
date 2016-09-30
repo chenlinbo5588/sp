@@ -7,6 +7,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 class MyYdzj_Controller extends Ydzj_Controller {
 	private $_pushObject;
+	protected $_loginUID = 0;
 	
 	public function __construct(){
 		parent::__construct();
@@ -16,28 +17,19 @@ class MyYdzj_Controller extends Ydzj_Controller {
 			js_redirect('member/login');
 		}
 		
-		$this->_initURIParameter();
+		$this->load->config('member_site');
+		
+		$this->_navs();
 		
 		$this->_pushObject = $this->base_service->getPushObject();
 		$this->assign('pushConfig',config_item('huanxin'));
 	}
 	
 	
-	
-	
-	/**
-	 * 初始化 url
-	 */
-	protected function _initURIParameter(){
-		$this->assign('uri_string',$this->uri->uri_string);
-		
-	}
-	
 	/**
 	 * 
 	 */
 	protected function _addBreadCrumbs(){
-		
 		
 		
 		

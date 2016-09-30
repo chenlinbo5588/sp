@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class My extends MyYdzj_Controller {
+class My_pm extends MyYdzj_Controller {
 	
 	private $_avatarImageSize ;
 	private $_avatarSizeKeys;

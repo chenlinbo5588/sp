@@ -1,4 +1,4 @@
-{include file="./my_header.tpl"}
+{include file="common/my_header.tpl"}
 	<div class="w-step-row">
 		<div class="w-step3 {if $step > 1}w-step-past{else if $step == 1} w-step-cur{/if}">原手机号码验证</div>
 		<div class="w-step3 {if $step > 2}w-step-past-past{else if $step == 2}w-step-past-cur{else}w-step-cur-future{/if}">绑定新得手机号码</div>		
@@ -51,5 +51,5 @@
     
     </script>
     <script src="{resource_url('js/getcode.js')}" type="text/javascript"></script>
-{include file="./my_footer.tpl"}
+{include file="common/my_footer.tpl"}
 

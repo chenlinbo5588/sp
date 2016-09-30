@@ -1,4 +1,4 @@
-{include file="./my_header.tpl"}
+{include file="common/my_header.tpl"}
 	{form_open(site_url('my/edit_base'),"id='editForm'")}
 	<table class="fulltable style1">
 		<tbody>
@@ -36,5 +36,5 @@
 		</tbody>
 	</table>
 	</form>
-{include file="./my_footer.tpl"}
+{include file="common/my_footer.tpl"}
 

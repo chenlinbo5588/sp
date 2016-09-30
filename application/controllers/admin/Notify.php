@@ -8,6 +8,10 @@ class Notify extends Ydzj_Admin_Controller {
 	}
 	
 	public function member(){
+		
+		$uid = $this->input->get_post('uid');
+		$memberInfo = $this->Member_Model->getFirstByKey($uid,'uid');
+		
 		$this->display();
 	}
 	
