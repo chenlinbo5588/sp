@@ -79,6 +79,15 @@ $config['navs'] = array(
 		)
 	),
 	
+	/* 子导航的父级 */
+	'sub_parent' => array(
+		'setting/base' => array('url' => 'setting/base','title' => '站点设置'),
+		'setting/dump' => array('url' => 'setting/base','title' => '站点设置'),
+		'message/email' => array('url' => 'message/email','title' => '站点设置'),
+		'message/email_tpl' => array('url' => 'message/email','title' => '站点设置'),
+		'upload/param' => array('url' => 'upload/param','title' => '站点设置'),
+		'upload/default_image' => array('url' => 'upload/param','title' => '站点设置'),
+	),
 	'sub' => array (
 		'dashboard' => array(
 			'dashboard/welcome' => '欢迎页面'

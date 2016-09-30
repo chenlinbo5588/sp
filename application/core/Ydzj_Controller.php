@@ -69,9 +69,8 @@ class Ydzj_Controller extends MY_Controller {
 			$topSelect = $configNav['main'][$configNav['side'][$navs[$moduleIndex]]];
 		}
 		
-		$this->_subNavs = $configNav['sub'][$navs[$moduleIndex]];
+		$this->_subNavs = $configNav['sub'][$modulName];
 		$this->_breadCrumbs[] = $topSelect;
-		
 		
 		$sideMenu = array();
 		if(is_string($configNav['side'][$modulName])){
@@ -80,10 +79,8 @@ class Ydzj_Controller extends MY_Controller {
 			$sideMenu = $configNav['side'][$modulName];
 		}
 		
-		foreach($sideMenu as $side){
-			if(strpos($side['url'],$moduleUrl) !== false){
-				$this->_breadCrumbs[] = $side;
-			}
+		if($configNav['sub_parent'][$funcUrl]){
+			$this->_breadCrumbs[] = $configNav['sub_parent'][$funcUrl];
 		}
 		
 		if($configNav['sub'][$modulName][$funcUrl]){
