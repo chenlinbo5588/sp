@@ -4,10 +4,10 @@
 	<div class="fixed-empty"></div>
     <div class="feedback">{$feedback}</div>
 	  {if $info['id']}
-	  <form name="categoryForm" method="post" action="{admin_site_url('lab_measure/edit')}">
+	  <form name="categoryForm" method="post" action="{site_url('lab_measure/edit')}">
 	  <input type="hidden" name="id" value="{$info['id']}"/>
 	  {else}
-	  <form name="categoryForm" method="post" action="{admin_site_url('lab_measure/add')}">
+	  <form name="categoryForm" method="post" action="{site_url('lab_measure/add')}">
 	  {/if}
 	  
 	  <table class="autotable">

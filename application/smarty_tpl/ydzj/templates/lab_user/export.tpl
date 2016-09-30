@@ -1,8 +1,5 @@
 {include file="common/main_header.tpl"}
 {config_load file="member.conf"}
-  {include file="./user_common.tpl"}
-  <div class="fixed-empty"></div>
-  <div class="feedback">{$feedback}</div>
   <table class="table tb-type2" id="prompt">
     <tbody>
       <tr class="space odd">
@@ -16,7 +13,7 @@
       </tr>
     </tbody>
   </table>
-  {form_open(admin_site_url('lab_user/export'),'id="lab_user_form"')}
+  {form_open(site_url('lab_user/export'),'id="lab_user_form"')}
     <input type="hidden" name="if_convert" value="1" />
     <table class="table tb-type2">
     <thead>

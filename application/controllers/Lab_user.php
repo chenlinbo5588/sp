@@ -8,11 +8,6 @@ class Lab_User extends MyYdzj_Controller {
 	
     public function __construct(){
 		parent::__construct();
-		
-		$this->assign('action',$this->uri->rsegment(2));
-		$this->assign('topnav',strtolower(get_class()).'/index');
-		
-		$this->load->helper('cookie');
     }
     
     public function index()
@@ -197,7 +192,7 @@ class Lab_User extends MyYdzj_Controller {
     private function _getPageData(){
     	try {
             $page = $this->input->get_post('page');
-            $page_size = get_cookie('page_size');
+            $page_size = $this->input->get_cookie('page_size');
             
             if(!$page_size){
             	$page_size = config_item('page_size');
@@ -298,7 +293,7 @@ class Lab_User extends MyYdzj_Controller {
 				}
 				
 				
-				$_POST['updator'] = $this->_adminProfile['basic']['name'];
+				$_POST['updator'] = $this->_profile['basic']['name'];
 				if($this->_loginUID != LAB_FOUNDER_ID){
 					unset($_POST['is_manager']);
 				}
@@ -393,7 +388,7 @@ class Lab_User extends MyYdzj_Controller {
 	    		
 	    		//清楚这个用户的成员记录
 	    		$this->Lab_Member_Model->deleteByUserId($id);
-	    		$this->Member_Model->updateByWhere(array('status' => '已删除', 'updator' => $this->_adminProfile['basic']['name']),array('id' => $id));
+	    		$this->Member_Model->updateByWhere(array('status' => '已删除', 'updator' => $this->_profile['basic']['name']),array('id' => $id));
 	    		
 	    		$this->jsonOutput('删除成功');
     		}
@@ -417,6 +412,9 @@ class Lab_User extends MyYdzj_Controller {
     
     
     private function _getRoleAllowList(){
+    	
+    	$this->load->model('Role_Model');
+    	
     	/**
 		 * 只显示自己创建的以及 自己所在角色组
 		 */
@@ -425,7 +423,7 @@ class Lab_User extends MyYdzj_Controller {
 				'add_uid' => $this->_loginUID
 			),
 			'or_where' => array(
-				'id' => $this->_adminProfile['basic']['group_id']
+				'id' => $this->_profile['basic']['group_id']
 			)
 		));
 		
@@ -515,7 +513,7 @@ class Lab_User extends MyYdzj_Controller {
 			$is_manager = 'n';
 		}
 		
-		$this->Lab_Member_Model->addUserLabs($user_id,explode(',', $lab_id),$is_manager,$this->_loginUID,$this->_adminProfile['basic']['name']);
+		$this->Lab_Member_Model->addUserLabs($user_id,explode(',', $lab_id),$is_manager,$this->_loginUID,$this->_profile['basic']['name']);
     }
     
     
@@ -532,7 +530,7 @@ class Lab_User extends MyYdzj_Controller {
 					break;
 				}
 				
-				$_POST['creator'] = $this->_adminProfile['basic']['name'];
+				$_POST['creator'] = $this->_profile['basic']['name'];
 				if($this->_loginUID != LAB_FOUNDER_ID){
 					$_POST['is_manager'] = 'n';
 				}

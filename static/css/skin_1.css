@@ -402,8 +402,9 @@ input[type=checkbox],input[type=radio] {
    }
    
 .loca { line-height:24px; color:#7292A4; }
-    .loca div, .loca strong, .crumbs span, span.arrow { float:left; margin-left: 2px;}
-    .loca span.arrow { background: url(../img/sky/bg_position.gif) no-repeat scroll -50px -155px; width: 4px; height:8px; margin: 9px 6px 7px 6px; _margin:9px 3px 7px 3px; /* IE6 */}
+.loca div, .loca strong, .crumbs a, a.arrow { float:left; margin-left: 2px;}
+.loca a.arrow { background: url(../img/sky/bg_position.gif) no-repeat scroll -50px -155px; width: 4px; height:8px; margin: 9px 6px 7px 6px; _margin:9px 3px 7px 3px; /* IE6 */}
+
 
 #main-content {
 	padding-top:47px;

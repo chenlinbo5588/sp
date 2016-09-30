@@ -1,4 +1,4 @@
-							 {form_open(admin_site_url('lab/manager_lab_user'),'name="memberForm"')}
+							 {form_open(site_url('lab/manager_lab_user'),'name="memberForm"')}
 							 <table class="rounded-corner" id="user_table">
 							    <colgroup>
 							        <col style="width:10%"/>

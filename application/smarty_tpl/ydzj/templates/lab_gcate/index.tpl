@@ -44,7 +44,7 @@
         	alert(json.message);
         	
         	if(json.message.indexOf('成功') != -1){
-        		location.href = "{admin_site_url('goods_category/index')}";
+        		location.href = "{site_url('goods_category/index')}";
         	}
         	
         };
@@ -56,7 +56,7 @@
 	        if(id == 'root'){
 	            return;
 	        }
-	        location.href= "{admin_site_url('goods_category/edit?id=')}" + id + "&t" + Math.random();
+	        location.href= "{site_url('goods_category/edit?id=')}" + id + "&t" + Math.random();
 	    }
 	    
 	    function tondrag(id,id2){
@@ -74,7 +74,7 @@
 			        "确定": function() {
 			          	$.ajax({
 	                          type:"POST",
-	                          url:"{admin_site_url('goods_category/delete')}",
+	                          url:"{site_url('goods_category/delete')}",
 	                          dataType:"json",
 	                          data: { id: id },
 	                          success:successHandler,
@@ -102,7 +102,7 @@
 			        "确定": function() {
 			          	$.ajax({
 	                          type:"POST",
-	                          url:"{admin_site_url('goods_category/edit')}",
+	                          url:"{site_url('goods_category/edit')}",
 	                          dataType:"json",
 	                          data: { id: id , name : tree.getItemText(id) , pid: id2 },
 	                          success:successHandler,
@@ -131,7 +131,7 @@
 	    tree.setOnLoadingEnd(treeLoaded); 
 	    tree.setOnDblClickHandler(tondblclick);
 	    tree.setDragHandler(tondrag);
-	    tree.loadXML("{admin_site_url('goods_category/getTreeXML/')}",function(){
+	    tree.loadXML("{site_url('goods_category/getTreeXML/')}",function(){
 	    	
 	    });
 	    

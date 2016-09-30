@@ -5,7 +5,7 @@
  * 实验室货品分类
  */
  
-class Lab_GoodsCate extends MyYdzj_Controller {
+class Lab_Gcate extends MyYdzj_Controller {
 	
 	private $_cacheKey = "lab_category";
 	

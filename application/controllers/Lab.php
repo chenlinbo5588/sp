@@ -5,14 +5,10 @@ class Lab extends MyYdzj_Controller {
 	
     public function __construct(){
 		parent::__construct();
-		
-		$this->assign('moduleTitle','实验室');
-		$this->_breadCrumbs[] = array('title' => '实验室','url' => 'lab/index');
     }
     
     public function index()
     {
-    	$this->_breadCrumbs[] = array('title' => '实验室列表','url' => 'lab/index');
         $this->display();
     }
     

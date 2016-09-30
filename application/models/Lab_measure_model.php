@@ -1,9 +1,9 @@
 <?php
 
 
-class Measure_Model extends MY_Model {
+class Lab_Measure_Model extends MY_Model {
     
-    public $_tableName = 'measure';
+    public $_tableName = 'lab_measure';
     
     public static $_tableMeta = null;
     

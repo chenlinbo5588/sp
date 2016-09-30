@@ -1,5 +1,5 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
 <title>{$SEO_title}</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -20,7 +20,9 @@ var cookiedomain = "{config_item('cookie_domain')}",
     cookie_skin = $.cookie("MyCssSkin"),
     SITEURL = '{base_url()}',
     cityUrl = "{site_url('district/index/')}",
-    LOADING_IMAGE = "{resource_url('img/loading/loading.gif')}";
+    LOADING_IMAGE = "{resource_url('img/loading/loading.gif')}",
+    authCodeURL ="{site_url('api/register/authcode')}",
+    captchaUrl = "{site_url('captcha/index')}";
     
 if (cookie_skin) {
     $('#cssfile2').attr("href","{resource_url('css')}/"+ cookie_skin +".css");
@@ -45,8 +47,8 @@ if (cookie_skin) {
       <li><a href="{admin_site_url('my/logout')}" title="退出"><span>退出</span></a></li>
     </ul>
 	<ul id="nav" class="main-nav clearfix">
-		{foreach from=$navs['main'] item=item}
-		<li><a class="link{if $pathStr == $item['url']} actived{/if}" href="{admin_site_url($item['url'])}">{$item['title']|escape}</a></li>
+		{foreach from=$navs['main'] key=key item=item}
+	<li><a class="link{if $item['url'] == $currentTopNav['url']} actived{/if}" href="{admin_site_url($item['url'])}">{$item['title']|escape}</a></li>
 		{/foreach}
 	</ul>
 </div>
@@ -57,6 +59,11 @@ if (cookie_skin) {
 	<div class="page">
 		<div class="loca clearfix">
 			<strong>您的位置:</strong>
-		    <div id="crumbs" class="crumbs"><span>控制台</span><span class="arrow">&nbsp;</span><span>欢迎页面</span></div>
+		    <div class="crumbs">
+		    	{foreach name="crumbs" from=$breadCrumbs item=item}
+		    	<a href="{site_url($item['url'])}" title="{$item['title']|escape}">{$item['title']|escape}</a>
+		    	{if !$smarty.foreach.crumbs.last}<a class="arrow">&nbsp;</a>{/if}
+		    	{/foreach}
+		   	</div>
 		</div>
 		{include file="common/sub_nav.tpl"}

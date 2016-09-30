@@ -45,8 +45,8 @@ if (cookie_skin) {
       <li><a href="{site_url('my/logout')}" title="退出"><span>退出</span></a></li>
     </ul>
 	<ul id="nav" class="main-nav clearfix">
-		{foreach from=$navs['main'] item=item}
-	<li><a class="link{if $pathStr == $item['url']} actived{/if}" href="{site_url($item['url'])}">{$item['title']|escape}</a></li>
+		{foreach from=$navs['main'] key=key item=item}
+	<li><a class="link{if $item['url'] == $currentTopNav['url']} actived{/if}" href="{site_url($item['url'])}">{$item['title']|escape}</a></li>
 		{/foreach}
 	</ul>
 </div>
@@ -57,6 +57,11 @@ if (cookie_skin) {
 	<div class="page">
 		<div class="loca clearfix">
 			<strong>您的位置:</strong>
-		    <div id="crumbs" class="crumbs"><span>控制台</span><span class="arrow">&nbsp;</span><span>欢迎页面</span></div>
+		    <div class="crumbs">
+		    	{foreach name="crumbs" from=$breadCrumbs item=item}
+		    	<a href="{site_url($item['url'])}" title="{$item['title']|escape}">{$item['title']|escape}</a>
+		    	{if !$smarty.foreach.crumbs.last}<a class="arrow">&nbsp;</a>{/if}
+		    	{/foreach}
+		   	</div>
 		</div>
 		{include file="common/sub_nav.tpl"}

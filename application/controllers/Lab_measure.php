@@ -5,10 +5,7 @@
 class Lab_Measure extends MyYdzj_Controller {
     public function __construct(){
 		parent::__construct();
-		$this->load->model('Measure_Model');
-		
-		$this->assign('action',$this->uri->rsegment(2));
-		$this->assign('topnav',strtolower(get_class()).'/index');
+		$this->load->model('Lab_Measure_Model');
     }
     
     public function index()
@@ -41,7 +38,7 @@ class Lab_Measure extends MyYdzj_Controller {
             }
             
             $condition['where']['status'] = '正常';
-            $data = $this->Measure_Model->getList($condition);
+            $data = $this->Lab_Measure_Model->getList($condition);
             $this->assign('page',$data['pager']);
             $this->assign('data',$data);
             
@@ -71,7 +68,7 @@ class Lab_Measure extends MyYdzj_Controller {
 		$id = $this->input->get_post('id');
 		
 		if($this->isPostRequest()){
-			$this->form_validation->set_rules('name','度量单位名称',   'required|max_length[20]|is_unique_not_self['.$this->Measure_Model->getTableRealName().'.name.id.'.$id.']');
+			$this->form_validation->set_rules('name','度量单位名称',   'required|max_length[20]|is_unique_not_self['.$this->Lab_Measure_Model->getTableRealName().'.name.id.'.$id.']');
 			
 			
 			for($i = 0; $i < 1; $i++){
@@ -84,7 +81,7 @@ class Lab_Measure extends MyYdzj_Controller {
 				
 				$_POST['updator'] = $this->_adminProfile['basic']['name'];
 				
-				$flag = $this->Measure_Model->update($_POST,array('id' => $id));
+				$flag = $this->Lab_Measure_Model->update($_POST,array('id' => $id));
 				
 				if($flag < 0){
 					$this->jsonOutput($this->db->get_error_info());
@@ -95,7 +92,7 @@ class Lab_Measure extends MyYdzj_Controller {
 			}
 			
 		}else{
-			$info = $this->Measure_Model->getFirstByKey($id);
+			$info = $this->Lab_Measure_Model->getFirstByKey($id);
 			
 			$this->assign('info',$info);
         	$this->display('lab_measure/add');
@@ -107,14 +104,14 @@ class Lab_Measure extends MyYdzj_Controller {
     	
     	if($id && $this->isPostRequest()){
     		if(is_array($id)){
-    			$rows = $this->Measure_Model->deleteByCondition(array(
+    			$rows = $this->Lab_Measure_Model->deleteByCondition(array(
     				'where_in' => array(
     					array('key' => 'id','value' => $id)
     				
     				)
     			));
     		}else{
-    			$rows = $this->Measure_Model->delete(array('id' => $id));
+    			$rows = $this->Lab_Measure_Model->delete(array('id' => $id));
     		}
     		
     		
@@ -132,7 +129,7 @@ class Lab_Measure extends MyYdzj_Controller {
     public function add()
     {
 		if($this->isPostRequest()){
-			$this->form_validation->set_rules('name','度量名称',  'required|max_length[20]|is_unique['.$this->Measure_Model->getTableRealName().'.name]');
+			$this->form_validation->set_rules('name','度量名称',  'required|max_length[20]|is_unique['.$this->Lab_Measure_Model->getTableRealName().'.name]');
 			
 			for($i = 0; $i < 1; $i++){
 				if(!$this->form_validation->run()){
@@ -142,7 +139,7 @@ class Lab_Measure extends MyYdzj_Controller {
 				}
 				
 				$_POST['creator'] = $this->_adminProfile['basic']['name'];
-				$flag = $this->Measure_Model->_add($_POST);
+				$flag = $this->Lab_Measure_Model->_add($_POST);
 				
 				if($flag > 0){
 					$this->jsonOutput('保存成功',array('redirectUrl' => admin_site_url('lab_measure/add')));

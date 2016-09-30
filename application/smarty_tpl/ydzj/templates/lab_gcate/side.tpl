@@ -1,0 +1,1 @@
+{include file="lab_goods/side.tpl"}

@@ -1,12 +1,12 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 
-class Goods extends MyYdzj_Controller {
+class Lab_goods extends MyYdzj_Controller {
     public function __construct(){
 		parent::__construct();
 		
 		$this->load->model('Lab_Model');
-		$this->load->library('Goods_service');
+		$this->load->library('Lab_goods_service');
 		
 		$this->assign('isSystemManager',$this->_checkIsSystemManager());
 		
@@ -123,8 +123,8 @@ class Goods extends MyYdzj_Controller {
         	$condition['where']['quantity < threshold'] = null;
         }
         
-        $this->Goods_Category_Model->clearMenuTree();
-        $list = $this->Goods_Category_Model->getListByTree($_GET['category_id']);
+        $this->Lab_Gcate_Model->clearMenuTree();
+        $list = $this->Lab_Gcate_Model->getListByTree($_GET['category_id']);
         
         $ids = array_keys($list);
         $ids[] = intval($_GET['category_id']);
@@ -140,9 +140,9 @@ class Goods extends MyYdzj_Controller {
         	)
         );
         
-        $data = $this->Goods_Model->getList($condition);
+        $data = $this->Lab_Goods_Model->getList($condition);
     	
-    	//$list = $this->Goods_Model->getList();
+    	//$list = $this->Lab_Goods_Model->getList();
     	
     	require_once PHPExcel_PATH.'PHPExcel.php';
     	
@@ -294,7 +294,7 @@ class Goods extends MyYdzj_Controller {
 	    		if(is_file($filePath)){
 	    			
 	    			//init basic data
-	    			$categoryList = $this->Goods_Category_Model->getList();
+	    			$categoryList = $this->Lab_Gcate_Model->getList();
 					$hashCategory = array();
 					foreach($categoryList as $item){
 						$hashCategory[$item['name']] = $item['id'];
@@ -406,7 +406,7 @@ class Goods extends MyYdzj_Controller {
 						//检查是否已经存在
 						
 						try {
-							$flag = $this->Goods_Model->_add($rowValue);
+							$flag = $this->Lab_Goods_Model->_add($rowValue);
 						}catch(Exception $re){
 							
 							print_r($re);
@@ -439,7 +439,7 @@ class Goods extends MyYdzj_Controller {
 								
 								$this->db->where(array('hash' => $rowValue['hash']));
 								
-								$affectRow = $this->db->update($this->Goods_Model->getTableRealName());
+								$affectRow = $this->db->update($this->Lab_Goods_Model->getTableRealName());
 								if($affectRow >= 0){
 									$classname = "success";
 									$result['duplicate']++;
@@ -529,7 +529,7 @@ EOF;
     				$condition['where']['name'] = sbc_to_dbc($_POST['goods_name']);
     			}
     			
-    			$this->Goods_Model->deleteByCondition($condition);
+    			$this->Lab_Goods_Model->deleteByCondition($condition);
     		}
     		
     		//print_r($this->session->all_userdata());
@@ -596,7 +596,7 @@ EOF;
                 $page = 1;
             }
             
-            $page_size = get_cookie('page_size');
+            $page_size = $this->input->get_cookie('page_size');
             
             if(!$page_size){
             	$page_size = config_item('page_size');
@@ -640,8 +640,8 @@ EOF;
             	$condition['where']['threshold !='] = 0;
             }
             
-            $this->Goods_Category_Model->clearMenuTree();
-            $list = $this->Goods_Category_Model->getListByTree($_GET['category_id']);
+            $this->Lab_Gcate_Model->clearMenuTree();
+            $list = $this->Lab_Gcate_Model->getListByTree($_GET['category_id']);
             
             $ids = array_keys($list);
             $ids[] = intval($_GET['category_id']);
@@ -661,10 +661,10 @@ EOF;
             	);
             }
             
-            $data = $this->Goods_Model->getList($condition);
+            $data = $this->Lab_Goods_Model->getList($condition);
             
-            $this->Goods_Category_Model->clearMenuTree();
-            $categoryList = $this->Goods_Category_Model->getListByTree();
+            $this->Lab_Gcate_Model->clearMenuTree();
+            $categoryList = $this->Lab_Gcate_Model->getListByTree();
             
             $this->assign('categoryList',$categoryList);
             $data['pager']['shortStyle'] = false;
@@ -680,7 +680,7 @@ EOF;
     private function _prepareData(){
     	
     	
-    	$categoryName = $this->Goods_Category_Model->getFirstByKey($_POST['category_id']);
+    	$categoryName = $this->Lab_Gcate_Model->getFirstByKey($_POST['category_id']);
 		$labName = $this->Lab_Model->getFirstByKey($_POST['lab_id']);
 		
 		$_POST['category_name'] = $categoryName['name'];
@@ -720,7 +720,7 @@ EOF;
 				
 				unset($_POST['lab_id']);
 				
-				$flag = $this->Goods_Model->update($_POST,array('id' => $id));
+				$flag = $this->Lab_Goods_Model->update($_POST,array('id' => $id));
 				
 				if($flag >= 0){
 					$this->jsonOutput('保存成功');
@@ -739,7 +739,7 @@ EOF;
 			
 		}else{
 			$this->_initBasicData();
-			$info = $this->Goods_Model->getFirstByKey($id);
+			$info = $this->Lab_Goods_Model->getFirstByKey($id);
 			$this->assign('info',$info);
 			
 			$this->display('goods/add');
@@ -751,7 +751,7 @@ EOF;
     	$id = $this->input->get_post('id');
     	
     	$this->_initBasicData();
-		$info = $this->Goods_Model->getFirstByKey(intval($id));
+		$info = $this->Lab_Goods_Model->getFirstByKey(intval($id));
 		$this->assign('info',$info);
 		
     	$this->display('goods/add_body');
@@ -767,7 +767,7 @@ EOF;
 					$id = $id[0];
 				}
 				
-				$info = $this->Goods_Model->getFirstByKey($id);
+				$info = $this->Lab_Goods_Model->getFirstByKey($id);
 				
 				
 				if(empty($info)){
@@ -783,7 +783,7 @@ EOF;
 		    		}
 				}
 				
-	    		$this->Goods_Model->deleteByWhere(array('id' => $id));
+	    		$this->Lab_Goods_Model->deleteByWhere(array('id' => $id));
 	    		$this->jsonOutput('删除成功');
 			}
     	}else{
@@ -797,7 +797,7 @@ EOF;
     	
     	$val = intval($val);
     	
-    	$info = $this->Goods_Category_Model->getFirstByKey($val);
+    	$info = $this->Lab_Gcate_Model->getFirstByKey($val);
     	
     	if(empty($info)){
     		$this->form_validation->set_message('check_category', '%s 无效');
@@ -824,8 +824,8 @@ EOF;
     
     private function _initBasicData(){
     	
-		$categoryList = $this->Goods_Category_Model->getListByTree();
-		$measureList = $this->Measure_Model->getList(array(
+		$categoryList = $this->Lab_Gcate_Model->getListByTree();
+		$measureList = $this->Lab_Measure_Model->getList(array(
 			'where' => array(
 				'status' => '正常'
 			)
@@ -854,7 +854,7 @@ EOF;
 				$_POST['creator'] = $this->_adminProfile['basic']['name'];
 				
 				$this->_prepareData();
-				$flag = $this->Goods_Model->_add($_POST);
+				$flag = $this->Lab_Goods_Model->_add($_POST);
 				
 				if($flag > 0){
 					$this->jsonOutput('保存成功');

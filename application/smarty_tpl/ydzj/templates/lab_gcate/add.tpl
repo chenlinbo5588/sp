@@ -5,9 +5,9 @@
     <div class="feedback">{$feedback}</div>
     {include file="common/dhtml_tree.tpl"}
     {if $info['id']}
-		{form_open(admin_site_url('goods_category/edit?id='|cat:$info['id']),'name="categoryForm"')}
+		{form_open(site_url('goods_category/edit?id='|cat:$info['id']),'name="categoryForm"')}
 	{else}
-		{form_open(admin_site_url('goods_category/add'),'name="categoryForm"')}
+		{form_open(site_url('goods_category/add'),'name="categoryForm"')}
 	{/if}
 	   <input type="hidden" name="id" value="{$info['id']}"/>
 	   <input type="hidden" name="pid" value="{$info['pid']}"/>
@@ -69,7 +69,7 @@
 	    tree.setOnLoadingStart(treeLoading);
 	    tree.setOnLoadingEnd(treeLoaded); 
 	    
-	    tree.loadXML("{admin_site_url('goods_category/getTreeXML')}",function(){
+	    tree.loadXML("{site_url('goods_category/getTreeXML')}",function(){
 	        {if $info['id']}
 	        	tree.selectItem({$info['id']});
 	        {else}

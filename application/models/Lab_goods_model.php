@@ -1,9 +1,9 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Goods_Model extends MY_Model {
+class Lab_goods_Model extends MY_Model {
     
-    public $_tableName = 'goods';
+    public $_tableName = 'lab_goods';
     public static $_tableMeta = null;
 
 

@@ -1,9 +1,6 @@
 {include file="common/main_header.tpl"}
 	{config_load file="goods.conf"}
-    {include file="./goods_common.tpl"}
-    <div class="feedback">{$feedback}</div>
-    <div class="fixed-empty"></div>
-	<form name="categoryForm" method="post" action="{admin_site_url('goods/import')}" target="tagetframe" onsubmit="return validation(this);">
+	<form name="categoryForm" method="post" action="{site_url('goods/import')}" target="tagetframe" onsubmit="return validation(this);">
 		<table class="table tb-type2">
 	      <tbody>
 	        <tr class="noborder">
@@ -52,7 +49,7 @@
                 var uploadbutton = K.uploadbutton({
                         button : K('#uploadButton')[0],
                         fieldName : 'imgFile',
-                        url : '{admin_site_url('common/upload_excel/?mod=goods')}',
+                        url : '{site_url('common/upload_excel/?mod=goods')}',
                         afterUpload : function(data) {
                             if (data.error === 0) {
                                  $("#file_id").val(data.id);

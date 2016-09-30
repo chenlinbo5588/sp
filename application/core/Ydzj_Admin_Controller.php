@@ -20,41 +20,6 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 	}
 	
 	
-	/**
-	 * 导航相关
-	 */
-	protected function _navs(){
-		$navs = $this->uri->segments;
-		if($navs[1] == 'admin'){
-			$navs = array_slice($navs,1,3);
-		}
-		
-		//print_r($navs);
-        $pathStr = implode('/',$navs);
-		//echo site_url($_SERVER['REQUEST_URI']);
-		$currentUri = $_SERVER['REQUEST_URI'];
-		if(preg_match("/^\/index.php\/admin\//",$currentUri,$match)){
-			$currentUri = substr($currentUri,17);
-		}
-		
-		
-		$configNav = config_item('navs');
-		$this->_subNavs = $configNav['sub'][$navs[0]];
-		
-		//print_r($this->_subNavs);
-		//echo $pathStr;
-		
-		$this->assign('uri_string',$this->uri->uri_string);
-		$this->assign('currentURL',$currentUri);
-        $this->assign('pathStr',$pathStr);
-        $this->assign('fnKey',$navs[0]);
-        
-        $this->assign('navs',config_item('navs'));
-	}
-	
-	
-	
-	
 	protected function _initLibrary(){
 		parent::_initLibrary();
 		$this->load->model('Role_Model');
@@ -125,8 +90,6 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
         $this->_permission['admin/dashboard/welcome'] = 1;
         $this->_permission['admin/dashboard/aboutus'] = 1;
 
-		//print_r($this->_permission);
-		
         $this->assign('permission',$this->_permission);
         
         if(!isset($this->_permission[$currentUri])){
@@ -147,23 +110,10 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 	 * 记录谁操作得
 	 */
 	public function addWhoHasOperated($action = 'add'){
-		
-		switch($action){
-			case 'add':
-				$ar = array(
-					"creator" => $this->_adminProfile['basic']['name']
-				);
-				break;
-			case 'edit':
-				$ar = array(
-					"updator" => $this->_adminProfile['basic']['name']
-				);
-				break;
-			default:
-				break;
-		}
-		
-		return $ar;
+		return array(
+			"{$action}_uid" => $this->_adminProfile['basic']['uid'],
+			"{$action}_username" => $this->_adminProfile['basic']['username']
+		);
 	}
 	
 	

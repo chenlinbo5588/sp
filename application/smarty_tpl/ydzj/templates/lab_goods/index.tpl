@@ -1,9 +1,6 @@
 {include file="common/main_header.tpl"}
   {config_load file="goods.conf"}
-  {include file="./goods_common.tpl"}
-  <div class="feedback">{$feedback}</div>
-  <div class="fixed-empty"></div>
-  <form name="formSearch" id="formSearch" action="{admin_site_url('goods/index')}" method="get">
+  <form name="formSearch" id="formSearch" action="{site_url('goods/index')}" method="get">
   <input type="hidden" name="page" value=""/>
     <table class="tb-type1 noborder search">
       <tbody>
@@ -28,7 +25,7 @@
           </td>
           <td><label>已达到预警:<input type="checkbox" name="threshold_active" value="y" {if $smarty.get.threshold_active}checked{/if}/></label></td>
           <td><input type="submit" class="msbtn" value="查询" />
-              <a href="{admin_site_url('goods/export/?')}{$queryStr}" title="导出到EXCEL">导出到EXCEL</a>
+              <a href="{site_url('goods/export/?')}{$queryStr}" title="导出到EXCEL">导出到EXCEL</a>
               <span class="tip">&lt;&lt;&lt;请右键目标另存为</span></td>
        	</tr>
       </tbody>
@@ -36,7 +33,7 @@
   </form>
   
   <div id="goodslist">
-	  <table class="rounded-corner">
+	  <table class="table tb-type2">
 	  		{*
 		    <colgroup>
 		        <col style="width:10%"/>
@@ -79,10 +76,10 @@
 		    </thead>
 		    <tbody>
 		        {foreach from=$data['data'] key=key item=item}
-		        <tr id="row{$item['id']}" title="双击记录开始编辑" data-url="{admin_site_url('goods/edit?id=')}{$item['id']}" class="{if $key % 2 == 0}odd{else}even{/if}">
+		        <tr id="row{$item['id']}" title="双击记录开始编辑" data-url="{site_url('goods/edit?id=')}{$item['id']}" class="{if $key % 2 == 0}odd{else}even{/if}">
 		            <td>{$item['lab_address']|escape}</td>
 		            <td>{$item['code']|escape}</td>
-		            <td><a class="popwin asblock" data-url="{admin_site_url('goods/info?id=')}{$item['id']}" data-title="{$item['name']|escape}" href="javascript:void(0);">{$item['name']|escape}</a></td>
+		            <td><a class="popwin asblock" data-url="{site_url('goods/info?id=')}{$item['id']}" data-title="{$item['name']|escape}" href="javascript:void(0);">{$item['name']|escape}</a></td>
 		            <td>{$item['specific']|escape}</td>
 		            <td {if $item['threshold'] > 0 && $item['threshold'] >= $item['quantity']}class="warning" title="低库存 阀值{$item['threshold']}"{/if}>{$item['quantity']|escape}{$item['measure']|escape}</td>
 		            <td>{$item['price']|escape}</td>
@@ -100,10 +97,10 @@
 		            <td>
 		            {* 如果是系统级 管理员 ， 但不是该货品实验室管理员 只能修改 *}
 		            {if $isSystemManager || in_array($item['lab_id'],$joinedLabs)}
-		                <a href="{admin_site_url('goods/edit?id=')}{$item['id']}">编辑</a>&nbsp;
+		                <a href="{site_url('goods/edit?id=')}{$item['id']}">编辑</a>&nbsp;
 		            {/if}
 		            {if $admin_profile['basic']['id'] == $smarty.const.LAB_FOUNDER_ID || in_array($item['lab_id'],$managedLabs)}
-		                <a class="delete" href="javascript:void(0);" data-id="{$item['id']}" data-url="{admin_site_url('goods/delete?id=')}{$item['id']}" data-title="确定删除{$item['name']|escape}吗?">删除</a>
+		                <a class="delete" href="javascript:void(0);" data-id="{$item['id']}" data-url="{site_url('goods/delete?id=')}{$item['id']}" data-title="确定删除{$item['name']|escape}吗?">删除</a>
 		            {/if}
 		            </td>
 		        </tr>
@@ -125,7 +122,7 @@
 $(function(){
     bindDeleteEvent();
     
-    $.loadingbar({ urls: [ new RegExp("{admin_site_url('goods/info') }")], templateData:{ message:"努力加载中..." } , container: "#goodslist" });
+    $.loadingbar({ urls: [ new RegExp("{site_url('goods/info') }")], templateData:{ message:"努力加载中..." } , container: "#goodslist" });
 	        
     $(".rounded-corner tr").bind("dblclick",function(){
     	var url = $(this).attr('data-url');

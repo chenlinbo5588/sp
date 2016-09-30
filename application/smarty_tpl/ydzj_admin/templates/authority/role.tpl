@@ -24,7 +24,7 @@
         </tr>
       </tbody>
     </table>
-    <table class="rounded-corner">
+    <table class="table tb-type2">
       <thead>
         <tr class="space">
           <th colspan="5" class="nobg">列表</th>

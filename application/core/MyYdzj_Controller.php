@@ -23,37 +23,9 @@ class MyYdzj_Controller extends Ydzj_Controller {
 	}
 	
 	
-	/**
-	 * 导航相关
-	 */
-	protected function _navs(){
-		
-		$navs = $this->uri->segments;
-        $pathStr = implode('/',$navs);
-		
-		$currentUri = $_SERVER['REQUEST_URI'];
-		if(preg_match("/^\/index.php\/admin\//",$currentUri,$match)){
-			$currentUri = substr($currentUri,17);
-		}
-		
-		$configNav = config_item('navs');
-		$this->_subNavs = $configNav['sub'][$navs[1]];
-		///print_r($this->_subNavs);
-		
-		$this->assign('uri_string',$this->uri->uri_string);
-		$this->assign('currentURL',$currentUri);
-        $this->assign('pathStr',$pathStr);
-        $this->assign('fnKey',$navs[1]);
-        
-        $this->assign('navs',$configNav);
-	}
-	
-	
-	
 	private function _initUserLabsRelate(){
 		$this->load->library('Lab_service');
 		$ar = $this->lab_service->getUserLabsAssoc($this->_adminProfile['basic']['id']);
-    	
     	$this->session->set_userdata($ar);
 	}
 	

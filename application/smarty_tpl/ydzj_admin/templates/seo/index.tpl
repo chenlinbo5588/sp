@@ -365,7 +365,7 @@ $(function(){
 	$('.tab-base a[nctype="{$selectedGroup}"]').trigger("click");
 	
 	$('#category').bind('change',function(){
-		$.getJSON("{admin_site_url('setting/ajax_category/')}?id=" +$(this).val(), function(json){
+		$.getJSON("{admin_site_url('seo/ajax_category/')}?id=" +$(this).val(), function(json){
 			if(json){
 				$('#cate_title').val(json.data.gc_title);
 				$('#cate_keywords').val(json.data.gc_keywords);

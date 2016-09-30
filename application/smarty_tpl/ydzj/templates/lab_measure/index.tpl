@@ -3,7 +3,7 @@
     {include file="./measure_common.tpl"}
 	<div class="fixed-empty"></div>
     <div class="feedback">{$feedback}</div>
-	{form_open(admin_site_url('lab_measure/index'),'id="formSearch"')}
+	{form_open(site_url('lab_measure/index'),'id="formSearch"')}
 	    <input type="hidden" name="page" value=""/>
 	    <table class="tb-type1 noborder search">
 	      <tbody>
@@ -15,7 +15,7 @@
 	      </tbody>
 	    </table>
 	  
-		<table class="rounded-corner">
+		<table class="table tb-type2">
 		    <thead>
 		        <tr>
 		            <th class="first">序号</th>
@@ -33,8 +33,8 @@
 	                <td>{time_tran($item['gmt_create'])}</td>
 	                <td>{$item['creator']|escape}</td>
 	                <td>
-	                	<a href="{admin_site_url('lab_measure/edit?id=')}{$item['id']}">编辑</a>
-	                	<a class="delete" href="javascript:void(0);" data-id="{$item['id']}" data-url="{admin_site_url('lab_measure/delete?id=')}{$item['id']}" data-title="确定删除{$item['name']|escape}吗?">删除</a>
+	                	<a href="{site_url('lab_measure/edit?id=')}{$item['id']}">编辑</a>
+	                	<a class="delete" href="javascript:void(0);" data-id="{$item['id']}" data-url="{site_url('lab_measure/delete?id=')}{$item['id']}" data-title="确定删除{$item['name']|escape}吗?">删除</a>
 	                </td>
 	            </tr>
 	            {/foreach}  

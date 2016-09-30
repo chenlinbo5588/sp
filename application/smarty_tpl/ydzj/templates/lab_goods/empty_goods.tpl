@@ -1,9 +1,6 @@
 {include file="common/main_header.tpl"}
   {config_load file="goods.conf"}
-  {include file="./goods_common.tpl"}
-  <div class="feedback">{$feedback}</div>
-  <div class="fixed-empty"></div>
-  <form name="categoryForm" method="post" action="{admin_site_url('goods/empty_goods')}" onsubmit="return validation(this);">
+  <form name="categoryForm" method="post" action="{site_url('goods/empty_goods')}" onsubmit="return validation(this);">
   <input type="hidden" name="lab_id" value=""/>
   <table class="autotable">
       <tbody>
@@ -51,14 +48,16 @@
 		    setLabIds();
 		};
 	    
+	    setTimeout(function(){
+	    	tree.loadXML("{site_url('lab/getTreeXML?uid='|cat:$admin_profile['basic']['id'])}",function(){
+		    	{if $lab_id}
+		    	{foreach from=$lab_id item=item}
+		    	tree.setCheck({$item}, true);
+		    	{/foreach} 
+		    	{/if}
+	        });
+	    },500);
 	    
-	    tree.loadXML("{admin_site_url('lab/getTreeXML?uid='|cat:$admin_profile['basic']['id'])}",function(){
-	    	{if $lab_id}
-	    	{foreach from=$lab_id item=item}
-	    	tree.setCheck({$item}, true);
-	    	{/foreach} 
-	    	{/if}
-        });
         
         function setLabIds(){
 		    var allchecked = tree.getAllChecked();

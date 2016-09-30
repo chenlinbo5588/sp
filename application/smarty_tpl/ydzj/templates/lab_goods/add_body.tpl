@@ -37,7 +37,7 @@
 	              {/foreach}
 	          </select>
           </td>
-          <td class="vatop tips"><span class="hightlight">如A柜1层 </span><span class="tip">如果找不到到对应类别,<a href="{admin_site_url('goods_category/add')}">点击添加{#category_title#}</a></span></td>
+          <td class="vatop tips"><span class="hightlight">如A柜1层 </span><span class="tip">如果找不到到对应类别,<a href="{site_url('goods_category/add')}">点击添加{#category_title#}</a></span></td>
         </tr>
         <tr class="noborder">
           <td colspan="2" class="required"><label class="validation">{#goods_name#}:</label></td>
