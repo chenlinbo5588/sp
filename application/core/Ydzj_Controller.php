@@ -31,10 +31,12 @@ class Ydzj_Controller extends MY_Controller {
 		$this->_profile = array();
 		$this->_adminProfile = array() ;
 		
-		$this->form_validation->set_error_delimiters('<label class="form_error">','</label>');
+		$this->form_validation->set_error_delimiters('<label class="error">','</label>');
 		
+		$this->_userKeepFresh();
 		$this->_initLogin();
 	}
+	
 	
 	/**
 	 * 导航相关
@@ -101,27 +103,47 @@ class Ydzj_Controller extends MY_Controller {
 	
 	protected function _initLibrary(){
 		parent::_initLibrary();
+		$this->load->library('Message_service');
 	}
+	
+	
+	/**
+	 * 后台添加了新的通知  ，由用于触发信息的更新
+	 */
+	private function _userKeepFresh(){
+		$lsk = $this->input->get_cookie('lsk');
+		if($lsk){
+			$this->_reqInterval = $this->_reqtime - $lsk;
+		}
+		
+		//大于一分钟 这更新
+		if(empty($lsk) || $this->_reqInterval > config_item('pmcheck_interval') ){
+			$this->input->set_cookie('lsk',$this->_reqtime,CACHE_ONE_DAY);
+		}
+	}
+	
+	
 	
 	private function _initLogin(){
 		$userData =  $this->session->get_userdata();
-		//print_r($userData);
-		$lastVisit = $userData[$this->_lastVisitKey];
 		
+		$lastVisit = $userData[$this->_lastVisitKey];
 		if(empty($lastVisit)){
 			$lastVisit = 0;
 		}
 		
 		if($userData[$this->_profileKey]){
+			//保存时间间隔
+			//$this->_reqInterval = $this->_reqtime - $lastVisit;
+			
 			$this->_profile = $userData[$this->_profileKey];
+			$this->assign($this->_profileKey,$this->_profile);
 		}
 		
 		/* 如果已登陆 或者 首次登陆 则刷新上次访问时间 */
-		if($this->_profile && $lastVisit == 0){
+		if($this->_profile || $lastVisit == 0){
 			$this->session->set_userdata(array($this->_lastVisitKey => $this->_reqtime));
 		}
-		
-		$this->assign($this->_profileKey,$this->_profile);
 		
 	}
 	

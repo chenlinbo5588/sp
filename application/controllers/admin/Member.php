@@ -51,7 +51,7 @@ class Member extends Ydzj_Admin_Controller {
 			$this->assign('ds',$this->common_district_service->prepareCityData($ds));
 		}
 		
-		$search_map['search_field'] = array('mobile' => '账号','email' => '电子邮箱','username' => '真实姓名');
+		$search_map['search_field'] = array('username' => '登陆账号' ,'mobile' => '手机号码','email' => '电子邮箱');
 		
 		/*
 		$search_map['activity_sort'] = array(
@@ -123,7 +123,7 @@ class Member extends Ydzj_Admin_Controller {
 		
 		if($inviterList){
 			$this->assign('inviterInfo',$this->member_service->getListByCondition(array(
-				'select' => 'uid,mobile,avatar_m,avatar_s',
+				'select' => 'uid,username,mobile,avatar_m,avatar_s',
 				'where_in' => array(
 					array('key' => 'uid' ,'value' => $inviterList )
 				)
@@ -138,8 +138,7 @@ class Member extends Ydzj_Admin_Controller {
 		$this->assign('search_map',$search_map);
 		$this->assign('memberDs',$this->common_district_service->getDistrictByIds($dqList));
 		//$this->assign('d1',$this->common_district_service->getDistrictByPid(0));
-		
-		$this->display('member/index');
+		$this->display();
 	}
 	
 	

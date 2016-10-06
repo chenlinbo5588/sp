@@ -7,18 +7,23 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class MyYdzj_Controller extends Ydzj_Controller {
 	
 	protected $_loginUID = 0;
+	public $_newpm = array();
 	
 	public function __construct(){
 		parent::__construct();
 		
 		if(!$this->isLogin()){
-			$this->session->unset_userdata(array($this->_lastVisitKey,$this->_profileKey));
+			//$this->session->unset_userdata(array($this->_lastVisitKey,$this->_profileKey));
 			js_redirect('member/login');
 		}
 		
 		$this->load->config('member_site');
+		$this->_loginUID = $this->_profile['basic']['uid'];
 		$this->_navs();
 		$this->_initUserLabsRelate();
+		if($this->_reqInterval >= config_item('pmcheck_interval')){
+			$this->_pmUpdate();
+		}
 		
 	}
 	
@@ -47,6 +52,15 @@ class MyYdzj_Controller extends Ydzj_Controller {
     }
     
 	
+	/**
+	 * 更新用户站内信状态
+	 */
+	protected function _pmUpdate(){
+		$this->_newpm = $this->message_service->getLastestSysPm($this->_profile,$this->_loginUID);
+		if($this->_newpm){
+			$this->assign('newPm',count($this->_newpm));
+		}
+	}
 	
 	
 	

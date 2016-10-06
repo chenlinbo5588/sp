@@ -53,7 +53,9 @@ $config['navs'] = array(
 		'seo' => 'setting',
 		'member' => array(
 			array('title' => '会员管理','url' => 'member/index'),
+			array('title' => '会员通知','url' => 'notify/index'),
 		),
+		'notify' => 'member',
 		'goods' => array(
 			array('title' => '商品','url' => 'goods/index'),
 			array('title' => '商品分类','url' => 'goods_class/category'),
@@ -110,6 +112,10 @@ $config['navs'] = array(
 		'member' => array(
 			'member/index' => '管理',
 			'member/add' => '添加'
+		),
+		'notify' => array(
+			'notify/index' => '通知管理',
+			'notify/add' => '添加通知'
 		),
 		'goods' => array(
 			'goods/index' => '管理',

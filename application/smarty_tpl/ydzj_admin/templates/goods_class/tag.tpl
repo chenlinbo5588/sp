@@ -42,7 +42,7 @@
         <tr class="tfoot">
           <td colspan="4">
           	<label><input type="checkbox" class="checkall" id="checkallBottom" name="chkVal">全选</label>&nbsp;
-            <a href="JavaScript:void(0);" class="btn" id="deleteBtn" data-checkbox="tag_id[]" data-url="{admin_site_url('goods_class/tag_delete')}"><span>删除</span></a>
+            <a href="JavaScript:void(0);" class="btn deleteBtn" data-checkbox="tag_id[]" data-url="{admin_site_url('goods_class/tag_delete')}"><span>删除</span></a>
             <a class="btn" href="JavaScript:void(0);" id="refreshTagBtn" onclick="$('#dialog').show();location.href='{admin_site_url('goods_class/tag_update')}?page={$currentPage}'"><span>更新TAG名称</span></a>
             <a class="btn" href="JavaScript:void(0);" onclick="if(confirm('您确定要重新导入TAG吗？重新导入将会重置所有TAG值信息。')){ location.href='{admin_site_url('goods_class/tag_reset')}?page={$currentPage}'; }"> <span>导入/重置TAG</span> </a>
           	{include file="common/pagination.tpl"}

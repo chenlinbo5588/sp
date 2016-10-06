@@ -1,7 +1,7 @@
 {include file="common/main_header.tpl"}
 {config_load file="article.conf"}
   {form_open(admin_site_url('article/index'),'id="formSearch"')}
-  <input type="hidden" name="page" value="{$currentPage}"/>
+  <input type="hidden" name="page" value=""/>
     <table class="tb-type1 noborder search">
       <tbody>
         <tr>
@@ -68,7 +68,7 @@
       	<tr class="tfoot">
           <td colspan="8">
           	<label><input type="checkbox" class="checkall" id="checkallBottom" name="chkVal">全选</label>&nbsp;
-          	<a href="javascript:void(0);" class="btn" id="deleteBtn" data-checkbox="id[]" data-url="{admin_site_url('article/delete')}"><span>删除</span></a>
+          	<a href="javascript:void(0);" class="btn deleteBtn" data-checkbox="id[]" data-url="{admin_site_url('article/delete')}"><span>删除</span></a>
           	{include file="common/pagination.tpl"}
            </td>
         </tr>

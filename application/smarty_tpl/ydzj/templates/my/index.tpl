@@ -1,5 +1,4 @@
-{include file="./my_header.tpl"}
-	{include file="common/jquery_ui.tpl"}
+{include file="common/my_header.tpl"}
 	<table class="fulltable style1">
 		<tbody>
 			<tr>
@@ -22,15 +21,23 @@
 			</tr>
 			<tr>
 				<td>邮箱地址</td>
-				<td><span>{$profile['basic']['email']|escape}</span>&nbsp;<a id="edit_email" class="warning" href="javascript:void(0);">修改</a> {if $profile['basic']['email_status'] == 0}<span class="hightlight">邮箱尚未认证,可能无法收到邮件提醒</span> <a class="warning" href="{site_url('my/verify_email')}" title="马上认证邮箱">马上认证邮箱</a>{else}<span>已认证</span>{/if}</td>
+				<td>
+				    <div>
+				        <span id="emailAddr">{$profile['basic']['email']|escape}</span>&nbsp;<a id="edit_email" class="warning" href="javascript:void(0);">修改</a>
+				        <span id="emailVerfiyText">{if $profile['basic']['email_status'] == 1}已认证{else}未认证{/if}邮箱</span>
+				    </div>
+				    <div id="emailAddrVerfiy" {if $profile['basic']['email_status'] == 1}style="display:none;"{/if}>
+				        <span class="hightlight">邮箱尚未认证,可能无法收到邮件提醒</span>
+				        <a class="warning" href="{site_url('my/verify_email')}" title="马上认证邮箱">马上认证邮箱</a>
+				    </div>
+				    
+			   </td>
 			</tr>
 			<tr>
 				<td>头像</td>
 				<td>
 					<img src="{if $profile['basic']['avatar_s']}{resource_url($profile['basic']['avatar_s'])}{else}{resource_url($siteSetting['default_user_portrait'])}{/if}"/>
-					
 		            <div class="upload">
-		              
 		              <input type="button" id="uploadButton" value="选择图片上传" />
 		            </div>
 		            <div class="hightlight">文件最大2M，JPG PNG格式, 尺寸最多不超过 800x600</div>
@@ -69,14 +76,18 @@
 			</tr>
 		</tbody>
 	</table>
-	{include file="common/jquery_ui.tpl"}
 	{include file="common/jquery_validation.tpl"}
 	{include file="common/ke.tpl"}
 	{include file="common/jcrop.tpl"}
 	
-	<div id="dialog" title="修改邮箱">
+	<div id="dialog" title="修改邮箱" style="display:none;">
+	    <div class="loading_bg" style="display:none;">提交中，请稍候...</div>
+	    <div class="tip">修改邮箱后，请对邮箱进行认证</div>
 		{form_open(site_url('my/set_email'),"id='editEmailForm'")}
-			<input type="text" class="at_txt" name="newemail" value="" placeholder="请输入新的邮箱地址"/>
+			<table class="fulltable noborder">
+                <tr><td><input type="text" class="at_txt" name="newemail" value="" placeholder="请输入新的邮箱地址"/></td></tr>
+			    <tr><td><input type="submit" class="master_btn at_txt" name="tijiao" value="保存"/></td></tr>
+			</table>
 		</form>
 	</div>
 	<div id="imgCut" title="头像裁切">
@@ -98,5 +109,5 @@
 		var min_width = {$avatarImageSize['m']['width']},min_height = {$avatarImageSize['m']['height']};
 	</script>
 	<script type="text/javascript" src="{resource_url('js/my/index.js')}"></script>
-{include file="./my_footer.tpl"}
+{include file="common/my_footer.tpl"}
 

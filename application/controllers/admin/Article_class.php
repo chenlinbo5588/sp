@@ -162,7 +162,7 @@ class Article_Class extends Ydzj_Admin_Controller {
 		$this->form_validation->set_rules('ac_name','分类名称',"required");
 		
 		if($this->input->post('ac_parent_id')){
-			$this->form_validation->set_rules('ac_parent_id','上级分类', "in_db_list[{$this->Article_Class_Model->_tableRealName}.ac_id]|callback_checkpid[{$action}]");
+			$this->form_validation->set_rules('ac_parent_id','上级分类', 'in_db_list['.$this->Article_Class_Model->getTableRealName().".ac_id]|callback_checkpid[{$action}]");
 		}
 		
 		

@@ -92,11 +92,17 @@
       <thead>
         <tr class="thead">
           <th>&nbsp;</th>
-          <th colspan="2">会员</th>
+          <th>会员</th>
+          <th>登陆账号</th>
+          <th>手机号码</th>
+          <th>邮箱</th>
+          <th>QQ</th>
+          <th>性别</th>
           <th class="align-center">邀请人</th>
           <th>注册渠道</th>
           <th>地区</th>
           <th>最后登录</th>
+          <th>注册信息</th>
           <th>积分</th>
           <th>状态</th>
           <th class="align-center">发表言论</th>
@@ -109,29 +115,13 @@
         <tr class="hover member">
           <td class="w24"></td>
           <td class="w120 picture">
-            <div class=""><span class="thumb"><i></i><img src="{resource_url($item['avatar_s'])}"  data-avatar="{$item['avatar_m']}" /></span></div></td>
-          <td>
-            <p class="name"><strong>账号:&nbsp;{$item['mobile']|escape}</strong></p>
-            <p><strong>昵称:&nbsp;</strong><span>{$item['nickname']|escape}</span></p>
-            <p><strong>性别:&nbsp;</strong><span>{if $item['sex'] == 'M'}男{elseif $item['sex'] == 'F'}女{else}保密{/if}</span><span>(真实姓名: {$item['username']|escape})</span></p>
-            <p class="smallfont">注册时间:&nbsp;{$item['reg_date']|date_format:"%Y-%m-%d %H:%M:%S"}</p>
-            <p class="smallfont">注册IP:&nbsp;{$item['reg_ip']}</p>
-            <div class="im">
-                {if $item['email'] != ''}
-                <span class="email">
-                    <a href="mailto:{$item['email']}" class="yes" title="电子邮箱:{$item['email']|escape}">{$item['email']}</a>
-                </span>
-                {/if}
-                {if $item['qq'] != ''}
-                <span class="qq">
-                    <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin={$item['qq']}&site=qq&menu=yes" class="yes"  title="QQ: {$item['qq']|escape}">&nbsp;</a>
-                </span>
-                {/if}
-                {if $item['weixin'] != ''}
-                <span class="weixin"><a href="javascript:void(0)" title="{$item['weixin']|escape}">{$item['weixin']|escape}</a></span>
-                {/if}
-            </div>
+            <div class=""><span class="thumb"><i></i><img src="{resource_url($item['avatar_s'])}"  data-avatar="{$item['avatar_m']}" /></span></div>
           </td>
+          <td>{$item['username']|escape}</td>
+          <td>{$item['mobile']|escape}</td>
+          <td><div class="im"><span class="email">{if $item['email'] != ''}<a href="mailto:{$item['email']}" class="yes" title="电子邮箱:{$item['email']|escape}">{$item['email']}</a>{/if}</span></div><span>{$item['email']|escape}</span></td>
+          <td><div class="im"><span class="qq">{if $item['qq'] != ''}<a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin={$item['qq']}&site=qq&menu=yes" class="yes" alt="点击这里给我发消息  QQ: {$item['qq']|escape}" title="点击这里给我发消息 QQ: {$item['qq']|escape}">{$item['qq']|escape}</a>{/if}</span></div><span>{$item['qq']|escape}</span></td>
+          <td>{if $item['sex'] == 'M'}男{elseif $item['sex'] == 'F'}女{else}保密{/if}</td>
           <td class="align-center w120">
             {if $item['inviter']}
             <div class=""><a href="{admin_site_url('member/edit')}?id={$item['inviter']}"><img src="{resource_url($inviterInfo[$item['inviter']]['avatar_s'])}" /></a></div>
@@ -146,11 +136,15 @@
             <p>{if $item['last_login']}{$item['last_login']|date_format:"%Y-%m-%d %H:%M:%S"}</p>
             <p>{$item['last_loginip']}{/if}</p>
           </td>
+          <td>
+            <div>{$item['reg_date']|date_format:"%Y-%m-%d %H:%M:%S"}</div>
+            <div>{$item['reg_ip']}</div>
+          </td>
           <td>{$item['credits']}</td>
           <td>{$item['status']}</td>
           <td class="align-center">{if $item['allowtalk'] == 'N'}禁止{else}允许{/if}</td>
           <td class="align-center">{if $item['freeze'] == 'Y'}禁止{else}允许{/if}</td>
-          <td class="align-center"><a href="{admin_site_url('member/edit')}?id={$item['uid']}">编辑</a> | <a href="{admin_site_url('notify/member?uid=')}{$item['uid']}">通知</a></td>
+          <td class="align-center"><a href="{admin_site_url('member/edit')}?id={$item['uid']}">编辑</a> | <a href="{admin_site_url('notify/add?uid=')}{$item['uid']}">通知</a></td>
         </tr>
       {/foreach}
       </tbody>

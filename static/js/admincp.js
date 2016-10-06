@@ -25,11 +25,6 @@ $(function(){
 		}
 	);
 	
-	// 全选 start
-	$('.checkall').click(function(){
-		var group = $(this).prop("name");
-		$("input[group="+group+"]").prop("checked" , $(this).prop("checked") );
-	});
 
 
 	// 可编辑列（input）变色
@@ -101,65 +96,7 @@ $(function(){
 
 
 
-/**
- * 删除功能逻辑
- * @param postdata
- * @param url
- * @returns
- */
-function doDelete(postdata,url){
-	$.ajax({
-		type:"POST",
-		url:url,
-		data: postdata,
-		success:function(json){
-			alert(json.message);
-			refreshFormHash(json.data);
-			
-			var patt1 = new RegExp("成功");
-			if(patt1.test(json.message)){
-				for(var i = 0; i < postdata['id'].length; i++){
-					$("#row" + postdata['id'][i]).remove();
-				}
-			}
-		},
-		error:function(event,request, settings){
-			alert("删除出错");
-		}
-	});
-}
 
-
-function bindDeleteEvent(){
-	$("a.delete").bind("click",function(){
-		if(confirm('您确定要删除吗')){
-			var url = $(this).attr("data-url");
-	  		doDelete({ "formhash" : formhash , "id": [$(this).attr("data-id")] } ,url);
-		}
-  	});
-  	
-  	$("#deleteBtn").bind("click",function(){
-  		
-  		var ids = [];
-  		var url = $(this).attr("data-url");
-  		
-  		var checkboxName = $(this).attr('data-checkbox');
-  		
-  		$("input[name='" + checkboxName + "']:checked").each(function(){
-  			ids.push($(this).val());
-  		});
-  		
-  		if(ids.length == 0){
-  			alert("请先勾选");
-  		}else{
-  			
-  			if(confirm('您确定要删除吗')){
-  				doDelete({ "formhash" : formhash ,"id": ids }, url);
-  	  		}
-  		}
-  		
-  	});
-}
 
 
 function bindOnOffEvent(){

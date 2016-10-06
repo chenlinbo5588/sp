@@ -4,13 +4,43 @@
 $(function(){
 	var dialog, cutDlg;
 	
+	var insending = false;
+	
 	var change_email = function(){
 		if(!validation.valid()){
 			return false;
 		}
 		
-		$("#editEmailForm").submit();
-		return true;
+		if(insending){
+			return false;
+		}
+		
+		insending = true;
+		dialog.find(".loading_bg").show();
+		
+		$.ajax({
+			type:'POST',
+			url:$("#editEmailForm").attr('action'),
+			data: $("#editEmailForm").serialize(),
+			success:function(json){
+				insending = false;
+				dialog.find(".loading_bg").hide();
+				
+				if(check_success(json.message)){
+					dialog.dialog('close');
+					$("#emailAddr").html($("input[name=newemail]").val());
+					$("#emailVerfiyText").html("未认证邮箱");
+					showToast('success',json.message);
+				}else{
+					showToast('error',json.message);
+				}
+			},
+			error:function(){
+				showToast('error',"操作失败，服务器错误");
+				insending = false;
+				dialog.find(".loading_bg").hide();
+			}
+		})
 	};
 	
 	
@@ -19,6 +49,9 @@ $(function(){
 	}
 	
 	var validation = $("#editEmailForm").validate({
+		submitHandler:function(){
+			change_email();
+		},
 		rules: {
 			newemail: {
 				required: true,
@@ -32,13 +65,15 @@ $(function(){
 		autoOpen: false,
 		width: 300,
 		modal: true,
+		resize:false,
+		/*
 	      buttons: {
 	        "保存": change_email,
 	        "关闭": function() {
-	          dialog.dialog( "close" );
+	        	$(this).dialog( "close" );
 	        }
 	   },
-	   
+	   */
 	   open:function(){
 		   validation.resetForm();
 	   }
@@ -51,7 +86,7 @@ $(function(){
 	      buttons: {
 	        "保存": save_avatar,
 	        "关闭": function() {
-	        	cutDlg.dialog( "close" );
+	        	$(this).dialog( "close" );
 	        }
 	   },
 	   

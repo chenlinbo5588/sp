@@ -83,7 +83,6 @@
           <td class="w60 picture"><img class="size-106x106" src="{if $item['goods_pic_m']}{resource_url($item['goods_pic_m'])}{else if $item['goods_pic_b']}{resource_url($item['goods_pic_b'])}{else if $item['goods_pic']}{resource_url($item['goods_pic'])}{else}{resource_url('img/default.jpg')}{/if}"/></td>
           <td class="goods-name w270">
           	<p><span>{$item['goods_name']|escape}</span></p>
-            {*<p class="store">所属店铺:官方店铺</p>*}
          </td>
          <td>{$item['goods_code']|escape}</td>
          <td>
@@ -102,7 +101,7 @@
       	<tr class="tfoot">
           <td colspan="12">
           	<label><input type="checkbox" class="checkall" id="checkallBottom" name="chkVal">全选</label>&nbsp;
-          	<a href="javascript:void(0);" class="btn" id="deleteBtn" data-checkbox="id[]" data-url="{admin_site_url('goods/delete')}"><span>删除</span></a>
+          	<a href="javascript:void(0);" class="btn deleteBtn" data-checkbox="id[]" data-url="{admin_site_url('goods/delete')}"><span>删除</span></a>
           	{include file="common/pagination.tpl"}
            </td>
         </tr>

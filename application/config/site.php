@@ -13,6 +13,39 @@ $config['api_secret'] = 'b53209f0e4d2b2335d726e4e381511d59d22a31f';
 
 $config['allowed_img_types'] = 'jpg|jpeg|png';
 
+$config['mail_list'] = array(
+	'sina.com','126.com','163.com','gmail.com','qq.com','vip.qq.com','hotmail.com','sohu.com','139.com','vip.sina.com','21cn.cn','189.cn','sina.cn'
+);
+
+
+$config['fronted_admin'] = array(
+	
+);
+
+$config['notify_ways'] = array(
+	'站内信',
+	/*'聊天窗口',*/
+	'邮件',
+	/*'短信'*/
+);
+
+//
+$config['yunxin'] = array(
+	'url' => 'https://api.netease.im/nimserver/',
+	'appkey' => 'a54919705abd0863a8d3cc49cf8eb14e',
+	'secret' => 'e4294723dba9'
+);
+
+$config['huanxin'] = array(
+	'url' => 'https://a1.easemob.com/',
+	'appid' => 1,
+	'appkey' => 'shonex#sh1',
+	'client_id' => 'YXA6-XsmMH2XEeaP9mOxWdAA3Q',
+	'secret' => 'YXA6gvDBESUMtptDHPZearXT4d8YdVE',
+	'open_type' => 1
+);
+
+
 /**
  * 默认图片大小
  */

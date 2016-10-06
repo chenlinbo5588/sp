@@ -16,6 +16,121 @@ class Tools extends MY_Controller {
 		
 	}
 	
+	
+	
+	public function batch_insert(){
+		
+		$goodsName = array(
+			'卫衣',
+			'护腕',
+			'护膝',
+			'Nike',
+			'Adidas',
+			'乔丹',
+			'匡威',
+			'特步',
+			'361度',
+			'李宁',
+			'阿迪王',
+			'匹克'
+		);
+		
+		$color = array(
+			'黑',
+			'灰',
+			'银',
+			'白',
+			'棕',
+			'香槟',
+			'绿',
+			'蓝',
+			'紫',
+			'红',
+			'黄',
+			'金',
+			'橙',
+			'金属金'
+		);
+		
+		$sex = array('M','F');
+		
+		//2016/9/1 12:16:25
+		//2016/9/13 12:16:25
+		$timestamp = array(1472703385,time());
+		
+		$this->load->model('Goods_Recent_Model');
+		for($i = 0; $i < 100000; $i++){
+			
+			
+			
+			/*
+			$str = array(
+				mt_rand(1,9),
+				mt_rand(1,92),
+				mt_rand(1,999),
+				'00'.mt_rand(0,9)
+			);
+			
+			if($str[1] < 10){
+				$str[1] = '0'.$str[1];
+			}
+			
+			if($str[2] < 10){
+				$str[2] = '0'.$str[2];
+			}
+			*/
+			$gmtcreate = mt_rand($timestamp[0],$timestamp[1]);
+			
+			
+			//$goodsCode = implode('',$str);
+			$goodsCode = random_string('alnum',mt_rand(5,9));
+			
+			$insert = array(
+				'goods_name' => $goodsName[mt_rand(0,(count($goodsName) - 1))],
+				'goods_code' => $goodsCode,
+				'goods_size' => mt_rand(10,48),
+				'goods_color' => $color[mt_rand(0,count($color) - 1)],
+				'quantity' => mt_rand(1,10),
+				'sex' => $sex[mt_rand(0,count($sex) - 1)],
+				'price_min' => mt_rand(0,2000) * mt_rand(0,1),
+				'uid' => mt_rand(1,200),
+				'date_key' => date("Ymd",$gmtcreate),
+				'gmt_create' => $gmtcreate,
+				'gmt_modify' => $gmtcreate
+			);
+			
+			$insert['price_max'] = $insert['price_min'] * 2;
+			
+			$insert['send_day'] = $gmtcreate + mt_rand(0,3) * 86400;
+			$insert['ip'] = $this->input->ip_address();
+			
+			//$insert['kw'] = $insert['goods_name'].'_'.$insert['goods_code'].'_'.$insert['goods_size'];
+			$insert['cnum'] = mt_rand(0,$insert['quantity']);
+			
+			$sql = $this->db->insert_string($this->Goods_Recent_Model->getTableRealName(),$insert);
+			$this->db->query($sql);
+			
+			$id = $this->db->insert_id();
+			if($id){
+				echo $id.'<br/>';
+			}else{
+				
+				echo $i.'failed';
+			}
+		}
+		
+		
+		
+	}
+	
+	
+	
+	public function hash_code(){
+		
+		echo base64_encode(md5(mt_rand()));
+	}
+	
+	
 	public function com_address(){
 		$file = 'address.m.csv.txt';
 		
@@ -369,6 +484,304 @@ EOT;
 	}
 	
 	
+	
+	public function test_sendtext(){
+		$pushApi = $this->base_service->getPushObject();
+		
+		$json = $pushApi->sendText(array(
+			'15986867878'
+		),random_string('alnum',5),'清风信息系统管理员');
+		
+		
+		
+		print_r($json);
+	}
+	
+	
+	
+	public function update_localpsw(){
+		$memberList = $this->Member_Model->getList();
+		//var_dump($pushApi);
+		
+		foreach($memberList as $member){
+			$newpassword = $this->encrypt->encode($member['password']);
+			$this->Member_Model->update(array(
+				'password' => $newpassword
+			),array('uid' => $member['uid']));
+			
+			//$json = $this->->updatePassword($member['uid'],$member['mobile'],$member['password']);
+			//print_r($json);
+		}
+	}
+	
+	public function update_hxpsw(){
+		set_time_limit(0);
+		
+		$memberList = $this->Member_Model->getList();
+		$pushApi = $this->base_service->getPushObject();
+		//var_dump($pushApi);
+		
+		foreach($memberList as $member){
+			$psw = $this->encrypt->decode($member['password']);
+			$json = $pushApi->updatePassword($member['uid'],$member['mobile'],$psw);
+			print_r($json);
+			
+			sleep(5);
+		}
+	}
+	
+	
+	public function test_insert_message(){
+		
+		
+		set_time_limit(0);
+		
+		$this->load->library('Message_service');
+		
+		
+		$members = $this->Member_Model->getList();
+		
+		
+		foreach($members as $member){
+			for($i = 0; $i < 500;$i++){
+				$data = array(
+					'title' => random_string('alnum',mt_rand(10,30)),
+					'content' => random_string('alnum',mt_rand(80,500)),
+					'uid' => $member['uid'],
+				);
+				
+				$insertid = $this->message_service->addSystemPmMessage($data);
+			}
+			
+		}
+		
+		
+		
+	}
+	
+	
+	/**
+	 * 创建站内聊天信息推送表 30 张表，用户 uid  分表
+	 * 
+	 * 跑批 
+	 */
+	public function create_pm_chat_tables(){
+		
+		$chat_pm = range(0,29);
+		
+		
+		foreach($chat_pm as $key => $value){
+			echo "'{$key}' => {$value},<br/>";
+		}
+		
+		
+		echo '<br/>';
+		
+		
+		$sql = <<< EOF
+CREATE TABLE `sp_push_chat{i}` (
+  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+  `msg_type` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '0=后台系统消息 1=货品匹配信息',
+  `uid` mediumint(9) unsigned NOT NULL DEFAULT '0',
+  `username` varchar(30) NOT NULL DEFAULT '',
+  `content` text,
+  `is_send` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `gmt_create` int(10) unsigned NOT NULL DEFAULT '0',
+  `gmt_modify` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `idx_send` (`is_send`),
+  KEY `idx_uid` (`msg_type`,`uid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+EOF;
+
+		$pm = $this->load->get_config('split_pm_chat');
+		
+		
+		print_r($pm);
+		
+		foreach($pm as $p){
+			
+			$exexSQL = str_replace('{i}',$p,$sql);
+			$this->Member_Model->execSQL($exexSQL);
+		}
+		
+		
+		
+	}
+	
+	
+	
+	public function create_pm_tables(){
+		
+		
+		
+		$sql = <<< EOF
+CREATE TABLE `sp_pm_message{i}` (
+  `id` mediumint(10) unsigned NOT NULL AUTO_INCREMENT,
+  `uid` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `from_uid` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `site_msgid` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '系统消息id',
+  `msg_type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0 = 用户消息  -1=系统消息 1=货品匹配站内信',
+  `readed` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '1=已读',
+  `msg_direction` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '0=接收 1=发送',
+  `title` varchar(200) NOT NULL DEFAULT '',
+  `content` text,
+  `gmt_create` int(10) unsigned NOT NULL DEFAULT '0',
+  `gmt_modify` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `idx_uid` (`uid`,`msg_type`),
+  KEY `idx_ctime` (`gmt_create`),
+  KEY `idx_read` (`uid`,`readed`),
+  KEY `idx_dir` (`msg_direction`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+EOF;
+
+		$pm = $this->load->get_config('split_pm');
+		
+		
+		print_r($pm);
+		
+		foreach($pm as $p){
+			
+			$exexSQL = str_replace('{i}',$p,$sql);
+			$this->Member_Model->execSQL($exexSQL);
+		}
+	}
+	
+	
+	
+	
+	
+	
+	public function test_hash(){
+		$this->load->library('Flexihash');
+		
+		
+		
+		/*
+		$pm = array(
+	'pm_1' => 1,
+	'auth_2' => 2,
+	'auth_3' => 3,
+	'auth_4' => 4,
+	'auth_5' => 5,
+	'auth_6' => 6,
+	'auth_7' => 7,
+	'auth_8' => 8,
+	'auth_9' => 9,
+	'auth_10' => 10);
+		*/
+		
+		
+		$pm = range(0,29);
+		
+		foreach($pm as $key => $value){
+			echo "'{$key}' => {$value},<br/>";
+		}
+		
+		
+		print_r($pm);
+		echo '<br/>';
+		
+		
+	
+		$this->flexihash->addTargets($pm);
+
+
+		
+		
+		$memeberList = $this->Member_Model->getList();
+		
+		
+		foreach($memeberList as $member){
+			$whichTable1 = $this->flexihash->lookup($member['uid']);
+			
+			echo $member['uid'] . '='.$whichTable1.'<br/>';
+			
+			
+		}
+		
+		
+		$this->flexihash->addTargets(array(
+			10
+		));
+		
+		foreach($memeberList as $member){
+			$whichTable1 = $this->flexihash->lookup($member['uid']);
+			echo $member['uid'] . '='.$whichTable1.'<br/>';
+		}
+	}
+	
+	public function test_emailconfirm(){
+		$this->load->library('Message_service');
+		
+		$this->message_service->initEmail($this->_siteSetting);
+		$this->message_service->sendEmailConfirm('104071152@qq.com','http://wwww.baidu.com');
+		
+	}
+	
+	public function test_gethxpsw(){
+		$memberList = $this->Member_Model->getList();
+		
+		$this->load->model('Huanxin_Model');
+		
+		foreach($memberList as $member){
+			$psw = $this->encrypt->decode($member['password']);
+			echo "{$member['msgid']}={$member['username']}={$member['mobile']}={$psw}=".md5(config_item('encryption_key').$psw)."\n";
+			
+			/*
+			$this->Huanxin_Model->_add(array(
+				'uid' => $member['uid'],
+				'username' => $member['mobile'],
+				'nickname' => $member['nickname'],
+				'password' => md5(config_item('encryption_key').$psw)
+			),true);
+			*/
+		}
+		
+	}
+	
+	public function test_updatepsw(){
+		$pushApi = $this->base_service->getPushObject();
+		$json = $pushApi->updatePassword(120,'15689523612','654321');
+		
+		print_r($json);
+	}
+	
+	
+	
+	
+	
+	public function test_huanxin(){
+		$memberList = $this->Member_Model->getList();
+		$pushApi = $this->base_service->getPushObject();
+		//var_dump($pushApi);
+		
+		foreach($memberList as $member){
+			//print_r($member);
+			//$json = $pushApi->createId($member['uid'],$member['mobile'],$member['nickname'],$member['password']);
+			//print_r($json);
+		}
+		
+	}
+	
+	
+	public function test_yunxin(){
+		$this->load->config('site');
+		$this->load->library(array('Yunxin_api'));
+		
+		//foreach()
+		$resp = $this->yunxin_api->createId('15689895424','15689895424');
+		
+		var_dump($resp);
+	}
+	
 	/**
 	 * 首页
 	 */
@@ -382,7 +795,19 @@ EOT;
 
         
         foreach($tables as $table){
+        	if(preg_match('/^sp_push_chat\d+$/i',$table,$match)){
+        		continue;
+        	}
+        	
+        	if(preg_match('/^sp_pm_message\d+$/i',$table,$match)){
+        		continue;
+        	}
+        	
+        	
             $fields = $this->db->field_data($table);
+            
+            
+            
             
             $str = array();
             foreach($fields as $field){

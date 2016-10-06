@@ -1,7 +1,7 @@
 {include file="common/main_header.tpl"}
 {config_load file="article.conf"}
   {form_open(admin_site_url('cms_article_class/index'),'id="formSearch"')}
-  <input type="hidden" name="page" value="{$currentPage}"/>
+  <input type="hidden" name="page" value=""/>
     <table class="tb-type1 noborder search">
       <tbody>
         <tr>

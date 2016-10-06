@@ -35,6 +35,24 @@ html{ -webkit-text-size-adjust: none;}
     zoom:1; /* for IE6 IE7 */ 
 } 
 
+/* 设置显示和隐藏, 通常用来与 JS 配合 */ 
+.hide { 
+    display:none !important; 
+    visibility:hidden; 
+} 
+.block { 
+    display:block !important; 
+} 
+/* 设置内联, 减少浮动带来的bug */ 
+.fl { 
+    float:left; 
+    display:inline; 
+} 
+.fr { 
+    float:right; 
+    display:inline; 
+}
+
 /* 宽度\高度\尺寸
 ------------------------------------------------------------------- */
 .w12 { width: 12px; }
@@ -173,6 +191,13 @@ input[type=checkbox],input[type=radio] {
 
 .loading_animate {
 	background: url(../img/loading/loading.gif) no-repeat 50% 50%;
+}
+
+.loading_bg {
+    height:25px;
+    line-height:25px;
+    background: url(../img/loading/smallLoading.gif) no-repeat 10px center;
+    padding: 0 0 0 25px;
 }
 
 
@@ -381,26 +406,27 @@ input[type=checkbox],input[type=radio] {
 }
 
 .main-nav {padding-left: 160px;z-index:4; }
-   .main-nav li {
-   		float:left;
-   	}
-   .main-nav li a.link {
-   		border:1px solid transparent;
-   		display:block;
-   		font-size: 15px; 
-   		padding: 5px 10px;
-   	}
-   .main-nav li a.actived {
-   		font-weight:bold;
-   		border:1px solid #2EBCFF;
-   		border-bottom: 1px solid #fff;
-   		background-color:#fff;
-	   	border-radius:5px 5px 0 0;
-	    -webkit-border-radius:5px 5px 0 0;
-	    -moz-border-radius:5px 5px 0 0;
-	    -o-border-radius:5px 5px 0 0;
-   }
-   
+.main-nav li {
+	float:left;
+}
+.main-nav li a.link {
+ 	border:1px solid transparent;
+	display:block;
+	font-size: 15px; 
+	padding: 5px 10px;
+}
+
+.main-nav li a.actived {
+	font-weight:bold;
+	border:1px solid #2EBCFF;
+	border-bottom: 1px solid #fff;
+	background-color:#fff;
+ 	border-radius:5px 5px 0 0;
+   -webkit-border-radius:5px 5px 0 0;
+   -moz-border-radius:5px 5px 0 0;
+   -o-border-radius:5px 5px 0 0;
+}
+
 .loca { line-height:24px; color:#7292A4; }
 .loca div, .loca strong, .crumbs a, a.arrow { float:left; margin-left: 2px;}
 .loca a.arrow { background: url(../img/sky/bg_position.gif) no-repeat scroll -50px -155px; width: 4px; height:8px; margin: 9px 6px 7px 6px; _margin:9px 3px 7px 3px; /* IE6 */}

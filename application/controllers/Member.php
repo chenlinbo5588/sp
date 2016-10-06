@@ -170,13 +170,20 @@ class Member extends Ydzj_Controller {
 					break;
 				}
 				
+				/**
+				 * 同步到最新的系统消息,防止新注册用户同步大量的以前的系统消息
+				 */
+				$this->load->model('Site_Message_Model');
+				$sysMessageId = $this->Site_Message_Model->getMaxByWhere('id');
+				
 				$addParam = array(
 					'sid' => $this->session->session_id,
 					'mobile' => $this->input->post('mobile'),
 					'username' => $this->input->post('username'),
 					'email' => $this->input->post('email'),
 					'password' => $this->input->post('psw'),
-					'status' => -2,
+					'status' => -1,
+					'msgid' => intval($sysMessageId),
 					'inviter' => empty($inviter) == true ? 0 : intval($inviter)
 				);
 				
