@@ -13,6 +13,17 @@ $config['mail_list'] = array(
 );
 
 
+$config['fronted_admin'] = array(
+	
+);
+
+$config['notify_ways'] = array(
+	'站内信',
+	'聊天窗口',
+	'邮件',
+	/*'短信'*/
+);
+
 //
 $config['yunxin'] = array(
 	'url' => 'https://api.netease.im/nimserver/',

@@ -489,7 +489,7 @@ EOT;
 		$pushApi = $this->base_service->getPushObject();
 		
 		$json = $pushApi->sendText(array(
-			'15689523612'
+			'15986867878'
 		),random_string('alnum',5),'清风信息系统管理员');
 		
 		
@@ -530,12 +530,143 @@ EOT;
 		}
 	}
 	
+	
+	public function test_insert_message(){
+		
+		
+		set_time_limit(0);
+		
+		$this->load->library('Message_service');
+		
+		
+		$members = $this->Member_Model->getList();
+		
+		
+		foreach($members as $member){
+			for($i = 0; $i < 500;$i++){
+				$data = array(
+					'title' => random_string('alnum',mt_rand(10,30)),
+					'content' => random_string('alnum',mt_rand(80,500)),
+					'uid' => $member['uid'],
+				);
+				
+				$insertid = $this->message_service->addSystemPmMessage($data);
+			}
+			
+		}
+		
+		
+		
+	}
+	
+	
+	/**
+	 * 创建站内聊天信息推送表 30 张表，用户 uid  分表
+	 * 
+	 * 跑批 
+	 */
+	public function create_pm_chat_tables(){
+		
+		$chat_pm = range(0,29);
+		
+		
+		foreach($chat_pm as $key => $value){
+			echo "'{$key}' => {$value},<br/>";
+		}
+		
+		
+		echo '<br/>';
+		
+		
+		$sql = <<< EOF
+CREATE TABLE `sp_push_chat{i}` (
+  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+  `msg_type` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '0=后台系统消息 1=货品匹配信息',
+  `uid` mediumint(9) unsigned NOT NULL DEFAULT '0',
+  `username` varchar(30) NOT NULL DEFAULT '',
+  `content` text,
+  `is_send` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `gmt_create` int(10) unsigned NOT NULL DEFAULT '0',
+  `gmt_modify` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `idx_send` (`is_send`),
+  KEY `idx_uid` (`msg_type`,`uid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+EOF;
+
+		$pm = $this->load->get_config('split_pm_chat');
+		
+		
+		print_r($pm);
+		
+		foreach($pm as $p){
+			
+			$exexSQL = str_replace('{i}',$p,$sql);
+			$this->Member_Model->execSQL($exexSQL);
+		}
+		
+		
+		
+	}
+	
+	
+	
+	public function create_pm_tables(){
+		
+		
+		
+		$sql = <<< EOF
+CREATE TABLE `sp_pm_message{i}` (
+  `id` mediumint(10) unsigned NOT NULL AUTO_INCREMENT,
+  `uid` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `from_uid` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `site_msgid` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '系统消息id',
+  `msg_type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0 = 用户消息  -1=系统消息 1=货品匹配站内信',
+  `readed` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '1=已读',
+  `msg_direction` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '0=接收 1=发送',
+  `title` varchar(200) NOT NULL DEFAULT '',
+  `content` text,
+  `gmt_create` int(10) unsigned NOT NULL DEFAULT '0',
+  `gmt_modify` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `idx_uid` (`uid`,`msg_type`),
+  KEY `idx_ctime` (`gmt_create`),
+  KEY `idx_read` (`uid`,`readed`),
+  KEY `idx_dir` (`msg_direction`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+EOF;
+
+		$pm = $this->load->get_config('split_pm');
+		
+		
+		print_r($pm);
+		
+		foreach($pm as $p){
+			
+			$exexSQL = str_replace('{i}',$p,$sql);
+			$this->Member_Model->execSQL($exexSQL);
+		}
+	}
+	
+	
+	
+	
+	
+	
 	public function test_hash(){
 		$this->load->library('Flexihash');
 		
 		
+		
+		/*
 		$pm = array(
-	'auth_1' => 1,
+	'pm_1' => 1,
 	'auth_2' => 2,
 	'auth_3' => 3,
 	'auth_4' => 4,
@@ -545,43 +676,46 @@ EOT;
 	'auth_8' => 8,
 	'auth_9' => 9,
 	'auth_10' => 10);
-	
+		*/
+		
+		
+		$pm = range(0,29);
+		
+		foreach($pm as $key => $value){
+			echo "'{$key}' => {$value},<br/>";
+		}
+		
+		
+		print_r($pm);
+		echo '<br/>';
+		
+		
 	
 		$this->flexihash->addTargets($pm);
 
 
-
-		
-		$whichTable1 = $constHash->lookup(200);
-		/*$whichTable2 = $constHash->lookup(201);
-		$whichTable3 = $constHash->lookup(202);
-		$whichTable4 = $constHash->lookup(203);
-		$whichTable5 = $constHash->lookup(204);
-		$whichTable6 = $constHash->lookup(205);
-		$whichTable7 = $constHash->lookup(206);
-		$whichTable8 = $constHash->lookup(800);
-		*/
-		
-		echo $whichTable1;
-		echo "<br/>";
-		
-		echo $whichTable2;
-		echo "<br/>";
-		echo $whichTable3;
-		echo "<br/>";
-		echo $whichTable4;
-		echo "<br/>";
-		echo $whichTable5;
-		echo "<br/>";
-		echo $whichTable6;
-		echo "<br/>";
-		echo $whichTable7;
-		echo "<br/>";
-		echo $whichTable8;
-		
-		echo "<br/>";
 		
 		
+		$memeberList = $this->Member_Model->getList();
+		
+		
+		foreach($memeberList as $member){
+			$whichTable1 = $this->flexihash->lookup($member['uid']);
+			
+			echo $member['uid'] . '='.$whichTable1.'<br/>';
+			
+			
+		}
+		
+		
+		$this->flexihash->addTargets(array(
+			10
+		));
+		
+		foreach($memeberList as $member){
+			$whichTable1 = $this->flexihash->lookup($member['uid']);
+			echo $member['uid'] . '='.$whichTable1.'<br/>';
+		}
 	}
 	
 	public function test_emailconfirm(){
@@ -599,7 +733,7 @@ EOT;
 		
 		foreach($memberList as $member){
 			$psw = $this->encrypt->decode($member['password']);
-			echo "{$member['mobile']}={$psw}=".md5(config_item('encryption_key').$psw)."\n";
+			echo "{$member['msgid']}={$member['username']}={$member['mobile']}={$psw}=".md5(config_item('encryption_key').$psw)."\n";
 			
 			/*
 			$this->Huanxin_Model->_add(array(
@@ -661,7 +795,19 @@ EOT;
 
         
         foreach($tables as $table){
+        	if(preg_match('/^sp_push_chat\d+$/i',$table,$match)){
+        		continue;
+        	}
+        	
+        	if(preg_match('/^sp_pm_message\d+$/i',$table,$match)){
+        		continue;
+        	}
+        	
+        	
             $fields = $this->db->field_data($table);
+            
+            
+            
             
             $str = array();
             foreach($fields as $field){

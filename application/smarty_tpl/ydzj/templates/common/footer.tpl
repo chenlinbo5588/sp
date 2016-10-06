@@ -39,9 +39,8 @@
 		    </div>
 		</div><!-- //end of foot -->
     </div><!-- //end of wrap -->
-    <script type="text/javascript" src="{resource_url('js/respond.min.js')}"></script>
-    
     <!--[if lt IE 9]>
+    <script type="text/javascript" src="{resource_url('js/respond.min.js')}"></script>
 	<script type="text/javascript" src="{resource_url('js/html5shiv.js')}"></script>
 	<![endif]-->
 	<!--[if lte IE 9]>
@@ -52,6 +51,5 @@
 	    });
 	</script>
 	<![endif]-->
-	
 </body>
 </html>

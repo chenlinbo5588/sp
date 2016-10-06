@@ -1,5 +1,5 @@
 {include file="common/my_header.tpl"}
-	<form action="{site_url('goods/index')}" method="post" id="formSearch">
+	<form action="{site_url($uri_string)}" method="post" id="formSearch">
         <input type="hidden" name="page" value=""/>
         <div class="goods_search">
              <ul class="search_con">
@@ -76,8 +76,8 @@
 		              {$item['uid']}
 		              {/if}
 		           </td>
-		           <td>{$item['gmt_create']|date_format:"%m-%d %H:%M"}</td>
-		           <td>{$item['gmt_modify']|date_format:"%m-%d %H:%M"}</td>
+		           <td>{time_tran($item['gmt_create'])}</td>
+		           <td>{time_tran($item['gmt_modify'])}</td>
 		           <td>
 		              {if $profile && $profile['basic']['uid'] == $item['uid']}
 		              <a href="javascript:void(0)">修改</a>

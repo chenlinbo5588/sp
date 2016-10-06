@@ -2,13 +2,13 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 $entity = array(
-'id' => 'int',
-'add_username' => 'varchar',
-'add_uid' => 'mediumint',
-'to_user' => 'varchar',
-'to_uid' => 'mediumint',
+'id' => 'mediumint',
+'uid' => 'mediumint',
+'from_uid' => 'mediumint',
+'site_msgid' => 'mediumint',
 'msg_type' => 'tinyint',
 'readed' => 'tinyint',
+'msg_direction' => 'tinyint',
 'title' => 'varchar',
 'content' => 'text',
 'gmt_create' => 'int',

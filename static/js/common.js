@@ -1,6 +1,7 @@
 var regMobile = /^(\+?86)?1[0-9][0-9]{1}[0-9]{8}$|15[0189]{1}[0-9]{8}$|189[0-9]{8}$/;
 //地区缓存
 var districtCache = [];
+var commonDialog;
 
 function drop_confirm(msg, url){
     if(confirm(msg)){
@@ -434,40 +435,6 @@ function districtSelect(isBind){
 }
 
 
-/**
- * 浮动DIV定时显示提示信息,如操作成功, 失败等
- * @param string tips (提示的内容)
- * @param int height 显示的信息距离浏览器顶部的高度
- * @param int time 显示的时间(按秒算), time > 0
- * @sample <a href="javascript:void(0);" onclick="showTips( '操作成功', 100, 3 );">点击</a>
- * @sample 上面代码表示点击后显示操作成功3秒钟, 距离顶部100px
- * @copyright ZhouHr 2010-08-27
- */
-function showTips( tips, height, time ){
-    var windowWidth = document.documentElement.clientWidth;
-    var tipsDiv = '<div class="tipsClass">' + tips + '</div>';
-
-    $( 'body' ).append( tipsDiv );
-    $( 'div.tipsClass' ).css({
-        'top' : 200 + 'px',
-        'left' : ( windowWidth / 2 ) - ( tips.length * 13 / 2 ) + 'px',
-        'position' : 'fixed',
-        'padding' : '20px 50px',
-        'background': '#EAF2FB',
-        'font-size' : 14 + 'px',
-        'margin' : '0 auto',
-        'text-align': 'center',
-        'width' : 'auto',
-        'color' : '#333',
-        'border' : 'solid 1px #A8CAED',
-        'opacity' : '0.90',
-        'z-index' : '9999'
-    }).show();
-    setTimeout( function(){$( 'div.tipsClass' ).fadeOut().remove();}, ( time * 1000 ) );
-};
-
-
-
 $.fn.imageCode = function(setting){
 	var wrap = $(setting.wrapId);
 	
@@ -504,9 +471,182 @@ $.fn.imageCode = function(setting){
 	
 	this.refreshImg = _refreshImg;
 	return this;
+};
+
+function showToast(icon,message){
+	$.toast({
+		position:'top-center',
+	    text: message,
+	    icon: icon,
+	    loader:false
+	})
 }
 
+/*
+ * ajax
+ */
+function doAjaxPost(postdata,url,datatype,successFn,errorFn){
+	$.ajax({
+		type:"POST",
+		url:url,
+		dataType:datatype,
+		data: postdata,
+		success:successFn,
+		error:errorFn
+	});
+}
+
+/**
+ * 确认对话框
+ * @param ids
+ * @param url
+ * @param title
+ * @param dataType
+ * @param successFn
+ * @param errorFn
+ */
+function ui_confirm(ids,url,title,dataType,successFn,errorFn){
+	var lock = false;
+	
+	commonDialog = $("#showDlg" ).dialog({
+		title: "提示",
+		autoOpen: false,
+		width: 400,
+		modal: true,
+	      buttons: {
+	        "确定": function(){
+	        	/* 防止联系点击确定  */
+	        	if(lock == true){
+	        		return;
+	        	}
+	        	lock = true;
+	        	
+	        	commonDialog.html('<div class="loading_bg">操作进行中,请稍候...</div>');
+	        	doAjaxPost({ "formhash" : formhash ,"id": ids }, url, dataType, function(json){
+	        		lock = false;
+	        		commonDialog.dialog( "close" );
+	        		if(typeof(successFn) != 'undefined'){
+	        			successFn(ids,json);
+	        		}
+	        	},function(XMLHttpRequest, textStatus, thrownError){
+	        		lock = false;
+	        		commonDialog.dialog( "close" );
+	        		if(typeof(errorFn) != 'undefined'){
+	        			errorFn(XMLHttpRequest, textStatus, thrownError);
+	        		}
+	        	});
+	        },
+	        "关闭": function() {
+	        	commonDialog.dialog( "close" );
+	        }
+	   },
+	   open:function(){
+		  
+	   }
+	}).html('<span class="ui-icon ui-icon-alert fl"></span><strong>' + title + '</strong>').dialog("open");
+	
+}
+
+function check_success(message){
+	var reg = new RegExp(/成功/);
+	return reg.test(message);
+}
+
+
+/**
+ * 通用ajax更新
+ */
+function bindOpEvent(selector,customSuccessFn,customErrorFn){
+	var successCallback = function(ids,json){
+		if(check_success(json.message)){
+			showToast('success',json.message);
+			for(var i = 0; i < ids.length; i++){
+				$("#row" + ids[i]).remove();
+			}
+		}else{
+			showToast('error',json.message);
+		}
+	}
+	
+	var errorCallback = function(){
+		showToast('error',"执行出错,服务器异常，请稍后再次尝试");
+	}
+	
+	$(selector).bind("click",function(){
+  		var ids = [];
+  		var url = $(this).attr("data-url");
+  		var title = $(this).attr('data-title');
+  		
+  		var checkboxName = $(this).attr('data-checkbox');
+  		
+  		$("input[name='" + checkboxName + "']:checked").each(function(){
+  			ids.push($(this).val());
+  		});
+  		
+  		if(ids.length == 0){
+  			showToast('error','请选勾选.');
+  		}else{
+  			ui_confirm(ids,url,'你确定要' + title + '吗？','json', customSuccessFn ? customSuccessFn : successCallback,customErrorFn ? customErrorFn : errorCallback );
+  		}
+  	});
+	
+}
+
+
+/**
+ * 
+ * @param sucFn 成功事件回调
+ * @param errorFn 失败事件回调
+ */
+function bindDeleteEvent(customSuccessFn,customErrorFn){
+	var successCallback = function(ids,json){
+		if(check_success(json.message)){
+			showToast('success',json.message);
+			
+			for(var i = 0; i < ids.length; i++){
+				$("#row" + ids[i]).remove();
+			}
+		}else{
+			showToast('error',json.message);
+		}
+	}
+	
+	var errorCallback = function(){
+		showToast('error',"删除出错，服务器异常，请稍后再次尝试");
+	}
+	
+	$("a.delete").bind("click",function(){
+		ui_confirm([$(this).attr("data-id")],$(this).attr("data-url"),'你确定要删除吗？','json',customSuccessFn ? customSuccessFn : successCallback,customErrorFn ? customErrorFn: errorCallback);
+  	});
+  	
+  	$(".deleteBtn").bind("click",function(){
+  		var ids = [];
+  		var url = $(this).attr("data-url");
+  		var title = $(this).attr('data-title');
+  		
+  		var checkboxName = $(this).attr('data-checkbox');
+  		
+  		$("input[name='" + checkboxName + "']:checked").each(function(){
+  			ids.push($(this).val());
+  		});
+  		
+  		if(ids.length == 0){
+  			showToast('error','请选勾选.');
+  		}else{
+  			ui_confirm(ids,url,'你确定要删除吗？','json',customSuccessFn ? customSuccessFn : successCallback,customErrorFn ? customErrorFn: errorCallback);
+  		}
+  	});
+}
+
+
+
 $(function(){
+	// 全选 start
+	$('.checkall').click(function(){
+		var group = $(this).prop("name");
+		$("input[group="+group+"]").prop("checked" , $(this).prop("checked") );
+	});
+	
 	
 	$("input[name=jumpPage]").keydown(function(event){
 　　　　 // 注意此处不要用keypress方法，否则不能禁用　Ctrl+V 与　Ctrl+V,具体原因请自行查找keyPress与keyDown区分，十分重要，请细查
@@ -538,5 +678,3 @@ $(function(){
     	$(formid).submit();
     });
 });
-
-

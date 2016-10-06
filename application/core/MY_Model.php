@@ -7,8 +7,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class MY_Model extends CI_Model {
 	
-	public $_tablePre = 'sp_';
-	public $_tableRealName = '';
+	private $_tablePre = 'sp_';
+	//private $_tableRealName = '';
+	private $_tableId = '';
+	
 	
 	//用户自动记录操作人
 	public static $operator;
@@ -18,7 +20,8 @@ class MY_Model extends CI_Model {
 	
     public function __construct(){
         parent::__construct();
-        $this->_tableRealName = $this->getTableRealName();
+        
+        //$this->_tableRealName = $this->getTableRealName();
     }
     
 	
@@ -27,7 +30,21 @@ class MY_Model extends CI_Model {
      * @return type 
      */
     protected function getTableMeta(){
-        return $this->load->entity($this->_tableRealName);
+        return $this->load->entity("{$this->_tablePre}{$this->_tableName}");
+    }
+    
+    /**
+     * 设置分表id
+     */
+    public function setTableId($tableId){
+    	$this->_tableId = $tableId;
+    }
+    
+    /**
+     * 获得分表id
+     */
+    public function getTableId(){
+    	return $this->_tableId;
     }
     
     /**
@@ -35,7 +52,7 @@ class MY_Model extends CI_Model {
      * @return type 
      */
     public function getTableRealName(){
-    	return $this->_tablePre.$this->_tableName;
+    	return "{$this->_tablePre}{$this->_tableName}{$this->_tableId}";
     }
     
     /**
@@ -53,7 +70,7 @@ class MY_Model extends CI_Model {
         
         $this->db->select_sum($condition['field']);
         $this->db->where($condition['where']);
-        $query =  $this->db->get($this->_tableRealName);
+        $query =  $this->db->get($this->getTableRealName());
         
         $data = $query->result_array();
         return $data;
@@ -64,7 +81,7 @@ class MY_Model extends CI_Model {
             $this->db->where($condition['where']);
         }
         
-        return $this->db->count_all_results($this->_tableRealName);
+        return $this->db->count_all_results($this->getTableRealName());
     }
     
     public function isUnqiueByKey($value,$key){
@@ -90,7 +107,7 @@ class MY_Model extends CI_Model {
         }
         
         $this->db->select_max($field);
-        $query = $this->db->get($this->_tableRealName);
+        $query = $this->db->get($this->getTableRealName());
         
         $data = $query->result_array();
         
@@ -181,14 +198,14 @@ class MY_Model extends CI_Model {
     	}
     	
     	$this->_setCondition($condition);
-    	$this->db->delete($this->_tableRealName);
+    	$this->db->delete($this->getTableRealName());
         return $this->db->affected_rows();
     	
     }
     
     
     public function deleteByWhere($where){
-        $this->db->delete($this->_tableRealName,$where);
+        $this->db->delete($this->getTableRealName(),$where);
         return $this->db->affected_rows();
     }
     
@@ -201,10 +218,10 @@ class MY_Model extends CI_Model {
     	$data = $this->_fieldsDecorator($param,'add');
         
         if(!$replace){
-        	$this->db->insert($this->_tableRealName, $data);
+        	$this->db->insert($this->getTableRealName(), $data);
         	return $this->db->insert_id();
         }else{
-        	$this->db->replace($this->_tableRealName, $data);
+        	$this->db->replace($this->getTableRealName(), $data);
         	return $this->db->affected_rows();
         }
     }
@@ -247,7 +264,7 @@ class MY_Model extends CI_Model {
         $data = $this->_fieldsDecorator($param,'update');
         
         if($data){
-        	$this->db->update($this->_tableRealName, $data, $where);
+        	$this->db->update($this->getTableRealName(), $data, $where);
         	return $this->db->affected_rows();
         }else{
         	return false;
@@ -264,7 +281,7 @@ class MY_Model extends CI_Model {
 		}
     	
     	$this->db->where($where);
-    	$this->db->update($this->_tableRealName);
+    	$this->db->update($this->getTableRealName());
     	
     	return $this->db->affected_rows();
     }
@@ -274,15 +291,14 @@ class MY_Model extends CI_Model {
     	$this->_setCondition($condition);
     	
     	$data = $this->_fieldsDecorator($data,'update');
-    	
-    	$this->db->update($this->_tableRealName, $data);
+    	$this->db->update($this->getTableRealName(), $data);
         return $this->db->affected_rows();
     }
     
     public function updateByWhere($data,$where = null){
     	$data = $this->_fieldsDecorator($data,'update');
     	
-        $this->db->update($this->_tableRealName,$data,$where);
+        $this->db->update($this->getTableRealName(),$data,$where);
         return $this->db->affected_rows();
     }
     
@@ -292,7 +308,7 @@ class MY_Model extends CI_Model {
     		$filterData[] = $this->_fieldsDecorator($item,'add');
     	}
     	
-        return $this->db->insert_batch($this->_tableRealName, $filterData); 
+        return $this->db->insert_batch($this->getTableRealName(), $filterData); 
     }
     
     public function batchUpdate($data,$key = 'id'){
@@ -301,7 +317,7 @@ class MY_Model extends CI_Model {
     		$filterData[] = $this->_fieldsDecorator($item,'update');
     	}
     	
-        return $this->db->update_batch($this->_tableRealName, $filterData,$key); 
+        return $this->db->update_batch($this->getTableRealName(), $filterData,$key); 
     }
     
     
@@ -320,7 +336,7 @@ class MY_Model extends CI_Model {
      * 查询
      */
     public function getFirstByKey($id,$key = 'id'){
-        $query = $this->db->get_where($this->_tableRealName,array($key => $id));
+        $query = $this->db->get_where($this->getTableRealName(),array($key => $id));
         $data = $query->result_array();
         if($data[0]){
             return $data[0];
@@ -340,7 +356,7 @@ class MY_Model extends CI_Model {
             }
             
             $this->db->where($condition['where']);
-            $query = $this->db->get($this->_tableRealName);
+            $query = $this->db->get($this->getTableRealName());
             $data = $query->result_array();
             
             if($data[0]){
@@ -378,7 +394,7 @@ class MY_Model extends CI_Model {
         $this->_setCondition($condition);
         
         if($condition['pager']){
-        	$total_rows = $this->db->count_all_results($this->_tableRealName);
+        	$total_rows = $this->db->count_all_results($this->getTableRealName());
         	
         	//总页数
         	$totalPage = ceil($total_rows/$condition['pager']['page_size']);
@@ -390,11 +406,11 @@ class MY_Model extends CI_Model {
             $pager = pageArrayGenerator($condition['pager'],$total_rows);
             //print_r($condition);
             $this->_setCondition($condition);
-            $query = $this->db->get($this->_tableRealName,$condition['pager']['page_size'],($condition['pager']['current_page'] - 1) * $condition['pager']['page_size']);
+            $query = $this->db->get($this->getTableRealName(),$condition['pager']['page_size'],($condition['pager']['current_page'] - 1) * $condition['pager']['page_size']);
         	$data['data'] = $query->result_array();
         	$data['pager'] = $pager['pager'];
         }else{
-            $query = $this->db->get($this->_tableRealName);
+            $query = $this->db->get($this->getTableRealName());
             $data = $query->result_array();
         }
         

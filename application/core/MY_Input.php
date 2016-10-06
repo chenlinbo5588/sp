@@ -3,7 +3,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class MY_Input extends CI_Input {
 	
-	
 	public function __construct(){
 		parent::__construct();
 	}
@@ -122,8 +121,9 @@ class MY_Input extends CI_Input {
 		$message = $scuritylang[$message] ? $scuritylang[$message] : $message;
 		if($this->is_ajax_request()) {
 			$this->security_ajaxshowheader();
-			echo '<div id="attackevasive_1" class="popupmenu_option"><b style="font-size: 16px">'.$subject.'</b><br /><br />'.$message.'</div>';
-			$this->security_ajaxshowfooter();
+			//echo '<div id="attackevasive_1" class="popupmenu_option"><b style="font-size: 16px">'.$subject.'</b><br /><br />'.$message.'</div>';
+			echo json_encode(array('code' => 500,'message' =>$message, 'data' => array()));
+			//$this->security_ajaxshowfooter();
 		} else {
 			echo '<html>';
 			echo '<head>';
@@ -171,12 +171,15 @@ class MY_Input extends CI_Input {
 		@header("Expires: -1");
 		@header("Cache-Control: no-store, private, post-check=0, pre-check=0, max-age=0", FALSE);
 		@header("Pragma: no-cache");
-		header("Content-type: application/xml");
-		echo "<?xml version=\"1.0\" encoding=\"".$charset."\"?>\n<root><![CDATA[";
+		header("Content-type: application/json");
+		
+		/*echo "<?xml version=\"1.0\" encoding=\"".$charset."\"?>\n<root><![CDATA[";*/
 	}
 	
+	/*
 	public function security_ajaxshowfooter() {
 		echo ']]></root>';
 		exit();
 	}
+	*/
 }

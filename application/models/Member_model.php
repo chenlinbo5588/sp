@@ -17,7 +17,7 @@ class Member_Model extends MY_Model {
     }
     
     public function getUserByUid($uid,$field = '*'){
-        $sql = "SELECT {$field} FROM ".$this->_tableRealName ." WHERE uid = ?"; 
+        $sql = "SELECT {$field} FROM ".$this->getTableRealName() ." WHERE uid = ?"; 
         $query = $this->db->query($sql, array($uid));
         $row = $query->result_array();
         

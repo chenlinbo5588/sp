@@ -1,12 +1,9 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-/**
- * 近期 货品表
- */
-class Goods_Recent_Model extends MY_Model {
+class Site_Message_Model extends MY_Model {
     
-    public $_tableName = 'goods_recent';
+    public $_tableName = 'site_message';
     public static $_tableMeta = null;
 
 
@@ -18,6 +15,5 @@ class Goods_Recent_Model extends MY_Model {
     protected function _metaData(){
     	return self::$_tableMeta;
     }
-    
     
 }

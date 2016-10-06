@@ -153,6 +153,12 @@ a:focus,*:focus {
 	overflow:hidden;
 }
 
+.position_a {
+	position:absolute;
+}
+
+
+
 /** 通用样式 **/
 input[type=text],input[type=password] {
     height:20px;
@@ -256,8 +262,12 @@ input[type=text]:focus , input[type=password]:focus ,textarea:focus {
 	padding:20px;
 }
 
+.mg10 {
+	margin: 10px 0;
+}
+
 .tip {
-    color:#B3B3B3;
+    color:#888888;
 }
 
 
@@ -274,6 +284,13 @@ input[type=text]:focus , input[type=password]:focus ,textarea:focus {
 .passbg {
     background: url(../img/pass.png) no-repeat 10px center;
     padding-left: 50px;
+}
+
+.loading_bg {
+	height:25px;
+	line-height:25px;
+	background: url(../img/loading/smallLoading.gif) no-repeat 10px center;
+	padding: 0 0 0 30px;
 }
 
 .tip_success {
@@ -311,14 +328,10 @@ input[type=text]:focus , input[type=password]:focus ,textarea:focus {
 
 .warning {
     background:#FFD500;
-    padding:5px;
+    padding:2px 5px;
     text-align: center;
 }
 
-.form_error {
-    color:red;
-    text-align:center;
-}
 
 label.error {
 	color:red;
@@ -334,13 +347,46 @@ input[type=text].valid , input[type=password].valid {
 }
 
 
+.tabin_screen { border-bottom:1px solid #e9eaec; position:relative;padding: 5px 0;}
+.tabin_screen ul{height:40px; line-height:40px;}
+.tabin_screen ul li{  font-size:14px; padding:0 5px; float:left}
+.tabin_screen ul li a{ color:#333; display:block; margin-bottom:-1px;}
+.tabin_screen ul li.scr_cur{border-bottom:1px solid #178fe6;}
+.tabin_screen ul li.scr_cur a{background:url(../img/scli.png) no-repeat center bottom; }
+
+
+.tab {
+    
+    
+}
+
+.tab .tab-item {
+    display: block;
+    float: left;
+    height: 25px;
+    line-height: 25px;
+    background: #F3F3F3;
+    border: 1px solid #dcdcdc;
+    padding: 0 5px;
+}
+
+.tab-gap .tab-item  {
+    margin:0 5px 0 0;
+}
+
+.tab .tab-item .link {
+    display:block;
+}
+
+.tab .current {
+    background-color: #DAF4FE;
+}
+
+
 .nav ,.control ,.action {
     display: inline-block;
     border: 1px solid #473e86;
-    height: 26px;
     padding: 0 5px;
-    margin-left: 10px;
-    line-height: 26px;
     color: #473e86;
     font-size: 16px;
     background-color: white;
@@ -350,7 +396,6 @@ input[type=text].valid , input[type=password].valid {
     -o-border-radius:5px;
     transition-duration: 0.2s;
     cursor: pointer;
-    font-family:  helvetica, "microsoft yahei", sans-serif;
     text-align: center;
 }
 .nav:hover,.control:hover,.action:hover {
@@ -413,7 +458,7 @@ input[type=text].valid , input[type=password].valid {
 .pagination a {
   padding: 5px 10px;
   background:#fff;
-  border:1px solid #1AA169;
+  border:1px solid #0D93BF;
 }
 
 .pagination a:hover ,.pagination a.active {background:#0D93BF;color:#fff;cursor:pointer;}
@@ -531,7 +576,7 @@ table.fulltable {
 
 
 .fulltable thead th {
-	background-color:#C8EBE9;
+	background-color:#DAF4FE;
 }
 
 
@@ -539,6 +584,10 @@ table.fulltable {
 	border:1px solid #CBCBCB;
 	border-width:1px 0 1px 0;
 	padding: 5px 0;
+}
+
+.noborder thead th , .noborder tbody td {
+	border-width:0px;
 }
 
 
@@ -647,10 +696,9 @@ table.fulltable {
     font-size: 14px;
 }
 .foot .part-two .column li a {
-    color: #25a597;
 }
 .foot .part-two .column li a:hover {
-    color: #25a597;
+	color:#0D93BF;
 }
 .foot .part-two .info-wrapper {
     clear: both;
@@ -824,6 +872,7 @@ table.fulltable {
 #my {
 	margin:10px auto;
 	min-height:500px;
+	padding: 5px;
 }
 
 
@@ -838,7 +887,7 @@ table.fulltable {
 }
 
 .mynav .segment {
-	background-color:#C8EBE9;
+	background-color:#DAF4FE;
 }
 
 #my .panel_content {
@@ -894,6 +943,28 @@ table.fulltable {
     padding: 5px;
 	
 }
+
+
+.jsUserSendMsg {
+	
+    right:0px;
+    top:0px;	
+}
+
+
+#pmDetail {
+	word-break:break-all;
+}
+
+.pm_title {
+	border:1px solid #dcdcdc;
+	border-width:1px 0px 1px 0px;
+}
+
+.pm_content {
+	text-indent: 2em;
+}
+
 
 @media (min-width: 1440px) {
     .boxz {

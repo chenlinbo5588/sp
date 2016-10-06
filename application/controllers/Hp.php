@@ -3,12 +3,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 
 
-class Goods extends MyYdzj_Controller {
+class Hp extends MyYdzj_Controller {
 	
 	public function __construct(){
 		parent::__construct();
 		
-		$this->load->model('Goods_Recent_Model');
+		$this->load->model('Hp_Recent_Model');
 	}
 	
 	
@@ -181,7 +181,7 @@ class Goods extends MyYdzj_Controller {
 		}else{
 
 			//print_r($condition);
-			$list = $this->Goods_Recent_Model->getList($condition);
+			$list = $this->Hp_Recent_Model->getList($condition);
 			$this->assign('page',$list['pager']);
 			$this->assign('list',$list['data']);
 		}

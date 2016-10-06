@@ -4,8 +4,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class MY_Controller extends CI_Controller {
 
 	public $_verifyName;
+	
+	
 	public $_lastVisit;
 	public $_lastVisitKey;
+	
+	//请求时间间隔
+	public $_reqInterval = 0;
 	
 	public $_reqtime;
 	
@@ -42,13 +47,13 @@ class MY_Controller extends CI_Controller {
 		$this->smartyConfig();
 	}
 	
-	
 	protected function _verify($type = 'alnum' ,$len = 5 , $seconds = 600){
 		$string = random_string($type,$len);
 		$expire = $this->_reqtime + $seconds;
 		$text = "{$string}\t{$expire}";
-		$encrypted_string = $this->encrypt->encode($text, $this->config->item('encryption_key'));
+		$encrypted_string = $this->encrypt->encode($text);
 		//$this->input->set_cookie($this->_verifyName,$encrypted_string, $seconds);
+		
 		return $string;
 	}
 	
@@ -95,13 +100,22 @@ class MY_Controller extends CI_Controller {
     	}
     }
     
+    /**
+     * 返回缓存类型
+     */
     public function getCacheObject(){
+    	$driverName = config_item('cache_driver');
     	
-    	$isSupport = $this->cache->redis->is_supported();
-    	if($isSupport){
-    		return $this->cache->redis;
-    	}else{
+    	if($driverName == 'redis'){
+    		$isSupport = $this->cache->redis->is_supported();
+	    	if($isSupport){
+	    		return $this->cache->redis;
+	    	}else{
+	    		
+	    		return $this->cache->file;
+	    	}
     		
+    	}else{
     		return $this->cache->file;
     	}
     }
@@ -118,7 +132,7 @@ class MY_Controller extends CI_Controller {
 	    		$settingList[$item['name']] = $item['value'];
 	    	}
 	    	
-	    	$this->getCacheObject()->save(CACHE_KEY_SiteSetting,$settingList);
+	    	$this->getCacheObject()->save(CACHE_KEY_SiteSetting,$settingList,CACHE_ONE_DAY);
     	}
     	
     	$this->_siteSetting = $settingList;
@@ -145,7 +159,7 @@ class MY_Controller extends CI_Controller {
 	    	}
 	    	
 	    	//print_r($seoList);
-	    	$this->getCacheObject()->save(CACHE_KEY_SeoSetting,$seoList);
+	    	$this->getCacheObject()->save(CACHE_KEY_SeoSetting,$seoList,CACHE_ONE_DAY);
     	}
     	
     	$this->_seoSetting = $seoList;

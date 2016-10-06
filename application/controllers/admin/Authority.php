@@ -185,7 +185,7 @@ class Authority extends Ydzj_Admin_Controller {
 		
 		
 		if($this->isPostRequest()){
-			$this->form_validation->set_rules('email','登陆名',"required|valid_email|is_unique[{$this->Adminuser_Model->_tableRealName}.email]");
+			$this->form_validation->set_rules('email','登陆名','required|valid_email|is_unique['.$this->Adminuser_Model->getTableRealName().'.email]');
 			$this->_getUserRules('add');
 			
 			for($i = 0; $i < 1; $i++){
@@ -232,7 +232,7 @@ class Authority extends Ydzj_Admin_Controller {
 		$info = $this->Adminuser_Model->getFirstByKey($id,'uid');
 		
 		if($this->isPostRequest()){
-			$this->form_validation->set_rules('email','登陆名',"required|valid_email|is_unique_not_self[{$this->Adminuser_Model->_tableRealName}.email.uid.{$id}]");
+			$this->form_validation->set_rules('email','登陆名','required|valid_email|is_unique_not_self['.$this->Adminuser_Model->getTableRealName().".email.uid.{$id}]");
 			$this->_getUserRules('edit');
 			
 			for($i = 0; $i < 1; $i++){
@@ -357,7 +357,7 @@ class Authority extends Ydzj_Admin_Controller {
 		
 		if($this->isPostRequest()){
 			
-			$this->form_validation->set_rules('name','权限组名称',"required|is_unique[{$this->Role_Model->_tableRealName}.name]");
+			$this->form_validation->set_rules('name','权限组名称','required|is_unique['.$this->Role_Model->getTableRealName().'.name]');
 			
 			
 			$this->_getRoleRules();
@@ -452,7 +452,7 @@ class Authority extends Ydzj_Admin_Controller {
 			$this->assign('ispost',true);
 			$this->_getRoleRules();
 			
-			$this->form_validation->set_rules('name','权限组名称',"required|is_unique_not_self[{$this->Role_Model->_tableRealName}.name.id.{$id}]");
+			$this->form_validation->set_rules('name','权限组名称','required|is_unique_not_self['.$this->Role_Model->getTableRealName().".name.id.{$id}]");
 			
 			
 			$info = $this->_prepareRoleData();

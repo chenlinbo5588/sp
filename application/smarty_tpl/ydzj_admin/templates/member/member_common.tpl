@@ -1,5 +1,4 @@
 {include file="common/ke.tpl"}
-{include file="common/jquery_ui.tpl"}
 {include file="common/jcrop.tpl"}
 
 <div id="imgCut" title="头像裁切">
@@ -14,7 +13,7 @@
 </div>
 
 <script type="text/javascript">
-	var uploadUrl = '{site_url("common/pic_upload")}?mod=member_avatar';
+	var uploadUrl = '{admin_site_url("common/pic_upload")}?mod=member_avatar';
 	var min_width = {$avatarImageSize['m']['width']},min_height = {$avatarImageSize['m']['height']};
 		
 	var save_avatar = function(){

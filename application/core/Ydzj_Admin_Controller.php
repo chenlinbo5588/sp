@@ -40,6 +40,7 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 			}
 		}else{
 			$this->_adminProfile = $alldata[$this->_adminProfileKey];
+			
 			if($this->_adminProfile){
 				$this->session->set_userdata(array(
 					$this->_adminProfileKey => $this->_adminProfile,
@@ -119,6 +120,7 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 	
 	public function getAppTemplateDir(){
 		return 'ydzj_admin';
+		//return str_replace('_controller','',strtolower(get_class()));
 	}
 	
 }

@@ -232,7 +232,7 @@ class Goods_service extends Base_service {
 		
 		$condition_str = trim($condition_str,',');
 		
-		return $this->_goodsClassTagModel->execSQL("insert into `{$this->_goodsClassTagModel->_tableRealName}` (`gc_id_1`,`gc_id_2`,`gc_id_3`,`gc_tag_name`,`gc_tag_value`,`gc_id`,`type_id`) values ".$condition_str);
+		return $this->_goodsClassTagModel->execSQL('insert into `'.$this->_goodsClassTagModel->getTableRealName()."` (`gc_id_1`,`gc_id_2`,`gc_id_3`,`gc_tag_name`,`gc_tag_value`,`gc_id`,`type_id`) values ".$condition_str);
 	
 	}
 	

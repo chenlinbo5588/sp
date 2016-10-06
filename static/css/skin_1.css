@@ -35,6 +35,24 @@ html{ -webkit-text-size-adjust: none;}
     zoom:1; /* for IE6 IE7 */ 
 } 
 
+/* 设置显示和隐藏, 通常用来与 JS 配合 */ 
+.hide { 
+    display:none !important; 
+    visibility:hidden; 
+} 
+.block { 
+    display:block !important; 
+} 
+/* 设置内联, 减少浮动带来的bug */ 
+.fl { 
+    float:left; 
+    display:inline; 
+} 
+.fr { 
+    float:right; 
+    display:inline; 
+}
+
 /* 宽度\高度\尺寸
 ------------------------------------------------------------------- */
 .w12 { width: 12px; }
@@ -173,6 +191,13 @@ input[type=checkbox],input[type=radio] {
 
 .loading_animate {
 	background: url(../img/loading/loading.gif) no-repeat 50% 50%;
+}
+
+.loading_bg {
+    height:25px;
+    line-height:25px;
+    background: url(../img/loading/smallLoading.gif) no-repeat 10px center;
+    padding: 0 0 0 25px;
 }
 
 

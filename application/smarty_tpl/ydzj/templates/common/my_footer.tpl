@@ -19,11 +19,31 @@
         </div>
     </div>
 {include file="common/footer.tpl"}
+<div id="soundDiv"></div>
+<script type="text/javascript" src="{resource_url('js/swfobject/swfobject.js')}"></script>
+<script type="text/javascript" src="{resource_url('js/my/notify.js')}"></script>
 <script>
+var soundSwfUrl = "{resource_url('js/swfobject/sound.swf')}",
+    expressSwfUrl = "{resource_url('js/swfobject/expressInstall.swf')}",
+    pmUrl = "{site_url('my_pm/check_newpm')}";
+    
+var notify = $.fn.myNotify.initSWF('soundDiv',soundSwfUrl,expressSwfUrl);
+notify.setSound('{resource_url('sound/girl.mp3')}');
+notify.setPmUrl("{site_url('my_pm/index')}");
+notify.updatePm(pmUrl);
+
 $(function(){
+    {if $newPm}
+    notify.showToast();
+    {/if}
+    
+    //8秒以后再绑定，防止用户进入过立即离开，避免过多开销
+    setTimeout(function(){
+        notify.updatePm(pmUrl);
+    },8000);
+    
 	$("a.kf-chat").bind("click",function(){
 		window.open ("{site_url('webim/index')}",'{$siteSetting['site_name']} 聊天窗口','height=650,width=1024,top=0,left=0,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no') 
 	});
-})
-
+});
 </script>

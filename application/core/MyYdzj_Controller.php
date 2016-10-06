@@ -8,6 +8,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class MyYdzj_Controller extends Ydzj_Controller {
 	private $_pushObject;
 	protected $_loginUID = 0;
+	public $_newpm = array();
 	
 	public function __construct(){
 		parent::__construct();
@@ -17,13 +18,32 @@ class MyYdzj_Controller extends Ydzj_Controller {
 			js_redirect('member/login');
 		}
 		
+		
 		$this->load->config('member_site');
+		$this->_loginUID = $this->_profile['basic']['uid'];
 		
 		$this->_navs();
 		
 		$this->_pushObject = $this->base_service->getPushObject();
 		$this->assign('pushConfig',config_item('huanxin'));
+		
+		
+		if($this->_reqInterval >= config_item('pmcheck_interval')){
+			$this->_pmUpdate();
+		}
 	}
+	
+	
+	/**
+	 * 更新用户站内信状态
+	 */
+	protected function _pmUpdate(){
+		$this->_newpm = $this->message_service->getLastestSysPm($this->_profile,$this->_loginUID);
+		if($this->_newpm){
+			$this->assign('newPm',count($this->_newpm));
+		}
+	}
+	
 	
 	
 	/**

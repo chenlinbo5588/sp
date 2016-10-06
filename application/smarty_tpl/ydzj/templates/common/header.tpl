@@ -9,8 +9,6 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,minimal-ui">
 <link rel="stylesheet" href="{resource_url('css/site.css')}"/>
 <link rel="stylesheet" href="{resource_url('font-awesome/css/font-awesome.min.css')}"/>
-<script type="text/javascript" src="{resource_url('js/jquery.js')}"></script>
-<script type="text/javascript" src="{resource_url('js/common.js')}"></script>
 <script>
 var cookiedomain = "{config_item('site_domain')}",
     cookiepath = "{config_item('cookie_path')}",
@@ -22,7 +20,14 @@ var cookiedomain = "{config_item('site_domain')}",
     authCodeURL ="{site_url('api/register/authcode')}",
     captchaUrl = "{site_url('captcha/index')}";
 </script>
+<script type="text/javascript" src="{resource_url('js/jquery.js')}"></script>
+{include file="common/jquery_ui.tpl"}
+<link rel="stylesheet" href="{resource_url('js/toast/jquery.toast.min.css')}"/>
+<script type="text/javascript" src="{resource_url('js/toast/jquery.toast.min.js')}"></script>
+<script type="text/javascript" src="{resource_url('js/common.js')}"></script>
+
 </head>
+<div id="showDlg" style="display:none;"></div>
 <body {if $bodyClass}class="{$bodyClass}"{/if}>
     <div id="wrap">
         <div id="topbar">

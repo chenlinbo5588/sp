@@ -306,23 +306,30 @@ class My extends MyYdzj_Controller {
 			
 			for($i = 0; $i < 1; $i++){
 				if($this->form_validation->run() == FALSE){
+					$this->jsonOutput($this->form_validation->error_string('',''),$this->getFormHash());
 					break;
 				}
 				
 				$newEmail = $this->input->post('newemail');
-				$result = $this->Member_Model->update(array(
+				
+				$updateData = array(
 					'email' => $newEmail,
 					'email_status' => 0
-				),array('uid' => $this->_profile['basic']['uid']));
+				);
+				
+				$result = $this->Member_Model->update($updateData,array('uid' => $this->_profile['basic']['uid']));
 				
 				if($result){
-					$this->_profile['basic']['email'] = $newEmail;
+					$this->_profile['basic'] = array_merge($this->_profile['basic'],$updateData);
 					$this->refreshProfile();
 				}
+				
+				$this->jsonOutput('修改成功');
 			}
+		}else{
+			$this->jsonOutput('请求非法',$this->getFormHash());
 		}
 		
-		redirect('my/index');
 		
 	}
 	

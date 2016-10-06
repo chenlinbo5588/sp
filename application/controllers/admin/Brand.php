@@ -187,7 +187,7 @@ class Brand extends Ydzj_Admin_Controller {
 		$treelist = $this->goods_service->getGoodsClassTreeHTML();
 		$info = $this->Brand_Model->getFirstByKey($id,'brand_id');
 		
-		$this->_subNavs[] = array('url' => 'brand/edit?brand_id='.$id, 'title' => '编辑');
+		//$this->_subNavs[] = array('url' => 'brand/edit?brand_id='.$id, 'title' => '编辑');
 		
 		if($this->isPostRequest()){
 			

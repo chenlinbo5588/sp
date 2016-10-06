@@ -77,7 +77,7 @@ class Cms_Article extends Ydzj_Admin_Controller {
 	private function _getRules($action = 'add',$info = array()){
 		$this->form_validation->set_rules('article_title','文章标题','required|max_length[80]');
 		$this->form_validation->set_rules('content','文章内容','required');
-		$this->form_validation->set_rules('ac_id','文章分类',"required|in_db_list[{$this->Cms_Article_Class_Model->_tableRealName}.id]");
+		$this->form_validation->set_rules('ac_id','文章分类','required|in_db_list['.$this->Cms_Article_Class_Model->getTableRealName().'.id]');
 		
 		if($this->input->post('article_origin')){
 			$this->form_validation->set_rules('article_origin','文章来源','required|max_length[30]');

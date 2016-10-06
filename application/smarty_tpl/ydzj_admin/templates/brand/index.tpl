@@ -1,6 +1,6 @@
 {include file="common/main_header.tpl"}
   {form_open(admin_site_url('brand/index'),'id="formSearch"')}
-  	 <input type="hidden" name="page" value="{$currentPage}"/>
+  	 <input type="hidden" name="page" value=""/>
 	 <table class="tb-type1 noborder search">
 	    <tbody>
 	        <tr>
@@ -49,7 +49,7 @@
           <td class="align-center yes-onoff">
           	<a href="JavaScript:void(0);" {if $item['brand_recommend']}class="enabled"{else}class="disabled"{/if} data-id="{$item['brand_id']}" data-fieldname="brand_recommend"><img src="{resource_url('img/transparent.gif')}"></a>
           </td>
-          <td class="align-center"><a href="{admin_site_url('brand/edit')}?brand_id={$item['brand_id']}">编辑</a>&nbsp;|&nbsp;<a href="javascript:void(0)" class="delete" data-url="{admin_site_url('brand/delete')}" data-id="{$item['brand_id']}">删除</a></td>
+          <td class="align-center"><a href="{admin_site_url('brand/edit')}?brand_id={$item['brand_id']}">编辑</a>&nbsp;|&nbsp;<a href="javascript:void(0)" class="delete" data-title="删除" data-url="{admin_site_url('brand/delete')}" data-id="{$item['brand_id']}">删除</a></td>
         </tr>
         {/foreach}
       </tbody>
@@ -57,7 +57,7 @@
       	<tr class="tfoot">
           <td colspan="7">
           	<label><input type="checkbox" class="checkall" id="checkallBottom" name="chkVal">全选</label>&nbsp;
-          	<a href="javascript:void(0);" class="btn" id="deleteBtn" data-checkbox="del_brand_id[]" data-url="{admin_site_url('brand/delete')}"><span>删除</span></a>
+          	<a href="javascript:void(0);" class="btn deleteBtn" data-checkbox="del_brand_id[]" data-url="{admin_site_url('brand/delete')}"><span>删除</span></a>
           	{include file="common/pagination.tpl"}
            </td>
         </tr>
