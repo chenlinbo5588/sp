@@ -189,6 +189,7 @@ class Huanxin_api extends Http_Client {
         );
         
         $respone = $this->request($param);
+        
         return json_decode($respone,true);
     }
 }

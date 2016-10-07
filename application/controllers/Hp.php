@@ -142,7 +142,7 @@ class Hp extends MyYdzj_Controller {
 		}
 		
 		if($queryStr){
-			$results = $client->query(implode(' ',$queryStr),'goods_recent');
+			$results = $client->query(implode(' ',$queryStr),'hp_recent');
 			/*
 			 * 
 			 * 多个查询
@@ -155,7 +155,7 @@ class Hp extends MyYdzj_Controller {
 			$results = $client->RunQueries();
 			*/
 		}else{
-			$results = $client->query('','goods_recent');
+			$results = $client->query('','hp_recent');
 		}
 		
 		
@@ -174,7 +174,7 @@ class Hp extends MyYdzj_Controller {
 			
 			//print_r($condition);
 			
-			$list = $this->Goods_Recent_Model->getList($condition);
+			$list = $this->Hp_Recent_Model->getList($condition);
 			$this->assign('list',$list);
 			$this->assign('page',$pager['pager']);
 			
@@ -209,6 +209,119 @@ class Hp extends MyYdzj_Controller {
 		
 		$this->assign('userList',$userList);
 		
+		
+		$this->display();
+	}
+	
+	
+	public function add(){
+		
+		$initRow = array(0);
+		
+		if($this->isPostRequest()){
+			
+			/*
+			$this->form_validation->set_rules('goods_code[]','货号','required|min_length[1]|max_length[10]');
+			$this->form_validation->set_rules('goods_name[]','货名','required|min_length[1]|max_length[10]');
+			$this->form_validation->set_rules('goods_color[]','颜色','required|min_length[1]|max_length[10]');
+			$this->form_validation->set_rules('goods_size[]','尺码','required|is_numeric|greater_than[0]|less_than[60]');
+			$this->form_validation->set_rules('quantity[]','数量','required|is_natural_no_zero|less_than[100]');
+			$this->form_validation->set_rules('sex[]','性别','required|in_list[0,1]');
+			$this->form_validation->set_rules('price_max[]','最高价','required|is_numeric|greater_than[0]|less_than[100000]');
+			*/
+			
+			$validationKey = array(
+				'goods_code' => array(
+					'title' => '货号',
+					'rules' => 'required|min_length[1]|max_length[10]'
+				),
+				'goods_name' => array(
+					'title' => '货名',
+					'rules' => 'required|min_length[1]|max_length[10]'
+				),
+				'goods_color' => array(
+					'title' => '颜色',
+					'rules' => 'required|min_length[1]|max_length[10]'
+				),
+				'goods_size' => array(
+					'title' => '尺码',
+					'rules' => 'required|is_numeric|greater_than[0]|less_than[60]'
+				),
+				'quantity' => array(
+					'title' => '数量',
+					'rules' => 'required|is_natural_no_zero|less_than[100]'
+				),
+				'sex' => array(
+					'title' => '性别',
+					'rules' => 'required|in_list[0,1]'
+				),
+				'price_max' => array(
+					'title' => '最高价',
+					'rules' => 'required|is_numeric|greater_than[0]|less_than[100000]'
+				),
+				'send_zone' => array(
+					'title' => '发货地址',
+					'rules' => 'max_length[10]'
+				),
+				'send_day' => array(
+					'title' => '发货时间',
+					'rules' => 'valid_date'
+				)
+			);
+			
+			
+			
+			$postData = array();
+			foreach($validationKey as $key => $item){
+				$postData[$key] = $this->input->post($key);
+			}
+			
+			// 提交了多少行
+			$rowCount = intval(count($postData['goods_code']));
+			
+			
+			if($rowCount == 0){
+				$initRow = array(0);
+			}else{
+				//最多20行,保护机制
+				if($rowCount > 20){
+					$rowCount = 20;
+				}
+				
+				$initRow = range(0,$rowCount - 1);
+			}
+			
+			
+			//构造验证数据
+			$data = array();
+			foreach($validationKey as $key => $validation){
+				foreach($initRow as $item){
+					$dk = "{$key}{$item}";
+					$data[$dk] = $postData[$key][$item];
+					$this->form_validation->set_rules($dk,$validation['title'],$validation['rules']);
+				}
+			}
+			
+			$this->form_validation->set_data($data);
+			
+			for($i = 0; $i < 1; $i++){
+				if(!$this->form_validation->run()){
+					$feedback = $this->form_validation->error_string('','');
+					break;
+				}
+				
+				
+				
+				
+				
+				
+			}
+			
+		}else{
+			$initRow = array(0);
+		}
+		
+		$this->assign('initRow',$initRow);
 		
 		$this->display();
 	}

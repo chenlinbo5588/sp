@@ -35,6 +35,7 @@ notify.updatePm(pmUrl);
 $(function(){
     {if $newPm}
     notify.showToast();
+    notify.playSound(1);
     {/if}
     
     //8秒以后再绑定，防止用户进入过立即离开，避免过多开销

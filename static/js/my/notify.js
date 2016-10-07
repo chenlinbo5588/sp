@@ -35,6 +35,7 @@
             hideAfter:30000,
             bgColor: '#324DFF',
             textColor: 'white',
+            stack:1,
             loader:false
         });
     },

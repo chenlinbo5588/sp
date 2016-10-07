@@ -43,7 +43,7 @@
 		           <td>{time_tran($item['gmt_create'])}</td>
 		           <td>{if $item['readed'] == 1}{time_tran($item['gmt_modify'])}{/if}</td>
 		           <td>
-		              <a class="delete" title="删除" data-title="删除"  href="javascript:void(0)" data-url="{site_url('my_pm/delete')}" data-id="{$item['id']}">X</a>
+		              <a class="delete" title="删除" data-title="删除"  href="javascript:void(0)" data-url="{site_url('my_pm/delete')}" data-id="{$item['id']}">&times;</a>
 		           </td>
 		        <tr>
 		        {/foreach}

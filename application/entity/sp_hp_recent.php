@@ -2,11 +2,13 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 $entity = array(
-'goods_id' => 'int',
+'goods_id' => 'mediumint',
 'goods_name' => 'varchar',
 'goods_code' => 'varchar',
 'goods_color' => 'varchar',
-'color_id' => 'smallint',
+'gc_id1' => 'int',
+'gc_id2' => 'int',
+'gc_id3' => 'int',
 'goods_size' => 'float',
 'quantity' => 'smallint',
 'cnum' => 'smallint',

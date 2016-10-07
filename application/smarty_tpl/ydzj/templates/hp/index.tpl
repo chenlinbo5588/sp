@@ -52,7 +52,7 @@
                     <th>期望求购价格范围</th>
                     <th>发布人</th>
                     <th>发布时间</th>
-                    <th>最后修改时间</th>
+                    <th>最后更新时间</th>
                     <th>操作</th>
                 </tr>
             </thead>
@@ -83,8 +83,6 @@
 		              <a href="javascript:void(0)">修改</a>
 		              <a href="javascript:void(0)">删除</a>
 		              {/if}
-		              <a href="javascript:void(0);">点击完成交易</a>
-		              <a href="javascript:void(0);" data-url="{site_url('trade/goods_done')}">复制</a>
 		           </td>
 		        <tr>
 		        {/foreach}

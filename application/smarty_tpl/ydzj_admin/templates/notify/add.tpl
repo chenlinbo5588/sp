@@ -31,7 +31,7 @@
         <tr class="noborder">
           <td class="vatop rowform">
               {foreach from=$sendWays key=key item=item}
-              <label><input type="checkbox" {if in_array($key,$info['send_ways'])}checked{/if} value="{$item}" name="send_ways[]" >{$item|escape}</label>
+              <label><input type="checkbox" {if in_array($item,$info['send_ways'])}checked{/if} value="{$item}" name="send_ways[]" >{$item|escape}</label>
               {/foreach}
           </td>
           <td class="vatop tips">{form_error('send_ways[]')}。</td>

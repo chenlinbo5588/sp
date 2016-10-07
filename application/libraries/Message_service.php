@@ -20,7 +20,7 @@ class Message_service extends Base_service {
 	public function __construct(){
 		parent::__construct();
 		
-		self::$CI->load->model(array('Msg_Template_Model','Pm_Message_Model','Member_Group_Model','Site_Message_Model','Push_Chat_Model'));
+		self::$CI->load->model(array('Msg_Template_Model','Pm_Message_Model','Site_Message_Model','Push_Chat_Model'));
 		self::$CI->load->library(array('Email','Flexihash'));
 		
 		
@@ -29,7 +29,7 @@ class Message_service extends Base_service {
 		
 		$this->_msgTemplateModel = self::$CI->Msg_Template_Model;
 		$this->_pmMessageModel = self::$CI->Pm_Message_Model;
-		$this->_memberGroupModel = self::$CI->Member_Group_Model;
+		
 		$this->_siteMessageModel = self::$CI->Site_Message_Model;
 		$this->_pushChatModel = self::$CI->Push_Chat_Model;
 		
@@ -39,8 +39,16 @@ class Message_service extends Base_service {
 		
 	}
 	
+	
 	/* ----------------以下站内信----------------------------------------------- */
 	public function getAllMemberGroup(){
+		
+		if(!$this->_memberGroupModel){
+			self::$CI->load->model('Member_Group_Model');
+			$this->_memberGroupModel = self::$CI->Member_Group_Model;
+		}
+		
+		
 		$cacheObject = self::$CI->getCacheObject();
 		$groupList = $cacheObject->get('Member_Group');
 		

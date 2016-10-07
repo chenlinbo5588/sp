@@ -204,13 +204,8 @@ class My_pm extends MyYdzj_Controller {
 			}
 		}
 		
-		
-		//@todo delete
-		//$info['title'] = random_string('alnum',rand(8,200));
-		//$info['content'] = random_string('alnum',rand(8,500));
-		
-		$this->output->http_cache(3600);
-		//$this->output->set_cache_header($this->_reqtime,$this->_reqtime + 600);
+		//$this->output->http_cache(CACHE_ONE_YEAR);
+		$this->output->set_cache_header($info['gmt_create'],$this->_reqtime + CACHE_ONE_YEAR);
 		$this->assign('info',$info);
 		$this->display();
 	}

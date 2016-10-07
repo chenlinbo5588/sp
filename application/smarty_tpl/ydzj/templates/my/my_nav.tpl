@@ -8,6 +8,7 @@
             <li><a href="{site_url('my/seller_verify')}">卖家认证</a></li>
             <li class="segment"><h3>求货区</h3></li>
             <li><a href="{site_url('hp/index')}">求货查询</a></li>
+            <li><a href="{site_url('hp/add')}">发布求货</a></li>
             <li><a href="{site_url('my_req/index')}">我的求货</a></li>
             <li><a href="{site_url('my_inventory/index')}">我的库存</a></li>
             <li><a href="{site_url('my_inventory/setting')}">库存设置</a></li>

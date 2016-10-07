@@ -408,16 +408,25 @@ input[type=text].valid , input[type=password].valid {
 	display:inline-block;
     cursor:pointer;
     background-color:#db3652;
-    font-size:14px;
+    font-size:16px;
     color:#fff;
     border:0;
-    padding:6px 10px;
+    padding:0px 5px;
+    border: 1px solid #db3652;
     text-align:center;
     border-radius:5px;
     -webkit-border-radius:5px;
     -moz-border-radius:5px;
     -o-border-radius:5px;
 }
+
+.master_btn:hover , .link_btn:hover , .slaveBtn:hover {
+	box-shadow:0px 0px 15px #443636;
+    -moz-box-shadow:0px 0px 15px #443636;
+    -o-box-shadow:0px 0px 15px #443636;
+    -webkit-box-shadow:0px 0px 15px #443636;
+}
+
 
 .greenBtn {
     background:#34AB75;
@@ -573,6 +582,9 @@ table.fulltable {
     width:100%;
 }
 
+table.noext {
+	width:auto;
+}
 
 
 .fulltable thead th {
@@ -583,7 +595,7 @@ table.fulltable {
 .fulltable thead th , .fulltable tbody td {
 	border:1px solid #CBCBCB;
 	border-width:1px 0 1px 0;
-	padding: 5px 0;
+	padding: 3px 2px;
 }
 
 .noborder thead th , .noborder tbody td {

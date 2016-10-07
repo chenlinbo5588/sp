@@ -55,7 +55,6 @@ class Member extends Ydzj_Controller {
 	 */
 	public function login()
 	{
-		
 		if($this->isLogin()){
 			js_redirect('my');
 		}
