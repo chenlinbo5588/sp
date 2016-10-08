@@ -71,6 +71,11 @@ class Hp_service extends Base_service {
 		}
 		*/
 		
+		
+		if($condition['fields']['uid']){
+			$this->_sphixClient->SetFilter('uid',$condition['fields']['uid']);
+		}
+		
 		if($condition['fields']['sex']){
 			$this->_sphixClient->SetFilter('sex',$condition['fields']['sex']);
 		}

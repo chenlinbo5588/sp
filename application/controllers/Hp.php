@@ -11,42 +11,6 @@ class Hp extends MyYdzj_Controller {
 		$this->load->model('Hp_Recent_Model');
 	}
 	
-	/*
-	private function _processCode($code){
-		//print_r($code);
-		$code = str_replace(array("\r\n","\n",'-',' ',"\t",'|'),'',trim($code));
-		$code = str_replace('，',',',$code);
-		$code = trim($code,',');
-		
-		$tmpCode = explode(',',$code);
-		if(count($tmpCode) > 50){
-			return implode(',',array_slice($tmpCode,0,50));
-		}
-		
-		return trim($code,',');
-		
-		
-		$goodsCode = explode("\n",$code);
-		//print_r($goodsCode);
-		$realCode = array();
-		foreach($goodsCode as $line){
-			if(trim($line) != ''){
-				$line = str_replace('，',',',trim($line));
-				$multiVal = explode(',',$line);
-				
-				foreach($multiVal as $oneValue){
-					
-					if(trim($oneValue)){
-						$realCode[] = str_replace('-','',trim($oneValue));
-					}
-				}
-			}
-		}
-		
-		return $realCode;
-		
-	}*/
-	
 	
 	public function index()
 	{
@@ -112,6 +76,8 @@ class Hp extends MyYdzj_Controller {
 		//print_r($results);
 		//file_put_contents('debug.txt',print_r($results,true));
 		
+		$uid = array();
+		
 		if($results['matches'] && $results['status'] === 0 && $results['total_found'] > 0){
 			$condition['where_in'][] = array(
 				'key' => 'goods_id',
@@ -126,21 +92,15 @@ class Hp extends MyYdzj_Controller {
 			$this->assign('list',$list);
 			$this->assign('page',$pager['pager']);
 			
-		}else{
-			//print_r($condition);
-			$list = $this->Hp_Recent_Model->getList($condition);
-			$this->assign('page',$list['pager']);
-			$this->assign('list',$list['data']);
+			
+			foreach($list as $item){
+				$uid[] = $item['uid'];
+			}
+			$userList = $this->Member_Model->getUserListByIds($uid,'uid,nickname,qq,mobile');
+			//print_r($userList);
+			$this->assign('userList',$userList);
 		}
 		
-		$uid = array();
-		foreach($list as $item){
-			$uid[] = $item['uid'];
-		}
-		$userList = $this->Member_Model->getUserListByIds($uid,'uid,nickname,qq,mobile');
-		//print_r($userList);
-		
-		$this->assign('userList',$userList);
 		$this->display();
 	}
 	
