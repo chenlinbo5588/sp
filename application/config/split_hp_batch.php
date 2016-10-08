@@ -2,7 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
- * 水平切分
+ * 水平切分 用户求货批次记录， 用于控制用户求货发布数量
  */
 $config = array(
 	'0' => 0,

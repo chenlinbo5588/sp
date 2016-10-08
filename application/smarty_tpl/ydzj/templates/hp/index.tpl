@@ -1,4 +1,5 @@
 {include file="common/my_header.tpl"}
+	{config_load file="hp.conf"}
 	<form action="{site_url($uri_string)}" method="post" id="formSearch">
         <input type="hidden" name="page" value=""/>
         <div class="goods_search">
@@ -24,11 +25,13 @@
                     <input type="text" name="pr1" class="stxt" value="{if $smarty.post.pr1}{$smarty.post.pr1}{/if}" placeholder="最低价"/>
                     <input type="text" name="pr2" class="stxt" value="{if $smarty.post.pr2}{$smarty.post.pr2}{/if}" placeholder="最高价"/>
                 </li>
+                {*
                 <li>
                     <label class="ftitle">剩余数量</label>
                     <input type="text" name="cn1" class="stxt" value="{if $smarty.post.cn1}{$smarty.post.cn1}{/if}" placeholder="最低剩余"/>
                     <input type="text" name="cn2" class="stxt" value="{if $smarty.post.cn2}{$smarty.post.cn2}{/if}" placeholder="最高剩余"/>
                 </li>
+                *}
                 <li>
                     <input class="master_btn" type="submit" name="search" value="查询"/>
                 </li>
@@ -43,13 +46,13 @@
             <thead>
                 <tr>
                     <th>求货序号</th>
-                    <th>货品名称</th>
-                    <th>货号</th>
-                    <th>颜色</th>
-                    <th>尺码(CN)</th>
-                    <th>求购数量(剩余)</th>
-                    <th>性别</th>
-                    <th>期望求购价格范围</th>
+                    <th>{#goods_code#}</th>
+                    <th>{#goods_name#}</th>
+                    <th>{#goods_color#}</th>
+                    <th>{#goods_size#}</th>
+                    <th>{#quantity#}</th>
+                    <th>{#sex#}</th>
+                    <th>{#price_max#}</th>
                     <th>发布人</th>
                     <th>发布时间</th>
                     <th>最后更新时间</th>
@@ -60,18 +63,19 @@
 		        {foreach from=$list item=item}
 		        <tr>
 		           <td>{$item['goods_id']}</td>
-		           <td>{$item['goods_name']|escape}</td>
 		           <td>{$item['goods_code']|escape}</td>
+		           <td>{$item['goods_name']|escape}</td>
 		           <td>{$item['goods_color']|escape}</td>
 		           <td>{$item['goods_size']}</td>
-		           <td>{$item['quantity']}&nbsp;({$item['cnum']})</td>
-		           <td>{$item['sex']}</td>
-		           <td>{$item['price_min']} ~ {$item['price_max']}</td>
+		           <td>{$item['quantity']}</td>
+		           <td>{if $item['sex'] == 1}男{else}女{/if}</td>
+		           <td>{$item['price_max']}</td>
 		           <td>
 		              {if $userList[$item['uid']]['qq']}
-		              <a target="_blank" class="qqchat" href="http://wpa.qq.com/msgrd?v=3&uin={$userList[$item['uid']]['qq']}&site=qq&menu=yes" alt="点击这里给我发消息" title="点击这里给我发消息">{$userList[$item['uid']]['nickname']}</a>
+		              <a target="_blank" class="qqchat" href="http://wpa.qq.com/msgrd?v=3&uin={$userList[$item['uid']]['qq']}&site=qq&menu=yes" alt="点击这里给我发消息" title="点击这里给我发消息">{$userList[$item['uid']]['qq']}</a>
+		              <span>QQ:{$userList[$item['uid']]['qq']}</span>
 		              {elseif $userList[$item['uid']]['mobile']}
-		              {$userList[$item['uid']]['mobile']}
+		              <span>手机:{$userList[$item['uid']]['mobile']}</span>
 		              {else}
 		              {$item['uid']}
 		              {/if}

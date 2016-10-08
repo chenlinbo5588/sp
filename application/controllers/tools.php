@@ -562,24 +562,14 @@ EOT;
 	
 	
 	
+	
+	
 	/**
-	 * 创建用户求货表
+	 * 用户求货信息发布历史记录表
 	 */
-	public function create_my_hp(){
-		
-		$chat_pm = range(0,29);
-		
-		
-		foreach($chat_pm as $key => $value){
-			echo "'{$key}' => {$value},<br/>";
-		}
-		
-		
-		echo '<br/>';
-		
-		
+	public function create_hp_pub_tables(){
 		$sql = <<< EOF
-CREATE TABLE `sp_member_pub{i}` (
+CREATE TABLE `sp_hp_pub{i}` (
   `goods_id` mediumint(10) unsigned NOT NULL,
   `goods_name` varchar(40) NOT NULL DEFAULT '' COMMENT '名称',
   `goods_code` varchar(10) NOT NULL DEFAULT '' COMMENT '货号',
@@ -593,20 +583,20 @@ CREATE TABLE `sp_member_pub{i}` (
   `sex` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '性别',
   `price_min` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '期望价格范围',
   `price_max` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '期望价格范围',
-  `status` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `batch_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '批次号',
   `send_zone` varchar(30) NOT NULL DEFAULT '' COMMENT '发货地址',
   `send_day` int(3) unsigned NOT NULL DEFAULT '0' COMMENT '发货时间',
-  `uid` mediumint(9) unsigned NOT NULL DEFAULT '0',
+  `uid` int(9) unsigned NOT NULL DEFAULT '0',
   `date_key` int(10) unsigned NOT NULL DEFAULT '0',
   `ip` varchar(15) NOT NULL DEFAULT '',
   `gmt_create` int(11) unsigned NOT NULL DEFAULT '0',
   `gmt_modify` int(11) unsigned NOT NULL DEFAULT '0',
   KEY `idx_uid_dk` (`uid`,`date_key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户求货发布表';
+
+
 EOF;
 
-		$pm = $this->load->get_config('split_my_hp');
+		$pm = $this->load->get_config('split_hp_pub');
 		
 		
 		print_r($pm);
@@ -617,6 +607,46 @@ EOF;
 			$this->Member_Model->execSQL($exexSQL);
 		}
 		
+	}
+	
+	
+	/**
+	 * 
+	 */
+	public function create_hp_batch_tables(){
+		
+		$chat_pm = range(0,29);
+		
+		foreach($chat_pm as $key => $value){
+			echo "'{$key}' => {$value},<br/>";
+		}
+		
+		echo '<br/>';
+		
+		$sql = <<< EOF
+CREATE TABLE `sp_hp_batch{i}` (
+  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+  `uid` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `batch_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `cnt` smallint(6) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `idx_batch` (`batch_id`),
+  KEY `idx_uid` (`uid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+EOF;
+
+		$pm = $this->load->get_config('split_pm');
+		
+		
+		print_r($pm);
+		
+		foreach($pm as $p){
+			
+			$exexSQL = str_replace('{i}',$p,$sql);
+			$this->Member_Model->execSQL($exexSQL);
+		}
 		
 	}
 	
@@ -624,28 +654,17 @@ EOF;
 	
 	
 	/**
-	 * 创建站内聊天信息推送表 30 张表，用户 uid  分表
+	 * 创建站内聊天信息推送表 ，用户 uid  分表
 	 * 
 	 * 跑批 
 	 */
-	public function create_pm_chat_tables(){
-		
-		$chat_pm = range(0,29);
-		
-		
-		foreach($chat_pm as $key => $value){
-			echo "'{$key}' => {$value},<br/>";
-		}
-		
-		
-		echo '<br/>';
-		
+	public function create_push_chat_tables(){
 		
 		$sql = <<< EOF
 CREATE TABLE `sp_push_chat{i}` (
   `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
   `msg_type` tinyint(3) NOT NULL DEFAULT '1' COMMENT '-1 后台系统消息 0=用户消息 1=货品匹配信息',
-  `uid` mediumint(9) unsigned NOT NULL DEFAULT '0',
+  `uid` int(9) unsigned NOT NULL DEFAULT '0',
   `username` varchar(30) NOT NULL DEFAULT '',
   `content` text,
   `is_send` tinyint(3) unsigned NOT NULL DEFAULT '0',
@@ -657,16 +676,10 @@ CREATE TABLE `sp_push_chat{i}` (
   KEY `idx_ctime` (`gmt_create`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
-
-
 EOF;
 
-		$pm = $this->load->get_config('split_pm_chat');
-		
-		
+		$pm = $this->load->get_config('split_push_chat');
 		print_r($pm);
-		
 		foreach($pm as $p){
 			
 			$exexSQL = str_replace('{i}',$p,$sql);
@@ -678,16 +691,59 @@ EOF;
 	}
 	
 	
+	public function get_uid_table(){
+		
+		$uid = $this->input->get('uid');
+		
+		$pm = $this->load->get_config('split_pm');
+		$push_chat = $this->load->get_config('split_push_chat');
+		$hp_batch = $this->load->get_config('split_hp_batch');
+		$hp_pub = $this->load->get_config('split_hp_pub');
+		
+		$pmHash = new Flexihash();
+		$pushChatHash = new Flexihash();
+		$hpBatchHash = new Flexihash();
+		$hpPubHash = new Flexihash();
+		
+		
+		$pmHash->addTargets($pm);
+		$pushChatHash->addTargets($push_chat);
+		$hpBatchHash->addTargets($hp_batch);
+		$hpPubHash->addTargets($hp_pub);
+		
+		echo 'pm_mesage='.$pmHash->lookup($uid);
+		echo '<br/>';
+		echo 'push_chat='.$pushChatHash->lookup($uid);
+		echo '<br/>';
+		echo 'hp_batch='.$hpBatchHash->lookup($uid);
+		echo '<br/>';
+		echo 'hp_pub='.$hpPubHash->lookup($uid);
+	}
+	
+	
+	
+	/**
+	 * 显示切分方数组
+	 */
+	public function show_split(){
+		$range = range(0,99);
+		
+		foreach($range as $key => $value){
+			echo "'{$key}' => {$value},<br/>";
+		}
+		
+		echo '<br/>';
+		
+	}
 	
 	public function create_pm_tables(){
-		
 		
 		
 		$sql = <<< EOF
 CREATE TABLE `sp_pm_message{i}` (
   `id` mediumint(10) unsigned NOT NULL AUTO_INCREMENT,
-  `uid` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `from_uid` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `uid` int(8) unsigned NOT NULL DEFAULT '0',
+  `from_uid` int(8) unsigned NOT NULL DEFAULT '0',
   `site_msgid` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '系统消息id',
   `msg_type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0 = 用户消息  -1=系统消息 1=货品匹配站内信',
   `readed` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '1=已读',
@@ -702,7 +758,6 @@ CREATE TABLE `sp_pm_message{i}` (
   KEY `idx_read` (`uid`,`readed`),
   KEY `idx_dir` (`msg_direction`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 
 
 EOF;
@@ -868,7 +923,11 @@ EOF;
         		continue;
         	}
         	
-        	if(preg_match('/^sp_member_pub\d+$/i',$table,$match)){
+        	if(preg_match('/^sp_hp_pub\d+$/i',$table,$match)){
+        		continue;
+        	}
+        	
+        	if(preg_match('/^sp_hp_batch\d+$/i',$table,$match)){
         		continue;
         	}
         	

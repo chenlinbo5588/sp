@@ -2,7 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 $entity = array(
-'uid' => 'mediumint',
+'uid' => 'int',
 'email' => 'varchar',
 'username' => 'varchar',
 'password' => 'varchar',
@@ -35,6 +35,7 @@ $entity = array(
 'd4' => 'int',
 'allowtalk' => 'char',
 'freeze' => 'char',
+'channel' => 'tinyint',
 'gmt_create' => 'int',
 'gmt_modify' => 'int'
 );

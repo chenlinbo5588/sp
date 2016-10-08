@@ -244,12 +244,12 @@ class MY_Model extends CI_Model {
         
         if($action == 'add'){
         	foreach(array('gmt_create','gmt_modify') as $value){
-	            if(array_key_exists($value,$fields)){
+	            if(empty($data[$value]) && array_key_exists($value,$fields)){
 	                $data[$value] = $now;
 	            }
 	        }
         }else if ($action == 'update'){
-        	if(array_key_exists('gmt_modify',$fields)){
+        	if(empty($data['gmt_modify']) && array_key_exists('gmt_modify',$fields)){
 	            $data['gmt_modify'] = $now;
 	        }
         }

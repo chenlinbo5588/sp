@@ -2,7 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 $entity = array(
-'uid' => 'mediumint',
-'nickname' => 'varchar',
+'uid' => 'int',
+'username' => 'varchar',
 'last_activity' => 'int'
 );

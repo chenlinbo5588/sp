@@ -14,28 +14,32 @@ class Message_service extends Base_service {
 	
 	private $_setting ;
 	
-	private $_hashObject;
+	private $_pmHashObject;
+	private $_chatHashObject;
 
 	
 	public function __construct(){
 		parent::__construct();
 		
 		self::$CI->load->model(array('Msg_Template_Model','Pm_Message_Model','Site_Message_Model','Push_Chat_Model'));
-		self::$CI->load->library(array('Email','Flexihash'));
-		
+		self::$CI->load->library(array('Email'));
 		
 		$this->_email = self::$CI->email;
-		$this->_hashObject = self::$CI->flexihash;
-		
 		$this->_msgTemplateModel = self::$CI->Msg_Template_Model;
 		$this->_pmMessageModel = self::$CI->Pm_Message_Model;
 		
 		$this->_siteMessageModel = self::$CI->Site_Message_Model;
 		$this->_pushChatModel = self::$CI->Push_Chat_Model;
 		
+		
+		$this->_pmHashObject = new Flexihash();
+		$this->_chatHashObject = new Flexihash();
+		
 		$pmConfig = self::$CI->load->get_config('split_pm');
+		$chatConfig = self::$CI->load->get_config('split_push_chat');
 		//print_r($pmConfig);
-		$this->_hashObject->addTargets($pmConfig);
+		$this->_pmHashObject->addTargets($pmConfig);
+		$this->_chatHashObject->addTargets($chatConfig);
 		
 	}
 	
@@ -74,7 +78,7 @@ class Message_service extends Base_service {
 	 * 设置 Push Chat tableid
 	 */
 	public function setPushChatTableByUid($uid){
-		$tableId = $this->_hashObject->lookup($uid);//file_put_contents("user_pm_push.txt",$tableId);
+		$tableId = $this->_chatHashObject->lookup($uid);
 		$this->_pushChatModel->setTableId($tableId);
 	}
 	
@@ -83,7 +87,7 @@ class Message_service extends Base_service {
 	 * 设置 Pm Message tableid
 	 */
 	public function setPmTableByUid($uid){
-		$tableId = $this->_hashObject->lookup($uid);//file_put_contents("user_pm.txt",$tableId);
+		$tableId = $this->_pmHashObject->lookup($uid);
 		$this->_pmMessageModel->setTableId($tableId);
 	}
 	
@@ -157,11 +161,9 @@ class Message_service extends Base_service {
 			'content' => strip_tags($content)
 		);
 		
-		
 		// 发送方先记录
 		$this->setPmTableByUid($from_uid);
 		$sendId = $this->_pmMessageModel->_add($data);
-		
 		
 		// 接受方再次记录
 		$this->setPmTableByUid($userInfo['uid']);
@@ -169,9 +171,7 @@ class Message_service extends Base_service {
 		$data['readed'] = 0;
 		$data['msg_direction'] = 0;
 		
-		
 		$receiveId = $this->_pmMessageModel->_add($data);
-		
 		
 		return array('id_send' => $sendId, 'id_receive' => $receiveId);
 	}
@@ -337,6 +337,7 @@ class Message_service extends Base_service {
 					// do insert
 					$userChat[] = array(
 						'uid' => $uid,
+						'msg_type' => -1,
 						'username' => $userProfile['chat']['username'],
 						'content' => strip_tags($list[$pmIndex]['content']),
 					);

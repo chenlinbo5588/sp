@@ -270,6 +270,13 @@ input[type=text]:focus , input[type=password]:focus ,textarea:focus {
     color:#888888;
 }
 
+.required {
+	font-weight:bold;
+}
+
+.required em {
+	color:red;
+}
 
 
 .red {color: red;}
@@ -408,11 +415,10 @@ input[type=text].valid , input[type=password].valid {
 	display:inline-block;
     cursor:pointer;
     background-color:#db3652;
-    font-size:16px;
+    font-size:14px;
     color:#fff;
     border:0;
-    padding:0px 5px;
-    border: 1px solid #db3652;
+    padding:6px 10px;
     text-align:center;
     border-radius:5px;
     -webkit-border-radius:5px;
@@ -471,6 +477,32 @@ input[type=text].valid , input[type=password].valid {
 }
 
 .pagination a:hover ,.pagination a.active {background:#0D93BF;color:#fff;cursor:pointer;}
+
+/* 返回顶部 */
+.backToTop {
+    /* display: none; */
+    width: 28px;
+    height: 80px;
+    background: url(../img/back_top.png) no-repeat;
+    color: transparent;
+    font-size: 12px;
+    text-align: center;
+    position: fixed;
+    _position: absolute;
+    /* margin-left: 490px; */
+    /* left: 50%; */
+    bottom: 100px;
+    _bottom: "auto";
+    cursor: pointer;
+    font-size: 0px;
+    right: 10px;
+}
+
+.backToTop:hover {
+    color: transparent;
+    background-position:-33px 0px;
+}
+
 
 /** ajax 加载中样式 **/
 .lightbox {

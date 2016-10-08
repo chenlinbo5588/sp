@@ -51,7 +51,7 @@ class Member extends Ydzj_Admin_Controller {
 			$this->assign('ds',$this->common_district_service->prepareCityData($ds));
 		}
 		
-		$search_map['search_field'] = array('username' => '登陆账号' ,'mobile' => '手机号码','email' => '电子邮箱');
+		$search_map['search_field'] = array('username' => '登陆账号' ,'mobile' => '手机号码');
 		
 		/*
 		$search_map['activity_sort'] = array(
@@ -64,7 +64,6 @@ class Member extends Ydzj_Admin_Controller {
 		$search_map['register_channel'] = array('1' => '后台管理中心','2' => '手机网页版' ,'3' => 'PC网页版','4' => 'iOS客户端','5' => 'Android客户端');
 		$search_map['register_sort'] = array('uid DESC' => '按时间倒序','uid ASC' => '按时间顺序');
 		$search_map['member_state'] = array('avatar_status@0' => '待验证头像','district_bind@0' => '未设置地区','freeze@1' => '已禁止登录');
-		
 		
 		$search['search_field_name'] = $this->input->get_post('search_field_name');
 		$search['search_field_value'] = $this->input->get_post('search_field_value');

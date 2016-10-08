@@ -341,6 +341,7 @@ class MY_Controller extends CI_Controller {
 
 
 require_once(APPPATH.'libraries'.DIRECTORY_SEPARATOR.'Http_client.php');
+require_once(APPPATH.'libraries'.DIRECTORY_SEPARATOR.'Flexihash.php');
 include APPPATH.'core/Ydzj_Controller.php';
 include APPPATH.'core/MyYdzj_Controller.php';
 include APPPATH.'core/Ydzj_Admin_Controller.php';

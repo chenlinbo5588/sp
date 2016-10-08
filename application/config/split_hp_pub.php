@@ -2,7 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
- * 水平切分
+ * 水平切分, 记录用户历史求货信息, 记录3天前的
  */
 $config = array(
 	'0' => 0,

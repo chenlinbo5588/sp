@@ -20,6 +20,7 @@
     </div>
 {include file="common/footer.tpl"}
 <div id="soundDiv"></div>
+<a class="backToTop" href="#top"></a>
 <script type="text/javascript" src="{resource_url('js/swfobject/swfobject.js')}"></script>
 <script type="text/javascript" src="{resource_url('js/my/notify.js')}"></script>
 <script>
@@ -38,13 +39,17 @@ $(function(){
     notify.playSound(1);
     {/if}
     
-    //8秒以后再绑定，防止用户进入过立即离开，避免过多开销
-    setTimeout(function(){
-        notify.updatePm(pmUrl);
-    },8000);
+    notify.updatePm(pmUrl);
     
 	$("a.kf-chat").bind("click",function(){
 		window.open ("{site_url('webim/index')}",'{$siteSetting['site_name']} 聊天窗口','height=650,width=1024,top=0,left=0,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no') 
 	});
+	
+	{if !empty($feedback)}
+	setTimeout(function(){
+		$(".feedback").slideToggle(1000,"linear");
+	},3000);
+	
+	{/if}
 });
 </script>

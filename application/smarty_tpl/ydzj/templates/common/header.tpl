@@ -25,8 +25,8 @@ var cookiedomain = "{config_item('site_domain')}",
 <link rel="stylesheet" href="{resource_url('js/toast/jquery.toast.min.css')}"/>
 <script type="text/javascript" src="{resource_url('js/toast/jquery.toast.min.js')}"></script>
 <script type="text/javascript" src="{resource_url('js/common.js')}"></script>
-
 </head>
+<a name="top"></a>
 <div id="showDlg" style="display:none;"></div>
 <body {if $bodyClass}class="{$bodyClass}"{/if}>
     <div id="wrap">

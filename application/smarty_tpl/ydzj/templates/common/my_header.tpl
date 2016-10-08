@@ -11,3 +11,4 @@
 			    	{/foreach}
 			   	</div>
 			</div>
+			<div class="feedback">{$feedback}</div>

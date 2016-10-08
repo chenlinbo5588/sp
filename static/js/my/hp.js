@@ -60,10 +60,29 @@
 			return;
 		}
 		
+		var alink = $(this),size;
+		
 		var tr = $(this).parents('tr');
 		var cloneTr = tr.clone(false);
+		var sizeInput = cloneTr.find("input[name='goods_size[]']");
+		
 		cloneTr.find("label.error").remove();
 		cloneTr.find("input").removeClass("error").removeClass("valid");
+		
+		size = $.trim(sizeInput.val());
+		size = parseFloat(size);
+		
+		if(!size){
+			size = 0;
+		}
+		
+		if(alink.hasClass("incre")){
+			sizeInput.val(size + 1);
+		}else if(alink.hasClass("decre")){
+			if((size - 1) > 0){
+				sizeInput.val(size - 1);
+			}
+		}
 		
 		cloneTr.insertAfter(tr);
 		add_index();
@@ -75,6 +94,34 @@
 		add_index();
 	});
 	
+	
+	var stepBy = function(sizeInput,op){
+		var size = $.trim(sizeInput.val());
+		size = parseFloat(size);
+		
+		if(!size){
+			size = 0;
+		}
+		
+		if('up' == op){
+			sizeInput.val(size + 0.5);
+		}else if('down' == op){
+			if((size - 0.5) > 0){
+				sizeInput.val(size - 0.5);
+			}
+		}
+	}
+	
+	$("#bodyContent").delegate("a.fa-long-arrow-down,a.fa-long-arrow-up","click",function(){
+		var tr = $(this).parents('tr');
+		var sizeInput = tr.find("input[name='goods_size[]']");
+		
+		if($(this).hasClass("fa-long-arrow-down")){
+			stepBy(sizeInput,'down');
+		}else if($(this).hasClass("fa-long-arrow-up")){
+			stepBy(sizeInput,'up');
+		}
+	});
 	
 	/*
 	var formValidation = $("#pubForm").validate({
@@ -108,6 +155,9 @@
 				min:1,
 				max:500,
 				digits:true
+			},
+			"send_day" : {
+				dateISO:true
 			}
 		},
 		messages: {
