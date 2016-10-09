@@ -3,8 +3,8 @@
 	<form action="{site_url($uri_string)}" method="post" id="formSearch">
         <input type="hidden" name="page" value=""/>
         <div class="goods_search">
-             <ul class="search_con">
-                <li class="first"><textarea name="gc" placeholder="输入{#goods_code#}，每行一个货号或者单行按逗号分隔，一次最多可同时50个">{$smarty.post.gc}</textarea></li>
+        	 <textarea name="gc" placeholder="输入{#goods_code#}，每行一个货号或者单行按逗号分隔，一次最多可同时50个">{$smarty.post.gc}</textarea>
+             <ul class="search_con clearfix">
                 <li>
                     <label class="ftitle">{#goods_name#}</label>
                     <input type="text" class="mtxt" name="gn" value="{$smarty.post.gn}"/>
@@ -26,17 +26,46 @@
                     <input type="text" name="pr2" class="stxt" value="{if $smarty.post.pr2}{$smarty.post.pr2}{/if}" placeholder="上限"/>
                 </li>
                 <li>
+                	<label class="ftitle">{#mtime#}</label>
+                	<select name="mtime">
+                	{foreach from=$mtime item=item key=key}
+                		<option value="{$key}" {if $smarty.post.mtime == $key}selected{/if}/>{$key}</option>
+                	{/foreach}
+                	</select>
+                </li>
+                <li>
                     <input class="master_btn" type="submit" name="search" value="查询"/>
                 </li>
              </ul>
-             <div class="searchtip" id="gctip" style="display:none;">
-                <div class="tip">单行模式: 229284000,884926-006,148777000</div>
-                <div class="tip">多行莫斯: <br/>229284000<br/>884926-006<br/>148777000<br/>....</div>
-            </div>
+             {include file="hp/code_tip.tpl"}
+	        <div>{include file="common/pagination.tpl"}</div>
+	        {include file="./list.tpl"}
+		    <div>{include file="common/pagination.tpl"}</div>
 	    </div>
-        <div>{include file="common/pagination.tpl"}</div>
-        {include file="./list.tpl"}
-	    <div>{include file="common/pagination.tpl"}</div>
     </form>
+    <script>
+    $(function(){
+    	$(document).tooltip({
+    		items: "textarea[name=gc]",
+      		content: function() {
+      			return $("#gctip").html();
+      		}
+    	});
+    	
+    	$("textarea[name=gc]").bind("focusin",function(){
+    		$(this).animate({ 
+			    height: 200
+			  }, 1000 ,function(){
+			  	$(this).height(200);
+			});
+    	}).bind('focusout',function(){
+    		$(this).animate({ 
+			    height: 40
+			  }, 1000 ,function(){
+			  	$(this).height(40);
+			});
+    	});
+    });
+    </script>
 {include file="common/my_footer.tpl"}
 

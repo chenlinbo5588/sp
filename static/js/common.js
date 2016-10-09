@@ -560,8 +560,11 @@ function bindOpEvent(selector,customSuccessFn,customErrorFn){
 	var successCallback = function(ids,json){
 		if(check_success(json.message)){
 			showToast('success',json.message);
-			for(var i = 0; i < ids.length; i++){
-				$("#row" + ids[i]).remove();
+			
+			if(typeof(ids) != 'undefined'){
+				for(var i = 0; i < ids.length; i++){
+					$("#row" + ids[i]).remove();
+				}
 			}
 		}else{
 			showToast('error',json.message);

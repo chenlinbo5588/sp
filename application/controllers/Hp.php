@@ -5,34 +5,27 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Hp extends MyYdzj_Controller {
 	
+	private $_mtime ;
+	
+	
 	public function __construct(){
 		parent::__construct();
+		$this->load->library('Hp_service');
 		
-		$this->load->model('Hp_Recent_Model');
+		$this->_mtime = array(
+			'不限' => '',
+			'10分钟内' => '-600 seconds',
+			'20分钟内' => '-1200 seconds',
+			'30分钟内' => '-1800 seconds',
+			'1小时内' => '-3600 seconds',
+			'2小时内' => '-7200 seconds',
+		);
 	}
 	
 	
-	public function index()
-	{
-		$currentPage = $this->input->get_post('page') ? $this->input->get_post('page') : 1;
-		
-		$pageParam = array(
-			'page_size' => config_item('page_size'),
-			'current_page' => $currentPage,
-			'call_js' => 'search_page',
-			'form_id' => '#formSearch'
-		);
-		
-		$condition = array(
-			'order' => 'gmt_modify DESC',
-			'pager' => $pageParam
-		);
-		
-		//$searchKeys['gn'] = $this->input->get_post('gn');
-		//$searchKeys['gc'] = $this->input->get_post('gc');
-		
-		
+	private function _prepareParam($pageParam){
 		$searchKeys['sex'] = intval($this->input->get_post('sex'));
+		
 		
 		//尺码
 		$searchKeys['s1'] = floatval($this->input->get_post('s1'));
@@ -42,9 +35,11 @@ class Hp extends MyYdzj_Controller {
 		$searchKeys['pr1'] = intval($this->input->get_post('pr1'));
 		$searchKeys['pr2'] = intval($this->input->get_post('pr2'));
 		
+		$searchKeys['mtime'] = trim($this->input->get_post('mtime'));
+		
 		$searchCondition = array(
 			'pager' => $pageParam,
-			'order_field' => 'gmt_modify',
+			'order' => 'gmt_modify DESC',
 			'fields' => array(
 				'goods_name' => $this->input->get_post('gn'),
 				'goods_code' => $this->input->get_post('gc'),
@@ -54,7 +49,6 @@ class Hp extends MyYdzj_Controller {
 		//性别
 		if($searchKeys['sex']){
 			$searchCondition['fields']['sex'] = array($searchKeys['sex']);
-			//$client->SetFilter ('sex', array($searchKeys['sex']));
 		}
 		
 		if($searchKeys['s1'] || $searchKeys['s2']){
@@ -67,40 +61,55 @@ class Hp extends MyYdzj_Controller {
 			$searchCondition['fields']['price_max'] = $prOrderedValue;
 		}
 		
-		$this->load->library('Hp_service');
+		if($searchKeys['mtime'] && $this->_mtime[$searchKeys['mtime']]){
+			$searchCondition['fields']['gmt_modify'] = array(
+				strtotime($this->_mtime[$searchKeys['mtime']],$this->_reqtime),
+				$this->_reqtime
+			);
+		}
+		
+		
+		return $searchCondition;
+		
+	}
+	
+	private function _preparePager(){
+		$currentPage = $this->input->get_post('page') ? $this->input->get_post('page') : 1;
+		
+		$pageParam = array(
+			'page_size' => config_item('page_size'),
+			'current_page' => $currentPage,
+			'call_js' => 'search_page',
+			'form_id' => '#formSearch'
+		);
+		
+		return $pageParam;
+	}
+	
+	public function index()
+	{
+		$searchCondition = $this->_prepareParam($this->_preparePager());
+		
 		$this->hp_service->setServer(0);
 		
 		$results = $this->hp_service->query($searchCondition);
 		
-		//print_r($searchCondition);
 		//print_r($results);
-		//file_put_contents('debug.txt',print_r($results,true));
-		
 		$uid = array();
 		
-		if($results['matches'] && $results['status'] === 0 && $results['total_found'] > 0){
-			$condition['where_in'][] = array(
-				'key' => 'goods_id',
-				'value' => array_keys($results['matches'])
-			);
+		if($results){
+			$this->assign('list',$results['data']);
+			$this->assign('page',$results['pager']);
 			
-			unset($condition['pager']);
-			
-			$pager = pageArrayGenerator($pageParam,$results['total_found']);
-			
-			$list = $this->Hp_Recent_Model->getList($condition);
-			$this->assign('list',$list);
-			$this->assign('page',$pager['pager']);
-			
-			
-			foreach($list as $item){
+			foreach($results['data'] as $item){
 				$uid[] = $item['uid'];
 			}
 			$userList = $this->Member_Model->getUserListByIds($uid,'uid,nickname,qq,mobile');
-			//print_r($userList);
 			$this->assign('userList',$userList);
 		}
 		
+		
+		$this->assign('mtime',$this->_mtime);
 		$this->display();
 	}
 	
@@ -109,13 +118,17 @@ class Hp extends MyYdzj_Controller {
 		
 		$initRow = array(0);
 		$feedback = '';
-		$ctrlKey = 'pubctrl_'.$this->_loginUID;
+		
 		
 		$postData = array();
 		
 		
 		if($this->isPostRequest()){
 			for($i = 0; $i < 1; $i++){
+				
+				$lastPub = $this->hp_service->getUserLastPub($this->_loginUID);
+				
+				/*
 				$hpBatch = $this->load->get_config('split_hp_batch');
 				$flexiHash = new Flexihash();
 				
@@ -139,6 +152,8 @@ class Hp extends MyYdzj_Controller {
 						$this->getCacheObject()->save($ctrlKey,$lastPub,CACHE_ONE_DAY);
 					}
 				}
+				
+				*/
 				
 				/*
 				$this->form_validation->set_rules('goods_code[]','货号','required|min_length[1]|max_length[10]');
@@ -206,10 +221,9 @@ class Hp extends MyYdzj_Controller {
 					$initRow = range(0,$rowCount - 1);
 				}
 				
-				// 3 分钟 
-				if($lastPub &&  ($this->_reqtime - $lastPub['batch_id']) < 180){
-					$freezenSec = $this->_reqtime - $lastPub['batch_id'];
-					$feedback = getErrorTip('求货发布冻结时间内还剩'. (180 - $freezenSec).'秒,请稍候尝试');
+				$remainSeconds = $this->hp_service->getPubTimeRemain($this->_reqtime,$this->_loginUID);
+				if($remainSeconds){
+					$feedback = getErrorTip('求货发布冻结时间内还剩'. $remainSeconds.'秒,请稍候尝试');
 					break;
 				}
 				
@@ -266,19 +280,15 @@ class Hp extends MyYdzj_Controller {
 					$insertData[] = $rowData;
 				}
 				
-				//print_r($insertData);
-				$this->Hp_Recent_Model->batchInsert($insertData);
+				$rowsInserted = $this->hp_service->addHp($insertData,$this->_reqtime,$this->_loginUID);
 				
-				$ctrlData = array(
-					'uid' => $this->_loginUID,
-					'batch_id' => $this->_reqtime,
-					'cnt' => $rowCount
-				);
+				if($rowsInserted){
+					$feedback = getSuccessTip('求货发布成功,您发布的信息蒋在一分钟内开始生效');
+				}else{
+					$errorInfo = $this->Hp_Recent_Model->get_error_info();
+					$feedback = getErrorTip(str_replace(array('{code}','{message}'),array($errorInfo['code'],$errorInfo['message']),"系统错误,{code}:{message}"));
+				}
 				
-				$this->Hp_Batch_Model->_add($ctrlData);
-				$this->getCacheObject()->save($ctrlKey,$ctrlData,CACHE_ONE_DAY);
-				
-				$feedback = getSuccessTip('求货发布成功');
 			}
 		}
 		

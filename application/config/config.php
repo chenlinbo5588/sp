@@ -370,8 +370,8 @@ $config['encryption_key'] = 'OTg0NTQyMmMzMTQ0MzRkOWJhY2EwODA4NTllMTBkZGQ=';
 $config['sess_driver'] = 'redis';
 $config['sess_cookie_name'] = 'sid';
 
-// keep 3 day
-$config['sess_expiration'] = 259200;
+// keep 30 day
+$config['sess_expiration'] = 2592000;
 //$config['sess_save_path'] = 'sp_sessions';
 $config['sess_save_path'] = 'tcp://localhost:6379';
 $config['sess_match_ip'] = FALSE;

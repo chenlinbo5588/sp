@@ -579,9 +579,7 @@ CREATE TABLE `sp_hp_pub{i}` (
   `gc_id3` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '货品三级分类',
   `goods_size` float unsigned NOT NULL DEFAULT '0' COMMENT '尺码',
   `quantity` smallint(5) unsigned NOT NULL DEFAULT '1' COMMENT '数量',
-  `cnum` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '剩余数量',
   `sex` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '性别',
-  `price_min` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '期望价格范围',
   `price_max` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '期望价格范围',
   `send_zone` varchar(30) NOT NULL DEFAULT '' COMMENT '发货地址',
   `send_day` int(3) unsigned NOT NULL DEFAULT '0' COMMENT '发货时间',
@@ -590,8 +588,10 @@ CREATE TABLE `sp_hp_pub{i}` (
   `ip` varchar(15) NOT NULL DEFAULT '',
   `gmt_create` int(11) unsigned NOT NULL DEFAULT '0',
   `gmt_modify` int(11) unsigned NOT NULL DEFAULT '0',
-  KEY `idx_uid_dk` (`uid`,`date_key`)
+  KEY `idx_uid_dk` (`uid`,`date_key`),
+  KEY `idx_goods_id` (`goods_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户求货发布表';
+
 
 
 EOF;
@@ -627,12 +627,13 @@ EOF;
 CREATE TABLE `sp_hp_batch{i}` (
   `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
   `uid` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `action` tinyint(3) unsigned DEFAULT '0' COMMENT '0=标题添加操作 1=刷新操作',
   `batch_id` int(10) unsigned NOT NULL DEFAULT '0',
   `cnt` smallint(6) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `idx_batch` (`batch_id`),
   KEY `idx_uid` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 
 EOF;

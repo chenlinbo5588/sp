@@ -621,6 +621,7 @@ table.noext {
 
 .fulltable thead th {
 	background-color:#DAF4FE;
+	font-weight:bold;
 }
 
 
@@ -940,20 +941,21 @@ table.noext {
 
 .goods_search {
 	position:relative;
-}
-
-.search_con li.first {
-	
-	width:100%;
+    padding: 10px 0;
+    margin-bottom: 10px;
 }
 
 .search_con li {
-	
+	width:230px;
+	height:40px;
+	line-height:40px;
+	float:left;
 } 
 
 .goods_search .ftitle {
 	display:inline-block;
-	width:75px;
+	width:60px;
+	font-weight:bold;
 }
 
 .goods_search textarea {
@@ -1010,7 +1012,7 @@ table.noext {
 
 @media (min-width: 1440px) {
     .boxz {
-        width:1200px;
+        width:1280px;
     }
 }
 

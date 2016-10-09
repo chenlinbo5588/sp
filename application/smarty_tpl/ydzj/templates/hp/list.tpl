@@ -1,18 +1,18 @@
         <table class="fulltable">
             <thead>
                 <tr>
-                    <th>求货序号</th>
+                    <th>{#goods_id#}</th>
                     <th>{#goods_code#}</th>
                     <th>{#goods_name#}</th>
                     <th>{#goods_color#}</th>
                     <th>{#goods_size#}</th>
                     <th>{#quantity#}</th>
                     <th>{#sex#}</th>
-                    <th>{#price_max#}</th>
-                    <th>发布人</th>
-                    <th>发布时间</th>
-                    <th>最后更新时间</th>
-                    <th>操作</th>
+                    <th>{#accept#}{#price_max#}</th>
+                    <th>{#owner#}</th>
+                    <th>{#need#}{#send_zone#}</th>
+                    <th>{#send_day#}</th>
+                    <th>{#mtime#}</th>
                 </tr>
             </thead>
 	        <tbody>
@@ -36,17 +36,12 @@
 		              {$item['uid']}
 		              {/if}
 		           </td>
-		           <td>{time_tran($item['gmt_create'])}</td>
+		           <td>{$item['send_zone']|escape}</td>
+		           <td>{$item['send_day']|date_format:"%Y-%m-%d"}</td>
 		           <td>{time_tran($item['gmt_modify'])}</td>
-		           <td>
-		              {if $profile && $profile['basic']['uid'] == $item['uid']}
-		              <a href="javascript:void(0)">修改</a>
-		              <a href="javascript:void(0)">删除</a>
-		              {/if}
-		           </td>
 		        <tr>
 		        {foreachelse}
-		        <tr><td colspan="12">找不到相关记录</td></tr>
+		        <tr><td colspan="11">找不到相关记录</td></tr>
 		        {/foreach}
 		    </tbody>
 		 </table>

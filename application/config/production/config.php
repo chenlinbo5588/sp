@@ -13,6 +13,9 @@ $config['site_domain'] = $_SERVER['SERVER_NAME'];
 $config['page_size'] = 20;
 
 
+// 货品 90 分钟过期
+$config['hp_expired'] = 5400;
+
 // 这个配合比较重要，建议不要小于60, 过小会造成系统负荷过重
 $config['pmcheck_interval'] = 90;
 

@@ -1,5 +1,10 @@
 {include file="common/my_header.tpl"}
     {config_load file="hp.conf"}
+    <style>
+    label.error {
+    	display:block;
+    }
+    </style>
     <div id="pubwrap">
 	    <div class="tip">一次最多可发布20个货品,再次发布求货时间间隔<span class="hightlight">3分钟</span>,求货信息默认过期时间<span class="hightlight">90分钟</span>,过期后请用户点击<a class="hightlight" href="{site_url('my_req/index')}">我的求货</a>菜单进行主动刷新</div>
 		<form action="{site_url($uri_string)}" method="post" id="pubForm">
@@ -18,7 +23,7 @@
 	                    <th><label class="required"><em>*</em>{#goods_size#}(0 - 60)</label></th>
 	                    <th><label class="required"><em>*</em>{#quantity#}(1-100)</label></th>
 	                    <th><label class="required"><em>*</em>{#sex#}</label></th>
-	                    <th><label class="required"><em>*</em>{#price_max#}</label></th>
+	                    <th><label class="required"><em>*</em>{#accept#}{#price_max#}</label></th>
 	                    <th>{#send_zone#}</th>
 	                    <th>{#send_day#}</th>
 	                    <th>{#op#}</th>

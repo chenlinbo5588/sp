@@ -5,10 +5,23 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class My_req extends MyYdzj_Controller {
 	
+	
+	private $_isExpired ;
+	
+	
 	public function __construct(){
 		parent::__construct();
 		
-		$this->load->model('Hp_Recent_Model');
+		$this->load->library('Hp_service');
+		$this->assign('reqtime',$this->_reqtime);
+		
+		$this->_isExpired = array(
+			'0' => '不限',
+			'1' => '已过期',
+			'2' => '未过期',
+		);
+		
+		$this->assign('isExpired',$this->_isExpired);
 	}
 	
 	
@@ -34,7 +47,7 @@ class My_req extends MyYdzj_Controller {
 		
 		$searchCondition = array(
 			'pager' => $pageParam,
-			'order_field' => 'gmt_modify',
+			'order' => 'gmt_modify DESC',
 			'fields' => array(
 				'goods_name' => $this->input->get_post('gn'),
 				'goods_code' => $this->input->get_post('gc'),
@@ -58,18 +71,11 @@ class My_req extends MyYdzj_Controller {
 			$searchCondition['fields']['price_max'] = $prOrderedValue;
 		}
 		
-		
-		
 		return $searchCondition;
-		
 	}
 	
 	
-	/**
-	 * 最近求货
-	 */
-	public function recent()
-	{
+	private function _preparePager(){
 		$currentPage = $this->input->get_post('page') ? $this->input->get_post('page') : 1;
 		$pageParam = array(
 			'page_size' => config_item('page_size'),
@@ -78,49 +84,74 @@ class My_req extends MyYdzj_Controller {
 			'form_id' => '#formSearch'
 		);
 		
+		return $pageParam;
+	}
+	
+	/**
+	 * 最近求货
+	 */
+	public function recent()
+	{
+		///echo date("Y-m-d H:i:s",$this->_reqtime);
+		$searchCondition = $this->_prepareParam($this->_preparePager());
 		
-		$condition = array(
-			'order' => 'gmt_modify DESC',
-			'pager' => $pageParam
-		);
 		
-		$searchCondition = $this->_prepareParam($pageParam);
-		
-		$this->load->library('Hp_service');
 		$this->hp_service->setServer(0);
-		
 		
 		$results = $this->hp_service->query($searchCondition);
 		
-		//print_r($searchCondition);
-		//print_r($results);
-		//file_put_contents('debug.txt',print_r($results,true));
-		
-		if($results['matches'] && $results['status'] === 0 && $results['total_found'] > 0){
-			$condition['where_in'][] = array(
-				'key' => 'goods_id',
-				'value' => array_keys($results['matches'])
-			);
-			
-			unset($condition['pager']);
-			
-			$pager = pageArrayGenerator($pageParam,$results['total_found']);
-			
-			$list = $this->Hp_Recent_Model->getList($condition);
-			$this->assign('list',$list);
-			$this->assign('page',$pager['pager']);
-			
+		if($results){
+			$this->assign('list',$results['data']);
+			$this->assign('page',$results['pager']);
 		}
 		
 		$this->display();
 	}
 	
-
 	
+	/**
+	 * 删除货品
+	 */
+	public function recent_del(){
+		
+		
+		
+	}
+	
+	
+	/**
+	 * 
+	 */
+	public function reactive(){
+		$id = $this->input->post('id');
+		if($id && $this->isPostRequest()){
+			$remainSeconds = $this->hp_service->getPubTimeRemain($this->_reqtime,$this->_loginUID);
+			if($remainSeconds){
+				$this->jsonOutput('冻结时间还剩'.$remainSeconds.'秒,请稍后尝试');
+			}else{
+				$rows = $this->hp_service->reactiveUserHpReq($id,$this->_reqtime,$this->_loginUID);
+				$this->jsonOutput('重新激活成功');
+			}
+		}else{
+			$this->jsonOutput('请求非法',$this->getFormHash());
+		}
+	}
+	
+	
+	/**
+	 * 
+	 */
 	public function history(){
 		
+		$condition = $this->_preparePager();
+		
+		$results = $this->hp_service->getPubHistory();
 		
 		
+		if($results){
+			$this->assign('list',$results['data']);
+			$this->assign('page',$results['pager']);
+		}
 		
 		$this->display('my_req/recent');
 	}
