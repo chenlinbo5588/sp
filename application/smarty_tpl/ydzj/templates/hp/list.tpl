@@ -41,7 +41,7 @@
 		           <td>{time_tran($item['gmt_modify'])}</td>
 		        <tr>
 		        {foreachelse}
-		        <tr><td colspan="11">找不到相关记录</td></tr>
+		        <tr><td colspan="12">找不到相关记录</td></tr>
 		        {/foreach}
 		    </tbody>
 		 </table>

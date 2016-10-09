@@ -54,9 +54,9 @@
     	
     	$("textarea[name=gc]").bind("focusin",function(){
     		$(this).animate({ 
-			    height: 200
+			    height: 160
 			  }, 1000 ,function(){
-			  	$(this).height(200);
+			  	$(this).height(160);
 			});
     	}).bind('focusout',function(){
     		$(this).animate({ 

@@ -40,7 +40,7 @@
 			             <a class="fa fa-long-arrow-down" href="javascript:void(0)" ></a>
 			             <input type="text" class="w36" name="goods_size[]" value="{$postData['goods_size'][$item]|escape}" placeholder="如:41"/>
 			             <a href="javascript:void(0)" class="fa fa-long-arrow-up"></a>{form_error('goods_size'|cat:$item)}</td>
-			            <td><input type="text" class="w60" name="quantity[]" value="{$postData['quantity'][$item]|escape}" placeholder="请输入{#quantity#}"/>{form_error('quantity'|cat:$item)}</td>
+			            <td><input type="text" class="w60" name="quantity[]" value="{if $postData['quantity'][$item]}{$postData['quantity'][$item]|escape}{else}1{/if}" placeholder="请输入{#quantity#}"/>{form_error('quantity'|cat:$item)}</td>
 			            <td><select class="w60" name="sex[]">
 			                    <option value="1" {if $postData['sex'][$item] == 1}selected{/if}>男</option>
 			                    <option value="2" {if $postData['sex'][$item] == 2}selected{/if}>女</option>

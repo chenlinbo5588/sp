@@ -11,6 +11,8 @@ class Hp_service extends Base_service {
 	private $_hpPubHash;
 	private $_hpBatchHash;
 	
+	private $_pubFreezen;
+	
 	public function __construct(){
 		parent::__construct();
 		
@@ -32,6 +34,8 @@ class Hp_service extends Base_service {
 
 		$this->_hpPubHash->addTargets($pubConfig);
 		$this->_hpBatchHash->addTargets($batchConfig);
+		
+		$this->_pubFreezen = config_item('hp_pub_freezen');
 		
 		$this->_sphixClient = new SphinxClient;
 	}
@@ -107,14 +111,25 @@ class Hp_service extends Base_service {
 			$this->_sphixClient->SetFilterFloatRange('goods_size',$condition['fields']['goods_size'][0],$condition['fields']['goods_size'][1]);
 		}
 		
+		
+		foreach(array('price_max','gmt_create','gmt_modify') as $filterKey){
+			if($condition['fields'][$filterKey]){
+				$this->_sphixClient->SetFilterRange($filterKey,$condition['fields'][$filterKey][0],$condition['fields'][$filterKey][1]);
+			}
+			
+		}
+		
+		/*
 		if($condition['fields']['price_max']){
 			$this->_sphixClient->SetFilterRange('price_max',$condition['fields']['price_max'][0],$condition['fields']['price_max'][1]);
 		}
 		
+		
+		
 		if($condition['fields']['gmt_modify']){
 			$this->_sphixClient->SetFilterRange('gmt_modify',$condition['fields']['gmt_modify'][0],$condition['fields']['gmt_modify'][1]);
 		}
-		
+		*/
 		
 		$avaibleCode = $this->_processCode($condition['fields']['goods_code']);
 		//print_r($avaibleCode);
@@ -189,9 +204,9 @@ class Hp_service extends Base_service {
 	public function getPubTimeRemain($reqTime ,$uid,$action = 'add'){
 		$lastPub = $this->getUserLastPub($uid);
 		
-		if($lastPub &&  ($reqTime - $lastPub['batch_id']) < 180){
+		if($lastPub &&  ($reqTime - $lastPub['batch_id']) < $this->_pubFreezen){
 			$freezenSec = $reqTime - $lastPub['batch_id'];
-			return (180 - $freezenSec);
+			return ($this->_pubFreezen - $freezenSec);
 		}else{
 			return 0;
 		}
@@ -287,7 +302,7 @@ class Hp_service extends Base_service {
 		
 		$affectRow = $this->_hpRecentModel->updateByCondition(array('gmt_modify' => $time),$condition);
 		if($affectRow){
-			//1 means 刷新
+			//参数 1 means 刷新
 			$this->addUserHpFrequentCtrl($uid,$time,$affectRow,1,true);
 		}
 		
@@ -307,6 +322,15 @@ class Hp_service extends Base_service {
 		return $this->_hpPubModel->getList($condition);
 		
 	}
+	
+	
+	/**
+	 * 删除最近货品
+	 */
+	public function deleteUserRecentHp($condition){
+		return $this->_hpRecentModel->deleteByCondition($condition);
+	}
+	
 	
 	/**
 	 * 珊瑚用户的历史货品

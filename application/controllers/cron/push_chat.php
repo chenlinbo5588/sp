@@ -18,7 +18,7 @@ class Push_Chat extends MY_Controller {
 		
 		$currentDir = pathinfo(__FILE__, PATHINFO_DIRNAME);
 		
-		file_put_contents($currentDir.'/log.txt',print_r($_SERVER,true));
+		//file_put_contents($currentDir.'/log.txt',print_r($_SERVER,true));
 		
 		if(empty($param[3])){
 			exit('table param is not given');
