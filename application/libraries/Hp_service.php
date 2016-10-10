@@ -201,7 +201,7 @@ class Hp_service extends Base_service {
 	 * time remain to pub
 	 * 获得再次发布的 等待时间
 	 */
-	public function getPubTimeRemain($reqTime ,$uid,$action = 'add'){
+	public function getPubTimeRemain($reqTime ,$uid){
 		$lastPub = $this->getUserLastPub($uid);
 		
 		if($lastPub &&  ($reqTime - $lastPub['batch_id']) < $this->_pubFreezen){
@@ -333,7 +333,7 @@ class Hp_service extends Base_service {
 	
 	
 	/**
-	 * 珊瑚用户的历史货品
+	 * 删除用户的历史货品
 	 */
 	public function deleteHistory($condition,$uid){
 		$tableId = $this->_hpPubHash->lookup($uid);

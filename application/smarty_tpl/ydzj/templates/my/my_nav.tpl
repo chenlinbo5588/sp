@@ -10,7 +10,7 @@
             <li><a href="{site_url('hp/index')}">求货查询</a></li>
             <li><a href="{site_url('hp/add')}">发布求货</a></li>
             <li><a href="{site_url('my_req/recent')}">我的求货</a></li>
-            <li><a href="{site_url('inventory/my')}">我的库存</a></li>
+            <li><a href="{site_url('inventory/index')}">我的库存</a></li>
             <li><a href="{site_url('inventory/setting')}">库存设置</a></li>
         </ul>
     </div>

@@ -335,8 +335,8 @@ class MY_Model extends CI_Model {
     /**
      * 查询
      */
-    public function getFirstByKey($id,$key = 'id'){
-        $query = $this->db->get_where($this->getTableRealName(),array($key => $id));
+    public function getFirstByKey($id,$key = 'id',$fields = '*'){
+        $query = $this->db->select($fields)->get_where($this->getTableRealName(),array($key => $id));
         $data = $query->result_array();
         if($data[0]){
             return $data[0];

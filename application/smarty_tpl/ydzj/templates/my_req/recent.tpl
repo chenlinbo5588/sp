@@ -106,8 +106,6 @@
     <script type="text/javascript" src="{resource_url('js/jquery-ui/i18n/zh-CN.js')}"></script>
     <script>
         $(function(){
-            $( ".datepicker" ).datepicker({ })
-            
 			var successCallback = function(ids,json){
 				if(check_success(json.message)){
 					showToast('success',json.message);

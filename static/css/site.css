@@ -946,10 +946,13 @@ table.noext {
 }
 
 .search_con li {
-	width:230px;
+	display: block;
+    width: 240px;
 	height:40px;
 	line-height:40px;
 	float:left;
+	padding: 0 5px 0 0;
+	
 } 
 
 .goods_search .ftitle {
@@ -1007,6 +1010,35 @@ table.noext {
 
 .pm_content {
 	text-indent: 2em;
+}
+
+
+.slot_list {
+	
+	
+}
+
+.slot_item {
+	width: 150px;
+    height: 150px;
+    display: inline-block;
+    float: left;
+    background: url(../img/slot.png) no-repeat center center;
+    border: 1px solid #d0d0d0;
+    margin: 0 5px 5px 0;
+}
+
+.slot_item .title {
+	height:116px;
+	line-height:116px;
+	display:block;
+	text-align:center;
+	font-size:15px;
+}
+
+.slot_item .goods_code {
+	text-align: center;
+    height: 30px;
 }
 
 
