@@ -2,17 +2,23 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Inventory_service extends Base_service {
+	
+	
+	private $_reactiveFreezen;
+	
 	private $_memberSlotModel;
 	private $_inventoryModel;
-	private $_reactiveFreezen;
+	private $_memberInventoryModel;
+	
 	
 	
 	public function __construct(){
 		parent::__construct();
 		
-		self::$CI->load->model(array('Inventory_Model','Member_Slot_Model'));
+		self::$CI->load->model(array('Inventory_Model','Member_Slot_Model','Member_Inventory_Model'));
 		$this->_inventoryModel = self::$CI->Inventory_Model;
 		$this->_memberSlotModel = self::$CI->Member_Slot_Model;
+		$this->_memberInventoryModel = self::$CI->Member_Inventory_Model;
 		
 		$this->_reactiveFreezen = config_item('inventory_freezen');
 	}
@@ -45,7 +51,6 @@ class Inventory_service extends Base_service {
 	 * 重新激活用户的库存 ，这样可以参与到自动匹配
 	 */
 	public function reactiveUserInventory($time, $uid){
-		
 		$condition = array(
 			'where' => array(
 				'uid' => $uid
@@ -56,6 +61,81 @@ class Inventory_service extends Base_service {
 		
 		return $affectRow;
 	}
+	
+	
+	
+	/**
+	 * 
+	 */
+	public function getSlotDetail($slot_id,$uid,$field = '*'){
+		$condition = array(
+			'select' => $field,
+			'where' => array(
+				'uid' => $uid,
+				'slot_id' => $slot_id
+			)
+		);
+		
+		return $this->_memberInventoryModel->getById($condition);
+		
+	}
+	
+	
+	
+	
+	/**
+	 * 配置 货柜 货号信息
+	 */
+	public function setSlotGoodsCode($slot_id,$goods_code,$uid){
+		
+		$inventory = $this->getUserCurrentInventory($uid);
+		
+		$inventory['slot_config'][$slot_id]['goods_code'] = $goods_code;
+		$inventory['slot_config'] = json_encode($inventory['slot_config']);
+		
+		
+		return $this->_memberSlotModel->_add($inventory,true);
+		
+	}
+	
+	
+	/**
+	 * 更新货柜 货品
+	 */
+	public function updateSlotGoodsInfo($data,$uid){
+		
+		if($data['goods_list']){
+			
+			$kw = array();
+			$kw_price = array();
+			
+			foreach($data['goods_list'] as $good){
+				$kw[] = str_replace('.','',str_replace(array('-','_'),'',$good['goods_code']).$good['goods_size']);
+				$kw_price[] = $good['price_min'];
+			}
+			
+			$data['kw'] = implode('|',$kw);
+			$data['kw_price'] = implode('|',$kw_price);
+			
+			$data['goods_list'] = json_encode($data['goods_list']);
+		}
+		
+		return $this->_memberInventoryModel->_add($data,true);
+	}
+	
+	
+	
+	/**
+	 * 获得 货柜货品列表
+	 */
+	public function getSlotGoodsList(){
+		
+		
+		
+		
+		
+	}
+	
 	
 	
 	/**

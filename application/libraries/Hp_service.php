@@ -44,15 +44,17 @@ class Hp_service extends Base_service {
 	/**
 	 * 最多一次差50个货号
 	 */
-	private function _processCode($code){
+	private function _processCode($code,$limit = 50){
 		//print_r($code);
-		$code = str_replace(array("\r\n","\n",'-',' ',"\t",'|'),',',trim($code));
+		
+		$code = str_replace(array('-','_','.'),'',$code);
+		$code = str_replace(array("\r\n","\n",' ',"\t",'|'),',',trim($code));
 		$code = str_replace('，',',',$code);
 		$code = trim($code,',');
 		
 		$tmpCode = explode(',',$code);
-		if(count($tmpCode) > 50){
-			return implode(',',array_slice($tmpCode,0,50));
+		if($limit && count($tmpCode) > $limit){
+			return implode(',',array_slice($tmpCode,0,$limit));
 		}
 		
 		return $code;
@@ -69,10 +71,7 @@ class Hp_service extends Base_service {
 		$this->_sphixClient->setMatchMode(SPH_MATCH_EXTENDED);
 		//$this->_sphixClient->setRankingMode(SPH_RANK_NONE);
 		//$this->_sphixClient->setMaxQueryTime(10);
-		
 	}
-	
-	
 	
 	
 	/**
@@ -136,8 +135,16 @@ class Hp_service extends Base_service {
 		$queryStr = array();
 		
 		if($avaibleCode){
-			$queryStr[] = "@goods_code ".str_replace(',','|',$avaibleCode);
+			$queryStr[] = "@search_code ".str_replace(',','|',$avaibleCode);
 		}
+		
+		//用户库存关键字匹配
+		$kwCode = $this->_processCode($condition['fields']['kw']);
+		if($kwCode){
+			$queryStr[] = "@kw ".str_replace(',','|',$kwCode);
+		}
+		
+		//print_r($queryStr);
 		
 		if($condition['fields']['goods_name']){
 			$queryStr[] = "@goods_name {$condition['fields']['goods_name']}";
@@ -168,7 +175,7 @@ class Hp_service extends Base_service {
 			$results = $this->_sphixClient->query('',$source);
 		}
 		
-		//print_r($results['matches']);
+		//print_r($results);
 		
 		if($results['matches'] && $results['status'] === 0 && $results['total_found'] > 0){
 			

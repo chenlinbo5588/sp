@@ -1041,6 +1041,10 @@ table.noext {
     height: 30px;
 }
 
+.slot_name {
+	font-size:18px;
+	padding:5px;
+}
 
 @media (min-width: 1440px) {
     .boxz {

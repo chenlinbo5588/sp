@@ -10,6 +10,7 @@ $entity = array(
 'gc_id2' => 'int',
 'gc_id3' => 'int',
 'goods_size' => 'float',
+'search_code' => 'varchar',
 'kw' => 'varchar',
 'quantity' => 'smallint',
 'sex' => 'tinyint',

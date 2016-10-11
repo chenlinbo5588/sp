@@ -4,6 +4,7 @@
         <input type="hidden" name="page" value=""/>
         <div class="goods_search">
         	 <textarea name="gc" placeholder="输入{#goods_code#}，每行一个货号或者单行按逗号分隔，一次最多可同时50个">{$smarty.post.gc}</textarea>
+        	 {*<textarea name="kw" placeholder="输入{#goods_code#}，每行一个货号或者单行按逗号分隔，一次最多可同时50个">{$smarty.post.kw}</textarea>*}
              <ul class="search_con clearfix">
                 <li>
                     <label class="ftitle">{#goods_name#}</label>
@@ -52,6 +53,7 @@
       		}
     	});
     	
+    	/*
     	$("textarea[name=gc]").bind("focusin",function(){
     		$(this).animate({ 
 			    height: 160
@@ -65,6 +67,7 @@
 			  	$(this).height(40);
 			});
     	});
+    	*/
     });
     </script>
 {include file="common/my_footer.tpl"}

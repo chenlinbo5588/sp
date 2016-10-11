@@ -103,11 +103,12 @@ $(function(){
 		modal: true,
 		resize:false,
 		 buttons: {
+			 /*
 			"上一条":function(){
 				
 			},
 			"下一条":function(){
-			},
+			},*/
 	        "关闭": function() {
 	        	$(this).dialog( "close" );
 	        }

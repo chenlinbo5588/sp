@@ -20,8 +20,6 @@ $config['hp_validation'] = array(
 	),
 	/* 库存 */
 	'inventory' => array(
-		'goods_code',
-		'goods_name',
 		'goods_color',
 		'goods_size',
 		'quantity',
@@ -31,7 +29,7 @@ $config['hp_validation'] = array(
 	'rule_list' => array(
 		'goods_code' => array(
 			'title' => '货号',
-			'rules' => 'required|min_length[1]|max_length[10]'
+			'rules' => 'required|alpha_dash|min_length[1]|max_length[10]'
 		),
 		'goods_name' => array(
 			'title' => '货名',

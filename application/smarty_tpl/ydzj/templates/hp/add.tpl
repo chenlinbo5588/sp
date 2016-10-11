@@ -33,8 +33,8 @@
 	            {foreach from=$initRow item=item}
 	                <tr>
 	                    <td>{$item + 1}</td>
-			            <td><input type="text" name="goods_code[]" value="{$postData['goods_code'][$item]|escape}" placeholder="请输入{#goods_code#}"/>{form_error('goods_code'|cat:$item)}</td>
-			            <td><input type="text" name="goods_name[]" value="{$postData['goods_name'][$item]|escape}" placeholder="请输入{#goods_name#}"/>{form_error('goods_name'|cat:$item)}</td>
+			            <td><input type="text" name="goods_code[]" value="{$postData['goods_code'][$item]|escape}" placeholder="字母数字下划线、破折号"/>{form_error('goods_code'|cat:$item)}</td>
+			            <td><input type="text" name="goods_name[]" value="{$postData['goods_name'][$item]|escape}" placeholder="最大长度10个字符"/>{form_error('goods_name'|cat:$item)}</td>
 			            <td><input type="text" class="w60" name="goods_color[]" value="{$postData['goods_color'][$item]|escape}" placeholder="如:白"/>{form_error('goods_color'|cat:$item)}</td>
 			            <td>
 			             <a class="fa fa-long-arrow-down" href="javascript:void(0)" ></a>
@@ -47,7 +47,7 @@
 			            </select>{form_error('sex'|cat:$item)}</td>
 			            <td><input type="text" class="w60" name="price_max[]" value="{$postData['price_max'][$item]|escape}" placeholder="{#price_max#}"/>{form_error('price_max'|cat:$item)}</td>
 			            <td><input type="text" name="send_zone[]" value="{$postData['send_zone'][$item]|escape}" placeholder="请输入{#send_zone#}"/>{form_error('send_zone'|cat:$item)}</td>
-			            <td><input type="text" name="send_day[]" class="datepicker" value="{$postData['send_day'][$item]|escape}" placeholder="请输入{#send_day#}"/>{form_error('send_day'|cat:$item)}</td>
+			            <td><input type="text" name="send_day[]" class="datepicker" value="{$postData['send_day'][$item]|escape}" placeholder="请选择{#send_day#}"/>{form_error('send_day'|cat:$item)}</td>
 			            <td>
 			                 <a class="incre copyrow" href="javascript:void(0);">+1码</a>&nbsp;
 			                 <a class="decre copyrow" href="javascript:void(0);">-1码</a>&nbsp;
@@ -63,8 +63,8 @@
     <script type="text/x-template" id="rowTpl">
         <tr>
             <td></td>
-            <td><input type="text" name="goods_code[]" value="" placeholder="请输入{#goods_code#}"/></td>
-            <td><input type="text" name="goods_name[]" value="" placeholder="请输入{#goods_name#}"/></td>
+            <td><input type="text" name="goods_code[]" value="" placeholder="字母数字下划线、破折号"/></td>
+            <td><input type="text" name="goods_name[]" value="" placeholder="中文或英文,最长10个字符"/></td>
             <td><input type="text" class="w60" name="goods_color[]" value="" placeholder="如:白"/></td>
             <td>
                 <a class="fa fa-long-arrow-down" href="javascript:void(0)" ></a>

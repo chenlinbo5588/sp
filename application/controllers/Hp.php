@@ -46,6 +46,8 @@ class Hp extends MyYdzj_Controller {
 			'fields' => array(
 				'goods_name' => $this->input->get_post('gn'),
 				'goods_code' => $this->input->get_post('gc'),
+				'kw' => $this->input->get_post('kw'),
+				//'kw'=> 'asdsd#42.5'
 			)
 		);
 		
@@ -207,7 +209,8 @@ class Hp extends MyYdzj_Controller {
 				
 				$this->form_validation->set_data($data);
 				if(!$this->form_validation->run()){
-					$feedback = getErrorTip($this->form_validation->error_string('',''));
+					//$feedback = getErrorTip($this->form_validation->error_string('',''));
+					$feedback = getErrorTip('数据输入格式有误,请检查录入格式');
 					break;
 				}
 				
@@ -236,7 +239,9 @@ class Hp extends MyYdzj_Controller {
 						}
 					}
 					
-					$rowData['kw'] = $rowData['goods_code'].'#'.$rowData['goods_size'];
+					//关键，创建一个完整的词组 ，防止分词  关系到精确匹配的问题
+					$rowData['search_code'] = str_replace(array('-','_'),'',$rowData['goods_code']);
+					$rowData['kw'] = str_replace('.','',$rowData['search_code'].'S'.$rowData['goods_size']);
 					
 					$insertData[] = $rowData;
 				}
