@@ -32,12 +32,12 @@
              </ul>
              {include file="hp/code_tip.tpl"}
              <div class="clearfix"><input type="button" class="master_btn fr" value="刷新库存"/></div>
-             <div class="tip">系统默认分类给了那您10个{#hp_slot#}，每个{#hp_slot#}可以添加60个不同尺寸的货品,如您需要跟多{#hp_slot#}，请在网站下发找到我们的联系方式并与我们取得沟通。</div>
+             <div class="tip">系统默认分类给了那您10个{#hp_slot#}，每个{#hp_slot#}可以添加50个不同尺寸的货品,如您需要跟多{#hp_slot#}，请在网站下发找到我们的联系方式并与我们取得沟通。</div>
 	         <ul class="slot_list clearfix">
 	         	{foreach from=$list['slot_config'] item=item}
 	         	<li class="slot_item">
-	         		<a class="title" href="{site_url('inventory/add_item')}" title="添加货品到货柜">{$item['title']|escape}({$item['cnt']}/{$item['max_cnt']})</a>
-	         		<div class="goods_code">{if $item['goods_code']}{#goods_code#}:{$item['goods_code']}{else}<input type="text" name="goods_code" value="" placeholder="请配置货号"/>{/if}</div>
+	         		<div class="title"><a href="{site_url('inventory/add_item?id='|cat:$item['id'])}" title="添加货品到货柜">{$item['title']|escape}({$item['cnt']}/{$item['max_cnt']})</a>&nbsp;<a href="javascript:void(0);" class="mtitle">修改</span></div>
+	         		<div class="goods_code">{if $item['goods_code']}{#goods_code#}:{$item['goods_code']}{else}<input type="text" name="goods_code" value="" data-id="{$item['id']}" placeholder="请配置货号"/>{/if}</div>
 	         	</li>
 	         	{/foreach}
 	         </ul>
@@ -48,21 +48,6 @@
     <script>
         $(function(){
             $( ".datepicker" ).datepicker({ })
-            
-			var successCallback = function(ids,json){
-				if(check_success(json.message)){
-					showToast('success',json.message);
-					
-					setTimeout(function(){
-					   location.reload();
-					},1000);
-				}else{
-					showToast('error',json.message);
-				}
-			}
-			
-            bindDeleteEvent();
-            {if $uri_string == 'my_req/recent'}bindOpEvent("input.updateBtn",successCallback);{/if}
         });
     </script>
     {include file="common/jquery_validation.tpl"}

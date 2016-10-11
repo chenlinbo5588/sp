@@ -37,7 +37,7 @@
 		              {/if}
 		           </td>
 		           <td>{$item['send_zone']|escape}</td>
-		           <td>{$item['send_day']|date_format:"%Y-%m-%d"}</td>
+		           <td>{if $item['send_day'] != 0}{$item['send_day']|date_format:"%Y-%m-%d"}{/if}</td>
 		           <td>{time_tran($item['gmt_modify'])}</td>
 		        <tr>
 		        {foreachelse}

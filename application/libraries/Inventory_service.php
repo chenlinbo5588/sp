@@ -2,7 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Inventory_service extends Base_service {
-	
+	private $_memberSlotModel;
 	private $_inventoryModel;
 	private $_reactiveFreezen;
 	
@@ -10,8 +10,9 @@ class Inventory_service extends Base_service {
 	public function __construct(){
 		parent::__construct();
 		
-		self::$CI->load->model(array('Inventory_Model'));
+		self::$CI->load->model(array('Inventory_Model','Member_Slot_Model'));
 		$this->_inventoryModel = self::$CI->Inventory_Model;
+		$this->_memberSlotModel = self::$CI->Member_Slot_Model;
 		
 		$this->_reactiveFreezen = config_item('inventory_freezen');
 	}
@@ -51,7 +52,7 @@ class Inventory_service extends Base_service {
 			)
 		);
 		
-		$affectRow = $this->_inventoryModel->updateByCondition(array('gmt_modify' => $time),$condition);
+		$affectRow = $this->_memberSlotModel->updateByCondition(array('gmt_modify' => $time),$condition);
 		
 		return $affectRow;
 	}
@@ -62,7 +63,7 @@ class Inventory_service extends Base_service {
 	 */
 	public function getUserCurrentInventory($uid,$field = '*'){
 		
-		$info = $this->_inventoryModel->getFirstByKey($uid,'uid');
+		$info = $this->_memberSlotModel->getFirstByKey($uid,'uid');
 		if(empty($info)){
 			$initData = array(
 				'uid' => $uid,
@@ -71,17 +72,17 @@ class Inventory_service extends Base_service {
 			
 			for($i = 1; $i <= 10; $i++){
 				$initData['slot_config'][$i] = array(
-					'id' => 1,
+					'id' => $i,
 					'title' => '货柜'.$i,
 					'cnt' => 0,
 					'goods_code' => '',
-					'max_cnt' => 60,
+					'max_cnt' => 50,
 				);
 			}
 			
 			$initData['slot_config'] = json_encode($initData['slot_config']);
 			
-			$this->_inventoryModel->_add($initData);
+			$this->_memberSlotModel->_add($initData);
 			$info = $initData;
 		}
 		

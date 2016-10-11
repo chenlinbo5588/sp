@@ -6,7 +6,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Hp extends MyYdzj_Controller {
 	
 	private $_mtime ;
-	
+	private $_maxRowPerReq;
 	
 	public function __construct(){
 		parent::__construct();
@@ -20,12 +20,15 @@ class Hp extends MyYdzj_Controller {
 			'1小时内' => '-3600 seconds',
 			'2小时内' => '-7200 seconds',
 		);
+		
+		$this->_maxRowPerReq = 20;
+		
+		$this->assign('maxRowPerReq',$this->_maxRowPerReq);
 	}
 	
 	
 	private function _prepareParam($pageParam){
 		$searchKeys['sex'] = intval($this->input->get_post('sex'));
-		
 		
 		//尺码
 		$searchKeys['s1'] = floatval($this->input->get_post('s1'));
@@ -125,35 +128,7 @@ class Hp extends MyYdzj_Controller {
 		
 		if($this->isPostRequest()){
 			for($i = 0; $i < 1; $i++){
-				
 				$lastPub = $this->hp_service->getUserLastPub($this->_loginUID);
-				
-				/*
-				$hpBatch = $this->load->get_config('split_hp_batch');
-				$flexiHash = new Flexihash();
-				
-				$flexiHash->addTargets($hpBatch);
-				$tableId = $flexiHash->lookup($this->_loginUID);
-				
-				$this->load->model('Hp_Batch_Model');
-				$this->Hp_Batch_Model->setTableId($tableId);
-				
-				$lastPub = $this->getCacheObject()->get($ctrlKey);
-				if(empty($lastPub)){
-					$lastPub = $this->Hp_Batch_Model->getList(array(
-						'where' => array(
-							'uid'=> $this->_loginUID,
-						),
-						'order' => 'batch_id DESC',
-						'limit' => 1 
-					));
-					
-					if($lastPub){
-						$this->getCacheObject()->save($ctrlKey,$lastPub,CACHE_ONE_DAY);
-					}
-				}
-				
-				*/
 				
 				/*
 				$this->form_validation->set_rules('goods_code[]','货号','required|min_length[1]|max_length[10]');
@@ -165,47 +140,12 @@ class Hp extends MyYdzj_Controller {
 				$this->form_validation->set_rules('price_max[]','最高价','required|is_numeric|greater_than[0]|less_than[100000]');
 				*/
 				
-				$validationKey = array(
-					'goods_code' => array(
-						'title' => '货号',
-						'rules' => 'required|min_length[1]|max_length[10]'
-					),
-					'goods_name' => array(
-						'title' => '货名',
-						'rules' => 'required|min_length[1]|max_length[10]'
-					),
-					'goods_color' => array(
-						'title' => '颜色',
-						'rules' => 'required|min_length[1]|max_length[10]'
-					),
-					'goods_size' => array(
-						'title' => '尺码',
-						'rules' => 'required|is_numeric|greater_than[0]|less_than[60]'
-					),
-					'quantity' => array(
-						'title' => '数量',
-						'rules' => 'required|is_natural_no_zero|less_than[100]'
-					),
-					'sex' => array(
-						'title' => '性别',
-						'rules' => 'required|in_list[1,2]'
-					),
-					'price_max' => array(
-						'title' => '最高价',
-						'rules' => 'required|is_numeric|greater_than[0]|less_than[100000]'
-					),
-					'send_zone' => array(
-						'title' => '发货地址',
-						'rules' => 'required|max_length[10]'
-					),
-					'send_day' => array(
-						'title' => '发货时间',
-						'rules' => 'required|valid_date'
-					)
-				);
+				$this->load->config('hp');
 				
-				foreach($validationKey as $key => $item){
-					$postData[$key] = $this->input->post($key,true);
+				$validationKey = config_item('hp_validation');
+				
+				foreach($validationKey['hp_req'] as $value){
+					$postData[$value] = $this->input->post($value,true);
 				}
 				
 				// 提交了多少行
@@ -214,9 +154,9 @@ class Hp extends MyYdzj_Controller {
 				if($rowCount == 0){
 					$initRow = array(0);
 				}else{
-					//最多20行,保护机制
-					if($rowCount > 20){
-						$rowCount = 20;
+					//最多行,保护机制
+					if($rowCount > $this->_maxRowPerReq){
+						$rowCount = $this->_maxRowPerReq;
 					}
 					$initRow = range(0,$rowCount - 1);
 				}
@@ -234,7 +174,23 @@ class Hp extends MyYdzj_Controller {
 				
 				//用于数据校验得数组
 				$data = array();
-				foreach($validationKey as $key => $validation){
+				
+				foreach($validationKey['hp_req'] as $key){
+					foreach($initRow as $item){
+						$dk = "{$key}{$item}";
+						$data[$dk] = $postData[$key][$item];
+						if($key == 'send_zone' || $key == 'send_day'){
+							if(!empty($data[$dk])){
+								$this->form_validation->set_rules($dk,$validationKey['rule_list'][$key]['title'],$validationKey['rule_list'][$key]['rules']);
+							}
+						}else{
+							$this->form_validation->set_rules($dk,$validationKey['rule_list'][$key]['title'],$validationKey['rule_list'][$key]['rules']);
+						}
+					}
+				}
+				
+				/*
+				foreach($validationKey['rule_list'] as $key => $validation){
 					foreach($initRow as $item){
 						$dk = "{$key}{$item}";
 						$data[$dk] = $postData[$key][$item];
@@ -247,16 +203,15 @@ class Hp extends MyYdzj_Controller {
 						}
 					}
 				}
+				*/
 				
 				$this->form_validation->set_data($data);
 				if(!$this->form_validation->run()){
-					//$feedback = $this->form_validation->error_string('','');
-					$feedback = getErrorTip('数据校验失败');
+					$feedback = getErrorTip($this->form_validation->error_string('',''));
 					break;
 				}
 				
 				$insertData = array();
-				$fieldNames = array_keys($validationKey);
 				
 				$date_key = date("Ymd",$this->_reqtime);
 				$ip = $this->input->ip_address();
@@ -269,17 +224,23 @@ class Hp extends MyYdzj_Controller {
 						'uid' => $this->_loginUID
 					);
 					
-					foreach($fieldNames as $field){
-						if($field == 'send_day' && !empty($postData[$field][$rowIndex])){
-							$rowData[$field] = strtotime($postData[$field][$rowIndex]);
+					foreach($validationKey['hp_req'] as $field){
+						if($field == 'send_day'){
+							if(empty($postData[$field][$rowIndex])){
+								$rowData[$field] = 0;
+							}else{
+								$rowData[$field] = strtotime($postData[$field][$rowIndex]);
+							}
+						}else{
+							$rowData[$field] = $postData[$field][$rowIndex];
 						}
-						
-						$rowData[$field] = $postData[$field][$rowIndex];
 					}
+					
+					$rowData['kw'] = $rowData['goods_code'].'#'.$rowData['goods_size'];
 					
 					$insertData[] = $rowData;
 				}
-				
+				///print_r($insertData);
 				$rowsInserted = $this->hp_service->addHp($insertData,$this->_reqtime,$this->_loginUID);
 				
 				if($rowsInserted){

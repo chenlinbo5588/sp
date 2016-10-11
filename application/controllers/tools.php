@@ -93,20 +93,21 @@ class Tools extends MY_Controller {
 				'goods_size' => mt_rand(5,48),
 				'quantity' => mt_rand(1,10),
 				'sex' => mt_rand(0,1),
-				'price_min' => mt_rand(0,2000) * mt_rand(0,1),
+				'price_max' => mt_rand(0,2000) * mt_rand(0,1),
 				'uid' => mt_rand(1,200),
 				'date_key' => date("Ymd",$gmtcreate),
 				'gmt_create' => $gmtcreate,
 				'gmt_modify' => $gmtcreate
 			);
 			
-			$insert['price_max'] = $insert['price_min'] * 2;
+			//$insert['price_max'] = $insert['price_min'] * 2;
 			
 			$insert['send_day'] = $gmtcreate + mt_rand(0,3) * 86400;
 			$insert['ip'] = $this->input->ip_address();
 			
 			//$insert['kw'] = $insert['goods_name'].'_'.$insert['goods_code'].'_'.$insert['goods_size'];
-			$insert['cnum'] = mt_rand(0,$insert['quantity']);
+			$insert['kw'] = $insert['goods_code'].'#'.$insert['goods_size'];
+			//$insert['cnum'] = mt_rand(0,$insert['quantity']);
 			
 			$sql = $this->db->insert_string($this->Hp_Recent_Model->getTableRealName(),$insert);
 			$this->db->query($sql);
@@ -578,6 +579,7 @@ CREATE TABLE `sp_hp_pub{i}` (
   `gc_id2` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '货品二级分类',
   `gc_id3` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '货品三级分类',
   `goods_size` float unsigned NOT NULL DEFAULT '0' COMMENT '尺码',
+  `kw` varchar(15) NOT NULL DEFAULT '' COMMENT '货号链接上尺寸 成为一个唯一查找的建',
   `quantity` smallint(5) unsigned NOT NULL DEFAULT '1' COMMENT '数量',
   `sex` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '性别',
   `price_max` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '期望价格范围',
@@ -633,12 +635,13 @@ CREATE TABLE `sp_hp_batch{i}` (
   PRIMARY KEY (`id`),
   KEY `idx_batch` (`batch_id`),
   KEY `idx_uid` (`uid`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+
 
 
 EOF;
 
-		$pm = $this->load->get_config('split_pm');
+		$pm = $this->load->get_config('split_hp_batch');
 		
 		
 		print_r($pm);
@@ -776,6 +779,51 @@ EOF;
 	}
 	
 	
+	
+	/**
+	 * 暂时不分表， 等用户起来了以后再分表， 因为库存更新频率相对较低
+	 */
+	public function create_member_inventory(){
+		
+		
+		$sql = <<< EOF
+CREATE TABLE `sp_member_inventory{1}` (
+  `goods_id` mediumint(10) unsigned NOT NULL AUTO_INCREMENT,
+  `uid` int(9) unsigned NOT NULL DEFAULT '0',
+  `slot_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `goods_name` varchar(40) NOT NULL DEFAULT '' COMMENT '名称',
+  `goods_code` varchar(10) NOT NULL DEFAULT '' COMMENT '货号',
+  `goods_color` varchar(15) NOT NULL DEFAULT '' COMMENT '颜色',
+  `gc_id1` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '货品一级分类',
+  `gc_id2` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '货品二级分类',
+  `gc_id3` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '货品三级分类',
+  `goods_size` float unsigned NOT NULL DEFAULT '0' COMMENT '尺码',
+  `kw` varchar(15) NOT NULL DEFAULT '' COMMENT '货号链接上尺寸 成为一个唯一查找的建',
+  `quantity` smallint(5) unsigned NOT NULL DEFAULT '1' COMMENT '数量',
+  `sex` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '性别',
+  `price_min` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '最低可接受价格',
+  `date_key` int(10) unsigned NOT NULL DEFAULT '0',
+  `ip` varchar(15) NOT NULL DEFAULT '',
+  `gmt_create` int(11) unsigned NOT NULL DEFAULT '0',
+  `gmt_modify` int(11) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`goods_id`),
+  KEY `idx_slot` (`uid`,`slot_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户库存表';
+
+
+EOF;
+
+		$pm = $this->load->get_config('split_member_inventory');
+		
+		
+		print_r($pm);
+		
+		foreach($pm as $p){
+			
+			$exexSQL = str_replace('{i}',$p,$sql);
+			$this->Member_Model->execSQL($exexSQL);
+		}
+	}
 	
 	
 	

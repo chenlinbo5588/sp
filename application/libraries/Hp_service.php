@@ -245,6 +245,13 @@ class Hp_service extends Base_service {
 	 */
 	public function addHp($insertData,$reqTime,$uid,$reLookup = false){
 		$realInsert = $this->_hpRecentModel->batchInsert($insertData);
+		
+		/*
+		$tableId = $this->_hpPubHash->lookup($uid);
+		$this->_hpPubModel->setTableId($tableId);
+		$userInsert = $this->_hpPubModel->batchInsert($insertData);
+		*/
+		
 		$this->addUserHpFrequentCtrl($uid,$reqTime,$realInsert,$reLookup);
 		
 		return $realInsert;

@@ -1,6 +1,4 @@
 ;$(function(){
-	var maxRow = 20;
-	
 	$( ".datepicker" ).datepicker({
 		 numberOfMonths: 2,
 		 showButtonPanel: false,

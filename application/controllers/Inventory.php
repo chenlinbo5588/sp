@@ -7,6 +7,7 @@ class Inventory extends MyYdzj_Controller {
 	
 	
 	private $_isExpired ;
+	private $_maxRowPerSlot;
 	
 	
 	public function __construct(){
@@ -21,6 +22,9 @@ class Inventory extends MyYdzj_Controller {
 			'2' => '未过期',
 		);
 		
+		$this->_maxRowPerSlot = 50;
+		
+		$this->assign('maxRowPerSlot',$this->_maxRowPerSlot);
 		$this->assign('isExpired',$this->_isExpired);
 	}
 	
@@ -177,6 +181,98 @@ class Inventory extends MyYdzj_Controller {
 		
 		return 0;
 		
+	}
+	
+	
+	public function add_item(){
+		
+		$initRow = array(0);
+		$feedback = '';
+		
+		$postData = array();
+		
+		if($this->isPostRequest()){
+			for($i = 0; $i < 1; $i++){
+				
+				$this->load->config('hp');
+				$validationKey = config_item('hp_validation');
+				
+				foreach($validationKey['inventory'] as $key){
+					$postData[$key] = $this->input->post($key,true);
+				}
+				
+				// 提交了多少行
+				$rowCount = intval(count($postData['goods_code']));
+				
+				if($rowCount == 0){
+					$initRow = array(0);
+				}else{
+					//最多20行,保护机制
+					if($rowCount > $this->_maxRowPerSlot){
+						$rowCount = $this->_maxRowPerSlot;
+					}
+					$initRow = range(0,$rowCount - 1);
+				}
+				
+				
+				if($rowCount == 0){
+					$feedback = getErrorTip('请提供货品信息');
+					break;
+				}
+				
+				$data = array();
+				//用于数据校验得数组
+				foreach($validationKey['inventory'] as $key){
+					foreach($initRow as $item){
+						$dk = "{$key}{$item}";
+						$data[$dk] = $postData[$key][$item];
+						
+						$this->form_validation->set_rules($dk,$validationKey['rule_list'][$key]['title'],$validationKey['rule_list'][$key]['rules']);
+					}
+				}
+				
+				$this->form_validation->set_data($data);
+				if(!$this->form_validation->run()){
+					$feedback = getErrorTip($this->form_validation->error_string('',''));
+					break;
+				}
+				
+				$insertData = array();
+				
+				$date_key = date("Ymd",$this->_reqtime);
+				$ip = $this->input->ip_address();
+				
+				foreach($initRow as $rowIndex){
+					$rowData = array(
+						'date_key' => $date_key,
+						'ip' => $ip,
+						'gmt_create' => $this->_reqtime,
+						'uid' => $this->_loginUID
+					);
+					
+					foreach($validationKey['inventory'] as $field){
+						$rowData[$field] = $postData[$field][$rowIndex];
+					}
+					
+					$insertData[] = $rowData;
+				}
+				
+				//$rowsInserted = $this->hp_service->addHp($insertData,$this->_reqtime,$this->_loginUID);
+				
+				if($rowsInserted){
+					$feedback = getSuccessTip('库存更新成功');
+				}else{
+					$errorInfo = $this->Hp_Recent_Model->get_error_info();
+					$feedback = getErrorTip(str_replace(array('{code}','{message}'),array($errorInfo['code'],$errorInfo['message']),"系统错误,{code}:{message}"));
+				}
+				
+			}
+		}
+		
+		$this->assign('postData',$postData);
+		$this->assign('initRow',$initRow);
+		$this->assign('feedback',$feedback);
+		$this->display();
 	}
 	
 	
