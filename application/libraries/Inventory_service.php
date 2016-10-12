@@ -76,9 +76,29 @@ class Inventory_service extends Base_service {
 			)
 		);
 		
-		return $this->_memberInventoryModel->getById($condition);
+		$slot =  $this->_memberInventoryModel->getById($condition);
+		$slot['goods_list'] = json_decode($slot['goods_list'],true);
 		
+		return $slot;
 	}
+	
+	
+	/**
+	 * 转换成 POST data 形式
+	 */
+	public function formatGoodsListAsPostStyle($slotInfo){
+		$postData = array();
+		foreach($slotInfo['goods_list'] as $goods){
+			$postData['goods_color'][] = $goods['goods_color'];
+			$postData['goods_size'][] = $goods['goods_size'];
+			$postData['quantity'][] = $goods['quantity'];
+			$postData['sex'][] = $goods['sex'];
+			$postData['price_min'][] = $goods['price_min'];
+		}
+		
+		return $postData;
+	}
+	
 	
 	
 	/**
@@ -107,6 +127,12 @@ class Inventory_service extends Base_service {
 	 */
 	public function setSlotGoodsCode($slot_id,$goods_code,$uid){
 		$slots = $this->getUserCurrentSlots($uid);
+		
+		if($slots['slot_config'][$slot_id]['cnt'] > 0){
+			//还有货品不允许更改
+			return 0;
+		}
+		
 		$slots['slot_config'][$slot_id]['goods_code'] = $goods_code;
 		return $this->updateUserSlot($slots,$uid);
 	}
@@ -134,26 +160,24 @@ class Inventory_service extends Base_service {
 			$newCount = count($data['goods_list']);
 			
 			$data['goods_list'] = json_encode($data['goods_list']);
+		}else{
+			$data['goods_list'] = json_encode(array());
+			$data['kw'] = '';
+			$data['kw_price'] = '';
 		}
 		
 		
-		
-		$row = $this->_memberInventoryModel->_add($data,true);
+		$row = $this->_memberInventoryModel->_add($data,true,'update');
 		
 		$hpCount = 0;
 		
 		if($row){
-			
 			/* 更新库存表  */
 			foreach($slots['slot_config'] as $slot_id => $slot){
 				if($slot_id == $data['slot_id']){
-					if(0 == $newCount){
-						$hpCount += $slot['cnt'];
-					}else{
-						//更新 统计信息
-						$slots['slot_config'][$slot_id]['cnt'] = $newCount;
-						$hpCount += $newCount;
-					}
+					// 为0 表示已被清空，可以不计入统计
+					$slots['slot_config'][$slot_id]['cnt'] = $newCount;
+					$hpCount += $newCount;
 					
 				}else{
 					$hpCount += $slot['cnt'];
@@ -162,8 +186,8 @@ class Inventory_service extends Base_service {
 			
 			$slots['hp_cnt'] = $hpCount;
 			$this->updateUserSlot($slots,$uid);
-			
 		}
+			
 		
 		return $row;
 	}

@@ -16,13 +16,13 @@
 	            <input type="submit" name="tijiao" class="master_btn" value="保存"/>
 	        </div>
 	        {/if}
-	        <h1 class="slot_name">{#goods_slot#}标题:{$userSlot['title']}&nbsp;{#goods_code#}:{if $userSlot['goods_code']}{if $userSlot['cnt'] == 0}<a id="config_gc" class="warning" href="javascript:void(0);">{$userSlot['goods_code']}</a>{else}{$userSlot['goods_code']}{/if}{else}<a id="config_gc" class="warning" href="javascript:void(0);">尚未配置货号，请点击配置</a>{/if}<strong>&nbsp;容量:{$userSlot['max_cnt']}</strong></h1>
+	        <h1 class="slot_name">{#goods_slot#}标题:{$userSlot['title']}&nbsp;{#goods_code#}:{if $userSlot['goods_code']}{if $userSlot['cnt'] == 0}<a id="config_gc" class="warning" href="javascript:void(0);">{$userSlot['goods_code']}</a>{else}{$userSlot['goods_code']}{/if}{else}<a id="config_gc" class="warning" href="javascript:void(0);">尚未配置货号，请点击配置</a>{/if}<strong>&nbsp;总容量:{$userSlot['max_cnt']},当前用量{$userSlot['cnt']},剩余可用{$userSlot['max_cnt'] - $userSlot['cnt']}</strong></h1>
 	        <table class="fulltable noext">
 	            <thead>
 	                <tr>
 	                    <th>序号</th>
 	                    <th><label class="required"><em>*</em>{#goods_color#}(最长5个字)</label></th>
-	                    <th><label class="required"><em>*</em>{#goods_size#}(0 - 60)</label></th>
+	                    <th><label class="required"><em>*</em>{#goods_size#}(1 - 60)</label></th>
 	                    <th><label class="required"><em>*</em>{#quantity#}(1-100)</label></th>
 	                    <th><label class="required"><em>*</em>{#sex#}</label></th>
 	                    <th><label class="required"><em>*</em>{#accept#}{#price_min#}</label></th>

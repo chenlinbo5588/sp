@@ -41,7 +41,7 @@ $config['hp_validation'] = array(
 		),
 		'goods_size' => array(
 			'title' => '尺码',
-			'rules' => 'required|is_numeric|greater_than[0]|less_than[60]'
+			'rules' => 'required|is_numeric|greater_than[1]|less_than[60]'
 		),
 		'quantity' => array(
 			'title' => '数量',

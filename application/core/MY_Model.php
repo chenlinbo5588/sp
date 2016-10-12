@@ -214,8 +214,8 @@ class MY_Model extends CI_Model {
     /**
      * 添加
      */
-    public function _add($param,$replace = false){
-    	$data = $this->_fieldsDecorator($param,'add');
+    public function _add($param,$replace = false , $action = 'add'){
+    	$data = $this->_fieldsDecorator($param,$action);
         
         if(!$replace){
         	$this->db->insert($this->getTableRealName(), $data);
