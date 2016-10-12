@@ -25,10 +25,10 @@ class Inventory_service extends Base_service {
 	
 	
 	/**
-	 * 激活控制
+	 * 激活控制 所有货柜 做一个整体 计算刷新时间
 	 */
-	public function getUserInventoryActiveKey($uid){
-		return 'inventoryactive_'.$uid;
+	public function getUserSlotsActiveKey($uid){
+		return 'slotsactive_'.$uid;
 	}
 	
 	
@@ -36,7 +36,7 @@ class Inventory_service extends Base_service {
 	 * 获得再次激活 等待时间
 	 */
 	public function getReactiveTimeRemain($reqTime ,$uid){
-		$lastPub = $this->getUserCurrentInventory($uid,'gmt_modify');
+		$lastPub = $this->getUserCurrentSlots($uid,'gmt_modify');
 		
 		if($lastPub &&  ($reqTime - $lastPub['gmt_modify']) < $this->_reactiveFreezen){
 			$freezenSec = $reqTime - $lastPub['gmt_modify'];
@@ -50,7 +50,7 @@ class Inventory_service extends Base_service {
 	/**
 	 * 重新激活用户的库存 ，这样可以参与到自动匹配
 	 */
-	public function reactiveUserInventory($time, $uid){
+	public function reactiveUserSlots($time, $uid){
 		$condition = array(
 			'where' => array(
 				'uid' => $uid
@@ -65,7 +65,7 @@ class Inventory_service extends Base_service {
 	
 	
 	/**
-	 * 
+	 * 获得某一个货柜的 详情
 	 */
 	public function getSlotDetail($slot_id,$uid,$field = '*'){
 		$condition = array(
@@ -81,31 +81,44 @@ class Inventory_service extends Base_service {
 	}
 	
 	
+	/**
+	 * 更新用户 货柜信息表
+	 */
+	public function updateUserSlot($slot,$uid){
+		$slot['slot_config'] = json_encode($slot['slot_config']);
+		
+		return $this->_memberSlotModel->update($slot,array('uid' => $uid));
+	}
+	
+	
+	
+	/**
+	 * 配置 货柜 货柜标题
+	 */
+	public function setSlotTitle($slot_id,$title,$uid){
+		$slots = $this->getUserCurrentSlots($uid);
+		$slots['slot_config'][$slot_id]['title'] = $title;
+		return $this->updateUserSlot($slots,$uid);
+	}
 	
 	
 	/**
 	 * 配置 货柜 货号信息
 	 */
 	public function setSlotGoodsCode($slot_id,$goods_code,$uid){
-		
-		$inventory = $this->getUserCurrentInventory($uid);
-		
-		$inventory['slot_config'][$slot_id]['goods_code'] = $goods_code;
-		$inventory['slot_config'] = json_encode($inventory['slot_config']);
-		
-		
-		return $this->_memberSlotModel->_add($inventory,true);
-		
+		$slots = $this->getUserCurrentSlots($uid);
+		$slots['slot_config'][$slot_id]['goods_code'] = $goods_code;
+		return $this->updateUserSlot($slots,$uid);
 	}
 	
 	
 	/**
 	 * 更新货柜 货品
 	 */
-	public function updateSlotGoodsInfo($data,$uid){
+	public function updateSlotGoodsInfo($slots,$data,$uid){
 		
+		$newCount = 0;
 		if($data['goods_list']){
-			
 			$kw = array();
 			$kw_price = array();
 			
@@ -114,13 +127,45 @@ class Inventory_service extends Base_service {
 				$kw_price[] = $good['price_min'];
 			}
 			
+			
 			$data['kw'] = implode('|',$kw);
 			$data['kw_price'] = implode('|',$kw_price);
+			
+			$newCount = count($data['goods_list']);
 			
 			$data['goods_list'] = json_encode($data['goods_list']);
 		}
 		
-		return $this->_memberInventoryModel->_add($data,true);
+		
+		
+		$row = $this->_memberInventoryModel->_add($data,true);
+		
+		$hpCount = 0;
+		
+		if($row){
+			
+			/* 更新库存表  */
+			foreach($slots['slot_config'] as $slot_id => $slot){
+				if($slot_id == $data['slot_id']){
+					if(0 == $newCount){
+						$hpCount += $slot['cnt'];
+					}else{
+						//更新 统计信息
+						$slots['slot_config'][$slot_id]['cnt'] = $newCount;
+						$hpCount += $newCount;
+					}
+					
+				}else{
+					$hpCount += $slot['cnt'];
+				}
+			}
+			
+			$slots['hp_cnt'] = $hpCount;
+			$this->updateUserSlot($slots,$uid);
+			
+		}
+		
+		return $row;
 	}
 	
 	
@@ -141,7 +186,7 @@ class Inventory_service extends Base_service {
 	/**
 	 * 获得用户库存
 	 */
-	public function getUserCurrentInventory($uid,$field = '*'){
+	public function getUserCurrentSlots($uid,$field = '*'){
 		
 		$info = $this->_memberSlotModel->getFirstByKey($uid,'uid');
 		if(empty($info)){
@@ -167,7 +212,6 @@ class Inventory_service extends Base_service {
 		}
 		
 		$info['slot_config'] = json_decode($info['slot_config'],true);
-		
 		return $info;
 		
 	}

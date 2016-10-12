@@ -1039,6 +1039,11 @@ table.noext {
 .slot_item .goods_code {
 	text-align: center;
     height: 30px;
+    color: #223990;
+}
+
+.slot_item .setgc {
+	color:#D84D4D;
 }
 
 .slot_name {

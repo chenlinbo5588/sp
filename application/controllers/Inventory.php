@@ -134,21 +134,20 @@ class Inventory extends MyYdzj_Controller {
 	 */
 	public function index()
 	{
-		///echo date("Y-m-d H:i:s",$this->_reqtime);
 		//$searchCondition = $this->_prepareParam($this->_preparePager());
+		$userSlots = $this->inventory_service->getUserCurrentSlots($this->_loginUID);
 		
-		$userInventory = $this->inventory_service->getUserCurrentInventory($this->_loginUID);
-		//print_r($list);
+		$this->assign('list',$userSlots);
 		
+		/*
 		$pager = $this->_preparePager();
-		$results = pageArrayGenerator($pager,$userInventory['slot_num']);
+		$results = pageArrayGenerator($pager,$userSlots['slot_num']);
 		
 		if($results){
-			$this->assign('list',$userInventory);
+			$this->assign('list',$userSlots);
 			$this->assign('page',$results['pager']);
 		}
-		
-		//print_r($userInventory);
+		*/
 		
 		$this->display();
 	}
@@ -181,6 +180,35 @@ class Inventory extends MyYdzj_Controller {
 	/**
 	 * 配置货柜 对应的货号信息
 	 */
+	public function slot_title(){
+		
+		
+		$slot_id = trim($this->input->post('slot_id',true));
+		$title = trim($this->input->post('title',true));
+		
+		if($this->isPostRequest()){
+			for($i = 0; $i < 1; $i++){
+				
+				$this->form_validation->set_rules('title','required|min_length[1]|max_length[10]');
+				
+				if(!$this->form_validation->run()){
+					$this->jsonOutput($this->form_validation->error_string('',''),$this->getFormHash());
+					break;
+				}
+				
+				$return = $this->inventory_service->setSlotGoodsCode($slot_id,$title,$this->_loginUID);
+				$this->jsonOutput('设置成功',$return);
+			}
+			
+		}else{
+			$this->jsonOutput('请求非法',$this->getFormHash());
+		}
+	}
+	
+	
+	/**
+	 * 配置货柜 对应的货号信息
+	 */
 	public function slot_gc(){
 		
 		
@@ -198,7 +226,7 @@ class Inventory extends MyYdzj_Controller {
 				}
 				
 				$return = $this->inventory_service->setSlotGoodsCode($slot_id,$goodsCode,$this->_loginUID);
-				$this->jsonOutput('发送成功',$return);
+				$this->jsonOutput('设置成功',$return);
 			}
 			
 		}else{
@@ -220,14 +248,10 @@ class Inventory extends MyYdzj_Controller {
 		$feedback = '';
 		
 		$postData = array();
-		$userInventory = $this->inventory_service->getUserCurrentInventory($this->_loginUID);
+		$userSlotsList = $this->inventory_service->getUserCurrentSlots($this->_loginUID);
+		$userSlot = $userSlotsList['slot_config'][$slotId];
 		
-		$userInventorySlot = $userInventory['slot_config'][$slotId];
-		
-		if($userInventorySlot['goods_code'] && $this->isPostRequest()){
-			
-			
-			
+		if($userSlot['goods_code'] && $this->isPostRequest()){
 			
 			for($i = 0; $i < 1; $i++){
 				
@@ -244,9 +268,9 @@ class Inventory extends MyYdzj_Controller {
 				if($rowCount == 0){
 					$initRow = array(0);
 				}else{
-					//最多20行,保护机制
-					if($rowCount > $userInventorySlot['max_cnt']){
-						$rowCount = $userInventorySlot['max_cnt'];
+					//保护机制
+					if($rowCount > $userSlot['max_cnt']){
+						$rowCount = $userSlot['max_cnt'];
 					}
 					$initRow = range(0,$rowCount - 1);
 				}
@@ -287,13 +311,13 @@ class Inventory extends MyYdzj_Controller {
 					'ip' => $this->input->ip_address(),
 					'gmt_modify' => $this->_reqtime,
 					'uid' => $this->_loginUID,
-					'slot_id' => $userInventorySlot['id']
+					'slot_id' => $userSlot['id']
 				);
 				
 				$goodsList = array();
 				foreach($initRow as $rowIndex){
 					$rowData = array(
-						'goods_code' => $userInventorySlot['goods_code']
+						'goods_code' => $userSlot['goods_code']
 					);
 					
 					foreach($validationKey['inventory'] as $field){
@@ -304,7 +328,7 @@ class Inventory extends MyYdzj_Controller {
 				}
 				
 				$insertData['goods_list'] = $goodsList;
-				$rowsAffected = $this->inventory_service->updateSlotGoodsInfo($insertData,$this->_loginUID);
+				$rowsAffected = $this->inventory_service->updateSlotGoodsInfo($userSlotsList,$insertData,$this->_loginUID);
 				
 				if($rowsAffected){
 					$feedback = getSuccessTip('库存更新成功');
@@ -316,7 +340,7 @@ class Inventory extends MyYdzj_Controller {
 				
 			}
 		}else{
-			if($userInventorySlot['goods_code'] == ''){
+			if($userSlot['goods_code'] == ''){
 				 $needGoodsCodeFirst = "1";
 			}else{
 				
@@ -341,13 +365,13 @@ class Inventory extends MyYdzj_Controller {
 		}
 		
 		
-		if($userInventorySlot['max_cnt']){
-			$this->assign('maxRowPerSlot',$userInventorySlot['max_cnt']);
+		if($userSlot['max_cnt']){
+			$this->assign('maxRowPerSlot',$userSlot['max_cnt']);
 		}else{
 			$this->assign('maxRowPerSlot',50);
 		}
-		
-		$this->assign('userInventorySlot',$userInventorySlot);
+		//print_r($userSlot);
+		$this->assign('userSlot',$userSlot);
 		$this->assign('slotId',$slotId);
 		$this->assign('goodsCodeFirst',$needGoodsCodeFirst);
 		$this->assign('postData',$postData);

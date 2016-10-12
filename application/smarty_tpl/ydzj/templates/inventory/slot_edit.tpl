@@ -6,19 +6,18 @@
     }
     </style>
     <div id="pubwrap">
-        <div class="tip">温馨提醒:货柜货品清空并保存后，可以对当前货柜的货号进行更改</div>
+        <div class="tip">温馨提醒:货柜货品清空并保存后，可以对当前货柜的货号进行更改。</div>
 		<form action="{site_url($uri_string)}" method="post" id="pubForm">
 		<input type="hidden" name="id" value="{$slotId}"/>
-		    {if $userInventorySlot['goods_code']}
+		    {if $userSlot['goods_code']}
 			<div>
 	            <input type="button" name="addrow" class="action" value="增加一行"/>
 	            <input type="button" name="clearall" class="action" value="清空"/>
 	            <input type="submit" name="tijiao" class="master_btn" value="保存"/>
 	        </div>
 	        {/if}
-	        <h1 class="slot_name">{#goods_slot#}标题:{$userInventorySlot['title']}&nbsp;{#goods_code#}:{if $userInventorySlot['goods_code']}{$userInventorySlot['goods_code']}{else}<a id="config_gc" class="warning" href="javascript:void(0);">尚未配置货号，请点击配置</a>{/if}<strong>&nbsp;容量:{$userInventorySlot['max_cnt']}</strong></h1>
+	        <h1 class="slot_name">{#goods_slot#}标题:{$userSlot['title']}&nbsp;{#goods_code#}:{if $userSlot['goods_code']}{if $userSlot['cnt'] == 0}<a id="config_gc" class="warning" href="javascript:void(0);">{$userSlot['goods_code']}</a>{else}{$userSlot['goods_code']}{/if}{else}<a id="config_gc" class="warning" href="javascript:void(0);">尚未配置货号，请点击配置</a>{/if}<strong>&nbsp;容量:{$userSlot['max_cnt']}</strong></h1>
 	        <table class="fulltable noext">
-	           
 	            <thead>
 	                <tr>
 	                    <th>序号</th>
@@ -56,17 +55,7 @@
 	        </table>
 	    </form>
     </div>
-    {include file="common/jquery_validation.tpl"}
-    <div id="goodsCodeDlg" title="{#goods_slot#}信息配置" style="display:none;">
-        <div class="loading_bg" style="display:none;">发送中...</div>
-        <form id="slotForm" action="{site_url('inventory/slot_gc')}" method="post">
-            <input type="hidden" name="slot_id" value="{$slotId}"/>
-	        <table class="fulltable noborder">
-	            <tr><td><input type="text" class="at_txt" name="goods_code" value="" placeholder="请输入{#goods_code#}"/></td></tr>
-	            <tr><td><input type="submit" class="master_btn at_txt" name="tijiao" value="保存"/></td></tr>
-	        </table>
-        </form>
-    </div>
+    {include file="./dlg_code.tpl"}
     <script type="text/x-template" id="rowTpl">
         <tr>
         	<td></td>
@@ -92,6 +81,7 @@
     <script>
     	var maxRow = {$maxRowPerSlot};
     	var goodsCodeFirst = "{$goodsCodeFirst}";
+    	
     </script>
     <script type="text/javascript" src="{resource_url('js/jquery-ui/i18n/zh-CN.js')}"></script>
     <script type="text/javascript" src="{resource_url('js/my/hp.js')}"></script>

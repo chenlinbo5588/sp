@@ -38,8 +38,8 @@
 	         <ul class="slot_list clearfix">
 	         	{foreach from=$list['slot_config'] item=item}
 	         	<li class="slot_item">
-	         		<div class="title"><a href="{site_url('inventory/slot_edit?id='|cat:$item['id'])}" title="添加货品到货柜">{$item['title']|escape}({$item['cnt']}/{$item['max_cnt']})</a>&nbsp;<a href="javascript:void(0);" class="mtitle">修改</a></div>
-	         		<div class="goods_code">{if $item['goods_code']}{#goods_code#}:{$item['goods_code']}{else}<input type="text" name="goods_code" value="" data-id="{$item['id']}" placeholder="请配置货号"/>{/if}</div>
+	         		<div class="title"><a href="{site_url('inventory/slot_edit?id='|cat:$item['id'])}" title="添加货品到货柜"><span class="hightlight">{$item['title']|escape}({$item['cnt']}/{$item['max_cnt']})</span></a>&nbsp;<a href="javascript:void(0);" data-title="{$item['title']|escape}"  class="mtitle">修改</a></div>
+	         		<div class="goods_code">{if $item['goods_code']}{#goods_code#}:{$item['goods_code']}{else}<a class="setgc" href="javascript:void(0);" data-title="{$item['title']|escape}" data-id="{$item['id']}">货号设置</a>{/if}</div>
 	         	</li>
 	         	{/foreach}
 	         </ul>
@@ -47,8 +47,11 @@
     </form>
     <script type="text/javascript" src="{resource_url('js/jquery-ui/i18n/zh-CN.js')}"></script>
     <script>
+    	var setgcUrl = "{site_url('inventory/slot_gc')}";
         $(function(){
-            $( ".datepicker" ).datepicker({ });
+            //$( ".datepicker" ).datepicker({ });
         });
     </script>
+    {include file="./dlg_code.tpl"}
+    <script type="text/javascript" src="{resource_url('js/my/slot_list.js')}"></script>
 {include file="common/my_footer.tpl"}
