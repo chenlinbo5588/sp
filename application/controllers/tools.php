@@ -17,6 +17,91 @@ class Tools extends MY_Controller {
 	}
 	
 	
+	public function addImage(){
+		
+		set_time_limit(0);
+		
+		$imageFile = file(ROOTPATH.'/pic.txt');
+		$curl = new Http_Client;
+		//var_dump($curl);
+		
+		foreach($imageFile as $row){
+			$row = str_replace(array("\r\n","\n","\r"),'',$row);
+			$fields = explode(',',$row);
+			
+			$file = ROOTPATH.'/pic_cut/'.$fields[0];
+			
+			//echo "curl -X POST --form file=@{$file} -d '{\"f\" : \"json\"}' http://192.168.5.100/arcgis/rest/services/duogui/zh/FeatureServer/1/$fields[1]/addAttachment\n";
+			
+			
+			$param = array(
+	            'url' => "http://192.168.5.100/arcgis/rest/services/duogui/zh/FeatureServer/1/{$fields[1]}/addAttachment",
+	            'timeout' => 60,
+	            'method' => 'post',
+	            'data' => array(
+	            	'f' => 'json',
+	            	'attachment' => '@'.$file
+	            )
+	        );
+        	
+			$result = $curl->request($param);
+			var_dump($result);
+			
+			$jsonResp = json_decode($result,true);
+			
+			if($jsonResp['addAttachmentResult']['success'] == 'success'){
+				echo "{$fields[1]} {$file} 附件上传  成功  \n";
+			}else{
+				echo "{$fields[1]} {$file} 附件上传  失败 \n ";
+			}
+		}
+	}
+	
+	
+	public function image_resize(){
+		
+		set_time_limit(0);
+		$config['image_library'] = 'gd2';
+		$imageFile = file(ROOTPATH.'/pic.txt');
+		
+		$this->load->library('image_lib');
+		
+		foreach($imageFile as $row){
+			
+			$fields = explode(',',$row);
+			$config['source_image'] = ROOTPATH.'/pic/'.$fields[0];
+			$size = getimagesize($config['source_image']);
+			
+			$config['new_image'] = ROOTPATH.'/pic_cut/'.$fields[0];
+			$config['maintain_ratio']         = true;
+			$config['width']         = 3000;
+			$config['height']       = 2000;
+			$config['quality']      = 95;
+			
+			
+			if(file_exists($config['source_image'])){
+				continue;
+			}
+			
+			$this->image_lib->initialize($config);
+			$this->image_lib->resize();
+			
+			//break;
+		}
+		
+		echo 'OK';
+		//print_r($imageFile);
+		/*
+		$config['create_thumb'] = TRUE;
+		$config['maintain_ratio'] = TRUE;
+		$config['width']         = 75;
+		$config['height']       = 50;
+		
+		$this->image_lib->resize();
+		*/
+		
+	}
+	
 	
 	public function batch_insert(){
 		
