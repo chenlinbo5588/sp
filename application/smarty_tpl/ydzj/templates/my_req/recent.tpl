@@ -43,6 +43,10 @@
                     <input type="text" name="pr1" class="stxt" value="{if $smarty.post.pr1}{$smarty.post.pr1}{/if}" placeholder="下限"/>
                     <input type="text" name="pr2" class="stxt" value="{if $smarty.post.pr2}{$smarty.post.pr2}{/if}" placeholder="上限"/>
                 </li>
+                <li>
+                    <label class="ftitle">{#match_mode#}</label>
+                    <label><input type="checkbox" name="match_inventory" value="yes" checked/>自动匹配库存</label>
+                </li>
                 {/if}
                 <li>
                     <input class="master_btn" type="submit" name="search" value="查询"/>
@@ -120,6 +124,8 @@
 			
             bindDeleteEvent();
             {if $uri_string == 'my_req/recent'}bindOpEvent("input.updateBtn",successCallback);{/if}
+            
+            $( ".datepicker" ).datepicker({ });
         });
     </script>
     {include file="common/jquery_validation.tpl"}

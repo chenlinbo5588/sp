@@ -9,14 +9,17 @@
 	         <ul class="slot_list clearfix">
 	         	{foreach from=$list['slot_config'] item=item}
 	         	<li class="slot_item" data-id="{$item['id']}">
-	         		<div class="title"><a href="{site_url('inventory/slot_edit?id='|cat:$item['id'])}" title="添加货品到货柜"><span class="hightlight">{$item['title']|escape}({$item['cnt']}/{$item['max_cnt']})</span></a>&nbsp;<a href="javascript:void(0);" data-title="{$item['title']|escape}" class="mtitle">改名</a></div>
+	         		<div class="title"><a href="{site_url('inventory/slot_edit?id='|cat:$item['id'])}" title="添加货品到货柜"><strong>{$item['title']|escape}</strong><span class="hightlight">({$item['cnt']}/{$item['max_cnt']})</span></a>&nbsp;<a href="javascript:void(0);" data-title="{$item['title']|escape}" class="mtitle">改名</a></div>
 	         		<div class="goods_code">{if $item['goods_code']}{#goods_code#}:{$item['goods_code']}{else}<a class="setgc" href="javascript:void(0);" data-title="{$item['title']|escape}">设置货号</a>{/if}</div>
-	         		<a class="onoff" href="javascript:void(0);">停用</a>
 	         	</li>
 	         	{/foreach}
 	         </ul>
 	    </div>
     </form>
+    <div id="confirmOf">
+        <div class="loading_bg" style="display:none;">发送中...</div>
+        <div class="confirmtitle"></div>
+    </div>
     <script type="text/javascript" src="{resource_url('js/jquery-ui/i18n/zh-CN.js')}"></script>
     <script>
     	var setgcUrl = "{site_url('inventory/slot_gc')}";

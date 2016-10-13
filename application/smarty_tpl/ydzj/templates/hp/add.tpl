@@ -19,7 +19,7 @@
 	                    <th>序号</th>
 	                    <th><label class="required"><em>*</em>{#goods_code#}</label></th>
 	                    <th><label class="required"><em>*</em>{#goods_name#}</label></th>
-	                    <th><label class="required"><em>*</em>{#goods_color#}(最长5个字)</label></th>
+	                    <th><label class="required"><em>*</em>{#goods_color#}</label></th>
 	                    <th><label class="required"><em>*</em>{#goods_size#}(0 - 60)</label></th>
 	                    <th><label class="required"><em>*</em>{#quantity#}(1-100)</label></th>
 	                    <th><label class="required"><em>*</em>{#sex#}</label></th>
@@ -34,7 +34,7 @@
 	                <tr>
 	                    <td>{$item + 1}</td>
 			            <td><input type="text" name="goods_code[]" value="{$postData['goods_code'][$item]|escape}" placeholder="字母数字下划线、破折号"/>{form_error('goods_code'|cat:$item)}</td>
-			            <td><input type="text" name="goods_name[]" value="{$postData['goods_name'][$item]|escape}" placeholder="最大长度10个字符"/>{form_error('goods_name'|cat:$item)}</td>
+			            <td><input type="text" name="goods_name[]" value="{$postData['goods_name'][$item]|escape}" placeholder="中文或英文,最长10个字符"/>{form_error('goods_name'|cat:$item)}</td>
 			            <td><input type="text" class="w60" name="goods_color[]" value="{$postData['goods_color'][$item]|escape}" placeholder="如:白"/>{form_error('goods_color'|cat:$item)}</td>
 			            <td>
 			             <a class="fa fa-long-arrow-down" href="javascript:void(0)" ></a>

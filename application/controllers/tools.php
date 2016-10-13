@@ -642,11 +642,38 @@ EOT;
 			
 		}
 		
-		
-		
 	}
 	
 	
+	public function create_member_color(){
+		
+		$sql = <<< EOF
+CREATE TABLE `sp_member_color{i}` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `uid` int(10) unsigned NOT NULL DEFAULT '0',
+  `color_name` varchar(10) NOT NULL DEFAULT '',
+  `gmt_create` int(10) unsigned NOT NULL DEFAULT '0',
+  `gmt_modify` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `idx_ucolor` (`uid`,`color_name`),
+  KEY `idx_ctime` (`gmt_create`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+EOF;
+
+		$pm = $this->load->get_config('split_color');
+		
+		
+		print_r($pm);
+		
+		foreach($pm as $p){
+			
+			$exexSQL = str_replace('{i}',$p,$sql);
+			$this->Member_Model->execSQL($exexSQL);
+		}
+		
+		
+	}
 	
 	
 	
@@ -868,31 +895,23 @@ EOF;
 	/**
 	 * 暂时不分表， 等用户起来了以后再分表， 因为库存更新频率相对较低
 	 */
+	 
+	/*
 	public function create_member_inventory(){
 		
 		
 		$sql = <<< EOF
-CREATE TABLE `sp_member_inventory{1}` (
-  `goods_id` mediumint(10) unsigned NOT NULL AUTO_INCREMENT,
+CREATE TABLE `sp_member_inventory{i}` (
   `uid` int(9) unsigned NOT NULL DEFAULT '0',
-  `slot_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `goods_name` varchar(40) NOT NULL DEFAULT '' COMMENT '名称',
-  `goods_code` varchar(10) NOT NULL DEFAULT '' COMMENT '货号',
-  `goods_color` varchar(15) NOT NULL DEFAULT '' COMMENT '颜色',
-  `gc_id1` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '货品一级分类',
-  `gc_id2` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '货品二级分类',
-  `gc_id3` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '货品三级分类',
-  `goods_size` float unsigned NOT NULL DEFAULT '0' COMMENT '尺码',
-  `kw` varchar(15) NOT NULL DEFAULT '' COMMENT '货号链接上尺寸 成为一个唯一查找的建',
-  `quantity` smallint(5) unsigned NOT NULL DEFAULT '1' COMMENT '数量',
-  `sex` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '性别',
-  `price_min` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '最低可接受价格',
-  `date_key` int(10) unsigned NOT NULL DEFAULT '0',
+  `slot_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '货柜号',
+  `goods_list` text NOT NULL COMMENT '名称',
+  `enable` tinyint(3) unsigned NOT NULL DEFAULT '1' COMMENT '库存可用性 0=不可用',
+  `kw` text NOT NULL COMMENT '关键字列表',
+  `kw_price` text NOT NULL COMMENT '关键字对应的最低价列表 一一对应',
   `ip` varchar(15) NOT NULL DEFAULT '',
-  `gmt_create` int(11) unsigned NOT NULL DEFAULT '0',
   `gmt_modify` int(11) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`goods_id`),
-  KEY `idx_slot` (`uid`,`slot_id`)
+  UNIQUE KEY `idx_slot` (`uid`,`slot_id`),
+  KEY `idx_enable` (`enable`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户库存表';
 
 
@@ -910,7 +929,7 @@ EOF;
 		}
 	}
 	
-	
+	*/
 	
 	
 	public function test_hash(){
@@ -1062,6 +1081,10 @@ EOF;
         	}
         	
         	if(preg_match('/^sp_hp_batch\d+$/i',$table,$match)){
+        		continue;
+        	}
+        	
+        	if(preg_match('/^sp_member_color\d+$/i',$table,$match)){
         		continue;
         	}
         	

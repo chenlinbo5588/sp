@@ -276,7 +276,7 @@ class Inventory extends MyYdzj_Controller {
 				
 				$slotInfo = $this->inventory_service->getSlotDetail($slotId,$this->_loginUID,'gmt_modify');
 				$remainSeconds = $this->_reqtime - $slotInfo['gmt_modify'];
-				if($remainSeconds < 10){
+				if($remainSeconds < 15 ){
 					$feedback = getErrorTip('货柜货品更新冻结时间内还剩'.(15 - $remainSeconds).'秒,请稍候尝试');
 					break;
 				}
@@ -384,48 +384,6 @@ class Inventory extends MyYdzj_Controller {
 		$this->display();
 	}
 	
-	
-	
-	/**
-	 * 最近发布求货删除
-	 */
-	public function recent_del(){
-		
-		$id = $this->input->post('id');
-		if($id && $this->isPostRequest()){
-			
-			for($i = 0 ; $i < 1; $i++){
-				$seconds = $this->_delFreqControl();
-				
-				if($seconds){
-					$this->jsonOutput('抱歉,当前操作冻结解除还剩'.$seconds.'秒');
-					break;
-				}
-				
-				if(!is_array($id)){
-					$id = (array)$id;
-				}
-				
-				$condition = array(
-					'where' => array(
-						'uid' => $this->_loginUID
-					),
-					'where_in' => array(
-						array('key' => 'goods_id','value' => $id)
-					)
-				);
-				
-				$rows = $this->hp_service->deleteUserRecentHp($condition);
-				$this->input->set_cookie('dt',$this->_reqtime,CACHE_ONE_DAY);
-				
-				$this->jsonOutput('删除成功',array('id' => $id));
-			}
-			
-		}else{
-			$this->jsonOutput('请求非法',$this->getFormHash());
-		}
-		
-	}
 	
 	
 	/**

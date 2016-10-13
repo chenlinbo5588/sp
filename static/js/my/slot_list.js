@@ -2,7 +2,7 @@
  * 货柜列表
  */
 ;$(function(){
-	var goodsCodeDlg,titleDlg;
+	var goodsCodeDlg,titleDlg,confirmDlg;
 	var insending = false;
 	
 	var handler = function(dlg,formid){
@@ -90,10 +90,20 @@
         modal: true,
         open:function(){
         	titleValidation.resetForm();
-           $(this).find(".loading_bg").hide();
+        	$(this).find(".loading_bg").hide();
         }
     });
 	
+	/*
+	confirmDlg = $("#confirmOf" ).dialog({
+        autoOpen: false,
+        width: 280,
+        modal: true,
+        open:function(){
+        	$(this).find(".loading_bg").hide();
+        }
+    });
+	*/
 	
 	$(".setgc").bind("click",function(){
 		var id = $(this).closest(".slot_item").attr("data-id");
@@ -107,7 +117,23 @@
 		var id = $(this).closest(".slot_item").attr("data-id");
 		var title = $(this).attr("data-title");
 		$("input[name=slot_id]").val(id);
+		$("#slotTitleForm input[name=title]").val(title);
 		
 		titleDlg.dialog('open');
 	});
+	
+	/*
+	$(".slot_item .onoff").bind("click",function(){
+		var title = $(this).attr("data-title");
+		var dlgTitle = "";
+		if(title == "启用"){
+			dlgTitle = "停用";
+		}else if(title == "停用"){
+			dlgTitle = "启用";
+		}
+		
+		
+		confirmDlg.dialog("option","title",dlgTitle).dialog('open');
+	});
+	*/
 })

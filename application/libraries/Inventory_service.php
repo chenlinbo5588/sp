@@ -7,25 +7,31 @@ class Inventory_service extends Base_service {
 	private $_reactiveFreezen;
 	
 	private $_memberSlotModel;
-	private $_inventoryModel;
 	private $_memberInventoryModel;
 	
+	private $_memberColorModel;
+	private $_memberColorHash;
 	
 	
 	public function __construct(){
 		parent::__construct();
 		
-		self::$CI->load->model(array('Inventory_Model','Member_Slot_Model','Member_Inventory_Model'));
-		$this->_inventoryModel = self::$CI->Inventory_Model;
+		self::$CI->load->model(array('Member_Slot_Model','Member_Inventory_Model','Member_Color_Model'));
 		$this->_memberSlotModel = self::$CI->Member_Slot_Model;
 		$this->_memberInventoryModel = self::$CI->Member_Inventory_Model;
+		$this->_memberColorModel = self::$CI->Member_Color_Model;
+		
+		
+		$this->_memberColorHash = new Flexihash();
+		$colorSplit = self::$CI->load->get_config('split_color');
+		$this->_memberColorHash->addTargets($colorSplit);
 		
 		$this->_reactiveFreezen = config_item('inventory_freezen');
 	}
 	
 	
 	/**
-	 * 激活控制 所有货柜 做一个整体 计算刷新时间
+	 * 激活控制 所有货柜 做为一个整体 计算刷新时间
 	 */
 	public function getUserSlotsActiveKey($uid){
 		return 'slotsactive_'.$uid;
@@ -193,20 +199,6 @@ class Inventory_service extends Base_service {
 	}
 	
 	
-	
-	/**
-	 * 获得 货柜货品列表
-	 */
-	public function getSlotGoodsList(){
-		
-		
-		
-		
-		
-	}
-	
-	
-	
 	/**
 	 * 获得用户库存
 	 */
@@ -239,4 +231,94 @@ class Inventory_service extends Base_service {
 		return $info;
 		
 	}
+	
+	
+	/*  --------------------- 以下颜色管理 --------------------------- */
+	
+	
+	
+	
+	
+	public function addColor($colorName,$uid){
+		$this->setColorTableByUid($uid);
+		
+		return $this->_memberColorModel->_add(array(
+			'color_name' => $colorName,
+			'uid' => $uid
+		));
+	}
+	
+	
+	
+	/**
+	 * 设置 member color tableid
+	 */
+	public function setColorTableByUid($uid){
+		$tableId = $this->_memberColorHash->lookup($uid);
+		$this->_memberColorModel->setTableId($tableId);
+	}
+	
+	/**
+	 * 获得颜色列表
+	 */
+	public function getColorList($condition,$uid,$lookup = true){
+		
+		if($lookup){
+			$this->setColorTableByUid($uid);
+		}
+		
+		return $this->_memberColorModel->getList($condition);
+		
+	}
+	
+	
+	/**
+	 * 删除用户颜色
+	 */
+	public function deleteUserColor($ids, $uid){
+		if(!is_array($ids)){
+			$ids = (array)$ids;
+		}
+		
+		if(empty($ids)){
+			return false;
+		}
+		
+		$condition = array(
+			'where' => array(
+				'uid' => $uid
+			),
+			'where_in' => array(
+				array('key' => 'id' , 'value' => $ids)
+			)
+		);
+		
+		$this->setColorTableByUid($uid);
+		
+		return $this->_memberColorModel->deleteByCondition($condition);
+	}
+	
+	
+	/**
+	 * 检查是否存在
+	 */
+	public function isColorExists($colorName,$uid){
+		
+		$this->setColorTableByUid($uid);
+		
+		$info = $this->_memberColorModel->getById(array(
+			'select' => 'uid',
+			'where' => array(
+				'color_name' => $colorName
+			)
+		));
+		
+		if($info){
+			return true;
+		}else{
+			
+			return false;
+		}
+	}
+	
 }

@@ -8,10 +8,6 @@ class My_pm extends MyYdzj_Controller {
 		parent::__construct();
 	}
 	
-	public function sendbox(){
-		
-		
-	}
 	
 	public function index()
 	{

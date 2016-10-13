@@ -1,9 +1,9 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Color_Model extends MY_Model {
+class Member_Color_Model extends MY_Model {
     
-    public $_tableName = 'color';
+    public $_tableName = 'member_color';
     public static $_tableMeta = null;
 
 
