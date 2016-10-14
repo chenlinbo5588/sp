@@ -479,7 +479,7 @@ function showToast(icon,message){
 	    text: message,
 	    icon: icon,
 	    loader:false
-	})
+	});
 }
 
 /*
@@ -505,13 +505,14 @@ function doAjaxPost(postdata,url,datatype,successFn,errorFn){
  * @param successFn
  * @param errorFn
  */
-function ui_confirm(ids,url,title,dataType,successFn,errorFn){
+function ui_confirm(trigger,ids,url,title,dataType,successFn,errorFn){
 	var lock = false;
 	
 	commonDialog = $("#showDlg" ).dialog({
 		title: "提示",
 		autoOpen: false,
-		width: 400,
+		width: 280,
+		position: trigger ? { my: "center", at: "center", of: trigger } : null,
 		modal: true,
 	      buttons: {
 	        "确定": function(){
@@ -576,6 +577,8 @@ function bindOpEvent(selector,customSuccessFn,customErrorFn){
 	}
 	
 	$(selector).bind("click",function(){
+		var triggerObj = $(this);
+		
   		var ids = [];
   		var url = $(this).attr("data-url");
   		var title = $(this).attr('data-title');
@@ -589,7 +592,7 @@ function bindOpEvent(selector,customSuccessFn,customErrorFn){
   		if(ids.length == 0){
   			showToast('error','请选勾选.');
   		}else{
-  			ui_confirm(ids,url,'你确定要' + title + '吗？','json', customSuccessFn ? customSuccessFn : successCallback,customErrorFn ? customErrorFn : errorCallback );
+  			ui_confirm(triggerObj,ids,url,'你确定要' + title + '吗？','json', customSuccessFn ? customSuccessFn : successCallback,customErrorFn ? customErrorFn : errorCallback );
   		}
   	});
 	
@@ -619,11 +622,15 @@ function bindDeleteEvent(customSuccessFn,customErrorFn){
 	}
 	
 	$("a.delete").bind("click",function(){
-		ui_confirm([$(this).attr("data-id")],$(this).attr("data-url"),'你确定要删除吗？','json',customSuccessFn ? customSuccessFn : successCallback,customErrorFn ? customErrorFn: errorCallback);
+		var triggerObj = $(this);
+		
+		ui_confirm(triggerObj,[$(this).attr("data-id")],$(this).attr("data-url"),'你确定要删除吗？','json',customSuccessFn ? customSuccessFn : successCallback,customErrorFn ? customErrorFn: errorCallback);
   	});
   	
   	$(".deleteBtn").bind("click",function(){
   		var ids = [];
+  		var triggerObj = $(this);
+  		
   		var url = $(this).attr("data-url");
   		var title = $(this).attr('data-title');
   		
@@ -636,7 +643,7 @@ function bindDeleteEvent(customSuccessFn,customErrorFn){
   		if(ids.length == 0){
   			showToast('error','请选勾选.');
   		}else{
-  			ui_confirm(ids,url,'你确定要删除吗？','json',customSuccessFn ? customSuccessFn : successCallback,customErrorFn ? customErrorFn: errorCallback);
+  			ui_confirm(triggerObj,ids,url,'你确定要删除吗？','json',customSuccessFn ? customSuccessFn : successCallback,customErrorFn ? customErrorFn: errorCallback);
   		}
   	});
 }

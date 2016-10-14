@@ -54,6 +54,8 @@ function sbc_to_dbc($str)
 }
 
 
+
+
 /**
  * 输入一组,
  */
@@ -65,13 +67,18 @@ function orderValue($searchKeys,$maxSize = 50){
 		}
 	}else if(!empty($searchKeys[0]) && empty($searchKeys[1])){
 		$searchKeys[1] = $maxSize;
+	}else if(!empty($searchKeys[0]) && !empty($searchKeys[1])){
+		if($searchKeys[0] > $searchKeys[1]){
+			$tmp = $searchKeys[0];
+			$searchKeys[0] = $searchKeys[1];
+			$searchKeys[1] = $tmp;
+		}
 	}
 	
-	if($searchKeys[0] > $searchKeys[1]){
-		$tmp = $searchKeys[0];
-		$searchKeys[0] = $searchKeys[1];
-		$searchKeys[1] = $tmp;
+	if($searchKeys[1] > $maxSize){
+		$searchKeys[1] = $maxSize;
 	}
+	
 	
 	return $searchKeys;
 }

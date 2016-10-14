@@ -14,6 +14,9 @@ class My_color extends MyYdzj_Controller {
 	public function index()
 	{
 		$currentPage = $this->input->get_post('page') ? $this->input->get_post('page') : 1;
+		$colorName = trim($this->input->get_post('color_name',true));
+		
+		
 		$pageParam = array(
 			'page_size' => config_item('page_size'),
 			'current_page' => intval($currentPage),
@@ -29,6 +32,11 @@ class My_color extends MyYdzj_Controller {
 			'pager' => $pageParam
 		);
 		
+		
+		if($colorName){
+			$condition['where']['color_name'] = $colorName;
+		}
+		
 		$list = $this->inventory_service->getColorList($condition,$this->_loginUID);
 		$this->assign('page',$list['pager']);
 		$this->assign('list',$list['data']);
@@ -37,33 +45,43 @@ class My_color extends MyYdzj_Controller {
 	
 	
 	
-	public function colorcheck($colorname){
-		$flag = $this->inventory_service->isColorExists($colorname,$this->_loginUID);
-		
-		if($flag == true){
-			$this->form_validation->set_message('colorcheck', "{$colorname}已设置");
+	public function colorcheck($colorname,$id = ''){
+		$info = $this->inventory_service->getColorByName($colorname, $this->_loginUID);
+		if($info){
+			
+			if($id && $info['id'] == $id){
+				
+				//如果是自己就通过
+				return true;
+			}
+			
+			
+			$this->form_validation->set_message('colorcheck', "名称{$colorname}已经存在");
 			return false;
 		}else{
 			return true;
 		}
-		
 	}
 	
 	/**
 	 * 添加颜色
 	 */
 	public function add(){
-		$username = trim($this->input->post('color_name'));
+		$name = trim($this->input->post('color_name'));
 		
 		if($this->isPostRequest()){
 			for($i = 0; $i < 1; $i++){
-				$this->form_validation->set_rules('color_name','required|min_length[1]|max_length[30]|callback_colorcheck');
+				
+				$this->form_validation->set_error_delimiters('<label>','</label>');
+				
+				
+				$this->form_validation->set_rules('color_name','颜色名称', 'required|min_length[1]|max_length[30]|callback_colorcheck');
 				if(!$this->form_validation->run()){
 					$this->jsonOutput($this->form_validation->error_string('',''),$this->getFormHash());
 					break;
 				}
-				
-				$this->inventory_service->addColor($username,$this->_loginUID);
+				//print_r($_POST);
+				$this->inventory_service->addColor($name,$this->_loginUID);
 				
 				$this->jsonOutput('添加成功');
 			}
@@ -72,23 +90,31 @@ class My_color extends MyYdzj_Controller {
 		}
 	}
 	
-	
-	
 	/**
-	 * 检查颜色名称是否存在
+	 * 添加颜色
 	 */
-	public function colorname_check(){
+	public function edit(){
+		$name = trim($this->input->post('color_name'));
+		$id = $this->input->post('id');
 		
-		$colorname = trim($this->input->get_post('color_name'));
-		$flag = $this->inventory_service->isColorExists($colorname,$this->_loginUID);
-		
-		if($flag){
-			echo 'false';
+		if($this->isPostRequest()){
+			for($i = 0; $i < 1; $i++){
+				$this->form_validation->set_error_delimiters('<label>','</label>');
+				$this->form_validation->set_rules('color_name','颜色名称','required|min_length[1]|max_length[30]|callback_colorcheck['.$id.']');
+				if(!$this->form_validation->run()){
+					$this->jsonOutput($this->form_validation->error_string('',''),$this->getFormHash());
+					break;
+				}
+				
+				$this->inventory_service->editColor($name,$id,$this->_loginUID);
+				
+				$this->jsonOutput('编辑成功');
+			}
 		}else{
-			echo 'true';
+			$this->jsonOutput('请求非法',$this->getFormHash());
 		}
-		
 	}
+	
 	
 	/**
 	 * 删除 颜色

@@ -5,8 +5,8 @@
 	var goodsCodeDlg,titleDlg,confirmDlg;
 	var insending = false;
 	
-	var handler = function(dlg,formid){
-		if(!validation.valid()){
+	var handler = function(validationObj,dlg,formid){
+		if(!validationObj.valid()){
 			return false;
 		}
 		
@@ -49,7 +49,7 @@
 	
 	var validation = $("#slotForm").validate({
 		submitHandler:function(){
-			handler(goodsCodeDlg,'#slotForm');
+			handler(validation, goodsCodeDlg,'#slotForm');
 		},
 		rules: {
 			goods_code : {
@@ -62,7 +62,7 @@
 	
 	var titleValidation = $("#slotTitleForm").validate({
 		submitHandler:function(){
-			handler(titleDlg,'#slotTitleForm');
+			handler(titleValidation,titleDlg,'#slotTitleForm');
 		},
 		rules: {
 			title : {
@@ -110,7 +110,7 @@
 		var title = $(this).attr("data-title");
 		$("input[name=slot_id]").val(id);
 		
-		goodsCodeDlg.dialog('option','title',title).dialog('open');
+		goodsCodeDlg.dialog('option',{'title':title,'position': { 'my' : 'center','at':'center','of' : $(this) }} ).dialog('open');
 	});
 	
 	$(".mtitle").bind("click",function(){
@@ -119,7 +119,7 @@
 		$("input[name=slot_id]").val(id);
 		$("#slotTitleForm input[name=title]").val(title);
 		
-		titleDlg.dialog('open');
+		titleDlg.dialog('option',{'title':title,'position': { 'my' : 'center','at':'center','of' : $(this) }} ).dialog('open');
 	});
 	
 	/*
@@ -131,7 +131,6 @@
 		}else if(title == "停用"){
 			dlgTitle = "启用";
 		}
-		
 		
 		confirmDlg.dialog("option","title",dlgTitle).dialog('open');
 	});

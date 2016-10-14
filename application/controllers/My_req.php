@@ -94,11 +94,9 @@ class My_req extends MyYdzj_Controller {
 		}
 		
 		if($searchKeys['sdate'] || $searchKeys['edate']){
-			$dateValue = orderValue(array($searchKeys['sdate'],$searchKeys['sdate']),$this->_reqtime);
+			$dateValue = orderValue(array($searchKeys['sdate'],$searchKeys['edate']),$this->_reqtime);
 			$searchCondition['fields']['gmt_create'] = $dateValue;
-			
 		}
-		
 		
 		if($searchKeys['isexpired']){
 			if($searchKeys['isexpired'] == 1){
@@ -138,8 +136,6 @@ class My_req extends MyYdzj_Controller {
 	{
 		///echo date("Y-m-d H:i:s",$this->_reqtime);
 		$searchCondition = $this->_prepareParam($this->_preparePager());
-		
-		
 		$this->hp_service->setServer(0);
 		
 		$results = $this->hp_service->query($searchCondition);

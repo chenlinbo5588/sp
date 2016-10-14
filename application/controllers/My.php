@@ -59,12 +59,10 @@ class My extends MyYdzj_Controller {
 			));
 			
 			$this->jsonOutput('上传成功',array(
-				'id' => $cutImage['id'],
+				'id' => $fileData['id'],
 				'b' => resource_url($cutImage['file_url']),
 				'm' => resource_url($cutImage['img_m'])
-			
 			));
-			
 		}else{
 			$this->jsonOutput('上传失败');
 		}
@@ -80,10 +78,16 @@ class My extends MyYdzj_Controller {
 		
 		if($this->isPostRequest()){
 			$uploadFile = false;
-			switch($step){
-				case 1:
-					$this->form_validation->set_rules('store_url', '网店链接','required|valid_url');
+			
+			for($i = 0; $i < 1; $i++){
+				
+			
+				if(1 == $step){
 					
+					$this->form_validation->set_rules('store_url', '网店链接','required|valid_url');
+					$this->form_validation->set_rules('img_b','交易流水图片','required|valid_url');
+					
+					/*
 					$this->load->library('Attachment_service');
 					$this->attachment_service->setUserInfo($this->_profile['basic']);
 					
@@ -99,26 +103,25 @@ class My extends MyYdzj_Controller {
 						
 						$uploadFile = true;
 					}
+					*/
 					
-					break;
-				default:
-					break;			
-			}
-			
-			
-			for($i = 0; $i < 1; $i++){
-				if(!$this->form_validation->run()){
-					break;
+					if(!$this->form_validation->run()){
+						break;
+					}
+					
+					$this->load->mode('Member_Seller_Model');
+					$this->Member_Seller_Model->_add(array(
+						'uid' => $this->_loginUID,
+						'store_url' => $this->input->post('store_url'),
+						'source_pic' => str_replace(base_url(),'',$this->input->post('img_b')),
+						'trade_pic' => str_replace(base_url(),'',$this->input->post('img_m')),
+						'isnew' => 1
+					),true);
+					
+					$step++;
+					
 				}
-				
-				if(1 == $step && !$uploadFile){
-					$feedback = getErrorTip('请上传交易流水图片');
-					break;
-				}
-				
-				$step++;
 			}
-			
 		}
 		
 		

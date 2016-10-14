@@ -1,13 +1,13 @@
 {include file="common/my_header.tpl"}
 	<div class="w-step-row">
 		<div class="w-step4 {if $step > 1}w-step-past{else if $step == 1} w-step-cur{/if}">上传认证资料</div>
-		<div class="w-step4 {if $step > 2}w-step-past-past{else if $step == 2}w-step-past-cur{else}w-step-cur-future{/if}">确认提交</div>	
-		<div class="w-step4 w-step-future-future">审核</div>		
+		<div class="w-step4 {if $step > 2}w-step-past-past{else if $step == 2}w-step-past-cur{else}w-step-cur-future{/if}">确认信息</div>	
+		<div class="w-step4 w-step-future-future">等待审核</div>		
 		<div class="w-step4 {if $step < 4}w-step-future-future{else}w-step-past-cur{/if}">审核结果</div>
 	</div>
 	<div class="muted">通过卖家认证之后,将可以获得后台实时的匹配提醒</div>
 	
-	
+	{if $step == 1}
 	{form_open_multipart(site_url($uri_string),"id='sellerForm'")}
 	<input type="hidden" name="step" value="{$step}"/>
 	<input type="hidden" name="file_id" value=""/>
@@ -31,10 +31,10 @@
             </tr>
 		</tbody>
 	</table>
-	
+	</form>
 	<div class="trade_previw">
 	   <h5>上传成功后,点击图片查询大图</h5>
-	   <div id="prev" title="点击查询大图">
+	   <div id="prev" title="点击查看大图">
 	</div>
 	{include file="common/jquery_validation.tpl"}
 	{include file="common/uploadify.tpl"}
@@ -63,7 +63,7 @@
             $('.fancybox-thumbs').fancybox({
                 prevEffect : 'none',
                 nextEffect : 'none',
-                closeBtn  : false,
+                closeBtn  : true,
                 arrows    : false,
                 nextClick : true,
                 helpers : {
@@ -84,5 +84,9 @@
             });
         });
     </script>
+    {elseif $step == 2}
+		
+	
+	{/if}
 {include file="common/my_footer.tpl"}
 

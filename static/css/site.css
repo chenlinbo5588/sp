@@ -1083,14 +1083,14 @@ table.noext {
 .color_list .list_item {
 	float: left;
     display: block;
-    width: 80px;
-    background-color: #E4E4E4;
-    font-size: 15px;
-    border: 1px solid #C9C9C9;
-    padding: 3px 0 0 10px;
-    height: 25px;
+    /* width: 135px; */
+    background-color: #F6FFF4;
+    /* font-size: 15px; */
+    border: 1px solid #C7C7C7;
+    padding: 3px;
+    height: 20px;
     margin: 0 5px 5px 0;
-    position:relative;
+    position: relative;
 }
 
 

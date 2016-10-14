@@ -655,7 +655,7 @@ CREATE TABLE `sp_member_color{i}` (
   `gmt_create` int(10) unsigned NOT NULL DEFAULT '0',
   `gmt_modify` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
-  KEY `idx_ucolor` (`uid`,`color_name`),
+  UNIQUE KEY `idx_ucolor` (`uid`,`color_name`),
   KEY `idx_ctime` (`gmt_create`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

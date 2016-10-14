@@ -73,6 +73,7 @@ class Hp extends MyYdzj_Controller {
 			);
 		}
 		
+		//print_r($searchCondition);
 		
 		return $searchCondition;
 		

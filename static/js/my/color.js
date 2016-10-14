@@ -1,9 +1,10 @@
 ;$(function(){
-	var addDlg;
+	var addDlg,editColorDlg;
 	var insending = false;
 	
-	var handler = function(dlg,formid){
-		if(!validation.valid()){
+	var handler = function(validationObj,dlg,formid){
+		
+		if(!validationObj.valid()){
 			return false;
 		}
 		
@@ -41,29 +42,35 @@
 				dlg.find(".loading_bg").hide();
 			}
 		})
-		
 	};
+	
+	
 	
 	
 	var validation = $("#colorAddForm").validate({
 		submitHandler:function(){
-			handler(addDlg,"#colorAddForm");
+			handler(validation,addDlg,"#colorAddForm");
 		},
 		rules: {
 			color_name: {
 				required:true,
-				remote: color_url,
-				onkeyup:false,
-				onchange:false,
 				minlength: 1,
 				maxlength:30
 			}
+		}
+	});
+	
+	
+	var validationEdit = $("#colorEditForm").validate({
+		submitHandler:function(){
+			handler(validationEdit,editColorDlg,"#colorEditForm");
 		},
-		messages: {
-			color_name:{
-				remote: "该颜色已定义"
+		rules: {
+			color_name: {
+				required:true,
+				minlength: 1,
+				maxlength:30
 			}
-			
 		}
 	});
 	
@@ -78,8 +85,26 @@
 	    }
 	});
 	
+	editColorDlg = $("#editColorDlg" ).dialog({
+		autoOpen: false,
+		width: 260,
+		modal: true,
+	    open:function(){
+	    	validationEdit.resetForm();
+		   $(this).find(".loading_bg").hide();
+	    }
+	});
+	
 	
 	$("input[name=addcolor]").bind("click",function(){
 		addDlg.dialog('open');
+	});
+	
+	$("a.edit").bind("click",function(){
+		var colorName = $(this).attr('data-title');
+		var id = $(this).attr("data-id");
+		editColorDlg.find("input[name=color_name]").val(colorName);
+		editColorDlg.find("input[name=id]").val(id);
+		editColorDlg.dialog('open');
 	});
 });

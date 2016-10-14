@@ -236,15 +236,21 @@ class Inventory_service extends Base_service {
 	/*  --------------------- 以下颜色管理 --------------------------- */
 	
 	
-	
-	
-	
 	public function addColor($colorName,$uid){
 		$this->setColorTableByUid($uid);
 		
 		return $this->_memberColorModel->_add(array(
 			'color_name' => $colorName,
 			'uid' => $uid
+		));
+	}
+	
+	public function editColor($colorName,$id,$uid){
+		$this->setColorTableByUid($uid);
+		return $this->_memberColorModel->update(array(
+			'color_name' => $colorName,
+		),array(
+			'id' => $id
 		));
 	}
 	
@@ -300,25 +306,19 @@ class Inventory_service extends Base_service {
 	
 	
 	/**
-	 * 检查是否存在
+	 * 根据颜色名称获得颜色信息
 	 */
-	public function isColorExists($colorName,$uid){
-		
+	public function getColorByName($colorName,$uid,$field = '*'){
 		$this->setColorTableByUid($uid);
 		
 		$info = $this->_memberColorModel->getById(array(
-			'select' => 'uid',
+			'select' => $field,
 			'where' => array(
-				'color_name' => $colorName
+				'color_name' => $colorName,
+				'uid' => $uid
 			)
 		));
-		
-		if($info){
-			return true;
-		}else{
-			
-			return false;
-		}
+		return $info;
 	}
 	
 }

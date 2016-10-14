@@ -110,13 +110,12 @@ class Hp_service extends Base_service {
 			$this->_sphixClient->SetFilterFloatRange('goods_size',$condition['fields']['goods_size'][0],$condition['fields']['goods_size'][1]);
 		}
 		
-		
 		foreach(array('price_max','gmt_create','gmt_modify') as $filterKey){
 			if($condition['fields'][$filterKey]){
 				$this->_sphixClient->SetFilterRange($filterKey,$condition['fields'][$filterKey][0],$condition['fields'][$filterKey][1]);
 			}
-			
 		}
+		
 		
 		/*
 		if($condition['fields']['price_max']){
@@ -174,8 +173,6 @@ class Hp_service extends Base_service {
 		}else{
 			$results = $this->_sphixClient->query('',$source);
 		}
-		
-		//print_r($results);
 		
 		if($results['matches'] && $results['status'] === 0 && $results['total_found'] > 0){
 			
