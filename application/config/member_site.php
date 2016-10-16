@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $config['navs'] = array(
 	'main' => array(
 		'my' => array(
-			'title' => '个人中',
+			'title' => '个人中心',
 			'url' => 'my/index'
 		),
 		'goods' => array(

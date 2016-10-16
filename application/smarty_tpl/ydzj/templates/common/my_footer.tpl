@@ -3,7 +3,7 @@
     <div class="service-entry">
         <div class="entry-wrap">
             <a href="javascript:void(0);" class="kf-chat"><span class="icon"></span>站内聊天</a> 
-            <a href="javascript:void(0);" class="kf-biz"><span class="icon"></span>商务咨询</a> 
+            {*<a href="javascript:void(0);" class="kf-biz"><span class="icon"></span>商务咨询</a>*} 
         </div>
         <div class="visitor">
             <form>
@@ -34,9 +34,11 @@ notify.setPmUrl("{site_url('my_pm/index')}");
 notify.updatePm(pmUrl);
 
 $(function(){
-    {if $newPm}
+    {if $newPm || !empty($smarty.get.pm)}
     notify.showToast();
-    notify.playSound(1);
+    setTimeout(function(){
+        notify.playSound(1);
+    },2000);
     {/if}
     
     notify.updatePm(pmUrl);

@@ -5,9 +5,8 @@ $(function(){
 	var privatePmDlg;
 	var insending = false;
 	
-	//console.log(validation.valid());
-	var sendPm = function(){
-		if(!validation.valid()){
+	var sendPm = function(validationObj,dlg,formid){
+		if(!validationObj.valid()){
 			return false;
 		}
 		
@@ -16,18 +15,18 @@ $(function(){
 		}
 		
 		insending = true;
-		privatePmDlg.find(".loading_bg").show();
+		dlg.find(".loading_bg").show();
 		
 		$.ajax({
 			type:'POST',
-			url:$("#privatePmForm").attr('action'),
-			data: $("#privatePmForm").serialize(),
+			url:$(formid).attr('action'),
+			data: $(formid).serialize(),
 			success:function(json){
 				insending = false;
-				privatePmDlg.find(".loading_bg").hide();
+				dlg.find(".loading_bg").hide();
 				
 				if(check_success(json.message)){
-					privatePmDlg.dialog('close');
+					dlg.dialog('close');
 					showToast('success',json.message);
 				}else{
 					showToast('error',json.message);
@@ -36,7 +35,7 @@ $(function(){
 			error:function(){
 				showToast('error',"操作失败，服务器错误");
 				insending = false;
-				privatePmDlg.find(".loading_bg").hide();
+				dlg.find(".loading_bg").hide();
 			}
 		})
 		
@@ -45,12 +44,11 @@ $(function(){
 	
 	var validation = $("#privatePmForm").validate({
 		submitHandler:function(){
-			sendPm();
+			sendPm(validation,privatePmDlg, "#privatePmForm");
 		},
 		rules: {
 			to_username: {
-				required:true,
-				remote: username_url
+				required:true
 			},
 			title : {
 				required: true,
@@ -62,12 +60,6 @@ $(function(){
 				minlength: 1,
 				maxlength:200
 			}
-		},
-		messages: {
-			to_username:{
-				remote: "用户名不存在"
-			}
-			
 		}
 	});
 	
@@ -76,7 +68,6 @@ $(function(){
 		autoOpen: false,
 		width: 500,
 		modal: true,
-		
 		/*
 	    buttons: {
 	        "保存": sendPm,

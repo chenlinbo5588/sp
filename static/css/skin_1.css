@@ -164,6 +164,10 @@ label.error {
     border:1px solid red;
 }
 
+.at_txt {
+    width:100%;
+}
+
 input[type=text].error,input[type=password].error {
     border:1px solid red;
     background:#fff url(../img/access_disallow.gif) no-repeat right center;
@@ -439,6 +443,41 @@ input[type=checkbox],input[type=radio] {
     .nohover td { background:#FFF !important;}
 
 
+table.fulltable {
+    width:100%;
+}
+
+table.noext {
+    width:auto;
+}
+
+
+.fulltable thead th {
+    background-color:#DAF4FE;
+    font-weight:bold;
+}
+
+
+.fulltable thead th , .fulltable tbody td {
+    border:1px solid #CBCBCB;
+    border-width:1px 0 1px 0;
+    padding: 3px 2px;
+}
+
+.noborder thead th , .noborder tbody td {
+    border-width:0px;
+}
+
+
+.fulltable tbody tr:hover {
+    background-color:#F3F3F3;
+}
+
+.style1 thead th , .style1 tbody td {
+    padding:8px 0;
+}
+
+
 .tb-type1{}
 .tb-type1 th{line-height:21px; color: #333;}
 .tb-type1 td input[type="text"], .tb-type1 td select{ margin-right:4px; _margin-right:2px; margin-left:4px; _margin-left:2px; }
@@ -686,7 +725,7 @@ table.search { margin: 12px 0 6px 4px;}
 .power-onoff a:hover.disabled {background-position: -160px -580px;}
 .power-onoff a:active.disabled {background-position: -200px -580px;}
 
-.msbtn  {
+.msbtn,.master_btn  {
     display:inline-block;
     cursor:pointer;
     background-color:#db3652;

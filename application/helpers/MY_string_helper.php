@@ -82,3 +82,47 @@ function orderValue($searchKeys,$maxSize = 50){
 	
 	return $searchKeys;
 }
+
+
+
+function step_helper($stepText,$step){
+	$stepHtml = array();
+	$totalStep = count($stepText);
+	
+	for($i = 1; $i <= $totalStep; $i++){
+		$s = '<div class="w-step'.$totalStep . ' ';
+		$index = $i - 1;
+		if($i == $step){
+			if($i == 1){
+				$s .= 'w-step-cur';
+			}else{
+				$s .= 'w-step-past-cur';
+			}
+		}elseif($i < $step){
+			if($i == 1){
+				$s .= 'w-step-past';
+			}elseif(($step - 1) ==  1 ){
+				$s .= 'w-step-past';
+			}else{
+				$s .= 'w-step-past-past';
+			}
+		}elseif($i > $step){
+			if(($i - $step) ==  1 ){
+				$s .= 'w-step-cur-future';
+			}else{
+				$s .= 'w-step-future-future';
+			}
+		}
+		
+		$stepHtml[] = $s."\">{$stepText[$index]}</div>";
+	}
+	
+	return '<div class="w-step-row">'.implode('',$stepHtml).'</div>';
+	
+}
+
+
+function trim_newline($str){
+	return str_replace(array("\r\n","\n","\r"),'',$str);
+	
+}

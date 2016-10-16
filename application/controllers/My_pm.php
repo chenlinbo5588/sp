@@ -85,6 +85,8 @@ class My_pm extends MyYdzj_Controller {
 					break;
 				}
 				
+				$this->form_validation->set_error_delimiters('<label>','</label>');
+				
 				$this->form_validation->set_rules('to_username','用户账号','in_db_list['.$this->Member_Model->getTableRealName().'.username]');
 				$this->form_validation->set_rules('title','required|min_length[1]|max_length[30]');
 				$this->form_validation->set_rules('content','required|min_length[1]|max_length[200]');

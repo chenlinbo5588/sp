@@ -2,11 +2,15 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Member_service extends Base_service {
+	private $_memberSellerModel;
 	
 
 	public function __construct(){
 		parent::__construct();
 		
+		self::$CI->load->model('Member_Seller_Model');
+		
+		$this->_memberSellerModel = self::$CI->Member_Seller_Model;
 	}
 	
 	
@@ -105,4 +109,36 @@ class Member_service extends Base_service {
 		),array('uid' => $param['uid']));
 	}
 	
+	
+	/**
+	 * 卖家认证
+	 */
+	public function sellerVerify($uid,$flag,$message = ''){
+		
+		$data = array(
+				'verify_result' => $flag,
+				'verify_remark' => $message
+			);
+		
+		if(is_array($uid)){
+			$condition = array(
+				'where_in' => array(
+					array('key' => 'uid','value' => $uid)
+				)
+			);
+			
+			if(1 == $data['verify_result']){
+				self::$memberModel->updateByCondition(array('status' => $data['verify_result']),$condition);
+			}
+			
+			return $this->_memberSellerModel->updateByCondition($data,$condition);
+			
+		}else{
+			if(1 == $data['verify_result']){
+				self::$memberModel->updateByCondition(array('status' => $data['verify_result']),array('uid' => $uid));
+			}
+			
+			return $this->_memberSellerModel->update($data,array('uid' => $uid));
+		}
+	}
 }

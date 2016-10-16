@@ -4,8 +4,10 @@
     <input type="hidden" name="page" value=""/>
     <table class="tb-type1 noborder search">
       <tbody>
+        {*
         <tr>
             <td colspan="5">
+               
                 <div class="cityGroupWrap">
 	                <select name="d1" class="citySelect">
 	                    <option value="">{#choose#}</option>
@@ -34,6 +36,7 @@
                 </div>
             </td>
         </tr>
+        *}
         <tr>
           <td><select name="search_field_name" >
               {foreach from=$search_map['search_field'] key=key item=item}
@@ -42,7 +45,7 @@
             </select>
           </td>
           <td><input type="text" value="{$smarty.get['search_field_value']}" name="search_field_value" class="txt"></td>
-          
+          {*
           <td><select name="register_channel">
               <option  value="">{#register_channel#}</option>
               {foreach from=$search_map['register_channel'] key=key item=item}
@@ -50,44 +53,31 @@
               {/foreach}
             </select>
          </td>
-         
-         <td><select name="register_sort">
-              <option  value="">{#register_time#}</option>
-              {foreach from=$search_map['register_sort'] key=key item=item}
-              <option  value="{$key}" {if $smarty.get['register_sort'] == $key}selected{/if}>{$item}</option>
-              {/foreach}
-            </select>
-         </td>
-         <td><select name="member_state" >
-              <option  value="">{#member_state#}</option>
-              {foreach from=$search_map['member_state'] key=key item=item}
-              <option  value="{$key}" {if $smarty.get['member_state'] == $key}selected{/if}>{$item}</option>
-              {/foreach}
-            </select>
-          </td>
+         *}
           <td>
             <input type="submit" class="msbtn" name="tijiao" value="查询"/>
           </td>
         </tr>
+        <tr>
+            <td><label>{#register_time#}</label></td>
+            <td><select name="reg_time">
+              {foreach from=$mtime key=key item=item}
+              <option  value="{$key}" {if $smarty.get['reg_time'] == $key}selected{/if}>{$key}</option>
+              {/foreach}
+            </select>
+            </td>
+            <td><label>{#avatar_state#}</label></td>
+	          <td>
+	            <label><input type="radio" name="avatar_status" {if $smarty.get.avatar_status ==''}checked{/if}  value="">不限</label>
+	            <label><input type="radio" name="avatar_status" {if $smarty.get.avatar_status === 0}checked{/if} value="0">待审核</label>
+	            <label><input type="radio" name="avatar_status" {if $smarty.get.avatar_status === 1}checked{/if}  value="1">已审核</label>
+	          </td>
+            
+        </tr>
       </tbody>
     </table>
    </form>
-   
-   <table class="table tb-type2" id="prompt">
-    <tbody>
-      <tr class="space odd">
-        <th colspan="12"><div class="title">
-            <h5>操作提示</h5>
-            <span class="arrow"></span></div></th>
-      </tr>
-      <tr>
-        <td><ul>
-            <li>通过会员管理，你可以进行查看、编辑会员资料以及删除会员等操作</li>
-            <li>你可以根据条件搜索会员，然后选择相应的操作</li>
-          </ul></td>
-      </tr>
-    </tbody>
-  </table>
+   {include file="common/pagination.tpl"}
    <table class="table tb-type2 nobdb">
       <thead>
         <tr class="thead">
@@ -99,13 +89,10 @@
           <th>QQ</th>
           <th>性别</th>
           <th class="align-center">邀请人</th>
-          <th>注册渠道</th>
-          <th>地区</th>
           <th>最后登录</th>
           <th>注册信息</th>
           <th>积分</th>
           <th>状态</th>
-          <th class="align-center">发表言论</th>
           <th class="align-center">登录</th>
           <th class="align-center">操作</th>
         </tr>
@@ -128,10 +115,6 @@
             <p>{$inviterInfo[$item['inviter']]['mobile']}</p>
             {/if}
           </td>
-          <td>{$item['channel']}</td>
-          <td>
-           {$memberDs[$item['d1']]['name']}{$memberDs[$item['d2']]['name']}{$memberDs[$item['d3']]['name']}{$memberDs[$item['d4']]['name']}
-          </td>
           <td>
             <p>{if $item['last_login']}{$item['last_login']|date_format:"%Y-%m-%d %H:%M:%S"}</p>
             <p>{$item['last_loginip']}{/if}</p>
@@ -141,18 +124,12 @@
             <div>{$item['reg_ip']}</div>
           </td>
           <td>{$item['credits']}</td>
-          <td>{$item['status']}</td>
-          <td class="align-center">{if $item['allowtalk'] == 'N'}禁止{else}允许{/if}</td>
-          <td class="align-center">{if $item['freeze'] == 'Y'}禁止{else}允许{/if}</td>
+          <td>{if $item['status'] == 1}已认证用户{else}未认证{/if}</td>
+          <td class="align-center">{if $item['freeze'] == 'Y'}<span class="tip_warning">禁止</span>{else}允许{/if}</td>
           <td class="align-center"><a href="{admin_site_url('member/edit')}?id={$item['uid']}">编辑</a> | <a href="{admin_site_url('notify/add?uid=')}{$item['uid']}">通知</a></td>
         </tr>
       {/foreach}
       </tbody>
-      <tfoot class="tfoot">
-        <tr>
-          <td colspan="17">
-            {include file="common/pagination.tpl"}
-        </tr>
-      </tfoot>
     </table>
+    {include file="common/pagination.tpl"}
 {include file="common/main_footer.tpl"}

@@ -1,9 +1,5 @@
 {include file="common/my_header.tpl"}
-	<div class="w-step-row">
-		<div class="w-step3 {if $step > 1}w-step-past{else if $step == 1} w-step-cur{/if}">原手机号码验证</div>
-		<div class="w-step3 {if $step > 2}w-step-past-past{else if $step == 2}w-step-past-cur{else}w-step-cur-future{/if}">绑定新得手机号码</div>		
-		<div class="w-step3 {if $step < 3}w-step-future-future{else}w-step-past-cur{/if}">更换结果</div>
-	</div>
+	{$stepHTML}
 	<div class="muted">您更换了手机号之后，为了保留原先聊天窗口中好友关系,聊天窗口将还是以原先的手机账号登陆</div>
 	{form_open(site_url($uri_string),"id='editForm'")}
 	<input type="hidden" name="step" value="{$step}"/>
@@ -20,7 +16,7 @@
 			</tr>
 			<tr>
 				<td>&nbsp;</td>
-				<td><input type="submit" class="master_btn" name="tijiao" value="下一步"/></a></td>
+				<td><input type="submit" class="master_btn" name="tijiao" value="下一步"/></td>
 			</tr>
 	{else if $step == 2}
             <tr>

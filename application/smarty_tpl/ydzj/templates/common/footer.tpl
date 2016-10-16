@@ -5,19 +5,15 @@
 		            <div class="column-one column">
 		                <span class="title">联系我们</span>
 		                <ul>
-		                    <li>商务QQ：123456798</li>
-		                    <li>商务邮箱：<a href="mailto:sales@52ydzj.cn">sales@52ydzj.cn</a></li>
+		                    <li>联系电话：{$siteSetting['site_tel']}</li>
+		                    <li>联系邮箱：<a href="mailto:{$siteSetting['site_email']}">{$siteSetting['site_email']}</a></li>
 		                </ul>
 		            </div>
 		            <div class="column-two column">
 		                <span class="title">保持接触</span>
 		                <ul>
-		                    <li>微信公众号：52运动之家</li>
-		                    <li>支持QQ群：1111111111</li>
-		                    {*
-		                    <li><a target="_blank" href="http://community.jiguang.cn" rel="nofollow">技术支持</a></li>
-		                    <li><a target="_blank" href="http://blog.jiguang.cn" rel="nofollow">极光推送Blog</a></li>
-		                    *}
+		                    <li>微信公众号：{$siteSetting['site_weixin']}</li>
+		                    <li>QQ：{$siteSetting['site_qq']}</li>
 		                </ul>
 		            </div>
 		            <div class="column-three column">

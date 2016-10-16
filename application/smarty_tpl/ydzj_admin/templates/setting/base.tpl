@@ -72,6 +72,20 @@
           <td class="vatop rowform"><input id="site_email" name="site_email" value="{$currentSetting['site_email']['value']}" class="txt" type="text" /></td>
           <td class="vatop tips"><span class="vatop rowform">前台卖家中心页面右下侧可以显示，方便卖家遇到问题时咨询</span></td>
         </tr>
+        <tr>
+          <td colspan="2" class="required"><label for="site_weixn">官方QQ号:</label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform"><input id="site_qq" name="site_qq" value="{$currentSetting['site_qq']['value']}" class="txt" type="text" /></td>
+          <td class="vatop tips"><span class="vatop rowform">前台卖家中心页面右下侧可以显示，方便卖家遇到问题时咨询</span></td>
+        </tr>
+        <tr>
+          <td colspan="2" class="required"><label for="site_weixn">官方微信号:</label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform"><input id="site_weixin" name="site_weixin" value="{$currentSetting['site_weixin']['value']}" class="txt" type="text" /></td>
+          <td class="vatop tips"><span class="vatop rowform">前台卖家中心页面右下侧可以显示，方便卖家遇到问题时咨询</span></td>
+        </tr>
          <tr>
           <td colspan="2" class="required"><label for="statistics_code">第三方流量统计代码:</label></td>
         </tr>

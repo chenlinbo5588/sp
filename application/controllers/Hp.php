@@ -225,6 +225,7 @@ class Hp extends MyYdzj_Controller {
 						'date_key' => $date_key,
 						'ip' => $ip,
 						'gmt_create' => $this->_reqtime,
+						'gmt_modify' => $this->_reqtime,
 						'uid' => $this->_loginUID
 					);
 					

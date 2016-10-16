@@ -34,7 +34,7 @@
           <td>{$item['list_tplname']|escape}</td>
           <td>{$item['detail_tplname']|escape}</td>
           <td class="yes-onoff">
-	      	<a href="javascript:void(0);" data-url="{admin_site_url('sports_cate/onoff')}" data-id="{$item['id']}" class="{if $item['status'] == 1}enabled{else}disabled{/if}" data-fieldname="status">&nbsp;</a>
+	      	<a href="javascript:void(0);" data-url="{admin_site_url('cms_article_class/onoff')}" data-id="{$item['id']}" class="{if $item['status'] == 1}enabled{else}disabled{/if}" data-fieldname="status">&nbsp;</a>
 	     </td>
           <td class="nowrap">{$item['gmt_create']|date_format:"%Y-%m-%d %H:%M:%S"}</td>
           <td class="nowrap">{$item['add_username']|escape}</td>

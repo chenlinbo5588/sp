@@ -48,7 +48,6 @@
         </form>
     </div>
     <script>
-        var color_url = "{site_url('my_color/colorname_check')}";
         $(function(){
             bindDeleteEvent();
         });

@@ -284,13 +284,17 @@ input[type=text]:focus , input[type=password]:focus ,textarea:focus {
 .orange { color: #F60;}
 .bold {font-weight: bold; color: #545454}
 
-.hightlight {
+.hightlight,.ui-widget-content .hightlight {
 	color:#DA1CC1;
 }
 
-.passbg {
+.passbg,.warnbg {
     background: url(../img/pass.png) no-repeat 10px center;
     padding-left: 50px;
+}
+
+.warnbg {
+	background: url(../img/warn.png) no-repeat 10px center;
 }
 
 .loading_bg {
@@ -1010,6 +1014,7 @@ table.noext {
 
 .pm_content {
 	text-indent: 2em;
+	padding:5px 0;
 }
 
 
@@ -1091,6 +1096,12 @@ table.noext {
     height: 20px;
     margin: 0 5px 5px 0;
     position: relative;
+}
+
+
+.storeurl {
+	padding: 10px 0;
+    font-size: 16px;
 }
 
 

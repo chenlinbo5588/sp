@@ -20,7 +20,7 @@
 			</tr>	
             <tr>
                 <td>&nbsp;</td>
-                <td><input type="submit" class="master_btn" name="tijiao" value="发送"/></a></td>
+                <td><input type="submit" class="master_btn" name="tijiao" value="发送"/></td>
             </tr>
         </tbody>
     </table>

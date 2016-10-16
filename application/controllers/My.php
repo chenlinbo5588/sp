@@ -22,6 +22,8 @@ class My extends MyYdzj_Controller {
 	public function index()
 	{
 		//print_r($this->session->all_userdata());
+		
+		/*
 		$this->load->library('Common_District_service');
 		
 		$ds = array();
@@ -30,15 +32,17 @@ class My extends MyYdzj_Controller {
 		}
 		
 		$ds = array_unique($ds);
-		$this->seoTitle('个人中心');
+		
 		$this->assign('userDs',$this->common_district_service->getDistrictByIds($ds));
+		*/
 		
+		$this->seoTitle('个人中心');
 		$this->assign('inviteUrl',site_url('member/register?inviter='.$this->_profile['basic']['uid']));
-		
 		$avatarImageSize = config_item('avatar_img_size');
 		$this->assign('avatarImageSize',$avatarImageSize);
 		
 		//print_r($this->session->all_userdata());
+		//$newPm = $this->input->get('newpm');
 		
 		$this->display();
 	}
@@ -72,12 +76,17 @@ class My extends MyYdzj_Controller {
 		
 		$step = $this->input->get_post('step');
 		
+		
 		if(empty($step)){
 			$step = 1;
 		}
 		
+		
+		$this->load->model('Member_Seller_Model');
 		if($this->isPostRequest()){
 			$uploadFile = false;
+			
+			
 			
 			for($i = 0; $i < 1; $i++){
 				
@@ -86,6 +95,7 @@ class My extends MyYdzj_Controller {
 					
 					$this->form_validation->set_rules('store_url', '网店链接','required|valid_url');
 					$this->form_validation->set_rules('img_b','交易流水图片','required|valid_url');
+					 
 					
 					/*
 					$this->load->library('Attachment_service');
@@ -109,22 +119,72 @@ class My extends MyYdzj_Controller {
 						break;
 					}
 					
-					$this->load->mode('Member_Seller_Model');
-					$this->Member_Seller_Model->_add(array(
-						'uid' => $this->_loginUID,
+					$info = array(
 						'store_url' => $this->input->post('store_url'),
 						'source_pic' => str_replace(base_url(),'',$this->input->post('img_b')),
 						'trade_pic' => str_replace(base_url(),'',$this->input->post('img_m')),
-						'isnew' => 1
-					),true);
+					);
+					
+					$this->assign('info',$info);
+					$step++;
+					
+				}else if(2 == $step){
+					$info = $this->Member_Seller_Model->getFirstByKey($this->_loginUID,'uid');
+					$updateData = array(
+						'uid' => $this->_loginUID,
+						'store_url' => $this->input->post('store_url',true),
+						'source_pic' => $this->input->post('source_pic',true),
+						'trade_pic' => $this->input->post('trade_pic',true),
+						'verify_result' => 0
+					);
+					if(empty($info)){
+						$affectRow = $this->Member_Seller_Model->_add($updateData,true);
+					}else{
+						
+						//10 分钟开外 才能重新更新，防止用户刷页面
+						if(($this->_reqtime - $info['gmt_modify']) > 600){
+							//$affectRow = $this->Member_Seller_Model->update($updateData,array('uid' => $this->_loginUID,'verify_result !=' => 0));
+							$affectRow = $this->Member_Seller_Model->update($updateData,array('uid' => $this->_loginUID));
+						}
+					}
+					
+					if($affectRow > 0){
+						$this->message_service->initEmail($this->_siteSetting);
+						$this->message_service->sendEmail($this->_getSiteSetting('site_email'),"有新的卖家认证请求", "用户:".$this->_profile['basic']['username']." 提交了卖家认证资料，请及时审核,<a href=\"".admin_site_url('seller/index')) ."\">马上去审核</a>";
+					}
+					
+					$step++;
+				}else if(3 == $step){
 					
 					$step++;
 					
 				}
 			}
+		}else{
+			
+			$retry = $this->input->get_post('retry');
+			
+			
+			if('yes' != $retry){
+				$verfiyInfo = $this->Member_Seller_Model->getFirstByKey($this->_loginUID,'uid');
+				if($verfiyInfo){
+					if($verfiyInfo['verify_result'] == 0){
+						$step = 3;
+					}else{
+						$step = 4;
+						$this->assign('verfiyInfo',$verfiyInfo);
+					}
+					
+				}
+			}
 		}
 		
-		
+		$this->assign('stepHTML',step_helper(array(
+			'上传认证资料',
+			'确认信息',
+			'等待审核',
+			'审核结果',
+		),$step));
 		$this->assign('step',$step);
 		$this->display();
 		
@@ -143,7 +203,7 @@ class My extends MyYdzj_Controller {
 			$step = 1;
 		}
 		
-		if($step == 1){
+		if(1 == $step){
 			$this->form_validation->set_rules('mobile_auth_code','手机验证码', array(
 					'required',
 					array(
@@ -158,7 +218,7 @@ class My extends MyYdzj_Controller {
 				)
 			);
 			
-		}else if($step == 2){
+		}else if(2 == $step){
 			
 			$this->form_validation->set_rules('newmobile','新手机号',array(
 					'required',
@@ -218,6 +278,12 @@ class My extends MyYdzj_Controller {
 		}
 		
 		$this->assign('step',$step);
+		$this->assign('stepHTML',step_helper(array(
+			'原手机号码验证',
+			'绑定新手机号码',
+			'更换结果',
+		),$step));
+		
 		$this->display();
 	}
 	
@@ -228,10 +294,13 @@ class My extends MyYdzj_Controller {
 			$this->form_validation->set_rules('old_psw','原密码','required');
 			$this->form_validation->set_rules('psw','密码','required|valid_password|min_length[6]|max_length[12]');
 			$this->form_validation->set_rules('psw2','确认密码','required|matches[psw]');
+			$this->form_validation->set_rules('auth_code','验证码','required|callback_validateAuthCode');
 			
 			for($i = 0; $i < 1; $i++){
 				if(!$this->form_validation->run()){
-					$feedback = $this->form_validation->error_string();
+					//$feedback = $this->form_validation->error_string();
+					$feedback = getErrorTip('数据校验失败');
+					
 					break;
 				}
 				
@@ -276,7 +345,6 @@ class My extends MyYdzj_Controller {
 					break;
 				}
 				
-				$this->load->library('Message_service');
 				$this->message_service->initEmail($this->_siteSetting);
 				$param = $this->message_service->getEncodeParam(array(
 					$this->_profile['basic']['uid'],
@@ -467,14 +535,7 @@ class My extends MyYdzj_Controller {
 		$this->load->library('Attachment_service');
 		$this->attachment_service->setUserInfo($this->_profile['basic']);
 		
-		$fileData = $this->attachment_service->addImageAttachment('imgFile',array(
-			/*'min_width' => $this->_avatarImageSize['m']['width'],
-			'min_height' => $this->_avatarImageSize['m']['height'],*/
-			'max_width' => 800,
-			'max_height' => 800,
-		),0,'member_avatar');
-		
-		
+		$fileData = $this->attachment_service->addImageAttachment('Filedata',array(),0,'member_avatar');
 		$resp  = array();
 		
 		if($fileData){

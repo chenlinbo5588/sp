@@ -17,12 +17,13 @@ class Hp_service extends Base_service {
 		parent::__construct();
 		
 		self::$CI->load->config('sphinx');
-		self::$CI->load->model(array('Hp_Recent_Model','Hp_Pub_Model','Hp_Batch_Model'));
+		self::$CI->load->model(array('Hp_Recent_Model','Hp_Batch_Model','Hp_Pub_Model'));
 		
 		$this->_hpRecentModel = self::$CI->Hp_Recent_Model;
 		
 		//用户发布历史
 		$this->_hpPubModel = self::$CI->Hp_Pub_Model;
+		
 		//用户发布批次
 		$this->_hpBatchModel = self::$CI->Hp_Batch_Model;
 		
@@ -248,13 +249,15 @@ class Hp_service extends Base_service {
 	 * 添加货品
 	 */
 	public function addHp($insertData,$reqTime,$uid,$reLookup = false){
+		
 		$realInsert = $this->_hpRecentModel->batchInsert($insertData);
 		
-		/*
 		$tableId = $this->_hpPubHash->lookup($uid);
 		$this->_hpPubModel->setTableId($tableId);
-		$userInsert = $this->_hpPubModel->batchInsert($insertData);
-		*/
+		
+		$this->_hpPubModel->execSQL('INSERT INTO '.$this->_hpPubModel->getTableRealName().' SELECT * FROM '.$this->_hpRecentModel->getTableRealName().' WHERE uid = '.$uid .' AND gmt_modify = '.$reqTime);
+		
+		//$userInsert = $this->_hpPubModel->batchInsert($insertData);
 		
 		$this->addUserHpFrequentCtrl($uid,$reqTime,$realInsert,$reLookup);
 		
@@ -324,14 +327,13 @@ class Hp_service extends Base_service {
 	/**
 	 * 用户历史发布数据查询
 	 */
-	public function getPubHistory($condition,$uid){
+	public function getPubHistory($condition,$uid = 0){
 		$tableId = $this->_hpPubHash->lookup($uid);
 		$this->_hpPubModel->setTableId($tableId);
 		
 		$condition['where']['uid'] = $uid;
 		
 		return $this->_hpPubModel->getList($condition);
-		
 	}
 	
 	
@@ -346,7 +348,7 @@ class Hp_service extends Base_service {
 	/**
 	 * 删除用户的历史货品
 	 */
-	public function deleteHistory($condition,$uid){
+	public function deleteUserHistoryHp($condition,$uid){
 		$tableId = $this->_hpPubHash->lookup($uid);
 		$this->_hpPubModel->setTableId($tableId);
 		

@@ -88,7 +88,9 @@ class Member extends Ydzj_Controller {
 					if(!empty($url) && isLocalUrl($url)){
 						js_redirect($url);
 					}else{
-						js_redirect('my/index');
+						//增加已个站内信立刻刷新标志，用户登陆可立刻看到消息刷新
+						$param = $this->encrypt->encode($this->_reqtime + 10);
+						js_redirect('my/index/?spm='.urlencode($param));
 					}
 					
 				}else{
@@ -204,7 +206,6 @@ class Member extends Ydzj_Controller {
 					'email' => $this->input->post('email'),
 					'qq' => $this->input->post('qq'),
 					'password' => $this->input->post('psw'),
-					'status' => -1,
 					'msgid' => intval($sysMessageId),
 					'inviter' => empty($inviter) == true ? 0 : intval($inviter)
 				);

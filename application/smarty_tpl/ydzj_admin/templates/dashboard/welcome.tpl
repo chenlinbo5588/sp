@@ -14,7 +14,8 @@
       </dt>
       <dd>
         <ul>
-          <li class="w100pre normal"><a href="index.php?act=member&op=member">本周新增<sub><em id="statistics_week_add_member"></em></sub></a></li>
+          <li class="w50pre normal"><a href="{admin_site_url('member/index')}">本周新增{*<sub><em id="statistics_week_add_member"></em></sub>*}</a></li>
+          <li class="w50pre normal"><a href="{admin_site_url('seller/index')}">卖家认证{*<sub><em id="statistics_week_add_member"></em></sub>*}</a></li>
         </ul>
       </dd>
     </dl>
@@ -105,7 +106,7 @@
         </ul>
       </dd>
     </dl>
-    *}
+    
     <dl class="weixin">
       <dt>
         <div class="ico"><i></i></div>
@@ -120,6 +121,7 @@
         </ul>
       </dd>
     </dl>
+    *}
     <dl class="system">
       <dt>
         <div class="ico"><i></i><a id="UPDATE" style="visibility:hidden;" title="" target="_blank" href="javascript:void(0);"><sub><span>new</em></span></sub></a></div>

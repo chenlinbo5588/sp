@@ -620,7 +620,7 @@ EOT;
 	
 	public function test_insert_message(){
 		
-		
+		/*
 		set_time_limit(0);
 		
 		$this->load->library('Message_service');
@@ -641,7 +641,7 @@ EOT;
 			}
 			
 		}
-		
+		*/
 	}
 	
 	
@@ -691,6 +691,7 @@ CREATE TABLE `sp_hp_pub{i}` (
   `gc_id2` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '货品二级分类',
   `gc_id3` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '货品三级分类',
   `goods_size` float unsigned NOT NULL DEFAULT '0' COMMENT '尺码',
+  `search_code` varchar(15) NOT NULL DEFAULT '',
   `kw` varchar(15) NOT NULL DEFAULT '' COMMENT '货号链接上尺寸 成为一个唯一查找的建',
   `quantity` smallint(5) unsigned NOT NULL DEFAULT '1' COMMENT '数量',
   `sex` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '性别',

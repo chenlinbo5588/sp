@@ -112,37 +112,29 @@ $(function(){
 		$('#h').val(c.h);
 	}
 	
-	
-	
-	KindEditor.ready(function(K) {
-		var uploadbutton = K.uploadbutton({
-			button : K('#uploadButton')[0],
-			fieldName : 'imgFile',
-			extraParams : {  },
-			url : uploadUrl,
-			afterUpload : function(data) {
-				refreshFormHash(data);
-				if (data.error === 0) {
-					$("input[name=old_avatar]").val($("input[name=avatar]").val());
-	            	$("input[name=old_avatar_id]").val($("input[name=avatar_id]").val());
-	            	
-	                $("input[name=avatar_id]").val(data.id);
-	                $("input[name=avatar]").val(data.url);
-					
-	                $("#srcImg").html('<img id="cropbox" src="' + data.url + '"/>');
-	                
-	                cutDlg.dialog('open');
-				} else {
-					alert(data.msg);
-				}
-			},
-			afterError : function(str) {
-				alert('自定义错误信息: ' + str);
+	$('#file_upload').uploadify({
+        'fileTypeDesc' : '图片文件',
+        'buttonText' : '选择图片文件',
+        'fileTypeExts' : '*.jpg;*.png',
+        'swf'      : swfUrl,
+        'uploader' : uploadUrl,
+        'onUploadSuccess' : function(file, data, response) {
+        	var json = $.parseJSON(data);
+        	
+        	refreshFormHash(json);
+        	
+			if (json.error == 0) {
+				$("input[name=old_avatar]").val($("input[name=avatar]").val());
+            	$("input[name=old_avatar_id]").val($("input[name=avatar_id]").val());
+            	
+                $("input[name=avatar_id]").val(json.id);
+                $("input[name=avatar]").val(json.url);
+                $("#srcImg").html('<img id="cropbox" src="' + json.url + '"/>');
+                
+                cutDlg.dialog("option",{my: "center", at: "center", of: window }).dialog('open');
+			} else {
+				alert(json.msg);
 			}
-		});
-		uploadbutton.fileBox.change(function(e) {
-			uploadbutton.submit();
-		});
-	});
-	
+        }
+    });
 })

@@ -149,6 +149,24 @@ class Inventory extends MyYdzj_Controller {
 		}
 		*/
 		
+		if($this->isPostRequest()){
+			$remainSec = $this->inventory_service->getReactiveTimeRemain($this->_reqtime,$this->_loginUID,$userSlots);
+			
+			if(!$remainSec){
+				$flag = $this->inventory_service->reactiveUserSlots($this->_reqtime,$this->_loginUID);
+				$feedback = getSuccessTip('库存刷新成功');
+			}else{
+				$feedback = getErrorTip('更新冻结时间还有'.$remainSec.'秒');
+			}
+		}
+		
+		$inventoryExpireSec = config_item('inventory_expired');
+		$secondsElpse = $inventoryExpireSec - ($this->_reqtime - $userSlots['active_time']);
+		
+		
+		
+		$this->assign('secondsElpse',$secondsElpse);
+		$this->assign('feedback',$feedback);
 		$this->display();
 	}
 	
@@ -272,7 +290,9 @@ class Inventory extends MyYdzj_Controller {
 					$rowCount = $userSlot['max_cnt'];
 				}
 				
-				$initRow = range(0,$rowCount - 1);
+				if($rowCount != 0){
+					$initRow = range(0,$rowCount - 1);
+				}
 				
 				$slotInfo = $this->inventory_service->getSlotDetail($slotId,$this->_loginUID,'gmt_modify');
 				$remainSeconds = $this->_reqtime - $slotInfo['gmt_modify'];
@@ -337,16 +357,18 @@ class Inventory extends MyYdzj_Controller {
 				}
 				
 				$rowsAffected = $this->inventory_service->updateSlotGoodsInfo($userSlotsList,$insertData,$this->_loginUID);
-					
 				
 				if($rowsAffected){
 					$feedback = getSuccessTip('货柜货品更新成功');
+					
+					//读取最新
+					$userSlotsList = $this->inventory_service->getUserCurrentSlots($this->_loginUID);
+					$userSlot = $userSlotsList['slot_config'][$slotId];
 					
 				}else{
 					$errorInfo = $this->Member_Inventory_Model->get_error_info();
 					$feedback = getErrorTip(str_replace(array('{code}','{message}'),array($errorInfo['code'],$errorInfo['message']),"系统错误,{code}:{message}"));
 				}
-				
 			}
 		}else{
 			if($userSlot['goods_code'] == ''){

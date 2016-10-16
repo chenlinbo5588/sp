@@ -41,11 +41,14 @@ class Inventory_service extends Base_service {
 	/**
 	 * 获得再次激活 等待时间
 	 */
-	public function getReactiveTimeRemain($reqTime ,$uid){
-		$lastPub = $this->getUserCurrentSlots($uid,'gmt_modify');
+	public function getReactiveTimeRemain($reqTime ,$uid, $userSlots = array()){
 		
-		if($lastPub &&  ($reqTime - $lastPub['gmt_modify']) < $this->_reactiveFreezen){
-			$freezenSec = $reqTime - $lastPub['gmt_modify'];
+		if(empty($userSlots)){
+			$userSlots = $this->getUserCurrentSlots($uid,'active_time');
+		}
+		
+		if($userSlots &&  ($reqTime - $userSlots['active_time']) < $this->_reactiveFreezen){
+			$freezenSec = $reqTime - $userSlots['active_time'];
 			return ($this->_reactiveFreezen - $freezenSec);
 		}else{
 			return 0;
@@ -57,13 +60,37 @@ class Inventory_service extends Base_service {
 	 * 重新激活用户的库存 ，这样可以参与到自动匹配
 	 */
 	public function reactiveUserSlots($time, $uid){
-		$condition = array(
-			'where' => array(
-				'uid' => $uid
-			)
-		);
+		$affectRow = 0;
 		
-		$affectRow = $this->_memberSlotModel->updateByCondition(array('gmt_modify' => $time),$condition);
+		$slotList = $this->_memberInventoryModel->getList(array(
+			'where' => array(
+				'uid' => $uid,
+				'enable' => 1,
+			)
+		));
+		
+		if($slotList){
+			$kwList = array();
+			$kwPriceList = array();
+			foreach($slotList as $slot){
+				$kwList[] = $slot['kw'];
+				$kwPriceList[] = $slot['kw_price'];
+			}
+			
+			
+			$condition = array(
+				'where' => array(
+					'uid' => $uid
+				)
+			);
+			
+			$affectRow = $this->_memberSlotModel->updateByCondition(array(
+				'active_time' => $time, 
+				'kw' => implode('|',$kwList),
+				'kw_price' => implode('|',$kwPriceList)
+			),$condition);
+			
+		}
 		
 		return $affectRow;
 	}
@@ -155,7 +182,7 @@ class Inventory_service extends Base_service {
 			$kw_price = array();
 			
 			foreach($data['goods_list'] as $good){
-				$kw[] = str_replace('.','',str_replace(array('-','_'),'',$good['goods_code']).$good['goods_size']);
+				$kw[] = str_replace('.','',str_replace(array('-','_'),'',$good['goods_code']).'S'.$good['goods_size']);
 				$kw_price[] = $good['price_min'];
 			}
 			
@@ -191,6 +218,9 @@ class Inventory_service extends Base_service {
 			}
 			
 			$slots['hp_cnt'] = $hpCount;
+			
+			//让系统自动更新时间
+			unset($slots['gmt_modify']);
 			$this->updateUserSlot($slots,$uid);
 		}
 			
@@ -209,6 +239,8 @@ class Inventory_service extends Base_service {
 			$initData = array(
 				'uid' => $uid,
 				'slot_num' => 10,
+				'kw' => '',
+				'kw_price' => ''
 			);
 			
 			for($i = 1; $i <= 10; $i++){

@@ -6,51 +6,19 @@
             <li {if $uri_string == 'my_req/history'}class="scr_cur"{/if}><a href="{site_url('my_req/history')}">历史求货</a></li>
         </ul>
     </div>
-    <form action="{site_url($uri_string)}" method="post" id="formSearch">
+    <form action="{site_url($uri_string)}" method="get" id="formSearch">
         <input type="hidden" name="page" value=""/>
         <div class="goods_search">
-        	 <textarea name="gc" placeholder="输入{#goods_code#}，每行一个货号或者单行按逗号分隔，一次最多可同时50个">{$smarty.post.gc}</textarea>
              <ul class="search_con clearfix">
                 <li>
                     <label class="ftitle">{#pub_date#}</label>
-                    <input type="text" name="sdate" class="w72 datepicker" value="{if $smarty.post.sdate}{$smarty.post.sdate}{/if}" placeholder="日期开始"/>
-                    <input type="text" name="edate" class="w72 datepicker" value="{if $smarty.post.edate}{$smarty.post.edate}{/if}" placeholder="日期结束"/>
-                </li>
-                <li>
-                    <label class="ftitle">{#isexpired#}</label>
-                    {foreach from=$isExpired item=item key=key}
-                    <label><input type="radio" name="isexpired" value="{$key}" {if $smarty.post.isexpired == $key}checked{/if}/>{$item}</label>
-                    {/foreach}
-                </li>
-                <li>
-                    <label class="ftitle">{#goods_name#}</label>
-                    <input type="text" class="mtxt" name="gn" value="{$smarty.post.gn}"/>
-                </li>
-                <li>
-                    <label class="ftitle">{#goods_size#}</label>
-                    <input type="text" name="s1" class="stxt" value="{$smarty.post.s1}" placeholder="尺寸下限"/>
-                    <input type="text" name="s2" class="stxt" value="{$smarty.post.s2}" placeholder="尺寸上限"/>
-                </li>
-                <li>
-                    <label class="ftitle">{#sex#}</label>
-                    <label><input type="radio" name="sex" value="0" {if $smarty.post.sex == 0}checked{/if}/>不限</label>
-                    <label><input type="radio" name="sex" value="1" {if $smarty.post.sex == 1}checked{/if}/>男</label>
-                    <label><input type="radio" name="sex" value="2" {if $smarty.post.sex == 2}checked{/if}/>女</label>
-                </li>
-                <li>
-                    <label class="ftitle">{#price_max#}</label>
-                    <input type="text" name="pr1" class="stxt" value="{if $smarty.post.pr1}{$smarty.post.pr1}{/if}" placeholder="下限"/>
-                    <input type="text" name="pr2" class="stxt" value="{if $smarty.post.pr2}{$smarty.post.pr2}{/if}" placeholder="上限"/>
-                </li>
-                <li>
-                    <label class="ftitle">{#match_mode#}</label>
-                    <label><input type="checkbox" name="match_inventory" value="yes" checked/>自动匹配库存</label>
+                    <input type="text" name="sdate" class="w72 datepicker" value="{if $smarty.get.sdate}{$smarty.get.sdate}{/if}" placeholder="日期开始"/>
+                    <input type="text" name="edate" class="w72 datepicker" value="{if $smarty.get.edate}{$smarty.get.edate}{/if}" placeholder="日期结束"/>
                 </li>
                 <li>
                     <input class="master_btn" type="submit" name="search" value="查询"/>
                 </li>
              </ul>
-             {include file="hp/code_tip.tpl"}
 	        <table class="fulltable">
 	            <thead>
 	                <tr>
@@ -95,8 +63,8 @@
 		      <tr>
 		          <td colspan="12">
 		              <div class="pd5">
-		              <input type="button" class="action updateBtn" data-checkbox="id[]" data-title="{#reactive#}" data-url="{site_url('my_req/reactive')}" name="batchUpdate" value="重新激活"/>
-		              <input type="button" class="action deleteBtn" data-checkbox="id[]" data-title="删除" data-url="{site_url('my_req/delete?source=recent')}" name="delete" value="删除" />
+		              <input type="button" class="action" name="pub" value="+重新发布"/>
+		              <input type="button" class="action deleteBtn" data-checkbox="id[]" data-title="删除" data-url="{site_url('my_req/delete?source=history')}" name="delete" value="删除" />
 		              </div>
 		          </td>
 		      </tr>
@@ -107,21 +75,7 @@
     <script type="text/javascript" src="{resource_url('js/jquery-ui/i18n/zh-CN.js')}"></script>
     <script>
         $(function(){
-			var successCallback = function(ids,json){
-				if(check_success(json.message)){
-					showToast('success',json.message);
-					
-					setTimeout(function(){
-					   location.reload();
-					},1000);
-				}else{
-					showToast('error',json.message);
-				}
-			}
-			
             bindDeleteEvent();
-            bindOpEvent("input.updateBtn",successCallback);
-            
             $( ".datepicker" ).datepicker({ });
         });
     </script>

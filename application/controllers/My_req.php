@@ -117,6 +117,8 @@ class My_req extends MyYdzj_Controller {
 	}
 	
 	
+	
+	
 	private function _preparePager(){
 		$currentPage = $this->input->get_post('page') ? $this->input->get_post('page') : 1;
 		$pageParam = array(
@@ -175,11 +177,13 @@ class My_req extends MyYdzj_Controller {
 	
 	
 	/**
-	 * 最近发布求货删除
+	 * 求货删除 , 最近或者历史
 	 */
-	public function recent_del(){
+	public function delete(){
 		
 		$id = $this->input->post('id');
+		$source = $this->input->get_post('source');
+		
 		if($id && $this->isPostRequest()){
 			
 			for($i = 0 ; $i < 1; $i++){
@@ -203,7 +207,17 @@ class My_req extends MyYdzj_Controller {
 					)
 				);
 				
-				$rows = $this->hp_service->deleteUserRecentHp($condition);
+				switch($source){
+					case 'recent':
+						$rows = $this->hp_service->deleteUserRecentHp($condition);
+						break;
+					case 'history':
+						$rows = $this->hp_service->deleteUserHistoryHp($condition,$this->_loginUID);
+						break;
+					default:
+						break;
+				}
+				
 				$this->input->set_cookie('dt',$this->_reqtime,CACHE_ONE_DAY);
 				
 				$this->jsonOutput('删除成功',array('id' => $id));
@@ -214,6 +228,7 @@ class My_req extends MyYdzj_Controller {
 		}
 		
 	}
+	
 	
 	
 	/**
@@ -236,19 +251,36 @@ class My_req extends MyYdzj_Controller {
 	
 	
 	/**
-	 * 
+	 * 发布历史
 	 */
 	public function history(){
 		
-		$condition = $this->_preparePager();
+		$condition['pager'] = $this->_preparePager();
+		$condition['order'] = 'goods_id DESC';
+		
+		
+		$seach['sdate'] = $this->input->get_post('sdate');
+		$seach['edate'] = $this->input->get('edate');
+		
+		if($seach['sdate']){
+			$seach['sdate'] = str_replace('-','',$seach['sdate']);
+			$condition['where']['date_key >='] =  $seach['sdate'];
+		}
+		
+		if($seach['edate']){
+			$seach['edate'] = str_replace('-','',$seach['edate']);
+			$condition['where']['date_key <='] =  $seach['edate'];
+		}
+		
 		$results = $this->hp_service->getPubHistory($condition,$this->_loginUID);
+		
 		
 		if($results){
 			$this->assign('list',$results['data']);
 			$this->assign('page',$results['pager']);
 		}
 		
-		$this->display('my_req/recent');
+		$this->display();
 	}
 
 }

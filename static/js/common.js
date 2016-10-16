@@ -578,16 +578,9 @@ function bindOpEvent(selector,customSuccessFn,customErrorFn){
 	
 	$(selector).bind("click",function(){
 		var triggerObj = $(this);
-		
-  		var ids = [];
-  		var url = $(this).attr("data-url");
-  		var title = $(this).attr('data-title');
-  		
-  		var checkboxName = $(this).attr('data-checkbox');
-  		
-  		$("input[name='" + checkboxName + "']:checked").each(function(){
-  			ids.push($(this).val());
-  		});
+		var ids = getIDS(triggerObj);
+		var url = triggerObj.attr("data-url");
+  		var title = triggerObj.attr('data-title');
   		
   		if(ids.length == 0){
   			showToast('error','请选勾选.');
@@ -597,6 +590,24 @@ function bindOpEvent(selector,customSuccessFn,customErrorFn){
   	});
 	
 }
+
+function getIDS(obj){
+	var ids = [];
+	
+	
+	if(obj.attr('href')){
+		ids.push(obj.attr('data-id'));
+	}else{
+		var checkboxName = obj.attr('data-checkbox');
+  		
+  		$("input[name='" + checkboxName + "']:checked").each(function(){
+  			ids.push($(this).val());
+  		});
+	}
+	
+	return ids;
+}
+
 
 
 /**
@@ -628,17 +639,10 @@ function bindDeleteEvent(customSuccessFn,customErrorFn){
   	});
   	
   	$(".deleteBtn").bind("click",function(){
-  		var ids = [];
   		var triggerObj = $(this);
-  		
-  		var url = $(this).attr("data-url");
-  		var title = $(this).attr('data-title');
-  		
-  		var checkboxName = $(this).attr('data-checkbox');
-  		
-  		$("input[name='" + checkboxName + "']:checked").each(function(){
-  			ids.push($(this).val());
-  		});
+  		var ids = getIDS(triggerObj);
+  		var url = triggerObj.attr("data-url");
+  		var title = triggerObj.attr('data-title');
   		
   		if(ids.length == 0){
   			showToast('error','请选勾选.');

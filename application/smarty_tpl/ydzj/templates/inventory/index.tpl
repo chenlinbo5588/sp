@@ -4,7 +4,12 @@
     <form action="{site_url($uri_string)}" method="post" id="formSearch">
         <input type="hidden" name="page" value=""/>
         <div class="goods_search">
-             <div><input type="button" class="master_btn" value="刷新库存"/></div>
+             {if $secondsElpse > 0}
+             <div><input type="submit" class="master_btn" value="刷新库存"/>{*&nbsp;<input type="button" class="master_btn" value="匹配我的库存"/>*}<strong>还剩下{$secondsElpse}秒,库存将自动过期</strong></div>
+             {else}
+             <div><input type="submit" class="master_btn" value="刷新库存"/>{*&nbsp;<input type="button" class="master_btn" value="匹配我的库存"/>*}<strong>库存已过期</strong></div>
+             {/if}
+             <div class="hightlight pd5">库存默认过期时间为3个小时，过期以后需要可以进行手动刷新，库存刷新以后便可以获得平台后台自动匹配的消息提醒</div>
              <div class="tip pd5">系统默认分类给了那您10个{#goods_slot#}，每个{#goods_slot#}可以添加50个不同尺寸的货品,如您需要更多{#goods_slot#}，请在网站下发找到我们的联系方式并与我们取得沟通。</div>
 	         <ul class="slot_list clearfix">
 	         	{foreach from=$list['slot_config'] item=item}

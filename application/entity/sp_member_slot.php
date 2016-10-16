@@ -7,6 +7,9 @@ $entity = array(
 'slot_addon' => 'int',
 'hp_cnt' => 'int',
 'slot_config' => 'text',
+'kw' => 'text',
+'kw_price' => 'text',
+'active_time' => 'int',
 'gmt_create' => 'int',
 'gmt_modify' => 'int'
 );

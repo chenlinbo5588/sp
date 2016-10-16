@@ -78,6 +78,7 @@ class Notify extends Ydzj_Admin_Controller {
 			
 			$info['title'] = $this->input->post('title');
 			$info['content'] = $this->input->post('content');
+			$info['users'] = $this->input->post('users');
 			
 			$this->form_validation->set_rules('send_group','目标组','required|in_list[1,2,3,4]');
 			$this->form_validation->set_rules('msg_mode','发送模式','required|in_list[0,1,2]');
@@ -111,6 +112,8 @@ class Notify extends Ydzj_Admin_Controller {
 				
 				if($info['msg_mode'] != 0){
 					$userList = $this->input->post('users');
+					
+					//最后已个 |  重要，用户搜索用户
 					$data['users'] = str_replace(array("\r\n","\r","\n"),'|',$userList).'|';
 				}
 				

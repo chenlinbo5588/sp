@@ -30,7 +30,6 @@
 				        <span class="hightlight">邮箱尚未认证,可能无法收到邮件提醒</span>
 				        <a class="warning" href="{site_url('my/verify_email')}" title="马上认证邮箱">马上认证邮箱</a>
 				    </div>
-				    
 			   </td>
 			</tr>
 			<tr>
@@ -38,9 +37,8 @@
 				<td>
 					<img src="{if $profile['basic']['avatar_s']}{resource_url($profile['basic']['avatar_s'])}{else}{resource_url($siteSetting['default_user_portrait'])}{/if}"/>
 		            <div class="upload">
-		              <input type="button" id="uploadButton" value="选择图片上传" />
+		              <input id="file_upload" type="file" name="trade_pic" /><span class="hightlight">请上传尺寸JPG,PNG格式图片,大小1M以内</span>
 		            </div>
-		            <div class="hightlight">文件最大2M，JPG PNG格式, 尺寸最多不超过 800x600</div>
 				</td>
 			</tr>
 			<tr>
@@ -77,7 +75,7 @@
 		</tbody>
 	</table>
 	{include file="common/jquery_validation.tpl"}
-	{include file="common/ke.tpl"}
+	{include file="common/uploadify.tpl"}
 	{include file="common/jcrop.tpl"}
 	
 	<div id="dialog" title="修改邮箱" style="display:none;">
@@ -107,6 +105,7 @@
 	<script>
 		var uploadUrl = '{site_url("my/upload_avatar")}?mod=member_avatar';
 		var min_width = {$avatarImageSize['m']['width']},min_height = {$avatarImageSize['m']['height']};
+		var swfUrl = "{resource_url('js/uploadify/uploadify.swf')}";
 	</script>
 	<script type="text/javascript" src="{resource_url('js/my/index.js')}"></script>
 {include file="common/my_footer.tpl"}

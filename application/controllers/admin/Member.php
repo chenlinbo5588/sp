@@ -5,6 +5,7 @@ class Member extends Ydzj_Admin_Controller {
 	
 	private $_avatarImageSize ;
 	private $_avatarSizeKeys;
+	private $_mtime;
 	
 	
 	public function __construct(){
@@ -12,6 +13,14 @@ class Member extends Ydzj_Admin_Controller {
 		
 		$this->_avatarImageSize = config_item('avatar_img_size');
 		$this->_avatarSizeKeys = array_keys($this->_avatarImageSize);
+		
+		$this->_mtime = array(
+			'不限' => '',
+			'最近1天内' => '-1 days',
+			'最近3天内' => '-3 days',
+			'近一周内' => '-7 days',
+			'近一个月内' => '-30 days',
+		);
 		
 		$this->assign('avatarImageSize',$this->_avatarImageSize);
 	}
@@ -31,6 +40,7 @@ class Member extends Ydzj_Admin_Controller {
 			
 		);
 		
+		/*
 		$ds = array();
 		$dkeys = array('d1','d2','d3','d4');
 		$tempK = '';
@@ -50,6 +60,7 @@ class Member extends Ydzj_Admin_Controller {
 			
 			$this->assign('ds',$this->common_district_service->prepareCityData($ds));
 		}
+		*/
 		
 		$search_map['search_field'] = array('username' => '登陆账号' ,'mobile' => '手机号码');
 		
@@ -59,18 +70,20 @@ class Member extends Ydzj_Admin_Controller {
 				'-6 hours' => '最近6小时内活跃', '-12 hours' => '最近12小时内活跃',  
 				'-1 days' => '最近1天内活跃' , '-3 days' => '最近3天内活跃' , 
 				'-7 days' => '最近7天内活跃' ,'-15 days' => '最近15天内活跃');
-		*/
+		
 		
 		$search_map['register_channel'] = array('1' => '后台管理中心','2' => '手机网页版' ,'3' => 'PC网页版','4' => 'iOS客户端','5' => 'Android客户端');
 		$search_map['register_sort'] = array('uid DESC' => '按时间倒序','uid ASC' => '按时间顺序');
-		$search_map['member_state'] = array('avatar_status@0' => '待验证头像','district_bind@0' => '未设置地区','freeze@1' => '已禁止登录');
+		$search_map['member_state'] = array('avatar_status@0' => '待验证头像','freeze@1' => '已禁止登录');
+		*/
+		
 		
 		$search['search_field_name'] = $this->input->get_post('search_field_name');
 		$search['search_field_value'] = $this->input->get_post('search_field_value');
 		//$search['activity_sort'] = $this->input->get_post('activity_sort');
-		$search['register_channel'] = $this->input->get_post('register_channel');
-		$search['register_sort'] = $this->input->get_post('register_sort');
-		$search['member_state'] = $this->input->get_post('member_state');
+		//$search['register_channel'] = $this->input->get_post('register_channel');
+		$search['reg_time'] = $this->input->get_post('reg_time');
+		//$search['member_state'] = $this->input->get_post('member_state');
 		
 		if(!empty($search['search_field_value']) && in_array($search['search_field_name'], array_keys($search_map['search_field']))){
 			$condition['like'][$search['search_field_name']] = $search['search_field_value'];
@@ -80,19 +93,16 @@ class Member extends Ydzj_Admin_Controller {
 		if(in_array($search['activity_sort'], array_keys($search_map['activity_sort']))){
 			$condition['where']['last_activity >='] = strtotime($search['activity_sort']);
 		}
-		*/
+		
 		if(in_array($search['register_channel'], array_keys($search_map['register_channel']))){
 			$condition['where']['channel'] = $search['register_channel'];
 		}
+		*/
 		
-		if(in_array($search['register_sort'], array_keys($search_map['register_sort']))){
-			$condition['order'] = $search['register_sort'];
+		if($this->_mtime[$search['reg_time']]){
+			$condition['where']['gmt_create >='] = strtotime($this->_mtime[$search['reg_time']],$this->_reqtime);
 		}
 		
-		if(in_array($search['member_state'], array_keys($search_map['member_state']))){
-			$statArray = explode('@',$search['member_state']);
-			$condition['where'][$statArray[0]] = $statArray[1];
-		}
 		
 		$list = $this->member_service->getListByCondition($condition);
 		
@@ -100,6 +110,7 @@ class Member extends Ydzj_Admin_Controller {
 		$dqList = array();
 		$inviterList = array();
 		foreach($list['data'] as $member){
+			/*
 			if($member['d1']){
 				$dqList[] = $member['d1'];
 			}
@@ -114,7 +125,7 @@ class Member extends Ydzj_Admin_Controller {
 			if($member['d4']){
 				$dqList[] = $member['d4'];
 			}
-			
+			*/
 			if($member['inviter']){
 				$inviterList[] = $member['inviter'];
 			}
@@ -135,8 +146,10 @@ class Member extends Ydzj_Admin_Controller {
 		
 		
 		$this->assign('search_map',$search_map);
-		$this->assign('memberDs',$this->common_district_service->getDistrictByIds($dqList));
+		//$this->assign('memberDs',$this->common_district_service->getDistrictByIds($dqList));
 		//$this->assign('d1',$this->common_district_service->getDistrictByPid(0));
+		
+		$this->assign('mtime',$this->_mtime);
 		$this->display();
 	}
 	
@@ -224,11 +237,6 @@ class Member extends Ydzj_Admin_Controller {
 			$this->form_validation->set_rules('email','电子邮箱','valid_email');
 		}
 		
-		$param['username'] = $this->input->post('username');
-		if($param['username']){
-			$this->form_validation->set_rules('username','真实名称','min_length[1]|max_length[30]');
-		}
-		
 		$param['qq'] = $this->input->post('qq');
 		
 		if($param['qq']){
@@ -241,15 +249,15 @@ class Member extends Ydzj_Admin_Controller {
 			$this->form_validation->set_rules('weixin','微信号','alpha_dash|min_length[6]|max_length[20]');
 		}
 		
-		$this->form_validation->set_rules('allowtalk','允许发表言论','required|in_list[N,Y]');
 		$this->form_validation->set_rules('freeze','允许登录','required|in_list[N,Y]');
 	}
 	
 	
 	/**
-	 * 后台创建用户
+	 * 后台创建用户,暂时直接 die
 	 */
 	public function add(){
+		die(0);
 		$info = array();
 		
 		if($this->isPostRequest()){
@@ -297,7 +305,6 @@ class Member extends Ydzj_Admin_Controller {
 					'email' => $this->input->post('email'),
 					'username' => $this->input->post('username'),
 					'sex' => $this->input->post('sex'),
-					'allowtalk' => $this->input->post('allowtalk'),
 					'freeze' => $this->input->post('freeze'),
 					'status' => 0,
 					'channel' => 1	//1 标志直接后台增加
@@ -350,8 +357,6 @@ class Member extends Ydzj_Admin_Controller {
 		
 		if(!empty($member_id) && $this->isPostRequest()){
 			
-			$this->form_validation->set_rules('nickname','昵称','min_length[3]|max_length[30]|is_unique_not_self['.$this->Member_Model->getTableRealName().'.nickname.uid.'.$member_id.']');
-			
 			$password = $this->input->post('passwd');
 			$password2 =  $this->input->post('passwd2');
 			
@@ -370,20 +375,19 @@ class Member extends Ydzj_Admin_Controller {
 				}
 				
 				$updateData = array(
-					'nickname' => $this->input->post('nickname'),
 					'qq' => $this->input->post('qq'),
 					'weixin' => $this->input->post('weixin'),
 					'email' => $this->input->post('email'),
-					'username' => $this->input->post('username'),
 					'sex' => $this->input->post('sex'),
 					'allowtalk' => $this->input->post('allowtalk'),
 					'freeze' => $this->input->post('freeze'),
 				);
 				
-				$aid = $this->input->post('avatar_id');
+				$member_avatar = $this->input->post('avatar');
 				
-				if($aid){
-					$member_avatar = $this->input->post('avatar');
+				
+				if($member_avatar){
+					$aid = $this->input->post('avatar_id');
 					$avatar = getImgPathArray($member_avatar,$this->_avatarSizeKeys);
 					$avatar['aid'] = $aid;
 					$updateData = array_merge($updateData,$avatar);

@@ -54,8 +54,10 @@ $config['navs'] = array(
 		'member' => array(
 			array('title' => '会员管理','url' => 'member/index'),
 			array('title' => '会员通知','url' => 'notify/index'),
+			array('title' => '卖家认证','url' => 'seller/index'),
 		),
 		'notify' => 'member',
+		'seller' => 'member',
 		'goods' => array(
 			array('title' => '商品','url' => 'goods/index'),
 			array('title' => '商品分类','url' => 'goods_class/category'),
@@ -111,11 +113,13 @@ $config['navs'] = array(
 		),
 		'member' => array(
 			'member/index' => '管理',
-			'member/add' => '添加'
 		),
 		'notify' => array(
 			'notify/index' => '通知管理',
 			'notify/add' => '添加通知'
+		),
+		'seller' => array(
+			'seller/index' => '卖家认证管理'
 		),
 		'goods' => array(
 			'goods/index' => '管理',
@@ -126,7 +130,7 @@ $config['navs'] = array(
 			'goods_class/add' => '添加',
 			'goods_class/export' => '导出',
 			'goods_class/import' => '导入',
-			'goods_class/tag' => 'TAG管理'
+			//'goods_class/tag' => 'TAG管理'
 		),
 		'brand' => array(
 			'brand/index' => '管理',

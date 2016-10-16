@@ -38,7 +38,7 @@
 	           <tr id="row{$item['id']}">
 		           <td>
 		           <input type="checkbox" name="id[]" group="pmid" value="{$item['id']}"/>
-		           <a href="javascript:void(0);" class="popwin" data-url="{site_url('my_pm/detail?id='|cat:$item['id'])}">{if $item['msg_type'] == -1}<strong>【系统消息】</strong>{/if}{$item['title']|escape}</td>
+		           <a href="javascript:void(0);" class="popwin" data-url="{site_url('my_pm/detail')}?id={$item['id']}&uid={$item['uid']}">{if $item['msg_type'] == -1}<strong>【系统消息】</strong>{/if}{$item['title']|escape}</td>
 		           <td>{if $item['readed'] == 1}已读{else}未读{/if}</td>
 		           <td>{time_tran($item['gmt_create'])}</td>
 		           <td>{if $item['readed'] == 1}{time_tran($item['gmt_modify'])}{/if}</td>
@@ -67,7 +67,7 @@
             <table class="fulltable noborder">
                 <tr><td><input type="text" class="at_txt" name="to_username" value="" placeholder="请输入对方登陆账号"/></td></tr>
                 <tr><td><input type="text" class="at_txt" name="title" value="" placeholder="请输入消息标题，最大30个字"/></td></tr>
-                <tr><td><textarea name="content" class="at_txt" style="height:200px" placeholder="请输入消息正文，最大200个字"></textarea></td></tr>
+                <tr><td><textarea name="content" class="at_txt" style="height:200px" placeholder="请输入消息正文，最多200个字"></textarea></td></tr>
                 <tr><td><input type="submit" class="master_btn at_txt" name="tijiao" value="发送"/></td></tr>
             </table>
         </form>
@@ -75,7 +75,6 @@
     <div id="pmDetailDlg" title="站内信详情"></div>
     
     <script>
-        var username_url = "{site_url('my_pm/username_check')}";
         $(function(){
             bindDeleteEvent();
             {if $read == 0 && $type == 'receive'}bindOpEvent("input.updateBtn");{/if}

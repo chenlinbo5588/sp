@@ -6,6 +6,8 @@ $entity = array(
 'store_url' => 'varchar',
 'source_pic' => 'varchar',
 'trade_pic' => 'varchar',
+'verify_result' => 'tinyint',
+'verify_remark' => 'varchar',
 'gmt_create' => 'int',
 'gmt_modify' => 'int'
 );

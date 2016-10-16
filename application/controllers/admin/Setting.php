@@ -31,6 +31,8 @@ class Setting extends Ydzj_Admin_Controller {
 			'site_mobile',
 			'site_tel', //固定电话
 			'site_faxno',
+			'site_qq',
+			'site_weixin',
 		);
 		
 		$currentSetting = $this->admin_service->getSettingList(array(

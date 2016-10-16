@@ -97,7 +97,7 @@
 	
 	
 	$("input[name=addcolor]").bind("click",function(){
-		addDlg.dialog('open');
+		addDlg.dialog('option',{'position': { 'my' : 'center','at':'center','of' : $(this) }} ).dialog('open');
 	});
 	
 	$("a.edit").bind("click",function(){
@@ -105,6 +105,6 @@
 		var id = $(this).attr("data-id");
 		editColorDlg.find("input[name=color_name]").val(colorName);
 		editColorDlg.find("input[name=id]").val(id);
-		editColorDlg.dialog('open');
+		editColorDlg.dialog('option',{'position': { 'my' : 'center','at':'center','of' : $(this) }} ).dialog('open');
 	});
 });

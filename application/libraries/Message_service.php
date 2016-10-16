@@ -8,6 +8,7 @@ class Message_service extends Base_service {
 	private $_memberGroupModel = null;
 	private $_siteMessageModel = null;
 	private $_pushChatModel = null;
+	private $_pushEmailModel = null;
 	
 	
 	private $_email = null;
@@ -16,12 +17,13 @@ class Message_service extends Base_service {
 	
 	private $_pmHashObject;
 	private $_chatHashObject;
+	private $_emailHashObject;
 
 	
 	public function __construct(){
 		parent::__construct();
 		
-		self::$CI->load->model(array('Msg_Template_Model','Pm_Message_Model','Site_Message_Model','Push_Chat_Model'));
+		self::$CI->load->model(array('Msg_Template_Model','Pm_Message_Model','Site_Message_Model','Push_Chat_Model','Push_Email_Model'));
 		self::$CI->load->library(array('Email'));
 		
 		$this->_email = self::$CI->email;
@@ -30,10 +32,12 @@ class Message_service extends Base_service {
 		
 		$this->_siteMessageModel = self::$CI->Site_Message_Model;
 		$this->_pushChatModel = self::$CI->Push_Chat_Model;
+		$this->_pushEmailModel = self::$CI->Push_Email_Model;
 		
 		
 		$this->_pmHashObject = new Flexihash();
 		$this->_chatHashObject = new Flexihash();
+		$this->_emailHashObject = new Flexihash();
 		
 		$pmConfig = self::$CI->load->get_config('split_pm');
 		$chatConfig = self::$CI->load->get_config('split_push_chat');
@@ -72,6 +76,50 @@ class Message_service extends Base_service {
 	public function addSitePmMessage($data){
 		return $this->_siteMessageModel->_add($data);
 	}
+	
+	
+	/**
+	 * 更加用户id列表 添加系统消息
+	 */
+	public function sendSitePmMessageToUsersByUid($userIds,$moredata){
+		
+		if(empty($userIds)){
+			return ;
+		}
+		
+		if(!is_array($userIds)){
+			$userIds = (array)$userIds;
+		}
+		
+		
+		$data = array(
+			'msg_type' => 1,//全体
+			'msg_mode' => 1,//白名单
+			'send_ways' => '站内信',
+		);
+		
+		$data = array_merge($data,$moredata);
+		
+		$userList = self::$memberModel->getList(array(
+			'select' => 'username',
+			'where_in' => array(
+				array('key' => 'uid','value' => $userIds)
+			)
+		));
+		
+		if($data['msg_mode'] != 0){
+			$tempList = array();
+			foreach($userList as $user){
+				$tempList[] = $user['username'];
+			}
+			
+			$data['users'] = str_replace(array("\r\n","\r","\n"),'',implode('|',$tempList)).'|';
+		}
+		
+		
+		return $this->addSitePmMessage($data);
+	}
+	
 	
 	
 	/**
@@ -174,20 +222,6 @@ class Message_service extends Base_service {
 		$receiveId = $this->_pmMessageModel->_add($data);
 		
 		return array('id_send' => $sendId, 'id_receive' => $receiveId);
-	}
-	
-	
-	
-	/**
-	 * 添加 站内消息
-	 */
-	public function addSystemPmMessage($data){
-		$this->setPmTableByUid($data['uid']);
-		
-		$data['msg_type'] = -1;
-		$data['from_uid'] = 0;
-		
-		return $this->_pmMessageModel->_add($data);
 	}
 	
 	
@@ -387,6 +421,37 @@ class Message_service extends Base_service {
 		
 		return $sysPm;
 	}
+	
+	
+	/* ---------------以下站内聊天窗口 -------------------------------------------- */
+	
+	
+	/**
+	 * 添加一条待发聊天记录， 后台自动发送
+	 */
+	public function addSystemChatMessageToUser($data,$userInfo){
+		$this->setPushChatTableByUid($userInfo['uid']);
+		
+		$data = array_merge($data,$userInfo);
+		$data['msg_type'] = -1;
+		$data['content'] = strip_tags($data['content']);
+		
+		
+		$this->_pushChatModel->_add($data);
+	}
+	
+	/**
+	 * 添加一条待发邮件记录，后台自动发送
+	 */
+	public function addSystemEmailMessageToUser($data,$userInfo){
+		//$this->setPushChatTableByUid($userInfo['uid']);
+		
+		$data = array_merge($data,$userInfo);
+		$data['msg_type'] = -1;
+		
+		$this->_pushEmailModel->_add($data);
+	}
+	
 	
 	
 	/* ----------------以下邮件相关----------------------------------------------- */

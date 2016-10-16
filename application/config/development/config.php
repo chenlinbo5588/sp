@@ -22,6 +22,7 @@ $config['inventory_expired'] = 10800;
 
 // 发布求货 冻结时间间隔 秒数
 $config['hp_pub_freezen'] = 15;
+
 // 库存激活冻结时间间隔
 $config['inventory_freezen'] = 10;
 

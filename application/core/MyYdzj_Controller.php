@@ -27,8 +27,18 @@ class MyYdzj_Controller extends Ydzj_Controller {
 		$this->_pushObject = $this->base_service->getPushObject();
 		$this->assign('pushConfig',config_item('huanxin'));
 		
+		$refresh = false;
+		$spm = $this->input->get('spm');
 		
-		if($this->_reqInterval >= config_item('pmcheck_interval')){
+		if($spm){
+			$refreshIime = $this->encrypt->decode($spm);
+			
+			if($refreshIime && $refreshIime - $this->_reqtime > 0){
+				$refresh = true;
+			}
+		}
+		
+		if($refresh || $this->_reqInterval >= config_item('pmcheck_interval')){
 			$this->_pmUpdate();
 		}
 	}
