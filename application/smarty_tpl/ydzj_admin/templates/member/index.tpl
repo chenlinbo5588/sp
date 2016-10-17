@@ -92,7 +92,7 @@
           <th>最后登录</th>
           <th>注册信息</th>
           <th>积分</th>
-          <th>状态</th>
+          <th>卖家组</th>
           <th class="align-center">登录</th>
           <th class="align-center">操作</th>
         </tr>
@@ -124,7 +124,7 @@
             <div>{$item['reg_ip']}</div>
           </td>
           <td>{$item['credits']}</td>
-          <td>{if $item['status'] == 1}已认证用户{else}未认证{/if}</td>
+          <td>{if $item['group_id'] != 2}认证{else}未认证{/if}会员</td>
           <td class="align-center">{if $item['freeze'] == 'Y'}<span class="tip_warning">禁止</span>{else}允许{/if}</td>
           <td class="align-center"><a href="{admin_site_url('member/edit')}?id={$item['uid']}">编辑</a> | <a href="{admin_site_url('notify/add?uid=')}{$item['uid']}">通知</a></td>
         </tr>

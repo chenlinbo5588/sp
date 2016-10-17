@@ -274,9 +274,174 @@ class Member extends Ydzj_Controller {
 	}
 	
 	
+	public function checkEmailCode($emailCode){
+		$code = $this->getCacheObject()->get('email_code');
+		
+		$emailCode = trim($emailCode);
+		if(strtolower($code) == strtolower($emailCode)){
+			return true;
+		}else{
+			$this->form_validation->set_message('checkEmailCode', '对不起,邮件验证码参数有误');
+			return false;
+		}
+	}
+	
+	
+	/**
+	 * 忘记密码
+	 */
 	public function forget(){
+		
+		$feedback = '';
+		
+		$step = $this->input->get_post('step');
+		$username = $this->input->get_post('username');
+		if(empty($step)){
+			$step = 1;
+		}
+		
+		if($this->isPostRequest()){
+			
+			for($i = 0; $i < 1; $i++){
+				
+				if(1== $step){
+					$this->form_validation->set_rules('username','登陆账号', 'required|in_db_list['.$this->Member_Model->getTableRealName().'.username]');
+					$this->form_validation->set_rules('auth_code','验证码','required|callback_validateAuthCode');
+				
+				
+					if(!$this->form_validation->run()){
+						break;
+					}
+					
+					$userInfo = $this->Member_Model->getFirstByKey($username,'username','uid,username,email,mobile');
+					$emailUrl = 'http://mail.'.substr($userInfo['email'],strrpos($userInfo['email'],'@') + 1);
+					
+					$this->assign('userinfo',$userInfo);
+					$this->assign('mailurl',$emailUrl);
+					
+					
+					$this->session->set_userdata('forget_uid',$userInfo['uid']);
+					$this->session->set_userdata('forget_username',$userInfo['username']);
+					
+					$step++;
+					
+				}else if(2==$step){
+					
+					$this->load->library('Verify_service');
+					
+					$findWay = $this->input->get_post('find_way');
+					$this->form_validation->set_rules('find_way','找回方式', 'required|in_list[way_email,way_mobile]');
+					
+					if('way_email' == $findWay){
+						$this->form_validation->set_rules('email_code','邮箱地址','required|callback_checkEmailCode');
+						
+					}else if('way_mobile' == $findWay){
+						$this->form_validation->set_rules('auth_code','验证码','required|callback_validateAuthCode');
+						$this->form_validation->set_rules('mobile_auth_code','手机验证码', array(
+								'required',
+								array(
+									'authcode_callable['.$this->input->post('mobile').']',
+									array(
+										$this->verify_service,'validateAuthCode'
+									)
+								)
+							),
+							array(
+								'authcode_callable' => '手机验证码不正确'
+							)
+						);
+			
+			
+					}
+					
+					if(!$this->form_validation->run()){
+						break;
+					}
+					
+					$step++;
+				
+				}elseif(3==$step){
+					
+					$this->form_validation->set_rules('newpsw','密码','required|valid_password|min_length[6]|max_length[12]');
+					$this->form_validation->set_rules('newpsw_confirm','密码确认','required|matches[newpsw]');
+					
+					
+					if(!$this->form_validation->run()){
+						break;
+					}
+					
+					//print_r($this->session->all_userdata());
+					$uid = $this->session->userdata('forget_uid');
+					$username = $this->session->userdata('forget_username');
+					$postUsername = $this->input->post('username');
+					if($username != $postUsername){
+						$feedback = '参数不正确';
+						break;
+					}
+					$newpsw = $this->input->post('newpsw');
+					
+					$row = $this->Member_Model->update(array(
+						'password' => $this->encrypt->encode($newpsw)
+					),array('uid' => $uid));
+					
+					$step++;
+					
+					
+				}
+			}
+		}
+		
+		
+		$this->assign('stepHTML',step_helper(array(
+			'请输入您要找回密码的帐号',
+			'输入验证信息',
+			'重新设置密码'
+		),$step));
+		
+		$this->assign('username',$username);
+		$this->assign('step',$step);
+		$this->assign('feedback',$feedback);
 		$this->display();
 	}
+	
+	
+	/**
+	 * 发送邮件验证码
+	 */
+	public function email_code(){
+		
+		$email = $this->input->post('email');
+		
+		if($email && $this->isPostRequest()){
+			
+			$code = random_string('alnum',6);
+			
+			$emailData = array(
+				'title' => $this->_getSiteSetting('site_name').'邮件验证码',
+				'content' => "您的验证码是: <strong>".$code."</strong> ,如非本人操作请。<div>系统邮件请勿回复</div>"
+			);
+			
+			$this->message_service->initEmail($this->_siteSetting);
+			$flag = $this->message_service->sendEmail($email,$emailData['title'],$emailData['content']);
+			
+			if(!$flag){
+				$siteEmailModel = $this->message_service->getSiteEmailModel();
+				$siteEmailModel->_add(array(
+					'email' => $email,
+					'title' => $emailData['title'],
+					'content' => $emailData['content'],
+				));
+			}
+			
+			//10 
+			$this->getCacheObject()->save('email_code',$code,600);
+			$this->jsonOutput('邮件已发送');
+			
+		}else{
+			$this->jsonOutput('参数不正确');
+		}
+	}
+	
 	
 	public function verify_email(){
 		

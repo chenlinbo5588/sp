@@ -69,6 +69,13 @@ class Inventory_service extends Base_service {
 			)
 		));
 		
+		$condition = array(
+			'where' => array(
+				'uid' => $uid
+			)
+		);
+			
+		
 		if($slotList){
 			$kwList = array();
 			$kwPriceList = array();
@@ -85,19 +92,23 @@ class Inventory_service extends Base_service {
 				}
 			}
 			
-			
-			$condition = array(
-				'where' => array(
-					'uid' => $uid
-				)
-			);
-			
 			$updateData = array(
 				'active_time' => $time, 
 				'kw' => implode('|',$kwList),
 				'kw_price' => implode('|',$kwPriceList)
 			);
 			
+			
+			$affectRow = $this->_memberSlotModel->updateByCondition($updateData,$condition);
+			
+		}else{
+			
+			//所以货柜都空
+			$updateData = array(
+				'active_time' => $time, 
+				'kw' => '',
+				'kw_price' => '',
+			);
 			
 			$affectRow = $this->_memberSlotModel->updateByCondition($updateData,$condition);
 			

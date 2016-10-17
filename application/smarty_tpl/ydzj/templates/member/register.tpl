@@ -7,15 +7,7 @@
 	        <input type="hidden" name="returnUrl" value="{$returnUrl}"/>
 	        <li class="title"><h1>注册</h1></li>
 	        <li class="tip">{$feedback}</li>
-	        <li class="tip">{form_error('mobile')}</li>
-	        <li class="row rel">
-	            <input class="at_txt" type="text" id="mobile" name="mobile" value="{set_value('mobile')}" placeholder="请输入您常用手机号码，如13868880088"/>
-	            <input id="mobile_authcode" class="master_btn greenBtn mcode" data-mcode="#mobile" type="button" name="authCodeBtn" value="免费获取验证码"/>
-	        </li>
-	        <li class="tip">{form_error('mobile_auth_code')}</li>
-            <li class="row">
-                <input class="at_txt" type="text" name="mobile_auth_code" value="{set_value('mobile_auth_code')}" placeholder="请输入您手机收到的6位数字验证码"/>
-            </li>
+	        
             <li class="tip">{form_error('username')}</li>
             <li class="row">
                 <input class="at_txt" type="text" name="username" value="{set_value('username')}" placeholder="登陆账号,中文、字母、数字,最长8字符"/>
@@ -36,10 +28,19 @@
 	        <li class="row">
 	            <input class="at_txt" type="password" name="psw_confirm" value="{set_value('psw_confirm')}" placeholder="登陆密码确认"/>
 	        </li>
+	        <li class="tip">{form_error('mobile')}</li>
+            <li class="row">
+                <input class="at_txt" type="text" id="mobile" name="mobile" value="{set_value('mobile')}" placeholder="请输入您常用手机号码，如13868880088"/>
+            </li>
 	        <li>{form_error('auth_code')}</li>
             <li class="row rel">
                 <input class="at_txt" type="text" autocomplete="off" name="auth_code" value="{set_value('auth_code')}" placeholder="请输入右侧图片中4位验证码"/>
                 <div class="codeimg" id="authImg" title="点击图片刷新">正在获取验证码...</div>
+            </li>
+            <li class="tip">{form_error('mobile_auth_code')}</li>
+            <li class="row  rel">
+                <input class="at_txt" type="text" name="mobile_auth_code" value="{set_value('mobile_auth_code')}" placeholder="请输入您手机收到的6位数字验证码"/>
+                <input id="mobile_authcode" class="master_btn greenBtn grayed mcode" disabled data-mcode="#mobile" type="button" name="authCodeBtn" value="免费获取验证码"/>
             </li>
 	        <li class="row"><input class="master_btn w100pre" type="submit" name="register" value="注册"/></li>
 	    </form>

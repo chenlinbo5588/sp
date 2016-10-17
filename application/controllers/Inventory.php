@@ -19,6 +19,26 @@ class Inventory extends MyYdzj_Controller {
 			'2' => '未过期',
 		);
 		
+		//认证卖家
+		if(2 == $this->_profile['basic']['group_id']){
+			$refresh = $this->session->userdata('verify_refresh');
+			$needRefreshSeller = false;
+			if(empty($refresh)){
+				$needRefreshSeller = true;
+			}else if(($this->_reqtime - $refresh) > 60){
+				$needRefreshSeller = true;
+			}
+			
+			if($needRefreshSeller){
+				$this->load->library('Member_service');
+				$this->member_service->refreshProfile($this->_loginUID);
+			}
+			
+			if($needRefreshSeller){
+				$this->session->set_userdata('verify_refresh',$this->_reqtime);
+			}
+		}
+		
 		$this->assign('isExpired',$this->_isExpired);
 	}
 	

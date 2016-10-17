@@ -70,7 +70,7 @@ class Register extends MY_Controller {
 				$rt['code'] = 'success';
 				
 				$this->load->library('Sms_service');
-				if($this->sms_service->sendMessage($phoneNo)){
+				if($this->sms_service->sendMessage($phoneNo,$codeInfo['code'])){
 					$this->verify_service->updateSendFlag(array(
 			    		array('key' => 'send_normal' , 'value' => 'send_normal + 1')
 			    	),array('id' => $codeInfo['id']));

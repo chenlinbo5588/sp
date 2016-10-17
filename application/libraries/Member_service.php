@@ -126,7 +126,6 @@ class Member_service extends Base_service {
 	 * 卖家认证
 	 */
 	public function sellerVerify($uid,$flag,$message = ''){
-		file_put_contents('debug.txt',$uid);
 		$data = array(
 				'verify_result' => $flag,
 				'verify_remark' => $message

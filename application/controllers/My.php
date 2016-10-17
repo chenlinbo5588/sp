@@ -141,17 +141,23 @@ class My extends MyYdzj_Controller {
 					}
 					
 					if($affectRow > 0){
-						$siteEmailModel = $this->message_service->getSiteEmailModel();
-						$siteEmailModel->_add(array(
+						$emailData = array(
 							'email' => $this->_getSiteSetting('site_email'),
 							'title' => '有新的卖家认证请求',
 							'content' => '用户:'.$this->_profile['basic']['username'].' 提交了卖家认证资料，请及时审核,<a href="'.admin_site_url('seller/index').'">马上去审核</a>'
-						));
+						);
 						
-						/*
 						$this->message_service->initEmail($this->_siteSetting);
-						$this->message_service->sendEmail($this->_getSiteSetting('site_email'),"有新的卖家认证请求", "用户:".$this->_profile['basic']['username']." 提交了卖家认证资料，请及时审核,<a href=\"".admin_site_url('seller/index') ."\">马上去审核</a>";
-						*/
+						$flag = $this->message_service->sendEmail(
+							 $emailData['email'],
+							 $emailData['title'],
+							 $emailData['content']
+						);
+						
+						if(!$flag){
+							$siteEmailModel = $this->message_service->getSiteEmailModel();
+							$siteEmailModel->_add($emailData);
+						}
 					}
 					
 					$step++;

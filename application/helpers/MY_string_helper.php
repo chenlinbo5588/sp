@@ -6,25 +6,41 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 if ( ! function_exists('mask_mobile'))
 {
 	/**
-	 * Site URL
-	 *
-	 * Create a local URL based on your basepath. Segments can be passed via the
-	 * first parameter either as a string or an array.
-	 *
-	 * @param	string	$uri
-	 * @param	string	$protocol
+	 * @param	string	$mobile
+	 * @param	string	$mask
 	 * @return	string
 	 */
 	function mask_mobile($mobile, $mask = '*')
 	{
-		$str = $mobile;
 		if(preg_match("/^(\+?86)?1[0-9][0-9]{1}[0-9]{8}$|15[0189]{1}[0-9]{8}$|189[0-9]{8}$/",$mobile)){
-			$str = substr($mobile,0,-8). $mask.$mask.$mask.$mask.substr($mobile,-4);
+			$mobile = substr($mobile,0,-8).str_repeat($mask,4).substr($mobile,-4);
 		}
 		
-		return $str;
+		return $mobile;
 	}
 }
+
+if ( ! function_exists('mask_email'))
+{
+	/**
+	 * @param	string	$mobile
+	 * @param	string	$mask
+	 * @return	string
+	 */
+	function mask_email($email, $mask = '*')
+	{
+		$email_array = explode("@", $email); 
+        $prevfix = (strlen($email_array[0]) < 4) ? "" : substr($email, 0, 3); //邮箱前缀 
+        $count = 0; 
+        $str = preg_replace('/([\d\w+_-]{0,100})@/', '***@', $email, -1, $count); 
+        $rs = $prevfix . $str; 
+        
+        return $rs;
+	}
+}
+
+
+
 
 /** 
 * 全角字符转换为半角 

@@ -821,7 +821,7 @@ table.noext {
 
 /* 前台登陆  */
 #loginPanel,#register {
-	width: 30%;
+	width: 25%;
     min-width:350px;
     padding: 30px 20px 60px;
     margin: 30px auto;
@@ -913,6 +913,14 @@ table.noext {
 #adminlogin .form_error {
 	text-align: center;
     display: block;
+}
+
+.forgetway label {
+	font-size:15px;
+}
+
+.way_email strong, .way_mobile strong {
+	font-size:20px;
 }
 
 

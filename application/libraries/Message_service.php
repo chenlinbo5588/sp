@@ -327,7 +327,7 @@ class Message_service extends Base_service {
 	
 	
 	/**
-	 * 获得用户最近的一条系统消息
+	 * 系统广播 信息逻辑
 	 */
 	public function getLastestSysPm($userProfile,$uid){
 		//print_r($userProfile);
@@ -337,7 +337,7 @@ class Message_service extends Base_service {
 			'where' => array(
 				'id > ' => $maxUserSysId
 			),
-			'limit' => 5
+			'limit' => 10
 		));
 		
 		$listCount = count($list);
