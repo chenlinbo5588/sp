@@ -155,6 +155,11 @@ class Inventory extends MyYdzj_Controller {
 			if(!$remainSec){
 				$flag = $this->inventory_service->reactiveUserSlots($this->_reqtime,$this->_loginUID);
 				$feedback = getSuccessTip('库存刷新成功');
+				
+				if($flag){
+					$userSlots['active_time'] = $this->_reqtime;
+				}
+				
 			}else{
 				$feedback = getErrorTip('更新冻结时间还有'.$remainSec.'秒');
 			}

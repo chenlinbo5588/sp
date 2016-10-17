@@ -11,4 +11,11 @@
 			    	{/foreach}
 			   	</div>
 			</div>
+			{*
+			<div id="repub">
+				<a class="warning" href="{site_url('hp/add')}">3个货品待重新发布</a>
+				<ul class="republist">
+					<li><strong>Z12233</strong><span>Z12233</span><a href="javascript:void(0);">X</a></li>
+				</ul>
+			</div>*}
 			<div class="feedback">{$feedback}</div>

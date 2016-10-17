@@ -1,13 +1,17 @@
 {include file="common/my_header.tpl"}
     {config_load file="hp.conf"}
-    
+    {if $profile['basic']['group_id'] == 2}
+    <div class="panel pd20 warnbg">
+        <span>当前库存不可用,您的账户尚未进行卖家审核,<a class="warning" href="{site_url('my/seller_verify')}">马上去认证</a></span>
+    </div>
+    {else}
     <form action="{site_url($uri_string)}" method="post" id="formSearch">
         <input type="hidden" name="page" value=""/>
         <div class="goods_search">
              {if $secondsElpse > 0}
-             <div><input type="submit" class="master_btn" value="刷新库存"/>{*&nbsp;<input type="button" class="master_btn" value="匹配我的库存"/>*}<strong>还剩下{$secondsElpse}秒,库存将自动过期</strong></div>
+             <div><input type="submit" class="master_btn" value="刷新库存"/>{*&nbsp;<input type="button" class="master_btn" value="匹配我的库存"/>*}<strong class="pd5">还剩下{$secondsElpse}秒,库存将自动过期</strong></div>
              {else}
-             <div><input type="submit" class="master_btn" value="刷新库存"/>{*&nbsp;<input type="button" class="master_btn" value="匹配我的库存"/>*}<strong>库存已过期</strong></div>
+             <div><input type="submit" class="master_btn" value="刷新库存"/>{*&nbsp;<input type="button" class="master_btn" value="匹配我的库存"/>*}<strong class="pd5">您得库存已过期</strong></div>
              {/if}
              <div class="hightlight pd5">库存默认过期时间为3个小时，过期以后需要可以进行手动刷新，库存刷新以后便可以获得平台后台自动匹配的消息提醒</div>
              <div class="tip pd5">系统默认分类给了那您10个{#goods_slot#}，每个{#goods_slot#}可以添加50个不同尺寸的货品,如您需要更多{#goods_slot#}，请在网站下发找到我们的联系方式并与我们取得沟通。</div>
@@ -31,4 +35,5 @@
     </script>
     {include file="./dlg_code.tpl"}
     <script type="text/javascript" src="{resource_url('js/my/slot_list.js')}"></script>
+    {/if}
 {include file="common/my_footer.tpl"}

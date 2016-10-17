@@ -306,7 +306,6 @@ class Member extends Ydzj_Admin_Controller {
 					'username' => $this->input->post('username'),
 					'sex' => $this->input->post('sex'),
 					'freeze' => $this->input->post('freeze'),
-					'status' => 0,
 					'channel' => 1	//1 标志直接后台增加
 				);
 				

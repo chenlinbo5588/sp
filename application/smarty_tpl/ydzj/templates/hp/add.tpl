@@ -59,7 +59,6 @@
 	        </table>
 	    </form>
     </div>
-    {include file="common/jquery_validation.tpl"}
     <script type="text/x-template" id="rowTpl">
         <tr>
             <td></td>

@@ -8,16 +8,24 @@ class Message_service extends Base_service {
 	private $_memberGroupModel = null;
 	private $_siteMessageModel = null;
 	private $_pushChatModel = null;
+	
+	//邮件推送给 客户
 	private $_pushEmailModel = null;
 	
+	//邮件记录给网站管理员
+	private $_siteEmailModel = null;
 	
+	
+	//
 	private $_email = null;
 	
+	
+	//网站设置
 	private $_setting ;
 	
-	private $_pmHashObject;
-	private $_chatHashObject;
-	private $_emailHashObject;
+	private $_pmHashObject = null;
+	private $_chatHashObject = null;
+	private $_emailHashObject = null;
 
 	
 	public function __construct(){
@@ -34,7 +42,7 @@ class Message_service extends Base_service {
 		$this->_pushChatModel = self::$CI->Push_Chat_Model;
 		$this->_pushEmailModel = self::$CI->Push_Email_Model;
 		
-		
+		/*
 		$this->_pmHashObject = new Flexihash();
 		$this->_chatHashObject = new Flexihash();
 		$this->_emailHashObject = new Flexihash();
@@ -44,6 +52,7 @@ class Message_service extends Base_service {
 		//print_r($pmConfig);
 		$this->_pmHashObject->addTargets($pmConfig);
 		$this->_chatHashObject->addTargets($chatConfig);
+		*/
 		
 	}
 	
@@ -121,13 +130,39 @@ class Message_service extends Base_service {
 	}
 	
 	
+	/**
+	 * 获得 pm hash object
+	 */
+	public function getPmHashObj(){
+		if(!$this->_pmHashObject){
+			$this->_pmHashObject = new Flexihash();
+			$this->_pmHashObject->addTargets(self::$CI->load->get_config('split_pm'));
+		}
+		return $this->_pmHashObject;
+	}
 	
 	/**
-	 * 设置 Push Chat tableid
+	 * 获得 chat hash object
 	 */
-	public function setPushChatTableByUid($uid){
-		$tableId = $this->_chatHashObject->lookup($uid);
-		$this->_pushChatModel->setTableId($tableId);
+	public function getChatHashObj(){
+		if(!$this->_chatHashObject){
+			$this->_chatHashObject = new Flexihash();
+			$this->_chatHashObject->addTargets(self::$CI->load->get_config('split_push_chat'));
+		}
+		return $this->_chatHashObject;
+	}
+	
+	
+	/**
+	 * 获得 添加 送给管理的员的邮件model
+	 */
+	public function getSiteEmailModel(){
+		if(!$this->_siteEmailModel){
+			self::$CI->load->model(array('Site_Email_Model'));
+			$this->_siteEmailModel = self::$CI->Site_Email_Model;
+		}
+		
+		return $this->_siteEmailModel;
 	}
 	
 	
@@ -135,8 +170,16 @@ class Message_service extends Base_service {
 	 * 设置 Pm Message tableid
 	 */
 	public function setPmTableByUid($uid){
-		$tableId = $this->_pmHashObject->lookup($uid);
+		$tableId = $this->getPmHashObj()->lookup($uid);
 		$this->_pmMessageModel->setTableId($tableId);
+	}
+	
+	/**
+	 * 设置 Push Chat tableid
+	 */
+	public function setPushChatTableByUid($uid){
+		$tableId = $this->getChatHashObj()->lookup($uid);
+		$this->_pushChatModel->setTableId($tableId);
 	}
 	
 	
@@ -356,7 +399,6 @@ class Message_service extends Base_service {
 				$list[$pmIndex]['title'] = str_replace('{username}',$userProfile['basic']['username'],$list[$pmIndex]['title']);
 				$list[$pmIndex]['content'] = str_replace('{username}',$userProfile['basic']['username'],$list[$pmIndex]['content']);
 				
-				
 				if(strpos($sendWays,'站内信') !== false){
 					$userPm[] = array(
 						'uid' => $uid,
@@ -380,6 +422,15 @@ class Message_service extends Base_service {
 				if(strpos($sendWays,'邮件') !== false){
 					// do nothing current
 					
+					$userEmail[] = array(
+						'uid' => $uid,
+						'msg_type' => -1,
+						'username' => $userProfile['basic']['username'],
+						'email' => $userProfile['basic']['email'],
+						'title' => $list[$pmIndex]['title'],
+						'content' => $list[$pmIndex]['content'],
+					);
+					
 				}
 				
 				/*
@@ -402,6 +453,10 @@ class Message_service extends Base_service {
 			}
 			
 			//插入 用户邮件表 后台自动发送， 私人邮件发送数量太多，可能会被禁
+			if($userEmail){
+				$this->addMutiEmailMessageToUser($userEmail,$uid);
+			}
+			
 			//插入 用户短信 , 暂时不做 太费钱 
 		}
 		
@@ -425,7 +480,6 @@ class Message_service extends Base_service {
 	
 	/* ---------------以下站内聊天窗口 -------------------------------------------- */
 	
-	
 	/**
 	 * 添加一条待发聊天记录， 后台自动发送
 	 */
@@ -435,7 +489,6 @@ class Message_service extends Base_service {
 		$data = array_merge($data,$userInfo);
 		$data['msg_type'] = -1;
 		$data['content'] = strip_tags($data['content']);
-		
 		
 		$this->_pushChatModel->_add($data);
 	}
@@ -452,6 +505,23 @@ class Message_service extends Base_service {
 		$this->_pushEmailModel->_add($data);
 	}
 	
+	
+	/**
+	 * 添加邮件记录到管理员
+	 */
+	public function emailToSiteAdmin(){
+		
+		
+	}
+	
+	
+	
+	/**
+	 * 批量添加
+	 */
+	public function addMutiEmailMessageToUser($data,$uid = 0){
+		return $this->_pushEmailModel->batchInsert($data);
+	}
 	
 	
 	/* ----------------以下邮件相关----------------------------------------------- */

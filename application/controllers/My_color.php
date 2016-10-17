@@ -18,7 +18,7 @@ class My_color extends MyYdzj_Controller {
 		
 		
 		$pageParam = array(
-			'page_size' => config_item('page_size'),
+			'page_size' => 50,
 			'current_page' => intval($currentPage),
 			'call_js' => 'search_page',
 			'form_id' => '#formSearch',

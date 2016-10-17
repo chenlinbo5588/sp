@@ -88,6 +88,18 @@ class Member_service extends Base_service {
 		return self::$memberModel->update($data,array('uid' => $uid));
 	}
 	
+	
+	/**
+	 * 更新用户通知方式
+	 */
+	public function updateNotifyWays($ways,$uid){
+		return self::$memberModel->update(array(
+			'notify_ways' => implode(',',$ways)
+		),array('uid' => $uid));
+	}
+	
+	
+	
 	/**
 	 * 
 	 */
@@ -114,12 +126,20 @@ class Member_service extends Base_service {
 	 * 卖家认证
 	 */
 	public function sellerVerify($uid,$flag,$message = ''){
-		
+		file_put_contents('debug.txt',$uid);
 		$data = array(
 				'verify_result' => $flag,
 				'verify_remark' => $message
 			);
 		
+		if(1 == $data['verify_result']){
+			//group_id :  2 = 未认证会员  3=认证会员  4=大客户
+			$rows = self::$memberModel->updateByWhere(array('group_id' => 3),array('uid' => $uid));
+		}
+		
+		return $this->_memberSellerModel->update($data,array('uid' => $uid));
+			
+		/*
 		if(is_array($uid)){
 			$condition = array(
 				'where_in' => array(
@@ -128,17 +148,19 @@ class Member_service extends Base_service {
 			);
 			
 			if(1 == $data['verify_result']){
-				self::$memberModel->updateByCondition(array('status' => $data['verify_result']),$condition);
+				self::$memberModel->updateByCondition(array('group_id' => 3),array('uid' => $uid));
 			}
 			
 			return $this->_memberSellerModel->updateByCondition($data,$condition);
 			
 		}else{
 			if(1 == $data['verify_result']){
-				self::$memberModel->updateByCondition(array('status' => $data['verify_result']),array('uid' => $uid));
+				//group_id :  2 = 未认证会员  3=认证会员  4=大客户
+				self::$memberModel->updateByWhere(array('group_id' => 3),array('uid' => $uid));
 			}
 			
 			return $this->_memberSellerModel->update($data,array('uid' => $uid));
 		}
+		*/
 	}
 }

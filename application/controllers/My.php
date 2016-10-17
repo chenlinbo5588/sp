@@ -41,9 +41,6 @@ class My extends MyYdzj_Controller {
 		$avatarImageSize = config_item('avatar_img_size');
 		$this->assign('avatarImageSize',$avatarImageSize);
 		
-		//print_r($this->session->all_userdata());
-		//$newPm = $this->input->get('newpm');
-		
 		$this->display();
 	}
 	
@@ -86,13 +83,8 @@ class My extends MyYdzj_Controller {
 		if($this->isPostRequest()){
 			$uploadFile = false;
 			
-			
-			
 			for($i = 0; $i < 1; $i++){
-				
-			
 				if(1 == $step){
-					
 					$this->form_validation->set_rules('store_url', '网店链接','required|valid_url');
 					$this->form_validation->set_rules('img_b','交易流水图片','required|valid_url');
 					 
@@ -149,8 +141,17 @@ class My extends MyYdzj_Controller {
 					}
 					
 					if($affectRow > 0){
+						$siteEmailModel = $this->message_service->getSiteEmailModel();
+						$siteEmailModel->_add(array(
+							'email' => $this->_getSiteSetting('site_email'),
+							'title' => '有新的卖家认证请求',
+							'content' => '用户:'.$this->_profile['basic']['username'].' 提交了卖家认证资料，请及时审核,<a href="'.admin_site_url('seller/index').'">马上去审核</a>'
+						));
+						
+						/*
 						$this->message_service->initEmail($this->_siteSetting);
-						$this->message_service->sendEmail($this->_getSiteSetting('site_email'),"有新的卖家认证请求", "用户:".$this->_profile['basic']['username']." 提交了卖家认证资料，请及时审核,<a href=\"".admin_site_url('seller/index')) ."\">马上去审核</a>";
+						$this->message_service->sendEmail($this->_getSiteSetting('site_email'),"有新的卖家认证请求", "用户:".$this->_profile['basic']['username']." 提交了卖家认证资料，请及时审核,<a href=\"".admin_site_url('seller/index') ."\">马上去审核</a>";
+						*/
 					}
 					
 					$step++;
@@ -401,130 +402,6 @@ class My extends MyYdzj_Controller {
 			$this->jsonOutput('请求非法',$this->getFormHash());
 		}
 		
-		
-	}
-	
-	/**
-	 * 设置用户名称
-	 */
-	public function set_username(){
-		
-		if($this->isPostRequest()){
-			$setOk = false;
-			
-			$this->form_validation->reset_validation();
-			$this->form_validation->set_rules('username','真实姓名','required|min_length[2]|max_length[4]');
-			
-			
-			for($i = 0; $i < 1; $i++){
-				if($this->form_validation->run() == FALSE){
-					break;
-				}
-				
-				$this->load->library('Member_service');
-				$result = $this->member_service->updateUserInfo(array(
-					'username' => $this->input->post('username')
-				),$this->_profile['basic']['uid']);
-				
-				$this->member_service->refreshProfile($this->_profile['basic']['uid']);
-				$setOk = true;
-			}
-			
-			if($setOk){
-				redirect('my');
-			}else{
-				$this->display('my/set_username');
-			}
-			
-		}else{
-			$this->assign('default_username',$this->_profile['basic']['username']);
-			$this->display('my/set_username');
-		}
-	}
-	
-	
-	
-	
-	
-	private function _prepareSetCity(){
-		$d = array(
-			'd1' => $this->_profile['basic']['d1'],
-			'd2' => $this->_profile['basic']['d2'],
-			'd3' => $this->_profile['basic']['d3'],
-			'd4' => $this->_profile['basic']['d4']
-		);
-		
-		$rt = $this->common_district_service->prepareCityData($d);
-		
-		$this->assign('ds',$rt);
-	}
-	
-	
-	
-	/**
-	 * 设置地区
-	 * 
-	 * 如果用户通过 加入队伍邀请进行注册的 不需要进行该步骤，直接约邀请者设置的地区直接相同
-	 */
-	public function set_city()
-	{
-		$this->load->library('Common_District_service');
-		
-		if($this->isPostRequest()){
-			
-			$url = $this->input->post('returnUrl');
-			$this->assign('returnUrl',$url);
-			
-			$this->form_validation->reset_validation();
-			$this->form_validation->set_rules('d1','省','required|is_natural_no_zero');
-			$this->form_validation->set_rules('d2','市','required|is_natural_no_zero');
-			$this->form_validation->set_rules('d3','县','required|is_natural_no_zero');
-			
-			if($this->input->post('d4')){
-				$this->form_validation->set_rules('d4','街道/镇乡','is_natural_no_zero');
-			}
-			
-			if($this->form_validation->run() !== FALSE){
-				$this->load->library('Member_service');
-				
-				$addParam = array(
-					'district_bind' => 1,
-					'd1' => intval($this->input->post('d1')),
-					'd2' => intval($this->input->post('d2')),
-					'd3' => intval($this->input->post('d3')),
-					'd4' => intval($this->input->post('d4'))
-				);
-				
-				$result = $this->member_service->updateUserInfo($addParam, $this->_profile['basic']['uid']);
-				
-				$this->member_service->refreshProfile($this->_profile['basic']['uid']);
-				
-				
-				$targetUrl = '';
-				if(empty($url) || !isLocalUrl($url)){
-					$targetUrl = site_url('my/index');
-				}else{
-					$targetUrl = $url;
-				}
-				
-				$this->jsonOutput('设置成功',array(
-					'url' => $targetUrl
-				));
-				
-			}else{
-				$this->jsonOutput('',array(
-					'formhash' => $this->security->get_csrf_hash(),
-					'errormsg' => $this->form_validation->error_array()
-				));
-			}
-		}else{
-			
-			$this->assign('returnUrl',$this->input->get('returnUrl'));
-			$this->_prepareSetCity();
-			
-			$this->seoTitle('设置您的所在地');
-			$this->display();
-		}
 		
 	}
 	

@@ -73,8 +73,16 @@ class Inventory_service extends Base_service {
 			$kwList = array();
 			$kwPriceList = array();
 			foreach($slotList as $slot){
-				$kwList[] = $slot['kw'];
-				$kwPriceList[] = $slot['kw_price'];
+				$slot['kw'] = trim($slot['kw']);
+				$slot['kw_price'] = trim($slot['kw_price']);
+				
+				if($slot['kw']){
+					$kwList[] = $slot['kw'];
+				}
+				
+				if($slot['kw_price']){
+					$kwPriceList[] = $slot['kw_price'];
+				}
 			}
 			
 			
@@ -84,11 +92,14 @@ class Inventory_service extends Base_service {
 				)
 			);
 			
-			$affectRow = $this->_memberSlotModel->updateByCondition(array(
+			$updateData = array(
 				'active_time' => $time, 
 				'kw' => implode('|',$kwList),
 				'kw_price' => implode('|',$kwPriceList)
-			),$condition);
+			);
+			
+			
+			$affectRow = $this->_memberSlotModel->updateByCondition($updateData,$condition);
 			
 		}
 		

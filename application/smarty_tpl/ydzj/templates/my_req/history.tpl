@@ -63,7 +63,7 @@
 		      <tr>
 		          <td colspan="12">
 		              <div class="pd5">
-		              <input type="button" class="action" name="pub" value="+重新发布"/>
+		              {*<input type="button" class="action repub" name="pub" value="加到重新发布列表" />*}
 		              <input type="button" class="action deleteBtn" data-checkbox="id[]" data-title="删除" data-url="{site_url('my_req/delete?source=history')}" name="delete" value="删除" />
 		              </div>
 		          </td>

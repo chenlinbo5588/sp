@@ -18,13 +18,10 @@ class Register_service extends Base_service {
 	public function createHalfRegisterMemebr($regParam){
 		$return = $this->formatArrayReturn();
 		
-		$regParam['status'] = -2;
-		
 		$uid = self::$memberModel->_add(array(
 			'nickname' => $regParam['mobile'],
 			'mobile' => $regParam['mobile'],
 			'reg_ip' => $regParam['reg_ip'],
-			'status' => -2,
 		));
 		
 		if($uid > 0){

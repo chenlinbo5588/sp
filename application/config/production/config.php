@@ -27,7 +27,7 @@ $config['hp_pub_freezen'] = 300;
 $config['inventory_freezen'] = 300;
 
 // 消息更新时间间隔 秒数   这个配合比较重要，建议不要小于60, 过小会造成系统负荷过重
-$config['pmcheck_interval'] = 90;
+$config['pmcheck_interval'] = 60;
 
 
 $config['compress_output'] = true;
