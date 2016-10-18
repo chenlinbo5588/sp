@@ -34,6 +34,7 @@ class Base_service {
 	}
 	
 	
+	/*
 	public function getPushObject(){
 		self::$CI->load->library('Huanxin_api');
 		self::$CI->huanxin_api->initConfig(config_item('huanxin'));
@@ -41,6 +42,7 @@ class Base_service {
 		
 		return self::$CI->huanxin_api;
 	}
+	*/
 	
 	/**
      * 解析 地址名称 反过来得到 id

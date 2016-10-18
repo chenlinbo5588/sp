@@ -25,7 +25,7 @@ $(function(){
            success:function(json){
         	   codeValidating = false;
         	   if(/成功/.test(json.message)){
-        		   inputElem.removeClass('showloading').addClass("valid");
+        		   inputElem.removeClass('showloading error').addClass("valid");
             	   targetElem.removeClass("grayed").attr("disabled",false);
         	   }else{
         		   faildFn();

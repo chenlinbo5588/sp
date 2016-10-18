@@ -1,6 +1,6 @@
 {include file="common/my_header.tpl"}
     {config_load file="hp.conf"}
-    {if $profile['basic']['group_id'] == 2}
+    {if $currentGroupId == 2}
     <div class="panel pd20 warnbg">
         <span>当前库存不可用,您的账户尚未进行卖家审核,<a class="warning" href="{site_url('my/seller_verify')}">马上去认证</a></span>
     </div>

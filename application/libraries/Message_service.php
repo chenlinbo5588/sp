@@ -7,7 +7,7 @@ class Message_service extends Base_service {
 	private $_pmMessageModel = null;
 	private $_memberGroupModel = null;
 	private $_siteMessageModel = null;
-	private $_pushChatModel = null;
+	//private $_pushChatModel = null;
 	
 	//邮件推送给 客户
 	private $_pushEmailModel = null;
@@ -24,14 +24,14 @@ class Message_service extends Base_service {
 	private $_setting ;
 	
 	private $_pmHashObject = null;
-	private $_chatHashObject = null;
+	//private $_chatHashObject = null;
 	private $_emailHashObject = null;
 
 	
 	public function __construct(){
 		parent::__construct();
 		
-		self::$CI->load->model(array('Msg_Template_Model','Pm_Message_Model','Site_Message_Model','Push_Chat_Model','Push_Email_Model'));
+		self::$CI->load->model(array('Msg_Template_Model','Pm_Message_Model','Site_Message_Model','Push_Email_Model'));
 		self::$CI->load->library(array('Email'));
 		
 		$this->_email = self::$CI->email;
@@ -39,7 +39,7 @@ class Message_service extends Base_service {
 		$this->_pmMessageModel = self::$CI->Pm_Message_Model;
 		
 		$this->_siteMessageModel = self::$CI->Site_Message_Model;
-		$this->_pushChatModel = self::$CI->Push_Chat_Model;
+		//$this->_pushChatModel = self::$CI->Push_Chat_Model;
 		$this->_pushEmailModel = self::$CI->Push_Email_Model;
 		
 		/*
@@ -144,6 +144,8 @@ class Message_service extends Base_service {
 	/**
 	 * 获得 chat hash object
 	 */
+	 
+	/*
 	public function getChatHashObj(){
 		if(!$this->_chatHashObject){
 			$this->_chatHashObject = new Flexihash();
@@ -151,7 +153,7 @@ class Message_service extends Base_service {
 		}
 		return $this->_chatHashObject;
 	}
-	
+	*/
 	
 	/**
 	 * 获得 添加 送给管理的员的邮件model
@@ -177,11 +179,13 @@ class Message_service extends Base_service {
 	/**
 	 * 设置 Push Chat tableid
 	 */
+	
+	/*
 	public function setPushChatTableByUid($uid){
 		$tableId = $this->getChatHashObj()->lookup($uid);
 		$this->_pushChatModel->setTableId($tableId);
 	}
-	
+	*/
 	
 	/**
 	 * 获得用户 站内信列表
@@ -409,6 +413,7 @@ class Message_service extends Base_service {
 					);
 				}
 				
+				/*
 				if(strpos($sendWays,'聊天窗口') !== false){
 					// do insert
 					$userChat[] = array(
@@ -418,6 +423,8 @@ class Message_service extends Base_service {
 						'content' => strip_tags($list[$pmIndex]['content']),
 					);
 				}
+				*/
+				
 				
 				if(strpos($sendWays,'邮件') !== false){
 					// do nothing current
@@ -447,10 +454,12 @@ class Message_service extends Base_service {
 			}
 			
 			//插入 用户聊天信息表 后台自动发送
+			/*
 			if($userChat){
 				$this->setPushChatTableByUid($uid);
 				$this->_pushChatModel->batchInsert($userChat);
 			}
+			*/
 			
 			//插入 用户邮件表 后台自动发送， 私人邮件发送数量太多，可能会被禁
 			if($userEmail){
@@ -483,6 +492,8 @@ class Message_service extends Base_service {
 	/**
 	 * 添加一条待发聊天记录， 后台自动发送
 	 */
+	
+	/*
 	public function addSystemChatMessageToUser($data,$userInfo){
 		$this->setPushChatTableByUid($userInfo['uid']);
 		
@@ -492,6 +503,7 @@ class Message_service extends Base_service {
 		
 		$this->_pushChatModel->_add($data);
 	}
+	*/
 	
 	/**
 	 * 添加一条待发邮件记录，后台自动发送

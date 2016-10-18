@@ -221,9 +221,12 @@ class Member extends Ydzj_Controller {
 				
 				
 				$this->load->library(array('Message_service','Member_service'));
+				
+				/* 
+				 * 暂时不用聊天
 				$pushApi = $this->register_service->getPushObject();
 				$resp = $pushApi->createId($result['data']['uid'],$addParam['mobile'],$addParam['nickname'],$addParam['password']);
-				
+				*/
 				
 				$userInfo = $this->Member_Model->getFirstByKey($addParam['username'],'username');
 				
@@ -275,7 +278,7 @@ class Member extends Ydzj_Controller {
 	
 	
 	public function checkEmailCode($emailCode){
-		$code = $this->getCacheObject()->get('email_code');
+		$code = $this->session->userdata('email_code');
 		
 		$emailCode = trim($emailCode);
 		if(strtolower($code) == strtolower($emailCode)){
@@ -294,16 +297,12 @@ class Member extends Ydzj_Controller {
 		
 		$feedback = '';
 		
-		$step = $this->input->get_post('step');
-		$username = $this->input->get_post('username');
-		if(empty($step)){
-			$step = 1;
-		}
 		
 		if($this->isPostRequest()){
 			
+			$step = $this->session->userdata('step');
+			
 			for($i = 0; $i < 1; $i++){
-				
 				if(1== $step){
 					$this->form_validation->set_rules('username','登陆账号', 'required|in_db_list['.$this->Member_Model->getTableRealName().'.username]');
 					$this->form_validation->set_rules('auth_code','验证码','required|callback_validateAuthCode');
@@ -313,17 +312,19 @@ class Member extends Ydzj_Controller {
 						break;
 					}
 					
+					
+					$username = $this->input->post('username');
 					$userInfo = $this->Member_Model->getFirstByKey($username,'username','uid,username,email,mobile');
 					$emailUrl = 'http://mail.'.substr($userInfo['email'],strrpos($userInfo['email'],'@') + 1);
 					
 					$this->assign('userinfo',$userInfo);
 					$this->assign('mailurl',$emailUrl);
 					
-					
-					$this->session->set_userdata('forget_uid',$userInfo['uid']);
-					$this->session->set_userdata('forget_username',$userInfo['username']);
-					
 					$step++;
+					
+					$this->session->set_userdata(array(
+						'forget_uid'=>$userInfo['uid']
+					));
 					
 				}else if(2==$step){
 					
@@ -364,6 +365,7 @@ class Member extends Ydzj_Controller {
 					
 					$this->form_validation->set_rules('newpsw','密码','required|valid_password|min_length[6]|max_length[12]');
 					$this->form_validation->set_rules('newpsw_confirm','密码确认','required|matches[newpsw]');
+					$this->form_validation->set_rules('auth_code','验证码','required|callback_validateAuthCode');
 					
 					
 					if(!$this->form_validation->run()){
@@ -372,12 +374,6 @@ class Member extends Ydzj_Controller {
 					
 					//print_r($this->session->all_userdata());
 					$uid = $this->session->userdata('forget_uid');
-					$username = $this->session->userdata('forget_username');
-					$postUsername = $this->input->post('username');
-					if($username != $postUsername){
-						$feedback = '参数不正确';
-						break;
-					}
 					$newpsw = $this->input->post('newpsw');
 					
 					$row = $this->Member_Model->update(array(
@@ -389,6 +385,8 @@ class Member extends Ydzj_Controller {
 					
 				}
 			}
+		}else{
+			$step = 1;
 		}
 		
 		
@@ -398,7 +396,8 @@ class Member extends Ydzj_Controller {
 			'重新设置密码'
 		),$step));
 		
-		$this->assign('username',$username);
+		$this->session->set_userdata('step',$step);
+		
 		$this->assign('step',$step);
 		$this->assign('feedback',$feedback);
 		$this->display();
@@ -411,32 +410,35 @@ class Member extends Ydzj_Controller {
 	public function email_code(){
 		
 		$email = $this->input->post('email');
+		$lastEmailSendKey = 'email_sendts';
+		
+		$lastSend = $this->session->userdata($lastEmailSendKey);
 		
 		if($email && $this->isPostRequest()){
 			
-			$code = random_string('alnum',6);
-			
-			$emailData = array(
-				'title' => $this->_getSiteSetting('site_name').'邮件验证码',
-				'content' => "您的验证码是: <strong>".$code."</strong> ,如非本人操作请。<div>系统邮件请勿回复</div>"
-			);
-			
-			$this->message_service->initEmail($this->_siteSetting);
-			$flag = $this->message_service->sendEmail($email,$emailData['title'],$emailData['content']);
-			
-			if(!$flag){
-				$siteEmailModel = $this->message_service->getSiteEmailModel();
-				$siteEmailModel->_add(array(
-					'email' => $email,
-					'title' => $emailData['title'],
-					'content' => $emailData['content'],
+			for($i = 0; $i < 1; $i++){
+				if($lastSend && ($this->_reqtime - $lastSend) < 60){
+					$this->jsonOutput('60秒内不可重复发送');
+					break;
+				}
+				
+				$code = random_string('alnum',6);
+				
+				$emailData = array(
+					'title' => $this->_getSiteSetting('site_name').'邮件验证码',
+					'content' => "您的验证码是: <strong>".$code."</strong> ,如非本人操作请。<div>系统邮件请勿回复</div>"
+				);
+				
+				$this->message_service->initEmail($this->_siteSetting);
+				$flag = $this->message_service->sendEmail($email,$emailData['title'],$emailData['content']);
+				
+				$this->session->set_userdata(array(
+					$lastEmailSendKey => $this->_reqtime,
+					'email_code' => $code
 				));
+				
+				$this->jsonOutput('邮件已发送');
 			}
-			
-			//10 
-			$this->getCacheObject()->save('email_code',$code,600);
-			$this->jsonOutput('邮件已发送');
-			
 		}else{
 			$this->jsonOutput('参数不正确');
 		}

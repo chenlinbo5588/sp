@@ -44,6 +44,8 @@ class Push_Chat extends MY_Controller {
 		
 		if($pushList){
 			// 这里可批量发送消息,消息系统设计方面 看来可以做优化，另外这里发送消息 在看用户是否在线，如果不在线可考虑不发送消息
+			
+			/*
 			$pushObj = $this->base_service->getPushObject();
 			
 			$updateId = array();
@@ -66,6 +68,7 @@ class Push_Chat extends MY_Controller {
 					)
 				));
 			}
+			*/
 		}
 		
 	}

@@ -1013,6 +1013,9 @@ function validateAuthCode($val){
 	$ci = get_instance();
 	$word = trim($ci->session->userdata('auth_code'));
 	if(!empty($word) &&  strtolower($val) == strtolower($word)){
+		//防止验证码一直生效
+		$ci->session->set_userdata('auth_code',random_string());
+		
 		return true;
 	}else{
 		$ci->form_validation->set_message('validateAuthCode', '对不起,{field} 输入不正确');

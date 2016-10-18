@@ -21,7 +21,7 @@ $config['fronted_admin'] = array(
 
 $config['notify_ways'] = array(
 	'站内信',
-	'聊天窗口',
+	/*'聊天窗口',*/
 	'邮件',
 	/*'短信'*/
 );

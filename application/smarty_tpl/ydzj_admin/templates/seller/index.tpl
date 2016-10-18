@@ -115,7 +115,7 @@
                 <tr>
                     <td>通知方式:
                         {foreach from=$sendWays key=key item=item}
-                        <label><input type="checkbox" name="send_ways[]" {if $key == 0}checked{/if} value="{$item}"/>{$item}</label>
+                        <label><input type="checkbox" name="send_ways[]" checked value="{$item}"/>{$item}</label>
                         {/foreach}
                     </td>
                 </tr>

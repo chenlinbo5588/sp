@@ -19,8 +19,6 @@
 	<div class="boxz">
 	    {$stepHTML}
 	    {form_open(site_url('member/forget'),'id="forgetForm"')}
-	    <input type="hidden" name="step" value="{$step}"/>
-	    <input type="hidden" name="username" value="{$username}"/>
 	    <ul id="register" class="panel step{$step}">
 	        <li class="title"><h1>找回密码</h1></li>
 	        <li class="tip">{$feedback}</li>
@@ -72,10 +70,15 @@
             <li class="row">
                 <input class="at_txt" type="password"  name="newpsw_confirm" value="" placeholder="请输入新确认"/>
             </li>
+            <li class="tip">{form_error('auth_code')}</li>
+            <li class="row rel">
+                <input class="w50pre" type="text" autocomplete="off" name="auth_code" value="" placeholder="请输入4位验证码"/>
+                <div class="codeimg" id="authImg" title="点击图片刷新">正在获取验证码...</div>
+            </li>
             <li class="row"><input class="master_btn at_txt" type="submit" name="register" value="重新设置密码"/></li>
 	        {elseif 4==$step}
 	        <div class="pd20 passbg">
-		        <span>密码更新成功,<a class="warning" href="{site_url('member/login')}">马上登陆</a></span>
+		        <span>密码修改成功,<a class="warning" href="{site_url('member/login')}">马上登陆</a></span>
 		    </div>
 	        {/if}
 	    </ul>

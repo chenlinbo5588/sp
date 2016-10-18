@@ -23,7 +23,7 @@
 	                    <th>序号</th>
 	                    <th><label class="required"><em>*</em>{#goods_color#}(最长5个字)</label></th>
 	                    <th><label class="required"><em>*</em>{#goods_size#}(1 - 60)</label></th>
-	                    <th><label class="required"><em>*</em>{#quantity#}(1-100)</label></th>
+	                    <th><label class="required"><em>*</em>{#inventorynum#}(1-100)</label></th>
 	                    <th><label class="required"><em>*</em>{#sex#}</label></th>
 	                    <th><label class="required"><em>*</em>{#accept#}{#price_min#}</label></th>
 	                    <th>{#op#}</th>

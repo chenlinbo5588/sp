@@ -98,8 +98,6 @@ class Member_service extends Base_service {
 		),array('uid' => $uid));
 	}
 	
-	
-	
 	/**
 	 * 
 	 */
@@ -122,6 +120,32 @@ class Member_service extends Base_service {
 	}
 	
 	
+	public function getUserGroupKey($uid){
+		return "usergroup_{$uid}";
+	}
+	
+	
+	/**
+	 * 获得用户的  group id
+	 */
+	public function getUserGroupId($uid){
+		
+		$tempKey = $this->getUserGroupKey($uid);
+		
+		$groupId = self::$CI->getCacheObject()->get($tempKey);echo $groupId;
+		if(empty($groupId)){
+			$tempInfo = self::$memberModel->getFirstByKey($uid,'uid','group_id');
+			$groupId = $tempInfo['group_id'];
+			
+			self::$CI->getCacheObject()->save($tempKey,$groupId,CACHE_ONE_MONTH);
+		}
+		
+		return $groupId;
+		
+		
+	}
+	
+	
 	/**
 	 * 卖家认证
 	 */
@@ -134,10 +158,17 @@ class Member_service extends Base_service {
 		if(1 == $data['verify_result']){
 			//group_id :  2 = 未认证会员  3=认证会员  4=大客户
 			$rows = self::$memberModel->updateByWhere(array('group_id' => 3),array('uid' => $uid));
+			
+			if($rows){
+				$tempKey = $this->getUserGroupKey($uid);
+				self::$CI->getCacheObject()->save($tempKey,3,CACHE_ONE_MONTH);
+			}
+			
 		}
 		
 		return $this->_memberSellerModel->update($data,array('uid' => $uid));
-			
+		
+		
 		/*
 		if(is_array($uid)){
 			$condition = array(

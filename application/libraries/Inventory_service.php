@@ -9,22 +9,23 @@ class Inventory_service extends Base_service {
 	private $_memberSlotModel;
 	private $_memberInventoryModel;
 	
-	private $_memberColorModel;
-	private $_memberColorHash;
+	//private $_memberColorModel;
+	//private $_memberColorHash;
 	
 	
 	public function __construct(){
 		parent::__construct();
 		
-		self::$CI->load->model(array('Member_Slot_Model','Member_Inventory_Model','Member_Color_Model'));
+		self::$CI->load->model(array('Member_Slot_Model','Member_Inventory_Model'));
 		$this->_memberSlotModel = self::$CI->Member_Slot_Model;
 		$this->_memberInventoryModel = self::$CI->Member_Inventory_Model;
 		$this->_memberColorModel = self::$CI->Member_Color_Model;
 		
-		
+		/*
 		$this->_memberColorHash = new Flexihash();
 		$colorSplit = self::$CI->load->get_config('split_color');
 		$this->_memberColorHash->addTargets($colorSplit);
+		*/
 		
 		$this->_reactiveFreezen = config_item('inventory_freezen');
 	}
@@ -287,9 +288,9 @@ class Inventory_service extends Base_service {
 	}
 	
 	
-	/*  --------------------- 以下颜色管理 --------------------------- */
+	/*  --------------------- 以下颜色管理 已废弃，不需要做管理--------------------------- */
 	
-	
+	/*
 	public function addColor($colorName,$uid){
 		$this->setColorTableByUid($uid);
 		
@@ -307,20 +308,25 @@ class Inventory_service extends Base_service {
 			'id' => $id
 		));
 	}
-	
+	*/
 	
 	
 	/**
 	 * 设置 member color tableid
 	 */
+	
+	/*
 	public function setColorTableByUid($uid){
 		$tableId = $this->_memberColorHash->lookup($uid);
 		$this->_memberColorModel->setTableId($tableId);
 	}
+	*/
 	
 	/**
 	 * 获得颜色列表
 	 */
+	 
+	 /*
 	public function getColorList($condition,$uid,$lookup = true){
 		
 		if($lookup){
@@ -330,11 +336,13 @@ class Inventory_service extends Base_service {
 		return $this->_memberColorModel->getList($condition);
 		
 	}
-	
+	*/
 	
 	/**
 	 * 删除用户颜色
 	 */
+	
+	/*
 	public function deleteUserColor($ids, $uid){
 		if(!is_array($ids)){
 			$ids = (array)$ids;
@@ -358,10 +366,14 @@ class Inventory_service extends Base_service {
 		return $this->_memberColorModel->deleteByCondition($condition);
 	}
 	
+	*/
+	
 	
 	/**
 	 * 根据颜色名称获得颜色信息
 	 */
+	 
+	/*
 	public function getColorByName($colorName,$uid,$field = '*'){
 		$this->setColorTableByUid($uid);
 		
@@ -374,5 +386,5 @@ class Inventory_service extends Base_service {
 		));
 		return $info;
 	}
-	
+	*/
 }

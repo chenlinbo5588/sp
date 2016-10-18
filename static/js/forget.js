@@ -1,6 +1,15 @@
 $(function(){
     var emailSending = false;
-    $(".way_mobile").hide();
+    var currentWay = $("input[name=find_way]:checked").val();
+    
+    if(currentWay == 'way_mobile'){
+    	$(".way_email").hide();
+    }else{
+    	$(".way_mobile").hide();
+    }
+    
+    
+    
     
     $("input[name=find_way]").bind('click',function(){
           var that = $(this);

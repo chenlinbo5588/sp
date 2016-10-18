@@ -164,17 +164,6 @@ class Seller extends Ydzj_Admin_Controller {
 					
 					$this->message_service->sendSitePmMessageToUsersByUid($id,$data);
 					
-					
-					/* 添加一条事实聊天记录 */
-					if(strpos($sendWaysStr,'聊天窗口')){
-						$this->load->model('Huanxin_Model');
-						$chatUser = $this->Huanxin_Model->getFirstByKey($id,'uid','uid,username');
-						
-						if($chatUser){
-							$this->message_service->addSystemChatMessageToUser($data,$chatUser);
-						}
-					}
-					
 					if(strpos($sendWaysStr,'邮件')){
 						$memberInfo = $this->Member_Model->getFirstByKey($id,'uid','uid,username,email');
 						if($memberInfo){

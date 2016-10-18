@@ -691,10 +691,12 @@ CREATE TABLE `sp_hp_pub{i}` (
   `gc_id2` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '货品二级分类',
   `gc_id3` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '货品三级分类',
   `goods_size` float unsigned NOT NULL DEFAULT '0' COMMENT '尺码',
+  `goods_csize` varchar(10) NOT NULL DEFAULT '' COMMENT '中文尺寸名称',
   `search_code` varchar(15) NOT NULL DEFAULT '',
   `kw` varchar(15) NOT NULL DEFAULT '' COMMENT '货号链接上尺寸 成为一个唯一查找的建',
   `quantity` smallint(5) unsigned NOT NULL DEFAULT '1' COMMENT '数量',
   `sex` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '性别',
+  `price_status` tinyint(3) unsigned DEFAULT '1',
   `price_max` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '期望价格范围',
   `send_zone` varchar(30) NOT NULL DEFAULT '' COMMENT '发货地址',
   `send_day` int(3) unsigned NOT NULL DEFAULT '0' COMMENT '发货时间',
@@ -706,6 +708,7 @@ CREATE TABLE `sp_hp_pub{i}` (
   KEY `idx_uid_dk` (`uid`,`date_key`),
   KEY `idx_goods_id` (`goods_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户求货发布表';
+
 
 
 

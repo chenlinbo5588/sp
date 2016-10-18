@@ -24,13 +24,19 @@ class MyYdzj_Controller extends Ydzj_Controller {
 		
 		$this->_navs();
 		
+		
+		/*
 		$this->_pushObject = $this->base_service->getPushObject();
 		$this->assign('pushConfig',config_item('huanxin'));
+		*/
+		
+		
 		
 		$refresh = false;
 		$spm = $this->input->get('spm');
 		
 		if($spm){
+			//用于用户登陆后直接刷新站内信，可以避免首次等待
 			$refreshIime = $this->encrypt->decode($spm);
 			
 			if($refreshIime && $refreshIime - $this->_reqtime > 0){

@@ -12,6 +12,5 @@
             <li><a href="{site_url('my_req/recent')}">我的求货</a></li>
             <li class="segment"><h3>库存</h3></li>
             <li><a href="{site_url('inventory/index')}">我的库存</a></li>
-            <li><a href="{site_url('my_color/index')}">颜色管理</a></li>
         </ul>
     </div>

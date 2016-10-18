@@ -93,7 +93,7 @@
     </div>
     {elseif $step == 4}
     <div class="panel pd20{if $verfiyInfo['verify_result'] == 1} passbg{else} warnbg{/if}">
-        <span>{if $verfiyInfo['verify_result'] == 1}尊敬的<strong>{$profile['basic']['username']}</strong>用户，您已经认证成功，您现在可以去<a class="hightlight"  href="{site_url('inventory/index')}">维护库存</a>，您可以收到后台去求货自动匹配的消息提醒。
+        <span>{if $verfiyInfo['verify_result'] == 1}尊敬的<strong>{$profile['basic']['username']}</strong>用户，您已经认证成功，您现在可以去<a class="hightlight"  href="{site_url('inventory/index')}">维护库存</a>，您可以收到后台求货自动匹配的消息提醒。
         {else}很抱歉，你的认证未通过审核，未审核原因:<span class="tip_error">{$verfiyInfo['verify_remark']|escape}</span>&nbsp;<a class="hightlight" href="{site_url('my/seller_verify?retry=yes')}">重新提交审核信息</a>{/if}</span>
     </div>
 	{/if}
