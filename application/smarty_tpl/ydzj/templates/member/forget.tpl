@@ -11,13 +11,17 @@
 	#mobile_authcode {
 	    top: 15px;
     }
+    
+    .step3 {
+    
+    }
     </style>
 	<div class="boxz">
 	    {$stepHTML}
 	    {form_open(site_url('member/forget'),'id="forgetForm"')}
 	    <input type="hidden" name="step" value="{$step}"/>
 	    <input type="hidden" name="username" value="{$username}"/>
-	    <ul id="register" class="panel">
+	    <ul id="register" class="panel step{$step}">
 	        <li class="title"><h1>找回密码</h1></li>
 	        <li class="tip">{$feedback}</li>
 	        {if 1==$step}
@@ -38,7 +42,7 @@
             </li>
             <li class="row way_email">
                 <input class="at_txt" type="hidden" id="email" name="email" value="{$userinfo['email']}" />
-                <strong><a href="{$mailurl}" target="_blank">{mask_email($userinfo['email'])}</a></strong><input type="button" name="emailCodeBtn" class="action" value="发送验证码邮件"/>
+                <strong><a href="{$mailurl}" target="_blank">{mask_email($userinfo['email'])}</a></strong><input type="button" name="emailCodeBtn" class="action" data-retext="重发验证邮件" value="发送验证邮件"/>
             </li>
             <li class="tip" id="email_code"></li>
             <li class="row way_email">
@@ -50,7 +54,7 @@
             </li>
             <li class="tip">{form_error('auth_code')}</li>
             <li class="row rel way_mobile">
-                <input class="at_txt" type="text" autocomplete="off" name="auth_code" value="" placeholder="请输入4位验证码"/>
+                <input class="w50pre" type="text" autocomplete="off" name="auth_code" value="" placeholder="请输入4位验证码"/>
                 <div class="codeimg" id="authImg" title="点击图片刷新">正在获取验证码...</div>
             </li>
             <li class="tip">{form_error('mobile_auth_code')}</li>
@@ -79,6 +83,7 @@
 	</div>
 	<script>
 		var emailUrl = "{site_url('member/email_code')}";
+		var captchaCheck = "{site_url('captcha/check_captcha')}";
 	</script>
 	<script src="{resource_url('js/forget.js')}" type="text/javascript"></script>
 	<script src="{resource_url('js/getcode.js')}" type="text/javascript"></script>

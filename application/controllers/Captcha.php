@@ -36,5 +36,19 @@ class Captcha extends Ydzj_Controller {
 		
 		echo json_encode(array('img' => $cap['image']));
     }
+    
+    
+    /**
+     * 
+     */
+    public function check_captcha(){
+    	$val = $this->input->get_post('captcha');
+    	$word = trim($this->session->userdata('auth_code'));
+		if(!empty($word) &&  strtolower($val) == strtolower($word)){
+			$this->jsonOutput('验证成功');
+		}else{
+			$this->jsonOutput('验证失败');
+		}
+    }
 
 }

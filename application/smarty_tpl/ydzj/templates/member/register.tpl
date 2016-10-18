@@ -34,7 +34,7 @@
             </li>
 	        <li>{form_error('auth_code')}</li>
             <li class="row rel">
-                <input class="at_txt" type="text" autocomplete="off" name="auth_code" value="{set_value('auth_code')}" placeholder="请输入右侧图片中4位验证码"/>
+                <input class="w50pre" type="text" autocomplete="off" name="auth_code" value="{set_value('auth_code')}" placeholder="请输入右侧图片中4位验证码"/>
                 <div class="codeimg" id="authImg" title="点击图片刷新">正在获取验证码...</div>
             </li>
             <li class="tip">{form_error('mobile_auth_code')}</li>
@@ -47,10 +47,8 @@
 	    </ul>
 	</div>
 	<script>
-		$(function(){
-			var imgCode1 = $.fn.imageCode({ wrapId: "#authImg", captchaUrl : captchaUrl });
-	    	setTimeout(imgCode1.refreshImg,500);
-		});
+		var captchaCheck = "{site_url('captcha/check_captcha')}";
 	</script>
 	<script src="{resource_url('js/getcode.js')}" type="text/javascript"></script>
+	<script src="{resource_url('js/register.js')}" type="text/javascript"></script>
 {include file="common/footer.tpl"}

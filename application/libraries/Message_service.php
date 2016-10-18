@@ -609,9 +609,14 @@ class Message_service extends Base_service {
 		$this->_email->set_mailtype('html');
 		
 		$flag = $this->_email->send();
+		
+		/*
 		//var_dump($flag);
-		//$this->_email->print_debugger();
+		$debugMsg = $this->_email->print_debugger();
 		//echo 'success ';
+		if('/550 User not found/i'){
+		}
+		*/
 		
 		return $flag;
 	}

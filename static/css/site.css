@@ -561,6 +561,10 @@ input[type=text].valid , input[type=password].valid {
 	background: url(../img/loading/loading.gif) no-repeat 50% 50%;
 }
 
+.showloading {
+	background: url(../img/loading/smallLoading.gif) no-repeat center right;
+}
+
 .loading_box div {
 	1border: 3px solid #666;
 	text-align: center;
