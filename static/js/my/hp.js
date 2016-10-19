@@ -53,6 +53,22 @@
 		
 	}
 	
+	$( document ).tooltip({
+      items: "img,[title]",
+      content: function() {
+          var element = $( this );
+          
+          if ( element.is( "[title]" ) ) {
+            return element.attr( "title" );
+          }
+          
+          
+          if ( element.is( "img" ) ) {
+            return element.attr( "alt" );
+          }
+        }
+	});
+	
 	
 	
 	$("input[name=addrow]").bind("click",addRow);
@@ -77,15 +93,13 @@
 		size = $.trim(sizeInput.val());
 		size = parseFloat(size);
 		
-		if(!size){
-			size = 0;
-		}
-		
-		if(alink.hasClass("incre")){
-			sizeInput.val(size + 1);
-		}else if(alink.hasClass("decre")){
-			if((size - 1) > 0){
-				sizeInput.val(size - 1);
+		if(size){
+			if(alink.hasClass("incre")){
+				sizeInput.val(size + 1);
+			}else if(alink.hasClass("decre")){
+				if((size - 1) > 0){
+					sizeInput.val(size - 1);
+				}
 			}
 		}
 		
@@ -104,15 +118,13 @@
 		var size = $.trim(sizeInput.val());
 		size = parseFloat(size);
 		
-		if(!size){
-			size = 0;
-		}
-		
-		if('up' == op){
-			sizeInput.val(size + 0.5);
-		}else if('down' == op){
-			if((size - 0.5) > 0){
-				sizeInput.val(size - 0.5);
+		if(size){
+			if('up' == op){
+				sizeInput.val(size + 0.5);
+			}else if('down' == op){
+				if((size - 0.5) > 0){
+					sizeInput.val(size - 0.5);
+				}
 			}
 		}
 	}

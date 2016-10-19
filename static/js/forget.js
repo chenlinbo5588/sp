@@ -51,7 +51,7 @@ $(function(){
            success:function(json){
         	   codeValidating = false;
         	   if(/成功/.test(json.message)){
-        		   inputElem.removeClass('showloading').addClass("valid");
+        		   inputElem.removeClass('showloading error').addClass("valid");
             	   targetElem.removeClass("grayed").attr("disabled",false);
         	   }else{
         		   faildFn();
@@ -63,13 +63,15 @@ $(function(){
         });
     }
     
-    $(".step2 input[name=auth_code]").bind("focusout",function(){
+    $(".step2 input[name=auth_code]").bind('keyup',function(){
     	var code = $(this).val();
-    	
     	if(code.length == 4){
     		codeValidation($(this),code,$("#mobile_authcode"));
+    	}else{
+    		$(this).removeClass('valid');
+    		$(this).removeClass("showloading")
+    		$("#mobile_authcode").addClass("grayed").attr("disabled",true);
     	}
-    	
     });
     
     $("input[name=emailCodeBtn]").bind("click",function(){

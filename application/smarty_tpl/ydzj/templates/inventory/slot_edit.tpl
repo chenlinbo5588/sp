@@ -43,7 +43,7 @@
 			                    <option value="1" {if $postData['sex'][$item] == 1}selected{/if}>男</option>
 			                    <option value="2" {if $postData['sex'][$item] == 2}selected{/if}>女</option>
 			            </select>{form_error('sex'|cat:$item)}</td>
-			            <td><input type="text" class="w60" name="price_min[]" value="{$postData['price_min'][$item]|escape}" placeholder="{#price_min#}"/>{form_error('price_min'|cat:$item)}</td>
+			            <td><input type="text" class="w60" name="price_min[]" title="{#price_see#}" value="{$postData['price_min'][$item]|escape}" placeholder="{#price_min#}"/>{form_error('price_min'|cat:$item)}</td>
 			            <td>
 			                 <a class="incre copyrow" href="javascript:void(0);">+1码</a>&nbsp;
 			                 <a class="decre copyrow" href="javascript:void(0);">-1码</a>&nbsp;
@@ -62,7 +62,7 @@
             <td><input type="text" class="w60" name="goods_color[]" value="" placeholder="如:白"/></td>
             <td>
                 <a class="fa fa-long-arrow-down" href="javascript:void(0)" ></a>
-                <input type="text" class="w36" name="goods_size[]" value="" placeholder="如:41"/>
+                <input type="text" class="w36" title="{#size_example#}" name="goods_size[]" value="" placeholder="{#size_example#}"/>
                 <a href="javascript:void(0)" class="fa fa-long-arrow-up"></a>
            </td>
             <td><input type="text" class="w60" name="quantity[]" value="1" placeholder="请输入{#quantity#}"/></td>
@@ -70,7 +70,7 @@
 	                <option value="1">男</option>
 	                <option value="2">女</option>
             </select></td>
-            <td><input type="text" class="w60" name="price_min[]" value="" placeholder="{#price_min#}"/></td>
+            <td><input type="text" class="w60" name="price_min[]" title="{#price_see#}" value="" placeholder="{#price_min#}"/></td>
             <td>
             	<a class="incre copyrow" href="javascript:void(0);">+1码</a>&nbsp;
 			    <a class="decre copyrow" href="javascript:void(0);">-1码</a>&nbsp;

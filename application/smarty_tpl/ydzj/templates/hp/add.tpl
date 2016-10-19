@@ -20,10 +20,11 @@
 	                    <th><label class="required"><em>*</em>{#goods_code#}</label></th>
 	                    <th><label class="required"><em>*</em>{#goods_name#}</label></th>
 	                    <th><label class="required"><em>*</em>{#goods_color#}</label></th>
-	                    <th><label class="required"><em>*</em>{#goods_size#}(0 - 60)</label></th>
-	                    <th><label class="required"><em>*</em>{#quantity#}(1-100)</label></th>
+	                    <th><label class="required"><em>*</em>{#goods_size#}</label></th>
+	                    <th><label class="required"><em>*</em>{#quantity#}</label></th>
 	                    <th><label class="required"><em>*</em>{#sex#}</label></th>
-	                    <th><label class="required"><em>*</em>{#accept#}{#price_max#}</label></th>
+	                    <th><label class="required"><em>*</em>{#price_max#}</label></th>
+	                    <th>{#price_status#}</th>
 	                    <th>{#send_zone#}</th>
 	                    <th>{#send_day#}</th>
 	                    <th>{#op#}</th>
@@ -38,16 +39,17 @@
 			            <td><input type="text" class="w60" name="goods_color[]" value="{$postData['goods_color'][$item]|escape}" placeholder="如:白"/>{form_error('goods_color'|cat:$item)}</td>
 			            <td>
 			             <a class="fa fa-long-arrow-down" href="javascript:void(0)" ></a>
-			             <input type="text" class="w36" name="goods_size[]" value="{$postData['goods_size'][$item]|escape}" placeholder="如:41"/>
+			             <input type="text" class="w60" name="goods_size[]" title="{#size_example#}" value="{$postData['goods_size'][$item]|escape}" placeholder="{#size_example#}"/>
 			             <a href="javascript:void(0)" class="fa fa-long-arrow-up"></a>{form_error('goods_size'|cat:$item)}</td>
 			            <td><input type="text" class="w60" name="quantity[]" value="{if $postData['quantity'][$item]}{$postData['quantity'][$item]|escape}{else}1{/if}" placeholder="请输入{#quantity#}"/>{form_error('quantity'|cat:$item)}</td>
 			            <td><select class="w60" name="sex[]">
 			                    <option value="1" {if $postData['sex'][$item] == 1}selected{/if}>男</option>
 			                    <option value="2" {if $postData['sex'][$item] == 2}selected{/if}>女</option>
 			            </select>{form_error('sex'|cat:$item)}</td>
-			            <td><input type="text" class="w60" name="price_max[]" value="{$postData['price_max'][$item]|escape}" placeholder="{#price_max#}"/>{form_error('price_max'|cat:$item)}</td>
+			            <td><input type="text" class="w60" name="price_max[]" title="{#price_see#}" value="{$postData['price_max'][$item]|escape}" placeholder="{#price_max#}"/>{form_error('price_max'|cat:$item)}</td>
+			            <td><input type="checkbox" name="price_status[]" title="{#price_cansee#}" {if $postData['price_status'][$item] == 1}checked{/if} value="1" placeholder="{#price_status#}"/>{form_error('price_status'|cat:$item)}</td>
 			            <td><input type="text" name="send_zone[]" value="{$postData['send_zone'][$item]|escape}" placeholder="请输入{#send_zone#}"/>{form_error('send_zone'|cat:$item)}</td>
-			            <td><input type="text" name="send_day[]" class="datepicker" value="{$postData['send_day'][$item]|escape}" placeholder="请选择{#send_day#}"/>{form_error('send_day'|cat:$item)}</td>
+			            <td><input type="text" name="send_day[]" class="w72 datepicker" value="{$postData['send_day'][$item]|escape}" placeholder="{#send_day#}"/>{form_error('send_day'|cat:$item)}</td>
 			            <td>
 			                 <a class="incre copyrow" href="javascript:void(0);">+1码</a>&nbsp;
 			                 <a class="decre copyrow" href="javascript:void(0);">-1码</a>&nbsp;
@@ -67,7 +69,7 @@
             <td><input type="text" class="w60" name="goods_color[]" value="" placeholder="如:白"/></td>
             <td>
                 <a class="fa fa-long-arrow-down" href="javascript:void(0)" ></a>
-                <input type="text" class="w36" name="goods_size[]" value="" placeholder="如:41"/>
+                <input class="w60" type="text" class="" title="{#size_example#}" name="goods_size[]" value="" placeholder="{#size_example#}"/>
                 <a href="javascript:void(0)" class="fa fa-long-arrow-up"></a>
            </td>
             <td><input type="text" class="w60" name="quantity[]" value="1" placeholder="请输入{#quantity#}"/></td>
@@ -75,9 +77,10 @@
 	                <option value="1">男</option>
 	                <option value="2">女</option>
             </select></td>
-            <td><input type="text" class="w60" name="price_max[]" value="" placeholder="{#price_max#}"/></td>
+            <td><input type="text" class="w60" name="price_max[]" title="{#price_see#}" value="" placeholder="{#price_max#}"/></td>
+            <td><input type="checkbox" name="price_status[]" title="{#price_cansee#}" value="1" placeholder="{#price_status#}"/></td>
             <td><input type="text" name="send_zone[]" value="" placeholder="请输入{#send_zone#}"/></td>
-            <td><input type="text" name="send_day[]" value="" class="datepicker" placeholder="请输入{#send_day#}"/></td>
+            <td><input type="text" name="send_day[]" value="" class="w72 datepicker" placeholder="{#send_day#}"/></td>
             <td>
             	<a class="incre copyrow" href="javascript:void(0);">+1码</a>&nbsp;
 			    <a class="decre copyrow" href="javascript:void(0);">-1码</a>&nbsp;

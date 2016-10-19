@@ -209,7 +209,7 @@ class Member extends Ydzj_Controller {
 					'msgid' => intval($sysMessageId),
 					'inviter' => empty($inviter) == true ? 0 : intval($inviter)
 				);
-				
+				$addParam['username'] = trim($addParam['username']);
 				$addParam['nickname'] = $addParam['username'];
 				
 				$result = $this->register_service->createMember($addParam);
@@ -286,6 +286,26 @@ class Member extends Ydzj_Controller {
 		}else{
 			$this->form_validation->set_message('checkEmailCode', '对不起,邮件验证码参数有误');
 			return false;
+		}
+	}
+	
+	/**
+	 * 验证用户名
+	 */
+	public function check_username(){
+		$key = 'username';
+		$username = $this->input->get_post($key,true);
+		
+		if(empty($username)){
+			$this->jsonOutput('参数错误');
+		}else{
+			$this->form_validation->set_rules('username','登陆账号', 'required|in_db_list['.$this->Member_Model->getTableRealName().'.username]');
+			$this->form_validation->set_data(array($key => $username));
+			if($this->form_validation->run()){
+				$this->jsonOutput('用户名已被占用');
+			}else{
+				$this->jsonOutput('成功');
+			}
 		}
 	}
 	

@@ -8,7 +8,7 @@
                     <th>{#goods_size#}</th>
                     <th>{#quantity#}</th>
                     <th>{#sex#}</th>
-                    <th>{#accept#}{#price_max#}</th>
+                    <th>求货价格</th>
                     <th>{#owner#}</th>
                     <th>{#need#}{#send_zone#}</th>
                     <th>{#send_day#}</th>
@@ -22,10 +22,10 @@
 		           <td>{$item['goods_code']|escape}</td>
 		           <td>{$item['goods_name']|escape}</td>
 		           <td>{$item['goods_color']|escape}</td>
-		           <td>{$item['goods_size']}</td>
+		           <td>{$item['goods_csize']}</td>
 		           <td>{$item['quantity']}</td>
 		           <td>{if $item['sex'] == 1}男{else}女{/if}</td>
-		           <td>{$item['price_max']}</td>
+		           <td>{if $item['price_status'] || $item['uid'] == $profile['basic']['uid']}{$item['price_max']}{else}已隐藏{/if}</td>
 		           <td>
 		              {if $userList[$item['uid']]['qq']}
 		              <a target="_blank" class="qqchat" href="http://wpa.qq.com/msgrd?v=3&uin={$userList[$item['uid']]['qq']}&site=qq&menu=yes" alt="点击这里给我发消息" title="点击这里给我发消息">{$userList[$item['uid']]['qq']}</a>

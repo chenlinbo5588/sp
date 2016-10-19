@@ -203,88 +203,96 @@ class My extends MyYdzj_Controller {
 	 * 
 	 */
 	public function change_mobile(){
-		$step = $this->input->get_post('step');
 		$this->load->library('Verify_service');
 		
-		if(empty($step)){
-			$step = 1;
-		}
-		
-		if(1 == $step){
-			$this->form_validation->set_rules('mobile_auth_code','手机验证码', array(
-					'required',
-					array(
-						'authcode_callable['.$this->input->post('mobile').']',
-						array(
-							$this->verify_service,'validateAuthCode'
-						)
-					)
-				),
-				array(
-					'authcode_callable' => '手机验证码不正确'
-				)
-			);
+		if($this->isPostRequest()){
 			
-		}else if(2 == $step){
+			$step = $this->session->userdata('step');
 			
-			$this->form_validation->set_rules('newmobile','新手机号',array(
-					'required',
-					'valid_mobile',
-					array(
-						'loginname_callable[mobile]',
-						array(
-							$this->Member_Model,'isUnqiueByKey'
-						)
-					)
-				),
-				array(
-					'loginname_callable' => '%s已经被绑定'
-				)
-			);
 			
-			$this->form_validation->set_rules('mobile_auth_code','手机验证码', array(
-					'required',
-					array(
-						'authcode_callable['.$this->input->post('newmobile').']',
+			if(1 == $step){
+				$this->form_validation->set_rules('auth_code','验证码','required|callback_validateAuthCode');
+				$this->form_validation->set_rules('mobile_auth_code','手机验证码', array(
+						'required',
 						array(
-							$this->verify_service,'validateAuthCode'
+							'authcode_callable['.$this->input->post('mobile').']',
+							array(
+								$this->verify_service,'validateAuthCode'
+							)
 						)
+					),
+					array(
+						'authcode_callable' => '手机验证码不正确'
 					)
-				),
-				array(
-					'authcode_callable' => '手机验证码不正确'
-				)
-			);
-		}
-		
-		for($i = 0; $i < 1; $i++){
-			if(!$this->form_validation->run()){
-				break;
+				);
+				
+			}else if(2 == $step){
+				$this->form_validation->set_rules('auth_code','验证码','required|callback_validateAuthCode');
+				$this->form_validation->set_rules('newmobile','新手机号',array(
+						'required',
+						'valid_mobile',
+						array(
+							'loginname_callable[mobile]',
+							array(
+								$this->Member_Model,'isUnqiueByKey'
+							)
+						)
+					),
+					array(
+						'loginname_callable' => '%s已经被绑定'
+					)
+				);
+				
+				$this->form_validation->set_rules('mobile_auth_code','手机验证码', array(
+						'required',
+						array(
+							'authcode_callable['.$this->input->post('newmobile').']',
+							array(
+								$this->verify_service,'validateAuthCode'
+							)
+						)
+					),
+					array(
+						'authcode_callable' => '手机验证码不正确'
+					)
+				);
 			}
 			
-			if($step == 2){
-				//$this->form_validation->set_ruls('mobile','require|valid_mobile');
+			for($i = 0; $i < 1; $i++){
+				if(!$this->form_validation->run()){
+					break;
+				}
 				
-				$rows = $this->Member_Model->update(array(
-					'mobile' => $this->input->post('newmobile')
-				),array(
-					'uid' => $this->_profile['basic']['uid']
-				));
-				
-				if($rows > 0){
-					$this->_profile['basic']['mobile'] = $this->input->post('newmobile');
-					$this->session->set_userdata(array(
-						$this->_profileKey => $this->_profile
+				if($step == 2){
+					//$this->form_validation->set_ruls('mobile','require|valid_mobile');
+					
+					$rows = $this->Member_Model->update(array(
+						'mobile' => $this->input->post('newmobile')
+					),array(
+						'uid' => $this->_profile['basic']['uid']
 					));
+					
+					if($rows > 0){
+						$this->_profile['basic']['mobile'] = $this->input->post('newmobile');
+						$this->session->set_userdata(array(
+							$this->_profileKey => $this->_profile
+						));
+					}
+				}
+				
+				if($step <= 2){
+					$step++;
 				}
 			}
 			
-			if($step <= 2){
-				$step++;
-			}
+			
+		}else{
+			$step = 1;
 		}
 		
+		
 		$this->assign('step',$step);
+		$this->session->set_userdata('step',$step);
 		$this->assign('stepHTML',step_helper(array(
 			'原手机号码验证',
 			'绑定新手机号码',

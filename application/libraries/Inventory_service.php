@@ -257,22 +257,26 @@ class Inventory_service extends Base_service {
 	 */
 	public function getUserCurrentSlots($uid,$field = '*'){
 		
+		
+		
 		$info = $this->_memberSlotModel->getFirstByKey($uid,'uid');
 		if(empty($info)){
+			$initSize = 50;
+			
 			$initData = array(
 				'uid' => $uid,
-				'slot_num' => 10,
+				'slot_num' => $initSize,
 				'kw' => '',
 				'kw_price' => ''
 			);
 			
-			for($i = 1; $i <= 10; $i++){
+			for($i = 1; $i <= $initSize; $i++){
 				$initData['slot_config'][$i] = array(
 					'id' => $i,
 					'title' => '货柜'.$i,
 					'cnt' => 0,
 					'goods_code' => '',
-					'max_cnt' => 50,
+					'max_cnt' => 30,
 				);
 			}
 			

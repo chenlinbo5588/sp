@@ -1,10 +1,13 @@
 $(function(){
+	
+	var timer = null;
+	
 	$("input.mcode").bind("click",function(e){
 		var that = $(this);
 		var srcInputID = that.attr('data-mcode');
 		
 		var mobile = $(srcInputID).val();
-		var timer = null;
+		
 		
 		if(!regMobile.test(mobile)){
 			alert("请输入正确的手机号码");
@@ -13,7 +16,6 @@ $(function(){
 		
 		that.addClass("grayed").prop("disabled",true).val("剩余60秒");
 		var sec = 59;
-		
 		if(timer == null){
 			timer = setInterval(function(){
 				if(sec < 1){

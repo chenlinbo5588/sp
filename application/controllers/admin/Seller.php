@@ -167,7 +167,7 @@ class Seller extends Ydzj_Admin_Controller {
 					if(strpos($sendWaysStr,'邮件')){
 						$memberInfo = $this->Member_Model->getFirstByKey($id,'uid','uid,username,email');
 						if($memberInfo){
-							$this->message_service->addSystemEmailMessageToUser($data,$memberInfo);
+							$this->message_service->pushEmailMessageToUser(array_merge($data,$memberInfo),$memberInfo['uid']);
 						}
 					}
 				}

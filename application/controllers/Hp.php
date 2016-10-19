@@ -182,7 +182,7 @@ class Hp extends MyYdzj_Controller {
 					foreach($initRow as $item){
 						$dk = "{$key}{$item}";
 						$data[$dk] = $postData[$key][$item];
-						if($key == 'send_zone' || $key == 'send_day'){
+						if($key == 'send_zone' || $key == 'send_day' || 'price_status' == $key){
 							if(!empty($data[$dk])){
 								$this->form_validation->set_rules($dk,$validationKey['rule_list'][$key]['title'],$validationKey['rule_list'][$key]['rules']);
 							}
@@ -236,6 +236,16 @@ class Hp extends MyYdzj_Controller {
 							}else{
 								$rowData[$field] = strtotime($postData[$field][$rowIndex]);
 							}
+						}else if($field == 'goods_size'){
+							if(is_numeric($postData[$field][$rowIndex])){
+								//数字
+								$rowData['goods_size'] = $postData[$field][$rowIndex];
+								$rowData['goods_csize'] = $rowData['goods_size'];
+							}else{
+								//非数字
+								$rowData['goods_size'] = 0;
+								$rowData['goods_csize'] = $postData[$field][$rowIndex];
+							}
 						}else{
 							$rowData[$field] = $postData[$field][$rowIndex];
 						}
@@ -243,7 +253,7 @@ class Hp extends MyYdzj_Controller {
 					
 					//关键，创建一个完整的词组 ，防止分词  关系到精确匹配的问题
 					$rowData['search_code'] = str_replace(array('-','_'),'',$rowData['goods_code']);
-					$rowData['kw'] = str_replace('.','',$rowData['search_code'].'S'.$rowData['goods_size']);
+					$rowData['kw'] = str_replace('.','',$rowData['search_code'].'S'.$rowData['goods_csize']);
 					
 					$insertData[] = $rowData;
 				}

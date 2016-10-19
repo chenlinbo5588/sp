@@ -52,22 +52,6 @@
       			return $("#gctip").html();
       		}
     	});
-    	
-    	/*
-    	$("textarea[name=gc]").bind("focusin",function(){
-    		$(this).animate({ 
-			    height: 160
-			  }, 1000 ,function(){
-			  	$(this).height(160);
-			});
-    	}).bind('focusout',function(){
-    		$(this).animate({ 
-			    height: 40
-			  }, 1000 ,function(){
-			  	$(this).height(40);
-			});
-    	});
-    	*/
     });
     </script>
 {include file="common/my_footer.tpl"}

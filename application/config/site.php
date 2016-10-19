@@ -12,12 +12,15 @@ $config['mail_list'] = array(
 	'sina.com','126.com','163.com','gmail.com','qq.com','vip.qq.com','hotmail.com','sohu.com','139.com','vip.sina.com','21cn.cn','189.cn','sina.cn'
 );
 
+
+
 $config['SMS_apikey'] = '';
 
 
 $config['fronted_admin'] = array(
 	
 );
+
 
 $config['notify_ways'] = array(
 	'站内信',

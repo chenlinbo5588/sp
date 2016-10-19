@@ -15,6 +15,7 @@ $config['hp_validation'] = array(
 		'quantity',
 		'sex',
 		'price_max',
+		'price_status',
 		'send_zone',
 		'send_day',
 	),
@@ -41,15 +42,19 @@ $config['hp_validation'] = array(
 		),
 		'goods_size' => array(
 			'title' => '尺码',
-			'rules' => 'required|is_numeric|greater_than[1]|less_than[60]'
+			'rules' => 'required|min_length[1]|max_length[10]'
 		),
 		'quantity' => array(
 			'title' => '数量',
-			'rules' => 'required|is_natural_no_zero|less_than[100]'
+			'rules' => 'required|is_natural_no_zero|less_than[10000]'
 		),
 		'sex' => array(
 			'title' => '性别',
 			'rules' => 'required|in_list[1,2]'
+		),
+		'price_status' => array(
+			'title' => '显示价格',
+			'rules' => 'required|in_list[0,1]'
 		),
 		'price_min' => array(
 			'title' => '最低价',

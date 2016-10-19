@@ -685,18 +685,18 @@ EOF;
 CREATE TABLE `sp_hp_pub{i}` (
   `goods_id` mediumint(10) unsigned NOT NULL,
   `goods_name` varchar(40) NOT NULL DEFAULT '' COMMENT '名称',
-  `goods_code` varchar(10) NOT NULL DEFAULT '' COMMENT '货号',
+  `goods_code` varchar(10) NOT NULL DEFAULT '' COMMENT '用户原始货号',
   `goods_color` varchar(15) NOT NULL DEFAULT '' COMMENT '颜色',
   `gc_id1` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '货品一级分类',
   `gc_id2` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '货品二级分类',
   `gc_id3` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '货品三级分类',
-  `goods_size` float unsigned NOT NULL DEFAULT '0' COMMENT '尺码',
-  `goods_csize` varchar(10) NOT NULL DEFAULT '' COMMENT '中文尺寸名称',
-  `search_code` varchar(15) NOT NULL DEFAULT '',
-  `kw` varchar(15) NOT NULL DEFAULT '' COMMENT '货号链接上尺寸 成为一个唯一查找的建',
+  `goods_size` float unsigned NOT NULL DEFAULT '0' COMMENT '尺码 纯数字尺码 如 42',
+  `goods_csize` varchar(10) NOT NULL DEFAULT '' COMMENT '字母或文字尺码',
+  `search_code` varchar(10) NOT NULL DEFAULT '' COMMENT '用于搜索的 去除中划线和下划线 防止分词',
+  `kw` varchar(20) NOT NULL DEFAULT '' COMMENT '货号链接上尺寸 成为一个唯一查找的建',
   `quantity` smallint(5) unsigned NOT NULL DEFAULT '1' COMMENT '数量',
   `sex` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '性别',
-  `price_status` tinyint(3) unsigned DEFAULT '1',
+  `price_status` tinyint(3) unsigned NOT NULL DEFAULT '1' COMMENT '1=仅自己可见  0=明价求货',
   `price_max` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '期望价格范围',
   `send_zone` varchar(30) NOT NULL DEFAULT '' COMMENT '发货地址',
   `send_day` int(3) unsigned NOT NULL DEFAULT '0' COMMENT '发货时间',
@@ -727,6 +727,56 @@ EOF;
 		
 	}
 	
+	
+	/**
+	 * 
+	 */
+	public function create_push_email_tables(){
+		$chat_pm = range(0,9);
+		
+		foreach($chat_pm as $key => $value){
+			echo "'{$key}' => {$value},<br/>";
+		}
+		
+		echo '<br/>';
+		
+		$sql = <<< EOF
+CREATE TABLE `sp_push_email{i}` (
+  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+  `msg_type` tinyint(3) NOT NULL DEFAULT '1' COMMENT '-1 后台系统消息 0=用户消息 1=货品匹配信息',
+  `uid` int(9) unsigned NOT NULL DEFAULT '0',
+  `username` varchar(30) NOT NULL DEFAULT '',
+  `email` varchar(30) NOT NULL DEFAULT '',
+  `title` varchar(200) NOT NULL DEFAULT '',
+  `content` text NOT NULL,
+  `resp` text NOT NULL COMMENT '服务器返回消息',
+  `retry` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `is_send` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `gmt_create` int(10) unsigned NOT NULL DEFAULT '0',
+  `gmt_modify` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `idx_send` (`is_send`),
+  KEY `idx_uid` (`msg_type`,`uid`),
+  KEY `idx_retry` (`retry`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+EOF;
+
+		$pm = $this->load->get_config('split_push_email');
+		
+		
+		print_r($pm);
+		
+		foreach($pm as $p){
+			
+			$exexSQL = str_replace('{i}',$p,$sql);
+			$this->Member_Model->execSQL($exexSQL);
+		}
+		
+		
+		
+	}
 	
 	/**
 	 * 
@@ -816,24 +866,29 @@ EOF;
 		$uid = $this->input->get('uid');
 		
 		$pm = $this->load->get_config('split_pm');
-		$push_chat = $this->load->get_config('split_push_chat');
+		//$push_chat = $this->load->get_config('split_push_chat');
+		$push_email = $this->load->get_config('split_push_email');
 		$hp_batch = $this->load->get_config('split_hp_batch');
 		$hp_pub = $this->load->get_config('split_hp_pub');
 		
 		$pmHash = new Flexihash();
-		$pushChatHash = new Flexihash();
+		//$pushChatHash = new Flexihash();
+		$pushEmailHash = new Flexihash();
 		$hpBatchHash = new Flexihash();
 		$hpPubHash = new Flexihash();
 		
 		
 		$pmHash->addTargets($pm);
-		$pushChatHash->addTargets($push_chat);
+		//$pushChatHash->addTargets($push_chat);
+		$pushEmailHash->addTargets($push_email);
 		$hpBatchHash->addTargets($hp_batch);
 		$hpPubHash->addTargets($hp_pub);
 		
 		echo 'pm_mesage='.$pmHash->lookup($uid);
 		echo '<br/>';
-		echo 'push_chat='.$pushChatHash->lookup($uid);
+		//echo 'push_chat='.$pushChatHash->lookup($uid);
+		echo '<br/>';
+		echo 'push_email='.$pushEmailHash->lookup($uid);
 		echo '<br/>';
 		echo 'hp_batch='.$hpBatchHash->lookup($uid);
 		echo '<br/>';
@@ -1073,6 +1128,10 @@ EOF;
         
         foreach($tables as $table){
         	if(preg_match('/^sp_push_chat\d+$/i',$table,$match)){
+        		continue;
+        	}
+        	
+        	if(preg_match('/^sp_push_email\d+$/i',$table,$match)){
         		continue;
         	}
         	

@@ -41,19 +41,6 @@ class Message_service extends Base_service {
 		$this->_siteMessageModel = self::$CI->Site_Message_Model;
 		//$this->_pushChatModel = self::$CI->Push_Chat_Model;
 		$this->_pushEmailModel = self::$CI->Push_Email_Model;
-		
-		/*
-		$this->_pmHashObject = new Flexihash();
-		$this->_chatHashObject = new Flexihash();
-		$this->_emailHashObject = new Flexihash();
-		
-		$pmConfig = self::$CI->load->get_config('split_pm');
-		$chatConfig = self::$CI->load->get_config('split_push_chat');
-		//print_r($pmConfig);
-		$this->_pmHashObject->addTargets($pmConfig);
-		$this->_chatHashObject->addTargets($chatConfig);
-		*/
-		
 	}
 	
 	
@@ -142,6 +129,18 @@ class Message_service extends Base_service {
 	}
 	
 	/**
+	 * 获得 email hash object
+	 */
+	public function getEmailHashObj(){
+		if(!$this->_emailHashObject){
+			$this->_emailHashObject = new Flexihash();
+			$this->_emailHashObject->addTargets(self::$CI->load->get_config('split_push_email'));
+		}
+		return $this->_emailHashObject;
+	}
+	
+	
+	/**
 	 * 获得 chat hash object
 	 */
 	 
@@ -174,6 +173,14 @@ class Message_service extends Base_service {
 	public function setPmTableByUid($uid){
 		$tableId = $this->getPmHashObj()->lookup($uid);
 		$this->_pmMessageModel->setTableId($tableId);
+	}
+	
+	/**
+	 * 设置 Email Message tableid
+	 */
+	public function setEmailTableByUid($uid){
+		$tableId = $this->getEmailHashObj()->lookup($uid);
+		$this->_pushEmailModel->setTableId($tableId);
 	}
 	
 	/**
@@ -436,6 +443,7 @@ class Message_service extends Base_service {
 						'email' => $userProfile['basic']['email'],
 						'title' => $list[$pmIndex]['title'],
 						'content' => $list[$pmIndex]['content'],
+						'resp' => ''
 					);
 					
 				}
@@ -508,15 +516,13 @@ class Message_service extends Base_service {
 	/**
 	 * 添加一条待发邮件记录，后台自动发送
 	 */
-	public function addSystemEmailMessageToUser($data,$userInfo){
-		//$this->setPushChatTableByUid($userInfo['uid']);
-		
-		$data = array_merge($data,$userInfo);
+	public function pushEmailMessageToUser($data,$uid){
 		$data['msg_type'] = -1;
+		$data['resp'] = '';
 		
+		$this->setEmailTableByUid($uid);
 		$this->_pushEmailModel->_add($data);
 	}
-	
 	
 	/**
 	 * 添加邮件记录到管理员
@@ -527,11 +533,12 @@ class Message_service extends Base_service {
 	}
 	
 	
-	
 	/**
 	 * 批量添加
 	 */
 	public function addMutiEmailMessageToUser($data,$uid = 0){
+		$this->setEmailTableByUid($uid);
+		
 		return $this->_pushEmailModel->batchInsert($data);
 	}
 	

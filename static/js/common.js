@@ -1,4 +1,7 @@
-var regMobile = /^(\+?86)?1[0-9][0-9]{1}[0-9]{8}$|15[0189]{1}[0-9]{8}$|189[0-9]{8}$/;
+var regMobile = /^(\+?86)?1[0-9][0-9]{1}[0-9]{8}$|15[0189]{1}[0-9]{8}$|189[0-9]{8}$/,
+	regEmail = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/,
+	regPsw = /^[a-zA-Z0-9~!@#$%^&*()\\\|\\\\-_=+{}\[\];:"\'<,.>?\/]{6,12}$/;
+
 //地区缓存
 var districtCache = [];
 var commonDialog;
@@ -436,7 +439,14 @@ function districtSelect(isBind){
 
 
 $.fn.imageCode = function(setting){
+	var defaultSetting = {
+		'callbackFn' : function() {}	
+	};
+	
+	setting = $.extend({},setting);
+	
 	var wrap = $(setting.wrapId);
+	
 	
 	var isRequesting = false;
 	var _refreshImg = function(){
@@ -457,6 +467,10 @@ $.fn.imageCode = function(setting){
 					wrap.html(json.img);
 				}else{
 					wrap.html("点击重新刷新");
+				}
+				
+				if(setting.callbackFn){
+					setting.callbackFn(json);
 				}
 			},
 			error: function(XMLHttpRequest, textStatus, thrownError){
