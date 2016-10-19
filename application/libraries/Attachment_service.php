@@ -32,7 +32,7 @@ class Attachment_service extends Base_service {
         make_dir($config['upload_path']);
         $config['file_ext_tolower'] = true;
 		$config['encrypt_name'] = true;
-		$config['max_size'] = 4096;
+		$config['max_size'] = 2048;
 		
 		
 		return $config;
@@ -190,6 +190,10 @@ class Attachment_service extends Base_service {
 			//print_r($fileData);
 			$fileData['file_url'] = $config['file_path'].$fileData['file_name'];
 			$fileData['ip'] = self::$CI->input->ip_address();
+			
+			if($config['without_db']){
+				return $fileData;
+			}
 			
 			if($this->_userInfo){
 				$fileData['uid'] = $this->_userInfo['uid'];

@@ -358,6 +358,16 @@ input[type=text].valid , input[type=password].valid {
 }
 
 
+.w-tixing {
+    border-left: 5px solid #EDD28A;
+    background-color: #FCF8E2;
+    font-size: 12px;
+    color: #9d7337;
+    line-height: 28px;
+    padding: 20px;
+}
+
+
 .tabin_screen { border-bottom:1px solid #e9eaec; position:relative;padding: 5px 0;}
 .tabin_screen ul{height:40px; line-height:40px;}
 .tabin_screen ul li{  font-size:14px; padding:0 5px; float:left}
@@ -1124,6 +1134,12 @@ table.noext {
 	padding: 10px 0;
     font-size: 16px;
 }
+
+
+.hp-import-box {
+    padding: 40px 30px;
+}
+
 
 
 #repub {

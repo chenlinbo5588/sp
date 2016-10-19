@@ -130,7 +130,7 @@ function step_helper($stepText,$step){
 			}
 		}
 		
-		$stepHtml[] = $s."\">{$stepText[$index]}</div>";
+		$stepHtml[] = $s."\">".($index + 1)."、".$stepText[$index]."</div>";
 	}
 	
 	return '<div class="w-step-row">'.implode('',$stepHtml).'</div>';

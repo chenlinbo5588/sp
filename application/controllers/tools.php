@@ -696,6 +696,7 @@ CREATE TABLE `sp_hp_pub{i}` (
   `kw` varchar(20) NOT NULL DEFAULT '' COMMENT '货号链接上尺寸 成为一个唯一查找的建',
   `quantity` smallint(5) unsigned NOT NULL DEFAULT '1' COMMENT '数量',
   `sex` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '性别',
+  `pub_type` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '0=普通求货 1=批发求货',
   `price_status` tinyint(3) unsigned NOT NULL DEFAULT '1' COMMENT '1=仅自己可见  0=明价求货',
   `price_max` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '期望价格范围',
   `send_zone` varchar(30) NOT NULL DEFAULT '' COMMENT '发货地址',
@@ -708,6 +709,7 @@ CREATE TABLE `sp_hp_pub{i}` (
   KEY `idx_uid_dk` (`uid`,`date_key`),
   KEY `idx_goods_id` (`goods_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户求货发布表';
+
 
 
 

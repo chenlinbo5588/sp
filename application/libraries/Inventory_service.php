@@ -256,9 +256,6 @@ class Inventory_service extends Base_service {
 	 * 获得用户库存
 	 */
 	public function getUserCurrentSlots($uid,$field = '*'){
-		
-		
-		
 		$info = $this->_memberSlotModel->getFirstByKey($uid,'uid');
 		if(empty($info)){
 			$initSize = 50;

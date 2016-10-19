@@ -15,6 +15,7 @@ $entity = array(
 'kw' => 'varchar',
 'quantity' => 'smallint',
 'sex' => 'tinyint',
+'pub_type' => 'tinyint',
 'price_status' => 'tinyint',
 'price_max' => 'smallint',
 'send_zone' => 'varchar',

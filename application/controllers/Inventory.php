@@ -152,20 +152,13 @@ class Inventory extends MyYdzj_Controller {
 	 */
 	public function index()
 	{
+		
+		
 		//$searchCondition = $this->_prepareParam($this->_preparePager());
 		$userSlots = $this->inventory_service->getUserCurrentSlots($this->_loginUID);
 		
-		$this->assign('list',$userSlots);
 		
-		/*
-		$pager = $this->_preparePager();
-		$results = pageArrayGenerator($pager,$userSlots['slot_num']);
 		
-		if($results){
-			$this->assign('list',$userSlots);
-			$this->assign('page',$results['pager']);
-		}
-		*/
 		
 		if($this->isPostRequest()){
 			$remainSec = $this->inventory_service->getReactiveTimeRemain($this->_reqtime,$this->_loginUID,$userSlots);
@@ -187,13 +180,63 @@ class Inventory extends MyYdzj_Controller {
 		$secondsElpse = $inventoryExpireSec - ($this->_reqtime - $userSlots['active_time']);
 		
 		
-		
 		$this->assign('secondsElpse',$secondsElpse);
 		$this->assign('feedback',$feedback);
 		
+		if($this->isPostRequest()){
+			
+			
+		}else{
+			
+			
+			
+			
+			$step = 1;
+		}
+		
+		$this->assign('stepHTML',step_helper(array(
+			'选择要上传的文件',
+			'批量导入货品',
+			'导入完成结果',
+		),$step));
+		
+		$this->session->set_userdata('step',$step);
+		$this->assign('step',$step);
+		$this->assign('currentHpCnt',1);
 		$this->assign('currentGroupId',$this->_profile['basic']['group_id']);
+		$this->assign('list',$userSlots);
+		
 		$this->display();
 	}
+	
+	
+	public function upload(){
+		
+		///print_r($_FILES);
+		if($this->isPostRequest()){
+			$this->load->library('Attachment_service');
+			$config = $this->attachment_service->getUploadConfig();
+			$config['without_db'] = true;
+			$config['allowed_types'] = 'xlsx|xls';
+			$fileInfo = $this->attachment_service->addAttachment('Filedata',$config);
+			
+			$this->session->set_userdata('inventory_file',$fileInfo);
+			
+			
+			$this->jsonOutput('上传成功');
+		}else{
+			$this->jsonOutput('参数错误');
+		}
+		
+	}
+	
+	
+	public function import(){
+		
+		
+		
+	}
+	
 	
 	
 	
