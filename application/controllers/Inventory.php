@@ -152,15 +152,14 @@ class Inventory extends MyYdzj_Controller {
 	 */
 	public function index()
 	{
-		
-		
 		//$searchCondition = $this->_prepareParam($this->_preparePager());
-		$userSlots = $this->inventory_service->getUserCurrentSlots($this->_loginUID);
+		$userInventory = $this->inventory_service->getUserCurrentInventory($this->_loginUID);
 		
 		
-		
-		
+		/*
 		if($this->isPostRequest()){
+			
+			
 			$remainSec = $this->inventory_service->getReactiveTimeRemain($this->_reqtime,$this->_loginUID,$userSlots);
 			
 			if(!$remainSec){
@@ -174,6 +173,7 @@ class Inventory extends MyYdzj_Controller {
 			}else{
 				$feedback = getErrorTip('更新冻结时间还有'.$remainSec.'秒');
 			}
+			
 		}
 		
 		$inventoryExpireSec = config_item('inventory_expired');
@@ -182,32 +182,42 @@ class Inventory extends MyYdzj_Controller {
 		
 		$this->assign('secondsElpse',$secondsElpse);
 		$this->assign('feedback',$feedback);
+		*/
 		
 		if($this->isPostRequest()){
 			
 			
-		}else{
-			
-			
-			
-			
-			$step = 1;
 		}
 		
-		$this->assign('stepHTML',step_helper(array(
-			'选择要上传的文件',
-			'批量导入货品',
-			'导入完成结果',
-		),$step));
+		if($userInventory['hp_cnt'] == 0){
+			$this->_importStep(1);
+		}else{
+			$pageParam = $this->_preparePager();
+			$pager = pageArrayGenerator($pageParam,$userInventory['hp_cnt']);
+			//print_r($pager);
+			$startIndex = ($pager['pager']['current_page'] - 1) * $pager['pager']['page_size'];
+			$endIndex = $pager['pager']['page_size'];
+			
+			/*
+			if($endIndex > $userInventory['hp_cnt']){
+				$endIndex = $userInventory['hp_cnt'] - 1;
+			}	
+			*/
+			
+			
+			$list = array_slice($userInventory['goods_list'],$startIndex,$endIndex);
+			//print_r($list);
+			$this->assign('list',$list);
+			$this->assign('page',$pager['pager']);
+		}
 		
-		$this->session->set_userdata('step',$step);
-		$this->assign('step',$step);
-		$this->assign('currentHpCnt',1);
+		$this->assign('currentHpCnt',$userInventory['hp_cnt']);
 		$this->assign('currentGroupId',$this->_profile['basic']['group_id']);
-		$this->assign('list',$userSlots);
+		
 		
 		$this->display();
 	}
+	
 	
 	
 	public function upload(){
@@ -220,23 +230,181 @@ class Inventory extends MyYdzj_Controller {
 			$config['allowed_types'] = 'xlsx|xls';
 			$fileInfo = $this->attachment_service->addAttachment('Filedata',$config);
 			
-			$this->session->set_userdata('inventory_file',$fileInfo);
-			
+			$this->session->set_userdata(array(
+				'import_file' => $fileInfo['file_url'],
+			));
 			
 			$this->jsonOutput('上传成功');
-		}else{
-			$this->jsonOutput('参数错误');
 		}
-		
 	}
 	
 	
+	private function _getExcelColumnConfig(){
+		return array(
+    		array(
+    			'col' => 'A',
+    			'name' => '货号',
+    			'width' => 20,
+    			'db_key' => 'goods_code'
+    		),
+    		array(
+    			'col' => 'B',
+    			'name' => '货名',
+    			'width' => 20,
+    			'db_key' => 'goods_name'
+    		),
+    		array(
+    			'col' => 'C',
+    			'name' => '颜色',
+    			'width' => 30,
+    			'db_key' => 'goods_color'
+    		),
+    		array(
+    			'col' => 'D',
+    			'name' => '尺寸',
+    			'width' => 10,
+    			'db_key' => 'goods_size'
+    		),
+    		array(
+    			'col' => 'E',
+    			'name' => '性别',
+    			'width' => 8,
+    			'db_key' => 'sex'
+    		),
+    		array(
+    			'col' => 'F',
+    			'name' => '库存数量',
+    			'width' => 10,
+    			'db_key' => 'quantity'
+    		),
+    		array(
+    			'col' => 'G',
+    			'name' => '可接受最低价',
+    			'width' => 10,
+    			'db_key' => 'price_min'
+    		)
+    	);
+		
+	}    
+	
+	/**
+	 * 货品导入
+	 */
 	public function import(){
-		
-		
-		
+		if($this->isPostRequest()){
+			
+			$excelFile = $this->session->userdata('import_file');
+			$this->session->set_userdata(array(
+				'import_file' => ''
+			));
+			
+			$filePath = ROOTPATH.'/'.$excelFile;
+			if(file_exists($filePath) && is_file($filePath)){
+				
+				echo '<style type="text/css"> body { font: 62.5% "Microsoft Yahei", "Lucida Grande", Verdana, Lucida, Helvetica, Arial, "Simsun", sans-serif; } .success {color:blue;} .failed {color:red;}</style>';
+				echo "<div>正在导入，请耐心等待。。。</div>";
+				flush();
+				$this->load->file(PHPExcel_PATH.'PHPExcel.php');
+				//$filePath = ROOTPATH.'/test.xlsx';
+				$keyConfig = $this->_getExcelColumnConfig();
+				
+				$this->load->config('hp');
+				$validationConfig = config_item('hp_validation');
+				$slots = $this->inventory_service->getUserAllInventory($this->_loginUID);
+				
+				try {
+					$objPHPexcel = PHPExcel_IOFactory::load($filePath); 
+					$objWorksheet = $objPHPexcel->getActiveSheet(0); 
+					$startRow = 0;
+					$readAddOn = 2;	
+					$findKeyword = false;
+					$highestRow = $objWorksheet->getHighestRow();
+					
+					if($highestRow > 1000){
+						$highestRow = 1000;
+					}
+					
+					$rowsIgnored = array();
+					
+					$goodsList = array();
+					$kwList = array();
+					$kwPriceList = array();
+					
+					for($rowIndex = ($startRow + $readAddOn); $rowIndex <= $highestRow; $rowIndex++){
+						$rowValue = array();
+						$flag = false;
+						$affectRow = 0;
+						
+						foreach($keyConfig as $config){
+							$rowValue[$config['db_key']] = sbc_to_dbc(str_replace(array("\n","\r","\r\n"),"",trim($objWorksheet->getCell($config['col'].$rowIndex)->getValue())));
+						}
+						
+						//important , do not drop this line
+						if(empty($rowValue['goods_code'])){
+							continue;
+						}
+						
+						$this->form_validation->reset_validation();
+						//用于数据校验得数组
+						foreach($validationConfig['inventory'] as $filename){
+							$this->form_validation->set_rules($filename,$validationConfig['rule_list'][$filename]['title'],$validationConfig['rule_list'][$filename]['rules']);
+						}
+						
+						$this->form_validation->set_data($rowValue);
+						$flag = $this->form_validation->run();
+						
+						if(!$flag){
+							echo '<div class="success">行'.$rowIndex.'导入失败</div>';
+							$rowsIgnored[] = $rowIndex;
+							continue;
+						}else{
+							//echo '<div class="tip_success">行'.$rowIndex.'导入成功</div>';
+						}
+						
+						$goodsList[] = $rowValue;
+						//用一个
+						$kwList[] = code_replace($rowValue['goods_code']).str_replace('.','',$rowValue['goods_size']);
+						$kwPriceList[] = $rowValue['price_min'];
+						//检查是否已经存在
+					}
+					
+					//更新库存
+					$rows = $this->inventory_service->updateUserInventory(array(
+						'goods_list' => $goodsList,
+						'kw' => implode('|',$kwList),
+						'kw_price' => implode('|',$kwPriceList),
+						'ip' => $this->input->ip_address()
+					),$this->_loginUID);
+					
+					if($rows){
+						echo '<div class="success">导入完成,成功导入 ' . count($goodsList).'记录，其中失败'.count($rowsIgnored).'条</div>';
+					}else{
+						echo '<div class="failed">请重新上传文件</div>';
+					}
+			
+				}catch(Exception $re){
+					
+				}
+			}else{
+				echo '<div class="failed">导入出请重新上传文件</div>';
+			}
+			
+		}else{
+			
+			$this->_importStep(1);
+			$this->display('inventory/upload');
+		}
 	}
 	
+	private function _importStep($step){
+		$this->assign('stepHTML',step_helper(array(
+			'选择要上传的文件',
+			'批量导入货品',
+		),$step));
+		
+		$this->assign('step',$step);
+		$this->session->set_userdata('import_step',$step);
+	}
 	
 	
 	

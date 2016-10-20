@@ -25,6 +25,7 @@ $entity = array(
 'group_id' => 'int',
 'sid' => 'varchar',
 'credits' => 'int',
+'pm_id' => 'mediumint',
 'msgid' => 'mediumint',
 'district_bind' => 'tinyint',
 'freeze' => 'char',

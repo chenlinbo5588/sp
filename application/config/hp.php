@@ -30,7 +30,7 @@ $config['hp_validation'] = array(
 	'rule_list' => array(
 		'goods_code' => array(
 			'title' => '货号',
-			'rules' => 'required|alpha_dash|min_length[1]|max_length[10]'
+			'rules' => 'required|alpha_dash|min_length[1]|max_length[15]'
 		),
 		'goods_name' => array(
 			'title' => '货名',
@@ -50,7 +50,7 @@ $config['hp_validation'] = array(
 		),
 		'sex' => array(
 			'title' => '性别',
-			'rules' => 'required|in_list[1,2]'
+			'rules' => 'required|in_list[1,2,男,女,通用]'
 		),
 		'price_status' => array(
 			'title' => '显示价格',

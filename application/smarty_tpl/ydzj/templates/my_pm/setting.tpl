@@ -1,6 +1,8 @@
 {include file="common/my_header.tpl"}
 	{form_open(site_url($uri_string),"id='editForm'")}
-	<span class="tip">求货或库存匹配时得提醒方式,建议电脑版在线时只勾选站内信，离线时选择邮件，可降低由于多路径消息重复问题对您引起的干扰。</span>
+	<div class="w-tixing clearfix"><b>温馨提醒：</b>
+	    <p>求货或库存匹配时得提醒方式,建议电脑版在线时只勾选站内信，离线时选择邮件，可降低由于多路径消息重复问题对您引起的干扰。</p>
+	  </div>
 	<table class="fulltable style1">
 		<tbody>
 			<tr>

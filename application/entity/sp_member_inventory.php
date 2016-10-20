@@ -3,11 +3,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 $entity = array(
 'uid' => 'int',
-'slot_id' => 'int',
-'goods_list' => 'text',
+'hp_cnt' => 'int',
+'goods_list' => 'mediumtext',
 'enable' => 'tinyint',
-'kw' => 'text',
-'kw_price' => 'text',
+'kw' => 'mediumtext',
+'kw_price' => 'mediumtext',
 'ip' => 'varchar',
 'gmt_modify' => 'int'
 );

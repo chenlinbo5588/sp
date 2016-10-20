@@ -142,3 +142,10 @@ function trim_newline($str){
 	return str_replace(array("\r\n","\n","\r"),'',$str);
 	
 }
+
+/**
+ * code_replace
+ */
+function code_replace($code,$chars = array('-','_'),$replace = ''){
+	return str_replace($chars,$replace,$code);
+}

@@ -8,7 +8,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class MyYdzj_Controller extends Ydzj_Controller {
 	private $_pushObject;
 	protected $_loginUID = 0;
-	public $_newpm = array();
+	public $_newpm = 0;
 	
 	public function __construct(){
 		parent::__construct();
@@ -56,7 +56,7 @@ class MyYdzj_Controller extends Ydzj_Controller {
 	protected function _pmUpdate(){
 		$this->_newpm = $this->message_service->getLastestSysPm($this->_profile,$this->_loginUID);
 		if($this->_newpm){
-			$this->assign('newPm',count($this->_newpm));
+			$this->assign('newPm',$this->_newpm);
 		}
 	}
 	

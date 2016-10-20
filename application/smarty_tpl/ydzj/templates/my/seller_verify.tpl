@@ -1,6 +1,8 @@
 {include file="common/my_header.tpl"}
     {$stepHTML}
-	<div class="hightlight">通过卖家认证之后,将可以获得后台实时的匹配提醒</div>
+	<div class="w-tixing clearfix"><b>温馨提醒：</b>
+	    <p>通过卖家认证之后,将可以获得后台实时的匹配提醒</p>
+	  </div>
 	{include file="common/fancybox.tpl"}
 	{if $step == 1}
 	{form_open_multipart(site_url($uri_string),"id='sellerForm'")}

@@ -149,6 +149,7 @@ class Hp extends MyYdzj_Controller {
 				
 				foreach($validationKey['hp_req'] as $value){
 					$postData[$value] = $this->input->post($value,true);
+					$postData[$value] = $postData[$value];
 				}
 				
 				// 提交了多少行
@@ -230,6 +231,8 @@ class Hp extends MyYdzj_Controller {
 					);
 					
 					foreach($validationKey['hp_req'] as $field){
+						$postData[$field][$rowIndex] = trim($postData[$field][$rowIndex]);
+						
 						if($field == 'send_day'){
 							if(empty($postData[$field][$rowIndex])){
 								$rowData[$field] = 0;
@@ -252,8 +255,8 @@ class Hp extends MyYdzj_Controller {
 					}
 					
 					//关键，创建一个完整的词组 ，防止分词  关系到精确匹配的问题
-					$rowData['search_code'] = str_replace(array('-','_'),'',$rowData['goods_code']);
-					$rowData['kw'] = str_replace('.','',$rowData['search_code'].'S'.$rowData['goods_csize']);
+					$rowData['search_code'] = code_replace($rowData['goods_code']);
+					$rowData['kw'] = $rowData['search_code'].str_replace('.','',$rowData['goods_csize']);
 					
 					$insertData[] = $rowData;
 				}

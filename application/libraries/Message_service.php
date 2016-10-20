@@ -338,23 +338,37 @@ class Message_service extends Base_service {
 	
 	
 	/**
-	 * 系统广播 信息逻辑
+	 * 更新用户 最新的站内新
 	 */
 	public function getLastestSysPm($userProfile,$uid){
 		//print_r($userProfile);
-		$maxUserSysId = intval($userProfile['basic']['msgid']);
+		
+		
+		//系统消息
+		$currentUserSysId = intval($userProfile['basic']['msgid']);
+		
+		//用户站内信消息
+		$currentUserPmId = intval($userProfile['basic']['pm_id']);
 		
 		$list = $this->_siteMessageModel->getList(array(
 			'where' => array(
-				'id > ' => $maxUserSysId
+				'id > ' => $currentUserSysId
 			),
 			'limit' => 10
 		));
 		
-		$listCount = count($list);
+		$userPmList = $this->getPmListByUid(array(
+			'select' => 'id',
+			'where' => array(
+				'id > ' => $currentUserPmId
+			),
+			'limit' => 10
+		),$uid);
+		
+		$systemCount = count($list);
+		$userPmCount = count($userPmList);
 		
 		//print_r($list);
-		
 		$userGroup = $userProfile['basic']['group_id'];
 		$accept = false;
 		
@@ -367,7 +381,7 @@ class Message_service extends Base_service {
 		$userChat = array();
 		$userEmail = array();
 		
-		if($listCount){
+		if($systemCount){
 			foreach($list as $key => $item){
 				$accept = false;
 				
@@ -479,19 +493,26 @@ class Message_service extends Base_service {
 		
 		
 		// 无论前面是否,用户系统消息 下标更新
-		if($listCount){
-			$maxUserSysId = $list[$listCount - 1]['id'];
-			self::$CI->Member_Model->update(array(
-				'msgid' => intval($maxUserSysId)
-			),array('uid' => $uid));
-			
-			$userProfile['basic']['msgid'] = $maxUserSysId;
+		$updateData = array();
+		
+		if($systemCount){
+			$userProfile['basic']['msgid'] = $list[$systemCount - 1]['id'];
+			$updateData['msgid'] = $userProfile['basic']['msgid'];
+		}
+		
+		if($userPmCount){
+			$userProfile['basic']['pm_id'] = $userPmList[$userPmCount - 1]['id'];;
+			$updateData['pm_id'] = $userProfile['basic']['pm_id'];
+		}
+		
+		if($updateData){
+			self::$CI->Member_Model->update($updateData,array('uid' => $uid));
 			self::$CI->session->set_userdata(array(
 				'profile' => $userProfile
 			));
 		}
 		
-		return $sysPm;
+		return $systemCount + $userPmCount;
 	}
 	
 	

@@ -2,6 +2,17 @@
 
 class MY_Form_validation extends CI_Form_validation {
     
+    public function reset_validation_withrules()
+	{
+		$this->_field_data = array();
+		//$this->_config_rules = array();
+		$this->_error_array = array();
+		$this->_error_messages = array();
+		$this->error_string = '';
+		return $this;
+	}
+	
+	
     public function is_unique_by_status($str,$fields){
         list($table, $field,$key,$value)=explode('.', $fields);
 		$query = $this->CI->db->get_where($table, array($field => $str,$key => $value));

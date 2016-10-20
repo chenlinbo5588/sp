@@ -685,15 +685,15 @@ EOF;
 CREATE TABLE `sp_hp_pub{i}` (
   `goods_id` mediumint(10) unsigned NOT NULL,
   `goods_name` varchar(40) NOT NULL DEFAULT '' COMMENT '名称',
-  `goods_code` varchar(10) NOT NULL DEFAULT '' COMMENT '用户原始货号',
+  `goods_code` varchar(15) NOT NULL DEFAULT '' COMMENT '用户原始货号',
   `goods_color` varchar(15) NOT NULL DEFAULT '' COMMENT '颜色',
   `gc_id1` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '货品一级分类',
   `gc_id2` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '货品二级分类',
   `gc_id3` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '货品三级分类',
   `goods_size` float unsigned NOT NULL DEFAULT '0' COMMENT '尺码 纯数字尺码 如 42',
   `goods_csize` varchar(10) NOT NULL DEFAULT '' COMMENT '字母或文字尺码',
-  `search_code` varchar(10) NOT NULL DEFAULT '' COMMENT '用于搜索的 去除中划线和下划线 防止分词',
-  `kw` varchar(20) NOT NULL DEFAULT '' COMMENT '货号链接上尺寸 成为一个唯一查找的建',
+  `search_code` varchar(15) NOT NULL DEFAULT '' COMMENT '用于搜索的 去除中划线和下划线 防止分词',
+  `kw` varchar(25) NOT NULL DEFAULT '' COMMENT '货号链接上尺寸 成为一个唯一查找的建',
   `quantity` smallint(5) unsigned NOT NULL DEFAULT '1' COMMENT '数量',
   `sex` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '性别',
   `pub_type` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '0=普通求货 1=批发求货',
@@ -709,6 +709,7 @@ CREATE TABLE `sp_hp_pub{i}` (
   KEY `idx_uid_dk` (`uid`,`date_key`),
   KEY `idx_goods_id` (`goods_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户求货发布表';
+
 
 
 

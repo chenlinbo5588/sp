@@ -58,6 +58,27 @@ class Inventory_service extends Base_service {
 	
 	
 	/**
+	 * 获得用户所有的得库存 ,最多 50 条记录 即50个格子
+	 */
+	public function getUserAllInventory($uid){
+		$inventoryList = $this->_memberInventoryModel->getList(array(
+			'where' => array(
+				'uid' => $uid,
+			)
+		));
+		
+		if($inventoryList){
+			foreach($inventoryList as $key => $slot){
+				$inventoryList[$key]['goods_list'] = json_decode($inventoryList[$key]['goods_list']);
+			}
+		}
+		
+		
+		return $inventoryList;
+		
+	}
+	
+	/**
 	 * 重新激活用户的库存 ，这样可以参与到自动匹配
 	 */
 	public function reactiveUserSlots($time, $uid){
@@ -66,7 +87,6 @@ class Inventory_service extends Base_service {
 		$slotList = $this->_memberInventoryModel->getList(array(
 			'where' => array(
 				'uid' => $uid,
-				'enable' => 1,
 			)
 		));
 		
@@ -153,6 +173,21 @@ class Inventory_service extends Base_service {
 		}
 		
 		return $postData;
+	}
+	
+	
+	
+	/**
+	 * 更新用户 某一个货号的 货品列表 
+	 */
+	public function updateUserInventory($data,$uid){
+		$data['hp_cnt'] = count($data['goods_list']);
+		$data['goods_list'] = json_encode($data['goods_list']);
+		$data['uid'] = $uid;
+		
+		return $this->_memberInventoryModel->_add($data,true);
+		
+		
 	}
 	
 	
@@ -251,6 +286,19 @@ class Inventory_service extends Base_service {
 		return $row;
 	}
 	
+	
+	/**
+	 * 获得用户当前库存
+	 */
+	public function getUserCurrentInventory($uid,$field = '*'){
+		$inventory = $this->_memberInventoryModel->getFirstByKey($uid,'uid');
+		
+		if($inventory){
+			$inventory['goods_list'] = json_decode($inventory['goods_list'],true);
+		}
+		
+		return $inventory;
+	}
 	
 	/**
 	 * 获得用户库存
