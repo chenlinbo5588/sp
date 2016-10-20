@@ -75,6 +75,59 @@ class Hp_service extends Base_service {
 	}
 	
 	
+	public function automatch_query($condition,$source = 'hp_recent'){
+		$list = array();
+		
+		$kwCode = $condition['fields']['kw'];
+		if(empty($kwCode)){
+			return;
+		}
+		$kwCode = preg_replace('/#.*?#/i','',$kwCode);
+		$queryStr = "@kw ".str_replace(',','|',$kwCode);
+		
+		echo $queryStr;
+		if($condition['fields']['uid']){
+			$this->_sphixClient->SetFilter('uid',$condition['fields']['uid'],true);
+		}
+		
+		
+		if($condition['order']){
+			$this->_sphixClient->setSortMode(SPH_SORT_EXTENDED,$condition['order']);
+		}
+		
+		if($condition['pager']){
+			$this->_sphixClient->SetLimits(($condition['pager']['current_page'] - 1) * $condition['pager']['page_size'], $condition['pager']['page_size']);
+		}
+		
+		$results = $this->_sphixClient->query($queryStr,$source);
+		
+		//file_put_contents('debug.txt',print_r($results,true));
+		
+		if($results['matches'] && $results['status'] === 0 && $results['total_found'] > 0){
+			return $results['matches'];
+			/*
+			$getCondition['order'] = $condition['order'];
+			$getCondition['where_in'][] = array(
+				
+				'key' => 'goods_id',
+				'value' => array_keys($results['matches'])
+			);
+			
+			//$pager = pageArrayGenerator($condition['pager'],$results['total_found']);
+			//$list = $this->_hpRecentModel->getList($getCondition);
+			*/
+			//return array('data' => $list,'pager' => $pager['pager']);
+		}else{
+			return array();
+		}
+		
+		
+		
+		
+	}
+	
+	
+	
 	/**
 	 * 
 	 */
@@ -296,7 +349,7 @@ class Hp_service extends Base_service {
 	/**
 	 * 重新激活用户的求货信息
 	 */
-	public function reactiveUserHpReq($hpid,$time, $uid){
+	public function reactiveUserHpReq($hpid,$data, $uid){
 		if(!is_array($hpid)){
 			$hpid = (array)$hpid;
 		}
@@ -314,10 +367,10 @@ class Hp_service extends Base_service {
 			)
 		);
 		
-		$affectRow = $this->_hpRecentModel->updateByCondition(array('gmt_modify' => $time),$condition);
+		$affectRow = $this->_hpRecentModel->updateByCondition($data,$condition);
 		if($affectRow){
 			//参数 1 means 刷新
-			$this->addUserHpFrequentCtrl($uid,$time,$affectRow,1,true);
+			$this->addUserHpFrequentCtrl($uid,$data['gmt_modify'],$affectRow,1,true);
 		}
 		
 		return $affectRow;

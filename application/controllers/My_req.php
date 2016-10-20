@@ -136,6 +136,14 @@ class My_req extends MyYdzj_Controller {
 	 */
 	public function recent()
 	{
+		
+		
+		$this->_breadCrumbs[] = array(
+			'title' => '最近求货',
+			'url' => $this->uri->uri_string
+		);
+		
+		
 		///echo date("Y-m-d H:i:s",$this->_reqtime);
 		$searchCondition = $this->_prepareParam($this->_preparePager());
 		$this->hp_service->setServer(0);
@@ -241,7 +249,15 @@ class My_req extends MyYdzj_Controller {
 			if($remainSeconds){
 				$this->jsonOutput('冻结时间还剩'.$remainSeconds.'秒,请稍后尝试');
 			}else{
-				$rows = $this->hp_service->reactiveUserHpReq($id,$this->_reqtime,$this->_loginUID);
+				$updateData = array(
+					'gmt_modify' => $this->_reqtime,
+					'username' => $this->_profile['basic']['username'],
+					'qq' => $this->_profile['basic']['qq'],
+					'email' => $this->_profile['basic']['email'],
+					'mobile' => $this->_profile['basic']['mobile'],
+				);
+				
+				$rows = $this->hp_service->reactiveUserHpReq($id,$updateData,$this->_loginUID);
 				$this->jsonOutput('重新激活成功');
 			}
 		}else{
@@ -279,6 +295,12 @@ class My_req extends MyYdzj_Controller {
 			$this->assign('list',$results['data']);
 			$this->assign('page',$results['pager']);
 		}
+		
+		
+		$this->_breadCrumbs[] = array(
+			'title' => '历史求货',
+			'url' => $this->uri->uri_string
+		);
 		
 		$this->display();
 	}

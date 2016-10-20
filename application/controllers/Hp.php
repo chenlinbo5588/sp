@@ -114,6 +114,10 @@ class Hp extends MyYdzj_Controller {
 			$this->assign('userList',$userList);
 		}
 		
+		$this->_breadCrumbs[] = array(
+			'title' => '求货查询',
+			'url' => $this->uri->uri_string
+		);
 		
 		$this->assign('mtime',$this->_mtime);
 		$this->display();
@@ -227,7 +231,11 @@ class Hp extends MyYdzj_Controller {
 						'ip' => $ip,
 						'gmt_create' => $this->_reqtime,
 						'gmt_modify' => $this->_reqtime,
-						'uid' => $this->_loginUID
+						'uid' => $this->_loginUID,
+						'username' => $this->_profile['basic']['username'],
+						'qq' => $this->_profile['basic']['qq'],
+						'email' => $this->_profile['basic']['email'],
+						'mobile' => $this->_profile['basic']['mobile'],
 					);
 					
 					foreach($validationKey['hp_req'] as $field){
@@ -255,12 +263,12 @@ class Hp extends MyYdzj_Controller {
 					}
 					
 					//关键，创建一个完整的词组 ，防止分词  关系到精确匹配的问题
-					$rowData['search_code'] = code_replace($rowData['goods_code']);
-					$rowData['kw'] = $rowData['search_code'].str_replace('.','',$rowData['goods_csize']);
+					$rowData['search_code'] = strtolower(code_replace($rowData['goods_code']));
+					$rowData['kw'] = $rowData['search_code'].strtolower(str_replace('.','',$rowData['goods_csize']));
 					
 					$insertData[] = $rowData;
 				}
-				///print_r($insertData);
+				
 				$rowsInserted = $this->hp_service->addHp($insertData,$this->_reqtime,$this->_loginUID);
 				
 				if($rowsInserted){
@@ -272,6 +280,15 @@ class Hp extends MyYdzj_Controller {
 				
 			}
 		}
+		
+		$this->_breadCrumbs[] = array(
+			'title' => '求货区',
+			'url' => 'hp/index'
+		);
+		$this->_breadCrumbs[] = array(
+			'title' => '求货发布',
+			'url' => $this->uri->uri_string
+		);
 		
 		$this->assign('postData',$postData);
 		$this->assign('initRow',$initRow);

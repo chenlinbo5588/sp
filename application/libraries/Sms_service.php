@@ -25,7 +25,7 @@ class Sms_service extends Base_service {
 			'data' => http_build_query($data)
 		));
 		
-		file_put_contents("debug.txt",print_r($resp,true));
+		//file_put_contents("debug.txt",print_r($resp,true));
 		$json = json_decode($resp,true);
 		
 		if(0 == $json['code']){

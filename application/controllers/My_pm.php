@@ -6,6 +6,11 @@ class My_pm extends MyYdzj_Controller {
 	
 	public function __construct(){
 		parent::__construct();
+		
+		$this->_breadCrumbs[] = array(
+			'title' => '站内信',
+			'url' => 'my_pm/index'
+		);
 	}
 	
 	
@@ -40,9 +45,21 @@ class My_pm extends MyYdzj_Controller {
 		if($type == 'send'){
 			$condition['where']['msg_direction'] = 1;
 			
+			$this->_breadCrumbs[] = array(
+				'title' => '发件箱',
+				'url' => $this->uri->uri_string.'?type='.$type
+			);
+		
 			
 		}else{
 			$type = 'receive';
+			
+			$this->_breadCrumbs[] = array(
+				'title' => '收件箱',
+				'url' => $this->uri->uri_string.'?type='.$type
+			);
+			
+			
 			$condition['where']['msg_direction'] = 0;
 			$condition['where']['readed'] = $readed;
 		}
@@ -213,7 +230,7 @@ class My_pm extends MyYdzj_Controller {
 	 * 检查是否有新想消息s
 	 */
 	public function check_newpm(){
-		$this->jsonOutput('请求成功',array('newpm' => count($this->_newpm)));
+		$this->jsonOutput('请求成功',array('newpm' => $this->_newpm));
 	}
 	
 	
@@ -244,6 +261,13 @@ class My_pm extends MyYdzj_Controller {
 			$feedback = getSuccessTip('设置成功');
 		}
 		
+		
+		
+		$this->_breadCrumbs[] = array(
+			'title' => '提醒设置',
+			'url' => $this->uri->uri_string
+		);
+			
 		$this->assign('feedback',$feedback);
 		$this->assign('currentWays',$this->_profile['basic']['notify_ways']);
 		$this->assign('sendWays',$sendWays);

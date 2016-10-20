@@ -341,8 +341,6 @@ class Message_service extends Base_service {
 	 * 更新用户 最新的站内新
 	 */
 	public function getLastestSysPm($userProfile,$uid){
-		//print_r($userProfile);
-		
 		
 		//系统消息
 		$currentUserSysId = intval($userProfile['basic']['msgid']);

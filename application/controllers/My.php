@@ -15,6 +15,9 @@ class My extends MyYdzj_Controller {
 		
 		$this->assign('avatarImageSize',$this->_avatarImageSize);
 		
+		
+		
+		
 	}
 	
 	
@@ -71,8 +74,14 @@ class My extends MyYdzj_Controller {
 	
 	public function seller_verify(){
 		
-		$step = $this->input->get_post('step');
 		
+		$this->_breadCrumbs[] = array(
+			'title' => '卖家认证',
+			'url' => $this->uri->uri_string
+		);
+		
+		
+		$step = $this->input->get_post('step');
 		
 		if(empty($step)){
 			$step = 1;
@@ -205,6 +214,11 @@ class My extends MyYdzj_Controller {
 	public function change_mobile(){
 		$this->load->library('Verify_service');
 		
+		$this->_breadCrumbs[] = array(
+			'title' => '修改手机',
+			'url' => $this->uri->uri_string
+		);
+		
 		if($this->isPostRequest()){
 			
 			$step = $this->session->userdata('step');
@@ -304,6 +318,12 @@ class My extends MyYdzj_Controller {
 	
 	
 	public function change_psw(){
+		
+		$this->_breadCrumbs[] = array(
+			'title' => '修改密码',
+			'url' => $this->uri->uri_string
+		);
+		
 		if($this->isPostRequest()){
 			
 			$this->form_validation->set_rules('old_psw','原密码','required');

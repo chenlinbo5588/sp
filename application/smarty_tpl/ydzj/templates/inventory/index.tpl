@@ -8,8 +8,11 @@
         {if $currentHpCnt == 0}
         {include file="./import.tpl"}
         {else}
+        <div>{if $last_update}上次更新时间：{time_tran($last_update)}{/if}</div>
         <div class="w-tixing clearfix"><b>温馨提醒：</b>
             <p>库存更新通过导入文件方式更新. <a class="hightlight" href="{site_url('inventory/import')}">马上去更新库存</a></p>
+            <p>库存更新冻结时间 5 分钟.</p>
+            <p>库存自动失效时间 3 小时.</p>
           </div>
         <form action="{site_url($uri_string)}" method="get" id="formSearch">
 	        <input type="hidden" name="page" value=""/>

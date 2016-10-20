@@ -152,46 +152,28 @@ class Inventory extends MyYdzj_Controller {
 	 */
 	public function index()
 	{
-		//$searchCondition = $this->_prepareParam($this->_preparePager());
 		$userInventory = $this->inventory_service->getUserCurrentInventory($this->_loginUID);
 		
-		
-		/*
-		if($this->isPostRequest()){
-			
-			
-			$remainSec = $this->inventory_service->getReactiveTimeRemain($this->_reqtime,$this->_loginUID,$userSlots);
-			
-			if(!$remainSec){
-				$flag = $this->inventory_service->reactiveUserSlots($this->_reqtime,$this->_loginUID);
-				$feedback = getSuccessTip('库存刷新成功');
-				
-				if($flag){
-					$userSlots['active_time'] = $this->_reqtime;
-				}
-				
-			}else{
-				$feedback = getErrorTip('更新冻结时间还有'.$remainSec.'秒');
-			}
-			
-		}
-		
-		$inventoryExpireSec = config_item('inventory_expired');
-		$secondsElpse = $inventoryExpireSec - ($this->_reqtime - $userSlots['active_time']);
-		
-		
-		$this->assign('secondsElpse',$secondsElpse);
-		$this->assign('feedback',$feedback);
-		*/
-		
-		if($this->isPostRequest()){
-			
-			
+		if(empty($userInventory)){
+			//初始化用户库存
+			$this->inventory_service->initUserInventory($this->_loginUID);
 		}
 		
 		if($userInventory['hp_cnt'] == 0){
 			$this->_importStep(1);
+			
+			$this->_breadCrumbs[] = array(
+				'title' => '库存导入',
+				'url' => $this->uri->uri_string
+			);
+			
 		}else{
+			$this->_breadCrumbs[] = array(
+				'title' => '我的库存',
+				'url' => $this->uri->uri_string
+			);
+		
+		
 			$pageParam = $this->_preparePager();
 			$pager = pageArrayGenerator($pageParam,$userInventory['hp_cnt']);
 			//print_r($pager);
@@ -209,11 +191,11 @@ class Inventory extends MyYdzj_Controller {
 			//print_r($list);
 			$this->assign('list',$list);
 			$this->assign('page',$pager['pager']);
+			$this->assign('last_update',$userInventory['gmt_modify']);
 		}
 		
 		$this->assign('currentHpCnt',$userInventory['hp_cnt']);
 		$this->assign('currentGroupId',$this->_profile['basic']['group_id']);
-		
 		
 		$this->display();
 	}
@@ -255,15 +237,15 @@ class Inventory extends MyYdzj_Controller {
     		),
     		array(
     			'col' => 'C',
-    			'name' => '颜色',
-    			'width' => 30,
-    			'db_key' => 'goods_color'
-    		),
-    		array(
-    			'col' => 'D',
     			'name' => '尺寸',
     			'width' => 10,
     			'db_key' => 'goods_size'
+    		),
+    		array(
+    			'col' => 'D',
+    			'name' => '颜色',
+    			'width' => 30,
+    			'db_key' => 'goods_color'
     		),
     		array(
     			'col' => 'E',
@@ -287,12 +269,25 @@ class Inventory extends MyYdzj_Controller {
 		
 	}    
 	
+	
 	/**
 	 * 货品导入
 	 */
 	public function import(){
-		if($this->isPostRequest()){
+		
+		$infreezen = 0;
+		
+		$lastUpdate = $this->inventory_service->getLastUpdate($this->_loginUID);
+		$freezen = config_item('inventory_freezen');
+		if($lastUpdate && ($this->_reqtime - $lastUpdate ) < $freezen){
 			
+			$infreezen = 1;
+			
+			$this->assign('leftseconds', $freezen  - ($this->_reqtime - $lastUpdate ));
+			$this->assign('infreezen',$infreezen);
+		}
+		
+		if(0 == $infreezen && $this->isPostRequest()){
 			$excelFile = $this->session->userdata('import_file');
 			$this->session->set_userdata(array(
 				'import_file' => ''
@@ -328,7 +323,6 @@ class Inventory extends MyYdzj_Controller {
 					
 					$goodsList = array();
 					$kwList = array();
-					$kwPriceList = array();
 					
 					for($rowIndex = ($startRow + $readAddOn); $rowIndex <= $highestRow; $rowIndex++){
 						$rowValue = array();
@@ -363,16 +357,17 @@ class Inventory extends MyYdzj_Controller {
 						
 						$goodsList[] = $rowValue;
 						//用一个
-						$kwList[] = code_replace($rowValue['goods_code']).str_replace('.','',$rowValue['goods_size']);
-						$kwPriceList[] = $rowValue['price_min'];
-						//检查是否已经存在
+						$kwList[] = strtolower(code_replace($rowValue['goods_code']).str_replace('.','',$rowValue['goods_size']))."#{$rowValue['price_min']}#";
 					}
 					
 					//更新库存
 					$rows = $this->inventory_service->updateUserInventory(array(
+						'username' => $this->_profile['basic']['username'],
+						'email' => $this->_profile['basic']['email'],
+						'qq' => $this->_profile['basic']['qq'],
+						'mobile' => $this->_profile['basic']['mobile'],
 						'goods_list' => $goodsList,
-						'kw' => implode('|',$kwList),
-						'kw_price' => implode('|',$kwPriceList),
+						'kw' => implode(',',$kwList),
 						'ip' => $this->input->ip_address()
 					),$this->_loginUID);
 					
@@ -386,10 +381,21 @@ class Inventory extends MyYdzj_Controller {
 					
 				}
 			}else{
-				echo '<div class="failed">导入出请重新上传文件</div>';
+				echo '<div class="failed">请重新上传文件</div>';
 			}
 			
 		}else{
+			
+			$this->_breadCrumbs[] = array(
+				'title' => '我的库存',
+				'url' => 'inventory/index'
+			);
+			$this->_breadCrumbs[] = array(
+				'title' => '库存导入',
+				'url' => $this->uri->uri_string
+			);
+			
+			
 			
 			$this->_importStep(1);
 			$this->display('inventory/upload');
@@ -405,263 +411,5 @@ class Inventory extends MyYdzj_Controller {
 		$this->assign('step',$step);
 		$this->session->set_userdata('import_step',$step);
 	}
-	
-	
-	
-	/**
-	 * 删除频率控制
-	 */
-	private function _delFreqControl(){
-		
-		$deleteTime = $this->input->get_cookie('dt');
-		if($deleteTime){
-			/*
-			file_put_contents('debug.txt',$this->_reqtime."\n");
-			file_put_contents('debug.txt',$temp."\n",FILE_APPEND);
-			file_put_contents('debug.txt',($this->_reqtime - $temp),FILE_APPEND);
-			*/
-			
-			if(($this->_reqtime - $deleteTime) <= 15){
-				return 15 - ($this->_reqtime - $deleteTime);
-			}
-		}
-		
-		return 0;
-		
-	}
-	
-	
-	/**
-	 * 配置货柜 对应的货号信息
-	 */
-	public function slot_title(){
-		
-		
-		$slot_id = trim($this->input->post('slot_id',true));
-		$title = trim($this->input->post('title',true));
-		
-		if($this->isPostRequest()){
-			for($i = 0; $i < 1; $i++){
-				
-				$this->form_validation->set_rules('title','required|min_length[1]|max_length[10]');
-				
-				if(!$this->form_validation->run()){
-					$this->jsonOutput($this->form_validation->error_string('',''),$this->getFormHash());
-					break;
-				}
-				
-				$return = $this->inventory_service->setSlotTitle($slot_id,$title,$this->_loginUID);
-				$this->jsonOutput('设置成功',$return);
-			}
-			
-		}else{
-			$this->jsonOutput('请求非法',$this->getFormHash());
-		}
-	}
-	
-	
-	/**
-	 * 配置货柜 对应的货号信息
-	 */
-	public function slot_gc(){
-		
-		
-		$slot_id = trim($this->input->post('slot_id',true));
-		$goodsCode = trim($this->input->post('goods_code',true));
-		
-		if($this->isPostRequest()){
-			for($i = 0; $i < 1; $i++){
-				
-				$this->form_validation->set_rules('goods_code','required|min_length[1]|max_length[10]');
-				
-				if(!$this->form_validation->run()){
-					$this->jsonOutput($this->form_validation->error_string('',''),$this->getFormHash());
-					break;
-				}
-				
-				$return = $this->inventory_service->setSlotGoodsCode($slot_id,$goodsCode,$this->_loginUID);
-				$this->jsonOutput('设置成功',$return);
-			}
-			
-		}else{
-			$this->jsonOutput('请求非法',$this->getFormHash());
-		}
-	}
-	
-	
-	
-	/*
-	 * 配置货品信息到货柜
-	 */
-	public function slot_edit(){
-		
-		$slotId = $this->input->get_post('id');
-		
-		$needGoodsCodeFirst = "0";
-		$initRow = array();
-		$feedback = '';
-		
-		$postData = array();
-		$userSlotsList = $this->inventory_service->getUserCurrentSlots($this->_loginUID);
-		$userSlot = $userSlotsList['slot_config'][$slotId];
-		
-		//print_r($userSlotsList);
-		
-		if($userSlot['goods_code'] && $this->isPostRequest()){
-			
-			for($i = 0; $i < 1; $i++){
-				
-				$this->load->config('hp');
-				$validationKey = config_item('hp_validation');
-				
-				foreach($validationKey['inventory'] as $key){
-					$postData[$key] = $this->input->post($key,true);
-				}
-				
-				// 提交了多少行
-				$rowCount = intval(count($postData['goods_color']));
-				
-				if($rowCount > $userSlot['max_cnt']){
-					//保护机制
-					$rowCount = $userSlot['max_cnt'];
-				}
-				
-				if($rowCount != 0){
-					$initRow = range(0,$rowCount - 1);
-				}
-				
-				$slotInfo = $this->inventory_service->getSlotDetail($slotId,$this->_loginUID,'gmt_modify');
-				$remainSeconds = $this->_reqtime - $slotInfo['gmt_modify'];
-				if($remainSeconds < 15 ){
-					$feedback = getErrorTip('货柜货品更新冻结时间内还剩'.(15 - $remainSeconds).'秒,请稍候尝试');
-					break;
-				}
-				
-				if(0 == $userSlot['cnt']){
-					/* 初始添加货品中不能提交空，已有货品的清空下可以提交空行，表示清空货品 */
-					if($rowCount == 0){
-						$feedback = getErrorTip('请提供货品信息');
-						break;
-					}
-				}
-				
-				$insertData = array(
-					'ip' => $this->input->ip_address(),
-					'gmt_modify' => $this->_reqtime,
-					'uid' => $this->_loginUID,
-					'slot_id' => $userSlot['id']
-				);
-				
-				
-				if($rowCount == 0){
-					$insertData['goods_list'] = array();
-				}else{
-					$data = array();
-					//用于数据校验得数组
-					foreach($validationKey['inventory'] as $key){
-						foreach($initRow as $item){
-							$dk = "{$key}{$item}";
-							$data[$dk] = $postData[$key][$item];
-							
-							$this->form_validation->set_rules($dk,$validationKey['rule_list'][$key]['title'],$validationKey['rule_list'][$key]['rules']);
-						}
-					}
-					
-					$this->form_validation->set_data($data);
-					if(!$this->form_validation->run()){
-						//$feedback = getErrorTip($this->form_validation->error_string('',''));
-						$feedback = getErrorTip('数据输入格式有误,请检查录入格式');
-						break;
-					}
-					
-					
-					/* 提交了货品 */
-					$goodsList = array();
-					foreach($initRow as $rowIndex){
-						$rowData = array(
-							'goods_code' => $userSlot['goods_code']
-						);
-						
-						foreach($validationKey['inventory'] as $field){
-							$rowData[$field] = $postData[$field][$rowIndex];
-						}
-						
-						$goodsList[] = $rowData;
-					}
-					
-					$insertData['goods_list'] = $goodsList;
-				}
-				
-				$rowsAffected = $this->inventory_service->updateSlotGoodsInfo($userSlotsList,$insertData,$this->_loginUID);
-				
-				if($rowsAffected){
-					$feedback = getSuccessTip('货柜货品更新成功');
-					
-					//读取最新
-					$userSlotsList = $this->inventory_service->getUserCurrentSlots($this->_loginUID);
-					$userSlot = $userSlotsList['slot_config'][$slotId];
-					
-				}else{
-					$errorInfo = $this->Member_Inventory_Model->get_error_info();
-					$feedback = getErrorTip(str_replace(array('{code}','{message}'),array($errorInfo['code'],$errorInfo['message']),"系统错误,{code}:{message}"));
-				}
-			}
-		}else{
-			if($userSlot['goods_code'] == ''){
-				 $needGoodsCodeFirst = "1";
-			}else{
-				
-				// 获取货柜货品列表
-				$slotInfo = $this->inventory_service->getSlotDetail($slotId,$this->_loginUID,'goods_list,enable,gmt_modify');
-				
-				if($slotInfo['goods_list']){
-					$postData = $this->inventory_service->formatGoodsListAsPostStyle($slotInfo);
-					$initRow = range(0,count($slotInfo['goods_list']) - 1);
-				}
-			}
-		}
-		
-		
-		if($userSlot['max_cnt']){
-			$this->assign('maxRowPerSlot',$userSlot['max_cnt']);
-		}else{
-			$this->assign('maxRowPerSlot',50);
-		}
-		
-		
-		//print_r($initRow);
-		//print_r($postData);
-		
-		//print_r($userSlot);
-		$this->assign('userSlot',$userSlot);
-		$this->assign('slotId',$slotId);
-		$this->assign('goodsCodeFirst',$needGoodsCodeFirst);
-		$this->assign('postData',$postData);
-		$this->assign('initRow',$initRow);
-		$this->assign('feedback',$feedback);
-		$this->display();
-	}
-	
-	
-	
-	/**
-	 * 
-	 */
-	public function reactive(){
-		$id = $this->input->post('id');
-		if($id && $this->isPostRequest()){
-			$remainSeconds = $this->hp_service->getPubTimeRemain($this->_reqtime,$this->_loginUID);
-			if($remainSeconds){
-				$this->jsonOutput('冻结时间还剩'.$remainSeconds.'秒,请稍后尝试');
-			}else{
-				$rows = $this->hp_service->reactiveUserHpReq($id,$this->_reqtime,$this->_loginUID);
-				$this->jsonOutput('重新激活成功');
-			}
-		}else{
-			$this->jsonOutput('请求非法',$this->getFormHash());
-		}
-	}
-	
-	
 
 }

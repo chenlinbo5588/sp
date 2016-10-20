@@ -6,7 +6,11 @@
     }
     </style>
     <div id="pubwrap">
-	    <div class="tip">一次最多可发布{$maxRowPerReq}个货品,再次发布求货时间间隔<span class="hightlight">5分钟</span>,求货信息默认过期时间<span class="hightlight">90分钟</span>,过期后请用户点击<a class="hightlight" href="{site_url('my_req/index')}">我的求货</a>菜单进行主动刷新</div>
+    
+    
+        <div class="w-tixing clearfix"><b>温馨提醒：</b>
+            <p>一次最多可发布{$maxRowPerReq}个货品,再次发布求货时间间隔<span class="hightlight">5分钟</span>,求货信息默认过期时间<span class="hightlight">90分钟</span>,过期后请用户点击<a class="hightlight" href="{site_url('my_req/index')}">我的求货</a>菜单进行主动刷新</p>
+         </div>
 		<form action="{site_url($uri_string)}" method="post" id="pubForm">
 			<div>
 	            <input type="button" name="addrow" class="action" value="增加一行"/>
@@ -34,8 +38,8 @@
 	            {foreach from=$initRow item=item}
 	                <tr>
 	                    <td>{$item + 1}</td>
-			            <td><input type="text" name="goods_code[]" value="{$postData['goods_code'][$item]|escape}" placeholder="字母数字下划线、破折号"/>{form_error('goods_code'|cat:$item)}</td>
-			            <td><input type="text" name="goods_name[]" value="{$postData['goods_name'][$item]|escape}" placeholder="中文或英文,最长10个字符"/>{form_error('goods_name'|cat:$item)}</td>
+			            <td><input type="text" name="goods_code[]" value="{$postData['goods_code'][$item]|escape}" title="只允许英文字母数字下划线、破折号,最长15个字符" placeholder="请输入货号"/>{form_error('goods_code'|cat:$item)}</td>
+			            <td><input type="text" name="goods_name[]" value="{$postData['goods_name'][$item]|escape}" title="可自定义名称,中文或英文,最长15个字符" placeholder="请输入货品名称"/>{form_error('goods_name'|cat:$item)}</td>
 			            <td><input type="text" class="w60" name="goods_color[]" value="{$postData['goods_color'][$item]|escape}" placeholder="如:白"/>{form_error('goods_color'|cat:$item)}</td>
 			            <td>
 			             <a class="fa fa-long-arrow-down" href="javascript:void(0)" ></a>
@@ -64,8 +68,8 @@
     <script type="text/x-template" id="rowTpl">
         <tr>
             <td></td>
-            <td><input type="text" name="goods_code[]" value="" placeholder="字母数字下划线、破折号"/></td>
-            <td><input type="text" name="goods_name[]" value="" placeholder="中文或英文,最长10个字符"/></td>
+            <td><input type="text" name="goods_code[]" value="" title="只允许英文字母数字下划线、破折号,最长15个字符" placeholder="请输入货号"/></td>
+            <td><input type="text" name="goods_name[]" value="" title="可自定义名称,中文或英文,最长15个字符" placeholder="请输入货品名称"/></td>
             <td><input type="text" class="w60" name="goods_color[]" value="" placeholder="如:白"/></td>
             <td>
                 <a class="fa fa-long-arrow-down" href="javascript:void(0)" ></a>

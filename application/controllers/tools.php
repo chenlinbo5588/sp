@@ -702,6 +702,10 @@ CREATE TABLE `sp_hp_pub{i}` (
   `send_zone` varchar(30) NOT NULL DEFAULT '' COMMENT '发货地址',
   `send_day` int(3) unsigned NOT NULL DEFAULT '0' COMMENT '发货时间',
   `uid` int(9) unsigned NOT NULL DEFAULT '0',
+  `username` varchar(30) NOT NULL DEFAULT '',
+  `qq` varchar(15) NOT NULL DEFAULT '',
+  `email` varchar(30) NOT NULL DEFAULT '',
+  `mobile` varchar(15) NOT NULL DEFAULT '',
   `date_key` int(10) unsigned NOT NULL DEFAULT '0',
   `ip` varchar(15) NOT NULL DEFAULT '',
   `gmt_create` int(11) unsigned NOT NULL DEFAULT '0',
@@ -896,6 +900,13 @@ EOF;
 		echo 'hp_batch='.$hpBatchHash->lookup($uid);
 		echo '<br/>';
 		echo 'hp_pub='.$hpPubHash->lookup($uid);
+		
+		
+		$ar1 = range(0,30);
+		$ar2= range(0,15);
+		print_r($ar1);
+		$ar1 = array_merge($ar1,$ar2);
+		print_r($ar2);
 	}
 	
 	
