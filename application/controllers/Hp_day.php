@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 /**
  * 日期更新
  */
-class hp_day extends MY_Controller {
+class Hp_day extends MY_Controller {
 
 
 	public function __construct(){
@@ -29,7 +29,7 @@ class hp_day extends MY_Controller {
 		
 		$ts = strtotime("-3 days",$reqTime);
 		$this->Hp_Counter_Model->update(array('date_key' => date('Ymd',$ts)),array('counter_id' => 1));
-		echo 'success';
+		echo "success\n";
 	}
 	
 }

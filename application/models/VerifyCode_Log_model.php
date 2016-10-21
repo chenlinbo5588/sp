@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class VerifyCode_Log_Model extends MY_Model {
+class Verifycode_Log_Model extends MY_Model {
     
     public $_tableName = 'verifycode_log';
     public static $_tableMeta = null;

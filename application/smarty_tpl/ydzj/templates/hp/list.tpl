@@ -27,11 +27,11 @@
 		           <td>{if $item['sex'] == 1}男{else}女{/if}</td>
 		           <td>{if $item['price_status'] || $item['uid'] == $profile['basic']['uid']}{$item['price_max']}{else}已隐藏{/if}</td>
 		           <td>
-		              {if $userList[$item['uid']]['qq']}
-		              <a target="_blank" class="qqchat" href="http://wpa.qq.com/msgrd?v=3&uin={$userList[$item['uid']]['qq']}&site=qq&menu=yes" alt="点击这里给我发消息" title="点击这里给我发消息">{$userList[$item['uid']]['qq']}</a>
-		              <span>QQ:{$userList[$item['uid']]['qq']}</span>
-		              {elseif $userList[$item['uid']]['mobile']}
-		              <span>手机:{$userList[$item['uid']]['mobile']}</span>
+		              {if $item['qq']}
+		              <a target="_blank" class="qqchat" href="http://wpa.qq.com/msgrd?v=3&uin={$item['qq']}&site=qq&menu=yes" alt="点击这里给我发消息" title="点击这里给我发消息">{$item['qq']}</a>
+		              <span>QQ:{$item['qq']}</span>
+		              {elseif $item['mobile']}
+		              <span>手机:{$item['mobile']}</span>
 		              {else}
 		              {$item['uid']}
 		              {/if}

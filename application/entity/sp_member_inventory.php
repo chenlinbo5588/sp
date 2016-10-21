@@ -13,5 +13,6 @@ $entity = array(
 'kw' => 'mediumtext',
 'last_pm' => 'longtext',
 'ip' => 'varchar',
+'last_match' => 'int',
 'gmt_modify' => 'int'
 );

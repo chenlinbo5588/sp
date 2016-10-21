@@ -357,7 +357,7 @@ class Inventory extends MyYdzj_Controller {
 						
 						$goodsList[] = $rowValue;
 						//用一个
-						$kwList[] = strtolower(code_replace($rowValue['goods_code']).str_replace('.','',$rowValue['goods_size']))."#{$rowValue['price_min']}#";
+						$kwList[] = strtolower(code_replace($rowValue['goods_code']).str_replace(array('.','#'),'',$rowValue['goods_size']))."#{$rowValue['price_min']}#";
 					}
 					
 					//更新库存

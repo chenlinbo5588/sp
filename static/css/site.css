@@ -598,7 +598,7 @@ input[type=text].valid , input[type=password].valid {
 
 
 .qqchat {
-	display:block;
+	display:inline-block;
 	background:url(../img/qqchat.png) no-repeat;
 	width:77px;
 	height:22px;

@@ -39,7 +39,7 @@
             loader:false
         });
     },
-    updatePm(url){
+    updatePm:function(url){
     	var that = this;
     	if(this.pmInterval){
     		clearInterval(this.pmInterval);

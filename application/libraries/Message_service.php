@@ -532,6 +532,23 @@ class Message_service extends Base_service {
 	}
 	*/
 	
+	
+	
+	/**
+	 * 添加一条站内信，后台自动发送
+	 */
+	public function pushPmMessageToUser($data,$uid){
+		$data['resp'] = '';
+		
+		if(!$data['msg_type']){
+			$data['msg_type'] = -1;
+		}
+		
+		$this->setPmTableByUid($uid);
+		$this->_pmMessageModel->_add($data);
+	}
+	
+	
 	/**
 	 * 添加一条待发邮件记录，后台自动发送
 	 */

@@ -100,19 +100,22 @@ class Hp extends MyYdzj_Controller {
 		
 		$results = $this->hp_service->query($searchCondition);
 		
+		
 		//print_r($results);
 		$uid = array();
 		
 		if($results){
 			$this->assign('list',$results['data']);
 			$this->assign('page',$results['pager']);
-			
+			/*
 			foreach($results['data'] as $item){
 				$uid[] = $item['uid'];
 			}
 			$userList = $this->Member_Model->getUserListByIds($uid,'uid,nickname,qq,mobile');
 			$this->assign('userList',$userList);
+			*/
 		}
+		
 		
 		$this->_breadCrumbs[] = array(
 			'title' => '求货查询',
@@ -264,7 +267,9 @@ class Hp extends MyYdzj_Controller {
 					
 					//关键，创建一个完整的词组 ，防止分词  关系到精确匹配的问题
 					$rowData['search_code'] = strtolower(code_replace($rowData['goods_code']));
-					$rowData['kw'] = $rowData['search_code'].strtolower(str_replace('.','',$rowData['goods_csize']));
+					
+					//重要   用户后台自动匹配的字段， 货号&尺码  确定一个货品
+					$rowData['kw'] = $rowData['search_code'].strtolower(str_replace(array('.','#'),'',$rowData['goods_csize']));
 					
 					$insertData[] = $rowData;
 				}
