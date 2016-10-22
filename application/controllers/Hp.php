@@ -62,10 +62,12 @@ class Hp extends MyYdzj_Controller {
 			$searchCondition['fields']['goods_size'] = $sizeOrderedValue;
 		}
 		
+		/*
 		if($searchKeys['pr1'] || $searchKeys['pr2']){
 			$prOrderedValue = orderValue(array($searchKeys['pr1'],$searchKeys['pr2']),10000);
 			$searchCondition['fields']['price_max'] = $prOrderedValue;
 		}
+		*/
 		
 		if($searchKeys['mtime'] && $this->_mtime[$searchKeys['mtime']]){
 			

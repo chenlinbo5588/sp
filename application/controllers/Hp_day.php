@@ -26,9 +26,10 @@ class Hp_day extends MY_Controller {
 		
 		$this->load->model('Hp_Counter_Model');
 		
-		
 		$ts = strtotime("-3 days",$reqTime);
-		$this->Hp_Counter_Model->update(array('date_key' => date('Ymd',$ts)),array('counter_id' => 1));
+		
+		
+		$this->Hp_Counter_Model->update(array('date_key' => $ts),array('counter_id' => 1));
 		echo "success\n";
 	}
 	
