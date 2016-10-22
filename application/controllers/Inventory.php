@@ -176,15 +176,8 @@ class Inventory extends MyYdzj_Controller {
 		
 			$pageParam = $this->_preparePager();
 			$pager = pageArrayGenerator($pageParam,$userInventory['hp_cnt']);
-			//print_r($pager);
 			$startIndex = ($pager['pager']['current_page'] - 1) * $pager['pager']['page_size'];
 			$endIndex = $pager['pager']['page_size'];
-			
-			/*
-			if($endIndex > $userInventory['hp_cnt']){
-				$endIndex = $userInventory['hp_cnt'] - 1;
-			}	
-			*/
 			
 			
 			$list = array_slice($userInventory['goods_list'],$startIndex,$endIndex);

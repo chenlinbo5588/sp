@@ -47,5 +47,12 @@
 	    });
 	</script>
 	<![endif]-->
+	<script>
+		$(function(){
+		   $("#navtoggle").bind('click',function(){
+		        $("#mobilenav .mynav").slideToggle();
+		   });
+		});
+	</script>
 </body>
 </html>

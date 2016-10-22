@@ -2,7 +2,7 @@
 	<table class="fulltable style1">
 		<tbody>
 			<tr>
-				<td class="w120">用户UID</td>
+				<td {if !$isMobile}class="w120"{/if}>用户UID</td>
 				<td>{$profile['basic']['uid']}</td>
 			</tr>
 			<tr>

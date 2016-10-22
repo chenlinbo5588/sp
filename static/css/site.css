@@ -951,6 +951,12 @@ table.noext {
 	width: 150px;
     border: 1px solid #CDCDCD;
     position: absolute;;
+    background-color:#fff;
+}
+
+#mobilenav .mynav {
+	top:30px;
+	display:none;
 }
 
 .mynav li {
@@ -1203,5 +1209,7 @@ table.noext {
         display:block;
     }
 	
-    
+    #my .panel_content {
+        margin-left:0;
+    }
 }

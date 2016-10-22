@@ -32,7 +32,12 @@ var cookiedomain = "{config_item('site_domain')}",
     <div id="wrap">
         <div id="topbar">
             <div class="boxz">
+                {if $isMobile && $profile}
+                <div id="logo"><a id="navtoggle" href="javascript:void(0);">导航</a></div>
+                <div id="mobilenav">{include file="my/my_nav.tpl"}</div>
+                {else}
                 <div id="logo"><a href="{site_url('/')}">{$siteSetting['site_name']}</a></div>
+                {/if}
 	            <div id="homeSideLinks">
 	               {if $profile}
 	                   <a href="{site_url('my/index')}">{$profile['basic']['username']|escape}</a>

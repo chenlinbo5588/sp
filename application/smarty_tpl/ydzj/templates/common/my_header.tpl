@@ -1,6 +1,6 @@
 {include file="common/header.tpl"}
     <div id="my" class="boxz clearfix">
-        {include file="my/my_nav.tpl"}
+        {if !$isMobile}{include file="my/my_nav.tpl"}{/if}
         <div class="panel_content">
         	<div class="loca clearfix">
 				<strong>您的位置:</strong>

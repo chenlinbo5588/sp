@@ -132,7 +132,7 @@ class Member_service extends Base_service {
 		
 		$tempKey = $this->getUserGroupKey($uid);
 		
-		$groupId = self::$CI->getCacheObject()->get($tempKey);echo $groupId;
+		$groupId = self::$CI->getCacheObject()->get($tempKey);
 		if(empty($groupId)){
 			$tempInfo = self::$memberModel->getFirstByKey($uid,'uid','group_id');
 			$groupId = $tempInfo['group_id'];
