@@ -756,7 +756,6 @@ CREATE TABLE `sp_push_email{i}` (
   `email` varchar(30) NOT NULL DEFAULT '',
   `title` varchar(200) NOT NULL DEFAULT '',
   `content` text NOT NULL,
-  `resp` text NOT NULL COMMENT '服务器返回消息',
   `retry` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `is_send` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `gmt_create` int(10) unsigned NOT NULL DEFAULT '0',
@@ -765,7 +764,7 @@ CREATE TABLE `sp_push_email{i}` (
   KEY `idx_send` (`is_send`),
   KEY `idx_uid` (`msg_type`,`uid`),
   KEY `idx_retry` (`retry`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
 
 
 EOF;

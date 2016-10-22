@@ -341,6 +341,7 @@ class Message_service extends Base_service {
 	 * 更新用户 最新的站内新
 	 */
 	public function getLastestSysPm($userProfile,$uid){
+		//file_put_contents('debug.txt',print_r($userProfile,true));
 		
 		//系统消息
 		$currentUserSysId = intval($userProfile['basic']['msgid']);
@@ -358,6 +359,7 @@ class Message_service extends Base_service {
 		$userPmList = $this->getPmListByUid(array(
 			'select' => 'id',
 			'where' => array(
+				'uid' => $uid,
 				'id > ' => $currentUserPmId
 			),
 			'limit' => 10
@@ -367,6 +369,7 @@ class Message_service extends Base_service {
 		$userPmCount = count($userPmList);
 		
 		//print_r($list);
+		//print_r($userPmList);
 		$userGroup = $userProfile['basic']['group_id'];
 		$accept = false;
 		
@@ -576,6 +579,16 @@ class Message_service extends Base_service {
 		$this->setEmailTableByUid($uid);
 		
 		return $this->_pushEmailModel->batchInsert($data);
+	}
+	
+	
+	
+	/**
+	 * 获得邮件队列中的数据
+	 */
+	public function getEmailListByQueueId($condition,$id){
+		$this->_pushEmailModel->setTableId($id);
+		return $this->_pushEmailModel->getList($condition);
 	}
 	
 	

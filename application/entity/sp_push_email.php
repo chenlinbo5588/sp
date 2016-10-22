@@ -9,7 +9,6 @@ $entity = array(
 'email' => 'varchar',
 'title' => 'varchar',
 'content' => 'text',
-'resp' => 'text',
 'retry' => 'tinyint',
 'is_send' => 'tinyint',
 'gmt_create' => 'int',

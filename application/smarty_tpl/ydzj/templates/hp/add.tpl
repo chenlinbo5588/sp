@@ -17,7 +17,7 @@
 	            <input type="button" name="clearall" class="action" value="清空"/>
 	            <input type="submit" name="tijiao" class="master_btn" value="发布"/>
 	        </div>
-	        <table class="fulltable">
+	        <table class="fulltable noext">
 	            <thead>
 	                <tr>
 	                    <th>序号</th>

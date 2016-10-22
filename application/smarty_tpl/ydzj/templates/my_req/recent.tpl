@@ -18,9 +18,11 @@
                 </li>
                 <li>
                     <label class="ftitle">{#isexpired#}</label>
+                    <select name="isexpired">
                     {foreach from=$isExpired item=item key=key}
-                    <label><input type="radio" name="isexpired" value="{$key}" {if $smarty.post.isexpired == $key}checked{/if}/>{$item}</label>
+                        <option value="{$key}" {if $smarty.post.isexpired == $key}selected{/if}>{$item}</option>
                     {/foreach}
+                    </select>
                 </li>
                 <li>
                     <label class="ftitle">{#goods_name#}</label>
@@ -33,18 +35,16 @@
                 </li>
                 <li>
                     <label class="ftitle">{#sex#}</label>
-                    <label><input type="radio" name="sex" value="0" {if $smarty.post.sex == 0}checked{/if}/>不限</label>
-                    <label><input type="radio" name="sex" value="1" {if $smarty.post.sex == 1}checked{/if}/>男</label>
-                    <label><input type="radio" name="sex" value="2" {if $smarty.post.sex == 2}checked{/if}/>女</label>
+                    <select name="sex">
+                        <option value="0" {if $smarty.post.sex == 0}selected{/if}>不限</option>
+                        <option value="1" {if $smarty.post.sex == 1}selected{/if}>男</option>
+                        <option value="2" {if $smarty.post.sex == 2}selected{/if}>女</option>
+                    </select>
                 </li>
                 <li>
                     <label class="ftitle">{#price_max#}</label>
                     <input type="text" name="pr1" class="stxt" value="{if $smarty.post.pr1}{$smarty.post.pr1}{/if}" placeholder="下限"/>
                     <input type="text" name="pr2" class="stxt" value="{if $smarty.post.pr2}{$smarty.post.pr2}{/if}" placeholder="上限"/>
-                </li>
-                <li>
-                    <label class="ftitle">{#match_mode#}</label>
-                    <label><input type="checkbox" name="match_inventory" value="yes" checked/>自动匹配库存</label>
                 </li>
                 <li>
                     <input class="master_btn" type="submit" name="search" value="查询"/>

@@ -25,7 +25,7 @@ $config['hp_pub_freezen'] = 15;
 $config['inventory_freezen'] = 15;
 
 // 库存 过期时间  180 分钟过期
-$config['inventory_expired'] = 0;
+$config['inventory_expired'] = 15;
 
 
 //站内信更新检查时间间隔

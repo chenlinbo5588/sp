@@ -30,10 +30,12 @@ class Member extends Ydzj_Controller {
 	}
 	
 	private function _autologin($profile){
+		/*
 		$this->load->model('Huanxin_Model');
 		$chatConfig = $this->Huanxin_Model->getFirstByKey($profile['basic']['uid'],'uid');
 		
 		$profile['chat'] = empty($chatConfig) ? array() : $chatConfig;
+		*/
 		
 		$this->session->set_userdata(array(
 			$this->_profileKey => $profile,
@@ -207,7 +209,9 @@ class Member extends Ydzj_Controller {
 					'qq' => $this->input->post('qq'),
 					'password' => $this->input->post('psw'),
 					'msgid' => intval($sysMessageId),
-					'inviter' => empty($inviter) == true ? 0 : intval($inviter)
+					'inviter_uid' => empty($inviter) == true ? 0 : intval($inviter),
+					'last_login' => $this->_reqtime,
+					'last_loginip' => $this->input->ip_address()
 				);
 				$addParam['username'] = trim($addParam['username']);
 				$addParam['nickname'] = $addParam['username'];

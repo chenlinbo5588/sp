@@ -506,7 +506,7 @@ input[type=text].valid , input[type=password].valid {
     _position: absolute;
     /* margin-left: 490px; */
     /* left: 50%; */
-    bottom: 100px;
+    bottom: 20px;
     _bottom: "auto";
     cursor: pointer;
     font-size: 0px;
@@ -622,7 +622,7 @@ input[type=text].valid , input[type=password].valid {
 }
 
 .boxz {
-    width:980px;
+    
     margin:0 auto;
     position:relative;
 }
@@ -837,9 +837,7 @@ table.noext {
 
 /* 前台登陆  */
 #loginPanel,#register {
-	width: 25%;
-    min-width:350px;
-    padding: 30px 20px 60px;
+    padding: 30px 10px 60px;
     margin: 30px auto;
 }
 
@@ -961,6 +959,7 @@ table.noext {
 
 .mynav .segment {
 	background-color:#DAF4FE;
+	text-align: center;
 }
 
 .mynav .segment h3 {
@@ -984,7 +983,6 @@ table.noext {
 
 .search_con li {
 	display: block;
-    width: 240px;
 	height:40px;
 	line-height:40px;
 	float:left;
@@ -1157,27 +1155,53 @@ table.noext {
 	margin: 10px 0; 
 }
 
+
+@media (min-width: 1024px) {
+	#loginPanel,#register {
+        max-width:350px;
+    }
+}
+
+
+@media (min-width: 1024px) {
+    .boxz {
+        width:980px;
+    }
+}
+
+@media (min-width: 1280px) {
+    .boxz {
+        width:1024px;
+    }
+}
+
 @media (min-width: 1440px) {
     .boxz {
         width:1280px;
     }
 }
 
-@media (max-width: 1024px) {
+@media (min-width: 1800px) {
     .boxz {
-        width:640px;
-    }
-    
-    #loginPanel,#register {
-        width:98%;
-        padding:20px 0;
+        width:1680px;
     }
 }
 
 
 @media (max-width: 640px) {
-    .boxz {
-        width:100%;
-        max-width:640px;
+	
+    .w18pre { width: 50%;}
+	.w33pre  { width: 50%;}
+	.w34pre  { width: 50%;}
+	.w25pre { width: 50%;}
+	.w40pre { width: 60%;}
+	.w50pre { width: 75%;}
+	.w100pre { width: 100%; }
+    
+    .foot .part-two .column {
+        float:none;
+        display:block;
     }
+	
+    
 }

@@ -31,5 +31,4 @@ $config['inventory_expired'] = 10800;
 $config['pmcheck_interval'] = 60;
 
 
-$config['compress_output'] = true;
 

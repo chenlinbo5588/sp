@@ -19,6 +19,7 @@ class Hp extends MyYdzj_Controller {
 			'30分钟内' => '-1800 seconds',
 			'1小时内' => '-3600 seconds',
 			'2小时内' => '-7200 seconds',
+			'2小时以上' => '-7200 seconds',
 		);
 		
 		$this->_maxRowPerReq = 20;
@@ -67,10 +68,19 @@ class Hp extends MyYdzj_Controller {
 		}
 		
 		if($searchKeys['mtime'] && $this->_mtime[$searchKeys['mtime']]){
-			$searchCondition['fields']['gmt_modify'] = array(
-				strtotime($this->_mtime[$searchKeys['mtime']],$this->_reqtime),
-				$this->_reqtime
-			);
+			
+			if('2小时以上' == $searchKeys['mtime']){
+				$searchCondition['fields']['gmt_modify'] = array(
+					0,
+					strtotime($this->_mtime[$searchKeys['mtime']],$this->_reqtime)
+				);
+			}else{
+				$searchCondition['fields']['gmt_modify'] = array(
+					strtotime($this->_mtime[$searchKeys['mtime']],$this->_reqtime),
+					$this->_reqtime
+				);
+			}
+			
 		}
 		
 		//print_r($searchCondition);
