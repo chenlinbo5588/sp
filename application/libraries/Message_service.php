@@ -458,7 +458,6 @@ class Message_service extends Base_service {
 						'email' => $userProfile['basic']['email'],
 						'title' => $list[$pmIndex]['title'],
 						'content' => $list[$pmIndex]['content'],
-						'resp' => ''
 					);
 					
 				}
@@ -541,7 +540,6 @@ class Message_service extends Base_service {
 	 * 添加一条站内信，后台自动发送
 	 */
 	public function pushPmMessageToUser($data,$uid){
-		$data['resp'] = '';
 		
 		if(!$data['msg_type']){
 			$data['msg_type'] = -1;
@@ -556,8 +554,9 @@ class Message_service extends Base_service {
 	 * 添加一条待发邮件记录，后台自动发送
 	 */
 	public function pushEmailMessageToUser($data,$uid){
-		$data['msg_type'] = -1;
-		$data['resp'] = '';
+		if(!$data['msg_type']){
+			$data['msg_type'] = -1;
+		}
 		
 		$this->setEmailTableByUid($uid);
 		$this->_pushEmailModel->_add($data);

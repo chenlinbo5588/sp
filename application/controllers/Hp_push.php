@@ -134,6 +134,7 @@ class Hp_push extends MY_Controller {
 		if($reqUserList){
 			foreach($reqUserList as $uid => $reMsg){
 				$data1 = array(
+					'msg_type' => 1,
 					'title' => '【求货匹配】系统为您的求货匹配到了库存方联系方式，请您及时查看进行相关操作',
 					'content' => implode('',$reMsg['msg'])
 				);
@@ -149,7 +150,6 @@ class Hp_push extends MY_Controller {
 				$this->message_service->pushPmMessageToUser(
 					array_merge($data1,array(
 						'uid' => $uid,
-						'msg_type' => 1,
 						'from_uid' => 0,
 					)),$uid);
 			}
@@ -164,6 +164,7 @@ class Hp_push extends MY_Controller {
 			
 			//添加库存方用户 消息提醒，邮件和站内信
 			$data = array(
+				'msg_type' => 1,
 				'title' => '【求货匹配】系统为你匹配到求货人信息,请及时查看联系',
 				'content' => implode('',$newPushed)
 			);
@@ -174,7 +175,6 @@ class Hp_push extends MY_Controller {
 			$this->message_service->pushPmMessageToUser(
 				array_merge($data,array(
 					'uid' => $inventory['uid'],
-					'msg_type' => 1,
 					'from_uid' => 0,
 				)),$inventory['uid']);
 		}
