@@ -1,6 +1,10 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+include_once AliyunEmail_PATH.'aliyun-php-sdk-core/Config.php';
+use Dm\Request\V20151123 as Dm;
+
+
 class Message_service extends Base_service {
 
 	private $_msgTemplateModel = null;
@@ -9,15 +13,16 @@ class Message_service extends Base_service {
 	private $_siteMessageModel = null;
 	//private $_pushChatModel = null;
 	
-	//邮件推送给 客户
+	//邮件推送给 客户待发记录操作对象
 	private $_pushEmailModel = null;
 	
-	//邮件记录给网站管理员
+	//邮件记录给网站管理员 待发记录操作对象
 	private $_siteEmailModel = null;
 	
 	
-	//
+	//邮件推送对象
 	private $_email = null;
+	private $_emailRequest = null;
 	
 	
 	//网站设置
@@ -32,9 +37,9 @@ class Message_service extends Base_service {
 		parent::__construct();
 		
 		self::$CI->load->model(array('Msg_Template_Model','Pm_Message_Model','Site_Message_Model','Push_Email_Model'));
-		self::$CI->load->library(array('Email'));
+		//self::$CI->load->library(array('Email'));
+		//$this->_email = self::$CI->email;
 		
-		$this->_email = self::$CI->email;
 		$this->_msgTemplateModel = self::$CI->Msg_Template_Model;
 		$this->_pmMessageModel = self::$CI->Pm_Message_Model;
 		
@@ -42,6 +47,10 @@ class Message_service extends Base_service {
 		//$this->_pushChatModel = self::$CI->Push_Chat_Model;
 		$this->_pushEmailModel = self::$CI->Push_Email_Model;
 	}
+	
+	
+	
+	
 	
 	
 	/* ----------------以下站内信----------------------------------------------- */
@@ -593,14 +602,26 @@ class Message_service extends Base_service {
 	
 	/* ----------------以下邮件相关----------------------------------------------- */
 	
-	
 	/**
 	 * 初始化邮件发送设置
 	 */
 	public function initEmail($setting){
+		if(!$this->_email){
+			
+			$this->_setting = $setting;
+			
+    		$emailConfig = config_item('aliyun_dm');
+    		$iClientProfile = DefaultProfile::getProfile("cn-hangzhou", $emailConfig['api_key'], $emailConfig['api_secret']);
+    		$this->_email = new DefaultAcsClient($iClientProfile);
+    		$this->_emailRequest = new Dm\SingleSendMailRequest();
+		    $this->_emailRequest->setAccountName($emailConfig['account']);
+		    $this->_emailRequest->setFromAlias($this->_setting['site_name']);
+		    $this->_emailRequest->setAddressType(1);
+		    $this->_emailRequest->setReplyToAddress("false");
+		}
 		
-		$this->_setting = $setting;
 		
+		/*
 		$config['protocol'] = 'smtp';
 		$config['smtp_host'] = $setting['email_host'];
 		$config['smtp_port'] = $setting['email_port'];
@@ -612,10 +633,10 @@ class Message_service extends Base_service {
 		$config['smtp_timeout'] = 5;
 		$config['charset'] = config_item('charset');
 		
-		
 		//print_r($config);
 		
 		$this->_email->initialize($config);
+		*/
 	}
 	
 	
@@ -663,12 +684,32 @@ class Message_service extends Base_service {
 	}
 	
 	
-	
 	/*
 	 * 发送邮件
 	 */
 	public function sendEmail($to,$subject,$content){
+	    $this->_emailRequest->setToAddress($to);        
+	    $this->_emailRequest->setSubject($subject);
+	    $this->_emailRequest->setHtmlBody($content);
+	    
+	    $flag = false;
+	    
+	    try {
+	        $response = $this->_email->getAcsResponse($this->_emailRequest);
+	        $flag = true;
+	        //echo $response->RequestId;
+	        //print_r($response);
+	    }
+	    catch (ClientException  $e) {
+	        //print_r($e->getErrorCode());   
+	        //print_r($e->getErrorMessage());   
+	    }
+	    catch (ServerException  $e) {        
+	        //print_r($e->getErrorCode());   
+	        //print_r($e->getErrorMessage());
+	    }
 		
+		/*
 		$this->_email->to($to);
 		$this->_email->from($this->_setting['email_addr']);
 		$this->_email->subject($subject);
@@ -676,13 +717,6 @@ class Message_service extends Base_service {
 		$this->_email->set_mailtype('html');
 		
 		$flag = $this->_email->send();
-		
-		/*
-		//var_dump($flag);
-		$debugMsg = $this->_email->print_debugger();
-		//echo 'success ';
-		if('/550 User not found/i'){
-		}
 		*/
 		
 		return $flag;

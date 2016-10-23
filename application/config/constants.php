@@ -91,6 +91,7 @@ define('SMARTY_TPL_PATH',APPPATH.'smarty_tpl/');
 define('SphinxQL_PATH',APPPATH.'sphinxql/');
 define('EntityPATH',APPPATH.'entity/');
 define('PHPExcel_PATH',APPPATH.'/third_party/excel/');
+define('AliyunEmail_PATH',APPPATH.'/third_party/aliyun-php-sdk-dm/');
 
 
 define('FROM_BACKGROUND',1);

@@ -151,28 +151,43 @@ class Seller extends Ydzj_Admin_Controller {
 				$rows = $this->member_service->sellerVerify($id,$isPass,$message);
 				
 				if($rows > 0){
+					$memberInfo = $this->Member_Model->getFirstByKey($id,'uid','uid,username,email');
+					
+					
 					//默认发送站内信
 					$data = array(
 						'title' => "卖家认证审核" . ($isPass == 1 ? '通过': '未通过'),
-						'content' => "卖家<strong>{username}</strong>您好，您提交的认证信息经过通过审核，您现在去维护库存<a class=\"hightlight\" href=\"".site_url('inventory/index')."\">维护库存</a>",
+						'content' => "卖家<strong>{$memberInfo['username']}</strong>您好，您提交的认证信息经过通过审核，您现在去维护库存<a class=\"hightlight\" href=\"".site_url('inventory/index')."\">维护库存</a>",
 					);
 					
 					if(-1 == $isPass){
 						//审核不通过
-						$data['content'] = "卖家<strong>{username}</strong>您好，您提交的认证信息未通过审核，点击查看原因:<a class=\"hightlight\" href=\"".site_url('my/seller_verify')."\">卖家认证</a>";
+						$data['content'] = "卖家<strong>{$memberInfo['username']}</strong>您好，您提交的认证信息未通过审核，点击查看原因:<a class=\"hightlight\" href=\"".site_url('my/seller_verify')."\">卖家认证</a>";
 					}
 					
-					$this->message_service->sendSitePmMessageToUsersByUid($id,$data);
+					$this->message_service->pushPmMessageToUser(
+						array_merge($data,array(
+							'uid' => $id,
+							'from_uid' => 0,
+						)),$id);
 					
 					if(strpos($sendWaysStr,'邮件')){
-						$memberInfo = $this->Member_Model->getFirstByKey($id,'uid','uid,username,email');
-						if($memberInfo){
+						
+						//立即发送一封邮件，如果不成功，则插入一条待发记录
+						$this->message_service->initEmail($this->_siteSetting);
+						$flag = $this->message_service->sendEmail(
+							 $memberInfo['email'],
+							 $data['title'],
+							 $data['content']
+						);
+						
+						if(!$flag){
 							$this->message_service->pushEmailMessageToUser(array_merge($data,$memberInfo),$memberInfo['uid']);
 						}
 					}
 				}
 				
-				$this->jsonOutput('操作成功,通过消息将以站内信的方式通知用户',array('id' => $id));
+				$this->jsonOutput('操作成功,消息将会通知给用户:'.$memberInfo['username'],array('id' => $id));
 			}
 			
 		}else{

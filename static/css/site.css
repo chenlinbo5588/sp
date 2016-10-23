@@ -158,6 +158,9 @@ a:focus,*:focus {
 }
 
 
+input[type=button], input[type=submit], input[type=reset] {
+    -webkit-appearance: none;
+}
 
 /** 通用样式 **/
 input[type=text],input[type=password] {

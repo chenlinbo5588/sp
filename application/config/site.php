@@ -6,6 +6,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 $config['api_secret'] = 'b53209f0e4d2b2335d726e4e381511d59d22a31f';
 
+$config['aliyun_dm'] = array(
+	'account' => 'service@xinqf.cn',
+	'api_key' => 'LTAIDhv8e7NJWiR1',
+	'api_secret' => 'mS2THl6kWbsQ7RTo4NDpe5wdNi4U7J'
+);
+
+
 $config['allowed_img_types'] = 'jpg|jpeg|png';
 
 $config['mail_list'] = array(

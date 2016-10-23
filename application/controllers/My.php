@@ -153,7 +153,7 @@ class My extends MyYdzj_Controller {
 						$emailData = array(
 							'email' => $this->_getSiteSetting('site_email'),
 							'title' => '有新的卖家认证请求',
-							'content' => '用户:'.$this->_profile['basic']['username'].' 提交了卖家认证资料，请及时审核,<a href="'.admin_site_url('seller/index').'">马上去审核</a>'
+							'content' => '用户:<a href="'.admin_site_url('member/index?search_field_name=username&search_field_value=').urlencode($this->_profile['basic']['username']).'" target="_blank">'.$this->_profile['basic']['username'].'</a> 提交了卖家认证资料，请及时审核,<a href="'.admin_site_url('seller/index').'" target="_blank">马上去审核</a>'
 						);
 						
 						$this->message_service->initEmail($this->_siteSetting);
@@ -164,6 +164,7 @@ class My extends MyYdzj_Controller {
 						);
 						
 						if(!$flag){
+							//不成功则 建立一条待发记录
 							$siteEmailModel = $this->message_service->getSiteEmailModel();
 							$siteEmailModel->_add($emailData);
 						}

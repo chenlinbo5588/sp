@@ -1067,8 +1067,14 @@ EOF;
 		$this->load->library('Message_service');
 		
 		$this->message_service->initEmail($this->_siteSetting);
-		$this->message_service->sendEmailConfirm('104071152@qq.com','http://wwww.baidu.com');
 		
+		//$this->message_service->sendEmailConfirm('104071152@qq.com','http://wwww.baidu.com');
+		
+		/*
+		for($i = 0; $i < 3;$i++){
+			$this->message_service->sendEmail('104071152@qq.com',random_string('alnum',mt_rand(5,9)),random_string('alnum',mt_rand(5,9)));
+		}
+		*/
 	}
 	
 	public function test_gethxpsw(){

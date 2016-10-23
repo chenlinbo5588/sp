@@ -39,7 +39,7 @@ class Brand extends Ydzj_Admin_Controller {
 			$condition = array(
 				'order' => 'brand_id DESC',
 				'pager' => array(
-					'page_size' => config_item('page_size'),
+					'page_size' => 8,
 					'current_page' => $currentPage,
 					'call_js' => 'search_page',
 					'form_id' => '#formSearch'

@@ -19,6 +19,7 @@
         </ul>
       </dd>
     </dl>
+    {*
     <dl class="goods">
       <dt>
         <div class="ico"><i></i><sub title="货品总数"><span><em id="statistics_goods"></em></span></sub></div>
@@ -27,12 +28,11 @@
       </dt>
       <dd>
         <ul>
-          <li class="w50pre normal"><a href="index.php?act=goods&op=goods">本周新增<sub title=""><em id="statistics_week_add_product"></em></sub></a></li>
+          <li class="w50pre normal"><a href="{admin_site_url('goods/index')}">本周新增<sub title=""><em id="statistics_week_add_product"></em></sub></a></li>
           <li class="w50pre none"><a href="index.php?act=inform&op=inform_list">举报<sub><em id="statistics_inform_list">0</em></sub></a></li>
         </ul>
       </dd>
     </dl>
-    {*
     <dl class="shop">
       <dt>
         <div class="ico"><i></i><sub title="新增场馆数"><span><em id="statistics_store"></em></span></sub></div>

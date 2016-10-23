@@ -154,8 +154,8 @@ class Inventory extends MyYdzj_Controller {
 	{
 		$userInventory = $this->inventory_service->getUserCurrentInventory($this->_loginUID);
 		
-		if(empty($userInventory)){
-			//初始化用户库存
+		if(empty($userInventory) && 3 == $this->_profile['basic']['group_id']){
+			//已认证了则初始化用户库存
 			$this->inventory_service->initUserInventory($this->_loginUID);
 		}
 		
@@ -275,7 +275,6 @@ class Inventory extends MyYdzj_Controller {
 		if($lastUpdate && ($this->_reqtime - $lastUpdate ) < $freezen){
 			
 			$infreezen = 1;
-			
 			$this->assign('leftseconds', $freezen  - ($this->_reqtime - $lastUpdate ));
 			$this->assign('infreezen',$infreezen);
 		}
