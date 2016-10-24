@@ -224,7 +224,7 @@ class Member extends Ydzj_Controller {
 				}
 				
 				
-				$this->load->library(array('Message_service','Member_service'));
+				$this->load->library(array('Message_service','Member_service','Lab_service'));
 				
 				/* 
 				 * 暂时不用聊天
@@ -238,6 +238,9 @@ class Member extends Ydzj_Controller {
 				$this->_autologin(array(
 					'basic' => $userInfo
 				));
+				
+				
+				//$this->lab_service->
 				
 				$this->message_service->initEmail($this->_siteSetting);
 				$param = $this->message_service->getEncodeParam(array(

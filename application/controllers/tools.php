@@ -867,6 +867,81 @@ EOF;
 	}
 	
 	
+	/**
+	 * 创建
+	 */
+	public function create_lab_tables(){
+		
+		$sql = <<< EOF
+CREATE TABLE `sp_lab{i}` (
+  `id` mediumint(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL DEFAULT '',
+  `address` varchar(50) NOT NULL DEFAULT '',
+  `status` tinyint(4) NOT NULL DEFAULT '0',
+  `pid` int(10) unsigned NOT NULL DEFAULT '0',
+  `displayorder` int(11) unsigned NOT NULL DEFAULT '0',
+  `creator` varchar(30) NOT NULL DEFAULT '',
+  `updator` varchar(30) NOT NULL DEFAULT '',
+  `uid` int(10) unsigned NOT NULL,
+  `oid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '构机ID',
+  `gmt_create` int(10) unsigned NOT NULL DEFAULT '0',
+  `gmt_modify` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `idx_pid` (`pid`),
+  KEY `idx_status` (`status`),
+  KEY `idx_order` (`displayorder`),
+  KEY `idx_name` (`name`)
+) ENGINE=MyISAM AUTO_INCREMENT=45 DEFAULT CHARSET=utf8;
+
+EOF;
+
+		$pm = $this->load->get_config('split_lab');
+		print_r($pm);
+		foreach($pm as $p){
+			
+			$exexSQL = str_replace('{i}',$p,$sql);
+			$this->Member_Model->execSQL($exexSQL);
+		}
+		
+	}
+	
+	
+	
+	/**
+	 * 
+	 */
+	public function create_lab_oid_tables(){
+		
+		$sql = <<< EOF
+CREATE TABLE `sp_lab_oid{i}` (
+  `uid` int(10) unsigned NOT NULL DEFAULT '0',
+  `oid` int(10) unsigned NOT NULL DEFAULT '0',
+  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '-1 表示已退出该机构，后台可用户清理数据',
+  `is_default` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '是否用户默认机构',
+  `gmt_create` int(10) unsigned NOT NULL,
+  `gmt_modify` int(10) unsigned NOT NULL,
+  UNIQUE KEY `udx_uid` (`uid`,`oid`),
+  KEY `idx_udefault` (`uid`,`is_default`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='实验室用户机构表,用于用户存保用户所在组织构机';
+
+
+EOF;
+
+		$pm = $this->load->get_config('split_orgination');
+		print_r($pm);
+		foreach($pm as $p){
+			
+			$exexSQL = str_replace('{i}',$p,$sql);
+			$this->Member_Model->execSQL($exexSQL);
+		}
+		
+		
+		
+	}
+	
+	
+	
+	
 	public function get_uid_table(){
 		
 		$uid = $this->input->get('uid');
@@ -1167,6 +1242,10 @@ EOF;
         	}
         	
         	if(preg_match('/^sp_member_color\d+$/i',$table,$match)){
+        		continue;
+        	}
+        	
+        	if(preg_match('/^sp_lab\d+$/i',$table,$match)){
         		continue;
         	}
         	

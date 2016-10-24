@@ -96,6 +96,7 @@ define('AliyunEmail_PATH',APPPATH.'/third_party/aliyun-php-sdk-dm/');
 
 define('FROM_BACKGROUND',1);
 define('WEBSITE_FOUNDER',1);
+define('LAB_FOUNDER_ID',1);
 
 define('CACHE_ONE_DAY',86400);
 define('CACHE_ONE_MONTH',2592000);
