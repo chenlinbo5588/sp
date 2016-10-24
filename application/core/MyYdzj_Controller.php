@@ -8,6 +8,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class MyYdzj_Controller extends Ydzj_Controller {
 	private $_pushObject;
 	protected $_loginUID = 0;
+	protected $_currentOid = 0;
 	public $_newpm = 0;
 	
 	public function __construct(){
@@ -17,6 +18,8 @@ class MyYdzj_Controller extends Ydzj_Controller {
 			//$this->session->unset_userdata(array($this->_lastVisitKey,$this->_profileKey));
 			js_redirect('member/login');
 		}
+		
+		$this->load->library('Lab_service');
 		
 		
 		$this->load->config('member_site');
@@ -29,8 +32,6 @@ class MyYdzj_Controller extends Ydzj_Controller {
 		$this->_pushObject = $this->base_service->getPushObject();
 		$this->assign('pushConfig',config_item('huanxin'));
 		*/
-		
-		
 		
 		$refresh = false;
 		$spm = $this->input->get('spm');
@@ -47,7 +48,38 @@ class MyYdzj_Controller extends Ydzj_Controller {
 		if($refresh || $this->_reqInterval >= config_item('pmcheck_interval')){
 			$this->_pmUpdate();
 		}
+		
+		$this->_initUserOrgination();
 	}
+	
+	
+	
+	private function _initUserOrgination(){
+		
+		$userOrginationList = $this->lab_service->getOrginationByCondition(array(
+			'select' => 'oid,name,is_default',
+			'where' => array(
+				'uid' => $this->_loginUID
+			)
+		),$this->_loginUID);
+		
+		if($userOrginationList){
+			$keysList = array();
+			$defaultItem = 0;
+			foreach($userOrginationList as $item){
+				$keysList['oid'] = $item;
+				if($item['is_default'] == 1){
+					$defaultItem = $item;
+					$this->_currentOid = $item['oid'];
+				}
+			}
+			
+			$this->session->set_userdata(array('orgination' => $keysList,'current_oid' => $defaultItem['oid']));
+			$this->assign('currentOrgination',$defaultItem);
+		}
+	}
+	
+	
 	
 	
 	/**

@@ -8,7 +8,7 @@ class Lab_goods extends MyYdzj_Controller {
 		$this->load->model('Lab_Model');
 		$this->load->library('Lab_goods_service');
 		
-		$this->assign('isSystemManager',$this->_checkIsSystemManager());
+		//$this->assign('isSystemManager',$this->_checkIsSystemManager());
 		
 		$this->assign('action',$this->uri->rsegment(2));
 		$this->assign('topnav',strtolower(get_class()).'/index');

@@ -37,6 +37,12 @@ class Member extends Ydzj_Controller {
 		$profile['chat'] = empty($chatConfig) ? array() : $chatConfig;
 		*/
 		
+		
+		$this->load->library('Lab_service');
+		
+		
+				
+		
 		$this->session->set_userdata(array(
 			$this->_profileKey => $profile,
 			$this->_lastVisitKey => $this->_reqtime
@@ -233,14 +239,13 @@ class Member extends Ydzj_Controller {
 				*/
 				
 				$userInfo = $this->Member_Model->getFirstByKey($addParam['username'],'username');
+				$this->lab_service->addOrgination($userInfo['username'].'的实验室',  $userInfo['uid']);
 				
 				$this->_rememberLoginName($addParam['username']);
 				$this->_autologin(array(
 					'basic' => $userInfo
 				));
 				
-				
-				//$this->lab_service->
 				
 				$this->message_service->initEmail($this->_siteSetting);
 				$param = $this->message_service->getEncodeParam(array(

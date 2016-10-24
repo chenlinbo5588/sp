@@ -7,6 +7,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 class Lab_service extends Base_service {
 	
+	private $_orginationModel = null;
 	private $_labModel = null;
 	private $_labMemberModel = null;
 	private $_labCacheModel = null;
@@ -19,8 +20,9 @@ class Lab_service extends Base_service {
 
 	public function __construct(){
 		parent::__construct();
-		self::$CI->load->model(array('Lab_Model','Lab_Member_Model','Lab_Cache_Model'));
+		self::$CI->load->model(array('Orgination_Model','Lab_Model','Lab_Member_Model','Lab_Cache_Model'));
 		
+		$this->_orginationModel = self::$CI->Orgination_Model;
 		$this->_labModel = self::$CI->Lab_Model;
 		$this->_labMemberModel = self::$CI->Lab_Member_Model;
 		$this->_labCacheModel = self::$CI->Lab_Cache_Model;
@@ -44,35 +46,85 @@ class Lab_service extends Base_service {
 	public function getOrginationHashObject(){
 		if(!$this->_orginationHashObject){
 			$this->_orginationHashObject = new Flexihash();
-			$this->_orginationHashObject->addTargets(self::$CI->load->get_config('split_lab_member'));
+			$this->_orginationHashObject->addTargets(self::$CI->load->get_config('split_orgination'));
 		}
 		return $this->_orginationHashObject;
 	}
 	
-	
+	/**
+	 * 
+	 */
 	public function setOrginationTableByUid($uid){
-		
-		
-	}
-	
-	
-	
-	public function getOrginationById($condition , $uid){
-		$this->setPmTableByUid($uid);
-		return $this->_pmMessageModel->getList($condition);
-		
+		$tableId = $this->getOrginationHashObject()->lookup($uid);
+		$this->_orginationModel->setTableId($tableId);
 	}
 	
 	
 	/**
-	 * 
+	 * 新注册用户默认就是个组织架构
 	 */
-	public function addUserOrginationId(){
+	public function addOrgination($name,$uid){
+		$this->setOrginationTableByUid($uid);
 		
+		return $this->_orginationModel->_add(array(
+			'uid' => $uid,
+			'oid' => $uid,
+			'name' => $name,
+			'is_default' => 1
 		
+		));
+	}
+	
+	
+	/**
+	 * 获得
+	 */
+	public function getOrginationByCondition($condition , $uid){
+		$this->setOrginationTableByUid($uid);
+		return $this->_orginationModel->getList($condition);
+	}
+	
+	
+	/**
+	 * 获得用户的机构列表
+	 */
+	public function getMemberOrginationList($uid){
+		
+		$userOrginationList = $this->getOrginationByCondition(array(
+			'select' => 'oid,name,is_default',
+			'where' => array(
+				'uid' => $uid
+			)
+		),$uid);
+		
+		if($userOrginationList){
+			$keysList = array();
+			$defaultItem = 0;
+			foreach($userOrginationList as $item){
+				$keysList['oid'] = $item;
+				if($item['is_default'] == 1){
+					$defaultItem = $item;
+					$this->_currentOid = $item['oid'];
+				}
+			}
+			
+			return array(
+				'orgination' => array(
+					'list' => $keysList,
+					'default' => $defaultItem
+				)
+			);;
+			
+			//$this->session->set_userdata(array('orgination' => $keysList,'current_oid' => $defaultItem['oid']));
+			//$this->assign('currentOrgination',$defaultItem);
+		}else{
+			
+			return array();
+		}
 		
 		
 	}
+	
 	
 	
 	

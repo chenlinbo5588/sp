@@ -6,7 +6,6 @@ class Lab extends MyYdzj_Controller {
     public function __construct(){
 		parent::__construct();
 		
-		$this->load->library('Lab_service');
     }
     
     public function index()

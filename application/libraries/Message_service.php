@@ -527,23 +527,6 @@ class Message_service extends Base_service {
 	
 	/* ---------------以下站内聊天窗口 -------------------------------------------- */
 	
-	/**
-	 * 添加一条待发聊天记录， 后台自动发送
-	 */
-	
-	/*
-	public function addSystemChatMessageToUser($data,$userInfo){
-		$this->setPushChatTableByUid($userInfo['uid']);
-		
-		$data = array_merge($data,$userInfo);
-		$data['msg_type'] = -1;
-		$data['content'] = strip_tags($data['content']);
-		
-		$this->_pushChatModel->_add($data);
-	}
-	*/
-	
-	
 	
 	/**
 	 * 添加一条站内信，后台自动发送
@@ -688,6 +671,7 @@ class Message_service extends Base_service {
 	 * 发送邮件
 	 */
 	public function sendEmail($to,$subject,$content){
+		
 	    $this->_emailRequest->setToAddress($to);        
 	    $this->_emailRequest->setSubject($subject);
 	    $this->_emailRequest->setHtmlBody($content);

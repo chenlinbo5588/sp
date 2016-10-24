@@ -875,14 +875,14 @@ EOF;
 		$sql = <<< EOF
 CREATE TABLE `sp_lab{i}` (
   `id` mediumint(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) NOT NULL DEFAULT '',
-  `address` varchar(50) NOT NULL DEFAULT '',
+  `name` varchar(50) NOT NULL DEFAULT '' COMMENT '实验室名称',
+  `address` varchar(50) NOT NULL DEFAULT '' COMMENT '地址',
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `pid` int(10) unsigned NOT NULL DEFAULT '0',
   `displayorder` int(11) unsigned NOT NULL DEFAULT '0',
   `creator` varchar(30) NOT NULL DEFAULT '',
   `updator` varchar(30) NOT NULL DEFAULT '',
-  `uid` int(10) unsigned NOT NULL,
+  `uid` int(10) unsigned NOT NULL DEFAULT '0',
   `oid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '构机ID',
   `gmt_create` int(10) unsigned NOT NULL DEFAULT '0',
   `gmt_modify` int(10) unsigned NOT NULL DEFAULT '0',
@@ -891,7 +891,7 @@ CREATE TABLE `sp_lab{i}` (
   KEY `idx_status` (`status`),
   KEY `idx_order` (`displayorder`),
   KEY `idx_name` (`name`)
-) ENGINE=MyISAM AUTO_INCREMENT=45 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 EOF;
 
@@ -910,18 +910,20 @@ EOF;
 	/**
 	 * 
 	 */
-	public function create_lab_oid_tables(){
+	public function create_orgination_tables(){
 		
 		$sql = <<< EOF
-CREATE TABLE `sp_lab_oid{i}` (
+CREATE TABLE `sp_orgination{i}` (
   `uid` int(10) unsigned NOT NULL DEFAULT '0',
   `oid` int(10) unsigned NOT NULL DEFAULT '0',
+  `name` varchar(50) NOT NULL DEFAULT '' COMMENT '组织架构名称',
   `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '-1 表示已退出该机构，后台可用户清理数据',
   `is_default` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '是否用户默认机构',
   `gmt_create` int(10) unsigned NOT NULL,
   `gmt_modify` int(10) unsigned NOT NULL,
   UNIQUE KEY `udx_uid` (`uid`,`oid`),
-  KEY `idx_udefault` (`uid`,`is_default`)
+  KEY `idx_udefault` (`uid`,`is_default`),
+  KEY `idx_status` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='实验室用户机构表,用于用户存保用户所在组织构机';
 
 
@@ -1249,6 +1251,9 @@ EOF;
         		continue;
         	}
         	
+        	if(preg_match('/^sp_orgination\d+$/i',$table,$match)){
+        		continue;
+        	}
         	
             $fields = $this->db->field_data($table);
             
