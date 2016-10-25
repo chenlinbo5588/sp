@@ -10,10 +10,6 @@ class Lab extends MyYdzj_Controller {
     
     public function index()
     {
-    	
-    	
-    	
-    	
         $this->display();
     }
     
@@ -190,14 +186,9 @@ class Lab extends MyYdzj_Controller {
      */
    	public function getTreeXML(){
    		header("Content-type:text/xml");
-   		
-   		//空 或者 是 创始人  创始人 整课树可见
-   		if(empty($uid) || $uid == LAB_FOUNDER_ID){
-   			$uid = 0;
-   		}
-   		
+   	
    		$oid = $this->_profile['basic']['oid'];
-   		
+   		$uid = $this->_profile['basic']['uid'];
    		
    		echo $this->lab_service->getTreeXML($uid,$oid);
    	}

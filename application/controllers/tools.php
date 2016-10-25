@@ -874,15 +874,14 @@ EOF;
 		
 		$sql = <<< EOF
 CREATE TABLE `sp_lab{i}` (
-  `id` mediumint(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL DEFAULT '' COMMENT '实验室名称',
   `address` varchar(50) NOT NULL DEFAULT '' COMMENT '地址',
-  `status` tinyint(4) NOT NULL DEFAULT '0',
+  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '-1 表示已删除',
   `pid` int(10) unsigned NOT NULL DEFAULT '0',
   `displayorder` int(11) unsigned NOT NULL DEFAULT '0',
   `creator` varchar(30) NOT NULL DEFAULT '',
   `updator` varchar(30) NOT NULL DEFAULT '',
-  `uid` int(10) unsigned NOT NULL DEFAULT '0',
   `oid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '构机ID',
   `gmt_create` int(10) unsigned NOT NULL DEFAULT '0',
   `gmt_modify` int(10) unsigned NOT NULL DEFAULT '0',
@@ -890,8 +889,9 @@ CREATE TABLE `sp_lab{i}` (
   KEY `idx_pid` (`pid`),
   KEY `idx_status` (`status`),
   KEY `idx_order` (`displayorder`),
-  KEY `idx_name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  KEY `idx_name` (`name`),
+  KEY `idx_oid` (`oid`)
+) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8;
 
 EOF;
 
@@ -953,12 +953,14 @@ EOF;
 		$push_email = $this->load->get_config('split_push_email');
 		$hp_batch = $this->load->get_config('split_hp_batch');
 		$hp_pub = $this->load->get_config('split_hp_pub');
+		$orgination = $this->load->get_config('split_orgination');
 		
 		$pmHash = new Flexihash();
 		//$pushChatHash = new Flexihash();
 		$pushEmailHash = new Flexihash();
 		$hpBatchHash = new Flexihash();
 		$hpPubHash = new Flexihash();
+		$orginationHash = new Flexihash();
 		
 		
 		$pmHash->addTargets($pm);
@@ -966,6 +968,7 @@ EOF;
 		$pushEmailHash->addTargets($push_email);
 		$hpBatchHash->addTargets($hp_batch);
 		$hpPubHash->addTargets($hp_pub);
+		$orginationHash->addTargets($orgination);
 		
 		echo 'pm_mesage='.$pmHash->lookup($uid);
 		echo '<br/>';
@@ -976,7 +979,9 @@ EOF;
 		echo 'hp_batch='.$hpBatchHash->lookup($uid);
 		echo '<br/>';
 		echo 'hp_pub='.$hpPubHash->lookup($uid);
-		
+		echo '<br/>';
+		echo 'orgination='.$orginationHash->lookup($uid);
+		echo '<br/>';
 		
 		$ar1 = range(0,30);
 		$ar2= range(0,15);

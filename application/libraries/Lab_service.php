@@ -52,11 +52,23 @@ class Lab_service extends Base_service {
 	}
 	
 	/**
-	 * 
+	 * 机构根据用户id 分表
 	 */
 	public function setOrginationTableByUid($uid){
 		$tableId = $this->getOrginationHashObject()->lookup($uid);
 		$this->_orginationModel->setTableId($tableId);
+	}
+	
+	
+	/**
+	 * 
+	 */
+	public function setLabTableByOrgination($oid){
+		$tableId = $this->getLabHashObj()->lookup($oid);
+		
+		$this->_labModel->setTableId($tableId);
+		$this->_labMemberModel->setTableId($tableId);
+		$this->_labCacheModel->setTableId($tableId);
 	}
 	
 	
@@ -77,7 +89,7 @@ class Lab_service extends Base_service {
 	
 	
 	/**
-	 * 获得
+	 * 根据用户获得 用户加入到机构列表
 	 */
 	public function getOrginationByCondition($condition , $uid){
 		$this->setOrginationTableByUid($uid);
@@ -121,12 +133,7 @@ class Lab_service extends Base_service {
 			
 			return array();
 		}
-		
-		
 	}
-	
-	
-	
 	
 	/**
 	 * 获得用户当前 所在的 实验室列表
@@ -296,17 +303,18 @@ class Lab_service extends Base_service {
 	/**
 	 * 获得用户拥有的节点
 	 */
-	public function getUserOwnedLabs($uid = 0){
-		
+	public function getUserOwnedLabs($uid,$oid){
 		$list = array();
-   		
    		$condition = array(
    			'where' => array(
-   					'status' => '正常'
+				'status >=' => 0,
+				'oid' => $oid,
    			),
    			'order' => 'pid ASC , displayorder DESC'
    		);
    		
+   		
+   		/*
    		if($uid && $uid != LAB_FOUNDER_ID){
    			$labs = self::$CI->session->userdata('user_labs');
    			
@@ -316,6 +324,7 @@ class Lab_service extends Base_service {
 	   			);
    			}
    		}
+   		*/
    		
    		$list = $this->_labModel->getList($condition);
    		
@@ -341,11 +350,17 @@ class Lab_service extends Base_service {
 	/**
 	 * 
 	 */
-	public function makeNodeReachable($nodeList){
-		
+	public function makeNodeReachable($nodeList, $relookup = true){
 		$tempTree = array();
 		
 		$this->_labModel->_parentList = array();
+		
+		
+		if($relookup){
+			
+		}
+		
+		
 		//获得 祖先，才能将树构建起来 重要
 		//由于是递归产生，始终返回的是 _parentList
 		foreach($nodeList as $node){
@@ -360,23 +375,24 @@ class Lab_service extends Base_service {
 	 * 按照用户 uid 分表
 	 */
 	public function getTreeXML($uid,$oid){
-		
-   		
    		/**
    		 * 与总的树比较 更新的时间点,整课树形
    		 */
    		$fullTreeCache = $this->_labCacheModel->getById(array(
    			'select' => 'expire,gmt_modify',
    			'where' => array(
-   				'uid' => 0,
+   				'uid = oid' => null,
+   			)
+   		));
+   		
+   		$cache = $this->_labCacheModel->getById(array(
+   			'where' => array(
+   				'uid' => $uid,
    				'oid' => $oid
    			)
    		));
    		
-   		
-   		$cache = $this->_labCacheModel->getFirstByKey($uid,'key_id');
    		$cacheExpire = false;
-   		
    		if(empty($cache)){
    			$cacheExpire = true;
    		}
@@ -388,7 +404,7 @@ class Lab_service extends Base_service {
 	   				$cacheExpire = true;
 	   			}
    			}else{
-   				if($cache['expire'] < 0 || (time() - $cache['gmt_modify']) >= CACHE_ONE_DAY){
+   				if($cache['expire'] < 0){
    					$cacheExpire = true;
    				}
    			}
@@ -398,7 +414,7 @@ class Lab_service extends Base_service {
    			return $cache['content'];
    		}else{
    			$output = $this->getUserLabXML($uid);
-   			$this->cacheUserLabXML($uid,$output);
+   			$this->cacheUserLabXML($uid,$oid,$output);
    			return $output;
    		}
 	}
@@ -406,7 +422,7 @@ class Lab_service extends Base_service {
 	
 	
 	/**
-	 * 获得用户lab XML
+	 * 获得用户某一个实验室的 XML 
 	 */
 	public function getUserLabXML($uid = 0){
 		
@@ -430,11 +446,11 @@ class Lab_service extends Base_service {
 	/**
 	 * 缓存用户 Lab XML
 	 */
-	public function cacheUserLabXML($uid,$xml,$oid){
+	public function cacheUserLabXML($uid,$oid,$xml){
 		return $this->_labCacheModel->_add(array(
 			'uid' => $uid,
+			'oid' => $oid,
 			'content' => $xml,
-			'oid' => $oid
         ),true);
 	}
 	
