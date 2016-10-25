@@ -1,0 +1,53 @@
+.lab_users {
+    margin: 10px 0 0 0;
+}
+
+.lab_users li {
+    display:block;
+    float:left;
+    width:80px;
+    text-align:center;
+    margin:2px 3px;
+    position:relative;
+}
+
+.lab_users li a {
+    display:block;
+    padding: 5px 3px;
+    background:#f3d987;
+}
+
+.lab_users li a:hover {
+    background:#F0C640;
+}
+.lab_users .close {
+    position: absolute;
+    right: 0px;
+    top: 5px;
+    width: 20px;
+    height: 20px;
+    cursor:pointer;
+}
+
+.lab_users li a.manager_color , .manager_color {
+    background-color: #4F7ED1;
+    color:#fff;
+}
+
+.lab_users li a.manager_color:hover , .manager_color:hover {
+    background-color: #276DEB;
+}
+
+
+.member_color {
+    background:#f3d987;
+}
+
+.color_sample { 
+    padding: 3px;
+}
+
+.form_row .be_manager {
+    float:none;
+    display:inline;
+}

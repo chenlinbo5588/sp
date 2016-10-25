@@ -49,37 +49,26 @@ class MyYdzj_Controller extends Ydzj_Controller {
 			$this->_pmUpdate();
 		}
 		
-		$this->_initUserOrgination();
+		$this->_initUserParam();
 	}
 	
 	
-	
-	private function _initUserOrgination(){
+	/**
+	 * 初始化用户相关参数
+	 */
+	private function _initUserParam(){
+		$param = $this->lab_service->getMemberOrginationList($this->_loginUID);
 		
-		$userOrginationList = $this->lab_service->getOrginationByCondition(array(
-			'select' => 'oid,name,is_default',
-			'where' => array(
-				'uid' => $this->_loginUID
-			)
-		),$this->_loginUID);
-		
-		if($userOrginationList){
-			$keysList = array();
-			$defaultItem = 0;
-			foreach($userOrginationList as $item){
-				$keysList['oid'] = $item;
-				if($item['is_default'] == 1){
-					$defaultItem = $item;
-					$this->_currentOid = $item['oid'];
-				}
-			}
+		if($param){
+			$this->_profile['lab'] = $param;
 			
-			$this->session->set_userdata(array('orgination' => $keysList,'current_oid' => $defaultItem['oid']));
-			$this->assign('currentOrgination',$defaultItem);
+			//获得用户当前机构的所用的实验室列表
+			$userLabs = $this->lab_service->getUserOwnedLabs($this->_loginUID,$param['current']['oid']);
+			
+			$this->assign('user_labs',)
+			$this->session->set_userdata('lab', $param);
 		}
 	}
-	
-	
 	
 	
 	/**

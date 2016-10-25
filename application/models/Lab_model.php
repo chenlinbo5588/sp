@@ -39,7 +39,7 @@ class Lab_Model extends MY_Model {
         
         $condition['select'] = $field;
         $condition['where'] = array(
-            'status' => '正常',
+            'status' => 0,
             'id' => $selfid
         );
         
@@ -62,11 +62,11 @@ class Lab_Model extends MY_Model {
 		{
 		   if(empty($t['children']))
 		   {
-		   		$xml .= '<item text="'.$t['address'].'" id="'.$t['id'].'" open="0"></item>';
+		   		$xml .= '<item text="'.$t['name'].'" id="'.$t['id'].'" open="0"></item>';
 		   }
 		   else
 		   {
-			    $xml .= '<item text="'.$t['address'].'" id="'.$t['id'].'" open="0">';
+			    $xml .= '<item text="'.$t['name'].'" id="'.$t['id'].'" open="0">';
 			    $xml .= $this->toXML($t['children']);
 			    $xml = $xml."</item>";
 		   }
@@ -85,7 +85,7 @@ class Lab_Model extends MY_Model {
         //$selfId   = $selfId < 0 ? 0 : intval($selfId);
         $condition = array(
           'where' => array(
-              'status' => '正常',
+              'status' => 0,
               'pid' => $parentId,
           ),
           'order' => 'pid ASC, displayorder DESC'
@@ -102,18 +102,13 @@ class Lab_Model extends MY_Model {
         $childrenList = $this->getList($condition);
         if(is_array($childrenList)){
             foreach ($childrenList as $item){
-                
                 $sepA = array();
-                
-                //$repeatChar = str_repeat("&nbsp;", strlen($separate));
                 
                 for($i = 0; $i < $level; $i++){
                     $sepA[] = $separate;
                 }
      
                 $item['sep'] = implode('',$sepA);
-               
-                //$item['sep'] = str_replace($repeatChar,$separate,$item['sep'],$level );
                 
                 $item['level'] = $level;
                 $this->_userTree[$item['id']] = $item;

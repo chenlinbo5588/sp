@@ -187,8 +187,10 @@ class Lab extends MyYdzj_Controller {
    	public function getTreeXML(){
    		header("Content-type:text/xml");
    	
-   		$oid = $this->_profile['basic']['oid'];
+   		$oid = $this->_profile['lab']['current']['oid'];
    		$uid = $this->_profile['basic']['uid'];
+   		
+   		//print_r($this->_profile);
    		
    		echo $this->lab_service->getTreeXML($uid,$oid);
    	}

@@ -17,6 +17,8 @@ class Lab_service extends Base_service {
 	
 	//
 	private $_labHashObject = null;
+	
+	private $_hashLookup = false;
 
 	public function __construct(){
 		parent::__construct();
@@ -63,12 +65,18 @@ class Lab_service extends Base_service {
 	/**
 	 * 
 	 */
-	public function setLabTableByOrgination($oid){
-		$tableId = $this->getLabHashObj()->lookup($oid);
+	public function setLabTablesByOrgination($oid){
 		
-		$this->_labModel->setTableId($tableId);
-		$this->_labMemberModel->setTableId($tableId);
-		$this->_labCacheModel->setTableId($tableId);
+		if(!$this->_hashLookup){
+			$tableId = $this->getLabHashObj()->lookup($oid);
+		
+			$this->_labModel->setTableId($tableId);
+			$this->_labMemberModel->setTableId($tableId);
+			$this->_labCacheModel->setTableId($tableId);
+			
+			
+			$this->_hashLookup = true;
+		}
 	}
 	
 	
@@ -111,21 +119,19 @@ class Lab_service extends Base_service {
 		
 		if($userOrginationList){
 			$keysList = array();
-			$defaultItem = 0;
+			$defaultItem = array();
+			
 			foreach($userOrginationList as $item){
-				$keysList['oid'] = $item;
+				$keysList[$item['oid']] = $item;
 				if($item['is_default'] == 1){
 					$defaultItem = $item;
-					$this->_currentOid = $item['oid'];
 				}
 			}
 			
 			return array(
-				'orgination' => array(
-					'list' => $keysList,
-					'default' => $defaultItem
-				)
-			);;
+				'list' => $keysList,
+				'current' => $defaultItem,
+			);
 			
 			//$this->session->set_userdata(array('orgination' => $keysList,'current_oid' => $defaultItem['oid']));
 			//$this->assign('currentOrgination',$defaultItem);
@@ -165,12 +171,9 @@ class Lab_service extends Base_service {
 			'lab_id' => $labId,
 			'is_manager' => 'y',
 			'uid' => $userInfo['id'],
-			'creator' => $param['creator'],
-			'updator' => $param['creator'],
 		);
 		
 		$labMember = array_merge($labMember,$this->addWhoHasOperated($userInfo));
-		
 		
 		$this->_labMemberModel->_add($labMember,true);
 		
@@ -305,39 +308,53 @@ class Lab_service extends Base_service {
 	 */
 	public function getUserOwnedLabs($uid,$oid){
 		$list = array();
+   		
+   		
+   		$this->setLabTablesByOrgination($oid);
+   		
+   		$joinLabs = $this->_labMemberModel->getList(array(
+   			'select' => 'lab_id',
+   			'where' => array(
+   				'uid' => $uid,
+   				'oid' => $oid,
+   			)
+   		));
+   		
    		$condition = array(
    			'where' => array(
-				'status >=' => 0,
 				'oid' => $oid,
    			),
    			'order' => 'pid ASC , displayorder DESC'
    		);
    		
    		
-   		/*
-   		if($uid && $uid != LAB_FOUNDER_ID){
-   			$labs = self::$CI->session->userdata('user_labs');
+   		
+   		if($uid != $oid){
+   			/** 非创始人 */
+   			$labIds = array();
+   			foreach($joinLabs as $lab){
+   				$labIds[] = $lab['lab_id'];
+   			}
    			
-   			if($labs){
+   			
+   			if($labIds){
    				$condition['where_in'] = array(
-	   				array('key' => 'id', 'value' => $labs)
+	   				array('key' => 'id', 'value' => $labIds)
 	   			);
    			}
    		}
-   		*/
    		
-   		$list = $this->_labModel->getList($condition);
    		
-   		return $list;
+   		return $this->_labModel->getList($condition);
 	}
 	
 	
 	/**
-	 * 
+	 * 获取用户某个机构下的加入的实验室列表
 	 */
-	public function getUserOwnedLabsHTML($uid = 0){
+	public function getUserOwnedLabsHTML($uid,$oid){
 		
-		$tree = $this->makeNodeReachable($this->getUserOwnedLabs($uid));
+		$tree = $this->makeNodeReachable($this->getUserOwnedLabs($uid,$oid));
 		
 		return self::$CI->phptree->makeTreeForHtml($tree,array(
 			'primary_key' => 'id',
@@ -348,23 +365,20 @@ class Lab_service extends Base_service {
 	}
 	
 	/**
-	 * 
+	 * 使得节点相关关联
 	 */
-	public function makeNodeReachable($nodeList, $relookup = true){
+	public function makeNodeReachable($nodeList){
 		$tempTree = array();
 		
 		$this->_labModel->_parentList = array();
 		
 		
-		if($relookup){
-			
-		}
-		
-		
-		//获得 祖先，才能将树构建起来 重要
-		//由于是递归产生，始终返回的是 _parentList
-		foreach($nodeList as $node){
-			$tempTree = $this->_labModel->getParents($node['id']);
+		if($nodeList){
+			//获得 祖先，才能将树构建起来 重要
+			//由于是递归产生，始终返回的是 _parentList
+			foreach($nodeList as $node){
+				$tempTree = $this->_labModel->getParents($node['id']);
+			}
 		}
 		
 		return $tempTree;
@@ -372,9 +386,13 @@ class Lab_service extends Base_service {
 	
 	
 	/**
-	 * 按照用户 uid 分表
+	 * 
 	 */
 	public function getTreeXML($uid,$oid){
+		
+		$this->setLabTablesByOrgination($oid);
+		
+		
    		/**
    		 * 与总的树比较 更新的时间点,整课树形
    		 */
@@ -413,7 +431,7 @@ class Lab_service extends Base_service {
    		if(!$cacheExpire){
    			return $cache['content'];
    		}else{
-   			$output = $this->getUserLabXML($uid);
+   			$output = $this->getUserLabXML($uid,$oid);
    			$this->cacheUserLabXML($uid,$oid,$output);
    			return $output;
    		}
@@ -424,13 +442,12 @@ class Lab_service extends Base_service {
 	/**
 	 * 获得用户某一个实验室的 XML 
 	 */
-	public function getUserLabXML($uid = 0){
+	public function getUserLabXML($uid,$oid){
 		
 		$str = array();
 		$str[] = '<?xml version="1.0" ?><tree id="0">';
    		
-		$tree = $this->makeNodeReachable($this->getUserOwnedLabs($uid));
-		
+		$tree = $this->makeNodeReachable($this->getUserOwnedLabs($uid,$oid));
 		$tree = self::$CI->phptree->makeTree($tree,array(
 			'primary_key' => 'id',
 			'parent_key' => 'pid',
