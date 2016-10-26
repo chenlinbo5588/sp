@@ -62,15 +62,31 @@ class MyYdzj_Controller extends Ydzj_Controller {
 		
 		if($param){
 			$this->_profile['lab'] = $param;
-			
 			//获得用户当前机构的所用的实验室列表
 			
-			$this->assign('lab_param',$param);
-			$userLabs = $this->lab_service->getUserOwnedLabs($this->_loginUID,$param['current']['oid']);
+			$this->_currentOid = $param['current']['oid'];
+			
+			$this->lab_service->setLabTablesByOrgination($this->_currentOid);
+			$userJoinedLabs = $this->lab_service->getUserJoinedLabListByOrgination($this->_loginUID,$param['current']['oid']);
+			$joinedLabsIds = array();
+			
+			if($userJoinedLabs){
+				foreach($userJoinedLabs as $lab){
+					$joinedLabsIds[] = $lab['lab_id'];
+				}
+			}
 			
 			
-			$this->assign('user_labs',json_encode($userLabs));
-			$this->session->set_userdata('lab', $param);
+			$this->session->set_userdata(array('lab' => $param, 'user_labs' => $joinedLabsIds));
+			
+			$this->assign(
+				array(
+					'user_labs' => json_encode($joinedLabsIds),
+					'lab_param' => $param,
+					'current_oid' => $this->_currentOid
+				)
+			);
+			
 		}
 	}
 	

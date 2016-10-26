@@ -10,26 +10,34 @@
 		<input type="hidden" name="pid" value="{if $info['pid']}{$info['pid']}{else}0{/if}"/>
 	<table class="fulltable style1">
       <tbody>
-      	<tr class="noborder">
-          <td class="required"><label class="validation" for="address">{#lab_address#}:</label></td>
+        <tr class="noborder">
+          <td class="required w120"><label class="validation"><em></em>{#lab_name#}:</label></td>
           <td class="vatop rowform">
-          		<input type="text" value="{$info['address']|escape}" name="address" id="address" class="txt">
+                <input type="text" value="{$info['name']|escape}" name="name" class="w40pre txt" placeholder="请输入实验室名称，中文或者英文,中文最多12个汉字">
+                <label class="errtip" id="error_name"></label>
+          </td>
+        </tr>
+      	<tr class="noborder">
+          <td class="required" class="w60"><label class="validation" for="address">{#lab_address#}:</label></td>
+          <td class="vatop rowform">
+          		<input type="text" value="{$info['address']|escape}" name="address" id="address" class="w40pre txt" placeholder="请输入实验室地址，中文或者英文,中文最多12个汉字">
           		<label class="errtip" id="error_address"></label>
           </td>
         </tr>
         <tr class="noborder">
-          <td class="required"><label for="displayorder">{#displayorder#}:</label></td>
+          <td><label for="displayorder">{#displayorder#}:</label></td>
           <td class="vatop rowform">
           	<input type="text" value="{$info['displayorder']|escape}" name="displayorder" id="displayorder" class="txt">
           	<label class="errtip" id="error_displayorder"></label><span>大于等于0的自然数,最大9999，数字越小越靠前</span>
           </td>
         </tr>
         <tr class="noborder">
-          <td class="required"><label class="validation" for="parent">{#parent#}:</label><label class="errtip" id="error_pid"></label></td>
+          <td class="required"><label class="validation" for="parent">{#parent#}:</label></td>
           <td class="vatop rowform">
           	  <span class="tip">鼠标双击实验室名称项进入实验室详情页 <span class="blue">蓝色文字表示您管辖的实验室</span><span id="pid_tip" class="hightlight">{form_error('pid')}</span></span>
-	          <div id="treeboxbox_tree1" class="rounded_box">
-	               <div id="loading_img" class="loading_div" style="display:none;"></div>
+	          <div><label class="errtip" id="error_pid"></label></div>
+	          <div id="treeboxbox_tree1" class="treebox rounded_box">
+	               <div id="loading_img" class="loading_div" style="display:none;">加载中...</div>
 	          </div>
           </td>
         </tr>
@@ -65,18 +73,14 @@
 	    var user_labs = {$user_labs},formLock = [];
 	    	current_pid = {if $info['pid']}{$info['pid']}{else}""{/if},
 	    	current_id = "{$info['id']}",
-	    	dialog = null,tree = null,
-	        labEditUrl = "{site_url('lab/edit?id=')}",
-            treeXMLUrl = "{site_url('lab/getTreeXML')}",
-            treeImgUrl = "{$smarty.const.TREE_IMG_PATH}",
-            labUserDeleteUrl = "{site_url('lab/delete_lab_user')}",
-            labManagerUrl = "{site_url('lab/manager_lab_user')}";
-            
+	    	dialog = null;
+	    	
             $("form").each(function(){
 				var name = $(this).prop("name");
 				formLock[name] = false;
 			});
 	
 	 </script>
+	 {include file="./lab_var.tpl"}
 	 <script type="text/javascript" src="{resource_url('js/lab/lab_add.js')}"></script>
 {include file="common/my_footer.tpl"}

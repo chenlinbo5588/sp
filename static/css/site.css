@@ -300,6 +300,12 @@ input[type=text]:focus , input[type=password]:focus ,textarea:focus {
 	background: url(../img/warn.png) no-repeat 10px center;
 }
 
+
+.loading_div {
+	background: url(../img/loading/loading.gif) no-repeat 10px center;
+	height:60px;
+}
+
 .loading_bg {
 	height:25px;
 	line-height:25px;
@@ -350,6 +356,8 @@ input[type=text]:focus , input[type=password]:focus ,textarea:focus {
 label.error {
 	color:red;
 }
+
+label.validation{font-weight:700; background: url(../img/sky/bg_position.gif) no-repeat scroll -620px -660px; padding-left:16px;}
 
 input[type=text].error,input[type=password].error {
     border:1px solid red;
@@ -638,6 +646,10 @@ table.fulltable {
 
 table.noext {
 	width:auto;
+}
+
+.treebox td {
+	padding:0 !important;
 }
 
 

@@ -629,15 +629,14 @@ function getIDS(obj){
 function bindAjaxSubmit(classname){
 	
 	var lockFn = function(btn,name,lock){
-		submitBtn.attr('disabled',lock);
+		btn.attr('disabled',lock);
 		formLock[name] = lock;
 		
 		if(lock == true){
-			submitBtn.addClass("disabled");
+			btn.addClass("disabled");
 		}else{
-			submitBtn.removeClass("disabled");
+			btn.removeClass("disabled");
 		}
-		
 	}
 	
 	
@@ -743,6 +742,34 @@ function bindDeleteEvent(customSuccessFn,customErrorFn){
   	});
 }
 
+
+
+function treeExpand(tree){
+	var str = tree.getAllItemsWithKids();
+	var ids;
+	
+	if(str.length){
+		ids = str.split(',');
+	}
+	
+    var level = 0;
+    for(var i = 0 ; i < ids.length; i++)
+    {
+        level = tree.getLevel(ids[i]);
+        switch(level)
+        {
+            case 1:
+            	tree.openItem(ids[i]);
+                break;
+            case 2:
+                tree.openItem(ids[i]);
+                break;
+            default:
+                tree.closeItem(ids[i]);
+                break;
+        }
+    }
+}
 
 
 $(function(){

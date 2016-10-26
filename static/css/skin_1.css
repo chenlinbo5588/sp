@@ -160,6 +160,8 @@ label.error {
 	color:red;
 }
 
+label.validation{font-weight:700; background: url(../img/sky/bg_position.gif) no-repeat scroll -620px -660px; padding-left:16px;}
+
 .validation_error {
     border:1px solid red;
 }

@@ -8,7 +8,8 @@ $(function(){
     function tonclick(id){
         var isFind = false;
         
-        if(isFounder){
+        //不是自己的不给选
+        if(!isFounder){
             for(var i = 0 ; i < user_labs.length ; i++ )
             {
                 if(id != 0 && user_labs[i] == id){
@@ -55,7 +56,7 @@ $(function(){
         if(id == 'root'){
             return;
         }else{
-        	location.href= labEditUrl + id + "&" + Math.random();
+        	location.href= labEditUrl + "?id=" + id + "&" + Math.random();
         }
     }
     
@@ -68,7 +69,6 @@ $(function(){
 	    tree.loadXML(treeXMLUrl,function(){
 	        var parent = 0;
 	        
-	        
 	        if(current_id){
 	        	tree.selectItem(current_id);
 	        }else{
@@ -77,33 +77,17 @@ $(function(){
 	        	}
 	        }
 	        
-	        var parents = tree.getAllItemsWithKids();
-            var level = 0;
-            for(var i = 0 ; i < parents.length; i++)
-            {
-                level = tree.getLevel(parents[i]);
-                switch(level)
-                {
-                    case 1:
-                        break;
-                    case 2:
-                        tree.openItem(parents[i]);
-                        break;
-                    default:
-                        tree.closeItem(parents[i]);
-                        break;
-                }
-            }
+	        treeExpand(tree);
 	        
 	        // 用户管理的实验室
 	        for(var i = 0 ; i < user_labs.length ; i++ )
 	        {
 	            if(user_labs[i] != 0){
-	                parent = tree.getParentId(user_labs[i]['id']);
+	                parent = tree.getParentId(user_labs[i]);
 	                if(parent != 0){
 	                    tree.openItem(parent);
 	                }
-	                tree.setItemColor(user_labs[i]['id'], "blue", "#EC1336");
+	                tree.setItemColor(user_labs[i], "blue", "#EC1336");
 	                //tree.setItemText(user_labs[i], "【我的】" + tree.getItemText(user_labs[i]), "您的实验室:" + tree.getItemText(user_labs[i]));
 	            }
 	        }
@@ -175,7 +159,7 @@ $(function(){
 	  	});
 	  });
 	  
-	  $.loadingbar({ urls: [ new RegExp("{site_url('lab/manager_lab_user') }"),new RegExp("{site_url('lab_user/search') }") ], templateData:{ message:"努力加载中..." } , container: "#labMemberDlg" });
+	  $.loadingbar({ urls: [ new RegExp(labManagerUrl),new RegExp(labUserSearchUrl) ], templateData:{ message:"努力加载中..." } , container: "#labMemberDlg" });
 	  
 	  $(".close").bind("click",function(){
 	  	var user_id = $(this).attr("data-id");

@@ -984,14 +984,17 @@ EOF;
 CREATE TABLE `sp_lab_cache{i}` (
   `uid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '用户ID',
   `oid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '构机ID',
+  `group_name` varchar(10) NOT NULL DEFAULT '',
   `content` mediumtext NOT NULL,
   `expire` int(10) NOT NULL DEFAULT '0' COMMENT '过期时间戳',
   `gmt_create` int(10) unsigned NOT NULL DEFAULT '0',
   `gmt_modify` int(10) unsigned NOT NULL DEFAULT '0',
   UNIQUE KEY `udx_uid` (`uid`,`oid`),
   KEY `idx_expire` (`expire`),
-  KEY `idx_oid` (`oid`)
+  KEY `idx_oid` (`oid`),
+  KEY `idx_group` (`group_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 
 EOF;

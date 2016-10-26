@@ -239,7 +239,8 @@ class Member extends Ydzj_Controller {
 				*/
 				
 				$userInfo = $this->Member_Model->getFirstByKey($addParam['username'],'username');
-				$this->lab_service->addOrgination($userInfo['username'].'的实验室',  $userInfo['uid']);
+				
+				$this->lab_service->initNewMemberLab($userInfo);
 				
 				$this->_rememberLoginName($addParam['username']);
 				$this->_autologin(array(

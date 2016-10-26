@@ -3,7 +3,7 @@
  */
 $(function(){
 	$.loadingbar({ container: "#catelist" ,templateData:{ message:"努力加载中..."} });
-	var tree=new dhtmlXTreeObject("treeboxbox_tree1","100%","100%",0);
+	tree=new dhtmlXTreeObject("treeboxbox_tree1","100%","100%",0);
     tree.setImagePath(treeImgUrl);
     tree.enableHighlighting(true);
     tree.enableDragAndDrop(1);
@@ -17,7 +17,7 @@ $(function(){
         if(id == 'root'){
             return;
         }
-        location.href= labeEditUrl + id + "&t=" + Math.random();
+        location.href= labEditUrl + "?id=" + id + "&t=" + Math.random();
         //console.log(id);
         //console.log(tree.getItemText(id)+" was selected");
     }
@@ -91,32 +91,6 @@ $(function(){
     
     
     
-    /**
-     * 折叠实验室, 只展开到二级
-     */
-    function treeUnExpand(ptree){
-    	
-    	var parents = ptree.getAllItemsWithKids();
-        var level = 0;
-        for(var i = 0 ; i < ptree.length; i++)
-        {
-            level = ptree.getLevel(parents[i]);
-            switch(level)
-            {
-                case 1:
-                    break;
-                case 2:
-                	ptree.openItem(parents[i]);
-                    break;
-                default:
-                	ptree.closeItem(parents[i]);
-                    break;
-            }
-        }
-    }
-    
-    
-    
     tree.setOnLoadingStart(treeLoading);
     tree.setOnLoadingEnd(treeLoaded); 
     
@@ -129,7 +103,7 @@ $(function(){
     setTimeout(function(){
     	tree.loadXML(treeXMLUrl,function(){
         	tree.closeAllItems();
-            
+        	treeExpand(tree);
         });
     
     },500);

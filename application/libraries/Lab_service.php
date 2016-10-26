@@ -74,16 +74,48 @@ class Lab_service extends Base_service {
 			$this->_labMemberModel->setTableId($tableId);
 			$this->_labCacheModel->setTableId($tableId);
 			
-			
 			$this->_hashLookup = true;
 		}
 	}
 	
 	
 	/**
+	 * 初始话新的成员的 关联记录
+	 * 
+	 * 新用户需要初始化4条相关记录
+	 */
+	public function initNewMemberLab($memberInfo){
+		$this->addOrgination($memberInfo['username'],$memberInfo['uid']);
+		$this->setLabTablesByOrgination($memberInfo['uid']);
+		
+		$labId = $this->_labModel->_add(array(
+			'name' => $memberInfo['username'].'实验室中心',
+			'address' => '',
+			'creator' =>$memberInfo['username'],
+			'oid' => $memberInfo['uid']
+		));
+		
+		$labMember = array(
+			'uid' => $memberInfo['uid'],
+			'oid' => $memberInfo['uid'],
+			'lab_id' => $labId,
+			'creator' =>$memberInfo['username'],
+			'is_manager' => 'y'
+		);
+		
+		$this->_labMemberModel->_add($labMember,true);
+		
+		$this->_labCacheModel->_add(array(
+			'uid' => 0,
+			'oid' => $memberInfo['uid']
+		));
+	}
+	
+	/**
 	 * 新注册用户默认就是个组织架构
 	 */
 	public function addOrgination($name,$uid){
+		
 		$this->setOrginationTableByUid($uid);
 		
 		return $this->_orginationModel->_add(array(
@@ -91,7 +123,6 @@ class Lab_service extends Base_service {
 			'oid' => $uid,
 			'name' => $name,
 			'is_default' => 1
-		
 		));
 	}
 	
@@ -159,22 +190,19 @@ class Lab_service extends Base_service {
 	 * 
 	 * 然后再安装 返回的 lab_id 存储 lab member
 	 */
-	public function addLab($param,$userInfo){
-		
+	public function addLab($param,$userInfo,$oid){
 		$param['displayorder'] = empty($param['displayorder']) ? 255 : intval($param['displayorder']);
-		$param['creator'] = $userInfo['name'];
+		$param['oid'] = $oid;
 		
 		$labId = $this->_labModel->_add($param);
 		
 		$labMember = array(
-			'user_id' => $userInfo['id'],
+			'uid' => $userInfo['uid'],
+			'oid' => $oid,
 			'lab_id' => $labId,
-			'is_manager' => 'y',
-			'uid' => $userInfo['id'],
 		);
 		
 		$labMember = array_merge($labMember,$this->addWhoHasOperated($userInfo));
-		
 		$this->_labMemberModel->_add($labMember,true);
 		
 		return	$labId;
@@ -184,8 +212,8 @@ class Lab_service extends Base_service {
     /**
      * 使得缓存过期
      */
-    public function expireCacheByCondition($condition){
-    	return $this->_labCacheModel->updateByWhere(array('expire' => -1),$condition);
+    public function expireCacheByCondition($data,$condition){
+    	return $this->_labCacheModel->updateByCondition($data,$condition);
     }
 	
 	
@@ -242,64 +270,38 @@ class Lab_service extends Base_service {
 	/**
 	 * 删除用户的实验室
 	 */
-	public function deleteUserLab($userId,$lab_id,$operator = array()){
-		$this->_labModel->clearMenuTree();
-		
-		//获得子孙实验室
-		$subIds = $this->_labModel->getListByTree($lab_id);
-		
-		$ids = array();
-		$ids[] = $lab_id;
-		if($subIds){
-			foreach($subIds as $item){
-				$ids[] = $item['id'];
-			}
-		}
-		
-		$ids = array_unique($ids);
-		
-		/**
-		 * 查询是否是 这个实验室的管理管理员, 如果不是这个实验室的管理员
-		 * 不能进行删除
-		 */
-		if(LAB_FOUNDER_ID != $userId){
-			if(!$this->getLabManager($userId,$lab_id)){
-				return $this->formatArrayReturn('failed','对不起，您不是这个实验室的管理员，无权删除');
-    		}
-		}
-		
-		//原来不删除,现在直接删除
-		$this->_labModel->updateByCondition(
-			array('status' => '已删除','updator' => $operator['name']),
+	public function deleteUserLab($lab_id,$oid,$ts){
+		$rows = $this->_labModel->updateByWhere(
 			array(
-				'where_in' => array(
-					array('key' => 'id' , 'value' => $ids)
+				'status' => -1
+			),
+			array(
+				'id' => $lab_id
 			)
+		);
+		
+		return $this->_labCacheModel->updateByWhere(array(
+			'gmt_modify' => $ts
+		),array(
+			'uid' => 0,
+			'oid' => $oid,
+			'group_name' => 'treexml',
 		));
-		
-		if($ids){
-			//
-			$this->_labMemberModel->deleteAllUserByLabs($ids);
-			
-			/**
-			 * @todo 优化，后期可以考虑后台定时清理
-			 */
-			 
-			/*
-			// 性能考虑 不自动清理了，
-			$this->load->model('Goods_Model');
-			$this->Goods_Model->deleteByLabIds($ids);
-			$this->_labModel->deleteByCondition(array(
-	    		'where_in' => array(
-	    			array('key' => 'id' , 'value' => $ids)
-	    		)
-	    	
-	    	));
-	    	*/
-		}
-		
-		return $this->formatArrayReturn('success');
-		
+	}
+	
+	
+	
+	/**
+	 * 
+	 */
+	public function getUserJoinedLabListByOrgination($uid,$oid,$fields = 'lab_id'){
+		$joinLabs = $this->_labMemberModel->getList(array(
+   			'select' => $fields,
+   			'where' => array(
+   				'uid' => $uid,
+   				'oid' => $oid,
+   			)
+   		));
 	}
 	
 	
@@ -309,24 +311,13 @@ class Lab_service extends Base_service {
 	public function getUserOwnedLabs($uid,$oid){
 		$list = array();
    		
-   		
-   		$this->setLabTablesByOrgination($oid);
-   		
-   		$joinLabs = $this->_labMemberModel->getList(array(
-   			'select' => 'lab_id',
-   			'where' => array(
-   				'uid' => $uid,
-   				'oid' => $oid,
-   			)
-   		));
-   		
+   		$joinLabs = $this->getUserJoinedLabListByOrgination($uid,$oid);
    		$condition = array(
    			'where' => array(
 				'oid' => $oid,
    			),
-   			'order' => 'pid ASC , displayorder DESC'
+   			'order' => 'pid ASC , displayorder ASC'
    		);
-   		
    		
    		
    		if($uid != $oid){
@@ -343,7 +334,6 @@ class Lab_service extends Base_service {
 	   			);
    			}
    		}
-   		
    		
    		return $this->_labModel->getList($condition);
 	}
@@ -390,7 +380,6 @@ class Lab_service extends Base_service {
 	 */
 	public function getTreeXML($uid,$oid){
 		
-		$this->setLabTablesByOrgination($oid);
 		
    		/**
    		 * 与总的树比较 更新的时间点,整课树形
@@ -401,13 +390,15 @@ class Lab_service extends Base_service {
    			'where' => array(
    				'uid' => 0,
    				'oid' => $uid,
+   				'group_name' => 'treexml'
    			)
    		));
    		
    		$cache = $this->_labCacheModel->getById(array(
    			'where' => array(
    				'uid' => $uid,
-   				'oid' => $oid
+   				'oid' => $oid,
+   				'group_name' => 'treexml'
    			)
    		));
    		
@@ -465,6 +456,7 @@ class Lab_service extends Base_service {
 			'uid' => $uid,
 			'oid' => $oid,
 			'content' => $xml,
+			'group_name' => 'treexml'
         ),true);
 	}
 	
@@ -472,7 +464,7 @@ class Lab_service extends Base_service {
     /**
      * 获得用户 是管理员的实验室
      */
-    public function getLabManager($user_id,$lab_id){
+    public function getLabManager($uid,$lab_id,$oid){
     	if(!is_array($lab_id)){
     		$lab_id = (array)$lab_id;
     	}
@@ -480,7 +472,8 @@ class Lab_service extends Base_service {
     	return $this->_labMemberModel->getList(array(
     		'where' => array(
     			'is_manager' => 'y',
-    			'user_id' => $user_id
+    			'uid' => $uid,
+    			'oid' => $oid
     		),
     		'where_in' => array(
     			array('key' => 'lab_id' , 'value' => $lab_id)

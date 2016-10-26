@@ -163,10 +163,10 @@ class Base_service {
     	
     	switch($action){
     		case 'add':
-    			$rt = array('creator' => $user['name']);
+    			$rt = array('creator' => $user['username']);
     			break;
     		case 'edit':
-    			$rt = array('updator' => $user['name']);
+    			$rt = array('updator' => $user['username']);
     			break;
     		default;
     			break;
