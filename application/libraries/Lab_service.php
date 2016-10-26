@@ -392,14 +392,15 @@ class Lab_service extends Base_service {
 		
 		$this->setLabTablesByOrgination($oid);
 		
-		
    		/**
    		 * 与总的树比较 更新的时间点,整课树形
+   		 * uid = 0 表示该机构下的总树xml缓存
    		 */
    		$fullTreeCache = $this->_labCacheModel->getById(array(
    			'select' => 'expire,gmt_modify',
    			'where' => array(
-   				'uid = oid' => null,
+   				'uid' => 0,
+   				'oid' => $uid,
    			)
    		));
    		
@@ -413,19 +414,15 @@ class Lab_service extends Base_service {
    		$cacheExpire = false;
    		if(empty($cache)){
    			$cacheExpire = true;
-   		}
-   		
-   		if(!$cacheExpire){
-   			//比较整课树是否已经过期
-   			if($fullTreeCache){
-   				if($fullTreeCache['gmt_modify'] >= $cache['gmt_modify']){
+   		}else{
+   			if($cache['expire'] < 0){
+				$cacheExpire = true;
+			}else{
+				//比较整课树是否已经过期
+	   			if($fullTreeCache['gmt_modify'] > $cache['gmt_modify']){
 	   				$cacheExpire = true;
 	   			}
-   			}else{
-   				if($cache['expire'] < 0){
-   					$cacheExpire = true;
-   				}
-   			}
+			}
    		}
    		
    		if(!$cacheExpire){

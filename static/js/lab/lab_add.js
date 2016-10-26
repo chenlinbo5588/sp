@@ -7,19 +7,18 @@ $(function(){
     
     function tonclick(id){
         var isFind = false;
-        {if $profile['basic']['id'] != $smarty.const.LAB_FOUNDER_ID}
-            {* 勾选是否在自己管理的实验室 *}
+        
+        if(isFounder){
             for(var i = 0 ; i < user_labs.length ; i++ )
             {
                 if(id != 0 && user_labs[i] == id){
                    isFind = true;
                 }
             }
-        {else}
-           isFind = true;
-        {/if}
+        }else {
+        	isFind = true;
+        }
         
-        {* 没有修改父级 不报错 *}
         if(isFind == false && id == current_pid){
             isFind = true;
         }
@@ -56,7 +55,7 @@ $(function(){
         if(id == 'root'){
             return;
         }else{
-        	location.href= "{site_url('lab/edit?id=')}" + id + "&" + Math.random();
+        	location.href= labEditUrl + id + "&" + Math.random();
         }
     }
     
@@ -66,25 +65,45 @@ $(function(){
     
     
     setTimeout(function(){
-	    tree.loadXML("{site_url('lab/getTreeXML')}",function(){
+	    tree.loadXML(treeXMLUrl,function(){
 	        var parent = 0;
-	        {if empty($info['id'])}
-	        {if $info['pid']}tree.selectItem({$info['pid']});{/if}
-	        {elseif $info['id']}
-	        tree.selectItem({$info['id']});
-	        {/if}
 	        
-	        {include file="./tree_unexpand.tpl"}
+	        
+	        if(current_id){
+	        	tree.selectItem(current_id);
+	        }else{
+	        	if(current_pid){
+	        		tree.selectItem(current_pid);
+	        	}
+	        }
+	        
+	        var parents = tree.getAllItemsWithKids();
+            var level = 0;
+            for(var i = 0 ; i < parents.length; i++)
+            {
+                level = tree.getLevel(parents[i]);
+                switch(level)
+                {
+                    case 1:
+                        break;
+                    case 2:
+                        tree.openItem(parents[i]);
+                        break;
+                    default:
+                        tree.closeItem(parents[i]);
+                        break;
+                }
+            }
 	        
 	        // 用户管理的实验室
 	        for(var i = 0 ; i < user_labs.length ; i++ )
 	        {
 	            if(user_labs[i] != 0){
-	                parent = tree.getParentId(user_labs[i]);
+	                parent = tree.getParentId(user_labs[i]['id']);
 	                if(parent != 0){
 	                    tree.openItem(parent);
 	                }
-	                tree.setItemColor(user_labs[i], "blue", "#EC1336");
+	                tree.setItemColor(user_labs[i]['id'], "blue", "#EC1336");
 	                //tree.setItemText(user_labs[i], "【我的】" + tree.getItemText(user_labs[i]), "您的实验室:" + tree.getItemText(user_labs[i]));
 	            }
 	        }
@@ -92,32 +111,15 @@ $(function(){
 	    });
 	 },500);
     
-    
-    {* 成员管理 *}
-    {if $info['id']}
-    function ajaxPage(page){
-        //$("#user_loading").show();
-        $.ajax({
-            type:"GET",
-            cache:false,
-            url:"{site_url('lab_user/search')}",
-              data: { id: {$info['id']} ,page: page , username: $("#search_username").val()},
-              success:function(data){
-              	$("#userlist").html(data);
-              	dialog.dialog( "open" );
-              }
-        });
-    }
-    {/if}
-    
-    
     var successHandler = function(json){
     	alert(json.message);
       	if(json.message == '操作成功'){
-      		location.href= "{site_url('lab/edit?id=')}" + id + "&" + Math.random();
+      		location.href= labEditUrl + id + "&" + Math.random();
       	}
     };
     
+    
+    bindAjaxSubmit('form');
     
 	dialog = $( "#labMemberDlg" ).dialog({
       autoOpen: false,
@@ -138,9 +140,9 @@ $(function(){
 	      	
 	      	$.ajax({
                 type:"POST",
-                url:"{site_url('lab/manager_lab_user')}",
+                url:labManagerUrl,
                 dataType:"json",
-                data: "id={$info['id']}&" + $("form[name=memberForm]").serialize(),
+                data: "id=" + current_id + "&" + $("form[name=memberForm]").serialize(),
                 success:successHandler
            });
 	      }
@@ -158,8 +160,6 @@ $(function(){
       close: function() { }
 	});
 	
-	
-  
 	  $("body").delegate("#search_btn","click",function(){
 	      ajaxPage(1);
 	  });
@@ -194,9 +194,9 @@ $(function(){
 		        "确定": function() {
 		          $.ajax({
 	                    type:"POST",
-	                    url:"{site_url('lab/delete_lab_user')}",
+	                    url:labUserDeleteUrl,
 	                    dataType:"json",
-	                    data: { id: {$info['id']} , user_id: user_id},
+	                    data: { id: current_id , user_id: user_id},
 	                    success:function(json){
 	                    	 alert(json.message);
 	                    	 if(json.message == '删除成功'){

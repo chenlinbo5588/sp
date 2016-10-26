@@ -1,5 +1,7 @@
 {include file="common/my_header.tpl"}
   {config_load file="lab.conf"}
+  
+  	<div><a href="{site_url('lab/add')}">添加实验室</a></div>
   	<div class="w-tixing clearfix"><b>温馨提醒：</b>
         <p>1、【修改操作】鼠标双击实验室名称进入修改页面。</p>
         <p>2、【删除操作】鼠标左键拖曳实验室名称至右侧空白区域进行删除.</p>
@@ -16,8 +18,8 @@
 	 {include file="common/dhtml_tree.tpl"}
 	 {include file="common/jquery_ui.tpl"}
       <script>
-      	var tree = null;
-      	var labEditUrl = "{site_url('lab/edit?id=')}",
+      	var tree = null, isFounder = {if $lab_param['current']['oid'] == $profile['basic']['uid'])1{else}0{/if};
+      	var labEditUrl = "{site_url('lab/edit')}",
       		labDeleteUrl = "{site_url('lab/delete')}",
       		labMoveUrl = "{site_url('lab/move')}",
       		treeXMLUrl = "{site_url('lab/getTreeXML')}",

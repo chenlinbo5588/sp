@@ -59,13 +59,17 @@ class MyYdzj_Controller extends Ydzj_Controller {
 	private function _initUserParam(){
 		$param = $this->lab_service->getMemberOrginationList($this->_loginUID);
 		
+		
 		if($param){
 			$this->_profile['lab'] = $param;
 			
 			//获得用户当前机构的所用的实验室列表
+			
+			$this->assign('lab_param',$param);
 			$userLabs = $this->lab_service->getUserOwnedLabs($this->_loginUID,$param['current']['oid']);
 			
-			$this->assign('user_labs',)
+			
+			$this->assign('user_labs',json_encode($userLabs));
 			$this->session->set_userdata('lab', $param);
 		}
 	}

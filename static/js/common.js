@@ -622,6 +622,83 @@ function getIDS(obj){
 	return ids;
 }
 
+/**
+ * ajax 提交
+ * @param classname
+ */
+function bindAjaxSubmit(classname){
+	
+	var lockFn = function(btn,name,lock){
+		submitBtn.attr('disabled',lock);
+		formLock[name] = lock;
+		
+		if(lock == true){
+			submitBtn.addClass("disabled");
+		}else{
+			submitBtn.removeClass("disabled");
+		}
+		
+	}
+	
+	
+	$(classname).submit(function(){
+		var name=$(this).prop("name");
+		var submitBtn = $("input[type=submit]",$(this));
+		
+		if(formLock[name]){
+			return false;
+		}
+		
+		lockFn(submitBtn,name,true);
+		
+		$.ajax({
+			type:'POST',
+			url: $(this).prop("action"),
+			dataType:'json',
+			data:$(this).serialize(),
+			success:function(resp){
+				lockFn(submitBtn,name,false);
+				refreshFormHash(resp.data);
+				
+				alert(resp.message);
+				
+				if(resp.message != '保存成功'){
+					var errors = resp.data.errors;
+					var first = null;
+					
+					for(var f in errors){
+						if(first == null){
+							first = f;
+						}
+						$("#error_" + f).html(errors[f]).addClass("error").show();
+					}
+					
+					if($("input[name=" + first + "]").size()){
+						$("input[name=" + first + "]").focus();
+					}else if($("select[name=" + first + "]").size()){
+						$("select[name=" + first + "]").focus();
+					}
+					
+					
+				}else{
+					$("label.errtip").hide();
+					if(typeof(resp.data.redirectUrl) != "undefined"){
+						location.href = resp.data.redirectUrl;
+					}
+				}
+			
+			},
+			error:function(xhr, textStatus, errorThrown){
+				lockFn(submitBtn,name,false);
+				
+				alert("服务器发送错误,将重新刷新页面");
+			}
+		});
+		return false;
+	});
+}
+
+
 
 
 /**

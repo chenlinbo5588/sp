@@ -7,7 +7,7 @@
             <li><i class="fa fa-bell"></i><a href="{site_url('my_pm/setting')}">提醒设置</a></li>
             <li><a href="{site_url('my/seller_verify')}">卖家认证</a></li>
             <li class="segment"><h3>团队</h3></li>
-            <li><a href="{site_url('lab/index')}">{$profile['lab']['current']['name']|escape}</a></li>
+            <li><a href="{site_url('lab/index')}">{$lab_param['current']['name']|escape}</a></li>
             <li><a href="{site_url('lab/index')}">加入的团队</a></li>
             <li class="segment"><h3>货品</h3></li>
             <li><a href="{site_url('lab_goods/index')}">货品查询</a></li>

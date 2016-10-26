@@ -358,6 +358,7 @@ class Lab extends MyYdzj_Controller {
 			$this->assign('user_labs',json_encode(array_values($this->session->userdata('user_labs'))));
 			$this->assign('userList', $this->_getUserList($id));
 			
+			
 			$this->assign('isManager',$isLabManager);
 			
 			$this->assign('info',$info);
@@ -604,7 +605,7 @@ class Lab extends MyYdzj_Controller {
 				}
 			}
 		}else{
-			$this->assign('user_labs',json_encode(array_values($this->session->userdata('user_labs'))));
+			
        	 	$this->display();
 		}
     }
