@@ -9,7 +9,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,minimal-ui"/>
 <link href="{resource_url('css/skin_1.css')}" rel="stylesheet" type="text/css"/>
 <script>
-var cookiedomain = "{config_item('site_domain')}",
+var cookiedomain = "{config_item('cookie_domain')}",
     cookiepath = "{config_item('cookie_path')}",
     cookiepre = "{config_item('cookie_prefix')}",
     formhash = "{$formhash}",

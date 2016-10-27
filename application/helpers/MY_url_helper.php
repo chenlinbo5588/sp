@@ -27,7 +27,7 @@ if ( ! function_exists('resource_url'))
 	 * @param	string	$protocol
 	 * @return	string
 	 */
-	function resource_url($uri = '', $protocol = NULL)
+	function resource_url($uri = '',$withHash = false, $protocol = NULL)
 	{
 		if(strpos($uri,'http') !== false){
 			return $uri;
@@ -35,15 +35,25 @@ if ( ! function_exists('resource_url'))
 		
 		//if(strrpos($uri,'.'))
 		
+		if(strpos($uri,'static/') === false){
+			$uri = 'static/'.$uri;
+		}
 		
-		
-		if(strpos($uri,'static/') !== false){
-			return get_instance()->config->base_url($uri, $protocol);
-		}else{
-			return get_instance()->config->base_url('static/'.$uri, $protocol);
+		if($withHash){
+			$uri = preg_replace('/(.*?)(\?.*$)/',"\\1", $uri);
+			$uri .= '?v='.substr(filemtime(ROOTPATH.'/'.$uri),-4,4);
 		}
 		
 		
+		return get_instance()->config->base_url($uri, $protocol);
+		
+		/*
+		if(strpos($uri,'static/') !== false){
+		
+		}else{
+			return get_instance()->config->base_url('static/'.$uri, $protocol);
+		}
+		*/
 	}
 }
 

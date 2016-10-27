@@ -22,7 +22,7 @@ class Hp extends MyYdzj_Controller {
 			'2小时以上' => '-7200 seconds',
 		);
 		
-		$this->_maxRowPerReq = 20;
+		$this->_maxRowPerReq = 100;
 		
 		$this->assign('maxRowPerReq',$this->_maxRowPerReq);
 	}
@@ -42,6 +42,7 @@ class Hp extends MyYdzj_Controller {
 		$searchKeys['mtime'] = trim($this->input->get_post('mtime'));
 		
 		$searchCondition = array(
+			'sph_select' => '@ID',
 			'pager' => $pageParam,
 			'order' => 'gmt_modify DESC',
 			'fields' => array(
@@ -163,7 +164,6 @@ class Hp extends MyYdzj_Controller {
 				*/
 				
 				$this->load->config('hp');
-				
 				$validationKey = config_item('hp_validation');
 				
 				foreach($validationKey['hp_req'] as $value){
@@ -236,10 +236,10 @@ class Hp extends MyYdzj_Controller {
 				}
 				
 				$insertData = array();
+				$kwAssoc = array();
 				
 				$date_key = date("Ymd",$this->_reqtime);
 				$ip = $this->input->ip_address();
-				
 				foreach($initRow as $rowIndex){
 					$rowData = array(
 						'date_key' => $date_key,
@@ -283,18 +283,104 @@ class Hp extends MyYdzj_Controller {
 					//重要   用户后台自动匹配的字段， 货号&尺码  确定一个货品
 					$rowData['kw'] = $rowData['search_code'].strtolower(str_replace(array('.','#'),'',$rowData['goods_csize']));
 					
+					//保存kw 和 $insertData 数组下标的关联
+					
+					
+					if($kwAssoc[$rowData['kw']]){
+						$kwAssoc[$rowData['kw']][] = $rowIndex;
+					}else{
+						$kwAssoc[$rowData['kw']] = array($rowIndex);
+					}
+					
 					$insertData[] = $rowData;
 				}
 				
-				$rowsInserted = $this->hp_service->addHp($insertData,$this->_reqtime,$this->_loginUID);
 				
+				$searchCondition = array(
+					'sph_select' => '@ID',
+					'select' => 'goods_id,kw',
+					'pager' => array(
+						'page_size' => 200,
+						'current_page' => 1,
+					),
+					'order' => 'gmt_modify DESC',
+					'fields' => array(
+						'uid' => array($this->_loginUID),
+						'kw' => implode('|',array_keys($kwAssoc))
+					)
+				);
+				
+				//进行一次查询,看有哪些 kw 是在发布状态,如果是则将其拦截
+				$this->hp_service->setServer(0);
+				$activeList = $this->hp_service->query($searchCondition);
+				
+				$ignoreData = array();
+				
+				if($activeList){
+					foreach($activeList['data'] as $activeItem){
+						if($kwAssoc[$activeItem['kw']]){
+							foreach($kwAssoc[$activeItem['kw']] as $idx){
+								$ignoreData[$idx] = true;
+								unset($insertData[$idx]);
+							}
+						}
+					}
+				}
+				
+				if(empty($insertData)){
+					$feedback = getErrorTip('该批货号和尺寸已经发布过了，请更改发布货号以及尺寸');
+					break;
+				}
+				
+				$rowsInserted = $this->hp_service->addHp($insertData,$this->_reqtime,$this->_loginUID);
 				if($rowsInserted){
-					$feedback = getSuccessTip('求货发布成功,您发布的信息蒋在一分钟内开始生效');
+					$this->input->set_cookie('repub','','');
+					$this->assign('norepub',true);
+					$ignoreCount = count($ignoreData);
+					if($ignoreCount){
+						$feedback = getSuccessTip('求货发布成功,其中'.$ignoreCount.'条记录为重复发布，已忽略处理,您发布的信息蒋在一分钟内开始生效');
+					}else{
+						$feedback = getSuccessTip('求货发布成功,您发布的信息蒋在一分钟内开始生效');
+					}
+					
 				}else{
-					$errorInfo = $this->Hp_Recent_Model->get_error_info();
+					$errorInfo = $this->db->get_error_info();
 					$feedback = getErrorTip(str_replace(array('{code}','{message}'),array($errorInfo['code'],$errorInfo['message']),"系统错误,{code}:{message}"));
 				}
 				
+			}
+		}else{
+			
+			$repubIds = $this->input->get_cookie('repub');
+			$repubIdArray = array();
+			
+			$this->output->set_content_type('text/html');
+			
+			if($repubIds){
+				$repubIdArray = explode('|',$repubIds);
+				
+				if(count($repubIdArray) > 50){
+					$repubIdArray = array_slice($repubIdArray,0,49);
+				}
+				
+				$list = $this->hp_service->getPubHistory(array(
+					'where_in' => array(
+						array('key' => 'goods_id' , 'value' => $repubIdArray)
+					)
+				),$this->_loginUID);
+			
+			}
+			
+			if($list){
+				$initRow = range(0,count($list) - 1);
+				$this->load->config('hp');
+				
+				$validationKey = config_item('hp_validation');
+				foreach($list as $hpitem){
+					foreach($validationKey['hp_req'] as $field){
+						$postData[$field][] = $hpitem[$field];
+					}
+				}
 			}
 		}
 		

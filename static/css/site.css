@@ -408,6 +408,9 @@ input[type=text].valid , input[type=password].valid {
 }
 
 
+
+
+
 .nav ,.control ,.action {
     display: inline-block;
     border: 1px solid #473e86;
@@ -461,6 +464,34 @@ input[type=text].valid , input[type=password].valid {
     font-size:13px;
     padding:3px;
 }
+
+.btn {
+    border-bottom: 0;
+    text-align: center;
+    border-left: 0;
+    line-height: 31px;
+    width: 72px;
+    height: 31px;
+    color: #fff;
+    font-size: 14px;
+    border-top: 0;
+    cursor: pointer;
+    font-weight: bold;
+    border-right: 0;
+}
+
+.orangeBtn {
+    line-height: 20px;
+    width: 60px;
+    font-family: "微软雅黑";
+    background: #ed6d00;
+    height: 20px;
+    font-size: 14px;
+    vertical-align: middle;
+    font-weight: normal;
+}
+
+
 
 .grayed {
 	background:#6C6969;
@@ -1155,7 +1186,18 @@ table.noext {
 	position: absolute;
     right: 0;
     top: 0;
+    background-color: #EF0A80;
 }
+
+#repub a {
+	color:#fff;
+	display:inline-block;
+    /* border: 1px solid #FFFFFF; */
+    /* color: #fff; */
+    padding: 5px;
+    cursor:pointer;
+}
+
 
 
 #process_area {

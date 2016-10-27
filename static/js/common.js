@@ -670,7 +670,7 @@ function bindDeleteEvent(customSuccessFn,customErrorFn){
 
 $(function(){
 	// 全选 start
-	$('.checkall').click(function(){
+	$("body").delegate('.checkall','click',function(){
 		var group = $(this).prop("name");
 		$("input[group="+group+"]").prop("checked" , $(this).prop("checked") );
 	});
@@ -705,4 +705,51 @@ $(function(){
     	
     	$(formid).submit();
     });
+    
+    $("#repub .detail").bind('click',function(){
+    	var repubUrl = $(this).attr('data-url');
+    	
+    	$.get(repubUrl, { },function(resp){
+    		$("#showDlg" ).html(resp).dialog({
+        		title: "重新发布列表",
+        		autoOpen: false,
+        		width: '50%',
+        		height:300,
+        		position: { my: "center", at: "center", of: window },
+        		modal: true
+        	}).dialog('open');
+    		
+    	} ,'html');
+    	
+    });
+    
+    
+    $("body").delegate("input[name=repubcancel]","click",function(){
+        var selected = $("input[name='goods_id[]']:checked").size();
+        if(selected == 0){
+            showToast('error', '请先勾选');
+            return ;
+        }
+        
+        var ids = [];
+        
+        $("input[name='goods_id[]']").not("input:checked").each(function(){
+        	ids.push($(this).val());
+        });
+        
+        $("input[name='goods_id[]']:checked").each(function(){
+        	$("#gid" + $(this).val()).remove();
+        });
+        
+        if(ids.length){
+        	$("#repub .title em").html(ids.length);
+        	$("#repub").show();
+        }else{
+        	$("#repub").hide();
+        }
+        
+        setcookie('repub',ids.join('|'),86400);
+    });
+    
+    
 });

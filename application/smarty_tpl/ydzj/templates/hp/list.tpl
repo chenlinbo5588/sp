@@ -25,7 +25,7 @@
 		           <td>{$item['goods_csize']}</td>
 		           <td>{$item['quantity']}</td>
 		           <td>{if $item['sex'] == 1}男{else}女{/if}</td>
-		           <td>{if $item['price_status'] || $item['uid'] == $profile['basic']['uid']}{$item['price_max']}{else}已隐藏{/if}</td>
+		           <td>{if $item['price_status']}{$item['price_max']}{else}***{/if}</td>
 		           <td>
 		              {if $item['qq']}
 		              <a target="_blank" class="qqchat" href="http://wpa.qq.com/msgrd?v=3&uin={$item['qq']}&site=qq&menu=yes" alt="点击这里给我发消息" title="点击这里给我发消息">{$item['qq']}</a>

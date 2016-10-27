@@ -7,10 +7,10 @@
 <meta name="description" content="{$SEO_description}" />
 <meta name="keywords" content="{$SEO_keywords}" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,minimal-ui">
-<link rel="stylesheet" href="{resource_url('css/site.css')}"/>
+<link rel="stylesheet" href="{resource_url('css/site.css',true)}"/>
 <link href="{resource_url('font-awesome/css/font-awesome.min.css')}" rel="stylesheet" type="text/css"/>
 <script>
-var cookiedomain = "{config_item('site_domain')}",
+var cookiedomain = "{config_item('cookie_domain')}",
     cookiepath = "{config_item('cookie_path')}",
     cookiepre = "{config_item('cookie_prefix')}",
     formhash = "{$formhash}",
@@ -24,7 +24,7 @@ var cookiedomain = "{config_item('site_domain')}",
 {include file="common/jquery_ui.tpl"}
 <link rel="stylesheet" href="{resource_url('js/toast/jquery.toast.min.css')}"/>
 <script type="text/javascript" src="{resource_url('js/toast/jquery.toast.min.js')}"></script>
-<script type="text/javascript" src="{resource_url('js/common.js')}"></script>
+<script type="text/javascript" src="{resource_url('js/common.js',true)}"></script>
 </head>
 <a name="top"></a>
 <div id="showDlg" style="display:none;"></div>
@@ -38,6 +38,7 @@ var cookiedomain = "{config_item('site_domain')}",
                 {else}
                 <div id="logo"><a href="{site_url('/')}">{$siteSetting['site_name']}</a></div>
                 {/if}
+                
 	            <div id="homeSideLinks">
 	               {if $profile}
 	                   <a href="{site_url('my/index')}">{$profile['basic']['username']|escape}</a>

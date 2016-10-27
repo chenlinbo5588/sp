@@ -5,6 +5,7 @@
             <li {if $uri_string == 'my_req/recent'}class="scr_cur"{/if}><a href="{site_url('my_req/recent')}">最近3日内求货</a></li>
             <li {if $uri_string == 'my_req/history'}class="scr_cur"{/if}><a href="{site_url('my_req/history')}">历史求货</a></li>
         </ul>
+        
     </div>
     <form action="{site_url($uri_string)}" method="get" id="formSearch">
         <input type="hidden" name="page" value=""/>
@@ -63,7 +64,7 @@
 		      <tr>
 		          <td colspan="12">
 		              <div class="pd5">
-		              {*<input type="button" class="action repub" name="pub" value="加到重新发布列表" />*}
+		              <input type="button" class="action repub" name="repub" value="加入重新发布" />
 		              <input type="button" class="action deleteBtn" data-checkbox="id[]" data-title="删除" data-url="{site_url('my_req/delete?source=history')}" name="delete" value="删除" />
 		              </div>
 		          </td>
@@ -73,10 +74,5 @@
 	    </div>
     </form>
     <script type="text/javascript" src="{resource_url('js/jquery-ui/i18n/zh-CN.js')}"></script>
-    <script>
-        $(function(){
-            bindDeleteEvent();
-            $( ".datepicker" ).datepicker({ });
-        });
-    </script>
+    <script type="text/javascript" src="{resource_url('js/my/history.js')}"></script>
 {include file="common/my_footer.tpl"}

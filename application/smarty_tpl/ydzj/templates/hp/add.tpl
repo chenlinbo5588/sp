@@ -9,7 +9,9 @@
     
     
         <div class="w-tixing clearfix"><b>温馨提醒：</b>
-            <p>一次最多可发布{$maxRowPerReq}个货品,再次发布求货时间间隔<span class="hightlight">5分钟</span>,求货信息默认过期时间<span class="hightlight">90分钟</span>,过期后请用户点击<a class="hightlight" href="{site_url('my_req/recent')}">我的求货</a>菜单进行主动刷新</p>
+            <p>1. 一次最多可发布{$maxRowPerReq}个货品,再次发布求货时间间隔<span class="hightlight">5分钟</span></p>
+            <p>2. 求货信息默认过期时间<span class="hightlight">90分钟</span>,过期后请用户点击<a class="hightlight" href="{site_url('my_req/recent')}">我的求货</a>菜单进行主动刷新</p>
+            <p>3. 同一个货号和尺码的如果已发布且未过期的求货，不可重复发布,即使发布提交也将被忽略。</p>
          </div>
 		<form action="{site_url($uri_string)}" method="post" id="pubForm">
 			<div>

@@ -152,6 +152,10 @@ class Hp_service extends Base_service {
 		}
 		*/
 		
+		if($condition['sph_select']){
+			$this->_sphixClient->SetSelect($condition['sph_select']);
+		}
+		
 		if($condition['fields']['uid']){
 			$this->_sphixClient->SetFilter('uid',$condition['fields']['uid']);
 		}
@@ -229,7 +233,7 @@ class Hp_service extends Base_service {
 		}
 		
 		if($results['matches'] && $results['status'] === 0 && $results['total_found'] > 0){
-			
+			$getCondition['select'] = empty($condition['select']) ? '*' : $condition['select'];
 			$getCondition['order'] = $condition['order'];
 			$getCondition['where_in'][] = array(
 				

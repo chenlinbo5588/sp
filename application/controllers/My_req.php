@@ -183,6 +183,56 @@ class My_req extends MyYdzj_Controller {
 	}
 	
 	
+	/**
+	 * 添加到重新发布队列
+	 */
+	public function repub(){
+		
+		$repubIds = $this->input->get_cookie('repub');
+		$repubIdArray = array();
+		
+		$this->output->set_content_type('text/html');
+		
+		if($repubIds){
+			$repubIdArray = explode('|',$repubIds);
+		}
+		
+		if($repubIdArray){
+			
+			$list = $this->hp_service->getPubHistory(array(
+				'where_in' => array(
+					array('key' => 'goods_id' , 'value' => $repubIdArray)
+				)
+			),$this->_loginUID);
+			
+			$output = array();
+			$output[] = '<div class="mg10 clearfix"><input type="button" name="repubcancel" class="action" value="删除勾选"/><a class="action fr" href="'.site_url('hp/add').'">去发布求货</a></div>';
+			$output[] = '<table class="fulltable">';
+			$output[] = '<thead><th><label><input type="checkbox" class="checkall" name="goods_id" value="">勾选</label></th><th>货号</th><th>货名</th><th>颜色</th><th>尺码</th></thead><tbody>';
+			
+			foreach($list as $onehp){
+				$output[] = '<tr id="gid'.$onehp['goods_id'].'">';
+				$output[] = '<td><input type="checkbox" group="goods_id" name="goods_id[]" value="'.$onehp['goods_id'].'"/>'.$onehp['goods_id'].'</td>';
+				$output[] = '<td>'.$onehp['goods_code'].'</td>';
+				$output[] = '<td>'.$onehp['goods_name'].'</td>';
+				$output[] = '<td>'.$onehp['goods_color'].'</td>';
+				$output[] = '<td>'.$onehp['goods_csize'].'</td>';
+				$output[] = '</tr>';
+			}
+			
+			$output[] = '</tbody></table>';
+			
+			$this->output->set_output(implode('',$output));
+		}else{
+			
+			$this->output->set_output('没有待重新发布数据');
+		}
+		
+		
+		
+	}
+	
+	
 	
 	/**
 	 * 求货删除 , 最近或者历史

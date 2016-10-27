@@ -6,9 +6,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * 登陆态
  */
 class MyYdzj_Controller extends Ydzj_Controller {
-	private $_pushObject;
+	//private $_pushObject;
+	
 	protected $_loginUID = 0;
 	public $_newpm = 0;
+	
+	
 	
 	public function __construct(){
 		parent::__construct();
@@ -47,6 +50,9 @@ class MyYdzj_Controller extends Ydzj_Controller {
 		if($refresh || $this->_reqInterval >= config_item('pmcheck_interval')){
 			$this->_pmUpdate();
 		}
+		
+		
+		$this->_repubList();
 	}
 	
 	
@@ -69,6 +75,19 @@ class MyYdzj_Controller extends Ydzj_Controller {
 		
 		
 		
+	}
+	
+	
+	private function _repubList(){
+		$repubIds = $this->input->get_cookie('repub');
+		
+		$repubIdArray = array();
+		
+		if($repubIds){
+			$repubIdArray = explode('|',$repubIds);
+		}
+		
+		$this->assign('repubList',$repubIdArray);
 	}
 	
     
