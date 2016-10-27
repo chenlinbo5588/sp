@@ -107,15 +107,10 @@ class Lab_Member_Model extends MY_Model {
     	}
     	
     	$condition = array(
-    		/*
-    		'where' => array(
-    			'user_id !=' => LAB_FOUNDER_ID
-    		),
-    		*/
     		'where_in' => array(
     			array('key' => 'lab_id' , 'value' => $lab_id)
     		),
-    		'order' => 'is_manager DESC , user_id ASC'
+    		'order' => 'is_manager DESC , uid ASC'
     	);
     	
     	
@@ -127,7 +122,7 @@ class Lab_Member_Model extends MY_Model {
     	
     	if($users){
     		$condition['where_in'][] = array(
-    			'key' => 'user_id', 'value' => $users
+    			'key' => 'uid', 'value' => $users
     		);
     	}
     	

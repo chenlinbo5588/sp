@@ -102,13 +102,28 @@ $(function(){
       	}
     };
     
+    function searchUser(page){
+        //$("#user_loading").show();
+        $.ajax({
+            type:"get",
+            cache:false,
+            url:labManagerUrl,
+              data: { id: current_id ,page: page,username: $("#search_username").val()},
+              success:function(data){
+              	$("#userlist").html(data);
+              	//dialog.dialog( "open" );
+              }
+        });
+    }
+    
+    
     
     bindAjaxSubmit('form');
     
 	dialog = $( "#labMemberDlg" ).dialog({
       autoOpen: false,
       height: 'auto',
-      width: 800,
+      width: 500,
       modal: true,
       buttons: [
       	{
@@ -145,13 +160,13 @@ $(function(){
 	});
 	
 	  $("body").delegate("#search_btn","click",function(){
-	      ajaxPage(1);
+	      searchUser(1);
 	  });
 	  
 	  $("#addUserBtn").bind("click",function(){
 	  	$.ajax({
 	  		type:"GET",
-	  		url:"{site_url('lab_user/search?id=')}{$info['id']}&t=" + Math.random(),
+	  		url:labManagerUrl + "?id=" + current_id,
 	  		success:function(resp){
 	  			$("#userlist").html(resp);
 	  			dialog.dialog( "open" );
@@ -159,7 +174,7 @@ $(function(){
 	  	});
 	  });
 	  
-	  $.loadingbar({ urls: [ new RegExp(labManagerUrl),new RegExp(labUserSearchUrl) ], templateData:{ message:"努力加载中..." } , container: "#labMemberDlg" });
+	  $.loadingbar({ urls: [ new RegExp(labManagerUrl) ], templateData:{ message:"努力加载中..." } , container: "#labMemberDlg" });
 	  
 	  $(".close").bind("click",function(){
 	  	var user_id = $(this).attr("data-id");
@@ -171,7 +186,7 @@ $(function(){
 	  	$( "#dialog-confirm" ).dialog({
 		      resizable: false,
 		      height: "auto",
-		      width: 400,
+		      width: 300,
 		      modal: true,
 		      position: { my: "left bottom", at: "left bottom", of: alink },
 		      buttons: {

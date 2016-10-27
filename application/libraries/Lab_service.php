@@ -11,6 +11,7 @@ class Lab_service extends Base_service {
 	private $_labModel = null;
 	private $_labMemberModel = null;
 	private $_labCacheModel = null;
+	private $_labRoleModel = null;
 	
 	//组织架构hash, 使得不同的企业能够分离散存储,降低并发读写冲突
 	private $_orginationHashObject = null;
@@ -22,12 +23,13 @@ class Lab_service extends Base_service {
 
 	public function __construct(){
 		parent::__construct();
-		self::$CI->load->model(array('Orgination_Model','Lab_Model','Lab_Member_Model','Lab_Cache_Model'));
+		self::$CI->load->model(array('Orgination_Model','Lab_Model','Lab_Member_Model','Lab_Cache_Model','Lab_Role_Model'));
 		
 		$this->_orginationModel = self::$CI->Orgination_Model;
 		$this->_labModel = self::$CI->Lab_Model;
 		$this->_labMemberModel = self::$CI->Lab_Member_Model;
 		$this->_labCacheModel = self::$CI->Lab_Cache_Model;
+		$this->_labRoleModel = self::$CI->Lab_Role_Model;
 	}
 	
 	
@@ -73,6 +75,7 @@ class Lab_service extends Base_service {
 			$this->_labModel->setTableId($tableId);
 			$this->_labMemberModel->setTableId($tableId);
 			$this->_labCacheModel->setTableId($tableId);
+			$this->_labRoleModel->setTableId($tableId);
 			
 			$this->_hashLookup = true;
 		}
@@ -193,6 +196,7 @@ class Lab_service extends Base_service {
 	public function addLab($param,$userInfo,$oid){
 		$param['displayorder'] = empty($param['displayorder']) ? 255 : intval($param['displayorder']);
 		$param['oid'] = $oid;
+		$param['creator'] = $userInfo['username'];
 		
 		$labId = $this->_labModel->_add($param);
 		
@@ -216,56 +220,6 @@ class Lab_service extends Base_service {
     	return $this->_labCacheModel->updateByCondition($data,$condition);
     }
 	
-	
-	/**
-	 * 获得用户 lab 管理的lab  以及用户所在lab 的用户列表
-	 */
-	public function getUserLabsAssoc($uid){
-		$userLabs = $this->getUserLabsByUID($uid);
-		
-		//用户所在的 lab 列表
-		$labIds = array('0' => 0);
-		
-		//用户有管理权限的 lab 列表
-    	$userManagerLabs = array();
-		//
-    	$userIds = array(0);
-    	
-		foreach($userLabs as $lab){
-    		$labIds[$lab['lab_id']] = $lab['lab_id'];
-    		
-    		if(strtolower($lab['is_manager']) == 'y'){
-    			$userManagerLabs[] = $lab['lab_id'];
-    		}
-    	}
-    	
-    	
-    	
-    	/**
-         * 取出 lab 列表中 所有的用户 id
-         */
-        if(LAB_FOUNDER_ID != $uid){
-        	$users = $this->_labMemberModel->getList(array(
-	        	'select' => 'user_id',
-	        	'where_in' => array(
-	        		array('key' => 'lab_id', 'value' => array_keys($labIds))
-	        	)
-	        ));
-	        
-	        foreach($users as $u){
-	        	$userIds[] = $u['user_id'];
-	        }
-        }
-        
-    	$userIds = array_unique($userIds);
-    	
-    	return  array(
-    		'user_labs' => $labIds,	//用户所在的实验室
-    		'user_manager_labs' => $userManagerLabs,//用户管理的实验室
-    		'user_ids' => $userIds,   //lab 列表中 所有的用户
-    	);
-    	
-	}
 	
 	/**
 	 * 删除用户的实验室
@@ -303,6 +257,8 @@ class Lab_service extends Base_service {
    			)
    		));
 	}
+	
+	
 	
 	
 	/**
@@ -460,6 +416,32 @@ class Lab_service extends Base_service {
         ),true);
 	}
 	
+    /**
+     * 是否是管理员
+     */
+    public function isLabManager($uid,$labId,$oid){
+    	
+   		$isLabManager = false;
+   		
+   		if($uid == $oid){
+			return true;
+		}
+		
+		/**
+		 * 父级只要出现有是管理员的 就有权限删除
+		 */
+		$list = $this->_labModel->getParents($labId);
+		
+		$ids = array_keys($list);
+		$ids[] = $labId;
+		
+		if(!$isLabManager && $this->getLabManager($uid,$ids,$oid)){
+			$isLabManager = true;
+		}
+   		
+   		return $isLabManager;
+   	}
+    
     
     /**
      * 获得用户 是管理员的实验室
@@ -494,21 +476,21 @@ class Lab_service extends Base_service {
 		
 		if($userList){
 			foreach($userList as $user){
-				$userIds[$user['user_id']] = $user;
+				$userIds[$user['uid']] = $user;
 			}
 		}
 		
 		if($userIds){
-			$users = self::$adminUserModel->getList(array(
+			$users = self::$memberModel->getList(array(
 				'where_in' => array(
 					array(
-						'key' => 'id','value' => array_keys($userIds)
+						'key' => 'uid','value' => array_keys($userIds)
 					)
 				),
-				'order' => 'id ASC '
+				'order' => 'uid ASC '
 			));
 			foreach($users as $uk => $user){
-				$userIds[$user['id']]['name'] = $user['name'];
+				$userIds[$user['uid']]['username'] = $user['username'];
 			}
 		}
 		
@@ -524,5 +506,70 @@ class Lab_service extends Base_service {
     			'user_id' => $user_id
     		)
     	));
+    }
+    
+    
+    
+    /**
+     * 
+     */
+    public function getLabMemberListByCondition($condition){
+    	$data = $this->_labMemberModel->getList($condition);
+    	
+    	$roles = array();
+        $uids = array();
+        $labIds = array();
+        
+        $memberList = array();
+        $roleList = array();
+        $labList = array();
+            
+		foreach($data['data'] as $user){
+			$roles[] = $user['role_id'];
+			$uids[] = $user['uid'];
+			$labIds[] = $user['lab_id'];
+		}
+		
+		
+		//print_r($roles);
+		if($roles){
+			$roleList = $this->_labRoleModel->getList(
+				array(
+					'where' => array(
+						'oid' => $this->_currentOid
+					),
+					'where_in' => array(
+						array('key' => 'id','value' => $roles)
+					)
+				),'id'
+			);
+		}
+		
+		
+		if($uids){
+			$memberList = self::$memberModel->getList(
+				array(
+					'select' => 'uid,username,mobile,qq,email',
+					'where_in' => array(
+						array('key' => 'uid','value' => $uids)
+					)
+				),'uid'
+			);
+			
+		}
+		
+		if($labIds){
+			$labList = $this->_labModel->getList(
+				array(
+					'select' => 'id,name,address',
+					'where_in' => array(
+						array('key' => 'id','value' => $labIds)
+					)
+				),'id'
+			);
+		}
+		
+    	
+    	return array('list' => $data,'member' => $memberList,'role' => $roleList,'lab' => $labList);
     }
 }

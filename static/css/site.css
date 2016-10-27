@@ -437,6 +437,33 @@ input[type=text].valid , input[type=password].valid {
     text-decoration:none;
 }
 
+.btn {
+    border-bottom: 0;
+    text-align: center;
+    border-left: 0;
+    line-height: 31px;
+    width: 72px;
+    height: 31px;
+    color: #fff;
+    font-size: 14px;
+    border-top: 0;
+    cursor: pointer;
+    font-weight: bold;
+    border-right: 0;
+}
+
+.orangeBtn {
+    line-height: 20px;
+    width: 60px;
+    font-family: 微软雅黑;
+    height: 20px;
+    font-size: 14px;
+    vertical-align: middle;
+    font-weight: normal;
+    background: rgb(237, 109, 0);
+}
+
+
 .master_btn , .link_btn , .slaveBtn {
 	display:inline-block;
     cursor:pointer;
@@ -453,6 +480,7 @@ input[type=text].valid , input[type=password].valid {
 }
 
 .master_btn:hover , .link_btn:hover , .slaveBtn:hover {
+	text-decoration:none;
 	box-shadow:0px 0px 15px #443636;
     -moz-box-shadow:0px 0px 15px #443636;
     -o-box-shadow:0px 0px 15px #443636;
@@ -676,6 +704,7 @@ table.noext {
 
 .style1 thead th , .style1 tbody td {
 	padding:8px 0;
+	vertical-align: top;
 }
 
 

@@ -880,6 +880,8 @@ CREATE TABLE `sp_lab{i}` (
   `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '-1 表示已删除',
   `pid` int(10) unsigned NOT NULL DEFAULT '0',
   `displayorder` int(11) unsigned NOT NULL DEFAULT '0',
+  `add_uid` int(10) unsigned NOT NULL DEFAULT '0',
+  `edit_uid` int(10) unsigned NOT NULL,
   `creator` varchar(30) NOT NULL DEFAULT '',
   `updator` varchar(30) NOT NULL DEFAULT '',
   `oid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '构机ID',
@@ -893,6 +895,38 @@ CREATE TABLE `sp_lab{i}` (
   KEY `idx_oid` (`oid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8;
 
+EOF;
+
+		$pm = $this->load->get_config('split_lab');
+		print_r($pm);
+		foreach($pm as $p){
+			
+			$exexSQL = str_replace('{i}',$p,$sql);
+			$this->Member_Model->execSQL($exexSQL);
+		}
+		
+	}
+	
+	
+	public function create_lab_role_tables(){
+		
+		$sql = <<< EOF
+CREATE TABLE `sp_lab_role{i}` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `oid` int(10) unsigned NOT NULL DEFAULT '0',
+  `name` varchar(30) NOT NULL,
+  `permission` text,
+  `status` varchar(20) NOT NULL DEFAULT '',
+  `add_uid` int(10) unsigned NOT NULL DEFAULT '0',
+  `edit_uid` int(10) unsigned NOT NULL DEFAULT '0',
+  `creator` varchar(30) NOT NULL DEFAULT '',
+  `updator` varchar(30) NOT NULL DEFAULT '',
+  `gmt_create` int(10) unsigned NOT NULL DEFAULT '0',
+  `gmt_modify` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `idx_name` (`name`),
+  KEY `idx_oid` (`oid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 EOF;
 
 		$pm = $this->load->get_config('split_lab');
@@ -952,6 +986,9 @@ CREATE TABLE `sp_lab_member{i}` (
   `oid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建该条记录 用户id',
   `lab_id` int(10) unsigned NOT NULL DEFAULT '0',
   `is_manager` char(1) NOT NULL DEFAULT 'n',
+  `role_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '角色id',
+  `add_uid` int(10) unsigned NOT NULL DEFAULT '0',
+  `edit_uid` int(10) unsigned NOT NULL DEFAULT '0',
   `creator` varchar(30) NOT NULL DEFAULT '',
   `updator` varchar(30) NOT NULL DEFAULT '',
   `gmt_create` int(10) unsigned NOT NULL DEFAULT '0',
@@ -960,6 +997,7 @@ CREATE TABLE `sp_lab_member{i}` (
   KEY `idx_lab_manager` (`lab_id`,`is_manager`),
   KEY `idx_oid` (`oid`,`lab_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户归属实验室，一个用户可同时归属多个组织以及某以个组织下的多个实验室';
+
 
 
 EOF;
@@ -1339,7 +1377,9 @@ EOF;
         		continue;
         	}
         	
-        	
+        	if(preg_match('/^sp_lab_role\d+$/i',$table,$match)){
+        		continue;
+        	}
         	
             $fields = $this->db->field_data($table);
             

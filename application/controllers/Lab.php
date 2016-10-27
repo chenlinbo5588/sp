@@ -10,6 +10,8 @@ class Lab extends MyYdzj_Controller {
     
     public function index()
     {
+    	
+    	
         $this->display();
     }
     
@@ -271,7 +273,10 @@ class Lab extends MyYdzj_Controller {
     }
     
 	
-	private function _getUserList($lab_id){
+	/**
+	 * 
+	 */
+	private function _getMemberList($lab_id){
 		
 		$userIds = array();
 		$users = array();
@@ -280,21 +285,23 @@ class Lab extends MyYdzj_Controller {
 		
 		if($userList){
 			foreach($userList as $user){
-				$userIds[$user['user_id']] = $user;
+				$userIds[$user['uid']] = $user;
 			}
 		}
 		
 		if($userIds){
-			$users = $this->Adminuser_Model->getList(array(
+			$users = $this->Member_Model->getList(array(
+				'select' => 'uid,username',
 				'where_in' => array(
 					array(
-						'key' => 'id','value' => array_keys($userIds)
+						'key' => 'uid','value' => array_keys($userIds)
 					)
 				),
-				'order' => 'id ASC '
+				'order' => 'uid ASC'
 			));
+			
 			foreach($users as $uk => $user){
-				$userIds[$user['id']]['name'] = $user['name'];
+				$userIds[$user['uid']]['username'] = $user['username'];
 			}
 		}
 		
@@ -308,7 +315,7 @@ class Lab extends MyYdzj_Controller {
     public function edit(){
 		
 		$id = $this->input->get_post('id');
-		$isLabManager = $this->_isLabManager($id);
+		$isLabManager = $this->lab_service->isLabManager($this->_loginUID,$id,$this->_currentOid);
 		
 		$feedback = '';
 		
@@ -338,7 +345,7 @@ class Lab extends MyYdzj_Controller {
 					'address' => $this->input->post('address'),
 					'pid' => $this->input->post('pid'),
 					'displayorder' => $this->input->post('displayorder'),
-					'updator' => $this->_profile['basic']['name']
+					'updator' => $this->_profile['basic']['username']
 				),array('id' => $id));
 				
 				
@@ -347,7 +354,7 @@ class Lab extends MyYdzj_Controller {
 				}
 				
 				if($flag >= 0){
-					$this->jsonOutput('保存成功');
+					$this->jsonOutput('保存成功',array('redirectUrl' => site_url('lab/edit?id='.$id)));
 				}else{
 					$this->jsonOutput($this->db->get_error_info());
 				}
@@ -355,16 +362,133 @@ class Lab extends MyYdzj_Controller {
 			
 		}else{
 			$info = $this->Lab_Model->getFirstByKey($id);
-			print_r($info);
-			$this->assign('user_labs',json_encode(array_values($this->session->userdata('user_labs'))));
-			$this->assign('userList', $this->_getUserList($id));
 			
+			$this->assign('memberList', $this->_getMemberList($id));
 			$this->assign('isManager',$isLabManager);
 			
 			$this->assign('info',$info);
 	        $this->display('lab/add');
 		}
     }
+    
+    
+    
+    private function _searchUser(){
+    	
+    	$page = $this->input->get_post('page');
+    	if(empty($page)){
+            $page = 1;
+        }
+        
+        $lab_id = $this->input->get_post('id');
+        $isManager = false;
+        
+        //$condition['select'] = 'a,b';
+        
+        $condition['where']['lab_id'] = $lab_id;
+        $condition['order'] = "gmt_create DESC";
+        $condition['pager'] = array(
+            'page_size' => 10,
+            'current_page' => $page,
+            'query_param' => '',
+            'shortStyle' => true
+        );
+        
+        $username = trim($this->input->get_post('username'));
+        $searchMember = array();
+        $uids = array();
+        
+        if(!empty($username)){
+            $searchCondition = array(
+	        	'where' => array(
+	        		'username' => $username
+	        	)
+	        );
+	        
+	        $searchMember = $this->Member_Model->getFirstByKey($username,'username','uid,username,email');
+	        if(!empty($searchMember)){
+	        	$condition['where']['uid'] = $searchMember['uid'];
+	        }else{
+	        	$condition['where'][' 1 = 2 '] = null;
+	        }
+        }
+        
+        $memberList = array();
+    	$labUsers = $this->Lab_Member_Model->getList($condition);
+    	
+    	if($this->lab_service->isLabManager($this->_loginUID,$lab_id,$this->_currentOid)){
+			$isManager = true;
+		}
+		
+		if(empty($labUsers['data'])){
+			//没有就去 member 表中搜索该用户在不在，在的话就显示
+			if($searchMember){
+				//$memberList[$searchMember['uid']] = $searchMember;
+			}
+			
+		}else{
+			foreach($labUsers['data'] as $u){
+	    		$uids[] = $u['uid'];
+	    		
+	    		//移除管理员
+	    		$u['can_drop_manager'] = false;
+	    		//移除成员
+	    		$u['can_drop'] = true;
+	    		
+	    		if($u['uid'] == $this->_loginUID){
+	    			//自己不能取消自己
+	    			if($u['is_manager'] == 'y'){
+	    				$u['can_drop_manager'] = false;
+	    			}
+	    			
+	    			$u['can_drop'] = false;
+	    		}elseif($u['add_uid'] == $this->_loginUID){
+	    			//该记录是自己设置的，就可以进行管理
+	    			$u['can_drop_manager'] = true;
+	    		}
+	    		
+	    		
+	    		//创始人
+	    		if($this->_loginUID == $this->_currentOid){
+	    			if($u['uid'] == $this->_loginUID){
+	    				$u['can_drop_manager'] = false;
+	    				$u['can_drop'] = false;
+	    			}else{
+	    				$u['can_drop_manager'] = true;
+	    				$u['can_drop'] = true;
+	    			}
+	    		}
+	    		
+	    		$memberList[$u['uid']] = $u;
+	    	}
+	        
+	        
+	        if($uids){
+	        	$tempList = $this->Member_Model->getList(array(
+	        		'select' => 'uid,username,email',
+		        	'where_in' => array(
+		        		array('key' => 'uid' , 'value' => $uids)
+		        	)
+		        ));
+		        
+		        foreach($tempList as $member){
+		        	$memberList[$member['uid']] = array_merge($memberList[$member['uid']],$member);
+		        }
+	        }
+		}
+		
+		
+		$labUsers['pager']['shortStyle'] = true;
+	    $labUsers['pager']['call_js'] = "searchUser";
+		
+		$this->assign('isManager',$isManager);
+        $this->assign('page',$labUsers['pager']);
+        $this->assign('memberList',$memberList);
+    	
+        ///$data['pager']['shortStyle'] = true;
+        
+    }
+    
     
     
     /**
@@ -439,7 +563,9 @@ class Lab extends MyYdzj_Controller {
 	    		$this->jsonOutput('操作成功');
     		}
     	}else{
-    		$this->jsonOutput('请求参数错误');
+    		
+    		$this->_searchUser();
+    		$this->display('lab_user/search_popup');
     	}
     	
     }
@@ -454,7 +580,8 @@ class Lab extends MyYdzj_Controller {
     		$user_id = $this->input->post('user_id');
     		
     		for($i = 0; $i < 1; $i++){
-    			if($user_id == LAB_FOUNDER_ID){
+    			
+    			if($user_id == 1){
     				$this->jsonOutput('对不起，无法从实验室删除创始人');
     				break;
 	    		}
@@ -553,32 +680,7 @@ class Lab extends MyYdzj_Controller {
 		}else{
 			$this->jsonOutput('请求参数错误');
 		}
-    	
     }
-    
-    
-   	private function _isLabManager($labId){
-   		$isLabManager = false;
-   		
-   		if($this->_loginUID == $this->_currentOid){
-			$isLabManager = true;
-		}
-		
-		/**
-		 * 父级只要出现有是管理员的 就有权限删除
-		 */
-		$list = $this->Lab_Model->getParents($labId);
-		
-		$ids = array_keys($list);
-		$ids[] = $labId;
-		
-		if(!$isLabManager && $this->lab_service->getLabManager($this->_loginUID,$ids,$this->_currentOid)){
-			$isLabManager = true;
-		}
-   		
-   		return $isLabManager;
-   	}
-    
     
     
     /**
@@ -592,7 +694,7 @@ class Lab extends MyYdzj_Controller {
     			$id = $this->input->post('id');
     			
     			
-				$isLabManager = $this->_isLabManager($id);
+				$isLabManager = $this->lab_service->isLabManager($this->_loginUID,$id,$this->_currentOid);
 				
 				if(!$isLabManager){
 					$this->jsonOutput('对不起，您不是该实验室的管理员，无权删除');

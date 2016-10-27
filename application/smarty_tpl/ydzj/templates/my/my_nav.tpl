@@ -14,6 +14,7 @@
             <li><a href="{site_url('lab_gcate/index')}">货品分类</a></li>
             <li><a href="{site_url('lab_measure/index')}">度量单位</a></li>
             <li class="segment"><h3>实验员</h3></li>
-            <li><a href="{site_url('lab_user/index')}">实验员查询</a></li>
+            <li><a href="{site_url('lab_user/index')}">实验员管理</a></li>
+            <li><a href="{site_url('lab_user/add')}">添加实验员</a></li>
         </ul>
     </div>

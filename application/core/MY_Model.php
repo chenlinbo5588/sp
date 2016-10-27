@@ -386,7 +386,7 @@ class MY_Model extends CI_Model {
     }
     
     
-    public function getList($condition = array()){
+    public function getList($condition = array(),$assocKey = ''){
         
         $data = array();
         $total_rows = 0;
@@ -407,14 +407,36 @@ class MY_Model extends CI_Model {
             //print_r($condition);
             $this->_setCondition($condition);
             $query = $this->db->get($this->getTableRealName(),$condition['pager']['page_size'],($condition['pager']['current_page'] - 1) * $condition['pager']['page_size']);
-        	$data['data'] = $query->result_array();
+        	
+        	
+        	if($assocKey){
+        		$data['data'] = $this->dataToAssoc($query->result_array(),$assocKey);
+        	}else{
+        		$data['data'] = $query->result_array();
+        	}
+        	
         	$data['pager'] = $pager['pager'];
         }else{
             $query = $this->db->get($this->getTableRealName());
-            $data = $query->result_array();
+            
+            if($assocKey){
+            	$data = $this->dataToAssoc($query->result_array(),$assocKey);
+            }else{
+            	$data = $query->result_array();
+            }
         }
         
         return $data;
 
     }
+    
+    public function dataToAssoc($list,$key){
+    	$temp = array();
+    	foreach($list as $item){
+			$temp[$item[$key]] = $item;
+		}
+		
+		return $temp;
+    }
+    
 }

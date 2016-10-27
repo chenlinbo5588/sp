@@ -207,6 +207,8 @@ class Lab_User extends MyYdzj_Controller {
             }
             
             //$condition['select'] = 'a,b';
+            
+            $condition['where']['oid'] = $this->_currentOid;
             $condition['order'] = "gmt_create DESC";
             $condition['pager'] = array(
                 'page_size' => $page_size,
@@ -216,47 +218,26 @@ class Lab_User extends MyYdzj_Controller {
 				'form_id' => '#formSearch'
             );
             
-            $name = trim($this->input->get_post('name'));
+            $name = trim($this->input->get_post('username'));
             
             if(!empty($name)){
-                $condition['like']['name'] = $name;
+                $searchCondition['where']['username'] = $name;
+                $memberInfo = $this->Member_Model->getFirstByKey($name,'username','uid');
+                
+                if($memberInfo){
+                	$condition['where']['uid'] = $memberInfo['uid'];
+                }else{
+                	$condition['where']['1 = 2'] = null;
+                }
             }
             
-            $condition['where']['status'] = '正常';
-            
-            if($this->_loginUID != LAB_FOUNDER_ID){
-            	$condition['where_in'][] = array('key' => 'uid', 'value' => $this->session->userdata('user_ids'));
+            if($this->_loginUID != $this->_currentOid){
+            	$condition['where_in'][] = array('key' => 'uid', 'value' => $this->session->userdata('user_labs'));
             }
             
-            $data = $this->Member_Model->getList($condition);
-            
-            
-            $roles = array();
-			foreach($data['data'] as $user){
-				$roles[] = $user['group_id'];
-			}
-			
-			//print_r($roles);
-			if($roles){
-				$roleList = $this->Role_Model->getList(
-					array(
-						'where_in' => array(
-							array('key' => 'id','value' => $roles)
-						)
-					)
-				);
-				
-				$roleKeyList = array();
-				foreach($roleList as $role){
-					$roleKeyList[$role['id']] = $role['name'];
-				}
-				
-				$this->assign('roleList',$roleKeyList);
-			}
-            
-            
-            $this->assign('page',$data['pager']);
-            $this->assign('data',$data);
+            $data = $this->lab_service->getLabMemberListByCondition($condition,$searchCondition);
+            $this->assign('page',$data['list']['pager']);
+            $this->assign($data);
             
         }catch(Exception $e){
             //@todo error code here
@@ -559,95 +540,6 @@ class Lab_User extends MyYdzj_Controller {
 			
 	        $this->display();
 		}
-    }
-    
-    
-    private function _searchUser(){
-    	
-    	$page = $this->input->get_post('page');
-    	
-    	
-    	if(empty($page)){
-            $page = 1;
-        }
-        
-        $lab_id = $this->input->get_post('id');
-        $isManager = false;
-        
-        //$condition['select'] = 'a,b';
-        $condition['order'] = "gmt_create DESC";
-        $condition['pager'] = array(
-            'page_size' => 10,
-            'current_page' => $page,
-            'query_param' => '',
-            'shortStyle' => true
-        );
-        
-        
-        $username = trim($this->input->get_post('username'));
-        
-        if(!empty($username)){
-            $condition['like']['name'] = $username;
-        }
-        
-        $condition['where']['status'] = '正常';
-        $data = $this->Member_Model->getList($condition);
-        
-        $data['pager']['shortStyle'] = true;
-        $data['pager']['call_js'] = "ajaxPage";
-        
-        
-        /**
-         * 获取已经是当前成员
-         */
-        $uids = array();
-        foreach($data['data'] as $item){
-        	$uids[] = $item['id'];
-        }
-        
-        $memberList = array();
-        if($uids){
-        	$labUsers = $this->Lab_Member_Model->getLabUserList($lab_id , '', $uids);
-        	foreach($labUsers as $u){
-        		$u['can_drop_manager'] = false;
-        		$u['can_drop'] = true;
-        		
-        		if($u['user_id'] == $this->_loginUID){
-        			//自己不能取消自己
-        			if($u['is_manager'] == 'y'){
-        				$u['can_drop_manager'] = false;
-        			}
-        			
-        			$u['can_drop'] = false;
-        		}elseif($u['uid'] == $this->_loginUID){
-        			//该记录是自己设置的，就可以进行管理
-        			$u['can_drop_manager'] = true;
-        		}
-        		
-        		if($this->_loginUID == LAB_FOUNDER_ID){
-        			$u['can_drop_manager'] = true;
-        			$u['can_drop'] = true;
-        		}
-        		
-        		$memberList[$u['user_id']] = $u;
-        	}
-        }
-        
-        if($this->lab_service->getLabManager($this->_loginUID,$lab_id)){
-			$isManager = true;
-		}
-        
-        $this->assign('isManager',$isManager);
-        $this->assign('memberList',$memberList);
-        
-        ///$data['pager']['shortStyle'] = true;
-        $this->assign('page',$data['pager']);
-        $this->assign('data',$data);
-    }
-    
-    public function search(){
-    	$this->_searchUser();
-    	$this->display('lab_user/search_popup');
     }
     
 }

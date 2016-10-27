@@ -1,11 +1,9 @@
 {include file="common/my_header.tpl"}
 {config_load file="lab.conf"}
     <link href="{resource_url('css/lab.css')}" rel="stylesheet" type="text/css"/>
+    {form_open(site_url($uri_string),'name="labForm"')}
 	{if $info['id']}
-		{form_open(site_url($uri_string|cat:$info['id']),'name="labForm"')}
 		<input type="hidden" name="id" value="{$info['id']}"/>
-	{else}
-		{form_open(site_url($uri_string),'name="labForm"')}
 	{/if}
 		<input type="hidden" name="pid" value="{if $info['pid']}{$info['pid']}{else}0{/if}"/>
 	<table class="fulltable style1">
@@ -44,14 +42,14 @@
         {if $info['id']}
         <tr class="noborder">
           <td colspan="2" class="vatop rowform">
-          	  <input class="form_submit" id="addUserBtn" type="button" name="addUser" value="成员管理"/>
+          	  <input class="action" id="addUserBtn" type="button" name="addUser" value="成员管理"/>
 	          <div class="rounded_box" style="padding:10px;overflow:auto;">
 	          	<label>成员清单:</label>
 	            <span class="manager_color color_sample">图例：管理员</span>
 	            <span class="member_color color_sample">图例：实验员</span>
 	            <ul class="lab_users clearfix">
-	                {foreach from=$userList item=item}
-	                <li id="row_{$item['user_id']}"><a {if $item['is_manager'] == 'y'}class="manager_color"{/if}" href="javascript:void(0);">{$item['name']|escape}</a><span class="close" data-id="{$item['user_id']|escape}" data-title="{$item['name']|escape}">x</span></li>
+	                {foreach from=$memberList item=item}
+	                <li id="row_{$item['uid']}"><a {if $item['is_manager'] == 'y' || $item['oid'] == $item['uid']}class="manager_color"{/if}" href="javascript:void(0);">{$item['username']|escape}</a>{if $profile['basic']['uid'] != $item['uid']}<span class="close" data-id="{$item['uid']|escape}" data-title="{$item['username']|escape}">x</span>{/if}</li>
 	                {/foreach}
 	            </ul>
 	          </div>
@@ -79,7 +77,6 @@
 				var name = $(this).prop("name");
 				formLock[name] = false;
 			});
-	
 	 </script>
 	 {include file="./lab_var.tpl"}
 	 <script type="text/javascript" src="{resource_url('js/lab/lab_add.js')}"></script>

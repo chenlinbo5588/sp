@@ -6,6 +6,5 @@
       		treeXMLUrl = "{site_url('lab/getTreeXML')}",
       		treeImgUrl = "{$smarty.const.TREE_IMG_PATH}",
       		labUserDeleteUrl = "{site_url('lab/delete_lab_user')}",
-            labManagerUrl = "{site_url('lab/manager_lab_user')}",
-            labUserSearchUrl = "{site_url('lab_user/search') }";
+            labManagerUrl = "{site_url('lab/manager_lab_user')}";
        </script>

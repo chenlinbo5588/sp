@@ -27,14 +27,14 @@ $(function(){
     }
     
     var successHandler = function(json){
-    	alert(json.message);
-    	
     	if(json.message.indexOf('成功') != -1){
-    		location.reload();
+    		setTimeout(function(){
+    			location.reload();
+    		});
+    	}else{
+    		alert(json.message);
     	}
-    	
     };
-    
     
     
     function tondrag(id,id2){
