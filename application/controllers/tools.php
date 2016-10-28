@@ -916,7 +916,7 @@ CREATE TABLE `sp_lab_role{i}` (
   `oid` int(10) unsigned NOT NULL DEFAULT '0',
   `name` varchar(30) NOT NULL,
   `permission` text,
-  `status` varchar(20) NOT NULL DEFAULT '',
+  `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '-1 关闭 1=开启',
   `add_uid` int(10) unsigned NOT NULL DEFAULT '0',
   `edit_uid` int(10) unsigned NOT NULL DEFAULT '0',
   `creator` varchar(30) NOT NULL DEFAULT '',
@@ -925,7 +925,9 @@ CREATE TABLE `sp_lab_role{i}` (
   `gmt_modify` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `idx_name` (`name`),
-  KEY `idx_oid` (`oid`)
+  KEY `idx_oid` (`oid`),
+  KEY `idx_uid` (`add_uid`),
+  KEY `idx_status` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 EOF;
 

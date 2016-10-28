@@ -112,6 +112,25 @@ class MyYdzj_Controller extends Ydzj_Controller {
 		
 	}
 	
+	
+	public function addWhoHasOperated($action = 'add',$user = array()){
+    	$rt = array();
+    	
+    	switch($action){
+    		case 'add':
+    			$rt = array('add_uid' => $this->_profile['basic']['uid'], 'creator' => $this->_profile['basic']['username'],'oid' => $this->_currentOid);
+    			break;
+    		case 'edit':
+    			$rt = array('edit_uid' => $this->_profile['basic']['uid'], 'updator' => $this->_profile['basic']['username']);
+    			break;
+    		default;
+    			break;
+    	}
+    	
+    	return $rt;
+    	
+    }
+	
     
 }
 

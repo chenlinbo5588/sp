@@ -245,7 +245,9 @@ class Lab_User extends MyYdzj_Controller {
     }
     
     
-    
+    /**
+     * 
+     */
     public function edit(){
 		$id = $this->input->get_post('id');
 		
@@ -291,19 +293,14 @@ class Lab_User extends MyYdzj_Controller {
 			}
 			
 		}else{
-			$info = $this->Member_Model->getFirstByKey($id);
-			
-			$labIds = $this->lab_service->getUserJoinedLabList($id);
-			$ids = array();
-			foreach($labIds as $lab){
-				$ids[] = $lab['lab_id'];
-			}
+			$info = $this->Member_Model->getFirstByKey($id,'uid','uid,username,qq,email,mobile');
+			$labIds = $this->lab_service->getUserJoinedLabList($id,$this->_currentOid);
+			$ids = array_keys($labIds);
 			
 			$this->assign('lab_id',implode(',',$ids));
-			$this->assign('edit_user_labs',$labIds);
+			$this->assign('edit_user_labs',json_encode($ids));
 			
 			$this->assign('roleList',$this->_getRoleAllowList());
-			
 			
 			// 当前登陆用户拥有的实验室
 			$this->assign('user_labs',$this->session->userdata('user_labs'));
@@ -393,18 +390,12 @@ class Lab_User extends MyYdzj_Controller {
     
     
     private function _getRoleAllowList(){
-    	
-    	$this->load->model('Role_Model');
-    	
     	/**
 		 * 只显示自己创建的以及 自己所在角色组
 		 */
-		$roleList = $this->Role_Model->getList(array(
+		$roleList = $this->Lab_Role_Model->getList(array(
 			'where' => array(
 				'add_uid' => $this->_loginUID
-			),
-			'or_where' => array(
-				'id' => $this->_profile['basic']['group_id']
 			)
 		));
 		
@@ -501,7 +492,7 @@ class Lab_User extends MyYdzj_Controller {
     public function add()
     {
 		if($this->isPostRequest()){
-			$this->form_validation->set_rules('account','操作员登陆账号',  'required|min_length[2]|max_length[15]|alpha_dash|is_unique_by_status['.$this->Member_Model->getTableRealName().'.account.status.正常]');
+			$this->form_validation->set_rules('username','操作员登陆账号',  'required|in_db_list['.$this->Member_Model->getTableRealName().'.username]');
 			
 			$this->_addRules();
 			for($i = 0 ; $i < 1;  $i++){
@@ -533,7 +524,7 @@ class Lab_User extends MyYdzj_Controller {
 			$currentLabIds = $this->session->userdata('user_labs');
 			
 			$this->assign('roleList',$this->_getRoleAllowList());
-			
+			$this->assign('edit_user_labs',json_encode(array()));
 			$this->assign('lab_id',implode(',',$currentLabIds));
 			// 当前登陆用户拥有的实验室
 			$this->assign('user_labs',$currentLabIds);

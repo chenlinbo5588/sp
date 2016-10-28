@@ -43,8 +43,8 @@
                 <td>{$item['creator']|escape}</td>
                 <td>{time_tran($item['gmt_create'])}</td>
                 <td>
-                    <a href="{site_url('lab_user/edit?id=')}{$item['id']}">编辑</a>&nbsp;
-                    <a class="delete" href="javascript:void(0);" data-id="{$item['id']}" data-url="{site_url('lab_user/delete?uid=')}{$item['uid']}" data-title="确定删除{$item['name']|escape}吗?">删除</a>&nbsp;
+                    <a href="{site_url('lab_user/edit?id=')}{$item['uid']}">编辑</a>&nbsp;
+                    <a class="delete" href="javascript:void(0);" data-id="{$item['id']}" data-url="{site_url('lab_user/delete?uid=')}{$item['uid']}" data-title="{$member[$item['uid']]['username']|escape}">删除</a>
                 </td>
             </tr>
             {foreachelse}
@@ -60,9 +60,6 @@
         </tfoot>
 	</table>
 	</form>
-  
-  
-	<div id="dialog-confirm" title="删除{#title#}" style="display:none;"></div>
 	{include file="common/jquery_ui.tpl"}
 	<script>
 	$(function(){

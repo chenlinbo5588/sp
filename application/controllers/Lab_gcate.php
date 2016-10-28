@@ -54,6 +54,7 @@ class Lab_Gcate extends MyYdzj_Controller {
 				$ids[] = $item['id'];
 			}
 		}
+		
 		$ids = array_unique($ids);
     	
     	

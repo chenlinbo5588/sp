@@ -5,6 +5,7 @@ var regMobile = /^(\+?86)?1[0-9][0-9]{1}[0-9]{8}$|15[0189]{1}[0-9]{8}$|189[0-9]{
 //地区缓存
 var districtCache = [];
 var commonDialog;
+var formLock = [];
 
 function drop_confirm(msg, url){
     if(confirm(msg)){
@@ -725,7 +726,12 @@ function bindDeleteEvent(customSuccessFn,customErrorFn){
 	$("a.delete").bind("click",function(){
 		var triggerObj = $(this);
 		
-		ui_confirm(triggerObj,[$(this).attr("data-id")],$(this).attr("data-url"),'你确定要删除吗？','json',customSuccessFn ? customSuccessFn : successCallback,customErrorFn ? customErrorFn: errorCallback);
+		var title = triggerObj.attr('data-title');
+		if(typeof(title) == 'undefined'){
+			title = '';
+		}
+		
+		ui_confirm(triggerObj,[$(this).attr("data-id")],$(this).attr("data-url"),'你确定要删除<span class="hightlight">' + title + '</span>吗？','json',customSuccessFn ? customSuccessFn : successCallback,customErrorFn ? customErrorFn: errorCallback);
   	});
   	
   	$(".deleteBtn").bind("click",function(){
@@ -733,11 +739,15 @@ function bindDeleteEvent(customSuccessFn,customErrorFn){
   		var ids = getIDS(triggerObj);
   		var url = triggerObj.attr("data-url");
   		var title = triggerObj.attr('data-title');
-  		
+		if(typeof(title) == 'undefined'){
+			title = '';
+		}
+		
+		
   		if(ids.length == 0){
   			showToast('error','请选勾选.');
   		}else{
-  			ui_confirm(triggerObj,ids,url,'你确定要删除吗？','json',customSuccessFn ? customSuccessFn : successCallback,customErrorFn ? customErrorFn: errorCallback);
+  			ui_confirm(triggerObj,ids,url,'你确定要删除<span class="hightlight">' + title + '</span>吗？','json',customSuccessFn ? customSuccessFn : successCallback,customErrorFn ? customErrorFn: errorCallback);
   		}
   	});
 }

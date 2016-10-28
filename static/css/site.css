@@ -532,6 +532,14 @@ input[type=text].valid , input[type=password].valid {
 
 .pagination a:hover ,.pagination a.active {background:#0D93BF;color:#fff;cursor:pointer;}
 
+.pagination a.deactive {
+	background: #C8C7CE;
+    border: 1px solid #BDC2C3;
+    color: #9A9999;
+    text-decoration:none;
+
+}
+
 /* 返回顶部 */
 .backToTop {
     /* display: none; */
@@ -702,7 +710,7 @@ table.noext {
 	background-color:#F3F3F3;
 }
 
-.style1 thead th , .style1 tbody td {
+.style1 thead th , .style1 tbody td , .style1 tfoot td {
 	padding:8px 0;
 	vertical-align: top;
 }

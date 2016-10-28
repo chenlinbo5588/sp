@@ -1,6 +1,5 @@
 {include file="common/my_header.tpl"}
 {config_load file="lab.conf"}
-    <link href="{resource_url('css/lab.css')}" rel="stylesheet" type="text/css"/>
     {form_open(site_url($uri_string),'name="labForm"')}
 	{if $info['id']}
 		<input type="hidden" name="id" value="{$info['id']}"/>
@@ -68,7 +67,7 @@
 	 {include file="common/jquery_ui.tpl"}
 	 {include file="common/dhtml_tree.tpl"}
       <script>
-	    var user_labs = {$user_labs},formLock = [];
+	    var user_labs = {$user_labs},
 	    	current_pid = {if $info['pid']}{$info['pid']}{else}""{/if},
 	    	current_id = "{$info['id']}",
 	    	dialog = null;

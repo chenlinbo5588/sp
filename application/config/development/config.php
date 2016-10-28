@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 $config['cache_driver'] = 'redis';
 
-$config['log_threshold'] = 2;
+$config['log_threshold'] = 0;
 
 
 $config['base_url'] = '';

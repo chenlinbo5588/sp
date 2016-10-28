@@ -23,7 +23,7 @@ class Lab_service extends Base_service {
 
 	public function __construct(){
 		parent::__construct();
-		self::$CI->load->model(array('Orgination_Model','Lab_Model','Lab_Member_Model','Lab_Cache_Model','Lab_Role_Model'));
+		self::$CI->load->model(array('Orgination_Model','Lab_Model','Lab_Member_Model','Lab_Cache_Model','Lab_Role_Model','Lab_Fn_Model'));
 		
 		$this->_orginationModel = self::$CI->Orgination_Model;
 		$this->_labModel = self::$CI->Lab_Model;
@@ -65,7 +65,7 @@ class Lab_service extends Base_service {
 	
 	
 	/**
-	 * 
+	 * 根据 oid 分表
 	 */
 	public function setLabTablesByOrgination($oid){
 		
@@ -82,37 +82,7 @@ class Lab_service extends Base_service {
 	}
 	
 	
-	/**
-	 * 初始话新的成员的 关联记录
-	 * 
-	 * 新用户需要初始化4条相关记录
-	 */
-	public function initNewMemberLab($memberInfo){
-		$this->addOrgination($memberInfo['username'],$memberInfo['uid']);
-		$this->setLabTablesByOrgination($memberInfo['uid']);
-		
-		$labId = $this->_labModel->_add(array(
-			'name' => $memberInfo['username'].'实验室中心',
-			'address' => '',
-			'creator' =>$memberInfo['username'],
-			'oid' => $memberInfo['uid']
-		));
-		
-		$labMember = array(
-			'uid' => $memberInfo['uid'],
-			'oid' => $memberInfo['uid'],
-			'lab_id' => $labId,
-			'creator' =>$memberInfo['username'],
-			'is_manager' => 'y'
-		);
-		
-		$this->_labMemberModel->_add($labMember,true);
-		
-		$this->_labCacheModel->_add(array(
-			'uid' => 0,
-			'oid' => $memberInfo['uid']
-		));
-	}
+	
 	
 	/**
 	 * 新注册用户默认就是个组织架构
@@ -175,18 +145,42 @@ class Lab_service extends Base_service {
 		}
 	}
 	
+	
 	/**
-	 * 获得用户当前 所在的 实验室列表
+	 * 初始话新的成员的 关联记录
+	 * 
+	 * 新用户需要初始化4条相关记录
 	 */
-	public function getUserLabsByUID($uid){
-		return $this->_labMemberModel->getList(array(
-    		'select' => 'lab_id,is_manager',
-			'where' => array(
-				'user_id' => $uid
-			)
-    	));
+	public function initNewMemberLab($memberInfo){
+		$this->addOrgination($memberInfo['username'].'的实验中心',$memberInfo['uid']);
+		$this->setLabTablesByOrgination($memberInfo['uid']);
 		
+		$labId = $this->_labModel->_add(array(
+			'name' => $memberInfo['username'].'实验室中心',
+			'address' => '',
+			'creator' =>$memberInfo['username'],
+			'oid' => $memberInfo['uid']
+		));
+		
+		$labMember = array(
+			'uid' => $memberInfo['uid'],
+			'oid' => $memberInfo['uid'],
+			'lab_id' => $labId,
+			'creator' =>$memberInfo['username'],
+			'is_manager' => 'y'
+		);
+		
+		$this->_labMemberModel->_add($labMember,true);
+		
+		$this->_labCacheModel->_add(array(
+			'uid' => 0,
+			'oid' => $memberInfo['uid']
+		));
 	}
+	
+	
+	
+	//---------------------------------以下 Lab 相关  ---------------------------------
 	
 	/**
 	 * 添加实验室, 根据用户id  分表存储 lab 
@@ -467,7 +461,7 @@ class Lab_service extends Base_service {
      * 获得 某一个 lab 的成员列表
      * 
      */
-     public function getLabMemberList($lab_id){
+     public function getLabMemberList($lab_id,$oid){
 		
 		$userIds = array();
 		$users = array();
@@ -500,18 +494,20 @@ class Lab_service extends Base_service {
 	/**
 	 * 
 	 */
-	public function getUserJoinedLabList($user_id){
+	public function getUserJoinedLabList($user_id,$oid){
     	return $this->_labMemberModel->getList(array(
+    		'select' => 'lab_id',
     		'where' => array(
-    			'user_id' => $user_id
+    			'uid' => $user_id,
+    			'oid' => $oid
     		)
-    	));
+    	),'lab_id');
     }
     
     
     
     /**
-     * 
+     * 根据条件 获得成员列表 并将附加信息 添加进来
      */
     public function getLabMemberListByCondition($condition){
     	$data = $this->_labMemberModel->getList($condition);
@@ -572,4 +568,9 @@ class Lab_service extends Base_service {
     	
     	return array('list' => $data,'member' => $memberList,'role' => $roleList,'lab' => $labList);
     }
+    
+    
+    //--------------------------------------以下角色相关---------------------------------
+    
+    
 }

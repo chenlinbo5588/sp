@@ -1,4 +1,5 @@
 {include file="common/header.tpl"}
+	<link href="{resource_url('css/lab.css')}" rel="stylesheet" type="text/css"/>
     <div id="my" class="boxz clearfix">
         {if !$isMobile}{include file="my/my_nav.tpl"}{/if}
         <div class="panel_content">
