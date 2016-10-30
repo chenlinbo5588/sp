@@ -1,0 +1,844 @@
+.col2 {
+    width:50%;	
+}
+
+
+.thumblists {}
+.thumblists li { float: left; width:80px; height: 100px; margin-right:10px;}
+.thumblists li.picture div { background:#FFF; float: left;/* if IE7/8/9*/ *text-align: center; display: inline; border: dotted 1px #CBE9F3; float: left; padding: 2px; margin:5px;}
+.thumblists li.picture p { clear:both; line-height: 20px; height:20px; width: 70px; margin: 0 5px;}
+.thumblists li.picture p span { display:inline-block; width: 50%; text-align:center;}
+
+
+#contact_way li {
+	float:left;
+}
+
+
+
+#contact_way li.first {
+	padding-left:0;
+}
+
+
+.type-file-file { position:absolute; top:0px; right:0px; height:25px; width:256px; filter:alpha(opacity:0); opacity: 0; cursor: pointer;}
+.type-file-button , input.type-file-button:focus { background: url(../img/sky/bg_position.gif) no-repeat -50px -450px; width: 57px; height: 25px; border: 0; display:inline; float:right;}
+
+
+
+#naviText {
+	position: absolute;
+    width: 70px;
+    text-align: center;
+    background: #0138B7;
+    color: #fff !important;
+    right: 100px;
+}
+
+
+.bdwrap {
+	top:-50px;
+}
+
+.searchbar {
+	
+}
+
+.searchbar .hotlink {
+	display: block;
+    float: left;
+    width: 50%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.searchbar .searchform {
+	float:right;
+}
+
+.searchform .txt {
+	width:200px;
+	float: left;
+}
+
+.panel1 h3 {
+	float:left;
+	border:1px solid #dcdcdc;
+	border-width:1px 1px 0px 1px;
+	background:#fff;
+	font-size: 15px;
+    padding: 5px;
+}
+
+.panelContent {
+	border:1px solid #dcdcdc;
+}
+
+
+.twoCol {
+	width:100%;
+}
+
+.twoCol li.col {
+	width:49%;
+	position:relative;
+	float: left;
+}
+
+.twoCol li.col2 {
+	float:right;
+}
+
+.threeCol li.col {
+	float:left;
+	width:33%;
+	position:relative;
+}
+
+.col .colPanel {
+	padding: 10px 0 ;
+}
+
+.colPanel .panelTitel {
+	font-size:15px;
+	background:#e2e2e2;
+	padding: 5px;
+	font-weight: bold;
+}
+
+
+.hotlink strong {
+	font-size:14px;
+	color: #DB3652;
+}
+
+.hotlink a {
+	font-size:14px;
+	color:#6a6a6a;
+	padding: 0 3px;
+}
+
+#siteLogo {
+	float:left;
+	position: relative;
+    top: 3px;
+}
+
+#siteLogo img {
+	width:142px;
+	height:60px;
+	
+}
+
+#siteContacts {
+	float:right;
+}
+
+#siteContacts a {
+	color:#2B2B2B;
+	text-decoration: none;
+}
+
+#goinIntro {
+	/*
+	position:absolute;
+	left:0;
+	top:30px;
+	margin-left:61%;
+	width:38%;
+	
+	*/
+	text-indent:2em;
+	color:#333;
+}
+
+#goinIntro p {
+	text-indent:2em;
+}
+
+#homeNav {
+	position: absolute;
+    text-align: center;
+    right: 100px;
+    top: 0px;
+}
+
+#homeNav .sublist {
+    display:none;
+}
+
+#homeNav .current {
+    border:1px solid #d0d0d0;
+}
+
+#homeNav .current .sublist {
+    display:block;
+}
+
+#homeNav li.level0 {
+    height:100%;
+    float:left;
+    display:block;
+    padding:0 10px;
+    border: 1px solid transparent;
+    border-radius:4px; 
+    -moz-border-radius:4px; 
+    -webkit-border-radius:4px;
+}
+
+#homeNav a.link0, #homeNav a.link1 {
+    cursor:pointer;
+    display: block;
+    width: 100%;
+    font-weight: bold;
+    white-space: nowrap;
+    border-radius:4px; 
+    -moz-border-radius:4px; 
+    -webkit-border-radius:4px;
+}
+
+#homeNav li.current {
+	border:1px solid #d0d0d0;
+    background-color: #DBDBDB;
+}
+
+#homeNav .sublist li {
+	padding:10px 0;
+}
+
+
+#homeNav .products {
+    position: absolute;
+    left: 0;
+    height:300px;
+}
+
+#homeSwiper {
+    width:100%;
+    top:-60px;
+}
+
+#homeSwiper .sliderItem {
+    width:100%;
+    height:500px;
+}
+
+#homeSwiperPager {
+    position:absolute;
+    top:-90px;
+    z-index:20;
+    right:0;
+    display:block;  
+}
+
+#homeSwiperPager a {
+    display: block;
+    float: left;
+    text-align: center;
+    background: #90918B;
+    width: 20px;
+    height: 20px;
+    border: 1px solid #dcdcdc;
+    margin: 0 2px 0 0;
+    color: white;
+    text-decoration:none;
+}
+
+#homeSwiperPager a.activeSlide {
+    background:#FFB082;
+}
+
+
+.more {
+    font-size:14px;
+}
+
+
+#goinSwiper {
+    margin:0;
+    width:100%;
+}
+
+#goinSwiper div {
+    width:100%;
+    height:500px;
+}
+
+#menuProducts {
+	width: 100%;
+   	position: absolute;
+   	left: 0;
+   	border: 1px solid #dcdcdc;
+   	border-radius:4px; 
+    -moz-border-radius:4px; 
+    -webkit-border-radius:4px;
+    background:#fff;
+}
+
+#menuProducts a {
+	color:black !important;
+}
+
+#menuProducts a:hover {
+	backgournd:none;
+}
+
+#menuProducts li.level1 {
+	width:20%;
+	1border-left: 1px solid #dcdcdc;
+	float:left;
+	white-space: nowrap;
+}
+
+
+
+#menuProducts li.level1:hover {
+	background:none;
+	
+}
+
+#menuProducts li.level1 span {
+	
+	display:block;
+}
+
+#menuProducts li.level1:hover {
+	1background:#f4d74d;
+}
+
+#menuProducts ol {
+	padding-left:10px;
+	1list-style-type:square;
+	margin: 10px 0;
+    1border-top: 1px solid #dcdcdc;
+    text-align:left;
+}
+
+.newslist {
+	
+}
+
+.newslist li {
+	position:relative;
+	height:30px;
+	line-height:30px;
+	overflow:hidden;
+	padding:0 2px;
+	border-bottom: 1px dotted #dcdcdc;
+}
+
+
+.newslist li a {
+	float:left;
+	display:block;
+	width:80%;
+	white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.newslist li span {
+	display:block;
+	position:absolute;
+	top:0px;
+	right:4px;
+	background: #fff;
+    z-index: 2;
+}
+
+.serialProduct li {
+	padding:5px;
+}
+
+#starProducts {
+	padding:5px;
+}
+
+#starProducts h3 {
+	margin: 0 0 5px 0;
+}
+
+
+#starProducts .bx-wrapper {
+	
+}
+
+
+
+
+.friendLinks {
+	border: 1px solid #dcdcdc;
+	margin:10px 0 ;
+	padding:5px;
+}
+
+.friendLinks a {
+	
+}
+
+
+.mg10 {
+	margin-top:10px;
+}
+
+.linePg {
+	position: relative;
+    top: -60px;
+	1border-top:1px solid #fff;
+}
+
+.aboutPg , .newsPg, .productPg , .marketPg, .servicePg, .contactsPg , .docPg {
+	background:url(../img/cmp/2.jpg) no-repeat center center;
+	height:300px;
+}
+
+.newsPg {
+	background:url(../img/cmp/3.jpg) no-repeat center center;
+}
+
+.productPg {
+	background:url(../img/cmp/2.jpg) no-repeat center center;
+}
+ 
+.marketPg {
+	background:url(../img/cmp/3.jpg) no-repeat center center;
+}
+
+.breadcrumb {
+	padding: 8px 0 8px 5px;
+    background:#e9e9e9;
+}
+
+
+.breadcrumb a.breadlink {
+	padding: 3px 0 0 18px;
+	background:url(../img/pt_item.png) no-repeat left center;
+}
+
+.breadcrumb em {
+	text-indent: -1000em;
+    display: inline-block;
+    float: left;
+}
+
+.breadcrumb a.first {
+	background:url(../img/home.png) no-repeat left center;	
+}
+
+
+.sideNav {
+	width:200px;
+	float: left;
+}
+
+
+.sideNav .sideItem {
+	border: 1px solid #dcdcdc;
+	margin:0 0 20px 0;
+	border-radius:5px;
+    -webkit-border-radius:5px;
+    -moz-border-radius:5px;
+    -o-border-radius:5px;
+}
+
+.sideNav li {
+	padding: 15px 10px;
+    background: url(../img/t2.jpg) no-repeat 20px center;
+    text-align: center;
+    font-size: 14px;
+}
+
+.sideNav .itemTitle {
+	padding: 15px 10px;
+	text-align: center;
+	background-color:#465F98;
+	background-image:none;
+	border-width:1px 0px 0px 1px;
+	color:#fff;
+	border-radius:5px 5px 0 0;
+    -webkit-border-radius:5px 5px 0 0;
+    -moz-border-radius:5px 5px 0 0;
+    -o-border-radius:5px 5px 0 0;
+}
+
+
+.sideNav .itemTitle a {
+	color:#fff;
+}
+
+
+.contentArea {
+	margin-left:210px;
+}
+
+.contentArea .bd {
+	padding:10px;
+}
+
+
+table.liststyle1 {
+	width:100%;
+}
+
+.liststyle1 .liststyle1Item, .liststyle1 .liststyle1Item td {
+	padding:10px 0;
+}
+
+.liststyle1 .liststyle1Item td {
+	border: 1px solid #ccc;
+	border-width:1px 0 1px 0;
+}
+
+.liststyle1 .previewPic {
+	width:100px;
+	height:80px;
+	float: left;
+}
+
+.newsList .previewCont {
+	margin: 0 0 0 110px;
+}
+
+
+.productList .previewCont {
+	margin: 0 0 0 130px;
+	
+}
+
+.productList .previewPic {
+	width:120px;
+	height:100px;
+	float: left;
+	border:1px solid #dcdcdc;
+}
+
+.productList .productName {
+	font-size:18px;
+}
+
+.productList .productDetail {
+	padding:3px 0;
+}
+
+.bdlist .pagination {
+	margin:20px 0;
+	text-align: center;
+}
+
+
+.search div {
+	text-align:center;
+	padding:5px 0 ;
+}
+
+.articleHeader  {
+	text-align:center;
+	border-bottom:1px dashed #666;
+	padding:5px 0;
+	
+}
+
+.articleHeader h1 {
+	font-size:18px;
+	margin:5px 0;
+}
+
+.articleHeader em {
+	padding: 0 10px;
+}
+
+.articleContent {
+	margin:15px 0;
+	overflow: hidden;
+    word-wrap: break-word;
+}
+
+.articleContent img { 
+    height: auto; 
+    width: auto\9; 
+    max-width:100%;
+}
+
+
+
+.errorPage {
+	background: url(../img/error_page_bg.png) no-repeat left center;
+    height: 200px;
+    padding: 0 0 0 38px;
+    line-height: 200px;
+    width: 200px;
+    margin: 0 auto;
+}
+
+
+.productInfo {
+	position:relative;
+}
+
+.productInfo .textDesc {
+	position: absolute;
+    left: 530px;
+    top: 0;
+}
+
+.textDesc div {
+	
+	margin: 5px 0;
+}
+
+.textDesc em {
+	padding: 0 10px 0 0;
+}
+
+.goodscode {
+	color:#f00;
+}
+
+
+.suggest td {
+	padding: 5px 0;
+	vertical-align:middle;
+}
+
+
+.suggest td em {
+	
+	color:red;
+}
+
+.suggest input {
+	width:200px;
+}
+
+
+.suggest .form_error {
+	background:url(../img/error.gif) no-repeat left center;
+	padding-left: 20px;
+    margin: 0 0 0 5px;
+}
+
+.filelist {
+    
+}
+
+
+.fileitem {
+	background: #D8D8D8;
+	margin: 0 0 5px 0;
+	1padding: 10px 5px;
+	position: relative;
+	1height:40px;
+	
+}
+
+.fileitem .filename {
+	width: 50%;
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size:14px;
+    color:#ed6d00;
+    padding:0 0 0 5px;
+}
+
+.fileitem .filetype, .fileitem .filesize {
+	line-height:40px;
+}
+
+.fileitem em {
+	color:#666;
+}
+
+
+.fileitem .pubtime {
+	
+}
+
+
+.fileitem .downlink {
+	position: absolute;
+    /* top: 50%; */
+    right: 0;
+    /* margin: -5px 10px 0 0; */
+    width: 10%;
+    background: #ED6D00;
+    
+    color:#fff;
+    text-align: center;
+    height:40px;
+    line-height:40px;
+}
+
+.fileitem .wj {
+	display: inline-block;
+    width: 60px;
+    color: #999;
+}
+
+
+.fileitem .filetype, .fileitem .filesize {
+	color:#666;
+}
+
+
+.articleRelate .prevArticle {
+	float:right;
+}
+
+.articleRelate .nextArticle {
+	float:left;
+}
+
+.qqchat {
+	position: fixed;
+    bottom: 300px;
+    right: 50px;
+    z-index: 30;
+}
+
+
+
+
+@media (max-width: 360px), (max-width: 640px), (max-width:720px) {
+	img { 
+	    height: auto; 
+	    width: auto\9; 
+	    width:100%;
+	}
+	
+	#topBar {
+		height:auto;
+		background: #F4F755;
+	}
+	
+	#homeNav {
+		display:none;
+		top:22px;
+		right:0px;
+	}
+	
+	#homeNav li.level0 {
+		width:100%;
+		padding:10px;
+		border-radius: 0px;
+    	-moz-border-radius: 0px;
+    	-webkit-border-radius: 0px;
+   		background: rgba(1, 56, 183, 0.43);
+	}
+	
+	#homeNav a.link0, #homeNav a.link1 {
+		color:#fff;
+	}
+	
+	#goinSwiper div {
+		height:auto;
+	}
+	
+	
+	.aboutPg , .newsPg, .productPg , .marketPg, .servicePg, .contactsPg , .docPg {
+		background:url(../img/cmp/m2.jpg) no-repeat center top;
+		height:250px;
+	}
+	
+	.newsPg {
+		background:url(../img/cmp/m1.jpg) no-repeat center top;
+	}
+	
+	.productPg {
+		background:url(../img/cmp/m3.jpg) no-repeat center top;
+	}
+	 
+	.marketPg {
+		background:url(../img/cmp/m2.jpg) no-repeat center top;
+	}
+	
+	.sideNav {
+		width: 95%;
+    	float: none;
+    	margin: 0 auto;
+	}
+
+	
+	#footer .qrcode {
+		display:none;
+	}
+	
+	.breadcrumb span {
+		display:none;
+	}
+	
+	.contentArea .bd {
+		padding: 5px;
+	}
+	
+	.pagination {
+		float:none;
+	}
+	
+	input[type=text],input[type=password],input[type=text].txt{
+		width:99%;
+	}
+	
+	#siteLogo img {
+		display:none;
+	}
+	
+	#siteContacts {
+		float:none;
+	}
+	
+	#homeSwiper .sliderItem {
+		height:200px;
+	}
+	
+	.searchbar .searchform {
+		float:none;
+	}
+	
+	.searchbar .searchform .txt{
+		width:90%;
+	}
+	
+	.searchbar .hotlink {
+		width:100%;
+	}
+	
+	.twoCol li.col {
+		width:100%;
+		float:none;
+	}
+	
+	.contentArea {
+		margin-left:0;
+	}
+	
+	
+	.productInfo .textDesc {
+	
+		position:static;
+	}
+	
+	.fileitem .filename {
+		width:100%;
+	}
+	
+	.fileitem .downlink {
+		position:static;
+		width: 100%;
+	    display: block;
+	    height: 30px;
+	    line-height: 30px;
+	}
+	
+	.articleRelate .prevArticle {
+		float:none;
+	}
+	
+	.articleRelate .nextArticle {
+		float:none;
+	}
+}
+
+

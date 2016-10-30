@@ -16,7 +16,7 @@ class Ydzj_Controller extends MY_Controller {
 	public $_adminProfileKey;
 	public $_adminLastVisitKey;
 	
-	
+	public $_navigation = array();
 	
 	
 	public function __construct(){
@@ -200,5 +200,31 @@ class Ydzj_Controller extends MY_Controller {
 			return array('error' => $error, config_item('csrf_token_name') =>$this->security->get_csrf_hash(),'id' => $fileData['id'], 'url'=>base_url($fileData['file_url']));
 		}
 	}
+	
+	
+	public function breadcrumb(){
+    	
+    	if($this->_navigation){
+    		
+    		$temp = array();
+    		
+    		$i = 0;
+    		
+    		foreach($this->_navigation as $key => $item){
+    			if($i == 0){
+    				$temp[] = "<a class=\"first breadlink\" href=\"{$item}\">{$key}</a>";
+    			}else{
+    				$temp[] = "<a class=\"breadlink\" href=\"{$item}\">{$key}</a>";
+    			}
+    			
+    			$i++;
+    		}
+    		
+    		return implode('<em>&gt;</em>',$temp);
+    	}else{
+    		return '';
+    	}
+    }
+    
 	
 }

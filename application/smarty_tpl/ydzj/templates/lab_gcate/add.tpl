@@ -1,81 +1,56 @@
-{include file="common/main_header.tpl"}
-{config_load file="goods.conf"}
-    {include file="common/dhtml_tree.tpl"}
+{include file="common/my_header.tpl"}
+    <div id="handleDiv">
+    {form_open(site_url($uri_string),'name="addForm"')}
     {if $info['id']}
-		{form_open(site_url('goods_category/edit?id='|cat:$info['id']),'name="categoryForm"')}
-	{else}
-		{form_open(site_url('goods_category/add'),'name="categoryForm"')}
-	{/if}
-	   <input type="hidden" name="id" value="{$info['id']}"/>
-	   <input type="hidden" name="pid" value="{$info['pid']}"/>
-	   <table class="table tb-type2">
-      	<tbody>
-	      	<tr class="noborder">
-	          <td colspan="2" class="required"><label class="validation">{#category_name#}:</label></td>
-	        </tr>
-	        <tr class="noborder">
-	          <td class="vatop rowform"><input type="text" value="{$info['name']|escape}" name="name" class="txt"></td>
-	          <td class="vatop tips"><label class="errtip" id="error_name"></label></td>
-	        </tr>
-	   	</tbody>
-	   </table>
-	   <table class="autotable">
-    	<tbody>
-    	<tr class="noborder">
-          <td colspan="2" class="required"><label class="validation">{#pid#}:</label><label class="errtip" id="error_pid"></label></td>
-        </tr>
+        <input type="hidden" name="id" value="{$info['id']}"/>
+    {/if}
+    <table class="fulltable style1">
+      <tbody>
         <tr class="noborder">
-          <td colspan="2" class="vatop rowform">
-          	<div id="treeboxbox_tree1" class="rounded_box" style="height:400px;">
-          		<div id="loading_img" class="loading_div" style="display:none;"></div>
-	        </div>
+          <td class="required w120"><label class="validation"><em></em>名称:</label></td>
+          <td class="vatop rowform">
+                <input type="text" value="{$info['name']|escape}" name="name" class="w40pre txt" placeholder="分类名称">
+                <label class="errtip" id="error_name"></label>
           </td>
         </tr>
-        </tbody>
-        <tfoot>
-        <tr>
-          <td colspan="2"><input type="submit" name="submit" value="保存" class="msbtn"/></td>
+        <tr class="noborder">
+          <td><label for="displayorder">排序:</label></td>
+          <td class="vatop rowform">
+            <input type="text" value="{$info['displayorder']|escape}" name="displayorder" id="displayorder" class="txt">
+            <label class="errtip" id="error_displayorder"></label><span>大于等于0的自然数,最大9999，数字越小越靠前</span>
+          </td>
         </tr>
-      </tfoot>
-    </form>
-    
-    <script>
-	    var tree=new dhtmlXTreeObject("treeboxbox_tree1","100%","100%",0);
-	    tree.setImagePath("{$smarty.const.TREE_IMG_PATH}");
-	    
-	    function tonclick(id){
-	        if(id == 'root'){
-	            $("input[name=pid]").val(0);
-	        }else{
-	            $("input[name=pid]").val(id);
-	        }
-	    };
-	    
-	    tree.enableHighlighting(true);
-	    tree.enableSmartXMLParsing(true);
-	    tree.setOnClickHandler(tonclick);
-	    
-	    function treeLoading(){
-	        $("#loading_img").show();
-	    }
-	    
-	    function treeLoaded(){
-	        $("#loading_img").hide();
-	    }
-	    
-	    tree.setOnLoadingStart(treeLoading);
-	    tree.setOnLoadingEnd(treeLoaded); 
-	    
-	    tree.loadXML("{site_url('goods_category/getTreeXML')}",function(){
-	        {if $info['id']}
-	        	tree.selectItem({$info['id']});
-	        {else}
-	        	{if $info['pid']}tree.selectItem({$info['pid']});{/if}
-	        {/if}
-	    });
-	    
-	    $(function(){
-	    	{include file="common/form_ajax_submit.tpl"}
-	    });
-    </script>
-{include file="common/main_footer.tpl"}
+        <tr class="noborder">
+          <td class="required"><label class="validation" for="parent">父级:</label></td>
+          <td class="vatop rowform">
+              <select name="pid">
+              <option value="0">请选择</option>
+              {foreach from=$list item=item}
+              <option value="{$item['id']}" {if $info['pid'] == $item['id']}selected{/if}>{str_repeat('----',$item['level'])}{$item['name']|escape}</option>
+              {/foreach}
+              </select>
+              <label class="errtip" id="error_pid"></label>
+          </td>
+        </tr>
+        <tr>
+          <td></td>
+          <td><input type="submit" name="submit" value="保存" class="master_btn"/></td>
+        </tr>
+       </tbody>
+      </table>
+   </form>
+   </div>
+   <script>
+        $(function(){
+            $("form").each(function(){
+                var name = $(this).prop("name");
+                formLock[name] = false;
+            });
+            
+            bindAjaxSubmit('form');
+            
+            $.loadingbar({ urls: [ new RegExp($("form[name=addForm]").attr('action')) ], templateData:{ message:"努力加载中..." } ,container: "#handleDiv" });
+        });
+        
+     </script>
+{include file="common/my_footer.tpl"}

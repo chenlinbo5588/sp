@@ -15,7 +15,7 @@
 	        {foreach from=$lab_menu key=key item=item}
             <tr id="row{$item['id']}">
                 <td>{$item['level'] + 1}</td>
-                <td>{$item['sep']}{$item['name']|escape}</td>
+                <td>{str_repeat('----',$item['level'])}{$item['name']|escape}</td>
                 <td>
                     <a href="{site_url('lab_menu/edit?id=')}{$item['id']}">编辑</a>&nbsp;
                     <a class="delete" href="javascript:void(0);" data-id="{$item['id']}" data-url="{site_url('lab_menu/delete?id=')}{$item['id']}" data-title="{$item['name']|escape}">删除</a>

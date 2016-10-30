@@ -5,6 +5,7 @@ $(function(){
 	tree=new dhtmlXTreeObject("treeboxbox_tree1","100%","100%",0);
     tree.setImagePath(treeImgUrl);
     
+    
     function tonclick(id){
         var isFind = false;
         
@@ -67,9 +68,10 @@ $(function(){
     
     setTimeout(function(){
 	    tree.loadXML(treeXMLUrl,function(){
-	        var parent = 0;
+	        var parent = 0,i = 0;
 	        
 	        if(current_id){
+	        	//修改页
 	        	tree.selectItem(current_id);
 	        }else{
 	        	if(current_pid){
@@ -80,25 +82,33 @@ $(function(){
 	        treeExpand(tree);
 	        
 	        // 用户管理的实验室
-	        for(var i = 0 ; i < user_labs.length ; i++ )
+	        for(i = 0 ; i < user_labs.length ; i++ )
 	        {
 	            if(user_labs[i] != 0){
 	                parent = tree.getParentId(user_labs[i]);
 	                if(parent != 0){
 	                    tree.openItem(parent);
 	                }
+	                
 	                tree.setItemColor(user_labs[i], "blue", "#EC1336");
 	                //tree.setItemText(user_labs[i], "【我的】" + tree.getItemText(user_labs[i]), "您的实验室:" + tree.getItemText(user_labs[i]));
 	            }
 	        }
 	        
+	        for(i = 0; i <  manager_labs.length; i++){
+	            tree.setItemColor(manager_labs[i], "blue", "#EC1336");
+	        }
 	    });
 	 },500);
     
     var successHandler = function(json){
-    	alert(json.message);
       	if(json.message == '操作成功'){
-      		location.href= labEditUrl + id + "&" + Math.random();
+      		showToast('success',json.message);
+    		setTimeout(function(){
+    			location.href= labEditUrl + id + "&" + Math.random();
+    		},1000);
+      	}else{
+      		showToast('error',json.message);
       	}
     };
     
@@ -119,7 +129,8 @@ $(function(){
     
     
     bindAjaxSubmit('form');
-    
+    bindDeleteEvent();
+    /*
 	dialog = $( "#labMemberDlg" ).dialog({
       autoOpen: false,
       height: 'auto',
@@ -163,6 +174,7 @@ $(function(){
 	      searchUser(1);
 	  });
 	  
+	  
 	  $("#addUserBtn").bind("click",function(){
 	  	$.ajax({
 	  		type:"GET",
@@ -173,46 +185,9 @@ $(function(){
 	  		}
 	  	});
 	  });
+	  */
+	  $.loadingbar({ urls: [ new RegExp($("form[name=labForm]").attr('action')) ], templateData:{ message:"努力加载中..." } ,container: "#handleDiv" });
 	  
-	  $.loadingbar({ urls: [ new RegExp(labManagerUrl) ], templateData:{ message:"努力加载中..." } , container: "#labMemberDlg" });
+	  //$.loadingbar({ urls: [ new RegExp(labManagerUrl) ], templateData:{ message:"努力加载中..." } , container: "#labMemberDlg" });
 	  
-	  $(".close").bind("click",function(){
-	  	var user_id = $(this).attr("data-id");
-	      var user_name = $(this).attr("data-title");
-	      var alink = $(this);
-	      
-	      $( "#dialog-confirm .memberName" ).html(user_name);
-	      
-	  	$( "#dialog-confirm" ).dialog({
-		      resizable: false,
-		      height: "auto",
-		      width: 300,
-		      modal: true,
-		      position: { my: "left bottom", at: "left bottom", of: alink },
-		      buttons: {
-		        "确定": function() {
-		          $.ajax({
-	                    type:"POST",
-	                    url:labUserDeleteUrl,
-	                    dataType:"json",
-	                    data: { id: current_id , user_id: user_id},
-	                    success:function(json){
-	                    	 alert(json.message);
-	                    	 if(json.message == '删除成功'){
-	                    	 	$("#row_" + user_id).fadeOut();
-	                    	 }
-	                    },
-	                    error:function(XMLHttpRequest, textStatus, errorThrown){
-	                    }
-	               });
-	               
-		          $( this ).dialog( "close" );
-		        },
-		        "取消": function() {
-		          $( this ).dialog( "close" );
-		        }
-		      }
-		    });
-	  });
-    
 });

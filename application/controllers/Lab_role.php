@@ -177,9 +177,20 @@ class Lab_role extends MyYdzj_Controller {
 	}
 	
 	private function _getFnTree(){
-		$this->load->library('Tree_service');
-		$this->tree_service->setTargetModel($this->Lab_Fn_Model,'id','parent_id','name');
-		return $this->tree_service->toTree();
+		$list = $this->Lab_Fn_Model->getList(array(
+			'order' => 'pid ASC, displayorder ASC'
+		
+		));
+    	if($list){
+    		return $this->phptree->makeTree($list,array(
+				'primary_key' => 'id',
+				'parent_key' => 'pid',
+				'expanded' => true
+			));
+    	}else{
+    		
+    		return array();
+    	}
 		
 	}
 	
@@ -213,7 +224,7 @@ class Lab_role extends MyYdzj_Controller {
 		if($this->isPostRequest()){
 			$this->_getRoleRules();
 			
-			$this->form_validation->set_rules('name','权限组名称','required|is_unique_not_self['.$this->Lab_Role_Model->getTableRealName().".name.id.{$id}]");
+			$this->form_validation->set_rules('name','角色名称','required|is_unique_not_self['.$this->Lab_Role_Model->getTableRealName().".name.id.{$id}]");
 			
 			$info = $this->_prepareRoleData();
 			$info['id'] = $id;

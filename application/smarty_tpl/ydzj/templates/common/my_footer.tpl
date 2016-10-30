@@ -20,35 +20,37 @@
         </div>
     </div>
     *}
-{include file="common/footer.tpl"}
-<div id="soundDiv"></div>
-<a class="backToTop" href="#top"></a>
-<script type="text/javascript" src="{resource_url('js/swfobject/swfobject.js')}"></script>
-<script type="text/javascript" src="{resource_url('js/my/notify.js')}"></script>
-<script>
-var soundSwfUrl = "{resource_url('js/swfobject/sound.swf')}",
-    expressSwfUrl = "{resource_url('js/swfobject/expressInstall.swf')}",
-    pmUrl = "{site_url('my_pm/check_newpm')}";
-    
-var notify = $.fn.myNotify.initSWF('soundDiv',soundSwfUrl,expressSwfUrl);
-notify.setSound('{resource_url('sound/girl.mp3')}');
-notify.setPmUrl("{site_url('my_pm/index')}");
-notify.updatePm(pmUrl);
-
-$(function(){
-    {if $newPm || !empty($smarty.get.pm)}
-    notify.showToast();
-    setTimeout(function(){
-        notify.playSound(1);
-    },2000);
-    {/if}
-    
-    notify.updatePm(pmUrl);
-    
-	{if !empty($feedback)}
-	setTimeout(function(){
-		$(".feedback").slideToggle(1000,"linear");
-	},3000);
-	{/if}
-});
-</script>
+    {include file="common/share_footer.tpl"}
+	<div id="soundDiv"></div>
+	<a class="backToTop" href="#top"></a>
+	<script type="text/javascript" src="{resource_url('js/swfobject/swfobject.js')}"></script>
+	<script type="text/javascript" src="{resource_url('js/my/notify.js')}"></script>
+	<script>
+	var soundSwfUrl = "{resource_url('js/swfobject/sound.swf')}",
+	    expressSwfUrl = "{resource_url('js/swfobject/expressInstall.swf')}",
+	    pmUrl = "{site_url('my_pm/check_newpm')}";
+	    
+	var notify = $.fn.myNotify.initSWF('soundDiv',soundSwfUrl,expressSwfUrl);
+	notify.setSound('{resource_url('sound/girl.mp3')}');
+	notify.setPmUrl("{site_url('my_pm/index')}");
+	notify.updatePm(pmUrl);
+	
+	$(function(){
+	    {if $newPm || !empty($smarty.get.pm)}
+	    notify.showToast();
+	    setTimeout(function(){
+	        notify.playSound(1);
+	    },2000);
+	    {/if}
+	    
+	    notify.updatePm(pmUrl);
+	    
+		{if !empty($feedback)}
+		setTimeout(function(){
+			$(".feedback").slideToggle(1000,"linear");
+		},3000);
+		{/if}
+	});
+	</script>
+</body>
+</html>

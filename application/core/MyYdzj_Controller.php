@@ -9,7 +9,10 @@ class MyYdzj_Controller extends Ydzj_Controller {
 	private $_pushObject;
 	protected $_loginUID = 0;
 	protected $_currentOid = 0;
+	protected $_currentRoleId = 0;
 	public $_newpm = 0;
+	
+	public $_permission = null;
 	
 	public function __construct(){
 		parent::__construct();
@@ -20,13 +23,9 @@ class MyYdzj_Controller extends Ydzj_Controller {
 		}
 		
 		$this->load->library('Lab_service');
-		
-		
 		$this->load->config('member_site');
 		$this->_loginUID = $this->_profile['basic']['uid'];
-		
 		$this->_navs();
-		
 		
 		/*
 		$this->_pushObject = $this->base_service->getPushObject();
@@ -50,45 +49,67 @@ class MyYdzj_Controller extends Ydzj_Controller {
 		}
 		
 		$this->_initUserParam();
+		$this->_permission = config_item('permission');
+		
+		$this->_checkPermission();
 	}
+	
 	
 	
 	/**
 	 * 初始化用户相关参数
 	 */
-	private function _initUserParam(){
+	protected function _initUserParam(){
 		$param = $this->lab_service->getMemberOrginationList($this->_loginUID);
-		
-		
 		if($param){
 			$this->_profile['lab'] = $param;
 			//获得用户当前机构的所用的实验室列表
 			
 			$this->_currentOid = $param['current']['oid'];
+			//当前角色
+			$this->_currentRoleId = $param['current']['role_id'];
+				
+			/*
+			$org = $this->session->userdata('org');
+			$setSession = array();
+			
+			if(empty($org)){
+				$this->session->set_userdata('org',$param['current']);
+			}else{
+				$this->_currentOid = $org['oid'];
+				$this->_currentRoleId = $org['role_id'];
+			}
+			*/
 			
 			$this->lab_service->setLabTablesByOrgination($this->_currentOid);
 			$userJoinedLabs = $this->lab_service->getUserJoinedLabListByOrgination($this->_loginUID,$param['current']['oid']);
 			$joinedLabsIds = array();
+			$managerLabsIds = array();
 			
 			if($userJoinedLabs){
 				foreach($userJoinedLabs as $lab){
 					$joinedLabsIds[] = $lab['lab_id'];
+					if($lab['is_manager'] == 'y'){
+						$managerLabsIds[] = $lab['lab_id'];
+					}
 				}
 			}
 			
-			
-			$this->session->set_userdata(array('lab' => $param, 'user_labs' => $joinedLabsIds));
+			$this->session->set_userdata(array('lab' => $param,'user_labs' => $joinedLabsIds,'manager_labs' => $managerLabsIds));
 			
 			$this->assign(
 				array(
 					'user_labs' => json_encode($joinedLabsIds),
+					'manager_labs' => json_encode($managerLabsIds),
 					'lab_param' => $param,
 					'current_oid' => $this->_currentOid
 				)
 			);
 			
+			
 		}
 	}
+	
 	
 	
 	/**
@@ -102,6 +123,47 @@ class MyYdzj_Controller extends Ydzj_Controller {
 	}
 	
 	
+	private function _checkPermission(){
+        //print_r($this->_adminProfile);
+        $currentUri = $this->uri->uri_string();
+
+        if(!$this->isOrginationFounder()){
+	        $roleInfo = $this->Lab_Role_Model->getFirstByKey($this->_currentRoleId,'id');
+	        $currentPer = $this->encrypt->decode($roleInfo['permission'],config_item('encryption_key'));
+	
+	        if(trim($currentPer)){
+	            $this->_permission = array_merge($this->_permission,array_flip(explode('|',$currentPer)));
+	        }
+        }else{
+        	
+        	$fnList = $this->getCacheObject()->get('siteFn');
+        	if(empty($fnList)){
+        		$fnList = $this->Lab_Fn_Model->getList(array(
+        			'where' => 'url'
+        		));
+        		
+        		$this->getCacheObject()->save('siteFn',$fnList,CACHE_ONE_DAY);
+        	}
+        	
+        	foreach($fnList as $fn){
+    			$this->_permission[$fn['url']] = true;
+    		}
+        }
+
+        $this->assign('permission',$this->_permission);
+        
+        if(!$this->isOrginationFounder() && !isset($this->_permission[$currentUri])){
+            //file_put_contents("deb.txt",$currentUri,FILE_APPEND);
+            if($this->input->is_ajax_request()){
+                $this->responseJSON('没有足够的权限,请联系管理员');
+            }else{
+                js_redirect('my/nopermission');
+            }
+        }
+
+    }
+    
+    
 	
 	/**
 	 * 
@@ -112,6 +174,10 @@ class MyYdzj_Controller extends Ydzj_Controller {
 		
 	}
 	
+	
+	protected function isOrginationFounder(){
+		return $this->_profile['basic']['uid'] == $this->_currentOid ? true : false;
+	}
 	
 	public function addWhoHasOperated($action = 'add',$user = array()){
     	$rt = array();

@@ -15,8 +15,8 @@ $entity = array(
 'gc_description' => 'varchar',
 'add_uid' => 'int',
 'edit_uid' => 'int',
-'add_username' => 'varchar',
-'edit_username' => 'varchar',
+'creator' => 'varchar',
+'updator' => 'varchar',
 'gmt_create' => 'int',
 'gmt_modify' => 'int'
 );

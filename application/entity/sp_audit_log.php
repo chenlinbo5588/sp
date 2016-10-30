@@ -7,7 +7,7 @@ $entity = array(
 'ref_id' => 'mediumint',
 'remark' => 'text',
 'add_uid' => 'int',
-'add_username' => 'varchar',
+'creator' => 'varchar',
 'gmt_create' => 'int',
 'gmt_modify' => 'int'
 );

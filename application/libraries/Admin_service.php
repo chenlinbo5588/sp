@@ -24,11 +24,13 @@ class Admin_service extends Base_service {
 				$message = '用户名不存在';
 				break;
 			}
+			//print_r($user);
 			
 			if($user['uid'] != WEBSITE_FOUNDER && $user['status'] == '关闭'){
 				$message = '用户已被冻结';
 				break;
 			}
+			//var_dump(self::$CI->encrypt->decode($user['password'],config_item('encryption_key').md5($user['email'])));
 			
 			if($password != self::$CI->encrypt->decode($user['password'],config_item('encryption_key').md5($user['email']))){
 				$message = '密码不正确';

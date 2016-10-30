@@ -908,6 +908,67 @@ EOF;
 	}
 	
 	
+	
+	public function create_lab_goods(){
+		
+		$sql = <<< EOF
+CREATE TABLE `sp_lab_goods{i}` (
+  `id` bigint(10) unsigned NOT NULL AUTO_INCREMENT,
+  `oid` int(10) unsigned NOT NULL DEFAULT '0',
+  `lab_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '实验室id',
+  `lab_name` varchar(50) NOT NULL DEFAULT '',
+  `code` varchar(60) NOT NULL DEFAULT '' COMMENT '药品柜/试验台编号',
+  `name` varchar(80) NOT NULL DEFAULT '',
+  `specific` varchar(30) NOT NULL DEFAULT '',
+  `cas` varchar(30) NOT NULL DEFAULT '',
+  `danger_remark` varchar(20) NOT NULL DEFAULT '',
+  `manufacturer` varchar(50) NOT NULL DEFAULT '',
+  `measure` varchar(20) NOT NULL DEFAULT '' COMMENT '单位',
+  `hash` varchar(32) NOT NULL DEFAULT '' COMMENT 'oid+name+specific+measure 的md5值',
+  `category_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `category_name` varchar(50) NOT NULL DEFAULT '',
+  `quantity` int(10) unsigned NOT NULL DEFAULT '0',
+  `threshold` int(10) unsigned NOT NULL DEFAULT '0',
+  `price` double unsigned NOT NULL DEFAULT '0',
+  `subject_name` varchar(60) NOT NULL DEFAULT '' COMMENT '题课名称',
+  `project_name` varchar(60) NOT NULL DEFAULT '' COMMENT '实验名称',
+  `remark` varchar(80) NOT NULL DEFAULT '',
+  `status` tinyint(4) NOT NULL DEFAULT '0',
+  `add_uid` int(10) unsigned NOT NULL DEFAULT '0',
+  `edit_uid` int(10) unsigned NOT NULL DEFAULT '0',
+  `creator` varchar(30) NOT NULL DEFAULT '',
+  `updator` varchar(30) NOT NULL DEFAULT '' COMMENT '更新人',
+  `gmt_create` int(10) unsigned NOT NULL,
+  `gmt_modify` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `idx_hash` (`hash`),
+  KEY `idx_name` (`name`),
+  KEY `idx_status` (`status`),
+  KEY `idx_category_id` (`category_id`),
+  KEY `idx_quantity` (`quantity`),
+  KEY `idx_threshold` (`threshold`),
+  KEY `idx_subject_name` (`subject_name`),
+  KEY `idx_lab_id` (`lab_id`),
+  KEY `idx_oid` (`oid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+EOF;
+
+		$pm = $this->load->get_config('split_lab');
+		print_r($pm);
+		foreach($pm as $p){
+			
+			$exexSQL = str_replace('{i}',$p,$sql);
+			$this->Member_Model->execSQL($exexSQL);
+		}
+		
+	}
+	
+	
+	
+	
 	public function create_lab_role_tables(){
 		
 		$sql = <<< EOF
@@ -942,6 +1003,75 @@ EOF;
 	}
 	
 	
+	public function create_lab_gcate_tables(){
+		
+		$sql = <<< EOF
+CREATE TABLE `sp_lab_gcate{i}` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `oid` int(10) unsigned NOT NULL DEFAULT '0',
+  `name` varchar(50) NOT NULL DEFAULT '',
+  `status` tinyint(4) NOT NULL DEFAULT '0',
+  `pid` int(10) unsigned NOT NULL DEFAULT '0',
+  `displayorder` int(10) unsigned NOT NULL DEFAULT '0',
+  `add_uid` int(10) unsigned NOT NULL DEFAULT '0',
+  `edit_uid` int(10) unsigned NOT NULL DEFAULT '0',
+  `creator` varchar(30) NOT NULL DEFAULT '',
+  `updator` varchar(30) NOT NULL DEFAULT '',
+  `gmt_create` int(10) unsigned NOT NULL DEFAULT '0',
+  `gmt_modify` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `idx_pid` (`pid`),
+  KEY `idx_status` (`status`),
+  KEY `idx_name` (`name`),
+  KEY `idx_oid` (`oid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+EOF;
+
+		$pm = $this->load->get_config('split_lab');
+		print_r($pm);
+		foreach($pm as $p){
+			
+			$exexSQL = str_replace('{i}',$p,$sql);
+			$this->Member_Model->execSQL($exexSQL);
+		}
+		
+	}
+	
+	
+	
+	public function create_lab_measure_tables(){
+		
+		$sql = <<< EOF
+CREATE TABLE `sp_lab_measure{i}` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) NOT NULL DEFAULT '',
+  `status` tinyint(4) NOT NULL DEFAULT '0',
+  `oid` int(10) unsigned NOT NULL DEFAULT '0',
+  `add_uid` int(10) unsigned NOT NULL DEFAULT '0',
+  `edit_uid` int(10) unsigned NOT NULL DEFAULT '0',
+  `creator` varchar(30) NOT NULL DEFAULT '',
+  `updator` varchar(30) NOT NULL DEFAULT '',
+  `gmt_create` int(10) unsigned NOT NULL DEFAULT '0',
+  `gmt_modify` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `idx_status` (`status`),
+  KEY `idx_name` (`name`),
+  KEY `idx_oid` (`oid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+EOF;
+
+		$pm = $this->load->get_config('split_lab');
+		print_r($pm);
+		foreach($pm as $p){
+			
+			$exexSQL = str_replace('{i}',$p,$sql);
+			$this->Member_Model->execSQL($exexSQL);
+		}
+		
+	}
+	
+	
 	
 	/**
 	 * 
@@ -955,12 +1085,14 @@ CREATE TABLE `sp_orgination{i}` (
   `name` varchar(50) NOT NULL DEFAULT '' COMMENT '组织架构名称',
   `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '-1 表示已退出该机构，后台可用户清理数据',
   `is_default` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '是否用户默认机构',
+  `role_id` int(10) unsigned NOT NULL DEFAULT '0',
   `gmt_create` int(10) unsigned NOT NULL,
   `gmt_modify` int(10) unsigned NOT NULL,
   UNIQUE KEY `udx_uid` (`uid`,`oid`),
   KEY `idx_udefault` (`uid`,`is_default`),
   KEY `idx_status` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='实验室用户机构表,用于用户存保用户所在组织构机';
+
 
 
 EOF;
@@ -988,7 +1120,6 @@ CREATE TABLE `sp_lab_member{i}` (
   `oid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建该条记录 用户id',
   `lab_id` int(10) unsigned NOT NULL DEFAULT '0',
   `is_manager` char(1) NOT NULL DEFAULT 'n',
-  `role_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '角色id',
   `add_uid` int(10) unsigned NOT NULL DEFAULT '0',
   `edit_uid` int(10) unsigned NOT NULL DEFAULT '0',
   `creator` varchar(30) NOT NULL DEFAULT '',
@@ -1382,6 +1513,19 @@ EOF;
         	if(preg_match('/^sp_lab_role\d+$/i',$table,$match)){
         		continue;
         	}
+        	
+        	if(preg_match('/^sp_lab_gcate\d+$/i',$table,$match)){
+        		continue;
+        	}
+        	
+        	if(preg_match('/^sp_lab_measure\d+$/i',$table,$match)){
+        		continue;
+        	}
+        	
+        	if(preg_match('/^sp_lab_goods\d+$/i',$table,$match)){
+        		continue;
+        	}
+        	
         	
             $fields = $this->db->field_data($table);
             

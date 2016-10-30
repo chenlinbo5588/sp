@@ -1,18 +1,22 @@
 {include file="common/my_header.tpl"}
     {config_load file="goods.conf"}
-	{form_open(site_url('lab_measure/index'),'id="formSearch"')}
+    
+	{form_open(site_url($uri_string),'id="formSearch"')}
 	    <input type="hidden" name="page" value=""/>
-	    <table class="tb-type1 noborder search">
-	      <tbody>
-	      	<tr>
-	          <td><label>{#measure_title#}名称:</label></td>
-	          <td><input type="text" class="txt" name="name" value="{$smarty.post.name}" placeholder="请输入{#measure_title#}名称" /></td>
-	          <td><input type="submit" class="msbtn" value="查询" /></td>
-	       	</tr>
-	      </tbody>
-	    </table>
-	  
-		<table class="table tb-type2">
+	    <div class="goods_search">
+	    <ul class="search_con clearfix">
+	        <li>
+	            <label class="ftitle" style="width:80px;">{#measure_title#}名称:</label>
+	            <input type="text" value="{$smarty.post['name']}" name="name" class="txt" placeholder="请输入{#measure_title#}名称"/>
+	        </li>
+	        <li>
+	            <input class="master_btn" type="submit" name="search" value="查询"/>
+	        </li>
+	     </ul>
+	     <a class="master_btn position_a" style="right:0;top:10px;" href="{site_url('lab_measure/add')}">添加{#measure_title#}</a>
+	     
+	    </div>
+		<table class="fulltable style1">
 		    <thead>
 		        <tr>
 		            <th class="first">序号</th>
@@ -43,6 +47,7 @@
 	        </tfoot>
 		</table>
 	</form>
+	
 	<script>
 		$(function(){
 			bindDeleteEvent();

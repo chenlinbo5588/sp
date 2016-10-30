@@ -10,7 +10,7 @@ $config['base_url'] = '';
 $config['site_domain'] = $_SERVER['SERVER_NAME'];
 
 //$config['csrf_protection'] = FALSE;
-$config['page_size'] = 30;
+$config['page_size'] = 15;
 
 
 // 货品 90 分钟自动过期

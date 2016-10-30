@@ -7,6 +7,7 @@ $entity = array(
 'name' => 'varchar',
 'status' => 'tinyint',
 'is_default' => 'tinyint',
+'role_id' => 'int',
 'gmt_create' => 'int',
 'gmt_modify' => 'int'
 );

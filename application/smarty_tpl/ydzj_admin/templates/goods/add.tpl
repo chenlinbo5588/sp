@@ -1,15 +1,4 @@
 {include file="common/main_header.tpl"}
-  <div class="fixed-bar">
-    <div class="item-title">
-      <h3>商品</h3>
-      <ul class="tab-base">
-      	<li><a href="{admin_site_url('goods/index')}"><span>管理</span></a></li>
-      	<li><a class="current"><span>{if $info['goods_id']}编辑{else}新增{/if}</span></a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="fixed-empty"></div>
-  <div class="feedback">{$feedback}</div>
   {if $info['goods_id']}
   {form_open_multipart(admin_site_url('goods/edit'),'id="goods_form"')}
   {else}

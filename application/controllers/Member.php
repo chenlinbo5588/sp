@@ -139,7 +139,6 @@ class Member extends Ydzj_Controller {
 				
 				$this->load->library('Admin_service');
 				$result = $this->admin_service->do_adminlogin($this->input->post('email'),$this->input->post('password'));
-				
 				if($result['message'] != '成功'){
 					$this->assign('feedback',getErrorTip($result['message']));
 					break;
@@ -281,11 +280,7 @@ class Member extends Ydzj_Controller {
 	 * 登出
 	 */
 	public function logout(){
-		
-		if($this->isLogin()){
-			$this->session->unset_userdata('profile');
-		}
-		
+		$this->session->unset_userdata($this->_profileKey);
 		js_redirect('member/login');
 	}
 	

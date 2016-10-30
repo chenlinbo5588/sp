@@ -1,15 +1,4 @@
 {include file="common/main_header.tpl"}
-  <div class="fixed-bar">
-    <div class="item-title">
-      <h3>角色管理</h3>
-      <ul class="tab-base">
-      	<li><a class="current"><span>角色管理</span></a></li>
-      	<li><a href="{admin_site_url('authority/role_add')}"><span>添加角色</span></a></li>
-      </ul>
-     </div>
-  </div>
-  <div class="fixed-empty"></div>
-  
   {form_open(admin_site_url('authority/role'),'name="formSearch" id="formSearch"')}
     <input type="hidden" name="page" value=""/>
     <input type="hidden" name="submit_type" id="submit_type" value="" />

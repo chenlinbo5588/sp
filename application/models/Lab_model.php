@@ -102,15 +102,9 @@ class Lab_Model extends MY_Model {
         $childrenList = $this->getList($condition);
         if(is_array($childrenList)){
             foreach ($childrenList as $item){
-                $sepA = array();
-                
-                for($i = 0; $i < $level; $i++){
-                    $sepA[] = $separate;
-                }
-     
-                $item['sep'] = implode('',$sepA);
-                
+                $item['sep'] = str_repeat($separate,$level);
                 $item['level'] = $level;
+                
                 $this->_userTree[$item['id']] = $item;
                 $this->getListByTree($item['id'],$selfid, $separate,$level + 1);
             }

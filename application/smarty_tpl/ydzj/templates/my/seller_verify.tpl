@@ -1,7 +1,7 @@
 {include file="common/my_header.tpl"}
     {$stepHTML}
 	<div class="w-tixing clearfix"><b>温馨提醒：</b>
-	    <p>通过卖家认证之后,将可以获得后台实时的匹配提醒</p>
+	    <p>通过企业认证之后,将可以更好的客服服务以及数据保护等级</p>
 	  </div>
 	{include file="common/fancybox.tpl"}
 	{if $step == 1}
@@ -12,14 +12,15 @@
 	<input type="hidden" name="img_m" value=""/>
 	<table class="fulltable style1">
 	    <tbody>
+	       
 			<tr>
-				<td class="w120"><label>网店链接</label></td>
-				<td><input class="w50pre" type="text" name="store_url" value="{set_value('store_url')}" placeholder="请输入网店链接地址"/>{form_error('store_url')}</td>
+				<td class="w120"><label>企业名称</label></td>
+				<td><input class="w50pre" type="text" name="store_url" value="{set_value('store_url')}" placeholder="请输入企业名称"/>{form_error('store_url')}</td>
 			</tr>
 			<tr>
-				<td class="w120"><label>卖家最近交易流水</label></td>
+				<td class="w120"><label>工商营业执照</label></td>
 				<td>
-				    <input class="w50pre" id="file_upload" type="file" name="trade_pic" /><span>请上传尺寸JPG格式的最近交易流水图片,最小尺寸400x400</span>
+				    <input class="w50pre" id="file_upload" type="file" name="trade_pic" /><span>请上传尺寸JPG格式的工商营业执照,最小尺寸400x400</span>
 				    {form_error('img_b')}
 				</td>
 			</tr>
@@ -61,8 +62,7 @@
             $("#sellerForm").validate({
                 rules : {
                     store_url:{
-                        required:true,
-                        url:true
+                        required:true
                     },
                 }
             });
@@ -79,9 +79,9 @@
             <tr>
                 <td colspan="2">
                     <div class="trade_previw">
-				       <h5>卖家最近交易流水,点击图片可查看大图</h5>
+				       <h5>工商营业执照,点击图片可查看大图</h5>
 				       <a class="fancybox" href="{resource_url($info['source_pic'])}"><img src="{resource_url($info['trade_pic'])}"/></a>
-				       <div class="storeurl"><a href="{$info['store_url']}" target="_blank">网店链接:{$info['store_url']}</a></div>
+				       <div class="storeurl"><a href="{$info['store_url']}" target="_blank">工商营业执照:{$info['store_url']}</a></div>
 				       <div><input type="submit" class="master_btn" name="tijiao" value="确认无误,下一步"/></div>
 				    </div>
                 </td>
@@ -95,7 +95,7 @@
     </div>
     {elseif $step == 4}
     <div class="panel pd20{if $verfiyInfo['verify_result'] == 1} passbg{else} warnbg{/if}">
-        <span>{if $verfiyInfo['verify_result'] == 1}尊敬的<strong>{$profile['basic']['username']}</strong>用户，您已经认证成功，您现在可以去<a class="hightlight"  href="{site_url('inventory/index')}">维护库存</a>，您可以收到后台求货自动匹配的消息提醒。
+        <span>{if $verfiyInfo['verify_result'] == 1}尊敬的<strong>{$profile['basic']['username']}</strong>用户，您已经通过企业认证.
         {else}很抱歉，你的认证未通过审核，未审核原因:<span class="tip_error">{$verfiyInfo['verify_remark']|escape}</span>&nbsp;<a class="hightlight" href="{site_url('my/seller_verify?retry=yes')}">重新提交审核信息</a>{/if}</span>
     </div>
 	{/if}

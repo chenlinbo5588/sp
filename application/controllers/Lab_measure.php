@@ -1,11 +1,9 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 
-
 class Lab_Measure extends MyYdzj_Controller {
     public function __construct(){
 		parent::__construct();
-		$this->load->model('Lab_Measure_Model');
     }
     
     public function index()
@@ -24,6 +22,8 @@ class Lab_Measure extends MyYdzj_Controller {
             }
             
             //$condition['select'] = 'a,b';
+            
+            $condition['where']['oid'] = $this->_currentOid;
             $condition['order'] = "gmt_create DESC";
             $condition['pager'] = array(
                 'page_size' => config_item('page_size'),
@@ -33,32 +33,18 @@ class Lab_Measure extends MyYdzj_Controller {
 				'form_id' => '#formSearch'
             );
             
-            if(!empty($_GET['name'])){
-                $condition['like']['name'] = $_GET['name'];
+            $name = $this->input->get_post('name');
+            
+            if(!empty($name)){
+                $condition['like']['name'] = $name;
             }
             
-            $condition['where']['status'] = '正常';
             $data = $this->Lab_Measure_Model->getList($condition);
             $this->assign('page',$data['pager']);
             $this->assign('data',$data);
             
         }catch(Exception $e){
             //@todo error code here
-        }
-    }
-    
-    
-    public function compare($pid){
-    	$id = $_POST['id'];
-    	$info = $this->Goods_Category_Model->queryById($id);
-    	if ($pid == $info['id'])
-        {
-            $this->form_validation->set_message('compare', '%s 不能为自己');
-            return FALSE;
-        }
-        else
-        {
-            return TRUE;
         }
     }
     
@@ -79,9 +65,7 @@ class Lab_Measure extends MyYdzj_Controller {
 					break;
 				}
 				
-				$_POST['updator'] = $this->_adminProfile['basic']['name'];
-				
-				$flag = $this->Lab_Measure_Model->update($_POST,array('id' => $id));
+				$flag = $this->Lab_Measure_Model->update(array_merge($_POST,$this->addWhoHasOperated('edit')),array('id' => $id));
 				
 				if($flag < 0){
 					$this->jsonOutput($this->db->get_error_info());
@@ -114,7 +98,6 @@ class Lab_Measure extends MyYdzj_Controller {
     			$rows = $this->Lab_Measure_Model->delete(array('id' => $id));
     		}
     		
-    		
     		if($rows > 0){
     			$this->jsonOutput('删除成功');
     		}else{
@@ -138,11 +121,10 @@ class Lab_Measure extends MyYdzj_Controller {
 					break;
 				}
 				
-				$_POST['creator'] = $this->_adminProfile['basic']['name'];
-				$flag = $this->Lab_Measure_Model->_add($_POST);
+				$flag = $this->Lab_Measure_Model->_add(array_merge($_POST,$this->addWhoHasOperated()));
 				
 				if($flag > 0){
-					$this->jsonOutput('保存成功',array('redirectUrl' => admin_site_url('lab_measure/add')));
+					$this->jsonOutput('保存成功',array('redirectUrl' => site_url('lab_measure/index')));
 				}else{
 					$this->jsonOutput($this->db->get_error_info());
 				}
@@ -152,5 +134,4 @@ class Lab_Measure extends MyYdzj_Controller {
 			$this->display();
 		}
     }
-    
 }

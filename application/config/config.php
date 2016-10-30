@@ -394,7 +394,7 @@ $config['sess_regenerate_destroy'] = FALSE;
 |
 */
 $config['cookie_prefix']	= 'sp_';
-$config['cookie_domain']	= '';
+$config['cookie_domain']	= 'labv2.com';
 $config['cookie_path']		= '/';
 $config['cookie_secure']	= FALSE;
 $config['cookie_httponly'] 	= FALSE;

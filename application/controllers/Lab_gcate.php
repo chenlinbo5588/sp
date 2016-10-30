@@ -7,46 +7,65 @@
  
 class Lab_Gcate extends MyYdzj_Controller {
 	
-	private $_cacheKey = "lab_category";
+	private $_cacheKey = "gcate";
 	
     public function __construct(){
 		parent::__construct();
 		
-		$this->load->library('Goods_service');
-   		
-   		$this->assign('action',$this->uri->rsegment(2));
-		$this->assign('topnav',strtolower(get_class()).'/index');
-		
     }
+    
+    private function _getTreeData($moreCondition = array()){
+    	
+    	$condition = array(
+    		'where' => array(
+    			'oid' => $this->_currentOid
+    		),
+    		'order' => 'pid ASC, displayorder ASC'
+    	);
+    	
+    	
+    	$list = $this->Lab_Gcate_Model->getList(array_merge($condition,$moreCondition));
+    	
+    	//print_r($list);
+    	$treeHTML = array();
+    	
+    	if($list){
+    		$treeHTML = $this->phptree->makeTreeForHtml($list,array(
+				'primary_key' => 'id',
+				'parent_key' => 'pid',
+				'expanded' => trues
+			));
+    	}
+    	
+		return $treeHTML;
+	}
+	
+	
+	
     
     public function index()
     {
+    	
+    	$name = $this->input->get_post('name');
+    	if($name){
+    		$this->assign('list',$this->_getTreeData(array(
+				'like' => array(
+					'name' => $name
+				)
+			)));
+    	}else{
+    		$this->assign('list',$this->_getTreeData());
+    	}
+		
         $this->display();
     }
     
-    private function _updateCache(){
-    	$this->lab_service->expireCacheByCondition(array('key_id' => $this->_cacheKey));
-    }
     
-   	public function getTreeXML(){
-   		
-   		header("Content-type:text/xml");
-   		$cache = $this->Lab_Cache_Model->getFirstByKey($this->_cacheKey,'key_id');
-   		
-   		if(!empty($cache) && $cache['expire'] >= 0 && ((time() - $cache['gmt_create']) < CACHE_ONE_DAY )){
-   			echo $cache['content'];
-   		}else{
-   			$str = $this->_writeCache();
-   			echo $str;
-   		}
-   		
-   	}
-    
-    
+  
     public function compare($pid){
     	$id = $this->input->post('id');
     	
-    	$subIds = $this->Goods_Category_Model->getListByTree($id);
+    	$subIds = $this->Lab_Gcate_Model->getListByTree($id);
 		$ids = array();
 		$ids[] = $id;
 		if($subIds){
@@ -70,21 +89,15 @@ class Lab_Gcate extends MyYdzj_Controller {
     }
     
     
-    private function _writeCache(){
-    	$xml = $this->goods_service->goodsCategoryXML();
-   		$this->Lab_Cache_Model->addByKey($this->_cacheKey,$xml);
-   		
-   		return $xml;
-    }
-    
     public function edit(){
 		
 		$id = $this->input->get_post('id');
 		
 		if($this->isPostRequest()){
 			$this->form_validation->set_rules('id','分类id',  'required');
-			$this->form_validation->set_rules('name','分类名称',  'required');
+			$this->form_validation->set_rules('name','分类名称','required|is_unique_not_self['.$this->Lab_Gcate_Model->getTableRealName().".name.id.{$id}]");
 			$this->form_validation->set_rules('pid','父级分类',  'required|callback_compare');
+			
 			
 			for($i = 0; $i < 1; $i++){
 				if(!$this->form_validation->run()){
@@ -93,33 +106,39 @@ class Lab_Gcate extends MyYdzj_Controller {
 					break;
 				}
 				
-				$_POST['updator'] = $this->_profile['basic']['name'];
-				$rows = $this->Goods_Category_Model->update($_POST,array('id' => $id));
+				$data = array(
+					'name' => $this->input->post('name'),
+					'displayorder' => $this->input->post('displayorder'),
+					'pid' => $this->input->post('pid'),
+				);
+				
+				$rows = $this->Lab_Gcate_Model->update(array_merge($_POST,$this->addWhoHasOperated('edit')),array('id' => $id));
 				
 				if($rows >= 0){
-					if($rows > 0){
-						$this->_writeCache();
-					}
-					
-					$this->jsonOutput('保存成功');
+					$this->jsonOutput('保存成功',array('redirectUrl' => site_url('lab_gcate/edit?id='.$id)));
 				}else{
 					$this->jsonOutput($this->db->get_error_info());
 				}
 			}
 			
 		}else{
-			$info = $this->Goods_Category_Model->getFirstByKey($id);
+			$info = $this->Lab_Gcate_Model->getFirstByKey($id);
+			$this->assign('list',$this->_getTreeData());
 			$this->assign('info',$info);
-        	$this->display('goods_category/add');
+        	$this->display('lab_gcate/add');
 		}
     }
     
     public function delete(){
-    	
     	$id = $this->input->post('id');
     	
-    	if($this->isPostRequest()){
-    		$subIds = $this->Goods_Category_Model->getListByTree($id);
+    	if(!empty($id) && $this->isPostRequest()){
+    		
+    		if(is_array($id)){
+    			$id = $id[0];
+    		}
+    		
+    		$subIds = $this->Lab_Gcate_Model->getListByTree($id);
     		
     		$ids = array();
     		$ids[] = $id;
@@ -130,20 +149,19 @@ class Lab_Gcate extends MyYdzj_Controller {
     		}
     		
     		$ids = array_unique($ids);
+    		$rows =  $this->Lab_Gcate_Model->deleteByCondition(
+	    		array(
+	    			'where_in' => array(
+	    				array('key' => 'id','value' => $ids) 
+	    			)
+	    		)
+	    	);
     		
-    		$this->Goods_Category_Model->updateByCondition(array(
-				'status' => '已删除',
-				'updator' => $this->_profile['basic']['name']
-			),
-    		array(
-    			'where_in' => array(
-    				array('key' => 'id','value' => $ids) 
-    			
-    			)
-    		));
-    		
-    		$this->_writeCache();
-    		$this->jsonOutput('删除成功');
+    		if($rows){
+    			$this->jsonOutput('删除成功');
+    		}else{
+    			$this->jsonOutput($this->db->get_error_info());
+    		}
     		
     	}else{
     		$this->jsonOutput('请求参数错误');
@@ -151,11 +169,43 @@ class Lab_Gcate extends MyYdzj_Controller {
     }
     
     
+     private function _addRules(){
+     	
+    	$displayorder = $this->input->post('displayorder');
+    	if(!empty($displayorder)){
+    		$this->form_validation->set_rules('displayorder','排序',  'required|is_natural_no_zero|less_than_equal_to[9999]');
+    	}
+    }
+    
+    public function checkName($name,$id = 0){
+		$info = $this->Lab_Gcate_Model->getById(array(
+			'where' => array(
+				'name' => $name,
+				'oid' => $this->_currentOid
+			)
+		));
+		
+		if($info){
+			if($id && $info['id'] == $id){
+				//如果是自己就通过
+				return true;
+			}
+			
+			$this->form_validation->set_message('checkName', "名称{$name}已经存在");
+			return false;
+		}else{
+			return true;
+		}
+	}
+	
+    
     
     public function add()
     {
 		if($this->isPostRequest()){
-			$this->form_validation->set_rules('name','分类名称',  'required|max_length[30]');
+			$this->form_validation->set_rules('name','分类名称',  'required|max_length[30]|callback_checkName');
+     	
+			$this->_addRules();
 			
 			for($i = 0; $i < 1; $i++){
 				if(!$this->form_validation->run()){
@@ -164,18 +214,17 @@ class Lab_Gcate extends MyYdzj_Controller {
 					break;	
 				}
 				
-				$_POST['creator'] = $this->_profile['basic']['name'];
-				$newid = $this->Goods_Category_Model->_add($_POST);
-				
+				$newid = $this->Lab_Gcate_Model->_add(array_merge($_POST,$this->addWhoHasOperated()));
 				if($newid > 0){
-					$this->_updateCache();
-					$this->jsonOutput('保存成功');
+					$this->jsonOutput('保存成功',array('redirectUrl' => site_url('lab_gcate/edit?id='.$newid)));
 				}else{
 					$this->jsonOutput($this->db->get_error_info());
 				}
 			}
 			
 		}else{
+		
+			$this->assign('list',$this->_getTreeData());
         	$this->display();
 		}
     }

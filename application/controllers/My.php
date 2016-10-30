@@ -17,7 +17,10 @@ class My extends MyYdzj_Controller {
 		
 		
 		
-		
+	}
+	
+	public function nopermission(){
+		$this->display('common/nopermission');
 	}
 	
 	
@@ -76,7 +79,7 @@ class My extends MyYdzj_Controller {
 		
 		
 		$this->_breadCrumbs[] = array(
-			'title' => '卖家认证',
+			'title' => '企业认证',
 			'url' => $this->uri->uri_string
 		);
 		
@@ -94,8 +97,8 @@ class My extends MyYdzj_Controller {
 			
 			for($i = 0; $i < 1; $i++){
 				if(1 == $step){
-					$this->form_validation->set_rules('store_url', '网店链接','required|valid_url');
-					$this->form_validation->set_rules('img_b','交易流水图片','required|valid_url');
+					$this->form_validation->set_rules('store_url', '企业名称','required');
+					$this->form_validation->set_rules('img_b','工商营业执照','required|valid_url');
 					 
 					
 					/*
@@ -152,7 +155,7 @@ class My extends MyYdzj_Controller {
 					if($affectRow > 0){
 						$emailData = array(
 							'email' => $this->_getSiteSetting('site_email'),
-							'title' => '有新的卖家认证请求',
+							'title' => '有新的企业认证请求',
 							'content' => '用户:<a href="'.admin_site_url('member/index?search_field_name=username&search_field_value=').urlencode($this->_profile['basic']['username']).'" target="_blank">'.$this->_profile['basic']['username'].'</a> 提交了卖家认证资料，请及时审核,<a href="'.admin_site_url('seller/index').'" target="_blank">马上去审核</a>'
 						);
 						

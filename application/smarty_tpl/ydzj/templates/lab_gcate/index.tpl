@@ -1,139 +1,48 @@
 {include file="common/my_header.tpl"}
-{config_load file="goods.conf"}
-    <table class="autotable" id="prompt">
-	    <tbody>
-	      <tr class="space odd">
-	        <th colspan="12"><div class="title"><h5>操作提示</h5><span class="arrow"></span></div>
-	        </th>
-	      </tr>
-	      <tr>
-	        <td>
-	        	<ul>
-	              <li class="tip">【修改操作】鼠标双击{#category_title#}名称进入修改页面</li>
-		          <li class="tip">【删除操作】鼠标左键拖曳{#category_title#}名称至右侧空白区域进行删除</li>
-		          <li class="tip">【改变父级】鼠标拖曳{#category_title#}名称到某一{#category_title#}下</li>
-	            </ul>
-	        </td>
-	      </tr>
-	    </tbody>
-	  </table>
-	  <div id="catelist" style="max-width:750px;">
-	    <div class="rounded_box">
-	      <div id="treeboxbox_tree1"></div>
-	      <div id="loading_img" class="loading_div" style="display:none;"></div>
-	    </div>
-	  </div>
-	  
-	<div id="dialog-confirm" title="删除{#category_title#}" style="display:none;"><p><span class="ui-icon ui-icon-alert" style="float:left;"></span>确定删除<span class="categoryName hightlight"></span>吗?</p></div>
-	<div id="dialog-confirm2" title="删除{#category_title#}" style="display:none;"><p><span class="ui-icon ui-icon-alert" style="float:left;"></span>确定移动<span class="categoryName hightlight"></span>吗?</p></div>
-	
-	{include file="common/dhtml_tree.tpl"}
-	{include file="common/jquery_ui.tpl"}
-    <script>
-	    var tree=new dhtmlXTreeObject("treeboxbox_tree1","100%","100%",0);
-	    tree.setImagePath("/static/js/dhtmlxTree_v413_std/skins/web/imgs/dhxtree_web/");
-	    tree.enableHighlighting(true);
-	    tree.enableDragAndDrop(1);
-	    tree.enableSmartXMLParsing(true);
-	    
-	    var dialog = null;
-	    var successHandler = function(json){
-        	alert(json.message);
-        	
-        	if(json.message.indexOf('成功') != -1){
-        		location.href = "{site_url('goods_category/index')}";
-        	}
-        	
-        };
-        
-	    function tonclick(id){
-	    }
-	    
-	    function tondblclick(id){
-	        if(id == 'root'){
-	            return;
-	        }
-	        location.href= "{site_url('goods_category/edit?id=')}" + id + "&t" + Math.random();
-	    }
-	    
-	    function tondrag(id,id2){
-	    	
-	        if(0 == id2){
-	        
-	        	$( "#dialog-confirm .categoryName" ).html(tree.getItemText(id));
-	        	
-	        	$( "#dialog-confirm" ).dialog({
-			      resizable: false,
-			      height: "auto",
-			      width: 400,
-			      modal: true,
-			      buttons: {
-			        "确定": function() {
-			          	$.ajax({
-	                          type:"POST",
-	                          url:"{site_url('goods_category/delete')}",
-	                          dataType:"json",
-	                          data: { id: id },
-	                          success:successHandler,
-	                          error:function(XMLHttpRequest, textStatus, errorThrown){ }
-	                     });
-	                     
-			          	$( this ).dialog( "close" );
-			        },
-			        "取消": function() {
-			          $( this ).dialog( "close" );
-			        }
-			      }
-			    });
-	        }else{
-	        	
-	        	$( "#dialog-confirm2 .categoryName" ).html(tree.getItemText(id) + "到" + tree.getItemText(id2) + "下");
-	        	
-	        	$( "#dialog-confirm2" ).dialog({
-	        	  title:'移动{#category_title#}',
-			      resizable: false,
-			      height: "auto",
-			      width: 400,
-			      modal: true,
-			      buttons: {
-			        "确定": function() {
-			          	$.ajax({
-	                          type:"POST",
-	                          url:"{site_url('goods_category/edit')}",
-	                          dataType:"json",
-	                          data: { id: id , name : tree.getItemText(id) , pid: id2 },
-	                          success:successHandler,
-	                          error:function(XMLHttpRequest, textStatus, errorThrown){ }
-	                     });
-	                     
-			          	$( this ).dialog( "close" );
-			        },
-			        "取消": function() {
-			          $( this ).dialog( "close" );
-			        }
-			      }
-			    });
-	        }
-	    }
-	    
-	    function treeLoading(){
-	        $("#loading_img").show();
-	    }
-	    
-	    function treeLoaded(){
-	        $("#loading_img").hide();
-	    }
-	    
-	    tree.setOnLoadingStart(treeLoading);
-	    tree.setOnLoadingEnd(treeLoaded); 
-	    tree.setOnDblClickHandler(tondblclick);
-	    tree.setDragHandler(tondrag);
-	    tree.loadXML("{site_url('goods_category/getTreeXML/')}",function(){
-	    	
-	    });
-	    
-	    $(function(){
-	        $.loadingbar({ templateData:{ message:"努力加载中..."} , container: "#catelist"});
-	    });
-    </script>
+  {form_open(site_url($uri_string),'name="formSearch" id="formSearch"')}
+    <input type="hidden" name="page" value=""/>
+    <div class="goods_search">
+     <ul class="search_con clearfix">
+        <li>
+            <label class="ftitle">名称</label>
+            <input type="text" value="{$smarty.post['name']}" name="name" class="txt" placeholder="请输入分类称"/>
+        </li>
+        <li>
+            <input class="master_btn" type="submit" name="search" value="查询"/>
+        </li>
+     </ul>
+     <a class="master_btn sideadd" href="{site_url('lab_gcate/add')}">添加分类</a>
+    </div>
+    <table class="fulltable">
+      
+      <thead>
+        <tr class="thead">
+          <th class="w25pre">分类名称</th>
+          <th>创建时间</th>
+          <th class="align-center">操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        {foreach from=$list item=item}
+        <tr class="hover" id="row{$item['id']}">
+          <td>{str_repeat('----',$item['level'])}{$item['name']|escape}</td>
+          <td>{time_tran($item['gmt_create'])}</td>
+          <td class="align-center">
+            <a href="{site_url('lab_gcate/edit')}?id={$item['id']}">编辑</a>&nbsp;
+            <a class="delete" href="javascript:void(0);" data-id="{$item['id']}" data-url="{site_url('lab_gcate/delete?id=')}{$item['id']}" data-title="{$item['name']|escape}">删除</a>
+          </td>
+        </tr>
+        {foreachelse}
+        <tr class="no_data">
+          <td colspan="5">没有符合条件的记录</td>
+        </tr>
+        {/foreach}
+      </tbody>
+    </table>
+  </form>
+  <script type="text/javascript">
+    $(function(){
+        bindDeleteEvent();
+    });
+  </script>
 {include file="common/my_footer.tpl"}

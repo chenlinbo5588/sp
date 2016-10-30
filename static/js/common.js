@@ -609,15 +609,15 @@ function bindOpEvent(selector,customSuccessFn,customErrorFn){
 function getIDS(obj){
 	var ids = [];
 	
+	var checkboxName = obj.attr('data-checkbox');
+	var dataId = obj.attr('data-id');
 	
-	if(obj.attr('href')){
+	if(typeof(checkboxName) != 'undefined'){
+		$("input[name='" + checkboxName + "']:checked").each(function(){
+			ids.push($(this).val());
+		});
+	}else if(typeof(dataId) != 'undefined'){
 		ids.push(obj.attr('data-id'));
-	}else{
-		var checkboxName = obj.attr('data-checkbox');
-  		
-  		$("input[name='" + checkboxName + "']:checked").each(function(){
-  			ids.push($(this).val());
-  		});
 	}
 	
 	return ids;
@@ -660,11 +660,14 @@ function bindAjaxSubmit(classname){
 				lockFn(submitBtn,name,false);
 				refreshFormHash(resp.data);
 				
-				alert(resp.message);
-				
-				if(resp.message != '保存成功'){
+				if(!/成功/.test(resp.message)){
+					
+					showToast('error',resp.message);
+					
 					var errors = resp.data.errors;
 					var first = null;
+					
+					$("label.errtip").hide();
 					
 					for(var f in errors){
 						if(first == null){
@@ -681,9 +684,14 @@ function bindAjaxSubmit(classname){
 					
 					
 				}else{
+					showToast('success',resp.message);
+					
 					$("label.errtip").hide();
 					if(typeof(resp.data.redirectUrl) != "undefined"){
-						location.href = resp.data.redirectUrl;
+						
+						setTimeout(function(){
+							location.href = resp.data.redirectUrl;
+						},500);
 					}
 				}
 			
@@ -756,7 +764,7 @@ function bindDeleteEvent(customSuccessFn,customErrorFn){
 
 function treeExpand(tree){
 	var str = tree.getAllItemsWithKids();
-	var ids;
+	var ids = [];
 	
 	if(str.length){
 		ids = str.split(',');

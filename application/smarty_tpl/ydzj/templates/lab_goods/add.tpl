@@ -1,17 +1,23 @@
 {include file="common/my_header.tpl"}
-	{config_load file="goods.conf"}
+	{config_load file="lab_goods.conf"}
+	<div id="handleDiv">
+    <form name="goodsForm" method="post" action="{site_url($uri_string)}">
     {if $info['id']}
-    <form name="goodsForm" method="post" action="{site_url('goods/edit?id=')}{$info['id']}">
     <input type="hidden" name="id" value="{$info['id']}"/>
     <input type="hidden" name="lab_id" value="{$info['lab_id']}"/>
-	{else}
-	<form name="goodsForm" method="post" action="{site_url('goods/add')}">
 	{/if}
     {include file="./add_body.tpl"}
     </form>
+    </div>
     <script>
     	$(function(){
-	    	{include file="common/form_ajax_submit.tpl"}
+	    	$("form").each(function(){
+                var name = $(this).prop("name");
+                formLock[name] = false;
+            });
+            
+            $.loadingbar({ urls: [ new RegExp($("form[name=goodsForm]").attr('action')) ], templateData:{ message:"努力加载中..." } ,container: "#handleDiv" });
+            bindAjaxSubmit('form');
 	    });
     </script>
 {include file="common/my_footer.tpl"}

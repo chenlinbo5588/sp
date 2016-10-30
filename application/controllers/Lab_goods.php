@@ -20,7 +20,7 @@ class Lab_goods extends MyYdzj_Controller {
     	
     	$this->_getPageData();
     	$this->assign('queryStr',$_SERVER['QUERY_STRING']);
-    	$this->assign('managedLabs',$this->session->userdata('user_manager_labs'));
+    	$this->assign('managedLabs',$this->session->userdata('manager_labs'));
     	$this->assign('joinedLabs',$this->session->userdata('user_labs'));
         $this->display();
     }
@@ -32,7 +32,7 @@ class Lab_goods extends MyYdzj_Controller {
     			'col' => 'A',
     			'name' => '实验室',
     			'width' => 20,
-    			'db_key' => 'lab_address'
+    			'db_key' => 'lab_name'
     		),
     		array(
     			'col' => 'B',
@@ -86,7 +86,7 @@ class Lab_goods extends MyYdzj_Controller {
     			'col' => 'J',
     			'name' => '备注',
     			'width' => 20,
-    			'db_key' => 'project_name'
+    			'db_key' => 'remark'
     		)
     	);
 		
@@ -101,8 +101,8 @@ class Lab_goods extends MyYdzj_Controller {
     	//$condition['select'] = 'a,b';
         $condition['order'] = "gmt_create DESC";
         
-        if(!empty($_GET['lab_address'])){
-            $condition['like']['lab_address'] = $_GET['lab_address'];
+        if(!empty($_GET['lab_name'])){
+            $condition['like']['lab_name'] = $_GET['lab_name'];
         }
         
         if(!empty($_GET['name'])){
@@ -117,7 +117,7 @@ class Lab_goods extends MyYdzj_Controller {
             $condition['like']['project_name'] = $_GET['project_name'];
         }
         
-        $condition['where']['status'] = '正常';
+        $condition['where']['status'] = '0';
         
         if($_GET['threshold_active']){
         	$condition['where']['quantity < threshold'] = null;
@@ -136,7 +136,7 @@ class Lab_goods extends MyYdzj_Controller {
         	),
         	array(
         		'key' => 'lab_id',
-        		'value' => $this->session->userdata['user_labs']
+        		'value' => $this->session->userdata('user_labs')
         	)
         );
         
@@ -144,7 +144,7 @@ class Lab_goods extends MyYdzj_Controller {
     	
     	//$list = $this->Lab_Goods_Model->getList();
     	
-    	require_once PHPExcel_PATH.'PHPExcel.php';
+    	$this->load->file(PHPExcel_PATH.'PHPExcel.php');
     	
     	$cacheMethod = PHPExcel_CachedObjectStorageFactory::cache_to_discISAM; 
         $cacheSettings = array( 'dir'  => PHPExcel_TEMP_PATH );
@@ -216,7 +216,7 @@ class Lab_goods extends MyYdzj_Controller {
         foreach($list as $p){
             $current_row = $i + $row_start;
             
-            $objPHPExcel->getActiveSheet()->setCellValue('A'.$current_row,$p['lab_address']);
+            $objPHPExcel->getActiveSheet()->setCellValue('A'.$current_row,$p['lab_name']);
             $objPHPExcel->getActiveSheet()->setCellValue('B'.$current_row,$p['code']);
             $objPHPExcel->getActiveSheet()->setCellValue('C'.$current_row, $p['name']);
             $objPHPExcel->getActiveSheet()->setCellValue('D'.$current_row, $p['category_name']);
@@ -225,7 +225,7 @@ class Lab_goods extends MyYdzj_Controller {
             $objPHPExcel->getActiveSheet()->setCellValue('G'.$current_row, $p['quantity']);
             $objPHPExcel->getActiveSheet()->setCellValue('H'.$current_row, $p['price']);
             $objPHPExcel->getActiveSheet()->setCellValue('I'.$current_row, $p['subject_name']);
-            $objPHPExcel->getActiveSheet()->setCellValue('J'.$current_row, $p['project_name']);
+            $objPHPExcel->getActiveSheet()->setCellValue('J'.$current_row, $p['remark']);
             $i++;
         }
         
@@ -276,208 +276,213 @@ class Lab_goods extends MyYdzj_Controller {
 	    	
 	    	echo '<style type="text/css"> body { font: 62.5% "Microsoft Yahei", "Lucida Grande", Verdana, Lucida, Helvetica, Arial, "Simsun", sans-serif; } .import_result { border-collapse: collapse; } .import_result td { font-size:100%; border: 1px solid black; }  .success td {color:blue;} .failed td {color:red;}</style>';
 	    	//flush();
-	    	$id = $this->input->post('file_id');
 	    	
-	    	if(!empty($id)){
-	    		
-	    		$this->load->model('Attachment_Model');
-	    		//$this->load->model('Goods_Import_Model');
-	    		$excelFile = $this->Attachment_Model->getById(array(
-	    			'select' => 'file_url',
-	    			'where' => array(
-	    				'id' => $id
-	    			)
-	    		));
-	    		
-	    		$filePath = ROOTPATH.'/'.$excelFile['file_url'];
-	    		
-	    		if(is_file($filePath)){
-	    			
-	    			//init basic data
-	    			$categoryList = $this->Lab_Gcate_Model->getList();
-					$hashCategory = array();
-					foreach($categoryList as $item){
-						$hashCategory[$item['name']] = $item['id'];
-					}
+	    	$excelFile = $this->session->userdata('import_file');
+			$this->session->set_userdata(array(
+				'import_file' => ''
+			));
+			
+			$filePath = ROOTPATH.'/'.$excelFile;
+	    	if(file_exists($filePath) && is_file($filePath)){
+    			//init basic data
+    			
+    			$categoryList = $this->Lab_Gcate_Model->getList();
+				$hashCategory = array();
+				foreach($categoryList as $item){
+					$hashCategory[$item['name']] = $item['id'];
+				}
+				
+				$keyConfig = $this->_getExcelColumnConfig();
+				
+				$userLabs = $this->_getUserLab();
+				$hashLabs = array();
+				foreach($userLabs as $lab){
+					$lab['address'] = sbc_to_dbc(str_replace(array("\n","\r","\r\n"),"",trim($lab['address'])));
+					$hashLabs[$lab['address']] = $lab;
+				}
+				
+				// begin
+    			$this->load->file(PHPExcel_PATH.'PHPExcel.php');
+    			
+    			$objPHPexcel = PHPExcel_IOFactory::load($filePath); 
+				$objWorksheet = $objPHPexcel->getActiveSheet(0); 
+				$startRow = 0;
+				$readAddOn = 1; //标题行下再两行开始读  hard code , need make it configureable
+				$keyword = '实验室';
+				$findKeyword = false;
+				$highestRow = $objWorksheet->getHighestRow();
+				
+				if($highestRow > 1000){
+					$highestRow = 1000;
+				}
 					
-					$keyConfig = $this->_getExcelColumnConfig();
+				$result = array('success' => 0 , 'failed' => 0 ,'duplicate' => 0 );
+				
+				echo '<div>导入中....</div>';
+				/*echo '<table class="import_result"><tbody><tr>';
+				$temp = array();
+				
+				foreach($keyConfig as $config){
+					$temp[] = "<td>".$config['name']."</td>";
+				}
+				echo implode('',$temp);
+				echo '</tr>';
+				*/
+				flush();
+				
+				
+				foreach ($objWorksheet->getRowIterator() as $row) { 
+					 $cellIterator = $row->getCellIterator();
+					 $startRow++;
+					 
+					 foreach ($cellIterator as $cell) {
+					    if(str_replace(array("\n","\r","\r\n"),"",trim($cell->getValue())) == $keyword){
+					    	$findKeyword = true;
+					    	break;
+					    }
+					 }
+					 
+					 if($findKeyword){
+					 	break;
+					 }
+				}
+				
+				
+				for($rowIndex = ($startRow + $readAddOn); $rowIndex <= $highestRow; $rowIndex++){
+					$rowValue = array(
+						'oid' => $this->_currentOid
+					);
+					$flag = false;
+					$affectRow = 0;
+					$classname ="failed";
 					
-					$userLabs = $this->_getUserLab();
-					$hashLabs = array();
-					foreach($userLabs as $lab){
-						$lab['address'] = sbc_to_dbc(str_replace(array("\n","\r","\r\n"),"",trim($lab['address'])));
-						$hashLabs[$lab['address']] = $lab;
-					}
-					
-					// begin
-	    			require_once PHPExcel_PATH.'PHPExcel.php';
-	    			$objPHPexcel = PHPExcel_IOFactory::load($filePath); 
-					$objWorksheet = $objPHPexcel->getActiveSheet(0); 
-					$startRow = 0;
-					$readAddOn = 2; //标题行下再两行开始读  hard code , need make it configureable
-					$keyword = '实验室';
-					$findKeyword = false;
-					$highestRow = $objWorksheet->getHighestRow();
-					
-					$result = array('success' => 0 , 'failed' => 0 ,'duplicate' => 0 );
-					echo '<table class="import_result"><tbody><tr>';
-					$temp = array();
+					///$rowValue['id'] = NULL;
 					
 					foreach($keyConfig as $config){
-						$temp[] = "<td>".$config['name']."</td>";
-					}
-					echo implode('',$temp);
-					echo '</tr>';
-					
-					flush();
-					
-					foreach ($objWorksheet->getRowIterator() as $row) { 
-						 $cellIterator = $row->getCellIterator();
-						 $startRow++;
-						 
-						 foreach ($cellIterator as $cell) {
-						    if(str_replace(array("\n","\r","\r\n"),"",trim($cell->getValue())) == $keyword){
-						    	$findKeyword = true;
-						    	break;
-						    }
-						 }
-						 
-						 if($findKeyword){
-						 	break;
-						 }
+						$rowValue[$config['db_key']] = sbc_to_dbc(str_replace(array("\n","\r","\r\n"),"",trim($objWorksheet->getCell($config['col'].$rowIndex)->getValue())));
 					}
 					
-					$extraMessage = '';
+					//important , do not drop this line
+					if(empty($rowValue['lab_name'])){
+						break;
+					}
 					
-					for($rowIndex = ($startRow + $readAddOn); $rowIndex <= $highestRow; $rowIndex++){
-						$rowValue = array();
-						$flag = false;
-						$affectRow = 0;
-						$classname ="failed";
-						
-						///$rowValue['id'] = NULL;
-						$rowValue['file_id'] = $id;
-						
+					//实验室名称不存在
+					if(empty($hashLabs[$rowValue['lab_name']])){
+						/*
+						$temp = array();
+						$temp[] = '<tr class="failed">';
 						foreach($keyConfig as $config){
-							$rowValue[$config['db_key']] = sbc_to_dbc(str_replace(array("\n","\r","\r\n"),"",trim($objWorksheet->getCell($config['col'].$rowIndex)->getValue())));
+							$temp[] = "<td>".$rowValue[$config['db_key']]."</td>";
 						}
+						$temp[] = "</tr>";
 						
-						//important , do not drop this line
-						if(empty($rowValue['lab_address'])){
-							break;
-						}
+						echo implode('',$temp);
+						flush();
+						*/
+						$result['failed']++;
+						continue;
+					}
+					
+					$rowValue['lab_id'] = empty($hashLabs[$rowValue['lab_name']]['id']) ? 0 : $hashLabs[$rowValue['lab_name']]['id'];
+					$rowValue['category_id'] = empty($hashCategory[$rowValue['category_name']]) ? 0 : $hashCategory[$rowValue['category_name']];
+					$rowValue['specific'] = strtoupper($rowValue['specific']);
+					if(preg_match("/^-+$/",$rowValue['specific'])){
+						$rowValue['specific'] = '';
+					}
+					
+					$rowValue['quantity'] = intval($rowValue['quantity']);
+					$rowValue['price'] = (double)$rowValue['price'];
+					$rowValue['add_uid'] = $this->_profile['basic']['uid'];
+					$rowValue['creator'] = $this->_profile['basic']['username'];
+					
+					$rowValue['hash'] = $this->_getGoodsHash(
+						array(
+							'oid' => $this->_currentOid,
+							'lab_name' => $rowValue['lab_name'],
+							'code' => $rowValue['code'],
+							'name' => $rowValue['name'],
+							'specific' => strtoupper($rowValue['specific'])
+						)
+					);
+					//检查是否已经存在
+					try {
+						$flag = $this->Lab_Goods_Model->_add($rowValue);
+					}catch(Exception $re){
 						
-						//实验室地址不存在
-						if(empty($hashLabs[$rowValue['lab_address']])){
-							$temp = array();
-							$temp[] = '<tr class="failed">';
-							foreach($keyConfig as $config){
-								$temp[] = "<td>".$rowValue[$config['db_key']]."</td>";
+						//print_r($re);
+					}
+					
+					
+					if($flag > 0){
+						$result['success']++;
+						$classname = "success";
+					}else{
+						$errorInfo = $this->db->get_error_info();
+						
+						///file_put_contents('debug.txt',print_r($errorInfo,true));
+						
+						if($errorInfo['code'] == 1062){
+							foreach($rowValue as $rowKey => $rowV){
+								$this->db->set($rowKey, $rowV);
 							}
-							$temp[] = "</tr>";
 							
-							echo implode('',$temp);
-							flush();
+							//hash key duplicate
+							if($_POST['import_mode'] == '累加模式'){
+								$this->db->set('quantity', "quantity + {$rowValue['quantity']}",false);
+							}else{
+								$this->db->set('quantity', $rowValue['quantity']);
+							}
 							
-							$result['failed']++;
-							continue;
-						}
-						
-						$rowValue['lab_id'] = empty($hashLabs[$rowValue['lab_address']]['id']) ? 0 : $hashLabs[$rowValue['lab_address']]['id'];
-						$rowValue['category_id'] = empty($hashCategory[$rowValue['category_name']]) ? 0 : $hashCategory[$rowValue['category_name']];
-						$rowValue['specific'] = strtoupper($rowValue['specific']);
-						if(preg_match("/^-+$/",$rowValue['specific'])){
-							$rowValue['specific'] = '';
-						}
-						
-						$rowValue['quantity'] = intval($rowValue['quantity']);
-						$rowValue['price'] = (double)$rowValue['price'];
-						$rowValue['creator'] = $this->_adminProfile['basic']['name'];
-						
-						$rowValue['hash'] = $this->_getGoodsHash(
-							array(
-								'lab_address' => $rowValue['lab_address'],
-								'code' => $rowValue['code'],
-								'name' => $rowValue['name'],
-								'specific' => strtoupper($rowValue['specific'])
-							)
-						);
-						
-						//检查是否已经存在
-						
-						try {
-							$flag = $this->Lab_Goods_Model->_add($rowValue);
-						}catch(Exception $re){
 							
-							print_r($re);
-						}
-						
-						if($flag > 0){
-							$result['success']++;
-							$classname = "success";
-						}else{
-							$errorInfo = $this->db->get_error_info();
+							$this->db->set('status', '0');
+							$this->db->set('updator', $this->_profile['basic']['username']);
+							$this->db->set('edit_uid', $this->_profile['basic']['uid']);
+							$this->db->set('gmt_modify', time());
 							
-							///file_put_contents('debug.txt',print_r($errorInfo,true));
+							$this->db->where(array('hash' => $rowValue['hash']));
 							
-							if($errorInfo['code'] == 1062){
-								foreach($rowValue as $rowKey => $rowV){
-									$this->db->set($rowKey, $rowV);
-								}
-								
-								//hash key duplicate
-								if($_POST['import_mode'] == '累加模式'){
-									$this->db->set('quantity', "quantity + {$rowValue['quantity']}",false);
-								}else{
-									$this->db->set('quantity', $rowValue['quantity']);
-								}
-								
-								
-								$this->db->set('status', '正常');
-								$this->db->set('updator', $this->_adminProfile['basic']['name']);
-								$this->db->set('gmt_modify', time());
-								
-								$this->db->where(array('hash' => $rowValue['hash']));
-								
-								$affectRow = $this->db->update($this->Lab_Goods_Model->getTableRealName());
-								if($affectRow >= 0){
-									$classname = "success";
-									$result['duplicate']++;
-								}else{
-									$classname = "failed";
-									$result['failed']++;
-								}
-								
+							$affectRow = $this->db->update($this->Lab_Goods_Model->getTableRealName());
+							if($affectRow >= 0){
+								$classname = "success";
+								$result['duplicate']++;
 							}else{
 								$classname = "failed";
 								$result['failed']++;
 							}
+							
+						}else{
+							$classname = "failed";
+							$result['failed']++;
 						}
-						
-						$trRow = array();;
-						$trRow[] = "<tr class=\"{$classname}\">";
-						foreach($keyConfig as $config){
-							$trRow[] = "<td>".$rowValue[$config['db_key']]."</td>";
-						}
-						$trRow[] = "</tr>";
-						
-						echo implode('',$trRow);
-						
-						unset($trRow);
-						
-						flush();
 					}
 					
-					echo '</tbody></table>';
-					echo '<p>导入结果</p>';
-					echo '<p><span style="color:blue">新建'.($result['success']).'行</span>';
-					echo '&nbsp;<span style="color:blue">更新(含重复数据行)'.($result['duplicate']).'行</span>';
-					echo '&nbsp;<span style="color:red">失败'.$result['failed'].'行</span></p>';
+					/*
+					$trRow = array();;
+					$trRow[] = "<tr class=\"{$classname}\">";
+					foreach($keyConfig as $config){
+						$trRow[] = "<td>".$rowValue[$config['db_key']]."</td>";
+					}
+					$trRow[] = "</tr>";
 					
-					$script = <<< EOF
-					<script>
-						window.onload = function(){
-							parent.document.getElementById("begin_import").disabled = false;
+					echo implode('',$trRow);
+					
+					unset($trRow);
+					
+					flush();
+					*/
+				}
+				
+				//echo '</tbody></table>';
+				echo '<p>导入结果</p>';
+				echo '<p><span style="color:blue">新建'.($result['success']).'行</span>';
+				echo '&nbsp;<span style="color:blue">更新(含重复数据行)'.($result['duplicate']).'行</span>';
+				echo '&nbsp;<span style="color:red">失败'.$result['failed'].'行</span></p>';
+				
+				$script = <<< EOF
+				<script>
+					window.onload = function(){
+						parent.document.getElementById("begin_import").disabled = false;
 						}
 					</script>
 EOF;
@@ -485,8 +490,8 @@ EOF;
 					echo $script;
 					flush();
 	    		}
-	    	}
-    		
+	    		
+	    		@unlink($filePath);
     	}else{
     		
     		$this->assign('labList',$this->_getUserLab());
@@ -498,22 +503,40 @@ EOF;
     }
     
     
+    public function upload(){
+		
+		///print_r($_FILES);
+		if($this->isPostRequest()){
+			$this->load->library('Attachment_service');
+			$config = $this->attachment_service->getUploadConfig();
+			$config['without_db'] = true;
+			$config['allowed_types'] = 'xlsx|xls';
+			$fileInfo = $this->attachment_service->addAttachment('Filedata',$config);
+			
+			$this->session->set_userdata(array(
+				'import_file' => $fileInfo['file_url'],
+			));
+			
+			$this->jsonOutput('上传成功');
+		}
+	}
+	
+	
+    
     public function empty_goods(){
     	
     	$this->assign('labList',$this->_getUserLab());
     	
+    	$lab_ids = explode(',',$_POST['lab_id']);
+    	
     	$message = "";
-    	if($this->isPostRequest()){
-    		
-    		$lab_ids = explode(',',$_POST['lab_id']);
-    		
-    		$valid_id = array();
+    	if($lab_ids && $this->isPostRequest()){
     		$lab_checked = array();
-    		
+    		$valid_id = array();
     		
     		foreach($lab_ids as $id ){
     			$lab_checked[$id] = true;
-    			if(in_array($id, $this->session->userdata['user_labs'])){
+    			if(in_array($id, $this->session->userdata('user_labs'))){
     				$valid_id[] = $id;
     			}
     		}
@@ -530,23 +553,30 @@ EOF;
     			}
     			
     			$this->Lab_Goods_Model->deleteByCondition($condition);
+    			
+    			$message = "清空成功";
+    		}else{
+    			
+    			$message = "请求成功,但没有记录被清除";
     		}
     		
     		//print_r($this->session->all_userdata());
     		//print_r($valid_id);
     		//print_r($condition);
-    		$message = "清空成功";
+    		$this->jsonOutput($message);
     		
-    		$this->assign('lab_id',$lab_ids);
-    		$this->assign('message',$message);
+    		//$this->assign('lab_id',$lab_ids);
+    		//$this->assign('message',$message);
+    	}else{
+    		$this->display();
     	}
     	
-        $this->display();
+        
     }
     
     
     private function _addRules(){
-    	$this->form_validation->set_rules('lab_id','实验室地址',  'required|is_natural_no_zero');
+    	$this->form_validation->set_rules('lab_id','实验室名称',  'required|is_natural_no_zero');
     	$this->form_validation->set_rules('code','药品柜/试验台编号',  'required|max_length[100]');
 		$this->form_validation->set_rules('name','名称',  'required|max_length[100]');
 		$this->form_validation->set_rules('category_id','分类名称',  'required|callback_check_category');
@@ -607,6 +637,8 @@ EOF;
             }
             
             //$condition['select'] = 'a,b';
+            
+            $condition['where']['oid'] = $this->_currentOid;
             $condition['order'] = "gmt_modify DESC";
             $condition['pager'] = array(
                 'page_size' => $page_size,
@@ -617,8 +649,8 @@ EOF;
             );
             
             
-            if(!empty($_GET['lab_address'])){
-                $condition['like']['lab_address'] = $_GET['lab_address'];
+            if(!empty($_GET['lab_name'])){
+                $condition['like']['lab_name'] = $_GET['lab_name'];
             }
             
             if(!empty($_GET['name'])){
@@ -629,13 +661,15 @@ EOF;
                 $condition['like']['subject_name'] = $_GET['subject_name'];
             }
             
+            /*
             if(!empty($_GET['project_name'])){
                 $condition['like']['project_name'] = $_GET['project_name'];
             }
+            */
             
             $condition['where']['status'] = '正常';
             
-            if($_GET['threshold_active']){
+            if($_GET['threshold_active'] == 'y'){
             	$condition['where']['quantity <= threshold'] = null;
             	$condition['where']['threshold !='] = 0;
             }
@@ -654,10 +688,10 @@ EOF;
             	)
             );
             
-            if($this->_loginUID != LAB_FOUNDER_ID){
+            if(!$this->isOrginationFounder()){
             	$condition['where_in'][] = array(
             		'key' => 'lab_id',
-            		'value' => $this->session->userdata['user_labs']
+            		'value' => $this->session->userdata('user_labs')
             	);
             }
             
@@ -684,12 +718,13 @@ EOF;
 		$labName = $this->Lab_Model->getFirstByKey($_POST['lab_id']);
 		
 		$_POST['category_name'] = $categoryName['name'];
-		$_POST['lab_address'] = $labName['address'];
+		$_POST['lab_name'] = $labName['name'];
 		
-		//实验室地址 + 药品柜/试验台编号 + 名称 + 规格  确定唯一性
+		//机构ID + 实验室名称 + 药品柜/试验台编号 + 物品名称 + 规格  确定唯一性
 		$_POST['hash'] = $this->_getGoodsHash(
 			array(
-				'lab_address' => $_POST['lab_address'],
+				'oid' => $this->_currentOid,
+				'lab_name' => $_POST['lab_name'],
 				'code' => $_POST['code'],
 				'name' => $_POST['name'],
 				'specific' => strtoupper($_POST['specific'])
@@ -715,12 +750,11 @@ EOF;
 					break;
 				}
 				
-				$_POST['updator'] = $this->_adminProfile['basic']['name'];
 				$this->_prepareData();
 				
 				unset($_POST['lab_id']);
 				
-				$flag = $this->Lab_Goods_Model->update($_POST,array('id' => $id));
+				$flag = $this->Lab_Goods_Model->update(array_merge($_POST,$this->addWhoHasOperated('edit')),array('id' => $id));
 				
 				if($flag >= 0){
 					$this->jsonOutput('保存成功');
@@ -742,7 +776,7 @@ EOF;
 			$info = $this->Lab_Goods_Model->getFirstByKey($id);
 			$this->assign('info',$info);
 			
-			$this->display('goods/add');
+			$this->display('lab_goods/add');
 		}
     }
     
@@ -754,7 +788,7 @@ EOF;
 		$info = $this->Lab_Goods_Model->getFirstByKey(intval($id));
 		$this->assign('info',$info);
 		
-    	$this->display('goods/add_body');
+    	$this->display('lab_goods/add_body');
     }
     
     public function delete(){
@@ -775,7 +809,7 @@ EOF;
 					break;
 				}
 			
-				if($this->_loginUID != LAB_FOUNDER_ID){
+				if(!$this->isOrginationFounder()){
 					$labManager = $this->Lab_Member_Model->getLabManager($this->_loginUID,$info['lab_id']);
 		    		if(empty($labManager)){
 		    			$this->jsonOutput('您不是该实验室管理员，不能删除');
@@ -813,23 +847,19 @@ EOF;
     	ksort($hash);
     	$md5Value = array_values($hash);
     	//return md5($_POST['code'].$_POST['name'].strtoupper($_POST['specific']));
-    	return md5(implode($md5Value,''));
+    	return md5(implode('',$md5Value));
     }
     
     
     private function _getUserLab(){
-    	return $this->lab_service->getUserOwnedLabsHTML($this->_loginUID);
+    	return $this->lab_service->getUserOwnedLabsHTML($this->_loginUID,$this->_currentOid);
     	
     }
     
     private function _initBasicData(){
     	
 		$categoryList = $this->Lab_Gcate_Model->getListByTree();
-		$measureList = $this->Lab_Measure_Model->getList(array(
-			'where' => array(
-				'status' => '正常'
-			)
-		));
+		$measureList = $this->Lab_Measure_Model->getList();
 		
 		$this->assign('labList',$this->_getUserLab());
 		$this->assign('categoryList',$categoryList);
@@ -851,13 +881,11 @@ EOF;
 					break;
 				}
 				
-				$_POST['creator'] = $this->_adminProfile['basic']['name'];
-				
 				$this->_prepareData();
-				$flag = $this->Lab_Goods_Model->_add($_POST);
+				$flag = $this->Lab_Goods_Model->_add(array_merge($_POST,$this->addWhoHasOperated()));
 				
 				if($flag > 0){
-					$this->jsonOutput('保存成功');
+					$this->jsonOutput('保存成功',array('redirectUrl' => site_url('lab_goods/edit?id='.$flag)));
 				}else{
 					$errorInfo = $this->db->get_error_info();
 					

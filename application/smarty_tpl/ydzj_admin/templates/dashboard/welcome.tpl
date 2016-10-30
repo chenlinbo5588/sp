@@ -15,7 +15,7 @@
       <dd>
         <ul>
           <li class="w50pre normal"><a href="{admin_site_url('member/index')}">本周新增{*<sub><em id="statistics_week_add_member"></em></sub>*}</a></li>
-          <li class="w50pre normal"><a href="{admin_site_url('seller/index')}">卖家认证{*<sub><em id="statistics_week_add_member"></em></sub>*}</a></li>
+          <li class="w50pre normal"><a href="{admin_site_url('seller/index')}">企业认证{*<sub><em id="statistics_week_add_member"></em></sub>*}</a></li>
         </ul>
       </dd>
     </dl>

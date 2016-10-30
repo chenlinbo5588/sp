@@ -1,29 +1,37 @@
 {include file="common/my_header.tpl"}
-    {config_load file="goods.conf"}
-    {include file="./measure_common.tpl"}
-	<div class="fixed-empty"></div>
-    <div class="feedback">{$feedback}</div>
-	  {if $info['id']}
-	  <form name="categoryForm" method="post" action="{site_url('lab_measure/edit')}">
-	  <input type="hidden" name="id" value="{$info['id']}"/>
-	  {else}
-	  <form name="categoryForm" method="post" action="{site_url('lab_measure/add')}">
-	  {/if}
-	  
-	  <table class="autotable">
-       <tbody>
-      	<tr class="noborder">
-          <td colspan="2" class="required"><label class="validation" for="address">{#measure_title#}名称:</label><label class="errtip" id="error_name"></label></td>
-        </tr>
+    <div id="handleDiv">
+    {form_open(site_url($uri_string),'name="addForm"')}
+    {if $info['id']}
+        <input type="hidden" name="id" value="{$info['id']}"/>
+    {/if}
+    <table class="fulltable style1">
+      <tbody>
         <tr class="noborder">
-          <td class="vatop rowform"><input type="text" class="txt" name="name" value="{$info['name']|escape}" placeholder="请输入类别名称" /><input type="submit" class="msbtn" value="保存" /></td>
-          <td class="vatop tips"><label class="errtip" id="error_address"></label></td>
+          <td class="required w120"><label class="validation"><em></em>名称:</label></td>
+          <td class="vatop rowform">
+                <input type="text" value="{$info['name']|escape}" name="name" class="w40pre txt" placeholder="分类名称">
+                <label class="errtip" id="error_name"></label>
+          </td>
+        </tr>
+        <tr>
+          <td></td>
+          <td><input type="submit" name="submit" value="保存" class="master_btn"/></td>
         </tr>
        </tbody>
       </table>
-      <script>
-      	$(function(){
-      		{include file="common/form_ajax_submit.tpl"}
-      	});
-      </script>
+   </form>
+   </div>
+   <script>
+        $(function(){
+            $("form").each(function(){
+                var name = $(this).prop("name");
+                formLock[name] = false;
+            });
+            
+            bindAjaxSubmit('form');
+            
+            $.loadingbar({ urls: [ new RegExp($("form[name=addForm]").attr('action')) ], templateData:{ message:"努力加载中..." } ,container: "#handleDiv" });
+        });
+        
+     </script>
 {include file="common/my_footer.tpl"}

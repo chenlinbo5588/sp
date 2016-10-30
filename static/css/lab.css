@@ -1,26 +1,32 @@
+.sideadd {
+	
+	right:0;top:14px;
+	position:absolute;
+}
+
 .lab_users {
     margin: 10px 0 0 0;
 }
 
 .lab_users li {
-    display:block;
-    float:left;
-    width:80px;
-    text-align:center;
-    margin:2px 3px;
-    position:relative;
+    display: block;
+    float: left;
+    text-align: center;
+    margin: 2px 3px;
+    position: relative;
+    background-color: #f3d987;
+    padding: 0 20px 0 0;
 }
 
-.lab_users li a {
+.lab_users li a.username {
     display:block;
     padding: 5px 3px;
-    background:#f3d987;
 }
 
-.lab_users li a:hover {
+.lab_users li a.username:hover {
     background:#F0C640;
 }
-.lab_users .close {
+.lab_users a.delete {
     position: absolute;
     right: 0px;
     top: 5px;

@@ -30,3 +30,27 @@ $config['navs'] = array(
 		
 	)
 );
+
+$config['permission'] = array(
+	'my/change_mobile' => true,
+	'my/change_psw' => true,
+	'my/index' => true,
+	'my/nopermission' => true,
+	'my/seller_verify' => true,
+	'my/set_email' => true,
+	'my/set_avatar' => true,
+	'my/trade_upload' => true,
+	'my/upload_avatar' => true,
+	'my/verify_email' => true,
+	
+	'my_pm/check_newpm' => true,
+	'my_pm/delete' => true,
+	'my_pm/detail' => true,
+	'my_pm/index' => true,
+	'my_pm/sendpm' => true,
+	'my_pm/setread' => true,
+	'my_pm/setting' => true,
+	
+	'lab/orglist' => true,
+	
+);

@@ -11,9 +11,9 @@ $entity = array(
 'list_tplname' => 'varchar',
 'detail_tplname' => 'varchar',
 'add_uid' => 'int',
-'add_username' => 'varchar',
 'edit_uid' => 'int',
-'edit_username' => 'varchar',
+'creator' => 'varchar',
+'updator' => 'varchar',
 'gmt_create' => 'int',
 'gmt_modify' => 'int'
 );

@@ -3,9 +3,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 $entity = array(
 'id' => 'bigint',
-'file_id' => 'int',
+'oid' => 'int',
 'lab_id' => 'int',
-'lab_address' => 'varchar',
+'lab_name' => 'varchar',
 'code' => 'varchar',
 'name' => 'varchar',
 'specific' => 'varchar',
@@ -21,7 +21,10 @@ $entity = array(
 'price' => 'double',
 'subject_name' => 'varchar',
 'project_name' => 'varchar',
-'status' => 'varchar',
+'remark' => 'varchar',
+'status' => 'tinyint',
+'add_uid' => 'int',
+'edit_uid' => 'int',
 'creator' => 'varchar',
 'updator' => 'varchar',
 'gmt_create' => 'int',

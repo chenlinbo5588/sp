@@ -54,7 +54,7 @@ $config['navs'] = array(
 		'member' => array(
 			array('title' => '会员管理','url' => 'member/index'),
 			array('title' => '会员通知','url' => 'notify/index'),
-			array('title' => '卖家认证','url' => 'seller/index'),
+			array('title' => '企业认证','url' => 'seller/index'),
 		),
 		'notify' => 'member',
 		'seller' => 'member',
@@ -68,8 +68,10 @@ $config['navs'] = array(
 		'article' => array(
 			array('title' => '文章管理','url' => 'article/index'),
 			array('title' => '文章分类','url' => 'article_class/category'),
+			array('title' => '投诉建议','url' => 'suggestion/index'),
 		),
 		'article_class' => 'article',
+		'suggestion' => 'article',
 		'cms_article' =>  array(
 			array('title' => 'CMS文章','url' => 'cms_article/index'),
 			array('title' => 'CMS文章分类','url' => 'cms_article_class/index'),
@@ -119,7 +121,7 @@ $config['navs'] = array(
 			'notify/add' => '添加通知'
 		),
 		'seller' => array(
-			'seller/index' => '卖家认证管理'
+			'seller/index' => '企业认证管理'
 		),
 		'goods' => array(
 			'goods/index' => '管理',
@@ -143,6 +145,9 @@ $config['navs'] = array(
 		'article_class' => array(
 			'article_class/category' => '管理',
 			'article_class/add' => '添加',
+		),
+		'suggestion' => array(
+			'suggestion/index' => '管理',
 		),
 		'cms_article' => array(
 			'cms_article/index' => '管理',

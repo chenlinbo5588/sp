@@ -1,7 +1,7 @@
 {include file="common/my_header.tpl"}
   {config_load file="lab.conf"}
   	<div>
-  	   <a class="master_btn" href="{site_url('lab/add')}">添加实验室</a>
+  	   {if isset($permission['lab/add'])}<a class="master_btn" href="{site_url('lab/add')}">添加实验室</a>{/if}
   	</div>
   	<div class="w-tixing clearfix"><b>温馨提醒：</b>
         <p>1、【修改操作】鼠标双击实验室名称进入修改页面。</p>

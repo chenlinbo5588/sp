@@ -6,11 +6,15 @@ class Lab extends MyYdzj_Controller {
     public function __construct(){
 		parent::__construct();
 		
+		$this->_breadCrumbs[] = array(
+			'title' => '实验室管理中心',
+			'url' => 'lab/index'
+		);
+		
     }
     
     public function index()
     {
-    	
     	
         $this->display();
     }
@@ -28,6 +32,79 @@ class Lab extends MyYdzj_Controller {
     		),
     	);
 		
+	}
+	
+	
+	private function _getPageData(){
+    	try {
+            $page = $this->input->get_post('page');
+            $page_size = $this->input->get_cookie('page_size');
+            
+            if(!$page_size){
+            	$page_size = config_item('page_size');
+            }
+            
+            if($page_size > 100){
+            	$page_size = config_item('page_size');
+            }
+            
+            if(empty($page)){
+                $page = 1;
+            }
+            
+            $condition['where']['uid'] = $this->_loginUID;
+            $condition['order'] = "gmt_create DESC";
+            $condition['pager'] = array(
+                'page_size' => $page_size,
+                'current_page' => intval($page),
+                'query_param' => '',
+                'call_js' => 'search_page',
+				'form_id' => '#formSearch'
+            );
+            
+            $data = $this->lab_service->getOrginationByCondition($condition,$this->_loginUID);
+            $this->assign('page',$data['pager']);
+            $this->assign('list',$data['data']);
+            
+        }catch(Exception $e){
+            //@todo error code here
+        }
+    }
+    
+	/**
+	 * 
+	 */
+	public function orglist(){
+		
+		$this->_breadCrumbs[] = array(
+			'title' => '加入的组织机构',
+			'url' => $this->uri->uri_string
+		);
+		
+		
+		//update status
+		if($this->isPostRequest()){
+			for($i = 0; $i < 1; $i++){
+				
+				$id = $this->input->post('id');
+				
+				$this->Orgination_Model->update(array(
+					'is_default' => 0
+				),array('uid' => $this->_loginUID));
+				
+				$this->Orgination_Model->update(array(
+					'is_default' => 1
+				),array('oid' => $id,'uid' => $this->_loginUID));
+				
+				
+				$this->_initUserParam();
+			}
+			
+		}
+		
+		
+		$this->_getPageData();
+		$this->display();
 	}
     
     
@@ -47,12 +124,12 @@ class Lab extends MyYdzj_Controller {
 	            $condition['like']['name'] = $name;
 	        }
 	        
-	        $condition['where']['status'] = '正常';
+	        $condition['where']['status'] = '0';
 	        
-	        if($this->_loginUID != LAB_FOUNDER_ID){
+	        if(!$this->isOrginationFounder()){
 	        	$condition['where_in'][] = array(
 	        		'key' => 'id',
-	        		'value' => $this->session->userdata['user_labs']
+	        		'value' => $this->session->userdata('user_labs')
 	        	);
 	        }
 	        
@@ -62,7 +139,7 @@ class Lab extends MyYdzj_Controller {
 	        // @todo 防止超大记录 ，先预判记录数量 做判断 防止溢出
 	        $data = $this->Lab_Model->getList($condition);
 	
-	    	require_once PHPExcel_PATH.'PHPExcel.php';
+	    	$this->load->file(PHPExcel_PATH.'PHPExcel.php');
 	    	
 	    	$cacheMethod = PHPExcel_CachedObjectStorageFactory::cache_to_discISAM; 
 	        $cacheSettings = array( 'dir'  => PHPExcel_TEMP_PATH );
@@ -189,10 +266,7 @@ class Lab extends MyYdzj_Controller {
    	public function getTreeXML(){
    		header("Content-type:text/xml");
    		
-   		$oid = $this->_profile['lab']['current']['oid'];
-   		$uid = $this->_profile['basic']['uid'];
-   		
-   		echo $this->lab_service->getTreeXML($uid,$oid);
+   		echo $this->lab_service->getTreeXML($this->_loginUID,$this->_currentOid,'treexml');
    	}
     
     /**
@@ -319,9 +393,15 @@ class Lab extends MyYdzj_Controller {
 		
 		$feedback = '';
 		
+		$this->_breadCrumbs[] = array(
+			'title' => '修改实验室',
+			'url' => $this->uri->uri_string.'?id='.$id
+		);
+		
+		
 		if($id && $this->isPostRequest()){
 			$this->form_validation->set_rules('id','实验室id',  'required');
-			$this->form_validation->set_rules('name','实验室名称',  'trim|required|min_length[1]|max_length[15]');
+			$this->form_validation->set_rules('name','实验室名称',  'trim|required|min_length[1]|max_length[15]|is_unique_not_self['.$this->Lab_Model->getTableRealName().'.name.id.'.$id.']');
 			$this->form_validation->set_rules('address','实验室地址',  'trim|required|min_length[1]|max_length[15]');
 			$this->form_validation->set_rules('pid','父级',  'is_natural|callback_checkowner|callback_compare');
 			
@@ -385,7 +465,7 @@ class Lab extends MyYdzj_Controller {
         
         //$condition['select'] = 'a,b';
         
-        $condition['where']['lab_id'] = $lab_id;
+        $condition['where']['oid'] = $this->_currentOid;
         $condition['order'] = "gmt_create DESC";
         $condition['pager'] = array(
             'page_size' => 10,
@@ -501,7 +581,7 @@ class Lab extends MyYdzj_Controller {
     	if($this->isPostRequest()){
     		
     		for($i = 0; $i < 1; $i++){
-    			if($this->_loginUID != LAB_FOUNDER_ID && !$this->Lab_Member_Model->getLabManager($this->_loginUID,$id)){
+    			if(!$this->isOrginationFounder() && !$this->Lab_Member_Model->getLabManager($this->_loginUID,$id)){
 	    			$this->jsonOutput('对不起，您不是这个实验室的管理员，无权管理');
 	    			break;
 	    		}
@@ -553,11 +633,10 @@ class Lab extends MyYdzj_Controller {
 	    		
 	    		
 	    		if($_POST['drop_user_id'] && is_array($_POST['drop_user_id'])){
-	    			
 	    			/**
 	    			 * 删除lab 成员
 	    			 */
-	    			$dropRow = $this->Lab_Member_Model->deleteUsersByLabId($id,$_POST['drop_user_id'],array_unique(array(LAB_FOUNDER_ID , $this->_loginUID)));
+	    			$dropRow = $this->Lab_Member_Model->deleteUsersByLabId($id,$_POST['drop_user_id'],array($this->_loginUID));
 	    		}
 	    		
 	    		$this->jsonOutput('操作成功');
@@ -692,8 +771,6 @@ class Lab extends MyYdzj_Controller {
     		for($i = 0; $i < 1; $i++){
     			
     			$id = $this->input->post('id');
-    			
-    			
 				$isLabManager = $this->lab_service->isLabManager($this->_loginUID,$id,$this->_currentOid);
 				
 				if(!$isLabManager){
@@ -722,9 +799,14 @@ class Lab extends MyYdzj_Controller {
     public function add()
     {
     	
+    	$this->_breadCrumbs[] = array(
+			'title' => '添加实验室',
+			'url' => $this->uri->uri_string
+		);
+    	
 		if($this->isPostRequest()){
 			
-			$this->form_validation->set_rules('name','实验室名称',  'trim|required|min_length[1]|max_length[15]');
+			$this->form_validation->set_rules('name','实验室名称',  'trim|required|min_length[1]|max_length[15]|is_unique['.$this->Lab_Model->getTableRealName().'.name]');
 			$this->form_validation->set_rules('address','实验室地址',  'trim|required|min_length[1]|max_length[15]');
 			
 			$this->form_validation->set_rules('pid','父级','is_natural|callback_checkowner');
@@ -738,6 +820,8 @@ class Lab extends MyYdzj_Controller {
 				}
 				
 				$flag = $this->lab_service->addLab($_POST,$this->_profile['basic'],$this->_currentOid);
+				
+				
 				if($flag > 0){
 					$this->_updateCache();
 					$this->jsonOutput('保存成功',array('redirectUrl' => site_url('lab/index')));

@@ -5,56 +5,40 @@ class Lab_menu extends MyYdzj_Controller {
 	
     public function __construct(){
 		parent::__construct();
-		
-		$this->load->library('Tree_service');
-		$this->tree_service->setTargetModel($this->Lab_Fn_Model,'id','parent_id','name');
     }
     
     
-    private function _getMenu(){
-		$list = $this->tree_service->getListByTree(0,0,array(
-			'order' => 'parent_id ASC, displayorder DESC'
+    private function _getTreeData(){
+		$list = $this->Lab_Fn_Model->getList(array(
+			'order' => 'pid ASC, displayorder ASC'
+		
 		));
 		
-		return $list;
+		$treeHTML = array();
+		
+		if($list){
+			$treeHTML = $this->phptree->makeTreeForHtml($list,array(
+				'primary_key' => 'id',
+				'parent_key' => 'pid',
+				'expanded' => trues
+			));
+		}
+		
+		return $treeHTML;
 	}
 	
     
     public function index()
     {
-    	$this->assign('lab_menu',$this->_getMenu());
+    	$this->assign('lab_menu',$this->_getTreeData());
         $this->display();
     }
     
     
-    /**
-     * 权属
-     */
-    public function checkowner($pid){
-    	
-    	if($this->_loginUID != $this->_currentOid){
-    		$id = $this->input->post('id');
-    		
-	    	$info = $this->Lab_Model->getFirstByKey($id);
-	    	
-	    	
-	    	
-	    	
-	    	$allowIds[] = $info['pid'];
-    	
-    		if(!in_array($pid,$allowIds)){
-    			$this->form_validation->set_message('checkowner', '%s 不能选择不在自己管辖的实验室为父级');
-            	return FALSE;
-    		}
-    	}else{
-    		return true;
-    	}
-    }
-    
     public function compare($pid){
     	$id = $this->input->post('id');
     	
-    	$subIds = $this->Lab_Model->getListByTree($id);
+    	$subIds = $this->Lab_Fn_Model->getListByTree($id);
 		$ids = array();
 		$ids[] = $id;
 		if($subIds){
@@ -97,7 +81,8 @@ class Lab_menu extends MyYdzj_Controller {
 		if($id && $this->isPostRequest()){
 			$this->form_validation->set_rules('id','id',  'required');
 			$this->form_validation->set_rules('name','名称',  'trim|required|min_length[1]|max_length[15]');
-			$this->form_validation->set_rules('pid','父级',  'is_natural|callback_checkowner|callback_compare');
+			$this->form_validation->set_rules('url','链接',  'trim|required|min_length[1]|max_length[60]');
+			$this->form_validation->set_rules('pid','父级',  'is_natural|callback_compare');
 			
 			$this->_addRules();
 			
@@ -108,22 +93,24 @@ class Lab_menu extends MyYdzj_Controller {
 					break;
 				}
 				
-				$flag = $this->Lab_Menu_Model->update(array(
+				$flag = $this->Lab_Fn_Model->update(array(
 					'name' => $this->input->post('name'),
 					'pid' => $this->input->post('pid'),
 					'displayorder' => $this->input->post('displayorder'),
 				),array('id' => $id));
 				
 				if($flag >= 0){
-					$this->jsonOutput('保存成功',array('redirectUrl' => site_url('lab_menu/edit?id='.$id)));
+					$this->getCacheObject()->delete('siteFn');
+					
+					$this->jsonOutput('保存成功');
 				}else{
 					$this->jsonOutput($this->db->get_error_info());
 				}
 			}
 			
 		}else{
-			$info = $this->Lab_Model->getFirstByKey($id);
-			
+			$info = $this->Lab_Fn_Model->getFirstByKey($id);
+			$this->assign('lab_menu',$this->_getTreeData());
 			$this->assign('info',$info);
 	        $this->display('lab_menu/add');
 		}
@@ -133,28 +120,37 @@ class Lab_menu extends MyYdzj_Controller {
      * 删除
      */
     public function delete(){
+    	$id = $this->input->post('id');
+    	
+    	if(is_array($id)){
+    		$id = $id[0];
+    	}
     	
     	if($this->isPostRequest()){
     		for($i = 0; $i < 1; $i++){
-    			
-    			$id = $this->input->post('id');
-    			
-	    		$rows = $this->Lab_Fn_Model->deleteByWhere(array(
-	    			'id' => $id,
+	    		$subIds = $this->Lab_Fn_Model->getListByTree($id);
+	    		
+	    		$ids = array();
+	    		if(!empty($subIds)){
+	    			$ids = array_keys($subIds);
+	    		}
+	    		
+				$ids[] = $id;
+				
+	    		$rows = $this->Lab_Fn_Model->deleteByCondition(array(
+	    			'where_in' => array(
+	    				array('key' => 'id','value' => $ids)
+	    			)
 	    		));
-	    		
-	    		
-	    		// 把子树删除
-	    		
-	    		
-	    		
 	    		
 	    		if($rows < 0){
 	    			$this->jsonOutput($this->db->get_error_info());
 	    			break;
 	    		}
 	    		
-	    		$this->jsonOutput('删除成功');
+	    		$this->getCacheObject()->delete('siteFn');
+	    		
+	    		$this->jsonOutput('删除成功',array('redirectUrl' => site_url('lab_menu/index')));
     		}
     		
     	}else{
@@ -163,7 +159,7 @@ class Lab_menu extends MyYdzj_Controller {
     }
     
     /**
-     * 添加实验室
+     * 
      */
     public function add()
     {
@@ -171,6 +167,7 @@ class Lab_menu extends MyYdzj_Controller {
 		if($this->isPostRequest()){
 			
 			$this->form_validation->set_rules('name','名称',  'trim|required|min_length[1]|max_length[15]');
+			$this->form_validation->set_rules('url','链接',  'trim|required|min_length[1]|max_length[60]');
 			$this->form_validation->set_rules('pid','父级','is_natural');
 			$this->_addRules();
 			
@@ -184,6 +181,7 @@ class Lab_menu extends MyYdzj_Controller {
 				$flag = $this->Lab_Fn_Model->_add($_POST);
 				
 				if($flag > 0){
+					$this->getCacheObject()->delete('siteFn');
 					$this->jsonOutput('保存成功',array('redirectUrl' => site_url('lab_menu/index')));
 				}else{
 					$this->jsonOutput($this->db->get_error_info());
@@ -191,7 +189,7 @@ class Lab_menu extends MyYdzj_Controller {
 			}
 		}else{
 			
-			$this->assign('lab_menu',$this->_getMenu());
+			$this->assign('lab_menu',$this->_getTreeData());
        	 	$this->display();
 		}
     }

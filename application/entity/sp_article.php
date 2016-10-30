@@ -15,8 +15,10 @@ $entity = array(
 'article_click' => 'int',
 'article_author' => 'varchar',
 'article_digest' => 'varchar',
-'uid' => 'int',
-'username' => 'varchar',
+'add_uid' => 'int',
+'edit_uid' => 'int',
+'creator' => 'varchar',
+'updator' => 'varchar',
 'gmt_create' => 'int',
 'gmt_modify' => 'int'
 );

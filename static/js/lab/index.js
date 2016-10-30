@@ -3,6 +3,7 @@
  */
 $(function(){
 	$.loadingbar({ container: "#catelist" ,templateData:{ message:"努力加载中..."} });
+	
 	tree=new dhtmlXTreeObject("treeboxbox_tree1","100%","100%",0);
     tree.setImagePath(treeImgUrl);
     tree.enableHighlighting(true);
@@ -28,11 +29,12 @@ $(function(){
     
     var successHandler = function(json){
     	if(json.message.indexOf('成功') != -1){
+    		showToast('success',json.message);
     		setTimeout(function(){
     			location.reload();
-    		});
+    		},1000);
     	}else{
-    		alert(json.message);
+    		showToast('error',json.message);
     	}
     };
     

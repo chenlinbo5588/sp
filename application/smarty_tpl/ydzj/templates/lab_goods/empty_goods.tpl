@@ -1,36 +1,37 @@
-{include file="common/main_header.tpl"}
-  {config_load file="goods.conf"}
-  <form name="categoryForm" method="post" action="{site_url('goods/empty_goods')}" onsubmit="return validation(this);">
-  <input type="hidden" name="lab_id" value=""/>
-  <table class="autotable">
-      <tbody>
-        <tr class="noborder">
-          <td colspan="2" class="required"><label class="validation">{#goods_name#}:</label></td>
-        </tr>
-        <tr class="noborder">
-          <td class="vatop rowform">
-              <input type="text" class="txt" name="goods_name"  value="{$smarty.post.goods_name}"/>
-              <input type="submit" id="begin_empty" name="submit" value="确定" class="msbtn"/>
-          </td>
-          <td class="vatop tips"><span class="warning">留空表示清空选中的实验室的所有货品,填写{#goods_name#}则只清空指定的数据</span></td>
-        </tr>
-        <tr class="noborder">
-          <td colspan="2" class="required"><label class="validation">实验室:</label></td>
-        </tr>
-        <tr class="noborder">
-        	<td colspan="2">
-        		<div>
-        			<img src="{resource_url($smarty.const.TREE_IMG_PATH|cat:'iconCheckAll.gif')}"/><span class="blue">表示已选中</span>
-        			<img src="{resource_url($smarty.const.TREE_IMG_PATH|cat:'iconUncheckAll.gif')}"/><span class="red">表示未选中</span>
-        		</div>
-        		<div id="treeboxbox_tree1" class="rounded_box" style="height:400px;">
+{include file="common/my_header.tpl"}
+  {config_load file="lab_goods.conf"}
+  <div class="w-tixing clearfix"><b>温馨提醒：</b>
+    <p>1、{#goods_name#}留空表示清空选中的实验室的所有货品,填写{#goods_name#}则只清空指定的数据。</p>
+    <p>2、勾选实验室,则只清空勾选的实验室</p>
+  </div>
+  <div id="handleDiv">
+	  <form name="goodsForm" method="post" action="{site_url($uri_string)}" onsubmit="return validation(this);">
+	  <input type="hidden" name="lab_id" value=""/>
+	  <table class="fulltable">
+	      <tbody>
+	        <tr class="noborder">
+	          <td class="required w120"><label class="validation">{#goods_name#}:</label></td>
+	          <td class="vatop rowform">
+	              <input type="text" class="txt" name="goods_name"  value="{$smarty.post.goods_name}"/>
+	              <input type="submit" id="begin_empty" name="tijiao" value="确定" class="master_btn"/>
+	          </td>
+	        </tr>
+	        <tr class="noborder">
+	          <td class="required"><label class="validation">实验室:</label></td>
+	          <td>
+	    		<div>
+	    			<img src="{resource_url($smarty.const.TREE_IMG_PATH|cat:'iconCheckAll.gif')}"/><span class="blue">表示已选中</span>
+	    			<img src="{resource_url($smarty.const.TREE_IMG_PATH|cat:'iconUncheckAll.gif')}"/><span class="red">表示未选中</span>
+	    		</div>
+	    		<div id="treeboxbox_tree1" class="treebox rounded_box" style="height:400px;">
 	               <div id="loading_img" class="loading_div" style="display:none;"></div>
 	          	</div>
-        	</td>
-        </tr>
-       </tbody>
-    </form>
-    <div id="dialog-confirm" title="提示" style="display:none;"><p><span class="ui-icon ui-icon-alert" style="float:left;"></span><span>请勾选实验室</span><span class="hightlight">3秒后自动关闭</span></p></div>
+	    	  </td>
+	        </tr>
+	       </tbody>
+	       </table>
+	    </form>
+    </div>
     {include file="common/jquery_ui.tpl"}
     {include file="common/dhtml_tree.tpl"}
     <script>
@@ -49,7 +50,7 @@
 		};
 	    
 	    setTimeout(function(){
-	    	tree.loadXML("{site_url('lab/getTreeXML?uid='|cat:$admin_profile['basic']['id'])}",function(){
+	    	tree.loadXML("{site_url('lab/getTreeXML')}",function(){
 		    	{if $lab_id}
 		    	{foreach from=$lab_id item=item}
 		    	tree.setCheck({$item}, true);
@@ -76,24 +77,22 @@
 			setLabIds();
 			
 	        if($("input[name='lab_id']").val() == ''){
-	        	$("#dialog-confirm").dialog({
-				      autoOpen: false,
-				      height: 80,
-				      width: '20%',
-				      modal: false,
-				      resizable: false
-				      
-	        	}).dialog( "open" );
-	        	
-	        	setTimeout(function(){
-	        		$("#dialog-confirm").dialog( "close" );
-	        	},2000);
-	                	
+	        	showToast('error','请先勾选');
 	            return false;
 	        }
 	        
 	        return true;
 	    }
-	
+	    
+	    $(function(){
+            $("form").each(function(){
+                var name = $(this).prop("name");
+                formLock[name] = false;
+            });
+            
+            $.loadingbar({ urls: [ new RegExp($("form[name=goodsForm]").attr('action')) ], templateData:{ message:"努力加载中..." } ,container: "#handleDiv" });
+            bindAjaxSubmit('form');
+        });
+	    
 	</script>
-{include file="common/main_footer.tpl"}
+{include file="common/my_footer.tpl"}

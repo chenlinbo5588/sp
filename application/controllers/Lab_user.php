@@ -14,6 +14,9 @@ class Lab_User extends MyYdzj_Controller {
     {
     	$this->assign('queryStr',$_SERVER['QUERY_STRING']);
     	$this->_getPageData();
+    	
+    	$this->assign('isFounder',$this->isOrginationFounder());
+    	$this->assign('manager_labs',$this->session->userdata('manager_labs'));
         $this->display();
     }
     
@@ -57,7 +60,7 @@ class Lab_User extends MyYdzj_Controller {
 	        }
 	        
 	        $condition['where']['status'] = '正常';
-	        if($this->_loginUID != LAB_FOUNDER_ID){
+	        if(!$this->isOrginationFounder()){
 	        	$condition['where_in'][] = array('key' => 'uid', 'value' => $this->session->userdata('user_ids'));
 	        }
 	        
@@ -232,10 +235,11 @@ class Lab_User extends MyYdzj_Controller {
             }
             
             if($this->_loginUID != $this->_currentOid){
-            	$condition['where_in'][] = array('key' => 'uid', 'value' => $this->session->userdata('user_labs'));
+            	$condition['where_in'][] = array('key' => 'lab_id', 'value' => $this->session->userdata('user_labs'));
             }
+       
+            $data = $this->lab_service->getLabMemberListByCondition($condition,$searchCondition,$this->_currentOid);
             
-            $data = $this->lab_service->getLabMemberListByCondition($condition,$searchCondition);
             $this->assign('page',$data['list']['pager']);
             $this->assign($data);
             
@@ -249,25 +253,12 @@ class Lab_User extends MyYdzj_Controller {
      * 
      */
     public function edit(){
-		$id = $this->input->get_post('id');
+		$id = $this->input->get_post('uid');
 		
 		if($this->isPostRequest()){
-			$this->form_validation->set_rules('account', '操作员登陆账号', 'required|min_length[2]|max_length[15]|alpha_dash|is_unique_not_self['.$this->Member_Model->getTableRealName().'.account.id.'.$id.'.status.正常]');
 			$this->_addRules();
 			
 			for($i = 0 ; $i < 1;  $i++){
-				if($id == LAB_FOUNDER_ID && $this->_loginUID != LAB_FOUNDER_ID){
-					$this->jsonOutput('对不起，您无权修改创始人资料');
-					break;		
-				}
-				
-				
-				if($this->_loginUID != LAB_FOUNDER_ID){
-					if(!in_array($id,$this->session->userdata('user_ids'))){
-						$this->jsonOutput('对不起，不能修改不在自己管辖实验室的用户');
-						break;
-					}
-				}
 				
 				if(!$this->form_validation->run()){
 					$d['errors'] = $this->form_validation->error_array();
@@ -275,36 +266,80 @@ class Lab_User extends MyYdzj_Controller {
 					break;
 				}
 				
-				
-				$_POST['updator'] = $this->_profile['basic']['name'];
-				if($this->_loginUID != LAB_FOUNDER_ID){
-					unset($_POST['is_manager']);
+				$isManager = $this->input->post('is_manager');
+				if(!$this->isOrginationFounder()){
+					$isManager = 'n';
 				}
 				
-				$flag = $this->Member_Model->updateInfo($_POST);
-				if($flag < 0){
+				$roleId = $this->input->post('role_id');
+				$postId = $this->input->post('lab_id');
+				$postIds = explode(',',$postId);
+				
+				$this->Lab_Member_Model->deleteByCondition(array(
+					'where' => array(
+						'oid' => $this->_currentOid,
+						'uid' => $id
+					)
+				));
+				
+				//构造批量插入数组
+				$insertData = array();
+				foreach($postIds as $labid){
+					$insertData[] = array(
+						'uid' => $id,
+						'oid' => $this->_currentOid,
+						'lab_id' => $labid,
+						'is_manager' => $isManager,
+						'add_uid' => $this->_profile['basic']['uid'],
+						'creator' => $this->_profile['basic']['username'],
+					);
+				}
+				
+				$rows = $this->Lab_Member_Model->batchInsert($insertData);
+				$this->lab_service->updateOrgination(array('role_id' => $roleId),$id,$this->_currentOid);
+				
+				if($rows < 0){
 					$this->jsonOutput($this->db->get_error_info());
 					break;
 				}
-				
-				$this->_setUserLabs($id , $_POST['lab_id']);
 				
 				$this->jsonOutput('保存成功');
 			}
 			
 		}else{
+			
 			$info = $this->Member_Model->getFirstByKey($id,'uid','uid,username,qq,email,mobile');
-			$labIds = $this->lab_service->getUserJoinedLabList($id,$this->_currentOid);
-			$ids = array_keys($labIds);
+			$labIds = $this->lab_service->getUserJoinedLabListByOrgination($id,$this->_currentOid);
+			$ids = array();
+			foreach($labIds as $labMember){
+				$ids[] = $labMember['lab_id'];
+			}
 			
+			$info['is_manager'] = 'n';
 			$this->assign('lab_id',implode(',',$ids));
-			$this->assign('edit_user_labs',json_encode($ids));
-			
+			$this->assign('user_labs',json_encode($ids));
 			$this->assign('roleList',$this->_getRoleAllowList());
-			
-			// 当前登陆用户拥有的实验室
-			$this->assign('user_labs',$this->session->userdata('user_labs'));
 			$this->assign('info',$info);
+			
+			
+			if($id == $this->_loginUID){
+				$this->assign('currentRoleId',$this->_currentRoleId);
+			}else{
+				//获取
+				$roleInfo = $this->lab_service->getOrginationByCondition(array(
+					'select' => 'role_id',
+					'where' => array(
+						'oid' => $this->_currentOid,
+						'uid' => $id
+					),
+					'limit' => 1
+				),$id);
+				
+				if($roleInfo){
+					$this->assign('currentRoleId',$roleInfo[0]['role_id']);
+				}
+				
+			}
 			
 	        $this->display('lab_user/add');
 		}
@@ -316,61 +351,75 @@ class Lab_User extends MyYdzj_Controller {
     	
     	$id = $this->input->get_post('id');
     	
-    	if($this->isPostRequest()){
+    	if(!empty($id) && $this->isPostRequest()){
     		
     		for($i = 0; $i < 1; $i++){
-    			
-    			/**
-	    		 * 只能由创始人操作删除
-	    		 */
-	    		if($id == LAB_FOUNDER_ID){
-	    			$this->jsonOutput('创始人不能删除');
-	    			break;
-	    		}
+    			$isFounder = $this->isOrginationFounder();
+	    		$managerLabs = $this->session->userdata('manager_labs');
 	    		
 	    		
-	    		// 首先查看 当前登陆用户是那几个实验室的管理员
-	    		$manager_labs = $this->Lab_Member_Model->getList(array(
-	    			'where' => array(
-	    				'user_id' => $this->_loginUID,
-	    				'is_manager' => 'y'
-	    			)
-	    		));
-	    		
-	    		$labs = array();
-	    		
-	    		foreach($manager_labs as $lab){
-	    			$labs[] = $lab['lab_id'];
-	    		}
-	    		
-	    		if(empty($labs)){
+	    		if(!$isFounder && empty($managerLabs)){
 	    			// 不是任何一个实验室的管理员
 	    			$this->jsonOutput('您不是实验室管理员，无权删除');
 	    			break;
 	    		}
 	    		
-	    		// 再检查 当前将删除的用户 是否在 管辖下
-	    		$userList = $this->Lab_Member_Model->getList((array(
-	    			'where' => array(
-	    				'user_id' => $id,
-	    			),
-	    			'where_in' => array(
-	    				array('key' => 'lab_id' , 'value' => $labs)
-	    			)
-	    		)));
+	    		/**
+	    		 * id[]:144_54
+				 * id[]:144_52
+				 * id[]:144_51
+	    		 */
+	    		 
+	    		$labUserAssoc = array();
 	    		
-	    		if($this->_loginUID != LAB_FOUNDER_ID && empty($userList)){
-	    			$this->jsonOutput('您不是该用户所在实验室管理员，无权删除');
-	    			break;
+	    		foreach($id as $aLabMember){
+	    			$fields = explode('_',$aLabMember);
+	    			if($labUserAssoc[$fields[1]]){
+	    				$labUserAssoc[$fields[1]][] = $fields[0];
+	    			}else{
+	    				$labUserAssoc[$fields[1]] = array($fields[0]);
+	    			}
 	    		}
 	    		
-	    		//清楚这个用户的成员记录
-	    		$this->Lab_Member_Model->deleteByUserId($id);
-	    		$this->Member_Model->updateByWhere(array('status' => '已删除', 'updator' => $this->_profile['basic']['name']),array('id' => $id));
+	    		//print_r($labUserAssoc);
+	    		$ignoreCount = array();
 	    		
-	    		$this->jsonOutput('删除成功');
+	    		foreach($labUserAssoc as $lab_id  => $labMembers){
+	    			if($isFounder || in_array($lab_id,$managerLabs)){
+	    				if($labMembers){
+	    					$this->Lab_Member_Model->deleteByCondition(array(
+		    					'where' => array(
+		    						'oid' => $this->_currentOid,
+		    						'lab_id' => $lab_id,
+		    					),
+		    					'where_in' => array(
+		    						array('key' => 'uid','value' => $labMembers)
+		    					)
+		    				));
+		    				
+		    				$this->Lab_Cache_Model->updateByCondition(array(
+		    					'expire' => -1
+		    				),array(
+		    					'where' => array(
+		    						'oid' => $this->_currentOid,
+		    					),
+		    					'where_in' => array(
+		    						array('key' => 'uid','value' => $labMembers)
+		    					)
+		    				));
+	    				}
+	    			}else{
+	    				$ignoreCount[$lab_id] = $labMembers;
+	    			}
+	    		}
+	    		
+	    		if(empty($ignoreCount)){
+	    			$this->jsonOutput('删除成功');
+	    		}else{
+	    			$this->jsonOutput('删除成功,某些记录因您非管理员将被忽略该操作');
+	    		}
+	    		
     		}
-    		
     		
     	}else{
     		$this->jsonOutput('请求错误');
@@ -378,36 +427,39 @@ class Lab_User extends MyYdzj_Controller {
     }
     
     
-    public function checkstatus($val){
-    	
-    	if($val != '正常'){
-    		$this->form_validation->set_message('checkstatus', '%s 无效');
-            return FALSE;
-    	}else{
-    		return true;
-    	}
-    }
-    
-    
+    /**
+     * 查找当前用户可见的角色列表
+     */
     private function _getRoleAllowList(){
     	/**
-		 * 只显示自己创建的以及 自己所在角色组
+		 * 只显示自己创建的以及 自己所在角色
 		 */
-		$roleList = $this->Lab_Role_Model->getList(array(
-			'where' => array(
-				'add_uid' => $this->_loginUID
-			)
-		));
+		$roleList = array();
+		if($this->isOrginationFounder()){
+			$roleList = $this->Lab_Role_Model->getList(array(
+				'where' => array(
+					'add_uid' => $this->_loginUID
+				)
+			));
+		}else{
+			//如果不是创始人，则显示给到该用户的角色列表
+			$roleList = $this->Lab_Role_Model->getList(array(
+				'where' => array(
+					'add_uid' => $this->_loginUID,
+				),
+				'or_where' => array(
+					'id' => $this->_currentRoleId
+				)
+			));
+		}
 		
 		return $roleList;
     	
     }
     
     
-    public function checkrole($roleid){
-    	
+    public function checkRole($roleid){
     	$allowRoleList = $this->_getRoleAllowList();
-    	
     	$roleIds = array();
     	foreach($allowRoleList as $role){
     		$roleIds[] = $role['id'];
@@ -416,33 +468,60 @@ class Lab_User extends MyYdzj_Controller {
     	if(in_array($roleid,$roleIds)){
     		return true;
     	}else{
-    		$this->form_validation->set_message('checkrole', '%s 参数无效');
-    		return false;
-    	}
-    	
-    }
-    
-    public function checkmanager($val){
-    	if($this->_loginUID == LAB_FOUNDER_ID && in_array($val,array('y','n'))){
-    		return true;
-    	}else{
-    		$this->form_validation->set_message('checkmanager', '%s 无效');
+    		$this->form_validation->set_message('checkRole', '%s 参数无效');
     		return false;
     	}
     }
     
-    public function checkowner($lab_ids){
+    /**
+     * 校验只能是自己当前已加入的实验室，
+     */
+    public function checkOwner($lab_ids){
     	$allowIds = $this->session->userdata('user_labs');
     	$checked_labs = explode(',',$lab_ids);
     	
-    	if(LAB_FOUNDER_ID != $this->_loginUID){
+    	if(!$this->isOrginationFounder()){
     		foreach($checked_labs as $checked_lab){
     			if(!in_array($checked_lab , $allowIds)){
-    				$this->form_validation->set_message('checkowner', '%s 只能勾选您已经加入的实验室');
+    				$this->form_validation->set_message('checkOwner', '%s 只能勾选您已经加入的实验室');
             		return FALSE;
     			}
     		}
+    	}
+    	
+    	return true;
+    }
+    
+    
+    /**
+     * 检查用户是否已经加入到当前组织
+     */
+    public function checkUserJoin($username){
+    	$member = $this->Member_Model->getFirstByKey($username,'username','uid');
+    	
+    	$info = $this->lab_service->getOrginationByCondition(array(
+    		'where' => array(
+    			'uid' => $member['uid'],
+    			'oid' => $this->_currentOid,
+    		)
+    	),$member['uid']);
+    	
+    	if($info){
+    		//如果已加入的话，再看用户是否再lab_member 中还有对照记录，如果没有，则该用户一个实验室也没有参与，这样允许加入，
+    		//否则将出现用户被清空后 无法再加入
+    		$hasLabs = $this->Lab_Member_Model->getList(array(
+    			'select' => 'lab_id',
+    			'where' => array(
+	    			'uid' => $member['uid'],
+	    			'oid' => $this->_currentOid,
+	    		),
+	    		'limit' => 1
+    		));
     		
+    		if($hasLabs){
+    			$this->form_validation->set_message('checkUserJoin', '%s 已经加入到该当前组织架构');
+            	return FALSE;
+    		}
     	}
     	
     	return true;
@@ -450,85 +529,105 @@ class Lab_User extends MyYdzj_Controller {
     
     
     private function _addRules(){
-    	$this->form_validation->set_rules('name','操作员名称',  'required|max_length[20]');
-			
-		if(!empty($_POST['psw'])){
-            $this->form_validation->set_rules('psw', '密码', 'required|min_length[6]|max_length[10]|alpha_dash|matches[psw2]');
-            $this->form_validation->set_rules('psw2', '密码确认', 'required|min_length[6]|max_length[10]|alpha_dash');
-        }
-        
-        $this->form_validation->set_rules('lab_id','归属实验室',  'required|callback_checkowner');
-        
-        if(!empty($_POST['status'])){
-        	$this->form_validation->set_rules('status', '重新激活', 'callback_checkstatus');
-        }
-        
         if(!empty($_POST['is_manager'])){
-        	$this->form_validation->set_rules('is_manager','设为管理员',  'callback_checkmanager');
+        	$this->form_validation->set_rules('is_manager','设为实验室管理员',  'required|in_list[y,n]');
         }
         
-        
-        $this->form_validation->set_rules('group_id','角色分组',  'callback_checkrole');
-        
-        
-        if(!empty($_POST['group_id'])){
-        	$this->form_validation->set_rules('group_id','角色分组',  'in_db_list['.$this->Role_Model->getTableRealName().'.id]');
-        }
+        $this->form_validation->set_rules('lab_id','归属实验室',  'required|callback_checkOwner');
+        $this->form_validation->set_rules('role_id','归属角色',  'required|callback_checkRole');
     }
     
-    private function _setUserLabs($user_id , $lab_id , $is_manager  = 'n'){
-    	$lab_id = str_replace('root,','',$lab_id);
-    	
-		$this->Lab_Member_Model->deleteByUserId($user_id);
-		
-		if($is_manager != 'y'){
-			$is_manager = 'n';
-		}
-		
-		$this->Lab_Member_Model->addUserLabs($user_id,explode(',', $lab_id),$is_manager,$this->_loginUID,$this->_profile['basic']['name']);
-    }
+   
     
-    
+    /**
+     * 添加成员
+     */
     public function add()
     {
 		if($this->isPostRequest()){
-			$this->form_validation->set_rules('username','操作员登陆账号',  'required|in_db_list['.$this->Member_Model->getTableRealName().'.username]');
+			$this->form_validation->set_rules('username','操作员登陆账号',  'required|in_db_list['.$this->Member_Model->getTableRealName().'.username]|callback_checkUserJoin');
 			
 			$this->_addRules();
 			for($i = 0 ; $i < 1;  $i++){
+				
+				
+				
 				if(!$this->form_validation->run()){
 					$d['errors'] = $this->form_validation->error_array();
 					$this->jsonOutput('数据不能通过校验,添加失败',$d);
 					break;
 				}
 				
-				$_POST['creator'] = $this->_profile['basic']['name'];
-				if($this->_loginUID != LAB_FOUNDER_ID){
-					$_POST['is_manager'] = 'n';
+				$isManager = $this->input->post('is_manager');
+				if(!$this->isOrginationFounder()){
+					$isManager = 'n';
 				}
 				
-				$uid = $this->Member_Model->add($_POST);
+				$username = $this->input->post('username');
+				$memberInfo = $this->Member_Model->getFirstByKey(trim($username),'username','uid,username,email');
+				if($memberInfo['uid'] == $this->_loginUID){
+					$this->jsonOutput('该用户是创始人，无需添加');
+					break;
+				}
 				
-				if($uid <= 0){
+				//以逗号分隔的实验室id 列表
+				$labIds = $this->input->post('lab_id');
+				$labIdArray = explode(',',$labIds);
+				
+				
+				//构造批量插入数组
+				$insertData = array();
+				foreach($labIdArray as $labid){
+					$insertData[] = array(
+						'uid' => $memberInfo['uid'],
+						'oid' => $this->_currentOid,
+						'lab_id' => $labid,
+						'is_manager' => $isManager,
+						'add_uid' => $this->_profile['basic']['uid'],
+						'creator' => $this->_profile['basic']['username'],
+					);
+				}
+				
+				
+				$rows = $this->Lab_Member_Model->batchInsert($insertData);
+				$currentOrgation = $this->session->userdata('lab');
+				
+				$this->lab_service->addOrgination($currentOrgation['current']['name'],$memberInfo['uid'],$this->_currentOid,$this->input->post('role_id'),0,true);
+				
+				
+				if($rows <= 0){
 					$this->jsonOutput($this->db->get_error_info());
 					break;
 				}
 				
-				$this->_setUserLabs($uid , $_POST['lab_id'] );
-				//$this->jsonOutput('保存成功',array('redirectUrl' => admin_site_url('lab_user/add')));
-				$this->jsonOutput('保存成功',array('redirectUrl' => admin_site_url('lab_user/add')));
+				$data1 = array(
+					'msg_type' => 0,
+					'uid' => $memberInfo['uid'],
+					'from_uid' => $this->_loginUID,
+					'title' => '加入新的组织机构提醒',
+					'content' => '您已加新的组织机构,请点击 <a href="'.site_url('lab/orglist').'">点击查看</a>'
+				);
+				
+				$this->message_service->pushPmMessageToUser($data1,$memberInfo['uid']);
+				$this->message_service->initEmail($this->_siteSetting);
+				
+				$flag = $this->message_service->sendEmail($memberInfo['email'],
+							$data1['title'],
+							$data1['content']
+						);
+				
+				$this->jsonOutput('添加成功,用户将收到站内信以及邮件通知',array('redirectUrl' => site_url('lab_user/index')));
 			}
 			
 		}else{
 			
 			$currentLabIds = $this->session->userdata('user_labs');
+			$info['is_manager'] = 'n';
 			
 			$this->assign('roleList',$this->_getRoleAllowList());
-			$this->assign('edit_user_labs',json_encode(array()));
 			$this->assign('lab_id',implode(',',$currentLabIds));
 			// 当前登陆用户拥有的实验室
-			$this->assign('user_labs',$currentLabIds);
-			
+			$this->assign('info',$info);
 	        $this->display();
 		}
     }

@@ -91,12 +91,12 @@ define('SMARTY_TPL_PATH',APPPATH.'smarty_tpl/');
 define('SphinxQL_PATH',APPPATH.'sphinxql/');
 define('EntityPATH',APPPATH.'entity/');
 define('PHPExcel_PATH',APPPATH.'/third_party/excel/');
+define('PHPExcel_TEMP_PATH',ROOTPATH.'/static/temp/');
 define('AliyunEmail_PATH',APPPATH.'/third_party/aliyun-php-sdk-dm/');
 define('TREE_IMG_PATH','/static/js/dhtmlxTree_v413_std/skins/web/imgs/dhxtree_web/');
 
 define('FROM_BACKGROUND',1);
 define('WEBSITE_FOUNDER',1);
-define('LAB_FOUNDER_ID',1);
 
 define('CACHE_ONE_DAY',86400);
 define('CACHE_ONE_MONTH',2592000);

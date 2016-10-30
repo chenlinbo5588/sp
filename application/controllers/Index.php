@@ -14,6 +14,27 @@ class Index extends Ydzj_Controller {
 	 */
 	public function index()
 	{	
+		
+		
+		$this->load->library(array('Goods_service','Article_service'));
+		$goodsList = $this->goods_service->getCommandGoodsList();
+		$this->assign('goodsList',$goodsList);
+		
+		$this->assign('homeSliderImg',range(2,3));		
+		// 获得 企业新闻
+		$qiyeList = $this->article_service->getCommandArticleList(17);
+		// 行业动态
+		$industryList = $this->article_service->getCommandArticleList(18);
+
+		$hotkeys = $this->_getSiteSetting('hotwords');
+		$hotwords = explode(',',$hotkeys);
+		
+		$this->seo();
+		$this->assign('hotwords',$hotwords);
+		$this->assign('qiyeList',$qiyeList);
+		$this->assign('industryList',$industryList);
+		$this->display();
+		
 		$this->display();
 		/*
 		//$availableCity = $this->district_stat_service->getAvailableCity(1);
@@ -65,5 +86,5 @@ class Index extends Ydzj_Controller {
 		*/
 	}
 	
-
+	
 }

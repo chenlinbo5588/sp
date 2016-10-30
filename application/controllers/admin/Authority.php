@@ -197,7 +197,7 @@ class Authority extends Ydzj_Admin_Controller {
 					break;
 				}
 				
-				$info['password'] = $this->_getEncodePassword($info['admin_password'],$info['email']);
+				$info['password'] = $this->_getEncodePassword($info['password'],$info['email']);
 				$info = array_merge($info,$this->addWhoHasOperated('add'));
 				
 				if(($newid = $this->Adminuser_Model->_add($info)) < 0){
@@ -253,7 +253,7 @@ class Authority extends Ydzj_Admin_Controller {
 					//不更新
 					unset($info['password']);
 				}
-				
+				///print_r($info);
 				$info = array_merge($info,$this->addWhoHasOperated('edit'));
 				
 				if($this->Adminuser_Model->update($info,array('uid' => $id)) < 0){

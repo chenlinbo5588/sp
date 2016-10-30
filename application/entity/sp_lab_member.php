@@ -6,7 +6,6 @@ $entity = array(
 'oid' => 'int',
 'lab_id' => 'int',
 'is_manager' => 'char',
-'role_id' => 'int',
 'add_uid' => 'int',
 'edit_uid' => 'int',
 'creator' => 'varchar',

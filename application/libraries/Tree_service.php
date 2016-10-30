@@ -45,12 +45,17 @@ class Tree_service extends Base_service {
      */
     public function toTree($condition = array()){
     	$list = $this->_targetModel->getList($condition);
+    	if($list){
+    		return $this->_phpTree->makeTree($list,array(
+				'primary_key' => $this->_primaryKey,
+				'parent_key' => $this->_parentKey,
+				'expanded' => true
+			));
+    	}else{
+    		
+    		return array();
+    	}
     	
-    	return $this->_phpTree->makeTree($list,array(
-			'primary_key' => $this->_primaryKey,
-			'parent_key' => $this->_parentKey,
-			'expanded' => true
-		));
     }
     
     

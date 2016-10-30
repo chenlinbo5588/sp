@@ -3,13 +3,13 @@
 
 class Lab_Gcate_Model extends MY_Model {
     
-    public $_menuTree = array() ;
+    public $_tableName = 'lab_gcate';
+    public $_userTree = array() ;
     public $_fullTree = array();
     public $_parentList = array();
     
-    public $_tableName = 'lab_gcate';
-    public static $_tableMeta = null;
     
+    public static $_tableMeta = null;
     
     public function __construct(){
         parent::__construct();
@@ -21,12 +21,13 @@ class Lab_Gcate_Model extends MY_Model {
     	return self::$_tableMeta;
     }
     
+    
     public function saveTree($tree){
         $this->_fullTree = $tree;
     }
     
     public function clearMenuTree(){
-        $this->_menuTree = array();
+        $this->_userTree = array();
     }
     
     
@@ -38,20 +39,22 @@ class Lab_Gcate_Model extends MY_Model {
         
         $condition['select'] = $field;
         $condition['where'] = array(
-            'status' => '正常',
+            'status' => 0,
             'id' => $selfid
         );
         
         $result = $this->getById($condition);
         if($result){
-            $this->_parentList[] = $result;
-            $this->getParents($result['pid']);
+            $this->_parentList[$result['id']] = $result;
+            $this->getParents($result['pid'],$field);
         }
         
         return $this->_parentList;
     }
     
-	
+    /**
+     * 返回XML
+     */
     public function toXML($tree)
 	{
 		$xml = '';
@@ -59,30 +62,33 @@ class Lab_Gcate_Model extends MY_Model {
 		{
 		   if(empty($t['children']))
 		   {
-		   		$xml .= '<item text="'.$t['name'].'" id="'.$t['id'].'" open="1"></item>';
+		   		$xml .= '<item text="'.$t['name'].'" id="'.$t['id'].'" open="0"></item>';
 		   }
 		   else
 		   {
-			    $xml .= '<item text="'.$t['name'].'" id="'.$t['id'].'" open="1">';
+			    $xml .= '<item text="'.$t['name'].'" id="'.$t['id'].'" open="0">';
 			    $xml .= $this->toXML($t['children']);
 			    $xml = $xml."</item>";
 		   }
 		}
 		
 		return $xml;
-
 	}
     
+    
+    /**
+     * 递归获取
+     */
     public function getListByTree($parentId = 0,$selfid = 0,$separate = '----',$level = 0) {
         
         $parentId = $parentId < 0 ? 0 : intval($parentId);
         //$selfId   = $selfId < 0 ? 0 : intval($selfId);
         $condition = array(
           'where' => array(
-              'status' => '正常',
+              'status' => 0,
               'pid' => $parentId,
           ),
-          'order' => 'pid ASC, id ASC'
+          'order' => 'pid ASC, displayorder DESC'
         );
         
         if(is_array($selfid)){
@@ -96,28 +102,15 @@ class Lab_Gcate_Model extends MY_Model {
         $childrenList = $this->getList($condition);
         if(is_array($childrenList)){
             foreach ($childrenList as $item){
-                
-                $sepA = array();
-                
-                //$repeatChar = str_repeat("&nbsp;", strlen($separate));
-                
-                for($i = 0; $i < $level; $i++){
-                    $sepA[] = $separate;
-                }
-     
-                $item['sep'] = implode('',$sepA);
-               
-                //$item['sep'] = str_replace($repeatChar,$separate,$item['sep'],$level );
-               
-                
+                $item['sep'] = str_repeat($separate,$level);
                 $item['level'] = $level;
                 
-                $this->_menuTree[$item['id']] = $item;
-                
+                $this->_userTree[$item['id']] = $item;
                 $this->getListByTree($item['id'],$selfid, $separate,$level + 1);
             }
         }
 		
-		return $this->_menuTree;
+		return $this->_userTree;
 	}
+    
 }

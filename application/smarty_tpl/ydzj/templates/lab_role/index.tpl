@@ -31,7 +31,10 @@
           <td>{$item['name']|escape}</td>
           <td>{if $item['status'] == 1}开启{else}关闭{/if}</td>
           <td>{time_tran($item['gmt_create'])}</td>
-          <td class="align-center"><a href="{site_url('lab_role/edit')}?id={$item['id']}">编辑</a></td>
+          <td class="align-center">
+            <a href="{site_url('lab_role/edit')}?id={$item['id']}">编辑</a>&nbsp;
+            <a class="delete" href="javascript:void(0);" data-id="{$item['id']}" data-url="{site_url('lab_menu/delete?id=')}{$item['id']}" data-title="{$item['name']|escape}">删除</a>
+          </td>
         </tr>
       	{foreachelse}
       	<tr class="no_data">
@@ -52,6 +55,10 @@
     </table>
   </form>
   <script type="text/javascript">
+    $(function(){
+        bindDeleteEvent();
+    });
+  
 	function go(){
 		$("#formSearch").submit();
 	}
