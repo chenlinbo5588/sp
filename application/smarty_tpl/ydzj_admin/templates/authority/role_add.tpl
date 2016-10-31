@@ -1,15 +1,4 @@
 {include file="common/main_header.tpl"}
-  <div class="fixed-bar">
-    <div class="item-title">
-      <h3>{if $info['id']}维护{else}添加{/if}角色</h3>
-      <ul class="tab-base">
-      	<li><a href="{admin_site_url('authority/role')}" ><span>角色管理</span></a></li>
-      	<li><a  class="current"><span>{if $info['id']}编辑{else}添加{/if}角色</span></a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="fixed-empty"></div>
-  <div class="feedback">{$feedback}</div>
   {if $info['id']}
   {form_open(admin_site_url('authority/role_edit'),'id="add_form"')}
   {else}

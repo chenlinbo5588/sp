@@ -49,12 +49,14 @@ class My extends MyYdzj_Controller {
 	
 	
 	
-	public function trade_upload(){
+	private function _tradeUpload(){
 		
 		$this->load->library('Attachment_service');
 		$this->attachment_service->setUserInfo($this->_profile['basic']);
 		
-		$fileData = $this->attachment_service->addImageAttachment('Filedata',array(),0,'seller_verify');
+		$fileData = $this->attachment_service->addImageAttachment('trade_pic',array(
+			'without_db' => true
+		),0,'seller_verify');
 		
 		$resp  = array();
 		if($fileData){
@@ -62,13 +64,20 @@ class My extends MyYdzj_Controller {
 				array('m' => array('width' => 300,'height' => 450,'maintain_ratio' => true,'quality' => 100)
 			));
 			
+			return array(
+				'b' => $cutImage['file_url'],
+				'm' => $cutImage['img_m']
+			);
+			
+			/*
 			$this->jsonOutput('上传成功',array(
 				'id' => $fileData['id'],
 				'b' => resource_url($cutImage['file_url']),
 				'm' => resource_url($cutImage['img_m'])
 			));
+			*/
 		}else{
-			$this->jsonOutput('上传失败');
+			return array();
 		}
 	}
 	
@@ -90,47 +99,82 @@ class My extends MyYdzj_Controller {
 		
 		$this->load->model('Member_Seller_Model');
 		if($this->isPostRequest()){
-			$uploadFile = false;
 			
 			for($i = 0; $i < 1; $i++){
 				if(1 == $step){
-					$this->form_validation->set_rules('store_url', '网店链接','required|valid_url');
-					$this->form_validation->set_rules('img_b','交易流水图片','required|valid_url');
-					 
 					
-					/*
-					$this->load->library('Attachment_service');
-					$this->attachment_service->setUserInfo($this->_profile['basic']);
-					
-					$fileData = $this->attachment_service->addImageAttachment('trade_pic',array(
-						'min_width' => 400,
-						'min_height' => 400,
-					),0,'member_avatar');
-					
-					if($fileData){
-						$cutImage = $this->attachment_service->resize($fileData['file_url'],
-							array('b' => array('width' => 800,'height' => 600,'maintain_ratio' => true,'quality' => 95)
-						));
-						
-						$uploadFile = true;
-					}
-					*/
-					
-					if(!$this->form_validation->run()){
-						break;
-					}
-					
-					$info = array(
-						'store_url' => $this->input->post('store_url'),
-						'source_pic' => str_replace(base_url(),'',$this->input->post('img_b')),
-						'trade_pic' => str_replace(base_url(),'',$this->input->post('img_m')),
-					);
-					
-					$this->assign('info',$info);
 					$step++;
 					
 				}else if(2 == $step){
-					$info = $this->Member_Seller_Model->getFirstByKey($this->_loginUID,'uid');
+					
+					$back = false;
+					
+					//$this->form_validation->set_rules('store_url', '网店链接','required|valid_url');
+					$this->form_validation->set_rules('store_url', '网店链接','required|max_length[200]');
+					//$this->form_validation->set_rules('img_b','交易流水图片','required|valid_url');
+					
+					$store_url = $this->input->post('store_url');
+					
+					$img_b = $this->input->post('img_b');
+					$img_m = $this->input->post('img_m');
+					
+					$fileData = $this->_tradeUpload();
+					
+					//print_r($_FILES);
+					//print_r($fileData);
+					
+					$hasFile = false;
+					if($img_b || $fileData){
+						$hasFile = true;
+					}
+					
+					if($fileData){
+						$info = array(
+							'store_url' => $this->input->post('store_url'),
+							'source_pic' => $fileData['b'],
+							'trade_pic' => $fileData['m'],
+						);
+						
+						
+						
+					}else if($img_b){
+						$info = array(
+							'store_url' => $this->input->post('store_url'),
+							'source_pic' => str_replace(base_url(),'',$img_b),
+							'trade_pic' => str_replace(base_url(),'',$img_m),
+						);
+					}
+					
+					//var_dump($hasFile);
+					//print_r($info);
+					$this->assign('info',$info);
+					$isPass = true;
+					
+					if(!$hasFile){
+						$isPass = false;
+						$step = 1;
+						$this->assign('file_error','<label class="error">请上传文件</label>');
+					}
+					
+					if(!$this->form_validation->run()){
+						$isPass = false;
+						$this->assign('goback',$back);
+						
+					}
+					
+					if(!$isPass){
+						break;
+					}
+					
+					if($fileData && $img_b){
+						$this->attachment_service->deleteByFileUrl(array($img_b,$img_m));
+					}
+					
+					
+					
+				}else if(3 == $step){
+					
+					$verifyRecord = $this->Member_Seller_Model->getFirstByKey($this->_loginUID,'uid');
 					$updateData = array(
 						'uid' => $this->_loginUID,
 						'store_url' => $this->input->post('store_url',true),
@@ -138,12 +182,18 @@ class My extends MyYdzj_Controller {
 						'trade_pic' => $this->input->post('trade_pic',true),
 						'verify_result' => 0
 					);
-					if(empty($info)){
+					
+					$updateData['store_url'] = trim($updateData['store_url']);
+					
+					//$updateData['store_url'] = preg_replace('/^(https?:\/\/)(.*)$/i',"\\2",$updateData['store_url']);
+					
+					
+					if(empty($verifyRecord)){
 						$affectRow = $this->Member_Seller_Model->_add($updateData,true);
 					}else{
 						
 						//10 分钟开外 才能重新更新，防止用户刷页面
-						if(($this->_reqtime - $info['gmt_modify']) > 600){
+						if(($this->_reqtime - $verifyRecord['gmt_modify']) > 600){
 							//$affectRow = $this->Member_Seller_Model->update($updateData,array('uid' => $this->_loginUID,'verify_result !=' => 0));
 							$affectRow = $this->Member_Seller_Model->update($updateData,array('uid' => $this->_loginUID));
 						}
@@ -169,11 +219,6 @@ class My extends MyYdzj_Controller {
 							$siteEmailModel->_add($emailData);
 						}
 					}
-					
-					$step++;
-				}else if(3 == $step){
-					
-					$step++;
 					
 				}
 			}

@@ -6,10 +6,9 @@
 	{include file="common/fancybox.tpl"}
 	{if $step == 1}
 	{form_open_multipart(site_url($uri_string),"id='sellerForm'")}
-	<input type="hidden" name="step" value="{$step}"/>
-	<input type="hidden" name="file_id" value=""/>
-	<input type="hidden" name="img_b" value=""/>
-	<input type="hidden" name="img_m" value=""/>
+	<input type="hidden" name="step" value="2"/>
+	<input type="hidden" name="img_b" value="{$info['img_b']}"/>
+	<input type="hidden" name="img_m" value="{$info['img_m']}"/>
 	<table class="fulltable style1">
 	    <tbody>
 			<tr>
@@ -19,8 +18,7 @@
 			<tr>
 				<td class="w120"><label>卖家最近交易流水</label></td>
 				<td>
-				    <input class="w50pre" id="file_upload" type="file" name="trade_pic" /><span>请上传尺寸JPG格式的最近交易流水图片,最小尺寸400x400</span>
-				    {form_error('img_b')}
+				    <input id="file_upload" type="file" name="trade_pic" />{$file_error}<span>请上传尺寸JPG格式的最近交易流水图片,最小尺寸400x400</span>
 				</td>
 			</tr>
 			<tr>
@@ -30,47 +28,21 @@
 		</tbody>
 	</table>
 	</form>
-	<div class="trade_previw">
-	   <h5>上传成功后,点击图片可查看大图</h5>
-	   <div id="prev" title="点击查看大图"></div>
-	</div>
 	{include file="common/jquery_validation.tpl"}
-	{include file="common/uploadify.tpl"}
-	
 	<script type="text/javascript">
 	   $(function() {
-            $('#file_upload').uploadify({
-                'fileTypeDesc' : '图片文件',
-                'buttonText' : '选择图片文件',
-                'fileTypeExts' : '*.jpg;*.png',
-                'formData'     : {
-                    'min_width' : 400,
-                    'min_height' : 400
-                },
-                'swf'      : "{resource_url('js/uploadify/uploadify.swf')}",
-                'uploader' : "{site_url('my/trade_upload')}",
-                'onUploadSuccess' : function(file, data, response) {
-                    var json = $.parseJSON(data);
-                    $("input[name=file_id]").val(json.data.id);
-                    $("input[name=img_b]").val(json.data.b);
-                    $("input[name=img_m]").val(json.data.m);
-                    $("#prev").html('<a class="fancybox" href="' + json.data.b + '"><img src="' + json.data.m + '" alt="" /></a>');
-		        }
-            });
-            
             $("#sellerForm").validate({
                 rules : {
                     store_url:{
-                        required:true,
-                        url:true
-                    },
+                        required:true
+                    }
                 }
             });
         });
     </script>
     {elseif $step == 2}
     {form_open(site_url($uri_string),"id='sellerForm'")}
-    <input type="hidden" name="step" value="{$step}"/>
+    <input type="hidden" name="step" value="3"/>
     <input type="hidden" name="store_url" value="{$info['store_url']}"/>
     <input type="hidden" name="source_pic" value="{$info['source_pic']}"/>
     <input type="hidden" name="trade_pic" value="{$info['trade_pic']}"/>
@@ -81,7 +53,7 @@
                     <div class="trade_previw">
 				       <h5>卖家最近交易流水,点击图片可查看大图</h5>
 				       <a class="fancybox" href="{resource_url($info['source_pic'])}"><img src="{resource_url($info['trade_pic'])}"/></a>
-				       <div class="storeurl"><a href="{$info['store_url']}" target="_blank">网店链接:{$info['store_url']}</a></div>
+				       <div class="storeurl">网店链接:<a href="{$info['store_url']}" target="_blank">{$info['store_url']}</a></div>
 				       <div><input type="submit" class="master_btn" name="tijiao" value="确认无误,下一步"/></div>
 				    </div>
                 </td>

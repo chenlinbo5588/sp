@@ -5,6 +5,7 @@ var regMobile = /^(\+?86)?1[0-9][0-9]{1}[0-9]{8}$|15[0189]{1}[0-9]{8}$|189[0-9]{
 //地区缓存
 var districtCache = [];
 var commonDialog;
+var formLock = [];
 
 function drop_confirm(msg, url){
     if(confirm(msg)){
@@ -608,18 +609,101 @@ function bindOpEvent(selector,customSuccessFn,customErrorFn){
 function getIDS(obj){
 	var ids = [];
 	
+	var checkboxName = obj.attr('data-checkbox');
+	var dataId = obj.attr('data-id');
 	
-	if(obj.attr('href')){
+	if(typeof(checkboxName) != 'undefined'){
+		$("input[name='" + checkboxName + "']:checked").each(function(){
+			ids.push($(this).val());
+		});
+	}else if(typeof(dataId) != 'undefined'){
 		ids.push(obj.attr('data-id'));
-	}else{
-		var checkboxName = obj.attr('data-checkbox');
-  		
-  		$("input[name='" + checkboxName + "']:checked").each(function(){
-  			ids.push($(this).val());
-  		});
 	}
 	
 	return ids;
+}
+
+/**
+ * ajax 提交
+ * @param classname
+ */
+function bindAjaxSubmit(classname){
+	
+	var lockFn = function(btn,name,lock){
+		btn.attr('disabled',lock);
+		formLock[name] = lock;
+		
+		if(lock == true){
+			btn.addClass("disabled");
+		}else{
+			btn.removeClass("disabled");
+		}
+	}
+	
+	
+	$(classname).submit(function(){
+		var name=$(this).prop("name");
+		var submitBtn = $("input[type=submit]",$(this));
+		
+		if(formLock[name]){
+			return false;
+		}
+		
+		lockFn(submitBtn,name,true);
+		
+		$.ajax({
+			type:'POST',
+			url: $(this).prop("action"),
+			dataType:'json',
+			data:$(this).serialize(),
+			success:function(resp){
+				lockFn(submitBtn,name,false);
+				refreshFormHash(resp.data);
+				
+				if(!/成功/.test(resp.message)){
+					
+					showToast('error',resp.message);
+					
+					var errors = resp.data.errors;
+					var first = null;
+					
+					$("label.errtip").hide();
+					
+					for(var f in errors){
+						if(first == null){
+							first = f;
+						}
+						$("#error_" + f).html(errors[f]).addClass("error").show();
+					}
+					
+					if($("input[name=" + first + "]").size()){
+						$("input[name=" + first + "]").focus();
+					}else if($("select[name=" + first + "]").size()){
+						$("select[name=" + first + "]").focus();
+					}
+					
+					
+				}else{
+					showToast('success',resp.message);
+					
+					$("label.errtip").hide();
+					if(typeof(resp.data.redirectUrl) != "undefined"){
+						
+						setTimeout(function(){
+							location.href = resp.data.redirectUrl;
+						},500);
+					}
+				}
+			
+			},
+			error:function(xhr, textStatus, errorThrown){
+				lockFn(submitBtn,name,false);
+				
+				alert("服务器发送错误,将重新刷新页面");
+			}
+		});
+		return false;
+	});
 }
 
 
@@ -649,7 +733,12 @@ function bindDeleteEvent(customSuccessFn,customErrorFn){
 	$("a.delete").bind("click",function(){
 		var triggerObj = $(this);
 		
-		ui_confirm(triggerObj,[$(this).attr("data-id")],$(this).attr("data-url"),'你确定要删除吗？','json',customSuccessFn ? customSuccessFn : successCallback,customErrorFn ? customErrorFn: errorCallback);
+		var title = triggerObj.attr('data-title');
+		if(typeof(title) == 'undefined'){
+			title = '';
+		}
+		
+		ui_confirm(triggerObj,[$(this).attr("data-id")],$(this).attr("data-url"),'你确定要删除<span class="hightlight">' + title + '</span>吗？','json',customSuccessFn ? customSuccessFn : successCallback,customErrorFn ? customErrorFn: errorCallback);
   	});
   	
   	$(".deleteBtn").bind("click",function(){
@@ -657,11 +746,15 @@ function bindDeleteEvent(customSuccessFn,customErrorFn){
   		var ids = getIDS(triggerObj);
   		var url = triggerObj.attr("data-url");
   		var title = triggerObj.attr('data-title');
-  		
+		if(typeof(title) == 'undefined'){
+			title = '';
+		}
+		
+		
   		if(ids.length == 0){
   			showToast('error','请选勾选.');
   		}else{
-  			ui_confirm(triggerObj,ids,url,'你确定要删除吗？','json',customSuccessFn ? customSuccessFn : successCallback,customErrorFn ? customErrorFn: errorCallback);
+  			ui_confirm(triggerObj,ids,url,'你确定要删除<span class="hightlight">' + title + '</span>吗？','json',customSuccessFn ? customSuccessFn : successCallback,customErrorFn ? customErrorFn: errorCallback);
   		}
   	});
 }

@@ -71,7 +71,7 @@
 	          <td>{$memberList[$item['uid']]['mobile']|escape}</td>
 	          <td><div class="im"><span class="email">{if $memberList[$item['uid']]['email'] != ''}<a href="mailto:{$memberList[$item['uid']]['email']}" class="yes" title="电子邮箱:{$memberList[$item['uid']]['email']|escape}">{$memberList[$item['uid']]['email']}</a>{/if}</span></div><span>{$memberList[$item['uid']]['email']|escape}</span></td>
 	          <td><div class="im"><span class="qq">{if $memberList[$item['uid']]['qq'] != ''}<a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin={$memberList[$item['uid']]['qq']}&site=qq&menu=yes" class="yes" alt="点击这里给我发消息  QQ: {$memberList[$item['uid']]['qq']|escape}" title="点击这里给我发消息 QQ: {$memberList[$item['uid']]['qq']|escape}">{$memberList[$item['uid']]['qq']|escape}</a>{/if}</span></div><span>{$memberList[$item['uid']]['qq']|escape}</span></td>
-	          <td><a href="{$item['store_url']}" target="_blank">{$item['store_url']|escape}</a></td>
+	          <td>{if substr($item['store_url'],0,4) == 'http'}<a href="{$item['store_url']}" target="_blank">{$item['store_url']|escape}</a>{else}{$item['store_url']}{/if}</td>
 	          <td>
 	           <a class="fancybox" href="{resource_url($item['source_pic'])}" title="交易流水"><img class="w108" src="{resource_url($item['trade_pic'])}" alt="" /></a>
 	          </td>
