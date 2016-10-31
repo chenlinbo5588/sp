@@ -195,15 +195,20 @@ class Inventory extends MyYdzj_Controller {
 	
 	
 	
-	public function upload(){
+	public function _doUpload(){
 		
+		$this->load->library('Attachment_service');
+		$config = $this->attachment_service->getUploadConfig();
+		$config['without_db'] = true;
+		$config['allowed_types'] = 'xlsx|xls';
+		$fileInfo = $this->attachment_service->addAttachment('Filedata',$config);
+		
+		return $fileInfo['file_url'];
+		/*
 		///print_r($_FILES);
 		if($this->isPostRequest()){
-			$this->load->library('Attachment_service');
-			$config = $this->attachment_service->getUploadConfig();
-			$config['without_db'] = true;
-			$config['allowed_types'] = 'xlsx|xls';
-			$fileInfo = $this->attachment_service->addAttachment('Filedata',$config);
+			
+			
 			
 			$this->session->set_userdata(array(
 				'import_file' => $fileInfo['file_url'],
@@ -211,6 +216,7 @@ class Inventory extends MyYdzj_Controller {
 			
 			$this->jsonOutput('上传成功');
 		}
+		*/
 	}
 	
 	
@@ -272,25 +278,43 @@ class Inventory extends MyYdzj_Controller {
 		
 		$lastUpdate = $this->inventory_service->getLastUpdate($this->_loginUID);
 		$freezen = config_item('inventory_freezen');
+		
 		if($lastUpdate && ($this->_reqtime - $lastUpdate ) < $freezen){
-			
 			$infreezen = 1;
 			$this->assign('leftseconds', $freezen  - ($this->_reqtime - $lastUpdate ));
 			$this->assign('infreezen',$infreezen);
 		}
 		
+		$this->_breadCrumbs[] = array(
+			'title' => '我的库存',
+			'url' => 'inventory/index'
+		);
+		$this->_breadCrumbs[] = array(
+			'title' => '库存导入',
+			'url' => $this->uri->uri_string
+		);
+		
+		
 		if(0 == $infreezen && $this->isPostRequest()){
-			$excelFile = $this->session->userdata('import_file');
-			$this->session->set_userdata(array(
-				'import_file' => ''
-			));
+			$excelFile = $this->_doUpload();
 			
-			$filePath = ROOTPATH.'/'.$excelFile;
-			if(file_exists($filePath) && is_file($filePath)){
+			$step = 1;
+			
+			for($i = 0; $i < 1; $i++){
+				if(empty($excelFile)){
+					$feedback = $this->attachment_service->getErrorMsg('<div class="tip_error">','</div>');
+					break;
+				}
 				
-				echo '<style type="text/css"> body { font: 62.5% "Microsoft Yahei", "Lucida Grande", Verdana, Lucida, Helvetica, Arial, "Simsun", sans-serif; } .success {color:blue;} .failed {color:red;}</style>';
-				echo "<div>正在导入，请耐心等待。。。</div>";
-				flush();
+				$filePath = ROOTPATH.'/'.$excelFile;
+				if(!is_file($filePath)){
+					$feedback = getErrorTip('文件上传失败');
+					break;
+				}
+				
+				$step = 2;
+				
+				
 				$this->load->file(PHPExcel_PATH.'PHPExcel.php');
 				//$filePath = ROOTPATH.'/test.xlsx';
 				$keyConfig = $this->_getExcelColumnConfig();
@@ -363,35 +387,26 @@ class Inventory extends MyYdzj_Controller {
 						'ip' => $this->input->ip_address()
 					),$this->_loginUID);
 					
-					if($rows){
-						echo '<div class="success">导入完成,成功导入 ' . count($goodsList).'记录，其中失败'.count($rowsIgnored).'条</div>';
-					}else{
-						echo '<div class="failed">请重新上传文件</div>';
-					}
-			
-				}catch(Exception $re){
 					
+					$feedback = getSuccessTip('导入完成,成功导入 ' . count($goodsList).'记录，其中失败'.count($rowsIgnored).'条');
+					
+					
+				}catch(Exception $re){
+					$feedback = getErrorTip('导入错误,请检查文件格式是否正确');
 				}
-			}else{
-				echo '<div class="failed">请重新上传文件</div>';
+				
+				@unlink($filePath);
 			}
 			
+			$this->_importStep($step);
+			
 		}else{
-			
-			$this->_breadCrumbs[] = array(
-				'title' => '我的库存',
-				'url' => 'inventory/index'
-			);
-			$this->_breadCrumbs[] = array(
-				'title' => '库存导入',
-				'url' => $this->uri->uri_string
-			);
-			
-			
-			
 			$this->_importStep(1);
-			$this->display('inventory/upload');
 		}
+		
+		$this->assign('feedback',$feedback);
+		$this->display('inventory/upload');
+			
 	}
 	
 	private function _importStep($step){
@@ -399,9 +414,6 @@ class Inventory extends MyYdzj_Controller {
 			'选择要上传的文件',
 			'批量导入货品',
 		),$step));
-		
-		$this->assign('step',$step);
-		$this->session->set_userdata('import_step',$step);
 	}
 
 }
