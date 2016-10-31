@@ -231,6 +231,9 @@ class Setting extends Ydzj_Admin_Controller {
 	}
 	
 	
+	
+	
+	
 	private function _getTimeZone(){
 		return array(
 		'-12' => 'Pacific/Kwajalein',

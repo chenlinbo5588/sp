@@ -8,6 +8,12 @@ class Lab_User extends MyYdzj_Controller {
 	
     public function __construct(){
 		parent::__construct();
+		
+		$this->_breadCrumbs[] = array(
+			'title' => '实验室员管理',
+			'url' => 'lab_user/index'
+		);
+		
     }
     
     public function index()
@@ -255,6 +261,13 @@ class Lab_User extends MyYdzj_Controller {
     public function edit(){
 		$id = $this->input->get_post('uid');
 		
+		
+		$this->_breadCrumbs[] = array(
+			'title' => '编辑实验室员',
+			'url' => $this->uri->uri_string.'uid='.$id
+		);
+		
+		
 		if($this->isPostRequest()){
 			$this->_addRules();
 			
@@ -442,7 +455,7 @@ class Lab_User extends MyYdzj_Controller {
 				)
 			));
 		}else{
-			//如果不是创始人，则显示给到该用户的角色列表
+			//如果不是创始人，则显示给到该用户的角色列表 以及自己创建的角色
 			$roleList = $this->Lab_Role_Model->getList(array(
 				'where' => array(
 					'add_uid' => $this->_loginUID,
@@ -544,6 +557,13 @@ class Lab_User extends MyYdzj_Controller {
      */
     public function add()
     {
+    	
+    	$this->_breadCrumbs[] = array(
+			'title' => '添加实验室员',
+			'url' => $this->uri->uri_string
+		);
+		
+		
 		if($this->isPostRequest()){
 			$this->form_validation->set_rules('username','操作员登陆账号',  'required|in_db_list['.$this->Member_Model->getTableRealName().'.username]|callback_checkUserJoin');
 			

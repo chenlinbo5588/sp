@@ -47,10 +47,12 @@ $config['navs'] = array(
 			array('title' => '上传设置','url' => 'upload/param'),
 			array('title' => 'SEO设置','url' => 'seo/index'),
 			array('title' => '消息通知','url' => 'message/email'),
+			array('title' => '搜索设置','url' => 'search/hotword'),
 		),
 		'message' => 'setting',//表示边栏菜单显示数据源一样
 		'upload' => 'setting',
 		'seo' => 'setting',
+		'search' => 'setting',
 		'member' => array(
 			array('title' => '会员管理','url' => 'member/index'),
 			array('title' => '会员通知','url' => 'notify/index'),

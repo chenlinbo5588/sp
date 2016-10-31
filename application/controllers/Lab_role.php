@@ -7,6 +7,11 @@ class Lab_role extends MyYdzj_Controller {
 	public function __construct(){
 		parent::__construct();
 		
+		
+		$this->_breadCrumbs[] = array(
+			'title' => '角色管理',
+			'url' =>'lab_role/index'
+		);
 	}
 	
 	
@@ -126,6 +131,12 @@ class Lab_role extends MyYdzj_Controller {
 	
 	public function add(){
 		$feedback = '';
+		
+		$this->_breadCrumbs[] = array(
+			'title' => '添加角色',
+			'url' => $this->uri->uri_string
+		);
+		
 		if($this->isPostRequest()){
 			$this->form_validation->set_rules('name','角色名称','required|callback_checkRoleName');
 			$this->_getRoleRules();
@@ -220,6 +231,11 @@ class Lab_role extends MyYdzj_Controller {
 	public function edit(){
 		
 		$id = $this->input->get_post('id');
+		
+		$this->_breadCrumbs[] = array(
+			'title' => '编辑角色',
+			'url' => $this->uri->uri_string.'?id='.$id
+		);
 		
 		if($this->isPostRequest()){
 			$this->_getRoleRules();

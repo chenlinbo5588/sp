@@ -4,6 +4,11 @@
 class Lab_Measure extends MyYdzj_Controller {
     public function __construct(){
 		parent::__construct();
+		
+		$this->_breadCrumbs[] = array(
+			'title' => '度量单位管理',
+			'url' => 'lab_measure/index'
+		);
     }
     
     public function index()
@@ -52,6 +57,12 @@ class Lab_Measure extends MyYdzj_Controller {
     public function edit(){
 		
 		$id = $this->input->get_post('id');
+		
+		$this->_breadCrumbs[] = array(
+			'title' => '编辑度量单位',
+			'url' => $this->uri->uri_string.'?id='.$id
+		);
+		
 		
 		if($this->isPostRequest()){
 			$this->form_validation->set_rules('name','度量单位名称',   'required|max_length[20]|is_unique_not_self['.$this->Lab_Measure_Model->getTableRealName().'.name.id.'.$id.']');
@@ -111,6 +122,12 @@ class Lab_Measure extends MyYdzj_Controller {
     
     public function add()
     {
+    	$this->_breadCrumbs[] = array(
+			'title' => '添加度量单位',
+			'url' => $this->uri->uri_string
+		);
+		
+    	
 		if($this->isPostRequest()){
 			$this->form_validation->set_rules('name','度量名称',  'required|max_length[20]|is_unique['.$this->Lab_Measure_Model->getTableRealName().'.name]');
 			

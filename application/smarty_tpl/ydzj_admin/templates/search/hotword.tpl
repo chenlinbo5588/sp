@@ -1,5 +1,5 @@
 {include file="common/main_header.tpl"}
-  {form_open(admin_site_url('setting/search'),'name="form1"')}
+  {form_open(admin_site_url('search/hotword'),'name="form1"')}
     <table class="table tb-type2">
       <tbody>
         <tr class="noborder">

@@ -12,6 +12,10 @@ class Lab_Gcate extends MyYdzj_Controller {
     public function __construct(){
 		parent::__construct();
 		
+		$this->_breadCrumbs[] = array(
+			'title' => '货品分类管理',
+			'url' => 'lab_gcate/index'
+		);
     }
     
     private function _getTreeData($moreCondition = array()){
@@ -92,6 +96,11 @@ class Lab_Gcate extends MyYdzj_Controller {
     public function edit(){
 		
 		$id = $this->input->get_post('id');
+		
+		$this->_breadCrumbs[] = array(
+			'title' => '编辑货品分类',
+			'url' => $this->uri->uri_string.'?id='.$id
+		);
 		
 		if($this->isPostRequest()){
 			$this->form_validation->set_rules('id','分类id',  'required');
@@ -202,6 +211,11 @@ class Lab_Gcate extends MyYdzj_Controller {
     
     public function add()
     {
+    	$this->_breadCrumbs[] = array(
+			'title' => '添加货品分类',
+			'url' => $this->uri->uri_string
+		);
+		
 		if($this->isPostRequest()){
 			$this->form_validation->set_rules('name','分类名称',  'required|max_length[30]|callback_checkName');
      	

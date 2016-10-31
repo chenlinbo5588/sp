@@ -12,12 +12,19 @@ class Lab_goods extends MyYdzj_Controller {
 		
 		$this->assign('action',$this->uri->rsegment(2));
 		$this->assign('topnav',strtolower(get_class()).'/index');
+		
+		
+		$this->_breadCrumbs[] = array(
+			'title' => '货品',
+			'url' => 'lab_goods/index'
+		);
 
     }
     
     public function index()
     {
     	
+		
     	$this->_getPageData();
     	$this->assign('queryStr',$_SERVER['QUERY_STRING']);
     	$this->assign('managedLabs',$this->session->userdata('manager_labs'));
@@ -270,6 +277,12 @@ class Lab_goods extends MyYdzj_Controller {
     
     public function import(){
     	
+    	
+    	$this->_breadCrumbs[] = array(
+			'title' => '货品导入',
+			'url' => $this->uri->uri_string
+		);
+		
     	if($this->isPostRequest()){
     		ob_end_flush();//关闭缓存
 	    	header("Content-Type: text/html; charset=utf-8");
@@ -525,6 +538,12 @@ EOF;
     
     public function empty_goods(){
     	
+    	$this->_breadCrumbs[] = array(
+			'title' => '清空货品',
+			'url' => $this->uri->uri_string
+		);
+		
+		
     	$this->assign('labList',$this->_getUserLab());
     	
     	$lab_ids = explode(',',$_POST['lab_id']);
@@ -738,6 +757,13 @@ EOF;
     public function edit(){
 		
 		$id = $this->input->get_post('id');
+		
+		$this->_breadCrumbs[] = array(
+			'title' => '编辑货品',
+			'url' => $this->uri->uri_string.'?id='.$id
+		);
+		
+		
 		
 		if($this->isPostRequest()){
 			
