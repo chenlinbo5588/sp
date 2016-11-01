@@ -486,6 +486,10 @@ input[type=text].valid , input[type=password].valid {
 }
 
 
+.w-tixing .master_btn , .w-tixing .link_btn {
+	padding:0 10px;
+}
+
 .greenBtn {
     background:#34AB75;
 }

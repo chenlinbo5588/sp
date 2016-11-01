@@ -9,6 +9,7 @@
             <li class="segment"><h3>求货区</h3></li>
             <li><a href="{site_url('hp/index')}">求货查询</a></li>
             <li><a href="{site_url('hp/add')}">发布求货</a></li>
+            <li><a href="{site_url('hp/import')}">导入求货</a></li>
             <li><a href="{site_url('my_req/recent')}">我的求货</a></li>
             <li class="segment"><h3>库存</h3></li>
             <li><a href="{site_url('inventory/index')}">我的库存</a></li>

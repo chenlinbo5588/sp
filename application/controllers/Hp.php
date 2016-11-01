@@ -86,8 +86,6 @@ class Hp extends MyYdzj_Controller {
 			
 		}
 		
-		//print_r($searchCondition);
-		
 		return $searchCondition;
 		
 	}
@@ -140,6 +138,42 @@ class Hp extends MyYdzj_Controller {
 	}
 	
 	
+	private function _getKW($code,$size){
+		//关键，创建一个完整的词组 ，防止分词  关系到精确匹配的问题
+		$code = strtolower(code_replace(trim($code)));
+		
+		//重要   用户后台自动匹配的字段， 货号&尺码  确定一个货品
+		$kw = $code.strtolower(str_replace(array('.','#'),'',$size));
+		
+		return array('search_code' => $code,'kw' => $kw);
+	}
+	
+	
+	/**
+	 * 发布求货
+	 */
+	private function _pubGoods($insertData){
+		
+		$mutilData = $this->_dealPub($insertData);
+		
+		//print_r($mutilData);
+		
+		$rowsAffected = $this->hp_service->addHp($mutilData['insert'],$mutilData['update'],$this->_reqtime,$this->_loginUID);
+		if($rowsAffected){
+			$this->input->set_cookie('repub','','');
+			$this->assign('norepub',true);
+			
+			$feedback = getSuccessTip('求货发布成功,您发布的信息蒋在一分钟内开始生效');
+			
+		}else{
+			$errorInfo = $this->db->get_error_info();
+			$feedback = getErrorTip(str_replace(array('{code}','{message}'),array($errorInfo['code'],$errorInfo['message']),"系统错误,{code}:{message}"));
+		}
+		
+		return $feedback;
+	}
+	
+	
 	public function add(){
 		
 		$initRow = array(0);
@@ -151,8 +185,6 @@ class Hp extends MyYdzj_Controller {
 		
 		if($this->isPostRequest()){
 			for($i = 0; $i < 1; $i++){
-				$lastPub = $this->hp_service->getUserLastPub($this->_loginUID);
-				
 				/*
 				$this->form_validation->set_rules('goods_code[]','货号','required|min_length[1]|max_length[10]');
 				$this->form_validation->set_rules('goods_name[]','货名','required|min_length[1]|max_length[10]');
@@ -236,7 +268,6 @@ class Hp extends MyYdzj_Controller {
 				}
 				
 				$insertData = array();
-				$kwAssoc = array();
 				
 				$date_key = date("Ymd",$this->_reqtime);
 				$ip = $this->input->ip_address();
@@ -277,76 +308,20 @@ class Hp extends MyYdzj_Controller {
 						}
 					}
 					
-					//关键，创建一个完整的词组 ，防止分词  关系到精确匹配的问题
-					$rowData['search_code'] = strtolower(code_replace($rowData['goods_code']));
 					
 					//重要   用户后台自动匹配的字段， 货号&尺码  确定一个货品
-					$rowData['kw'] = $rowData['search_code'].strtolower(str_replace(array('.','#'),'',$rowData['goods_csize']));
+					$rowData = array_merge($rowData,$this->_getKW($rowData['goods_code'],$rowData['goods_csize']));
+					
 					
 					//保存kw 和 $insertData 数组下标的关联
+					//用户可能同一个货号 同已个尺码发布两条，默认只发一条
 					
-					
-					if($kwAssoc[$rowData['kw']]){
-						$kwAssoc[$rowData['kw']][] = $rowIndex;
-					}else{
-						$kwAssoc[$rowData['kw']] = array($rowIndex);
-					}
-					
-					$insertData[] = $rowData;
-				}
-				
-				
-				$searchCondition = array(
-					'sph_select' => '@ID',
-					'select' => 'goods_id,kw',
-					'pager' => array(
-						'page_size' => 200,
-						'current_page' => 1,
-					),
-					'order' => 'gmt_modify DESC',
-					'fields' => array(
-						'uid' => array($this->_loginUID),
-						'kw' => implode('|',array_keys($kwAssoc))
-					)
-				);
-				
-				//进行一次查询,看有哪些 kw 是在发布状态,如果是则将其拦截
-				$this->hp_service->setServer(0);
-				$activeList = $this->hp_service->query($searchCondition);
-				
-				$ignoreData = array();
-				
-				if($activeList){
-					foreach($activeList['data'] as $activeItem){
-						if($kwAssoc[$activeItem['kw']]){
-							foreach($kwAssoc[$activeItem['kw']] as $idx){
-								$ignoreData[$idx] = true;
-								unset($insertData[$idx]);
-							}
-						}
+					if(!isset($insertData[$rowData['kw']])){
+						$insertData[$rowData['kw']] = $rowData;
 					}
 				}
 				
-				if(empty($insertData)){
-					$feedback = getErrorTip('该批货号和尺寸已经发布过了，请更改发布货号以及尺寸');
-					break;
-				}
-				
-				$rowsInserted = $this->hp_service->addHp($insertData,$this->_reqtime,$this->_loginUID);
-				if($rowsInserted){
-					$this->input->set_cookie('repub','','');
-					$this->assign('norepub',true);
-					$ignoreCount = count($ignoreData);
-					if($ignoreCount){
-						$feedback = getSuccessTip('求货发布成功,其中'.$ignoreCount.'条记录为重复发布，已忽略处理,您发布的信息蒋在一分钟内开始生效');
-					}else{
-						$feedback = getSuccessTip('求货发布成功,您发布的信息蒋在一分钟内开始生效');
-					}
-					
-				}else{
-					$errorInfo = $this->db->get_error_info();
-					$feedback = getErrorTip(str_replace(array('{code}','{message}'),array($errorInfo['code'],$errorInfo['message']),"系统错误,{code}:{message}"));
-				}
+				$feedback = $this->_pubGoods($insertData);
 				
 			}
 		}else{
@@ -384,19 +359,280 @@ class Hp extends MyYdzj_Controller {
 			}
 		}
 		
-		$this->_breadCrumbs[] = array(
-			'title' => '求货区',
-			'url' => 'hp/index'
-		);
+		
+		$this->_pubBreadCrumbs();
+		
 		$this->_breadCrumbs[] = array(
 			'title' => '求货发布',
 			'url' => $this->uri->uri_string
 		);
 		
+		
 		$this->assign('postData',$postData);
 		$this->assign('initRow',$initRow);
 		$this->assign('feedback',$feedback);
 		$this->display();
+		
+	}
+	
+	/**
+	 * 
+	 */
+	private function _dealPub($insertData){
+		
+		$searchCondition = array(
+			'sph_select' => '@ID',
+			'select' => 'goods_id,kw',
+			'pager' => array(
+				'page_size' => 200,
+				'current_page' => 1,
+			),
+			'order' => 'gmt_modify DESC',
+			'fields' => array(
+				'uid' => array($this->_loginUID),
+				'kw' => implode('|',array_keys($insertData))
+			)
+		);
+		
+		//进行一次查询,看有哪些 kw 是在发布状态,如果是则做额外处理
+		$this->hp_service->setServer(0);
+		$activeList = $this->hp_service->query($searchCondition);
+		
+		$updateData = array();
+		
+		//如果已经存在有效发布，则更新
+		if($activeList){
+			foreach($activeList['data'] as $activeItem){
+				if($insertData[$activeItem['kw']]){
+					$updateData[$activeItem['kw']] = array_merge($insertData[$activeItem['kw']],array('goods_id' => $activeItem['goods_id']));
+				}
+			}
+			
+			$keysDropInsert = array_keys($updateData);
+			foreach($keysDropInsert as $dropKey ){
+				unset($insertData[$dropKey]);
+			}
+		}
+		
+		return array('insert' => $insertData,'update' => $updateData);
+		
+	}
+	
+	
+	private function _pubBreadCrumbs(){
+		
+		$this->_breadCrumbs[] = array(
+			'title' => '求货区',
+			'url' => 'hp/index'
+		);
+		
+		
+	}
+	
+	private function _importStep($step){
+		$this->assign('stepHTML',step_helper(array(
+			'选择要上传的文件',
+			'批量发布货品结果',
+		),$step));
+	}
+	
+	
+	public function _doUpload(){
+		
+		$this->load->library('Attachment_service');
+		$config = $this->attachment_service->getUploadConfig();
+		$config['without_db'] = true;
+		$config['allowed_types'] = 'xlsx|xls';
+		$fileInfo = $this->attachment_service->addAttachment('Filedata',$config);
+		
+		return $fileInfo['file_url'];
+		/*
+		///print_r($_FILES);
+		if($this->isPostRequest()){
+			
+			
+			
+			$this->session->set_userdata(array(
+				'import_file' => $fileInfo['file_url'],
+			));
+			
+			$this->jsonOutput('上传成功');
+		}
+		*/
+	}
+	
+	/**
+	 * 货品导入
+	 */
+	public function import(){
+		
+		$infreezen = 0;
+		
+		
+		$remainSeconds = $this->hp_service->getPubTimeRemain($this->_reqtime,$this->_loginUID);
+		if($remainSeconds){
+			$infreezen = 1;
+			$this->assign('leftseconds', $remainSeconds);
+			$this->assign('infreezen',$infreezen);
+		}
+				
+		
+		if(0 == $infreezen && $this->isPostRequest()){
+			$excelFile = $this->_doUpload();
+			
+			$step = 1;
+			
+			for($i = 0; $i < 1; $i++){
+				if(empty($excelFile)){
+					$feedback = $this->attachment_service->getErrorMsg('<div class="tip_error">','</div>');
+					break;
+				}
+				
+				$filePath = ROOTPATH.'/'.$excelFile;
+				if(!is_file($filePath)){
+					$feedback = getErrorTip('文件上传失败');
+					break;
+				}
+				
+				$step = 2;
+				
+				$this->load->config('hp');
+				$this->load->file(PHPExcel_PATH.'PHPExcel.php');
+				$keyConfig = config_item('hp_col');
+				$validationConfig = config_item('hp_validation');
+				
+				try {
+					$objPHPexcel = PHPExcel_IOFactory::load($filePath); 
+					$objWorksheet = $objPHPexcel->getActiveSheet(0); 
+					$startRow = 0;
+					$readAddOn = 2;	
+					$findKeyword = false;
+					$highestRow = $objWorksheet->getHighestRow();
+					
+					if($highestRow > $this->_maxRowPerReq){
+						$highestRow = $this->_maxRowPerReq;
+					}
+					
+					$rowsIgnored = array();
+					
+					$insertData = array();
+					$kwList = array();
+					
+					$date_key = date("Ymd",$this->_reqtime);
+					$ip = $this->input->ip_address();
+					
+					for($rowIndex = ($startRow + $readAddOn); $rowIndex <= $highestRow; $rowIndex++){
+						$rowValue = array();
+						$flag = false;
+						$affectRow = 0;
+						
+						foreach($keyConfig as $config){
+							$rowValue[$config['db_key']] = sbc_to_dbc(str_replace(array("\n","\r","\r\n"),"",trim($objWorksheet->getCell($config['col'].$rowIndex)->getValue())));
+						}
+						
+						//important , do not drop this line
+						if(empty($rowValue['goods_code'])){
+							continue;
+						}
+						
+						//print_r($rowValue);
+						
+						$this->form_validation->reset_validation();
+						
+						foreach($validationConfig['hp_req'] as $fieldName){
+							$rowValue[$fieldName] = trim($rowValue[$fieldName]);
+						
+							if($fieldName == 'send_zone' || $fieldName == 'send_day' || 'price_status' == $fieldName){
+								if(!empty($rowValue[$fieldName])){
+									$this->form_validation->set_rules($fieldName,$validationConfig['rule_list'][$fieldName]['title'],$validationConfig['rule_list'][$fieldName]['rules']);
+								}
+							}else{
+								$this->form_validation->set_rules($fieldName,$validationConfig['rule_list'][$fieldName]['title'],$validationConfig['rule_list'][$fieldName]['rules']);
+							}
+							
+						}
+						
+						$this->form_validation->set_data($rowValue);
+						$flag = $this->form_validation->run();
+						
+						if(!$flag){
+							echo $this->form_validation->error_string();
+							$rowsIgnored[] = $rowIndex;
+							continue;
+						}
+						
+						$rowValue = array_merge($rowValue, array(
+							'goods_csize' => $rowValue['goods_size'],
+							'date_key' => $date_key,
+							'ip' => $ip,
+							'gmt_create' => $this->_reqtime,
+							'gmt_modify' => $this->_reqtime,
+							'uid' => $this->_loginUID,
+							'username' => $this->_profile['basic']['username'],
+							'qq' => $this->_profile['basic']['qq'],
+							'email' => $this->_profile['basic']['email'],
+							'mobile' => $this->_profile['basic']['mobile'],
+						));
+						
+						if(empty($rowValue['send_day'])){
+							$rowValue['send_day'] = 0;
+						}else{
+							$rowValue['send_day'] = strtotime($rowValue['send_day']);
+						}
+						
+						if(!is_numeric($rowValue['goods_size'])){
+							$rowValue['goods_size'] = 0;
+						}
+						
+						if($rowValue['sex'] == '男'){
+							$rowValue['sex'] = 1;
+						}else if($rowValue['sex'] == '女'){
+							$rowValue['sex'] = 2;
+						}else {
+							$rowValue['sex'] = 1;
+						}
+						
+						if($rowValue['price_status'] == '是'){
+							$rowValue['price_status'] = 1;
+						}
+						
+						//重要   用户后台自动匹配的字段， 货号&尺码  确定一个货品
+						$rowValue = array_merge($rowValue,$this->_getKW($rowValue['goods_code'],$rowValue['goods_csize']));
+						
+						//保存kw 和 $insertData 数组下标的关联
+						//用户可能同一个货号 同已个尺码发布两条，默认只发一条
+						
+						if(!isset($insertData[$rowValue['kw']])){
+							$insertData[$rowValue['kw']] = $rowValue;
+						}
+					}
+					//print_r($insertData);
+					
+					$feedback = $this->_pubGoods($insertData);
+					
+				}catch(Exception $re){
+					$feedback = getErrorTip('导入错误,请检查文件格式是否正确');
+				}
+				
+				@unlink($filePath);
+			}
+			
+			$this->_importStep($step);
+			
+		}else{
+			$this->_importStep(1);
+		}
+		
+		
+		$this->_pubBreadCrumbs();
+		$this->_breadCrumbs[] = array(
+			'title' => '导入求货',
+			'url' => $this->uri->uri_string
+		);
+		
+		$this->assign('feedback',$feedback);
+		$this->display();
+			
 	}
 	
 }

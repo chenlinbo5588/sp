@@ -96,7 +96,7 @@ class My extends MyYdzj_Controller {
 			$step = 1;
 		}
 		
-		
+		//print_r($this->_siteSetting);
 		$this->load->model('Member_Seller_Model');
 		if($this->isPostRequest()){
 			

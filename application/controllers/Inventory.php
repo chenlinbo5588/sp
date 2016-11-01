@@ -220,55 +220,6 @@ class Inventory extends MyYdzj_Controller {
 	}
 	
 	
-	private function _getExcelColumnConfig(){
-		return array(
-    		array(
-    			'col' => 'A',
-    			'name' => '货号',
-    			'width' => 20,
-    			'db_key' => 'goods_code'
-    		),
-    		array(
-    			'col' => 'B',
-    			'name' => '货名',
-    			'width' => 20,
-    			'db_key' => 'goods_name'
-    		),
-    		array(
-    			'col' => 'C',
-    			'name' => '尺寸',
-    			'width' => 10,
-    			'db_key' => 'goods_size'
-    		),
-    		array(
-    			'col' => 'D',
-    			'name' => '颜色',
-    			'width' => 30,
-    			'db_key' => 'goods_color'
-    		),
-    		array(
-    			'col' => 'E',
-    			'name' => '性别',
-    			'width' => 8,
-    			'db_key' => 'sex'
-    		),
-    		array(
-    			'col' => 'F',
-    			'name' => '库存数量',
-    			'width' => 10,
-    			'db_key' => 'quantity'
-    		),
-    		array(
-    			'col' => 'G',
-    			'name' => '可接受最低价',
-    			'width' => 10,
-    			'db_key' => 'price_min'
-    		)
-    	);
-		
-	}    
-	
-	
 	/**
 	 * 货品导入
 	 */
@@ -313,15 +264,13 @@ class Inventory extends MyYdzj_Controller {
 				}
 				
 				$step = 2;
-				
+				$this->load->config('hp');
+				$validationConfig = config_item('hp_validation');
 				
 				$this->load->file(PHPExcel_PATH.'PHPExcel.php');
 				//$filePath = ROOTPATH.'/test.xlsx';
-				$keyConfig = $this->_getExcelColumnConfig();
+				$keyConfig = config_item('inventory_col');
 				
-				$this->load->config('hp');
-				$validationConfig = config_item('hp_validation');
-				$slots = $this->inventory_service->getUserAllInventory($this->_loginUID);
 				
 				try {
 					$objPHPexcel = PHPExcel_IOFactory::load($filePath); 
@@ -364,11 +313,8 @@ class Inventory extends MyYdzj_Controller {
 						$flag = $this->form_validation->run();
 						
 						if(!$flag){
-							echo '<div class="success">行'.$rowIndex.'导入失败</div>';
 							$rowsIgnored[] = $rowIndex;
 							continue;
-						}else{
-							//echo '<div class="tip_success">行'.$rowIndex.'导入成功</div>';
 						}
 						
 						$goodsList[] = $rowValue;

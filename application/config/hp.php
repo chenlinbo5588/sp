@@ -54,7 +54,7 @@ $config['hp_validation'] = array(
 		),
 		'price_status' => array(
 			'title' => '显示价格',
-			'rules' => 'required|in_list[0,1]'
+			'rules' => 'required|in_list[0,1,是,否]'
 		),
 		'price_min' => array(
 			'title' => '最低价',
@@ -75,3 +75,113 @@ $config['hp_validation'] = array(
 	)
 	
 );
+
+
+$config['inventory_col'] = array(
+	array(
+		'col' => 'A',
+		'name' => '货号',
+		'width' => 20,
+		'db_key' => 'goods_code'
+	),
+	array(
+		'col' => 'B',
+		'name' => '货名',
+		'width' => 20,
+		'db_key' => 'goods_name'
+	),
+	array(
+		'col' => 'C',
+		'name' => '尺码',
+		'width' => 10,
+		'db_key' => 'goods_size'
+	),
+	array(
+		'col' => 'D',
+		'name' => '颜色',
+		'width' => 30,
+		'db_key' => 'goods_color'
+	),
+	array(
+		'col' => 'E',
+		'name' => '性别',
+		'width' => 8,
+		'db_key' => 'sex'
+	),
+	array(
+		'col' => 'F',
+		'name' => '库存数量',
+		'width' => 10,
+		'db_key' => 'quantity'
+	),
+	array(
+		'col' => 'G',
+		'name' => '可接受最低价',
+		'width' => 10,
+		'db_key' => 'price_min'
+	)
+);
+
+$config['hp_col'] = array(
+	array(
+		'col' => 'A',
+		'name' => '货号',
+		'width' => 20,
+		'db_key' => 'goods_code'
+	),
+	array(
+		'col' => 'B',
+		'name' => '货名',
+		'width' => 20,
+		'db_key' => 'goods_name'
+	),
+	array(
+		'col' => 'C',
+		'name' => '尺码',
+		'width' => 10,
+		'db_key' => 'goods_size'
+	),
+	array(
+		'col' => 'D',
+		'name' => '颜色',
+		'width' => 30,
+		'db_key' => 'goods_color'
+	),
+	array(
+		'col' => 'E',
+		'name' => '性别',
+		'width' => 8,
+		'db_key' => 'sex'
+	),
+	array(
+		'col' => 'F',
+		'name' => '求货数量',
+		'width' => 10,
+		'db_key' => 'quantity'
+	),
+	array(
+		'col' => 'G',
+		'name' => '可接受最低价',
+		'width' => 10,
+		'db_key' => 'price_max'
+	),
+	array(
+		'col' => 'H',
+		'name' => '是否显示价格',
+		'width' => 10,
+		'db_key' => 'price_status'
+	),
+	array(
+		'col' => 'I',
+		'name' => '发货地址',
+		'width' => 10,
+		'db_key' => 'send_zone'
+	),
+	array(
+		'col' => 'J',
+		'name' => '要求发货时间',
+		'width' => 10,
+		'db_key' => 'send_day'
+	)
+);
+		

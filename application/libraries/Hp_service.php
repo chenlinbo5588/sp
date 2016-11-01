@@ -283,7 +283,7 @@ class Hp_service extends Base_service {
 	 * 
 	 * 
 	 */
-	public function addUserHpFrequentCtrl($uid,$reqTime,$rows,$action = 0, $reLookup = false){
+	public function addUserHpFrequentCtrl($uid,$reqTime,$rows,$action = 0){
 		$ctrlData = array(
 			'uid' => $uid,
 			'action' => $action,
@@ -291,12 +291,11 @@ class Hp_service extends Base_service {
 			'cnt' => $rows
 		);
 		
-		if($reLookup){
-			$tableId = $this->_hpBatchHash->lookup($uid);
-			$this->_hpBatchModel->setTableId($tableId);
-		}
+		$tableId = $this->_hpBatchHash->lookup($uid);
+		$this->_hpBatchModel->setTableId($tableId);
 		
 		$this->_hpBatchModel->_add($ctrlData);
+		
 		self::$CI->getCacheObject()->save($this->getUserLastPubKey($uid),$ctrlData,CACHE_ONE_DAY);
 	}
 	
@@ -305,20 +304,29 @@ class Hp_service extends Base_service {
 	/**
 	 * 添加货品
 	 */
-	public function addHp($insertData,$reqTime,$uid,$reLookup = false){
+	public function addHp($insertData,$updateData,$reqTime,$uid){
 		
-		$realInsert = $this->_hpRecentModel->batchInsert($insertData);
+		$realAffect = 0 ;
 		
 		$tableId = $this->_hpPubHash->lookup($uid);
 		$this->_hpPubModel->setTableId($tableId);
 		
-		$this->_hpPubModel->execSQL('INSERT INTO '.$this->_hpPubModel->getTableRealName().' SELECT * FROM '.$this->_hpRecentModel->getTableRealName().' WHERE uid = '.$uid .' AND gmt_modify = '.$reqTime);
+		
+		if($insertData){
+			$realAffect += $this->_hpRecentModel->batchInsert($insertData);
+			$this->_hpPubModel->execSQL('INSERT INTO '.$this->_hpPubModel->getTableRealName().' SELECT * FROM '.$this->_hpRecentModel->getTableRealName().' WHERE uid = '.$uid .' AND gmt_modify = '.$reqTime);
+		}
+		
+		if($updateData){
+			$realAffect += $this->_hpRecentModel->batchUpdate($updateData,'goods_id');
+		}
 		
 		//$userInsert = $this->_hpPubModel->batchInsert($insertData);
+		if($realAffect){
+			$this->addUserHpFrequentCtrl($uid,$reqTime,$realAffect);
+		}
 		
-		$this->addUserHpFrequentCtrl($uid,$reqTime,$realInsert,$reLookup);
-		
-		return $realInsert;
+		return $realAffect;
 	}
 	
 	
@@ -374,7 +382,7 @@ class Hp_service extends Base_service {
 		$affectRow = $this->_hpRecentModel->updateByCondition($data,$condition);
 		if($affectRow){
 			//参数 1 means 刷新
-			$this->addUserHpFrequentCtrl($uid,$data['gmt_modify'],$affectRow,1,true);
+			$this->addUserHpFrequentCtrl($uid,$data['gmt_modify'],$affectRow,1);
 		}
 		
 		return $affectRow;
