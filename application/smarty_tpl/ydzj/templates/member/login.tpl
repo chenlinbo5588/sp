@@ -8,7 +8,7 @@
 	        <li class="title"><h1>登陆</h1></li>
 	        <li>{form_error('loginname')}</li>
 	        <li class="row">
-	            <input id="loginname_text" class="at_txt" type="text" name="loginname" {if $loginname}value="{$loginname}"{else}value="{set_value('loginname')}"{/if} placeholder="请输入登陆账号或者手机号码"/>
+	            <input id="loginname_text" class="at_txt" type="text" name="loginname" {if $loginname}value="{$loginname}"{else}value="{set_value('loginname')}"{/if} placeholder="请输入登陆账号"/>
 	        </li>
 	        <li>{form_error('password')}</li>
 	        <li class="row">
