@@ -29,4 +29,4 @@ $config['inventory_expired'] = 15;
 
 
 //站内信更新检查时间间隔
-$config['pmcheck_interval'] = 5;
+$config['pmcheck_interval'] = 15;

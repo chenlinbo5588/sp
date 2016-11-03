@@ -52,6 +52,10 @@ class MyYdzj_Controller extends Ydzj_Controller {
 		}
 		
 		
+		//@待性能优化
+		$unread = $this->message_service->getUserUnreadCount($this->_loginUID);
+		$this->assign('unreadCount',$unread);
+		
 		$this->_repubList();
 	}
 	
@@ -61,9 +65,21 @@ class MyYdzj_Controller extends Ydzj_Controller {
 	 */
 	protected function _pmUpdate(){
 		$this->_newpm = $this->message_service->getLastestSysPm($this->_profile,$this->_loginUID);
+		
 		if($this->_newpm){
 			$this->assign('newPm',$this->_newpm);
 		}
+		
+		/*
+		$pmClick = $this->input->get_cookie('pmclick');
+		
+		if(empty($pmClick)){
+			$unread = $this->message_service->getUserUnreadCount($this->_loginUID);
+			
+			$this->input->set_cookie('pmclick', $this->_reqtime,CACHE_ONE_DAY);
+			$this->assign('unreadCount',200);
+		}
+		*/
 	}
 	
 	

@@ -72,6 +72,14 @@ class Inventory_service extends Base_service {
 	}
 	
 	
+	public function reactiveUserInventory($ts,$uid){
+		return $this->_memberInventoryModel->update(array(
+			'gmt_modify' => $ts
+		),array('uid' => $uid));
+		
+	}
+	
+	
 	/**
 	 * 初始化用户库存
 	 */

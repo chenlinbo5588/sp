@@ -741,6 +741,15 @@ table.noext {
 	vertical-align: top;
 }
 
+.style2 thead th , .style2 tbody td , .style2 tfoot td {
+    vertical-align: top;
+}
+
+
+.border thead th , .border tbody td {
+    border-width:1px;
+}
+
 
 
 .cityList {
@@ -998,9 +1007,16 @@ table.noext {
 	padding:10px 5px;
 }
 
+.mynav li.current {
+    border: 1px solid #CF246A;
+    border-width: 0 3px 0 0;
+    background-color: #F7CE98;
+}
+
 .mynav .segment {
 	background-color:#DAF4FE;
 	text-align: center;
+	font-size: 15px;
 }
 
 .mynav .segment h3 {

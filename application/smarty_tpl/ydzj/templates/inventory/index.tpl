@@ -8,9 +8,17 @@
         {if $currentHpCnt == 0}
         {include file="./import.tpl"}
         {else}
-        <div>{if $last_update}上次更新时间：{time_tran($last_update)}{/if}</div>
+        <div>{if $last_update}上次更新时间：{time_tran($last_update)}{/if}
+        {if $isExpired}
+            {if $isMobile}
+            <a id="reative" class="master_btn" href="javascript:void(0);">重新激活库存</a>
+            {else}
+            <a class="master_btn" href="{site_url('inventory/import')}">重新激活库存</a>
+            {/if}
+        </div>
+        {/if}
         <div class="w-tixing clearfix"><b>温馨提醒：</b>
-            <p>库存更新通过导入文件方式更新. <a class="link_btn" href="{site_url('inventory/import')}">马上去更新库存</a></p>
+            <p>库存更新通过导入文件方式更新. </p>
             <p>库存更新冻结时间 5 分钟.</p>
             <p>库存自动失效时间 3 小时.</p>
           </div>
@@ -46,6 +54,30 @@
 	        </table>
 		    <div>{include file="common/pagination.tpl"}</div>
 	    </form>
+	    
+	    <script>
+	       $(function(){
+	           $.loadingbar({ urls: [ new RegExp('{site_url('inventory/reactive')}') ],text:"操作中,请稍后..."});
+	           
+	           $("#reative").bind("click",function(){
+	               $.post("{site_url('inventory/reactive')}", {  },function(resp){
+                        
+                        if(!/成功/.test(resp.message)){
+                            showToast('error',resp.message);
+                        }else{
+                            showToast('success',resp.message);
+		                    if(typeof(resp.data.redirectUrl) != "undefined"){
+		                        setTimeout(function(){
+		                            location.href = resp.data.redirectUrl;
+		                        },500);
+		                    }
+                        }
+                 
+                   }, "json");
+	           });
+	       });
+	    
+	    </script>
         {/if}
     {/if}
 {include file="common/my_footer.tpl"}

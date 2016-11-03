@@ -360,7 +360,7 @@ class Hp extends MyYdzj_Controller {
 		}
 		
 		
-		$this->_pubBreadCrumbs();
+		
 		
 		$this->_breadCrumbs[] = array(
 			'title' => '求货发布',
@@ -419,15 +419,7 @@ class Hp extends MyYdzj_Controller {
 	}
 	
 	
-	private function _pubBreadCrumbs(){
-		
-		$this->_breadCrumbs[] = array(
-			'title' => '求货区',
-			'url' => 'hp/index'
-		);
-		
-		
-	}
+	
 	
 	private function _importStep($step){
 		$this->assign('stepHTML',step_helper(array(
@@ -624,7 +616,6 @@ class Hp extends MyYdzj_Controller {
 		}
 		
 		
-		$this->_pubBreadCrumbs();
 		$this->_breadCrumbs[] = array(
 			'title' => '导入求货',
 			'url' => $this->uri->uri_string

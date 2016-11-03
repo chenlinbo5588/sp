@@ -175,7 +175,8 @@ class Inventory extends MyYdzj_Controller {
 		
 		
 			$pageParam = $this->_preparePager();
-			$pager = pageArrayGenerator($pageParam,$userInventory['hp_cnt']);
+			
+			$pager = pageArrayGenerator($pageParam,$userInventory['hp_cnt'],$this->agent->is_mobile() ? 1 : 5);
 			$startIndex = ($pager['pager']['current_page'] - 1) * $pager['pager']['page_size'];
 			$endIndex = $pager['pager']['page_size'];
 			
@@ -185,6 +186,12 @@ class Inventory extends MyYdzj_Controller {
 			$this->assign('list',$list);
 			$this->assign('page',$pager['pager']);
 			$this->assign('last_update',$userInventory['gmt_modify']);
+			
+			
+			if(($this->_reqtime - $userInventory['gmt_modify']) > config_item('inventory_expired') ){
+				$this->assign('isExpired',true);
+			}
+			
 		}
 		
 		$this->assign('currentHpCnt',$userInventory['hp_cnt']);
@@ -360,6 +367,37 @@ class Inventory extends MyYdzj_Controller {
 			'选择要上传的文件',
 			'批量导入货品',
 		),$step));
+	}
+	
+	
+	/**
+	 * 重新刷新
+	 */
+	public function reactive(){
+		
+		if($this->isPostRequest()){
+			$lastUpdate = $this->inventory_service->getLastUpdate($this->_loginUID);
+			$freezen = config_item('inventory_freezen');
+			
+			if($lastUpdate && ($this->_reqtime - $lastUpdate ) < $freezen){
+				$leftSeconds = $freezen  - ($this->_reqtime - $lastUpdate );
+				$this->jsonOutput('尚在冻结期内,请稍后操作');
+			}else{
+				$rows = $this->inventory_service->reactiveUserInventory($this->_reqtime,$this->_loginUID);
+				
+				if($rows){
+					$this->jsonOutput('刷新成功',array('redirectUrl' => site_url('inventory/index')));
+				}else{
+					$this->jsonOutput('刷新失败');
+				}
+			}
+			
+			
+		}else{
+			$this->jsonOutput('参数错误');
+		}
+		
+		
 	}
 
 }

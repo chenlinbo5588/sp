@@ -21,19 +21,20 @@
 		
 		dtFn();
 		
-		
 		add_index();
 	}
 	
 	function add_index(){
-		$("#bodyContent tr").each(function(){
-			var tr = $(this);
-			tr.find("td:eq(0)").html(tr.index() + 1);
+		$("#bodyContent table").each(function(){
+			var tr = $("tbody tr:eq(0)",this);
+			tr.find("td:eq(1)").html($(this).index() + 1);
 		})
+		
+		$("#addstat strong").html($("#bodyContent table").size());
 	}
 	
 	function rowControl(){
-		if($("#bodyContent tr").size() >= maxRow){
+		if($("#bodyContent table").size() >= maxRow){
 			
 			$.toast({
 	            position:'bottom-center',
@@ -74,6 +75,9 @@
 	$("input[name=addrow]").bind("click",addRow);
 	$("input[name=clearall]").bind('click',function(){
 		$("#bodyContent").html('');
+		
+		$("#addstat strong").html($("#bodyContent table").size());
+		
 	});
 	
 	$("#bodyContent").delegate("a.copyrow","click",function(){
@@ -83,12 +87,12 @@
 		
 		var alink = $(this),size;
 		
-		var tr = $(this).parents('tr');
-		var cloneTr = tr.clone(false);
-		var sizeInput = cloneTr.find("input[name='goods_size[]']");
+		var table = $(this).parents('table');
+		var cloneTable = table.clone(false);
+		var sizeInput = cloneTable.find("input[name='goods_size[]']");
 		
-		cloneTr.find("label.error").remove();
-		cloneTr.find("input").removeClass("error").removeClass("valid");
+		cloneTable.find("label.error").remove();
+		cloneTable.find("input").removeClass("error").removeClass("valid");
 		
 		size = $.trim(sizeInput.val());
 		size = parseFloat(size);
@@ -103,13 +107,16 @@
 			}
 		}
 		
-		cloneTr.insertAfter(tr);
+		
+		$("#bodyContent").append(cloneTable);
+		
+		//cloneTable.insertAfter(table);
 		add_index();
 	});
 	
 	$("#bodyContent").delegate("a.deleterow","click",function(){
-		var tr = $(this).parents('tr');
-		tr.remove();
+		var table = $(this).parents('table');
+		table.remove();
 		add_index();
 	});
 	

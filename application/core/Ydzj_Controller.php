@@ -45,6 +45,7 @@ class Ydzj_Controller extends MY_Controller {
 		$navs = $this->uri->segments;
 		$moduleIndex = 1;
 		
+		
 		if($navs[1] == 'admin'){
 			$navs = array_slice($navs,1,3);
 			$moduleIndex = 0;
@@ -53,12 +54,7 @@ class Ydzj_Controller extends MY_Controller {
 		//功能 url 访问路径
         $funcUrl = implode('/',$navs);
 		
-		/*
-		$currentUri = $_SERVER['REQUEST_URI'];
-		if(preg_match("/^\/index.php\/admin\//",$currentUri,$match)){
-			$currentUri = substr($currentUri,17);
-		}
-		*/
+		
 		
 		$modulName = $navs[$moduleIndex];
 		$moduleUrl = $modulName.'/';
@@ -66,7 +62,7 @@ class Ydzj_Controller extends MY_Controller {
 		$configNav = config_item('navs');
 		$topSelect = $configNav['main'][$navs[$moduleIndex]];
 		
-		/* 由于主菜单 下 有其他子菜单，使用其他菜单功能是，蒋顶部导航选择 */
+		// 由于主菜单 下 有其他子菜单，使用其他菜单功能是，蒋顶部导航选择
 		if(empty($topSelect)){
 			$topSelect = $configNav['main'][$configNav['side'][$navs[$moduleIndex]]];
 		}
@@ -74,12 +70,14 @@ class Ydzj_Controller extends MY_Controller {
 		$this->_subNavs = $configNav['sub'][$modulName];
 		$this->_breadCrumbs[] = $topSelect;
 		
+		/*
 		$sideMenu = array();
 		if(is_string($configNav['side'][$modulName])){
 			$sideMenu = $configNav['side'][$configNav['side'][$modulName]];
 		}else{
 			$sideMenu = $configNav['side'][$modulName];
 		}
+		
 		
 		if($configNav['sub_parent'][$funcUrl]){
 			$this->_breadCrumbs[] = $configNav['sub_parent'][$funcUrl];
@@ -88,14 +86,15 @@ class Ydzj_Controller extends MY_Controller {
 		if($configNav['sub'][$modulName][$funcUrl]){
 			$this->_breadCrumbs[] = array('url' => $funcUrl , 'title'=> $configNav['sub'][$modulName][$funcUrl]);
 		}
+		*/
 		
 		$this->assign('uri_string',$this->uri->uri_string);
-		$this->assign('currentTopNav',$topSelect);
+		//$this->assign('currentTopNav',$topSelect);
 		//$this->assign('currentURL',$currentUri);
         
-        $this->assign('modulName',$modulName);
-        $this->assign('moduleUrl',$moduleUrl);
-        $this->assign('funcUrl',$funcUrl);
+        //$this->assign('modulName',$modulName);
+        //$this->assign('moduleUrl',$moduleUrl);
+        //$this->assign('funcUrl',$funcUrl);
         
         $this->assign('navs',$configNav);
 	}
@@ -112,6 +111,8 @@ class Ydzj_Controller extends MY_Controller {
 	 */
 	private function _userKeepFresh(){
 		$lsk = $this->input->get_cookie('lsk');
+		
+		
 		if($lsk){
 			$this->_reqInterval = $this->_reqtime - $lsk;
 		}
@@ -120,6 +121,7 @@ class Ydzj_Controller extends MY_Controller {
 		if(empty($lsk) || $this->_reqInterval > config_item('pmcheck_interval') ){
 			$this->input->set_cookie('lsk',$this->_reqtime,CACHE_ONE_DAY);
 		}
+		
 	}
 	
 	

@@ -11,11 +11,15 @@ class My_pm extends MyYdzj_Controller {
 			'title' => '站内信',
 			'url' => 'my_pm/index'
 		);
+		
+		//$this->input->set_cookie('pmclick',$this->_reqtime,CACHE_ONE_DAY);
 	}
 	
 	
 	public function index()
 	{
+		
+		
 		$type = $this->input->get_post('type');
 		
 		$currentPage = $this->input->get_post('page') ? $this->input->get_post('page') : 1;

@@ -344,6 +344,23 @@ class Message_service extends Base_service {
 		
 	}
 	
+	/*
+	 * 
+	 * 获得未读消息数量
+	 */
+	public function getUserUnreadCount($uid){
+		$this->setPmTableByUid($uid);
+		
+		return $this->_pmMessageModel->getCount(array(
+			'where' => array(
+				'uid' => $uid,
+				'readed' => 0
+			)
+		));
+		
+		
+		
+	}
 	
 	
 	/**
@@ -498,6 +515,8 @@ class Message_service extends Base_service {
 			}
 			
 			//插入 用户短信 , 暂时不做 太费钱 
+			
+			
 		}
 		
 		

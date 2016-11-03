@@ -857,13 +857,13 @@ if ( ! function_exists('function_usable'))
 /**
  * 分页函数
  */
-function pageArrayGenerator($pagerParam,$total){
+function pageArrayGenerator($pagerParam,$total,$step = 5){
 	
 	$currPage = $pagerParam['current_page'];
 	$pageSize = $pagerParam['page_size'];
 
 	
-    $step=5; //显示的页面间隔
+    //$step=5; //显示的页面间隔
     $stepTmp = ceil($step/2);
     $pageEnd = ceil($total/$pageSize); //总页数
     $pageEndNum = $pageSize*$currPage;   //本页最后的记录
