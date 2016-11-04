@@ -353,7 +353,18 @@ class Hp extends MyYdzj_Controller {
 				$validationKey = config_item('hp_validation');
 				foreach($list as $hpitem){
 					foreach($validationKey['hp_req'] as $field){
-						$postData[$field][] = $hpitem[$field];
+						
+						if($field == 'send_day'){
+							if(!empty($hpitem[$field])){
+								$postData[$field][] = date("Y-m-d",$hpitem[$field]);
+							}else{
+								$postData[$field][] = '';
+							}
+						}else{
+							$postData[$field][] = $hpitem[$field];
+						}
+						
+						
 					}
 				}
 			}

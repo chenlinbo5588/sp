@@ -1,8 +1,23 @@
 ;$(function(){
 	
-	bindDeleteEvent();
+	var successCallback = function(ids,json){
+		if(check_success(json.message)){
+			showToast('success',json.message);
+			
+			setTimeout(function(){
+			   location.reload();
+			},1000);
+		}else{
+			showToast('error',json.message);
+		}
+	}
 	
-    $( ".datepicker" ).datepicker();
+    bindDeleteEvent();
+    bindOpEvent("input.updateBtn",successCallback);
+    
+    $( ".datepicker" ).datepicker({ });
+	
+	
     $(".repub").bind("click",function(){
         var selected = $("input[name='id[]']:checked").size();
         if(selected == 0){

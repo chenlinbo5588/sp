@@ -95,6 +95,7 @@
 		      <tr>
 		          <td colspan="12">
 		              <div class="pd5">
+		              <input type="button" class="action repub" name="repub" value="加入重新发布" />
 		              <input type="button" class="action updateBtn" data-checkbox="id[]" data-title="{#reactive#}" data-url="{site_url('my_req/reactive')}" name="batchUpdate" value="重新激活"/>
 		              <input type="button" class="action deleteBtn" data-checkbox="id[]" data-title="删除" data-url="{site_url('my_req/delete?source=recent')}" name="delete" value="删除" />
 		              </div>
@@ -105,24 +106,5 @@
 	    </div>
     </form>
     <script type="text/javascript" src="{resource_url('js/jquery-ui/i18n/zh-CN.js')}"></script>
-    <script>
-        $(function(){
-			var successCallback = function(ids,json){
-				if(check_success(json.message)){
-					showToast('success',json.message);
-					
-					setTimeout(function(){
-					   location.reload();
-					},1000);
-				}else{
-					showToast('error',json.message);
-				}
-			}
-			
-            bindDeleteEvent();
-            bindOpEvent("input.updateBtn",successCallback);
-            
-            $( ".datepicker" ).datepicker({ });
-        });
-    </script>
+    <script type="text/javascript" src="{resource_url('js/my/history.js',true)}"></script>
 {include file="common/my_footer.tpl"}

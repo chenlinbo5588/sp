@@ -65,10 +65,10 @@
 				<td>积分</td>
 				<td>{$profile['basic']['credits']|escape}</td>
 			</tr>
-			<tr>
+			<tr class="tuiguang">
 				<td>推广链接</td>
 				<td>
-					<input type="text" style="width:80%" value="{$inviteUrl}"/>
+					<input id="tuiguang" type="text" style="width:80%" value="{$siteSetting['site_name']} {$profile['basic']['username']} 邀请您注册 {$inviteUrl}"/>
 					<input class="action" type="button" name="copylink" value="复制推广链接"/>
 				</td>
 			</tr>

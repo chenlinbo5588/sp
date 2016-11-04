@@ -74,5 +74,5 @@
 	    </div>
     </form>
     <script type="text/javascript" src="{resource_url('js/jquery-ui/i18n/zh-CN.js')}"></script>
-    <script type="text/javascript" src="{resource_url('js/my/history.js')}"></script>
+    <script type="text/javascript" src="{resource_url('js/my/history.js',true)}"></script>
 {include file="common/my_footer.tpl"}

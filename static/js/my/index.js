@@ -137,4 +137,10 @@ $(function(){
 			}
         }
     });
+	
+	$("input[name=copylink]").bind('click',function(){
+		$("#tuiguang").select();
+		showToast('warning','请按 Ctrl+C 完成复制');
+	})
+	
 })

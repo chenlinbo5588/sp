@@ -1224,6 +1224,11 @@ table.noext {
 }
 
 
+.tuiguang td {
+    background: #E1E2E6;
+}
+
+
 @media (min-width: 1024px) {
 	#loginPanel,#register {
         max-width:350px;
@@ -1273,5 +1278,10 @@ table.noext {
 	
     #my .panel_content {
         margin-left:0;
+    }
+    
+    .jq-toast-wrap {
+    	width:auto !important;
+    	max-width:100%;
     }
 }

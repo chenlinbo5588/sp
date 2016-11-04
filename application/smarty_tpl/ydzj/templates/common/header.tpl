@@ -28,7 +28,7 @@ var cookiedomain = "{config_item('cookie_domain')}",
 </head>
 <a name="top"></a>
 <div id="showDlg" style="display:none;"></div>
-<body {if $bodyClass}class="{$bodyClass}"{/if}>
+<body class="{if $bodyClass}{$bodyClass}{/if}">
     <div id="wrap">
         <div id="topbar">
             <div class="boxz">
