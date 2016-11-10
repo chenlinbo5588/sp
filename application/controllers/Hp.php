@@ -538,6 +538,10 @@ class Hp extends MyYdzj_Controller {
 							continue;
 						}
 						
+						if(empty($rowValue['goods_color'])){
+							$rowValue['goods_color'] = '未填';
+						}
+						
 						//print_r($rowValue);
 						
 						$this->form_validation->reset_validation();

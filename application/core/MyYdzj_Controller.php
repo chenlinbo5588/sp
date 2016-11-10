@@ -56,6 +56,9 @@ class MyYdzj_Controller extends Ydzj_Controller {
 		$unread = $this->message_service->getUserUnreadCount($this->_loginUID);
 		$this->assign('unreadCount',$unread);
 		
+		
+		//检查是否已经认证
+		$this->_checkHasVerify();
 		$this->_repubList();
 	}
 	
@@ -82,6 +85,32 @@ class MyYdzj_Controller extends Ydzj_Controller {
 		*/
 	}
 	
+	/**
+	 * 检查是否已认证
+	 */
+	protected function _checkHasVerify(){
+		//认证卖家
+		$navPop = false;
+		
+		if(2 == $this->_profile['basic']['group_id']){
+			//js_redirect('my/seller_verify');
+			
+			$this->load->library('Member_service');
+			$groupId = $this->member_service->getUserGroupId($this->_loginUID);
+			
+			if(3 == $groupId){
+				$this->_profile['basic']['group_id'] = $groupId;
+				$this->refreshProfile();
+				$this->getCacheObject()->delete($this->member_service->getUserGroupKey($this->_loginUID));
+			}
+		}
+		
+		$this->assign('currentGroupId',$this->_profile['basic']['group_id']);
+		$remind = $this->input->get_post('remind');
+		$sellerRemind = $this->input->get_cookie('seller_remind');
+		
+		
+	}
 	
 	
 	/**

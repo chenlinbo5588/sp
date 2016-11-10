@@ -100,7 +100,7 @@ class Inventory_service extends Base_service {
 	public function updateUserInventory($data,$uid){
 		$data['hp_cnt'] = count($data['goods_list']);
 		$data['goods_list'] = json_encode($data['goods_list']);
-		
+		$data['enable'] = 1;
 		
 		if($data['hp_cnt'] == 0){
 			$data['enable'] = 0;

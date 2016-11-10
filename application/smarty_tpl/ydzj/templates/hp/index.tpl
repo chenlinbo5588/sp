@@ -34,7 +34,7 @@
                 	<label class="ftitle">{#mtime#}</label>
                 	<select name="mtime">
                 	{foreach from=$mtime item=item key=key}
-                		<option value="{$key}" {if $smarty.post.mtime == $key}selected{/if}/>{$key}</option>
+                		<option value="{$key}" {if $smarty.post.mtime == $key}selected{/if}>{$key}</option>
                 	{/foreach}
                 	</select>
                 </li>

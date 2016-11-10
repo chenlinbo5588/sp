@@ -26,9 +26,9 @@ var cookiedomain = "{config_item('cookie_domain')}",
 <script type="text/javascript" src="{resource_url('js/toast/jquery.toast.min.js')}"></script>
 <script type="text/javascript" src="{resource_url('js/common.js',true)}"></script>
 </head>
-<a name="top"></a>
-<div id="showDlg" style="display:none;"></div>
 <body class="{if $bodyClass}{$bodyClass}{/if}">
+    <a name="top"></a>
+    <div id="showDlg" style="display:none;"></div>
     <div id="wrap">
         <div id="topbar">
             <div class="boxz">

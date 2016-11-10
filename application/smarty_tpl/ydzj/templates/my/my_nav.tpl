@@ -2,7 +2,7 @@
         <ul>
             <li class="segment"><h3>个人中心</h3></li>
             <li {if $uri_string == 'my/index'}class="current"{/if}><i class="fa fa-user"></i><a href="{site_url('my/index')}">基本资料</a></li>
-            <li {if $uri_string == 'my_pm/index'}class="current"{/if}"><i class="fa fa-envelope-o"></i><a href="{site_url('my_pm/index')}"><span>消息通知</span>{if $unreadCount}<strong>({if $unreadCount >= 100}99+{else}{$unreadCount}{/if}未读)</strong>{/if}</a></li>
+            <li {if $uri_string == 'my_pm/index'}class="current"{/if}><i class="fa fa-envelope-o"></i><a href="{site_url('my_pm/index')}"><span>消息通知</span>{if $unreadCount}<strong>({if $unreadCount >= 100}99+{else}{$unreadCount}{/if}未读)</strong>{/if}</a></li>
             <li {if $uri_string == 'my/change_psw'}class="current"{/if}><i class="fa fa-user-secret"></i><a href="{site_url('my/change_psw')}">修改密码</a></li>
             <li {if $uri_string == 'my_pm/setting'}class="current"{/if}><i class="fa fa-bell"></i><a href="{site_url('my_pm/setting')}">提醒设置</a></li>
             <li {if $uri_string == 'my/seller_verify'}class="current"{/if}><a href="{site_url('my/seller_verify')}">卖家认证</a></li>

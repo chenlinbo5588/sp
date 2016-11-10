@@ -22,10 +22,10 @@ class Inventory extends MyYdzj_Controller {
 		
 		$this->assign('isExpired',$this->_isExpired);
 		
-		$this->_checkHasVerify();
+		//$this->_checkHasVerify();
 	}
 	
-	
+	/*
 	private function _checkHasVerify(){
 		//认证卖家
 		if(2 == $this->_profile['basic']['group_id']){
@@ -39,7 +39,7 @@ class Inventory extends MyYdzj_Controller {
 			}
 		}
 	}
-	
+	*/
 	
 	
 	/**
@@ -195,7 +195,7 @@ class Inventory extends MyYdzj_Controller {
 		}
 		
 		$this->assign('currentHpCnt',$userInventory['hp_cnt']);
-		$this->assign('currentGroupId',$this->_profile['basic']['group_id']);
+		//$this->assign('currentGroupId',$this->_profile['basic']['group_id']);
 		
 		$this->display();
 	}
@@ -308,6 +308,10 @@ class Inventory extends MyYdzj_Controller {
 						//important , do not drop this line
 						if(empty($rowValue['goods_code'])){
 							continue;
+						}
+						
+						if(empty($rowValue['goods_color'])){
+							$rowValue['goods_color'] = '未填';
 						}
 						
 						$this->form_validation->reset_validation();
