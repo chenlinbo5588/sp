@@ -90,11 +90,7 @@ class MyYdzj_Controller extends Ydzj_Controller {
 	 */
 	protected function _checkHasVerify(){
 		//认证卖家
-		$navPop = false;
-		
 		if(2 == $this->_profile['basic']['group_id']){
-			//js_redirect('my/seller_verify');
-			
 			$this->load->library('Member_service');
 			$groupId = $this->member_service->getUserGroupId($this->_loginUID);
 			
@@ -106,9 +102,6 @@ class MyYdzj_Controller extends Ydzj_Controller {
 		}
 		
 		$this->assign('currentGroupId',$this->_profile['basic']['group_id']);
-		$remind = $this->input->get_post('remind');
-		$sellerRemind = $this->input->get_cookie('seller_remind');
-		
 		
 	}
 	
