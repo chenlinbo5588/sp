@@ -54,7 +54,10 @@ class Ydzj_Controller extends MY_Controller {
 		//功能 url 访问路径
         $funcUrl = implode('/',$navs);
 		
-		
+        $currentUri = $_SERVER['REQUEST_URI'];
+        if(preg_match("/^\/index.php\/admin\//",$currentUri,$match)){
+        	$currentUri = substr($currentUri,17);
+        }
 		
 		$modulName = $navs[$moduleIndex];
 		$moduleUrl = $modulName.'/';
@@ -70,7 +73,7 @@ class Ydzj_Controller extends MY_Controller {
 		$this->_subNavs = $configNav['sub'][$modulName];
 		$this->_breadCrumbs[] = $topSelect;
 		
-		/*
+		
 		$sideMenu = array();
 		if(is_string($configNav['side'][$modulName])){
 			$sideMenu = $configNav['side'][$configNav['side'][$modulName]];
@@ -86,15 +89,15 @@ class Ydzj_Controller extends MY_Controller {
 		if($configNav['sub'][$modulName][$funcUrl]){
 			$this->_breadCrumbs[] = array('url' => $funcUrl , 'title'=> $configNav['sub'][$modulName][$funcUrl]);
 		}
-		*/
+		
 		
 		$this->assign('uri_string',$this->uri->uri_string);
-		//$this->assign('currentTopNav',$topSelect);
+		$this->assign('currentTopNav',$topSelect);
 		//$this->assign('currentURL',$currentUri);
         
-        //$this->assign('modulName',$modulName);
-        //$this->assign('moduleUrl',$moduleUrl);
-        //$this->assign('funcUrl',$funcUrl);
+        $this->assign('modulName',$modulName);
+        $this->assign('moduleUrl',$moduleUrl);
+        $this->assign('funcUrl',$funcUrl);
         
         $this->assign('navs',$configNav);
 	}
