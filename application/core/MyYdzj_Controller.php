@@ -51,6 +51,9 @@ class MyYdzj_Controller extends Ydzj_Controller {
 		$this->_initUserParam();
 		$this->_permission = config_item('permission');
 		
+		$unread = $this->message_service->getUserUnreadCount($this->_loginUID);
+		$this->assign('unreadCount',$unread);
+		
 		$this->_checkPermission();
 	}
 	

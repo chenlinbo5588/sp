@@ -7,9 +7,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $config['api_secret'] = 'b53209f0e4d2b2335d726e4e381511d59d22a31f';
 
 $config['aliyun_dm'] = array(
-	'account' => '',
-	'api_key' => '',
-	'api_secret' => ''
+	'account' => 'system@safetyfst.com',
+	'api_key' => 'LTAIljFXelniCvtz',
+	'api_secret' => 'sodR7uUrudMNXetEyhKTussLH67gIO'
 );
 
 

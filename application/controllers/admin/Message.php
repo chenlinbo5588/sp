@@ -45,7 +45,7 @@ class Message extends Ydzj_Admin_Controller {
 				if($this->input->post('email_type') == 1 && $this->input->post('email_enabled') == 1){
 					$this->form_validation->set_rules('email_host','SMTP 服务器','required');
 					$this->form_validation->set_rules('email_port','SMTP 端口','required|is_natural_no_zero|less_than[65535]');
-					$this->form_validation->set_rules('email_addr','发信人邮件地址','required|valid_email');
+					$this->form_validation->set_rules('email_addr','发信人邮件地址','required');
 					$this->form_validation->set_rules('email_id','SMTP 身份验证用户名','required');
 					
 					//$this->form_validation->set_rules('email_pass','SMTP 身份验证密码','required');
@@ -168,6 +168,7 @@ class Message extends Ydzj_Admin_Controller {
 		$config['smtp_timeout'] = 10;
 		$config['charset'] = config_item('charset');
 		
+		print_r($config);
 		$this->email->initialize($config);
 		
 		$emailTitle = config_item('site_name');
@@ -186,7 +187,7 @@ class Message extends Ydzj_Admin_Controller {
 			$feedback = '失败';
 		}
 		
-		//file_put_contents('debug.txt',$this->email->print_debugger());
+		file_put_contents('debug.txt',$this->email->print_debugger());
 		$this->jsonOutput('发送'.$feedback);
 		
 	}

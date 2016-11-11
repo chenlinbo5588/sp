@@ -344,6 +344,23 @@ class Message_service extends Base_service {
 		
 	}
 	
+	/*
+	 * 
+	 * 获得未读消息数量
+	 */
+	public function getUserUnreadCount($uid){
+		$this->setPmTableByUid($uid);
+		
+		return $this->_pmMessageModel->getCount(array(
+			'where' => array(
+				'uid' => $uid,
+				'readed' => 0
+			)
+		));
+		
+		
+		
+	}
 	
 	
 	/**
@@ -593,6 +610,7 @@ class Message_service extends Base_service {
 			
 			$this->_setting = $setting;
 			
+			
     		$emailConfig = config_item('aliyun_dm');
     		$iClientProfile = DefaultProfile::getProfile("cn-hangzhou", $emailConfig['api_key'], $emailConfig['api_secret']);
     		$this->_email = new DefaultAcsClient($iClientProfile);
@@ -601,8 +619,8 @@ class Message_service extends Base_service {
 		    $this->_emailRequest->setFromAlias($this->_setting['site_name']);
 		    $this->_emailRequest->setAddressType(1);
 		    $this->_emailRequest->setReplyToAddress("false");
+		    
 		}
-		
 		
 		/*
 		$config['protocol'] = 'smtp';
@@ -672,6 +690,7 @@ class Message_service extends Base_service {
 	 */
 	public function sendEmail($to,$subject,$content){
 		
+		
 	    $this->_emailRequest->setToAddress($to);        
 	    $this->_emailRequest->setSubject($subject);
 	    $this->_emailRequest->setHtmlBody($content);
@@ -692,6 +711,7 @@ class Message_service extends Base_service {
 	        //print_r($e->getErrorCode());   
 	        //print_r($e->getErrorMessage());
 	    }
+		
 		
 		/*
 		$this->_email->to($to);

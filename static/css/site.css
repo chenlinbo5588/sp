@@ -488,6 +488,9 @@ input[type=text].valid , input[type=password].valid {
 }
 
 
+.w-tixing .master_btn , .w-tixing .link_btn {
+	padding:0 10px;
+}
 .greenBtn {
     background:#34AB75;
 }
@@ -496,6 +499,31 @@ input[type=text].valid , input[type=password].valid {
 	background:#34AB75;
     font-size:13px;
     padding:3px;
+}
+.btn {
+    border-bottom: 0;
+    text-align: center;
+    border-left: 0;
+    line-height: 31px;
+    width: 72px;
+    height: 31px;
+    color: #fff;
+    font-size: 14px;
+    border-top: 0;
+    cursor: pointer;
+    font-weight: bold;
+    border-right: 0;
+}
+
+.orangeBtn {
+    line-height: 20px;
+    width: 60px;
+    font-family: "微软雅黑";
+    background: #ed6d00;
+    height: 20px;
+    font-size: 14px;
+    vertical-align: middle;
+    font-weight: normal;
 }
 
 .grayed {
@@ -710,12 +738,21 @@ table.noext {
 
 
 .fulltable tbody tr:hover {
-	background-color:#FBFBFB;
+	background-color:#F3F3F3;
 }
 
 .style1 thead th , .style1 tbody td , .style1 tfoot td {
 	padding:8px 0;
 	vertical-align: top;
+}
+
+.style2 thead th , .style2 tbody td , .style2 tfoot td {
+    vertical-align: top;
+}
+
+
+.border thead th , .border tbody td {
+    border-width:1px;
 }
 
 
@@ -829,6 +866,7 @@ table.noext {
 
 #logo {
 	position:absolute;
+	
 }
 
 #logo a {
@@ -974,9 +1012,16 @@ table.noext {
 	padding:10px 5px;
 }
 
+.mynav li.current {
+    border: 1px solid #CF246A;
+    border-width: 0 3px 0 0;
+    background-color: #F7CE98;
+}
+
 .mynav .segment {
 	background-color:#DAF4FE;
 	text-align: center;
+	font-size: 15px;
 }
 
 .mynav .segment h3 {

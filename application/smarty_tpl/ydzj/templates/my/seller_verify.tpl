@@ -1,27 +1,24 @@
 {include file="common/my_header.tpl"}
     {$stepHTML}
 	<div class="w-tixing clearfix"><b>温馨提醒：</b>
-	    <p>通过企业认证之后,将可以更好的客服服务以及数据保护等级</p>
+	    <p>通过企业认证之后,将可以更好的数据服务</p>
 	  </div>
 	{include file="common/fancybox.tpl"}
 	{if $step == 1}
 	{form_open_multipart(site_url($uri_string),"id='sellerForm'")}
-	<input type="hidden" name="step" value="{$step}"/>
-	<input type="hidden" name="file_id" value=""/>
-	<input type="hidden" name="img_b" value=""/>
-	<input type="hidden" name="img_m" value=""/>
+	<input type="hidden" name="step" value="2"/>
+	<input type="hidden" name="img_b" value="{$info['img_b']}"/>
+	<input type="hidden" name="img_m" value="{$info['img_m']}"/>
 	<table class="fulltable style1">
 	    <tbody>
-	       
 			<tr>
 				<td class="w120"><label>企业名称</label></td>
-				<td><input class="w50pre" type="text" name="store_url" value="{set_value('store_url')}" placeholder="请输入企业名称"/>{form_error('store_url')}</td>
+				<td><input class="w50pre" type="text" name="store_url" value="{set_value('store_url')}" placeholder="请输入企业名称地址"/>{form_error('store_url')}</td>
 			</tr>
 			<tr>
-				<td class="w120"><label>工商营业执照</label></td>
+				<td class="w120"><label>企业工商营业执照</label></td>
 				<td>
-				    <input class="w50pre" id="file_upload" type="file" name="trade_pic" /><span>请上传尺寸JPG格式的工商营业执照,最小尺寸400x400</span>
-				    {form_error('img_b')}
+				    <input id="file_upload" type="file" name="trade_pic" />{$file_error}<span>请上传尺寸JPG格式的工商营业执照图片,最小尺寸400x400</span>
 				</td>
 			</tr>
 			<tr>
@@ -31,46 +28,21 @@
 		</tbody>
 	</table>
 	</form>
-	<div class="trade_previw">
-	   <h5>上传成功后,点击图片可查看大图</h5>
-	   <div id="prev" title="点击查看大图"></div>
-	</div>
 	{include file="common/jquery_validation.tpl"}
-	{include file="common/uploadify.tpl"}
-	
 	<script type="text/javascript">
 	   $(function() {
-            $('#file_upload').uploadify({
-                'fileTypeDesc' : '图片文件',
-                'buttonText' : '选择图片文件',
-                'fileTypeExts' : '*.jpg;*.png',
-                'formData'     : {
-                    'min_width' : 400,
-                    'min_height' : 400
-                },
-                'swf'      : "{resource_url('js/uploadify/uploadify.swf')}",
-                'uploader' : "{site_url('my/trade_upload')}",
-                'onUploadSuccess' : function(file, data, response) {
-                    var json = $.parseJSON(data);
-                    $("input[name=file_id]").val(json.data.id);
-                    $("input[name=img_b]").val(json.data.b);
-                    $("input[name=img_m]").val(json.data.m);
-                    $("#prev").html('<a class="fancybox" href="' + json.data.b + '"><img src="' + json.data.m + '" alt="" /></a>');
-		        }
-            });
-            
             $("#sellerForm").validate({
                 rules : {
                     store_url:{
                         required:true
-                    },
+                    }
                 }
             });
         });
     </script>
     {elseif $step == 2}
     {form_open(site_url($uri_string),"id='sellerForm'")}
-    <input type="hidden" name="step" value="{$step}"/>
+    <input type="hidden" name="step" value="3"/>
     <input type="hidden" name="store_url" value="{$info['store_url']}"/>
     <input type="hidden" name="source_pic" value="{$info['source_pic']}"/>
     <input type="hidden" name="trade_pic" value="{$info['trade_pic']}"/>
@@ -79,9 +51,9 @@
             <tr>
                 <td colspan="2">
                     <div class="trade_previw">
-				       <h5>工商营业执照,点击图片可查看大图</h5>
+				       <h5>企业工商营业执照,点击图片可查看大图</h5>
 				       <a class="fancybox" href="{resource_url($info['source_pic'])}"><img src="{resource_url($info['trade_pic'])}"/></a>
-				       <div class="storeurl"><a href="{$info['store_url']}" target="_blank">工商营业执照:{$info['store_url']}</a></div>
+				       <div class="storeurl">企业名称:<a href="{$info['store_url']}" target="_blank">{$info['store_url']}</a></div>
 				       <div><input type="submit" class="master_btn" name="tijiao" value="确认无误,下一步"/></div>
 				    </div>
                 </td>
@@ -95,7 +67,7 @@
     </div>
     {elseif $step == 4}
     <div class="panel pd20{if $verfiyInfo['verify_result'] == 1} passbg{else} warnbg{/if}">
-        <span>{if $verfiyInfo['verify_result'] == 1}尊敬的<strong>{$profile['basic']['username']}</strong>用户，您已经通过企业认证.
+        <span>{if $verfiyInfo['verify_result'] == 1}尊敬的<strong>{$profile['basic']['username']}</strong>用户，您已经认证成功。
         {else}很抱歉，你的认证未通过审核，未审核原因:<span class="tip_error">{$verfiyInfo['verify_remark']|escape}</span>&nbsp;<a class="hightlight" href="{site_url('my/seller_verify?retry=yes')}">重新提交审核信息</a>{/if}</span>
     </div>
 	{/if}
