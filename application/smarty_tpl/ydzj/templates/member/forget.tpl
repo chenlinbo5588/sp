@@ -36,7 +36,7 @@
 	        {elseif 2==$step}
 	        <li class="row forgetway">
                <label><input type="radio" name="find_way" checked value="way_email" {set_radio('find_way','way_email')}/>通过邮箱找回</label>
-               <label><input type="radio" name="find_way" value="way_mobile" {set_radio('find_way','way_mobile')}/>通过手机找回</label>
+               <label class="hide"><input type="radio" name="find_way" value="way_mobile" {set_radio('find_way','way_mobile')}/>通过手机找回</label>
             </li>
             <li class="row way_email">
                 <input class="at_txt" type="hidden" id="email" name="email" value="{$userinfo['email']}" />

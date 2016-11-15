@@ -15,7 +15,7 @@
 				<td>{$profile['basic']['nickname']|escape}</td>
 			</tr>
 			*}
-			<tr>
+			<tr class="hide">
 				<td>手机账号</td>
 				<td><i class="fa fa-phone" aria-hidden="true"></i>&nbsp;<a href="javascript:void(0);">{$profile['basic']['mobile']|escape}</a><a class="warning"  href="{site_url('my/change_mobile')}">更换手机号码</a></td>
 			</tr>

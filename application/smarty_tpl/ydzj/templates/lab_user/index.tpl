@@ -21,7 +21,7 @@
 	            <th>登陆账号</th>
 	            <th>邮件地址</th>
 	            <th>QQ</th>
-	            <th>手机号码</th>
+	            {*<th>手机号码</th>*}
 	            <th>实验室管理员</th>
 	            <th>录入人</th>
 	            <th>录入时间</th>
@@ -36,7 +36,7 @@
                 <td>{$member[$item['uid']]['username']|escape}</td>
                 <td>{$member[$item['uid']]['email']|escape}</td>
                 <td>{$member[$item['uid']]['qq']|escape}</td>
-                <td>{$member[$item['uid']]['mobile']|escape}</td>
+                {*<td>{$member[$item['uid']]['mobile']|escape}</td>*}
                 <td>{if $item['is_manager'] == 'y' || $item['uid'] == $item['oid']}是{else}否{/if}</td>
                 <td>{$item['creator']|escape}</td>
                 <td>{time_tran($item['gmt_create'])}</td>
@@ -49,14 +49,13 @@
             </tr>
             {foreachelse}
             <tr>
-            	<td colspan="10">找不到记录</td>
+            	<td colspan="9">找不到记录</td>
             </tr>
             {/foreach}  
 	    </tbody>
         <tfoot>
           <tr>
               <td colspan="9">
-                
                   <div class="pd5">
                   <label><input type="checkbox" class="checkall" name="id">全选</label>&nbsp;
                   <input type="button" class="action deleteBtn" data-checkbox="id[]" data-title="选中的记录" data-url="{site_url('lab_user/delete')}" name="delete" value="删除" />

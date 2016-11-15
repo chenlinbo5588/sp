@@ -67,6 +67,8 @@ class Register_service extends Base_service {
 		
 		
 		self::$form_validation->reset_validation();
+		
+		/*
 		self::$form_validation->set_rules('mobile','手机号',array(
 					'required',
 					'valid_mobile',
@@ -96,7 +98,7 @@ class Register_service extends Base_service {
 					'authcode_callable' => '手机验证码不正确'
 				)
 			);
-		
+		*/
 		self::$form_validation->set_rules('username','登陆账号',array(
 					'required',
 					'min_length[2]',

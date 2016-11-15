@@ -208,7 +208,8 @@ class Member extends Ydzj_Controller {
 				
 				$addParam = array(
 					'sid' => $this->session->session_id,
-					'mobile' => $this->input->post('mobile'),
+					//'mobile' => $this->input->post('mobile'),
+					'mobile' => '',
 					'username' => $this->input->post('username'),
 					'email' => $this->input->post('email'),
 					'qq' => $this->input->post('qq'),
