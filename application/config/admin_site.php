@@ -76,7 +76,7 @@ $config['navs'] = array(
 		'suggestion' => 'article',
 		'cms_article' =>  array(
 			array('title' => 'CMS文章','url' => 'cms_article/index'),
-			array('title' => 'CMS文章分类','url' => 'cms_article_class/index'),
+			array('title' => 'CMS文章分类','url' => 'cms_article_class/category'),
 			array('title' => 'CMS设置','url' => 'cms/index'),
 		),
 		'cms_article_class' => 'cms_article',
@@ -156,7 +156,7 @@ $config['navs'] = array(
 			'cms_article/add' => '添加',
 		),
 		'cms_article_class' => array(
-			'cms_article_class/index' => '管理',
+			'cms_article_class/category' => '管理',
 			'cms_article_class/add' => '添加',
 		),
 		'cms' => array(

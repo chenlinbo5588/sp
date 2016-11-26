@@ -43,7 +43,7 @@ class Article_Class extends Ydzj_Admin_Controller {
 	
 	public function delete(){
 		
-		$delId = $this->input->get_post('del_id');
+		$delId = $this->input->get_post('id');
 		
 		if($this->isPostRequest()){
 			$this->article_service->deleteArticleClass($delId);
