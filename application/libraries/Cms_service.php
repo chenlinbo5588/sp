@@ -52,7 +52,7 @@ class Cms_service extends Base_service {
 
         $condition['select'] = $field;
         $condition['where'] = array(
-            'ac_id' => $id
+            'id' => $id
         );
         
         $result = $this->_cmsArticleClassModel->getById($condition);
@@ -157,13 +157,13 @@ class Cms_service extends Base_service {
 				
 				$list = $this->_cmsArticleClassModel->getList(array(
 					'where_in' => array(
-						array('key' => 'ac_parent_id', 'value' => $ids)
+						array('key' => 'id', 'value' => $ids)
 					)
 				));
 			}
 		}
 		
-		$this->_cmsArticleClassModel->deleteByWhere(array('ac_id' => $delId));
+		$this->_cmsArticleClassModel->deleteByWhere(array('id' => $delId));
 		
 	}
 	

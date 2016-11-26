@@ -7,6 +7,17 @@
         <tr>
           <th><label for="search_name">名称</label></th>
           <td><input type="text" value="{$smarty.post['search_name']|escape}" name="search_name" id="search_name" class="txt"></td>
+          
+          <td>CMS文章分类:</td>
+	        <td colspan="3">
+	            <select name="ac_id" id="ac_id">
+	              <option value="">请选择...</option>
+	              {foreach from=$articleClassList item=item}
+	              <option {if $smarty.post['ac_id'] == $item['id']}selected{/if} value="{$item['id']}">{str_repeat('......',$item['level'])}{$item['level']+1} {$item['name']}</option>
+	              {/foreach}
+	            </select>
+	        </td>
+            
           <td><input type="submit" class="msbtn" name="tijiao" value="查询"/></td>
         </tr>
       </tbody>

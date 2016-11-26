@@ -14,7 +14,7 @@
       </tr>
     </tbody>
   </table>
-  {form_open(admin_site_url('article_class/category'),'id="searchForm"')}
+  {form_open(admin_site_url('cms_article_class/category'),'id="searchForm"')}
     <input type="hidden" name="submit_type" id="submit_type" value="" />
     <table class="table tb-type2" id="listtable">
       <thead>
@@ -28,17 +28,17 @@
       </thead>
       <tbody>
       	{foreach from=$list item=item}
-      	<tr class="hover edit" id="row{$item['ac_id']}">
+      	<tr class="hover edit" id="row{$item['id']}">
           <td class="w48">
-          	<img fieldid="{$item['ac_id']}" status="open" nc_type="flex" src="{resource_url('img/tv-expandable.gif')}">
+          	<img fieldid="{$item['id']}" status="open" nc_type="flex" src="{resource_url('img/tv-expandable.gif')}">
           </td>
           <td class="w48 sort"><span class="editable ">{$item['ac_sort']}</span></td>
           <td class="name">
-          	<span title="可编辑" class="editable ">{$item['ac_name']|escape}</span>
-          	<a class="btn-add-nofloat marginleft" href="{admin_site_url('article_class/add')}?ac_parent_id={$item['ac_id']}"><span>新增下级</span></a>
+          	<span title="可编辑" class="editable ">{$item['name']|escape}</span>
+          	<a class="btn-add-nofloat marginleft" href="{admin_site_url('cms_article_class/add')}?pid={$item['id']}"><span>新增下级</span></a>
           </td>
           <td></td>
-          <td class="w84"><a href="{admin_site_url('article_class/edit')}?ac_id={$item['ac_id']}">编辑</a> | <a class="delete" href="javascript:void(0);" data-id="{$item['ac_id']}">删除</a></td>
+          <td class="w84"><a href="{admin_site_url('cms_article_class/edit')}?id={$item['id']}">编辑</a> | <a class="delete" href="javascript:void(0);" data-id="{$item['id']}">删除</a></td>
         </tr>
         {/foreach}
       </tbody>
@@ -52,7 +52,7 @@
   			var id = $(this).attr("data-id");
   			$.ajax({
   				type:"POST",
-  				url: '{admin_site_url('article_class/delete')}',
+  				url: '{admin_site_url('cms_article_class/delete')}',
   				dataType:'json',
   				data :{ formhash : formhash , id : id },
   				success:function(json){
@@ -77,7 +77,7 @@
 			obj.attr('status','none');
 		
 			$.ajax({
-				url: '{admin_site_url('article_class/category')}?ac_parent_id='+id,
+				url: '{admin_site_url('cms_article_class/category')}?pid='+id,
 				success: function(html){
 					if($.trim(html) != ''){
 						$(html).insertAfter(pr);

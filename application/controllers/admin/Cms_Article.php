@@ -56,7 +56,7 @@ class Cms_Article extends Ydzj_Admin_Controller {
 		if($articleClassId){
 			$articleClassIdList = $this->cms_service->getAllChildArticleClassByPid($articleClassId);
 			$articleClassIdList[] = $articleClassId;
-			$condition['where_in'][] = array('key' => 'id', 'value' => $articleClassIdList);
+			$condition['where_in'][] = array('key' => 'ac_id', 'value' => $articleClassIdList);
 		}
 		
 		//print_r($condition);
@@ -132,7 +132,15 @@ class Cms_Article extends Ydzj_Admin_Controller {
 				$ids = (array)$ids;
 			}
 			
+			/*
 			$this->Cms_Article_Model->updateByCondition(array('article_state' => 4),array(
+				'where_in' => array(
+					array('key' => 'id','value' => $ids)
+				)
+			));
+			*
+			*/
+			$this->Cms_Article_Model->deleteByCondition(array(
 				'where_in' => array(
 					array('key' => 'id','value' => $ids)
 				)

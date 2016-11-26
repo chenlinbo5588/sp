@@ -16,6 +16,20 @@
           <td class="vatop tips">{form_error('name')}</td>
         </tr>
         <tr>
+          <td colspan="2" class="required"><label for="pid">上级分类:</label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform">
+            <select name="pid">
+              <option value="">请选择...</option>
+              {foreach from=$list item=item}
+              <option {if $info['pid'] == $item['id']}selected{/if} value="{$item['id']}">{str_repeat('......',$item['level'])}{$item['level']+1} {$item['name']}</option>
+              {/foreach}
+            </select>
+          </td>
+          <td class="vatop tips">{form_error('pid')}如果选择上级分类，那么新增的分类则为被选择上级分类的子分类</td>
+        </tr>
+        <tr>
           <td colspan="2" class="required">开启状态: </td>
         </tr>
         <tr class="noborder">
