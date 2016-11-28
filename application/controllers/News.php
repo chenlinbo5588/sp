@@ -19,27 +19,27 @@ class News extends Ydzj_Controller {
 		
 		$this->assign('sideTitle',$this->modKey);
 		
-		$this->load->library(array('Article_service','Goods_service'));
+		$this->load->library(array('Cms_service','Goods_service'));
 		
-		$articleClass = $this->Article_Class_Model->getList(array(
+		$articleClass = $this->Cms_Article_Class_Model->getList(array(
 			'where' => array(
-				'ac_name' => $this->modKey,
-				'ac_parent_id' => 0
+				'name' => $this->modKey,
+				'pid' => 0
 			)
 		));
 		
 		if($articleClass[0]){
-			$this->topClassId = $articleClass[0]['ac_id'];
+			$this->topClassId = $articleClass[0]['id'];
 			
-			$sideNavs = $this->Article_Class_Model->getList(array(
+			$sideNavs = $this->Cms_Article_Class_Model->getList(array(
 				'where' => array(
-					'ac_parent_id' => $this->topClassId
+					'pid' => $this->topClassId
 				)
 			));
 			
 			if($sideNavs){
 				foreach($sideNavs as $nav){
-					$this->sideNavs[$nav['ac_name']] = site_url('news/news_list/?ac_id=').$nav['ac_id'];
+					$this->sideNavs[$nav['name']] = site_url('news/news_list/?ac_id=').$nav['id'];
 				}
 			}
 			
@@ -70,7 +70,7 @@ class News extends Ydzj_Controller {
 		}
 		
 		$this->_breadCrumbLinks($currentAcId);
-		$childIds = $this->article_service->getAllChildArticleClassByPid($currentAcId);
+		$childIds = $this->cms_service->getAllChildArticleClassByPid($currentAcId);
 		
 		$childIds[] = $currentAcId;
 		
@@ -81,14 +81,14 @@ class News extends Ydzj_Controller {
 		$condition = array(
 			//'select' => 'article_id,ac_id,article_title,article_click,gmt_create,gmt_modify',
 			'where' => array(
-				'article_show' => 1
+				'article_state' => 3
 			),
 			'where_in' => array(
 				array(
 					'key' => 'ac_id','value' => $childIds
 				)
 			),
-			'order' => 'article_id DESC',
+			'order' => 'id DESC',
 			'pager' => array(
 				'page_size' => config_item('page_size'),
 				'current_page' => $currentPage,
@@ -103,24 +103,22 @@ class News extends Ydzj_Controller {
 			$condition['like']['article_title'] = $keyword;
 		}
 		
-		$list = $this->Article_Model->getList($condition);
+		$list = $this->Cms_Article_Model->getList($condition);
 		//echo 'aaa';print_r($list);
 		if($list['data']){
 			foreach($list['data'] as $key => $newsArtile){
-				
-				
-				if($newsArtile['article_pic']){
-					$newsArtile['article_pic'] = resource_url($newsArtile['article_pic']);
+				if($newsArtile['image_url']){
+					$newsArtile['image_url'] = resource_url($newsArtile['image_url']);
 				}else{
-					$newsArtile['article_pic'] = resource_url('img/default.jpg');
+					$newsArtile['image_url'] = resource_url('img/default.jpg');
 				}
 				
-				if(empty($newsArtile['article_url'])){
-					$newsArtile['article_url'] = site_url('news/detail?id=') . $newsArtile['article_id'].'&ac_id='.$newsArtile['ac_id'];
+				if(empty($newsArtile['jump_url'])){
+					$newsArtile['jump_url'] = site_url('news/detail?id=') . $newsArtile['id'].'&ac_id='.$newsArtile['ac_id'];
 				}
 				
-				if(trim($newsArtile['article_digest'])){
-					$newsArtile['article_digest'] = cutText(html_entity_decode(strip_tags($newsArtile['article_content'])),120);
+				if(trim($newsArtile['digest'])){
+					$newsArtile['digest'] = cutText(html_entity_decode(strip_tags($newsArtile['content'])),120);
 				}
 				
 				$list['data'][$key] = $newsArtile;
@@ -151,15 +149,15 @@ class News extends Ydzj_Controller {
 		}
 		
 		if($currentAcId){
-			$parents = $this->article_service->getParentsById($currentAcId);
+			$parents = $this->cms_service->getParentsById($currentAcId);
 			if($parents){
 				$parents = array_reverse($parents);
 			}
 			
 			foreach($parents as $pitem){
-				$this->seoKeys[] = $pitem['ac_name'];
+				$this->seoKeys[] = $pitem['name'];
 				
-				$this->_navigation[$pitem['ac_name']] = site_url('news/news_list?id='.$pitem['ac_id']);
+				$this->_navigation[$pitem['name']] = site_url('news/news_list?id='.$pitem['id']);
 			}
 		}
 		
@@ -171,7 +169,7 @@ class News extends Ydzj_Controller {
 		
 		$id = $this->input->get_post('id');
 		$ac_id = $this->input->get_post('ac_id');
-		$info = $this->Article_Model->getFirstByKey($id,'article_id');
+		$info = $this->Cms_Article_Model->getFirstByKey($id,'id');
 		if($info){
 			
 			if($info['article_click'] == 0){
@@ -180,23 +178,23 @@ class News extends Ydzj_Controller {
 			
 			
 			$this->_breadCrumbLinks($info['ac_id']);
-			$nextArticle = $this->article_service->getNextByArticle($info);
-			$preArticle = $this->article_service->getPreByArticle($info);
-			if($nextArticle && empty($nextArticle['article_url'])){
-				$nextArticle['article_url'] = site_url('news/detail?id=') . $nextArticle['article_id'].'&ac_id='.$nextArticle['ac_id'];
+			$nextArticle = $this->cms_service->getNextByArticle($info);
+			$preArticle = $this->cms_service->getPreByArticle($info);
+			if($nextArticle && empty($nextArticle['jump_url'])){
+				$nextArticle['jump_url'] = site_url('news/detail?id=') . $nextArticle['id'].'&ac_id='.$nextArticle['ac_id'];
 			}
 			
 			if($preArticle && empty($preArticle['article_url'])){
-				$preArticle['article_url'] = site_url('news/detail?id=') . $preArticle['article_id'].'&ac_id='.$preArticle['ac_id'];
+				$preArticle['jump_url'] = site_url('news/detail?id=') . $preArticle['id'].'&ac_id='.$preArticle['ac_id'];
 			}
 			
 			//print_r($preArticle);
 			$this->assign('nextArticle',$nextArticle);
 			$this->assign('preArticle',$preArticle);
 			
-			$this->Article_Model->increseOrDecrease(array(
+			$this->Cms_Article_Model->increseOrDecrease(array(
 				array('key' => 'article_click','value'=> 'article_click + 1')
-			),array('article_id' => $id));
+			),array('id' => $id));
 			
 		}else{
 			$this->_breadCrumbLinks($ac_id);

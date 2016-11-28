@@ -160,7 +160,7 @@
 #homeNav {
 	position: absolute;
     text-align: center;
-    right: 100px;
+    right: 110px;
     top: 0px;
 }
 
@@ -388,7 +388,7 @@
 	1border-top:1px solid #fff;
 }
 
-.aboutPg , .newsPg, .productPg , .marketPg, .servicePg, .contactsPg , .docPg {
+.aboutPg , .newsPg, .productPg , .marketPg, .servicePg, .contactsPg , .docPg,.techPg {
 	background:url(../img/cmp/2.jpg) no-repeat center center;
 	height:300px;
 }

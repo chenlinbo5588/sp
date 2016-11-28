@@ -58,7 +58,7 @@
           <td class="vatop tips">{form_error('article_sort')}</td>
         </tr>
         <tr>
-          <td colspan="2" class="required"><label class="validation">文章封面</label></td>
+          <td colspan="2" class="required"><label>文章封面</label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform">

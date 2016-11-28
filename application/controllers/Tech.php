@@ -1,10 +1,10 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class About extends Ydzj_Controller {
+class Tech extends Ydzj_Controller {
 	
 	private $sideNavs = null;
-	private $modKey = '关于我们';
+	private $modKey = '技术研发';
 	
 	public function __construct(){
 		parent::__construct();
@@ -40,6 +40,7 @@ class About extends Ydzj_Controller {
 		$this->assign('article',$article);
 		
 		$this->assign('breadcrumb',$this->breadcrumb());
+		
 	}
 	
 	
@@ -48,9 +49,8 @@ class About extends Ydzj_Controller {
 		$key = $this->input->get('art');
 		
 		if(empty($key)){
-			$key = '企业简介';
+			$key = '研究专家团队';
 		}
-		
 		
 		$this->_getArticleContent($key);
 		$this->seo($key);

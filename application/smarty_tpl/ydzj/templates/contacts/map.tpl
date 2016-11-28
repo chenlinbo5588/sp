@@ -27,7 +27,7 @@
 		
 		function init() {
 			map = new BMap.Map("mapDiv");
-			var point = new BMap.Point(120.274059,30.333041);
+			var point = new BMap.Point(121.563487,29.821112);
 			map.centerAndZoom(point,16);
 			map.addControl(new BMap.MapTypeControl());
 			map.enableScrollWheelZoom(true);
@@ -56,7 +56,7 @@
 			  message:"亲耐滴，晚上一起吃个饭吧？戳下面的链接看下地址喔~"
 			}
 			
-			var point = new BMap.Point(120.274059,30.333041);
+			var point = new BMap.Point(121.563487,29.821112);
 			
 			var marker = new BMap.Marker(point);  // 创建标注
 			map.addOverlay(marker); 
@@ -70,14 +70,15 @@
 			{*
 			var myGeo = new BMap.Geocoder();
 			// 将地址解析结果显示在地图上,并调整地图视野
-			myGeo.getPoint("浙江省杭州市江干区九环路63号", function(point){
+			myGeo.getPoint("浙江省宁波市鄞州区学士路298号", function(point){
+				console.log(point);
 				if (point) {
 					map.centerAndZoom(point, 16);
 					map.addOverlay(new BMap.Marker(point));
 				}else{
 					alert("您选择地址没有解析到结果!");
 				}
-			}, "杭州市");
+			}, "宁波市");
 			
 			map.addEventListener("click",function(e){
 				console.log(e.point.lng);

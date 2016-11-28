@@ -175,4 +175,62 @@ class Cms_service extends Base_service {
 		
 		return $this->toEasyUseArray($list,'id');
 	}
+	
+	
+	
+	public function getNextByArticle($article){
+		$article = $this->_cmsArticleModel->getList(array(
+			'where' => array('ac_id' => $article['ac_id'], 'id >' => $article['id'] , 'article_state' => 3),
+			'order' => 'id ASC',
+			'limit' => 1
+		));
+		
+		if($article[0]){
+			return $article[0];
+		}else{
+			return false;
+		}
+	}
+	
+	
+	public function getPreByArticle($article){
+		$article = $this->_cmsArticleModel->getList(array(
+			'where' => array('ac_id' => $article['ac_id'], 'id <' => $article['id'] , 'article_state' => 3),
+			'order' => 'id DESC',
+			'limit' => 1
+		));
+		
+		 //print_r($article);
+		
+		if($article[0]){
+			return $article[0];
+		}else{
+			return false;
+		}
+	}
+	
+	
+	/**
+	 * 推荐列表
+	 */
+	public function getCommandArticleList($currentId,$moreCondition = array('limit' => 8)){
+		
+		$articleClassIds = $this->getAllChildArticleClassByPid($currentId);
+		$articleClassIds[] = $currentId;
+		
+		$condition = array(
+			'where' => array(
+				'article_state' => 3,
+			),
+			'where_in' => array(
+				array('key' => 'ac_id' , 'value' => $articleClassIds )
+			),
+			'order' => 'id DESC',
+			'limit' => 8
+		);
+		
+		$condition = array_merge($condition,$moreCondition);
+		
+		return $this->_cmsArticleModel->getList($condition);
+	}
 }

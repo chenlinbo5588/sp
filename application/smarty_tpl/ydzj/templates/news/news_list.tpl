@@ -13,11 +13,11 @@
 					<table class="liststyle1 newsList">
 					{foreach from=$list['data'] item=item}
 					<tr class="liststyle1Item"><td>
-						<a href="{$item['article_url']}"><img class="previewPic" src="{$item['article_pic']}" alt="{$item['article_title']|escape}"/></a>
+						<a href="{$item['jump_url']}"><img class="previewPic" src="{$item['image_url']}" alt="{$item['article_title']|escape}"/></a>
 						<div class="previewCont">
-							<div><a href="{$item['article_url']}">{$item['article_title']|escape}</a></div>
+							<div><a href="{$item['jump_url']}">{$item['article_title']|escape}</a></div>
 							<div>发布时间：{$item['gmt_create']|date_format:"%Y-%m-%d"}</div>
-							<div>{$item['article_digest']}</div>
+							<div>{$item['digest']}</div>
 						</div>
 					</td></tr>
 					{foreachelse}

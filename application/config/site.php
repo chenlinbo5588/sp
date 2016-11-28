@@ -120,25 +120,21 @@ $config['weixin_img_size'] = array(
 
 
 $config['pageConf'] = array(
-	'走进我们' => array(
-		'url' => site_url('about'),
+	'关于我们' => array(
+		'url' => site_url('about/index?art=企业简介'),
 		'sideNav' => array(
-			'企业简介' => site_url('about/index'),
-			'公司理念' => site_url('about/thinking'),
-			'企业风采' => site_url('about/moreintro'),
+			'企业简介' => site_url('about/index?art=企业简介'),
+			'合作交流' => site_url('about/index?art=合作交流'),
+			'人才招聘' => site_url('about/index?art=人才招聘'),
 		)
 	),
-	'营销招商' => array(
-		'url' => site_url('market/agency'),
+	'技术研发' => array(
+		'url' => site_url('tech/index'),
 		'sideNav' => array(
-			'经销招商' => site_url('market/agency'),
-			'运营特点' => site_url('market/cooperation'),
-		)
-	),
-	'服务中心' => array(
-		'url' => site_url('service/customer'),
-		'sideNav' => array(
-			'客户服务' => site_url('service/customer')
+			'研究专家团队' => site_url('tech/index?art=研究专家团队'),
+			'科技成果' => site_url('tech/index?art=科技成果'),
+			'企业合作' => site_url('tech/index?art=企业合作'),
+			'在研项目' => site_url('tech/index?art=在研项目'),
 		)
 	),
 	'联系我们' => array(

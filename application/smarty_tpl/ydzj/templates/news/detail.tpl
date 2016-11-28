@@ -13,12 +13,12 @@
 						<div><em class="mute">浏览次数:</em><strong>{$info['article_click']}</strong><em class="mute">日期:</em><strong>{$info['gmt_create']|date_format:"%Y-%m-%d"}</strong></div>
 					</div>
 					<div class="articleContent">
-						{$info['article_content']}
+						{$info['content']}
 					</div>
 					
 					<div class="articleRelate clearfix">
-						<div class="prevArticle"><span>上一篇：{if empty($preArticle)}无{else}<a href="{$preArticle['article_url']}">{$preArticle['article_title']|escape}</a>{/if}</div>
-						<div class="nextArticle"><span>下一篇：{if empty($nextArticle)}无{else}<a href="{$nextArticle['article_url']}">{$nextArticle['article_title']|escape}</a>{/if}</div>
+						<div class="prevArticle"><span>上一篇：{if empty($preArticle)}无{else}<a href="{$preArticle['jump_url']}">{$preArticle['article_title']|escape}</a>{/if}</div>
+						<div class="nextArticle"><span>下一篇：{if empty($nextArticle)}无{else}<a href="{$nextArticle['jump_url']}">{$nextArticle['article_title']|escape}</a>{/if}</div>
 					</div>
 					{else}
 					<div class="errorPage">抱歉，文章不存在 <a href="javascript:history.go(-1);">返回</a></div>

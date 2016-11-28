@@ -16,15 +16,15 @@ class Index extends Ydzj_Controller {
 	{	
 		
 		
-		$this->load->library(array('Goods_service','Article_service'));
+		$this->load->library(array('Goods_service','Cms_service'));
 		$goodsList = $this->goods_service->getCommandGoodsList();
 		$this->assign('goodsList',$goodsList);
 		
 		$this->assign('homeSliderImg',range(2,3));		
 		// 获得 企业新闻
-		$qiyeList = $this->article_service->getCommandArticleList(17);
+		$qiyeList = $this->cms_service->getCommandArticleList(9);
 		// 行业动态
-		$industryList = $this->article_service->getCommandArticleList(18);
+		$industryList = $this->cms_service->getCommandArticleList(10);
 
 		$hotkeys = $this->_getSiteSetting('hotwords');
 		$hotwords = explode(',',$hotkeys);

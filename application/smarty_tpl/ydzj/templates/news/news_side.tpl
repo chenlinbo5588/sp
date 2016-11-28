@@ -1,6 +1,6 @@
 			<div class="sideNav">
 				<ul class="sideItem">
-					<li class="itemTitle"><h3><a href="{$sideTitleUrl}">{$sideTitle}</h3></li>
+					<li class="itemTitle"><h3><a href="{site_url('news/news_list')}">新闻资讯</h3></li>
 					{foreach from=$sideNavs item=item key=key}
 					<li><a href="{$item}#listmao">{$key}</a></li>
 					{/foreach}

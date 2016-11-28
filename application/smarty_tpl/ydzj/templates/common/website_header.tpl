@@ -1,5 +1,5 @@
 {include file="common/share_header.tpl"}
-<link rel="stylesheet" href="{resource_url('css/website.css')}"/>
+<link rel="stylesheet" href="{resource_url('css/website.css',true)}"/>
 <body {if $bodyClass}class="{$bodyClass}"{/if}>
     <a name="top"></a>
     <div id="showDlg" style="display:none;"></div>

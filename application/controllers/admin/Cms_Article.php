@@ -95,7 +95,7 @@ class Cms_Article extends Ydzj_Admin_Controller {
 			$this->form_validation->set_rules('article_sort','排序',"is_natural|less_than[256]");
 		}
 		
-		$this->form_validation->set_rules('image_url','文章封面',"required|valid_url");
+		//$this->form_validation->set_rules('image_url','文章封面',"required|valid_url");
 		$this->form_validation->set_rules('keyword','文章关键字',"required|max_length[100]");
 		
 		if($this->input->post('author')){
@@ -115,7 +115,7 @@ class Cms_Article extends Ydzj_Admin_Controller {
 		}
 		
 		if($this->input->post('digest')){
-			$this->form_validation->set_rules('digest','文章摘要',"required|max_length[100]");
+			$this->form_validation->set_rules('digest','文章摘要',"required|max_length[80]");
 		}
 		
 		
@@ -181,10 +181,12 @@ class Cms_Article extends Ydzj_Admin_Controller {
 		}
 		
 		if(trim($this->input->post('digest'))){
-			$info['digest'] = cutText(trim(html_entity_decode(strip_tags($this->input->post('article_content')))),120);
+			$info['digest'] = cutText(trim(html_entity_decode(strip_tags($this->input->post('content')))),80);
 		}else{
-			$info['digest'] = cutText(trim(html_entity_decode(strip_tags($info['article_content']))),120);
+			$info['digest'] = cutText(trim(html_entity_decode(strip_tags($info['content']))),80);
 		}
+		
+		$info['image_url'] = str_replace(base_url(),'',$info['image_url']);
 		
 		//已发布
 		if($info['article_state'] == 3){
