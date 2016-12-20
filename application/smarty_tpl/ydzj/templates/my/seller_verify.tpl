@@ -13,12 +13,12 @@
 	    <tbody>
 			<tr>
 				<td class="w120"><label>网店链接</label></td>
-				<td><input class="w50pre" type="text" name="store_url" value="{set_value('store_url')}" placeholder="请输入网店链接地址"/>{form_error('store_url')}</td>
+				<td><input class="w50pre" type="text" name="store_url" value="{set_value('store_url')}" placeholder="请输入网店链接地址"/>{form_error('store_url')} <span class="tip">输入以http:// 或者 https:// 开头的链接地址</span></td>
 			</tr>
 			<tr>
 				<td class="w120"><label>卖家最近交易流水</label></td>
 				<td>
-				    <input id="file_upload" type="file" name="trade_pic" />{$file_error}<span>请上传尺寸JPG格式的最近交易流水图片,最小尺寸400x400</span>
+				    <input id="file_upload" type="file" name="trade_pic" />{$file_error}<span class="tip">请上传尺寸JPG格式的最近交易流水图片,最小尺寸400x400</span>
 				</td>
 			</tr>
 			<tr>
@@ -28,18 +28,6 @@
 		</tbody>
 	</table>
 	</form>
-	{include file="common/jquery_validation.tpl"}
-	<script type="text/javascript">
-	   $(function() {
-            $("#sellerForm").validate({
-                rules : {
-                    store_url:{
-                        required:true
-                    }
-                }
-            });
-        });
-    </script>
     {elseif $step == 2}
     {form_open(site_url($uri_string),"id='sellerForm'")}
     <input type="hidden" name="step" value="3"/>

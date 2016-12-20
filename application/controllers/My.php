@@ -107,10 +107,8 @@ class My extends MyYdzj_Controller {
 					
 				}else if(2 == $step){
 					
-					$back = false;
-					
-					//$this->form_validation->set_rules('store_url', '网店链接','required|valid_url');
-					$this->form_validation->set_rules('store_url', '网店链接','required|max_length[200]');
+					$this->form_validation->set_rules('store_url', '网店链接','required|valid_starthttp|valid_url|max_length[300]');
+					//$this->form_validation->set_rules('store_url', '网店链接','required|max_length[300]');
 					//$this->form_validation->set_rules('img_b','交易流水图片','required|valid_url');
 					
 					$store_url = $this->input->post('store_url');
@@ -158,8 +156,7 @@ class My extends MyYdzj_Controller {
 					
 					if(!$this->form_validation->run()){
 						$isPass = false;
-						$this->assign('goback',$back);
-						
+						$step = 1;
 					}
 					
 					if(!$isPass){
