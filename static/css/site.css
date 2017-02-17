@@ -688,7 +688,8 @@ input[type=text].valid , input[type=password].valid {
 }
 
 #topbar {
-	background-color: rgba(242, 242, 242, 0.7);
+	background-color: rgba(242, 242, 242, 0.5);
+	filter: progid:DXImageTransform.Microsoft.gradient(enabled='true',startColorstr='#50000000', endColorstr='#50000000');
     height: 40px;
     width: 100%;
     font-size: 16px;
@@ -878,7 +879,7 @@ table.noext {
 /* 前台登陆  */
 #loginPanel,#register {
     padding: 30px 10px 60px;
-    margin: 30px auto;
+    margin: 80px auto;
 }
 
 .panel {

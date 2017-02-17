@@ -75,6 +75,7 @@ html{ -webkit-text-size-adjust: none;}
 .w830 { width: 830px;}
 
 .w18pre { width: 18%;}
+.w20pre { width: 20%;}
 .w33pre  { width: 33%;}
 .w34pre  { width: 34%;}
 .w25pre { width: 25%;}
@@ -961,7 +962,7 @@ tr.member .smallfont { font-size: 11px; color: #999; margin-bottom: 4px;}
 .ps-container .ps-scrollbar-x.in-scrolling, .ps-container .ps-scrollbar-y.in-scrolling { opacity: .9; filter: alpha(opacity=90);}
 
 .info-panel { }
-.info-panel dl { width: 31%; float: left; margin: 30px 2% 0 0; border: solid 1px #DEEFFB; overflow: hidden;}
+.info-panel dl { width: 31%; float: left; margin: 10px 2% 0 0; border: solid 1px #DEEFFB; }
 .info-panel dl:hover { border-color: #75CCEF; box-shadow: 3px 3px 0 #DEEFFB;}
 .info-panel dl dt { text-align: center; padding: 20px 0 20px 0;}
 .info-panel dl dt .ico { width: 60px; height: 60px; margin: 0 auto; border: solid 2px #75CCEF; border-radius: 32px; position: relative; z-index: 1; }

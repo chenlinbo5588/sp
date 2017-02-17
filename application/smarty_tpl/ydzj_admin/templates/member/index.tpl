@@ -92,7 +92,7 @@
           <th>最后登录</th>
           <th>注册信息</th>
           <th>积分</th>
-          <th>卖家组</th>
+          <th>用户组</th>
           <th class="align-center">登录</th>
           <th class="align-center">操作</th>
         </tr>

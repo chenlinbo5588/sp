@@ -6,7 +6,6 @@
   	padding: 3px;
   }
   </style>
-  <div class="feedback">{$feedback}</div>
   {if $info['article_id']}
   {form_open_multipart(admin_site_url('article/edit'),'id="article_form"')}
   {else}

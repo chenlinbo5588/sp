@@ -196,7 +196,7 @@ class Message extends Ydzj_Admin_Controller {
 		
 		$code = $this->input->get_post('code');
 		
-		$this->_subNavs[] = array('url' => 'message/email_tpl_edit?code='.$code, 'title' => '编辑消息模板');
+		$this->_subNavs['message/email_tpl_edit?code='.$code] = '编辑消息模板';
 		
 		$feedback = '';
 		

@@ -1,0 +1,113 @@
+.required em {
+	color:red;
+}
+
+#villageDiv li {
+	
+	float:left;
+	display:block;
+	height:40px;
+	
+}
+
+
+#mapDiv {
+   height:100%;
+   width: 100%;
+   margin: 0;
+   padding: 0;
+   position: fixed;
+}
+
+
+#statictsHTML {
+	position:absolute;
+	top:150px;
+	z-index: 20;
+	display:none;
+}
+
+ #search {
+    position: fixed;
+    z-index: 20;
+    top: 60px;
+    right: 50px;
+ }
+ 
+ #search_result {
+	position: fixed;
+	right: 110px;
+	top: 98px;
+	z-index: 20;
+	background-color: #fff;
+	width: 350px;
+	max-height: 480px;
+	overflow: auto;
+	border:1px solid #dcdcdc;
+	display:none;
+ }
+ 
+ #search_result li {
+    cursor:pointer;
+    padding:5px;
+    border-bottom:1px dotted #dcdcdc;            
+ }
+ 
+ #search_result li:hover {
+   background:yellow;
+ }
+ 
+ 
+ #panbox {
+   position:absolute;
+   right:0px;
+   bottom:0px;
+   width: 180px;
+   z-index:19;
+   background:rgba(255,255,255,0.7);
+ }
+ 
+ #templatePickerPane {
+   width: 225px;
+   overflow: hidden;
+ }
+
+ #panelHeader {
+   background-color: #92A661;
+   border-bottom: solid 1px #92A860;
+   color: #FFF;
+   font-size: 18px;
+   height: 24px;
+   line-height: 22px;
+   margin: 0;
+   overflow: hidden;
+   padding: 10px 10px 10px 10px;
+ }
+
+ .esriEditor .templatePicker {
+   padding-bottom: 5px;
+   padding-top: 5px;
+   height: 500px;
+   border-radius: 0px 0px 4px 4px;
+   border: solid 1px #92A661;
+ }
+
+ .dj_ie .infowindow .window .top .right .user .content, .dj_ie .simpleInfoWindow .content {
+   position: relative;
+ }
+ 
+.edit_ul {padding:5px;}
+.edit_ul.col3 li {float:left;width:33%;margin:3px 0;}
+.edit_ul.col4 li {float:left;width:50%;margin:3px 0;}
+.edit_ul .side_lb {vertical-align: top;width:120px;display:inline-block;}
+
+
+.txt-loading {
+	background:#fff url("../img/loading/smallLoading.gif") no-repeat right center !important;
+}
+
+
+#photos img {
+	width:80px;
+	height:80px;
+}

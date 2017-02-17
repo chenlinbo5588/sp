@@ -4,21 +4,8 @@
       <h3>系统信息<!--上次登录的时间：2015-09-23 08:37:39--></h3>
     </div>
   </div>
-  <div class="fixed-empty"></div>
   <div class="info-panel">
-    <dl class="member">
-      <dt>
-        <div class="ico"><i></i><sub title="会员总数"><span><em id="statistics_member"></em></span></sub></div>
-        <h3>会员</h3>
-        <h5>新增会员</h5>
-      </dt>
-      <dd>
-        <ul>
-          <li class="w50pre normal"><a href="{admin_site_url('member/index')}">本周新增{*<sub><em id="statistics_week_add_member"></em></sub>*}</a></li>
-          <li class="w50pre normal"><a href="{admin_site_url('seller/index')}">卖家认证{*<sub><em id="statistics_week_add_member"></em></sub>*}</a></li>
-        </ul>
-      </dd>
-    </dl>
+    
     {*
     <dl class="goods">
       <dt>
@@ -33,35 +20,54 @@
         </ul>
       </dd>
     </dl>
+    *}
     <dl class="shop">
       <dt>
         <div class="ico"><i></i><sub title="新增场馆数"><span><em id="statistics_store"></em></span></sub></div>
-        <h3>场馆</h3>
-        <h5>新场馆审核</h5>
+        <h3>存量建筑</h3>
+        <h5>新增审核</h5>
       </dt>
       <dd>
         <ul>
-          <li class="w33pre none"><a href="index.php?act=store&op=store_joinin">场馆审核<sub><em id="statistics_store_joinin">0</em></sub></a></li>
-          <li class="w33pre none"><a href="index.php?act=store&op=store&store_type=expired">已到期<sub><em id="statistics_store_expired">0</em></sub></a></li>
-          <li class="w34pre none"><a href="index.php?act=store&op=store&store_type=expire">即将到期<sub><em id="statistics_store_expire">0</em></sub></a></li>
+          <li class="w25pre normal"><a href="javascript:void(0);">已暂缓<sub><em id="statistics_store_expired">1200</em></sub></a></li>
+          <li class="w25pre normal"><a href="javascript:void(0);">已补办<sub><em id="statistics_store_expire">5602</em></sub></a></li>
+          <li class="w25pre normal"><a href="javascript:void(0);">已没收<sub><em id="statistics_store_expire">23</em></sub></a></li>
+          <li class="w25pre normal"><a href="javascript:void(0);">已拆除<sub><em id="statistics_store_expire">450</em></sub></a></li>
         </ul>
       </dd>
     </dl>
-    
+    {*
     <dl class="team">
       <dt>
         <div class="ico"><i></i></div>
-        <h3>队伍</h3>
+        <h3>巴里村</h3>
         <h5>审核开通/圈内话题及举报</h5>
       </dt>
       <dd>
         <ul>
-          <li class="w50pre none"><a href="http://www.nzbestprice.com/admin/index.php?act=circle_manage&op=circle_verify">队伍审核<sub><em id="statistics_circle_verify">0</em></sub></a></li>
-          <li class="w50pre none"><a href="http://www.nzbestprice.com/admin/index.php?act=circle_inform&op=inform_list">举报</a></li>
+          <li class="w20pre normal"><a href="javascript:void(0);">已暂缓<sub><em>1200</em></sub></a></li>
+          <li class="w20pre normal"><a href="javascript:void(0);">已补办<sub><em>5602</em></sub></a></li>
+          <li class="w20pre normal"><a href="javascript:void(0);">已没收<sub><em>23</em></sub></a></li>
+          <li class="w20pre normal"><a href="javascript:void(0);">已拆除<sub><em>450</em></sub></a></li>
+          <li class="w20pre normal"><a href="javascript:void(0);">举报<sub><em>2</em></sub></a></li>
         </ul>
       </dd>
     </dl>
-    
+    *}
+    <dl class="member">
+      <dt>
+        <div class="ico"><i></i><sub title="操作员总数"><span><em id="statistics_member"></em></span></sub></div>
+        <h3>操作员</h3>
+        <h5>新增操作员</h5>
+      </dt>
+      <dd>
+        <ul>
+          <li class="w50pre normal"><a href="{admin_site_url('member/index')}">当前操作员数量<sub><em>16</em></sub></a></li>
+          <li class="w50pre normal"><a href="{admin_site_url('seller/index')}">操作员审核<sub><em>0</em></sub></a></li>
+        </ul>
+      </dd>
+    </dl>
+    {*
     <dl class="trade">
       <dt>
         <div class="ico"><i></i><sub title="订单总数"><span><em id="statistics_order"></em></span></sub></div>
@@ -77,6 +83,8 @@
         </ul>
       </dd>
     </dl>
+    
+    
     <dl class="operation">
       <dt>
         <div class="ico"><i></i></div>
@@ -92,7 +100,9 @@
         </ul>
       </dd>
     </dl>
-        <dl class="cms">
+    
+    *}
+    <dl class="cms">
       <dt>
         <div class="ico"><i></i></div>
         <h3>CMS</h3>
@@ -100,28 +110,29 @@
       </dt>
       <dd>
         <ul>
-          <li class="w33pre none"><a href="http://www.nzbestprice.com/admin/index.php?act=cms_article&op=cms_article_list_verify">文章审核<sub><em id="statistics_cms_article_verify">0</em></sub></a></li>
-          <li class="w33pre none"><a href="http://www.nzbestprice.com/admin/index.php?act=cms_picture&op=cms_picture_list_verify">画报审核<sub><em id="statistics_cms_picture_verify">0</em></sub></a></li>
-          <li class="w34pre none"><a href="http://www.nzbestprice.com/admin/index.php?act=cms_comment&op=comment_manage">评论<sub></sub></a></li>
+          <li class="w50pre none"><a href="{admin_site_url('cms_article')}">文章审核<sub><em id="statistics_cms_article_verify">0</em></sub></a></li>
+          <li class="w50pre none"><a href="javascript:void(0);">评论审核<sub></sub></a></li>
         </ul>
       </dd>
     </dl>
     
+    {*
     <dl class="weixin">
       <dt>
         <div class="ico"><i></i></div>
-        <h3>微信营销</h3>
+        <h3>微信</h3>
         <h5>关注成员/文章推送/回复管理</h5>
       </dt>
       <dd>
         <ul>
-          <li class="w33pre none"><a href="http://www.nzbestprice.com/admin/index.php?act=microshop&op=goods_manage">关注成员</a></li>
-          <li class="w33pre none"><a href="http://www.nzbestprice.com/admin/index.php?act=circle_theme&op=theme_list">文章推送</a></li>
-          <li class="w34pre none"><a href="http://www.nzbestprice.com/admin/index.php?act=circle_inform&op=inform_list">回复管理</a></li>
+          <li class="w33pre none"><a href="javascript:void(0);">关注成员</a></li>
+          <li class="w33pre none"><a href="javascript:void(0);">文章推送</a></li>
+          <li class="w34pre none"><a href="javascript:void(0);">回复管理</a></li>
         </ul>
       </dd>
     </dl>
     *}
+    
     <dl class="system">
       <dt>
         <div class="ico"><i></i><a id="UPDATE" style="visibility:hidden;" title="" target="_blank" href="javascript:void(0);"><sub><span>new</em></span></sub></a></div>

@@ -12,9 +12,14 @@ $config['navs'] = array(
 			'url' => 'setting/base'
 		),
 		'member' => array(
-			'title' => '会员',
+			'title' => '操作员',
 			'url' => 'member/index'
 		),
+		'building' => array(
+			'title' => '存量建筑',
+			'url' => 'building/index'
+		),
+		/*
 		'goods' => array(
 			'title' => '商品',
 			'url' => 'goods/index'
@@ -22,7 +27,7 @@ $config['navs'] = array(
 		'goods_class' => array(
 			'title' => '商品分类',
 			'url' => 'goods_class/category'
-		),
+		),*/
 		'article' => array(
 			'title' => '网站',
 			'url' => 'article/index'
@@ -32,9 +37,9 @@ $config['navs'] = array(
 			'url' => 'cms_article/index'
 		),
 		
-		'authority' => array(
+		'role' => array(
 			'title' => '权限',
-			'url' => 'authority/role'
+			'url' => 'role/index'
 		),
 	),
 	
@@ -52,12 +57,15 @@ $config['navs'] = array(
 		'upload' => 'setting',
 		'seo' => 'setting',
 		'member' => array(
-			array('title' => '会员管理','url' => 'member/index'),
-			array('title' => '会员通知','url' => 'notify/index'),
-			array('title' => '卖家认证','url' => 'seller/index'),
+			array('title' => '操作员管理','url' => 'member/index'),
+			array('title' => '操作员通知','url' => 'notify/index'),
+			array('title' => '操作员认证','url' => 'seller/index'),
 		),
 		'notify' => 'member',
 		'seller' => 'member',
+		'building' => array(
+			array('title' => '存量建筑调查点','url' => 'building/index'),
+		),
 		'goods' => array(
 			array('title' => '商品','url' => 'goods/index'),
 			array('title' => '商品分类','url' => 'goods_class/category'),
@@ -77,10 +85,11 @@ $config['navs'] = array(
 		),
 		'cms_article_class' => 'cms_article',
 		'cms' => 'cms_article',
-		'authority' => array(
-			array('title' => '角色','url' => 'authority/role'),
-			array('title' => '管理员','url' => 'authority/user'),
-		)
+		'role' => array(
+			array('title' => '角色','url' => 'role/index'),
+			array('title' => '管理员','url' => 'user/index'),
+		),
+		'user' => 'role'
 	),
 	
 	/* 子导航的父级 */
@@ -118,9 +127,7 @@ $config['navs'] = array(
 			'notify/index' => '通知管理',
 			'notify/add' => '添加通知'
 		),
-		'seller' => array(
-			'seller/index' => '卖家认证管理'
-		),
+		
 		'goods' => array(
 			'goods/index' => '管理',
 			'goods/add' => '添加'
@@ -155,9 +162,13 @@ $config['navs'] = array(
 		'cms' => array(
 			'cms/index' => 'CMS设置',
 		),
-		'authority' => array(
-			'authority/role' => '管理',
-			'authority/role_add' => '添加'
+		'role' => array(
+			'role/index' => '管理',
+			'role/add' => '添加'
+		),
+		'user' => array(
+			'user/index' => '管理',
+			'user/add' => '添加'
 		)
 	)
 );

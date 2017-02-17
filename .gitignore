@@ -6,6 +6,7 @@
 
 temp/
 /js/arcgis_js_api/
+/static/js/arcgis_js_api/
 license.txt
 composer.json
 contributing.md

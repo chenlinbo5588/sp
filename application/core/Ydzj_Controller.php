@@ -90,7 +90,6 @@ class Ydzj_Controller extends MY_Controller {
 			$this->_breadCrumbs[] = array('url' => $funcUrl , 'title'=> $configNav['sub'][$modulName][$funcUrl]);
 		}
 		
-		
 		$this->assign('uri_string',$this->uri->uri_string);
 		$this->assign('currentTopNav',$topSelect);
 		//$this->assign('currentURL',$currentUri);

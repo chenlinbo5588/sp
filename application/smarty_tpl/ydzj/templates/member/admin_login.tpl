@@ -1,4 +1,6 @@
 {include file="common/header.tpl"}
+	<link href="{resource_url('css/login.css')}" rel="stylesheet" type="text/css"/>
+	<div class="bg-dot"></div>
 	<div class="boxz">
 	    <ul id="loginPanel" class="panel">
 		    {form_open(site_url('member/admin_login'))}
