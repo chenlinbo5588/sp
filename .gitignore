@@ -3,7 +3,11 @@
 /static/img/captcha/*
 !/static/img/captcha/index.html
 
+static/all/
+static/IMAGE_255x255/
+static/js/arcgis_js_api/
 /js/arcgis_js_api/
+
 license.txt
 composer.json
 contributing.md
