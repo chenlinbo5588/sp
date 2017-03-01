@@ -281,7 +281,7 @@ $(function(){
 	        <dt>微信营销</dt>
 	        <dd><a href="javascript:void(0)" onclick="openItem('article,weixin,weixin')">微信文章管理</a></dd>
 	        <dd><a href="javascript:void(0)" onclick="openItem('adv,weixin,weixin')">微信广告管理</a></dd>
-	    </dl>
+	    </dl>*}
 	    <dl>    
 	        <dt>CMS</dt>
 	        <dd><a href="javascript:void(0)" onclick="openItem('setting,cms,cms')">CMS管理</a></dd>
@@ -293,7 +293,7 @@ $(function(){
 	        <dd><a href="javascript:void(0)" onclick="openItem('index,tag,cms')">标签管理</a></dd>
 	        <dd><a href="javascript:void(0)" onclick="openItem('index,comment,cms')">评论管理</a></dd>
 	    </dl>
-	    *}
+	    
 	    <dl>    
 	        <dt>权限</dt>
 	        <dd><a href="javascript:void(0)" onclick="openItem('user,authority,authority')">管理员管理</a></dd>
@@ -331,8 +331,8 @@ $(function(){
 					<li><a class="link" id="nav_website" href="javascript:;" onclick="openItem('website');"><span>网站</span></a></li>
 					{*<li><a class="link" id="nav_operation" href="javascript:;" onclick="openItem('operation');"><span>运营</span></a></li>
 					<li><a class="link" id="nav_stat" href="javascript:;" onclick="openItem('stat');"><span>统计</span></a></li>
-					<li><a class="link" id="nav_weixin" href="javascript:;" onclick="openItem('weixin');"><span>微信营销</span></a></li>
-					<li><a class="link" id="nav_cms" href="javascript:;" onclick="openItem('cms');"><span>CMS</span></a></li>*}
+					<li><a class="link" id="nav_weixin" href="javascript:;" onclick="openItem('weixin');"><span>微信营销</span></a></li>*}
+					<li><a class="link" id="nav_cms" href="javascript:;" onclick="openItem('cms');"><span>CMS</span></a></li>
 					<li><a class="link" id="nav_authority" href="javascript:;" onclick="openItem('authority');"><span>权限</span></a></li>
 	            </ul>
 	          </nav>
@@ -539,25 +539,24 @@ $(function(){
               </dl>
             </li>
           </ul>
-
+          *}
           <ul id="sort_cms">
             <li>
               <dl>
                 <dd>
                   <ol>
-                    <li><a href="JavaScript:void(0);" id="setting_cms" onclick="openItem('setting,cms,cms');">CMS设置</a></li>
-                    <li><a href="JavaScript:void(0);" id="index_cms_article" onclick="openItem('index,cms_article,cms');">文章管理</a></li>
-                    <li><a href="JavaScript:void(0);" id="category_cms_article" onclick="openItem('category,cms_article,cms');">文章分类</a></li>
-                    <li><a href="JavaScript:void(0);" id="index_magazine" onclick="openItem('index,magazine,cms');">画报管理</a></li>
+                    <li><a href="JavaScript:void(0);" id="index_cms" onclick="openItem('index,cms,cms');">CMS设置</a></li>
+                    <li><a href="JavaScript:void(0);" id="index_cms_article" onclick="openItem('index,cms_article,cms');">CMS文章管理</a></li>
+                    <li><a href="JavaScript:void(0);" id="category_cms_article_class" onclick="openItem('category,cms_article_class,cms');">CMS文章分类</a></li>
+                    {*<li><a href="JavaScript:void(0);" id="index_magazine" onclick="openItem('index,magazine,cms');">画报管理</a></li>
                     <li><a href="JavaScript:void(0);" id="category_magazine" onclick="openItem('category,magazine,cms');">画报分类</a></li>
-                    <li><a href="JavaScript:void(0);" id="index_special" onclick="openItem('index,special,cms');">专题管理</a></li>
+                    <li><a href="JavaScript:void(0);" id="index_special" onclick="openItem('index,special,cms');">专题管理</a></li>*}
                     
                   </ol>
                 </dd>
               </dl>
             </li>
           </ul>
-          *}
           <ul id="sort_authority">
             <li>
               <dl>

@@ -103,8 +103,8 @@ class MY_Controller extends CI_Controller {
     	$this->_smarty = new Smarty();
         if(ENVIRONMENT == 'production'){
             //运行一段时间后再修改
-            //$this->_smarty->compile_check = false;
-            $this->_smarty->compile_check = true;
+            $this->_smarty->compile_check = false;
+            //$this->_smarty->compile_check = true;
         }else{
             $this->_smarty->compile_check = true;
         }
@@ -119,12 +119,30 @@ class MY_Controller extends CI_Controller {
     		
     		return $this->_siteSetting;
     	}
+    }
     	
+    /**
+     * 返回缓存类型
+     */
+    public function getCacheObject(){
+    	$driverName = config_item('cache_driver');
     	
+    	if($driverName == 'redis'){
+    		$isSupport = $this->cache->redis->is_supported();
+	    	if($isSupport){
+	    		return $this->cache->redis;
+	    	}else{
+	    		
+	    		return $this->cache->file;
+	    	}
+    		
+    	}else{
+    		return $this->cache->file;
+    	}
     }
     
     private function _initSiteSetting(){
-    	$settingList = $this->cache->file->get(CACHE_KEY_SiteSetting);
+    	$settingList = $this->getCacheObject()->get(CACHE_KEY_SiteSetting);
     	if(empty($settingList)){
     		$temp = $this->Setting_Model->getList();
     		//print_r($list);
@@ -133,20 +151,20 @@ class MY_Controller extends CI_Controller {
 	    		$settingList[$item['name']] = $item['value'];
 	    	}
 	    	
-	    	$this->cache->file->save(CACHE_KEY_SiteSetting,$settingList);
+	    	$this->getCacheObject()->save(CACHE_KEY_SiteSetting,$settingList,CACHE_ONE_DAY);
     	}
     	
     	//var_dump($settingList);
     	$this->_siteSetting = $settingList;
     	
     	$this->assign('siteSetting',$this->_siteSetting);
-    	//print_r($this->_siteSetting);
+    	$this->config->set_item('site_name',$this->_siteSetting['site_name']);
     }
     
     
     private function _initSeoSetting(){
     	
-    	$seoList = $this->cache->file->get(CACHE_KEY_SeoSetting);
+    	$seoList = $this->getCacheObject()->get(CACHE_KEY_SeoSetting);
     	if(empty($seoList)){
     		$temp = $this->Seo_Model->getList();
     		//print_r($list);
@@ -160,7 +178,7 @@ class MY_Controller extends CI_Controller {
 	    	}
 	    	
 	    	//print_r($seoList);
-	    	$this->cache->file->save(CACHE_KEY_SeoSetting,$seoList);
+	    	$this->getCacheObject()->save(CACHE_KEY_SeoSetting,$seoList,CACHE_ONE_DAY);
     	}
     	
     	$this->_seoSetting = $seoList;

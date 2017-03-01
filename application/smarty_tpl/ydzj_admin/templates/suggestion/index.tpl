@@ -70,7 +70,7 @@
       	<tr class="tfoot">
           <td colspan="12">
           	{*<label><input type="checkbox" class="checkall" id="checkallBottom" name="chkVal">全选</label>&nbsp;
-          	<a href="javascript:void(0);" class="btn" id="deleteBtn" data-checkbox="id[]" data-url="{admin_site_url('article/delete')}"><span>设为已处理</span></a>*}
+          	<a href="javascript:void(0);" class="btn deleteBtn" data-checkbox="id[]" data-url="{admin_site_url('article/delete')}"><span>设为已处理</span></a>*}
           	{include file="common/pagination.tpl"}
            </td>
         </tr>

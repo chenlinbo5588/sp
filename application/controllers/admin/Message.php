@@ -84,6 +84,7 @@ class Message extends Ydzj_Admin_Controller {
 					break;
 				}
 				
+				$this->getCacheObject()->delete(CACHE_KEY_SiteSetting);
 				
 				$feedback = getSuccessTip('保存成功');
 				$currentSetting = $this->admin_service->getSettingList(array(

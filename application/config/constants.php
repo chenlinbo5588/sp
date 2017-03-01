@@ -88,12 +88,17 @@ define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
 
 
 define('SMARTY_TPL_PATH',APPPATH.'smarty_tpl/');
+define('SphinxQL_PATH',APPPATH.'sphinxql/');
 define('EntityPATH',APPPATH.'entity/');
+define('PHPExcel_PATH',APPPATH.'/third_party/excel/');
+define('AliyunEmail_PATH',APPPATH.'/third_party/aliyun-php-sdk-dm/');
 
 define('FROM_BACKGROUND',1);
 define('WEBSITE_FOUNDER',1);
 
 define('CACHE_ONE_DAY',86400);
+define('CACHE_ONE_MONTH',2592000);
+define('CACHE_ONE_YEAR',31536000);
 
 
 define('CACHE_KEY_SeoSetting','seoSettingList');

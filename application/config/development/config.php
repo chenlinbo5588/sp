@@ -2,6 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 
+$config['cache_driver'] = 'file';
 $config['log_threshold'] = 2;
 
 
