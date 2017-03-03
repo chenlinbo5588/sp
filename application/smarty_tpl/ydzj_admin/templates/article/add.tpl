@@ -5,7 +5,8 @@
       <h3>{#title#}</h3>
       <ul class="tab-base">
       	<li><a href="{admin_site_url('article/index')}"><span>管理</span></a></li>
-      	<li><a class="current"><span>{if $info['article_id']}编辑{else}新增{/if}</span></a></li>
+      	<li><a {if empty($info['article_id'])}class="current"{/if} href="{admin_site_url('article/add')}"><span>新增</span></a></li>
+      	{if $info['article_id']}<li><a class="current"><span>编辑</span></a></li>{/if}
       </ul>
     </div>
   </div>

@@ -189,11 +189,6 @@ input[type=text]:focus , input[type=password]:focus ,textarea:focus {
     -o-border-radius:5px;
 }
 
-.logo {
-    height:	100px;
-    background:url(../img/logo.png) no-repeat 50% 50%;
-}
-
 img.nature {
     width:auto;
     height:auto;	
@@ -440,6 +435,7 @@ input[type=text].validation_error {
 /** 页脚和顶部 */
 #footer {
 	margin:10px 0 0 0;
+	1background:url(../img/cmp/bottom2.jpg) repeat-x left -200px;
 }
 
 #footer .row1 {
@@ -491,9 +487,10 @@ input[type=text].validation_error {
 	position: absolute;
     width: 70px;
     text-align: center;
-    background: #0138B7;
+    background: #C50000;
     color: #fff !important;
     right: 0;
+    bottom:0;
 }
 
 #topBar {
@@ -502,9 +499,13 @@ input[type=text].validation_error {
 	-moz-box-shadow:0 0 8px rgba(82, 168, 236, 0.8); 
 	-webkit-box-shadow: 0 0 8px rgba(82, 168, 236, 0.8);
 	box-shadow: 0 0 8px rgba(82, 168, 236, 0.8);*/
+	
+	background:url(../img/cmp/topbj_02.jpg) repeat-x left top;
+	
+	
 	position: relative;
     z-index: 22;
-    height:60px;
+    height:132px;
 }
 
 #topBar a {
@@ -518,7 +519,7 @@ input[type=text].validation_error {
 }
 
 .bdwrap {
-	top:-50px;
+	
 }
 
 .searchbar {
@@ -573,8 +574,12 @@ input[type=text].validation_error {
 
 .threeCol li.col {
 	float:left;
-	width:33%;
+	width:31%;
 	position:relative;
+}
+
+.threeCol li.fr {
+	float:right;
 }
 
 .col .colPanel {
@@ -601,25 +606,63 @@ input[type=text].validation_error {
 }
 
 #siteLogo {
-	float:left;
 	position: relative;
-    top: 3px;
+    float:left;
+    top: 5px;
 }
 
-#siteLogo img {
-	width:142px;
-	height:60px;
+
+
+#siteContacts {
 	
 }
 
-#siteContacts {
-	float:right;
-}
 
 #siteContacts a {
 	color:#2B2B2B;
 	text-decoration: none;
 }
+
+.welcome {
+	position:absolute;
+	right:0;
+}
+
+.lixi {
+	position: absolute;
+    z-index: 999;
+    color: #707070;
+    right: 374px;
+    padding: 0 0 0 30px;
+    height: 28px;
+    line-height: 28px;
+    font-size:15px;
+}
+
+.lixi1 {
+    top: 10px;
+    background: url(../img/mobile.png) no-repeat left center;
+    
+}
+
+.lixi2 {
+    top: 40px;
+    background: url(../img/phone.png) no-repeat left center;
+    
+}
+
+#langDiv {
+	position: absolute;
+    right: 0;
+    font-size:14px;
+    top: 32px;
+}
+
+#langDiv img {
+	width: 30px;
+    height: 20px;
+}
+
 
 #goinIntro {
 	/*
@@ -643,7 +686,7 @@ input[type=text].validation_error {
 	text-align:center;
 	width:100%;
 	right:0px;
-	top:0px;
+	top:29px;
 	z-index: 21;
 }
 
@@ -652,7 +695,7 @@ input[type=text].validation_error {
 }
 
 #homeNav .current {
-	background:#2B4796;
+	background:#35449D;
 }
 
 #homeNav .current .sublist {
@@ -675,7 +718,7 @@ input[type=text].validation_error {
     width: 100%;
     font-weight: bold;
     font-size: 16px;
-   	color:#0138B7;
+   	/*color:#0138B7;*/
     text-decoration: none;
     height: 40px;
     line-height: 40px;
@@ -712,18 +755,17 @@ input[type=text].validation_error {
 
 
 #homeSwiper {
-	width:100%;
-	top:-60px;
+	1background:#f00;
 }
 
 #homeSwiper .sliderItem {
 	width:100%;
-	height:500px;
+	height:300px;
 }
 
 #homeSwiperPager {
 	position:absolute;
-	top:-90px;
+	top:-28px;
 	z-index:20;
 	right:0;
 	display:block;	
@@ -733,7 +775,7 @@ input[type=text].validation_error {
 	display: block;
     float: left;
     text-align: center;
-    background: #90918B;
+    1background: #FF5E00;
     width: 20px;
     height: 20px;
     border: 1px solid #dcdcdc;
@@ -743,7 +785,7 @@ input[type=text].validation_error {
 }
 
 #homeSwiperPager a.activeSlide {
-	background:#FFB082;
+	background:#C50000;
 }
 
 
@@ -927,6 +969,8 @@ input[type=text].validation_error {
 .sideNav {
 	width:200px;
 	float: left;
+	position: relative;
+    top: -62px;
 }
 
 
@@ -949,7 +993,8 @@ input[type=text].validation_error {
 .sideNav .itemTitle {
 	padding: 15px 10px;
 	text-align: center;
-	background-color:#465F98;
+	/*background-color:#465F98;*/
+	background-color:#35449D;
 	background-image:none;
 	border-width:1px 0px 0px 1px;
 	color:#fff;
@@ -1237,9 +1282,17 @@ table.liststyle1 {
 	    width:100%;
 	}
 	
+	.welcome {
+		display:none;
+	}
+	
+	#langDiv {
+		top:10px;
+	}
+	
 	#topBar {
 		height:auto;
-		background: #F4F755;
+		
 	}
 	
 	#homeNav {
@@ -1308,8 +1361,17 @@ table.liststyle1 {
 		width:99%;
 	}
 	
+	#siteLogo {
+		float:none;
+	}
+	
 	#siteLogo img {
-		display:none;
+		width: 80px;
+	    height: 36px;
+	}
+	
+	.lixi {
+		position:static;
 	}
 	
 	#siteContacts {
@@ -1332,7 +1394,7 @@ table.liststyle1 {
 		width:100%;
 	}
 	
-	.twoCol li.col {
+	.threeCol li.col,.twoCol li.col {
 		width:100%;
 		float:none;
 	}

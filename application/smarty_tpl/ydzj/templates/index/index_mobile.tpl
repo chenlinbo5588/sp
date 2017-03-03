@@ -1,4 +1,4 @@
-{include file="common/header_main_nav.tpl"}
+{include file="common/website_header.tpl"}
 	{include file="./index_common.tpl"}
 	{include file="common/bxslider.tpl"}
 	<script type="text/javascript">
@@ -33,4 +33,4 @@
 			});
 		});
 	</script>
-{include file="common/footer.tpl"}
+{include file="common/website_footer.tpl"}

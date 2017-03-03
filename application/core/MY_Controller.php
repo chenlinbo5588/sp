@@ -217,6 +217,7 @@ class MY_Controller extends CI_Controller {
     private function _security(){
     	
     	$this->assign('formhash',$this->security->get_csrf_hash());
+    	
     	/*
     	if($this->input->cookie($this->_lastVisit) != ''){
 			$elapsed_time = number_format(microtime(TRUE) -  $this->input->cookie($this->_lastVisit), 2);

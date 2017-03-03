@@ -25,6 +25,7 @@ class Setting extends Ydzj_Admin_Controller {
 			'site_logo',
 			'icp_number',
 			'site_phone',//客服电话
+			'site_qq',
 			'site_email',
 			'statistics_code',
 			'time_zone',

@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class About extends Ydzj_Controller {
 	
 	private $sideNavs = null;
-	private $modKey = '走进标度';
+	private $modKey = '走进陆恒';
 	
 	public function __construct(){
 		parent::__construct();

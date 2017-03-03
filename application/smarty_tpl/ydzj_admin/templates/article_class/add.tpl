@@ -4,7 +4,8 @@
       <h3>文章分类</h3>
       <ul class="tab-base">
       	<li><a href="{admin_site_url('article_class/category')}"><span>管理</span></a></li>
-      	<li><a class="current"><span>{if $info['ac_id']}编辑{else}新增{/if}</span></a></li>
+      	<li><a {if empty($info['ac_id'])}class="current"{/if} href="{admin_site_url('article_class/add')}"><span>新增</span></a></li>
+      	{if $info['ac_id']}<li><a class="current"><span>编辑</span></a></li>{/if}
       </ul>
     </div>
   </div>

@@ -287,11 +287,11 @@ $(function(){
 	        <dd><a href="javascript:void(0)" onclick="openItem('setting,cms,cms')">CMS管理</a></dd>
 	        <dd><a href="javascript:void(0)" onclick="openItem('index,cms_article,cms')">文章管理</a></dd>
 	        <dd><a href="javascript:void(0)" onclick="openItem('category,cms_article,cms')">文章分类</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('index,magazine,cms')">画报管理</a></dd>
+	        {*<dd><a href="javascript:void(0)" onclick="openItem('index,magazine,cms')">画报管理</a></dd>
 	        <dd><a href="javascript:void(0)" onclick="openItem('category,magazine,cms')">画报分类</a></dd>
 	        <dd><a href="javascript:void(0)" onclick="openItem('index,special,cms')">专题管理</a></dd>
 	        <dd><a href="javascript:void(0)" onclick="openItem('index,tag,cms')">标签管理</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('index,comment,cms')">评论管理</a></dd>
+	        <dd><a href="javascript:void(0)" onclick="openItem('index,comment,cms')">评论管理</a></dd>*}
 	    </dl>
 	    
 	    <dl>    

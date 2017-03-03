@@ -2,7 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 $config['pageConf'] = array(
-	'走进标度' => array(
+	'走进陆恒' => array(
 		'url' => site_url('about'),
 		'sideNav' => array(
 			'企业简介' => site_url('about/index'),

@@ -1,4 +1,4 @@
-{include file="common/header_main_nav.tpl"}
+{include file="common/website_header.tpl"}
 	{include file="./index_common.tpl"}
 	<script type="text/javascript" src="{resource_url('js/jquery.cycle.all.js')}"></script>
 	{include file="common/bxslider.tpl"}
@@ -41,4 +41,4 @@
 			
 		});
 	</script>
-{include file="common/footer.tpl"}
+{include file="common/website_footer.tpl"}

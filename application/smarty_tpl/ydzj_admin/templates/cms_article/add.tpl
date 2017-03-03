@@ -5,8 +5,8 @@
       <h3>CMS文章分类</h3>
       <ul class="tab-base">
         <li><a href="{admin_site_url('cms_article/index')}"><span>列表</span></a></li>
-        <li><a class="current"><span>{if $info['id']}编辑{else}新增{/if}</span></a></li>
-        
+        <li><a {if empty($info['id'])}class="current"{/if} href="{admin_site_url('cms_article/add')}"><span>新增</span></a></li>
+      	{if $info['id']}<li><a class="current"><span>编辑</span></a></li>{/if}
       </ul>
     </div>
   </div>

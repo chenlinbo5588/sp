@@ -1,19 +1,12 @@
+	
 	<div id="homeSwiper">
-		{foreach from=$homeSliderImg item=item}
-		{if $isMobile}
-	    <div class="sliderItem" style="background:url({resource_url('img/cmp/m'|cat:$item|cat:'.jpg')}) no-repeat 50% 0"></div>
-	    {else}
-	    <div class="sliderItem" style="background:url({resource_url('img/cmp/'|cat:$item|cat:'.jpg')}) no-repeat 50% 0"></div>
-	    {/if}
-	    {/foreach}
-	    {*
-        <div class="sliderItem" style="background:url({resource_url('img/cmp/2.jpg')}) no-repeat 50% 0"></div>
-        <div class="sliderItem" style="background:url({resource_url('img/cmp/3.jpg')}) no-repeat 50% 0"></div>
-        <div class="sliderItem" style="background:url({resource_url('img/cmp/4.jpg')}) no-repeat 50% 0"></div>
-        *}
+	    <div class="sliderItem" style="background:url({resource_url('static/attach/2017/03/02/20150429184803483.jpg')}) no-repeat 50% 0"></div>
+	    <div class="sliderItem" style="background:url({resource_url('static/attach/2017/03/02/201504291847294729.jpg')}) no-repeat 50% 0"></div>
+	    <div class="sliderItem" style="background:url({resource_url('static/attach/2017/03/02/201702161640144014.jpg')}) no-repeat 50% 0"></div>
+	    <div class="sliderItem" style="background:url({resource_url('static/attach/2017/03/02/201702161640474047.jpg')}) no-repeat 50% 0"></div>
 	</div>
 	<div class="boxz"><div id="homeSwiperPager"></div></div>
-	<div class="boxz bdwrap">
+	<div class="boxz mg10">
 		<div class="searchbar clearfix">
 			<span class="hotlink">
 				<strong>热门搜索:　</strong>
@@ -27,11 +20,13 @@
 				</form>
 			</div>
 		</div>
+	</div>
+	<div class="boxz bdwrap">
 		<div class="moreInfo">
-			<ul class="twoCol clearfix">
+			<ul class="threeCol clearfix">
 				<li class="col">
 					<div class="colPanel">
-						<h3 class="panelTitel">走进标度</h3>
+						<h3 class="panelTitel">走进{config_item('site_name')}</h3>
 						{if !$isMobile}
 						{include file="./index_goin.tpl"}
 						{include file="./index_intro.tpl"}
@@ -41,7 +36,7 @@
 						{/if}
 					</div>
 				</li>
-				<li class="col col2">
+				<li class="col" >
 					<div class="colPanel newslist bd">
 						<h3 class="panelTitel"><span>企业新闻</span><a class="more fr" href="{site_url('news/news_list?ac_id=15')}">更多&gt;&gt;</a></h3>
 						<ol>
@@ -58,6 +53,8 @@
 							*}
 						</ol>
 					</div>
+				</li>
+			 	<li class="col">
 					<div class="colPanel newslist">
 						<h3 class="panelTitel"><span>行业动态</span><a class="more fr" href="{site_url('news/news_list?ac_id=16')}">更多&gt;&gt;</a></h3>
 						<ol class="clearfix">

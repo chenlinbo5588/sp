@@ -1,4 +1,4 @@
-{include file="common/header_main_nav.tpl"}
+{include file="common/website_header.tpl"}
 	<div class="linePg">
 		<div class="{$pgClass}"></div>
 		<div class="boxz clearfix mg10">
@@ -13,7 +13,7 @@
 						<div><em class="mute">浏览次数:</em><strong>{$info['article_click']}</strong><em class="mute">日期:</em><strong>{$info['gmt_create']|date_format:"%Y-%m-%d"}</strong></div>
 					</div>
 					<div class="articleContent">
-						{$info['article_content']}
+						{$info['content']}
 					</div>
 					
 					<div class="articleRelate clearfix">
@@ -29,4 +29,4 @@
 			{if $isMobile}{include file="./news_side.tpl"}{/if}
 		</div>
 	</div>
-{include file="common/footer.tpl"}
+{include file="common/website_footer.tpl"}

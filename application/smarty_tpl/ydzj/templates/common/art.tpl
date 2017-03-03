@@ -1,4 +1,4 @@
-{include file="common/header_main_nav.tpl"}
+{include file="common/website_header.tpl"}
 	<div class="linePg">
 		<div class="{$pgClass}"></div>
 		<div class="boxz clearfix mg10">

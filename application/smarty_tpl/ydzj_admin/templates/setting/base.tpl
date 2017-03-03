@@ -77,11 +77,19 @@
           <td class="vatop tips"><span class="vatop rowform">前台页面右下侧可以显示，方便访问者遇到问题时咨询，多个请用半角逗号 "," 隔开</span></td>
         </tr>
         <tr>
+          <td colspan="2" class="required"><label for="site_qq">QQ号码:</label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform"><input id="site_qq" name="site_qq" value="{$currentSetting['site_qq']['value']}" class="txt" type="text" /></td>
+          <td class="vatop tips"><span class="vatop rowform">前台页面右下侧可以显示，方便卖家遇到问题时咨询</span></td>
+        </tr>
+        
+        <tr>
           <td colspan="2" class="required"><label for="site_email">电子邮件:</label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input id="site_email" name="site_email" value="{$currentSetting['site_email']['value']}" class="txt" type="text" /></td>
-          <td class="vatop tips"><span class="vatop rowform">前台卖家中心页面右下侧可以显示，方便卖家遇到问题时咨询</span></td>
+          <td class="vatop tips"><span class="vatop rowform">前台页面右下侧可以显示，方便卖家遇到问题时咨询</span></td>
         </tr>
          <tr>
           <td colspan="2" class="required"><label for="statistics_code">第三方流量统计代码:</label></td>
