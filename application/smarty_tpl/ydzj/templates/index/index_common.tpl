@@ -6,7 +6,7 @@
 	    <div class="sliderItem" style="background:url({resource_url('static/attach/2017/03/02/201702161640474047.jpg')}) no-repeat 50% 0"></div>
 	</div>
 	<div class="boxz"><div id="homeSwiperPager"></div></div>
-	<div class="boxz mg10">
+	<div class="boxz mg5">
 		<div class="searchbar clearfix">
 			<span class="hotlink">
 				<strong>热门搜索:　</strong>
@@ -27,13 +27,7 @@
 				<li class="col">
 					<div class="colPanel">
 						<h3 class="panelTitel">走进{config_item('site_name')}</h3>
-						{if !$isMobile}
 						{include file="./index_goin.tpl"}
-						{include file="./index_intro.tpl"}
-						{else}
-						{include file="./index_intro.tpl"}
-						{include file="./index_goin.tpl"}
-						{/if}
 					</div>
 				</li>
 				<li class="col" >

@@ -13,4 +13,4 @@
 		</div>
 	</div>
 	
-{include file="common/footer.tpl"}
+{include file="common/website_footer.tpl"}

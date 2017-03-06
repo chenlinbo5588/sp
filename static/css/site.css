@@ -90,7 +90,12 @@ sub {
     bottom:-0.25em; 
 } 
 /* 让链接在 hover 状态下显示下划线 */
-a:link,a:visited {
+a:link {
+	color: #1A2B97;
+    text-decoration: none;
+}
+
+a:visited {
 	color: #06c;
     text-decoration: none;
 }
@@ -575,6 +580,7 @@ input[type=text].validation_error {
 .threeCol li.col {
 	float:left;
 	width:31%;
+	margin: 0 10px 0 0;
 	position:relative;
 }
 
@@ -591,6 +597,8 @@ input[type=text].validation_error {
 	background:#e2e2e2;
 	padding: 5px;
 	font-weight: bold;
+	border-bottom: 2px solid #1A2B97;
+    background: #DFDFDF;
 }
 
 
@@ -601,7 +609,6 @@ input[type=text].validation_error {
 
 .hotlink a {
 	font-size:14px;
-	color:#6a6a6a;
 	padding: 0 3px;
 }
 
@@ -626,6 +633,7 @@ input[type=text].validation_error {
 .welcome {
 	position:absolute;
 	right:0;
+	top: 5px;
 }
 
 .lixi {
@@ -633,22 +641,29 @@ input[type=text].validation_error {
     z-index: 999;
     color: #707070;
     right: 374px;
-    padding: 0 0 0 30px;
-    height: 28px;
+    top: 5px;
+    
+}
+
+
+.lixi p {
+	height: 28px;
     line-height: 28px;
     font-size:15px;
 }
 
+
 .lixi1 {
     top: 10px;
     background: url(../img/mobile.png) no-repeat left center;
+    padding-left: 25px;
     
 }
 
 .lixi2 {
     top: 40px;
     background: url(../img/phone.png) no-repeat left center;
-    
+    padding-left: 25px;
 }
 
 #langDiv {
@@ -686,7 +701,7 @@ input[type=text].validation_error {
 	text-align:center;
 	width:100%;
 	right:0px;
-	top:29px;
+	top:26px;
 	z-index: 21;
 }
 
@@ -896,6 +911,7 @@ input[type=text].validation_error {
 
 #starProducts h3 {
 	margin: 0 0 5px 0;
+	
 }
 
 
@@ -916,6 +932,9 @@ input[type=text].validation_error {
 	
 }
 
+.mg5 {
+	margin-top:5px;
+}
 
 .mg10 {
 	margin-top:10px;
@@ -1287,12 +1306,12 @@ table.liststyle1 {
 	}
 	
 	#langDiv {
-		top:10px;
+		position:static;
 	}
 	
 	#topBar {
+		background:none;
 		height:auto;
-		
 	}
 	
 	#homeNav {
