@@ -10,24 +10,18 @@
 				<div class="breadcrumb"><span>您所在的位置:</span>{$breadcrumb}</div>
 				<div class="bd bdlist">
 					<a name="listmao"></a>
-					<table class="liststyle1 newsList">
+					<ul class="newsList clearfix">
 					{foreach from=$list['data'] item=item}
-					<tr class="liststyle1Item"><td>
-						<a href="{$item['article_url']}"><img class="previewPic" src="{$item['article_pic']}" alt="{$item['article_title']|escape}"/></a>
-						<div class="previewCont">
-							<div><a href="{$item['article_url']}">{$item['article_title']|escape}</a></div>
-							<div>发布时间：{$item['gmt_create']|date_format:"%Y-%m-%d"}</div>
-							<div>{$item['article_digest']}</div>
-						</div>
-					</td></tr>
+					<li>
+						<h4><a href="{$item['jump_url']}">{$item['article_title']|escape}</a></h4>
+						<span class="pubtime">【{$item['publish_time']|date_format:"%Y-%m-%d"}】</span>
+					</li>
 					{foreachelse}
-					<tr>
-						<td>没有找到符合得记录</td>
-					</td>
+					<li>没有找到符合得记录</li>
 					{/foreach}
-					</table>
-					{include file="common/pagination.tpl"}
+					</ul>
 				</div>
+				{include file="common/pagination.tpl"}
 			</div>
 			{if $isMobile}{include file="./news_side.tpl"}{/if}
 			</form>

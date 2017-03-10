@@ -17,29 +17,21 @@ class Product extends Ydzj_Controller {
 		
 		$topClass = $this->Goods_Class_Model->getList(array(
 			'where' => array(
-				'gc_name' => $this->modKey,
 				'gc_parent_id' => 0
 			)
 		));
 		
-		if($topClass[0]){
-			$this->topClassId = $topClass[0]['gc_id'];
-			
-			$sideNavs = $this->Goods_Class_Model->getList(array(
-				'where' => array(
-					'gc_parent_id' => $this->topClassId
-				)
-			));
-			
-			if($sideNavs){
-				foreach($sideNavs as $nav){
-					$this->sideNavs[$nav['gc_name']] = site_url('product/plist/?gc_id=').$nav['gc_id'];
-				}
+		
+		if($topClass){
+			foreach($topClass as $nav){
+				$this->sideNavs[$nav['gc_name']] = site_url('product/plist/?gc_id=').$nav['gc_id'];
 			}
 		}
 		
+		
 		$this->_navigation = array(
 			'首页' => site_url('/'),
+			$this->modKey => site_url('product/plist'),
 		);
 		$this->assign('sideNavs',$this->sideNavs);
 		
@@ -56,7 +48,7 @@ class Product extends Ydzj_Controller {
 		$currentGcId = $this->input->get_post('gc_id');
 		
 		if(empty($currentGcId)){
-			$currentGcId = $this->topClassId;
+			$currentGcId = 0;
 		}
 		
 		$this->_breadCrumbLinks($currentGcId);
@@ -74,7 +66,7 @@ class Product extends Ydzj_Controller {
 			),
 			'order' => 'goods_id DESC',
 			'pager' => array(
-				'page_size' => config_item('page_size'),
+				'page_size' => 16,
 				'current_page' => $currentPage,
 				'form_id' => '#listForm',
 				'anchor' => 'listmao',
@@ -129,7 +121,7 @@ class Product extends Ydzj_Controller {
 	private function _breadCrumbLinks($currentAcId){
 		
 		if(empty($currentAcId)){
-			$currentAcId = $this->topClassId;
+			$currentAcId = 0;
 		}
 		
 		if($currentAcId){
@@ -172,6 +164,8 @@ class Product extends Ydzj_Controller {
 			*/
 			
 			$this->_breadCrumbLinks($info['gc_id']);
+			
+			
 			$nextProduct = $this->goods_service->getNextByProduct($info);
 			$preProduct = $this->goods_service->getPreByProduct($info);
 			
@@ -179,13 +173,14 @@ class Product extends Ydzj_Controller {
 			$this->assign('nextProduct',$nextProduct);
 			$this->assign('preProduct',$preProduct);
 			
+			$this->_navigation[$info['goods_name']] = site_url('product/plist?id='.$info['id'].'&=gc_id='.$info['gc_id']);
+			
 			$this->Goods_Model->increseOrDecrease(array(
 				array('key' => 'goods_click','value'=> 'goods_click + 1')
 			),array('goods_id' => $id));
 		}else{
 			$this->_breadCrumbLinks($gc_id);
 		}
-		
 		
 		$tempSeo = array_reverse($this->seoKeys);
 		$this->seo($info['goods_name'] .' - '.$tempSeo[0], implode(',',$tempSeo));

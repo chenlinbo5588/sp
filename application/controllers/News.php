@@ -104,11 +104,15 @@ class News extends Ydzj_Controller {
 		}
 		
 		$list = $this->Cms_Article_Model->getList($condition);
-		//echo 'aaa';print_r($list);
 		if($list['data']){
 			foreach($list['data'] as $key => $newsArtile){
 				if($newsArtile['image_url']){
+					
+					$imgArr = getImgPathArray($newsArtile['image_url'] , array('m'), $keyName = 'image_url');
 					$newsArtile['image_url'] = resource_url($newsArtile['image_url']);
+					
+					//print_r($imgArr);
+					$list['data'][$key] = array_merge($imgArr);
 				}else{
 					$newsArtile['image_url'] = resource_url('img/default.jpg');
 				}

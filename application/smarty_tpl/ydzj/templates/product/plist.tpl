@@ -10,24 +10,21 @@
 				<div class="breadcrumb"><span>您所在的位置:</span>{$breadcrumb}</div>
 				<div class="bd bdlist">
 					<a name="listmao"></a>
-					<table class="liststyle1 productList">
+					<ul class="liststyle1 productList clearfix">
 					{foreach from=$list['data'] item=item}
-					<tr class="liststyle1Item"><td>
-						<a href="{site_url('product/detail/?id=')}{$item['goods_id']}&gc_id={$item['gc_id']}"><img class="previewPic" src="{if $item['goods_pic_m']}{resource_url($item['goods_pic_m'])}{else if $item['goods_pic_b']}{resource_url($item['goods_pic_b'])}{else}{resource_url($item['goods_pic'])}{/if}" alt="{$item['article_title']|escape}"/></a>
+					<li class="liststyle1Item">
+						<a class="priviewLink" href="{site_url('product/detail/?id=')}{$item['goods_id']}&gc_id={$item['gc_id']}"><img class="previewPic" src="{if $item['goods_pic_m']}{resource_url($item['goods_pic_m'])}{else if $item['goods_pic_b']}{resource_url($item['goods_pic_b'])}{else}{resource_url($item['goods_pic'])}{/if}" alt="{$item['article_title']|escape}"/></a>
 						<div class="previewCont">
-							<div class="productName"><a href="{site_url('product/detail/?id=')}{$item['goods_id']}&gc_id={$item['gc_id']}">{$item['goods_name']|escape}</a></div>
-							<div class="productDetail"><span class="mute">设备介绍:</span>{$item['digest']}</div>
+							<h4 class="productName"><a href="{site_url('product/detail/?id=')}{$item['goods_id']}&gc_id={$item['gc_id']}">{$item['goods_name']|escape}</a></h4>
+							<p class="productDetail mute">{$item['digest']}</p>
 						</div>
-					</td></tr>
+					</li>
 					{foreachelse}
-					<tr>
-						<td>没有找到符合得记录</td>
-					</td>
+						<li>没有找到符合得记录</li>
 					{/foreach}
-					</table>
-					{include file="common/pagination.tpl"}
-					
+					</ul>
 				</div>
+				{include file="common/pagination.tpl"}
 			</div>
 			{if $isMobile}{include file="./product_side.tpl"}{/if}
 			</form>

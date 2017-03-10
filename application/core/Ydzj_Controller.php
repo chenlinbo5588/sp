@@ -24,9 +24,6 @@ class Ydzj_Controller extends MY_Controller {
 	
 	protected function _initLibrary(){
 		parent::_initLibrary();
-		
-		//@todo 需要删除，如果是其他网站
-		$this->load->config('boiido');
 	}
 	
 	private function _initLogin(){

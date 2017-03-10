@@ -55,6 +55,15 @@
 		          {/foreach}
 		        </select>
 	        </td>
+	        <th><label>商品推荐状态</label></th>
+          <td>
+          	<select name="goods_commend">
+              <option value="全部">请选择...</option>
+              {foreach from=$searchMap['goods_commend'] item=item key=key}
+              <option value="{$key}" {if $smarty.post['goods_commend'] == $key}selected{/if}>{$key}</option>
+              {/foreach}
+            </select>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -83,7 +92,8 @@
           <th>品牌&分类</th>
           <th class="align-center">商品状态</th>
           <th class="align-center">审核状态</th>
-          <th class="align-center">操作 </th>
+          <th class="align-center">推荐状态</th>
+          <th class="align-center">操作</th>
         </tr>
       </thead>
       <tbody>
@@ -101,6 +111,7 @@
             <p>{$goodsClassList[$item['gc_id']]['gc_name']}</p>
           </td>
           <td class="align-center">{if $item['goods_state'] == 1}已发布{else}未发布{/if}</td>
+          <td class="align-center">{if $item['goods_commend'] == 1}已{else}未{/if}推荐</td>
           <td class="align-center">{if $item['goods_verify'] == 1}已审核{else}未审核{/if}</td>
           <td class="align-center">
           	<p><a href="{site_url('product/detail')}?gc_id={$item['gc_id']}&id={$item['goods_id']}" target="_blank">查看</a> | <a href="{admin_site_url('goods/edit')}?goods_id={$item['goods_id']}">编辑</a></p>
@@ -110,7 +121,7 @@
       </tbody>
       <tfoot>
       	<tr class="tfoot">
-          <td colspan="12">
+          <td colspan="9">
           	<label><input type="checkbox" class="checkall" id="checkallBottom" name="chkVal">全选</label>&nbsp;
           	<a href="javascript:void(0);" class="btn deleteBtn" data-checkbox="id[]" data-url="{admin_site_url('goods/delete')}"><span>删除</span></a>
           	{include file="common/pagination.tpl"}

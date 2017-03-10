@@ -295,18 +295,13 @@ class Goods_service extends Base_service {
 	 */
 	public function getCommandGoodsList($goodsCate = '产品中心',$moreCondition = array('limit' => 20)){
 		
-		$topClassInfo = $this->_goodsClassModel->getList(array(
-			'where' => array(
-				'gc_name' => $goodsCate,
-				'gc_parent_id' => 0
-			)
-		));
-		
-		
-		$goodsClassIds = $this->getAllChildGoodsClassByPid($topClassInfo[0]['gc_id']);
-		$goodsClassIds[] = $topClassInfo[0]['gc_id'];
+		$goodsClassIds = $this->getAllChildGoodsClassByPid(0);
 		
 		//print_r($goodsClassIds);
+		
+		if(empty($goodsClassIds)){
+			return;
+		}
 		
 		$condition = array(
 			'where' => array(

@@ -14,6 +14,7 @@ class Goods extends Ydzj_Admin_Controller {
 	
 	
 	public function index(){
+		$searchMap['goods_commend'] = array('未推荐' => '0','已推荐' => '1');
 		$searchMap['goods_state'] = array('未发布' => '0','正常' => '1');
 		$searchMap['goods_verify'] = array('未通过' => '0','通过' => '1');
 		
@@ -38,6 +39,7 @@ class Goods extends Ydzj_Admin_Controller {
 		$goodsName = $this->input->get_post('search_goods_name');
 		$goodsVerify = $this->input->get_post('goods_verify') ? $this->input->get_post('goods_verify') : '';
 		
+		$goodsCommend = $this->input->get_post('goods_commend') ? $this->input->get_post('goods_commend') : '';
 		$goodsState = $this->input->get_post('goods_state') ? $this->input->get_post('goods_state') : '';
 		$goodsClassId = $this->input->get_post('gc_id') ? $this->input->get_post('gc_id') : 0;
 		
@@ -45,6 +47,9 @@ class Goods extends Ydzj_Admin_Controller {
 			$condition['like']['goods_name'] = $goodsName;
 		}
 		
+		if($searchMap[$goodsCommend]){
+			$condition['where']['goods_commend'] = $searchMap[$goodsCommend];
+		}
 		
 		if($searchMap[$goodsVerify]){
 			$condition['where']['goods_verify'] = $searchMap[$goodsVerify];

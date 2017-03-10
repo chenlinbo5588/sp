@@ -339,7 +339,7 @@ input[type=text].validation_error {
 
 
 
-.pagination { padding: 2px; float:right; +float:none; +position: absolute; +right:6px;}
+.pagination { padding: 2px; +position: absolute; +right:6px; text-align:center;}
 .pagination a {
   padding: 5px 10px;
   background:#fff;
@@ -558,8 +558,9 @@ input[type=text].validation_error {
     padding: 5px;
 }
 
-.panelContent {
-	border:1px solid #dcdcdc;
+.panelContent .product {
+	border: 1px solid #dcdcdc;
+    border-width: 0 1px 1px 1px
 }
 
 
@@ -592,13 +593,22 @@ input[type=text].validation_error {
 	padding: 10px 0 ;
 }
 
-.colPanel .panelTitel {
+.colPanel ol {
+	border: 1px solid #dcdcdc;
+    border-width: 0 1px 1px 1px
+}
+
+.panelTitel {
 	font-size:15px;
 	background:#e2e2e2;
 	padding: 5px;
 	font-weight: bold;
 	border-bottom: 2px solid #1A2B97;
     background: #DFDFDF;
+    border-radius:5px 5px 0 0 ;
+    -webkit-border-radius:5px 5px 0 0 ;
+    -moz-border-radius:5px 5px 0 0 ;
+    -o-border-radius:5px 5px 0 0 ;
 }
 
 
@@ -670,7 +680,7 @@ input[type=text].validation_error {
 	position: absolute;
     right: 0;
     font-size:14px;
-    top: 32px;
+    top: 30px;
 }
 
 #langDiv img {
@@ -905,22 +915,6 @@ input[type=text].validation_error {
 	padding:5px;
 }
 
-#starProducts {
-	padding:5px;
-}
-
-#starProducts h3 {
-	margin: 0 0 5px 0;
-	
-}
-
-
-#starProducts .bx-wrapper {
-	
-}
-
-
-
 
 .friendLinks {
 	border: 1px solid #dcdcdc;
@@ -942,18 +936,14 @@ input[type=text].validation_error {
 
 .linePg {
 	position: relative;
-    top: -60px;
 	1border-top:1px solid #fff;
 }
 
 .aboutPg , .newsPg, .productPg , .marketPg, .servicePg, .contactsPg , .docPg {
 	background:url(../img/cmp/2.jpg) no-repeat center center;
-	height:300px;
+	height:260px;
 }
 
-.newsPg {
-	background:url(../img/cmp/1.jpg) no-repeat center center;
-}
 
 .productPg {
 	background:url(../img/cmp/3.jpg) no-repeat center center;
@@ -989,7 +979,6 @@ input[type=text].validation_error {
 	width:200px;
 	float: left;
 	position: relative;
-    top: -62px;
 }
 
 
@@ -1038,53 +1027,97 @@ input[type=text].validation_error {
 }
 
 
-table.liststyle1 {
-	width:100%;
+.liststyle1 .liststyle1Item {
+	width: 210px;
+    height: 270px;
+    float: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border:1px solid #D2CFCF;
+    margin: 0 15px 10px 0;
+    padding: 2px;
 }
 
-.liststyle1 .liststyle1Item, .liststyle1 .liststyle1Item td {
-	padding:10px 0;
+.liststyle1 .liststyle1Item:hover {
+	border:1px solid #35449D;
+	box-shadow: 0px 0px 15px #443636;
+    -moz-box-shadow: 0px 0px 15px #443636;
+    -o-box-shadow: 0px 0px 15px #443636;
+    -webkit-box-shadow: 0px 0px 15px #443636;
+    -moz-transform:scale(1.05,1.05); 
+	-webkit-transform:scale(1.05,1.05); 
+	-o-transform:scale(1.05,1.05);
+	-webkit-transition:0.5s;
+     -moz-transition:0.5s;
+     -o-transition:0.5s;
 }
 
-.liststyle1 .liststyle1Item td {
-	border: 1px solid #ccc;
-	border-width:1px 0 1px 0;
+
+
+.liststyle1Item a {
+	display:block;
+	text-align: center;
+}
+
+.liststyle1Item a.priviewLink {
 }
 
 .liststyle1 .previewPic {
 	width:100px;
 	height:80px;
-	float: left;
-}
-
-.newsList .previewCont {
-	margin: 0 0 0 110px;
-}
-
-
-.productList .previewCont {
-	margin: 0 0 0 130px;
-	
 }
 
 .productList .previewPic {
-	width:120px;
-	height:100px;
-	float: left;
-	border:1px solid #dcdcdc;
+	width:210px;
+	height:180px;
 }
 
-.productList .productName {
-	font-size:18px;
+.previewCont .productDetail {
+	text-indent:2em;
+	padding: 2px 0;
 }
 
-.productList .productDetail {
-	padding:3px 0;
+.previewCont .productName {
+	border:1px dashed #dcdcdc; 
+	border-width: 1px 0 1px 0;
+    padding: 3px 0;
+    font-size: 14px;
 }
 
 .bdlist .pagination {
 	margin:20px 0;
 	text-align: center;
+}
+
+
+.newsList li {
+    position: relative;
+    /* height: 85px; */
+    overflow: hidden;
+    /* text-overflow: ellipsis; */
+    border-bottom: 1px dashed #BAB9B9;
+    margin: 10px 0;
+    padding: 5px 0;
+}
+
+.newsList .previewPic {
+	width:100px;
+	height:80px;
+}
+
+.newsList .previewLink {
+	position:absolute;
+}
+
+.newsList .previewCont {
+	
+	margin: 0 0 0 120px;
+}
+
+.newsList .pubtime {
+	position: absolute;
+    right: 0;
+    top: 0;
 }
 
 
@@ -1243,6 +1276,10 @@ table.liststyle1 {
 	color:#666;
 }
 
+.articleRelate {
+	border:1px dashed #d0d0d0;
+    padding: 5px;
+}
 
 .articleRelate .prevArticle {
 	float:right;
@@ -1306,7 +1343,7 @@ table.liststyle1 {
 	}
 	
 	#langDiv {
-		position:static;
+		top:12px;
 	}
 	
 	#topBar {
@@ -1377,7 +1414,7 @@ table.liststyle1 {
 	}
 	
 	input[type=text],input[type=password],input[type=text].txt{
-		width:99%;
+		width:98%;
 	}
 	
 	#siteLogo {
@@ -1420,6 +1457,13 @@ table.liststyle1 {
 	
 	.contentArea {
 		margin-left:0;
+	}
+	
+	
+	.liststyle1 .liststyle1Item {
+		float:none;
+		width:auto;
+		height:auto;
 	}
 	
 	

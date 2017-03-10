@@ -209,6 +209,9 @@ class MY_Controller extends CI_Controller {
 		$this->load->model(array('Member_Model','Setting_Model','Seo_Model'));
 		$this->load->library(array('user_agent','Form_validation','encrypt','PHPTree','Base_service'));
 		
+		$this->load->config('site');
+		
+		
 		$this->base_service->initStaticVars();
 		
     }
