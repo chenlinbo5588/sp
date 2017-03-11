@@ -12,7 +12,8 @@ class Setting extends Ydzj_Admin_Controller {
 	
 	
 	private function _clearCache(){
-		$this->cache->file->delete(CACHE_KEY_SiteSetting);
+		$this->getCacheObject()->delete(CACHE_KEY_SiteSetting);
+		$this->getCacheObject()->delete(CACHE_KEY_SeoSetting);
 	}
 	
 	public function base(){
@@ -217,6 +218,7 @@ class Setting extends Ydzj_Admin_Controller {
 				}
 			
 				$rows = $this->seo_service->updateSeo($_POST['SEO']);
+				
 			}else{
 				
 				if($this->input->post('category') != '' && $this->input->post('form_name') == 'category'){
@@ -236,8 +238,9 @@ class Setting extends Ydzj_Admin_Controller {
 				$feedback = getErrorTip('保存失败');
 			}
 			
-			
+			$this->_clearCache();
 		}
+		
 		
 		$currentSetting = $this->seo_service->getCurrentSeoSetting();
 		$goodsClassHTML = $this->goods_service->getGoodsClassTreeHTML();

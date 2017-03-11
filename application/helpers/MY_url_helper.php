@@ -101,7 +101,7 @@ if ( ! function_exists('js_redirect'))
 		header("Content-Type: text/html;charset=utf-8");
 		
 		if(empty($title)){
-			$title = 'ÕıÔÚÎªÄãÌø×ª,ÇëÉÔºó...';
+			$title = 'æ­£åœ¨åˆ·æ–°,è¯·ç¨å...';
 		}
 		echo "<p style=\"text-align:center;\">{$title}</p>";
 		
@@ -122,7 +122,7 @@ if ( ! function_exists('js_redirect'))
 
 if ( ! function_exists('urlToPath')) {
 	function urlToPath($url){
-		//¼æÈİ´¦Àí
+		//ï¿½ï¿½ï¿½İ´ï¿½ï¿½ï¿½
 		if(strpos($url,'http://') !== false){
 			$tempUrl = parse_url($url);
 			

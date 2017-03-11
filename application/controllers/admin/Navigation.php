@@ -5,267 +5,235 @@ class Navigation extends Ydzj_Admin_Controller {
 	
 	public function __construct(){
 		parent::__construct();
+		
 		$this->load->library(array('Navigation_service'));
 	}
 	
-	public function index(){
+	public function category(){
 		
-		$treelist = $this->navigation_service->toEasyUseArray($this->navigation_service->getArticleClassTreeHTML(),'ac_id');
-		$currentPage = $this->input->get_post('page') ? $this->input->get_post('page') : 1;
-	
-		$condition = array(
-			'where' => array(),
-			'order' => 'id DESC',
-			'pager' => array(
-				'page_size' => config_item('page_size'),
-				'current_page' => $currentPage,
-				'call_js' => 'search_page',
-				'form_id' => '#formSearch'
-			)
-		);
+		$id = $this->input->get_post('pid') ? $this->input->get_post('pid') : 0;
 		
-		$search_title = $this->input->get_post('search_title');
-		$classId = $this->input->get_post('id') ? $this->input->get_post('id') : 0;
+		$treelist = $this->navigation_service->getClassTreeHTML();
+		$deep = 0;
 		
 		
-		if($search_title){
-			$condition['like']['name_cn'] = $search_title;
+		//print_r($list);
+		$parentId = 0;
+		foreach($treelist as $item){
+			if($id == $item['id']){
+				$deep = $item['level'];
+				$parentId = $item['pid'];
+			}
+			
 		}
 		
-		if($classId){
-			$classIdList = $this->navigation_service->getAllChildClassByPid($classId);
-			$classIdList[] = $classId;
-			$condition['where_in'][] = array('key' => 'id', 'value' => $classIdList);
-		}
+		//echo $deep;
 		
-		
-		//print_r($condition);
-		$list = $this->Navigation_Model->getList($condition);
-		
-		$this->assign('classList',$treelist);
+		$list = $this->navigation_service->getClassByParentId($id);
 		$this->assign('list',$list);
-		$this->assign('page',$list['pager']);
-		$this->assign('currentPage',$currentPage);
+		$this->assign('parentId',$parentId);
+		$this->assign('deep',$deep + 1);
+		$this->assign('id',$id);
 		
 		$this->display();
 	}
 	
 	
-	
-	private function _getRules(){
-		$this->form_validation->set_rules('article_title','文章标题','required|max_length[80]');
-		$this->form_validation->set_rules('article_content','文章内容','required');
-		$this->form_validation->set_rules('ac_id','文章分类',"required|in_db_list[{$this->Article_Class_Model->_tableRealName}.ac_id]");
-		
-		if($this->input->post('article_url')){
-			
-			$this->form_validation->set_rules('article_url','链接','required|valid_url');
-		}
-		
-		
-		$this->form_validation->set_rules('article_show','是否显示','required|in_list[0,1]');
-		
-		
-		if($this->input->post('article_sort')){
-			$this->form_validation->set_rules('article_sort','排序',"is_natural|less_than[256]");
-		}
-		
-		if($this->input->post('article_pic')){
-			$this->form_validation->set_rules('article_pic','文章封面',"required|valid_url");
-		}
-		
-		if($this->input->post('article_author')){
-			$this->form_validation->set_rules('article_author','文章作者',"required|max_length[30]");
-		}
-		
-		if($this->input->post('article_digest')){
-			$this->form_validation->set_rules('article_digest','文章摘要',"required|max_length[200]");
-		}
-		
-	}
-	
-	
-	
-	
 	public function delete(){
 		
-		$ids = $this->input->post('id');
+		$delId = $this->input->get_post('id');
 		
-		if($this->isPostRequest() && !empty($ids)){
+		if($this->isPostRequest()){
 			
-			if(!is_array($ids)){
-				$ids = (array)$ids;
+			if(is_array($delId)){
+				$delId = $delId[0];
 			}
 			
-			$this->Article_Model->deleteByCondition(array(
-				'where_in' => array(
-					array('key' => 'article_id','value' => $ids)
-				)
-			));
-			
+			$this->navigation_service->deleteClass($delId);
 			$this->jsonOutput('删除成功',$this->getFormHash());
 		}else{
+			
 			$this->jsonOutput('请求非法',$this->getFormHash());
-			
 		}
 	}
-	
-	
-	private function _prepareArticleData(){
-		
-		
-		$info = array(
-			'article_title' => $this->input->post('article_title'),
-			'article_content' => $this->input->post('article_content'),
-			'ac_id' => $this->input->post('ac_id') ? $this->input->post('ac_id') : 0,
-			'article_url' => $this->input->post('article_url') ? $this->input->post('article_url') : '',
-			'article_pic' => $this->input->post('article_pic') ? $this->input->post('article_pic') : '',
-			'article_pic_id' => $this->input->post('article_pic_id') ? $this->input->post('article_pic_id') : 0,
-			'article_show' => $this->input->post('article_show'),
-			'article_sort' => $this->input->post('article_sort') ? $this->input->post('article_sort') : 255,
-			
-		);
-		
-		if(trim($this->input->post('article_author'))){
-			$info['article_author'] = $this->_adminProfile['basic']['username'];
-		}else{
-			$info['article_author'] = $this->input->post('article_author');
-		}
-		
-		if(trim($this->input->post('article_digest'))){
-			$info['article_digest'] = cutText(trim(html_entity_decode(strip_tags($this->input->post('article_content')))),120);
-		}else{
-			$info['article_digest'] = cutText(trim(html_entity_decode(strip_tags($info['article_content']))),120);
-		}
-		
-		$info['article_time'] = $this->input->server('REQUEST_TIME');
-		$info['uid'] = $this->_adminProfile['basic']['uid'];
-		
-		return $info;
-	}
-	
-	
 	
 	
 	public function add(){
-		$feedback = '';
 		
-		$treelist = $this->navigation_service->getArticleClassTreeHTML();
+		$feedback = '';
+		$treelist = $this->navigation_service->getClassTreeHTML();
+		
+		$ac_parent_id = $this->input->get_post('pid');
+		
+		
+		if($ac_parent_id){
+			$info['pid'] = $ac_parent_id;
+		}
 		
 		if($this->isPostRequest()){
-			$this->_getRules();
+			$this->_getRules('add');
 			
 			for($i = 0; $i < 1; $i++){
 				
-				$info = $this->_prepareArticleData();
-				$fileList = $this->_getFileList();
-				
-				$this->assign('fileList',$fileList);
+				$info = array(
+					'name_cn' => $this->input->post('name_cn'),
+					'name_en' => $this->input->post('name_en'),
+					'url_cn' => $this->input->post('url_cn'),
+					'url_en' => $this->input->post('url_en'),
+					'jump_type' => $this->input->post('jump_type'),
+					'pid' => $this->input->post('pid') ? $this->input->post('pid') : 0,
+					'displayorder' => $this->input->post('displayorder') ? $this->input->post('displayorder') : 255
+				);
 				
 				if(!$this->form_validation->run()){
 					$feedback = $this->form_validation->error_string();
 					break;
 				}
 				
-				if(($newid = $this->Article_Model->_add($info)) < 0){
+				$info = array_merge($info,$this->addWhoHasOperated('add'));
+				
+				if(($newid = $this->Navigation_Model->_add($info)) < 0){
 					$feedback = getErrorTip('保存失败');
 					break;
 				}
 				
-				if($fileList){
-					$insData = array();
-					
-					$whoadd = $this->addWhoHasOperated('add');
-					
-					foreach($fileList as $fileInfo){
-						$temp = array(
-							'article_id' => $newid,
-							'orig_name' => $fileInfo['orig_name'],
-							'file_url' => $fileInfo['file_url'],
-							'file_size' => $fileInfo['file_size'],
-							'file_ext' => $fileInfo['file_ext'],
-							'is_image' => $fileInfo['is_image'],
-							'image_type' => $fileInfo['image_type'],
-							'file_id' => $fileInfo['id']
-						);
-						
-						$insData[] = array_merge($temp,$whoadd);
-					}
-					
-					$this->Article_File_Model->batchInsert($insData);
-				}
-				
 				$feedback = getSuccessTip('保存成功');
-				
-				$info = $this->Article_Model->getFirstByKey($newid,'article_id');
+				$info = $this->Navigation_Model->getFirstByKey($newid,'id');
 			}
-		}else{
-			$info['uid'] = $this->_adminProfile['basic']['uid'];
-			$info['article_show'] = 1;
-			$info['article_author'] = $this->_adminProfile['basic']['username'];
 		}
+		
 		
 		$this->assign('info',$info);
 		$this->assign('feedback',$feedback);
-		$this->assign('articleClassList',$treelist);
+
+		
+		$this->assign('list',$treelist);
 		$this->display();
 	}
 	
 	
+	public function checkpid($pid, $extra = ''){
+		//不能是自己，也不能是其下级分类
+		$currentGcId = $this->input->post('id');
+		
+		$deep = $this->navigation_service->getClassDeepById($pid);
+		
+		if($deep >=2){
+			$this->form_validation->set_message('checkpid','父级只能是一级导航');
+			return false;
+		}
+		
+		if($extra == 'add'){
+			//如果是增加的不需要再网后面继续执行了
+			return true;
+		}
+		
+		
+		$list = $this->Navigation_Model->getList(array(
+			'where' => array('pid' => $currentGcId)
+		));
+		
+		$subIds = array($currentGcId);
+		$hasData = true;
+		
+		while($list && $hasData){
+			
+			$ids = array();
+			foreach($list as $item){
+				$subIds[] = $item['id'];
+				$ids[] = $item['id'];
+			}
+			
+			if($ids){
+				$hasData = false;
+			}else{
+				$list = $this->Navigation_Model->getList(array(
+					'where_in' => array(
+						array('key' => 'pid', 'value' => $ids)
+					)
+				));
+			}
+		}
+		
+		//print_r($subIds);
+		if(in_array($pid,$subIds)){
+			$this->form_validation->set_message('checkpid','父级不能选择自己和自己的下级导航');
+			return false;
+		}else{
+			
+			return true;
+		}
+		
+	}
+	
+	
+	private function _getRules($action = 'add'){
+		
+		$this->form_validation->set_rules('name_cn','导航中文名称',"required|min_length[1]|max_length[50]");
+		$this->form_validation->set_rules('name_en','导航英文名称',"required|min_length[1]|max_length[50]");
+		
+		if($this->input->post('pid')){
+			$this->form_validation->set_rules('pid','上级分类', "in_db_list[{$this->Navigation_Model->_tableRealName}.id]|callback_checkpid[{$action}]");
+		}
+		
+		$this->form_validation->set_rules('url_cn','导航中文链接',"required|valid_url");
+		$this->form_validation->set_rules('url_en','导航英文链接',"required|valid_url");
+		
+		$this->form_validation->set_rules('jump_type','跳转方式',"required|in_list[0,1]");
+		
+		if($this->input->post('displayorder')){
+			$this->form_validation->set_rules('displayorder','排序',"is_natural|less_than[256]");
+		}
+		
+	}
 	
 	
 	public function edit(){
 		
 		$feedback = '';
-		$id = $this->input->get_post('article_id');
+		$treelist = $this->navigation_service->getClassTreeHTML();
+		$id = $this->input->get_post('id');
 		
-		$treelist = $this->navigation_service->getArticleClassTreeHTML();
-		
-		$info = $this->Article_Model->getFirstByKey($id,'article_id');
+		$info = $this->Navigation_Model->getFirstByKey($id,'id');
 		
 		if($this->isPostRequest()){
-			$this->_getRules();
-			
+			$this->_getRules('edit');
 			for($i = 0; $i < 1; $i++){
 				
-				$info = $this->_prepareArticleData();
-				$fileList = $this->_getFileList();
+				$info = array(
+					'id' => $id,
+					'name_cn' => $this->input->post('name_cn'),
+					'name_en' => $this->input->post('name_en'),
+					'url_cn' => $this->input->post('url_cn'),
+					'url_en' => $this->input->post('url_en'),
+					'jump_type' => $this->input->post('jump_type'),
+					'pid' => $this->input->post('pid') ? $this->input->post('pid') : 0,
+					'displayorder' => $this->input->post('displayorder') ? $this->input->post('displayorder') : 255
+				);
 				
-				$info['article_id'] = $id;
 				
 				if(!$this->form_validation->run()){
 					$feedback = $this->form_validation->error_string();
 					break;
 				}
 				
-				if($this->Article_Model->update($info,array('article_id' => $id)) < 0){
+				$info = array_merge($info,$this->addWhoHasOperated('edit'));
+				
+				if($this->Navigation_Model->update($info,array('id' => $id)) < 0){
 					$feedback = getErrorTip('保存失败');
 					break;
 				}
 				
 				$feedback = getSuccessTip('保存成功');
 			}
-		}else{
-			
-			$currentFiles = $this->Article_File_Model->getList(array(
-				'select' => 'file_id,orig_name',
-				'where' => array('article_id' => $id)
-			));
-			
-			
-			foreach($currentFiles as $item){
-				$fileList[] = array(
-					'id' => $item['file_id'],
-					'orig_name' => $item['orig_name']
-				);
-			}
 		}
-		$this->assign('fileList',$fileList);
+		
 		
 		$this->assign('info',$info);
 		$this->assign('feedback',$feedback);
-		$this->assign('articleClassList',$treelist);
-		$this->display('article/add');
+		$this->assign('list',$treelist);
+		
+		$this->display('navigation/add');
 	}
 	
 }

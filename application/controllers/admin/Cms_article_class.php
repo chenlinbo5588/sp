@@ -138,7 +138,7 @@ class Cms_Article_Class extends Ydzj_Admin_Controller {
 		
 		//print_r($subIds);
 		if(in_array($pid,$subIds)){
-			$this->form_validation->set_message('checkpid','上级不能选择自己和自己的下级分类');
+			$this->form_validation->set_message('checkpid','父级不能选择自己和自己的下级分类');
 			return false;
 		}else{
 			
@@ -150,21 +150,17 @@ class Cms_Article_Class extends Ydzj_Admin_Controller {
 	
 	public function delete(){
 		
-		$ids = $this->input->post('id');
+		$delId = $this->input->post('id');
 		
-		if($this->isPostRequest() && !empty($ids)){
+		if($this->isPostRequest() && !empty($delId)){
 			
-			if(!is_array($ids)){
-				$ids = (array)$ids;
+			if(is_array($delId)){
+				$delId = $delId[0];
 			}
 			
-			$this->Cms_Article_Class_Model->deleteByCondition(array(
-				'where_in' => array(
-					array('key' => 'id','value' => $ids)
-				)
-			));
+			$this->cms_service->deleteArticleClass($delId);
+			$this->jsonOutput('删除成功',$this->getFormHash());
 			
-			$this->jsonOutput('删除成功');
 		}else{
 			$this->jsonOutput('请求非法');
 			

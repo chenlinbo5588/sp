@@ -19,6 +19,6 @@
 	</td>
 	<td></td>
 	<td class="w84">
-		<a href="{admin_site_url('goods_class/edit')}?gc_id={$item['gc_id']}">编辑</a> | <a class="delete" href="javascript:void(0);" data-id="{$item['gc_id']}">删除</a>
+		<a href="{admin_site_url('goods_class/edit')}?gc_id={$item['gc_id']}">编辑</a> | <a class="delete" data-url="{admin_site_url('goods_class/delete')}" href="javascript:void(0);" data-id="{$item['gc_id']}">删除</a>
 	</td>
 </tr>{/foreach}

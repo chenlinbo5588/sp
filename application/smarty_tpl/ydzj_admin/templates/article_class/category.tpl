@@ -48,7 +48,7 @@
           	<a class="btn-add-nofloat marginleft" href="{admin_site_url('article_class/add')}?ac_parent_id={$item['ac_id']}"><span>新增下级</span></a>
           </td>
           <td></td>
-          <td class="w84"><a href="{admin_site_url('article_class/edit')}?ac_id={$item['ac_id']}">编辑</a> | <a class="delete" href="javascript:void(0);" data-id="{$item['ac_id']}">删除</a></td>
+          <td class="w84"><a href="{admin_site_url('article_class/edit')}?ac_id={$item['ac_id']}">编辑</a> | <a class="delete" data-url="{admin_site_url('article_class/delete')}" href="javascript:void(0);" data-id="{$item['ac_id']}">删除</a></td>
         </tr>
         {/foreach}
       </tbody>
@@ -56,28 +56,19 @@
   </form>
   <script type="text/javascript">
   $(function(){
-  	//列表下拉
-  	$("#listtable").delegate("a.delete","click",function(){
-  		if(confirm('删除该分类将会同时删除该分类的所有下级分类，您确定要删除吗')){
-  			var id = $(this).attr("data-id");
-  			$.ajax({
-  				type:"POST",
-  				url: '{admin_site_url('article_class/delete')}',
-  				dataType:'json',
-  				data :{ formhash : formhash , del_id : id },
-  				success:function(json){
-  					$("#row" + id).remove();
-  					$(".row" + id).remove();
-  					refreshFormHash(json.data);
-  				},
-  				error:function(){
-  					alert("删除出错");
-  				}
-  			})
-  				
-  		}
-  	})
-  	
+  
+    bindDeleteEvent(function(ids,json){
+        showToast('success',json.message);
+        
+        for(var i = 0; i < ids.length; i++){
+            $("#row" + ids[i]).remove();
+            $(".row" + ids[i]).remove();
+        }
+        refreshFormHash(json.data);
+    },function(){
+        showToast('error','删除错误');
+    });
+    
   	$("#listtable").delegate("img[nc_type='flex']", "click",function(){
   		var obj = $(this);
 		var status = obj.attr('status');

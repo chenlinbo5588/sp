@@ -39,11 +39,15 @@ class Article_Class extends Ydzj_Admin_Controller {
 	
 	public function delete(){
 		
-		$delId = $this->input->get_post('del_id');
+		$delId = $this->input->get_post('id');
 		
 		if($this->isPostRequest()){
+			if(is_array($delId)){
+				$delId = $delId[0];
+			}
+			
 			$this->article_service->deleteArticleClass($delId);
-			$this->jsonOutput('成功',$this->getFormHash());
+			$this->jsonOutput('删除成功',$this->getFormHash());
 		}else{
 			
 			$this->jsonOutput('请求非法',$this->getFormHash());
@@ -144,7 +148,7 @@ class Article_Class extends Ydzj_Admin_Controller {
 		
 		//print_r($subIds);
 		if(in_array($pid,$subIds)){
-			$this->form_validation->set_message('checkpid','上级不能选择自己和自己的下级分类');
+			$this->form_validation->set_message('checkpid','父级不能选择自己和自己的下级分类');
 			return false;
 		}else{
 			

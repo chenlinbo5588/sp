@@ -479,7 +479,7 @@ $(function(){
                   <ol>
                     <li><a href="javascript:void(0);" id="category_article_class" onclick="openItem('category,article_class,website');">文章分类</a></li>
                     <li><a href="javascript:void(0);" id="index_article" onclick="openItem('index,article,website');">文章管理</a></li>
-                    <li><a href="javascript:void(0);" id="index_navigation" onclick="openItem('index,navigation,website');">导航管理</a></li>
+                    <li><a href="javascript:void(0);" id="category_navigation" onclick="openItem('category,navigation,website');">导航管理</a></li>
                     
                     {*<li><a href="JavaScript:void(0);" id="index_tag" onclick="openItem('index,tag,website');">标签管理</a></li>
                     <li><a href="JavaScript:void(0);" id="index_comment" onclick="openItem('index,comment,website');">评论管理</a></li>

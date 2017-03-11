@@ -39,11 +39,16 @@ class Goods_Class extends Ydzj_Admin_Controller {
 	
 	public function delete(){
 		
-		$delId = $this->input->post('del_id');
+		$delId = $this->input->post('id');
 		
 		if($this->isPostRequest()){
+			
+			if(is_array($delId)){
+				$delId = $delId[0];
+			}
+			
 			$this->goods_service->deleteGoodsClass($delId);
-			$this->jsonOutput('成功',$this->getFormHash());
+			$this->jsonOutput('删除成功',$this->getFormHash());
 		}else{
 			$this->jsonOutput('请求非法',$this->getFormHash());
 		}

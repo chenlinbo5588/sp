@@ -4,7 +4,8 @@
       <h3>商品分类</h3>
       <ul class="tab-base">
       	<li><a href="{admin_site_url('goods_class/category')}"><span>管理</span></a></li>
-      	<li><a class="current"><span>{if $info['gc_id']}编辑{else}新增{/if}</span></a></li>
+      	<li><a {if empty($info['gc_id'])}class="current"{/if} href="{admin_site_url('goods_class/add')}"><span>新增</span></a></li>
+        {if $info['gc_id']}<li><a class="current"><span>编辑</span></a></li>{/if}
       	<li><a href="{admin_site_url('goods_class/export')}"><span>导出</span></a></li>
       	<li><a href="{admin_site_url('goods_class/import')}"><span>导入</span></a></li>
       	<li><a href="{admin_site_url('goods_class/tag')}"><span>TAG管理</span></a></li>
