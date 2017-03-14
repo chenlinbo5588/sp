@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class About extends Ydzj_Controller {
+class Company extends Ydzj_Controller {
 	
 	private $sideNavs = null;
 	private $modKey = '走进陆恒';
@@ -11,7 +11,6 @@ class About extends Ydzj_Controller {
 		
 		$this->assign('pgClass',strtolower(get_class()).'Pg');
 		
-		$this->load->library('Goods_service');
 		$this->load->model('Article_Model');
 		
 		$tempAr = config_item('pageConf');
@@ -26,9 +25,6 @@ class About extends Ydzj_Controller {
 			'首页' => site_url('/'),
 			$this->modKey => $tempAr[$this->modKey]['url']
 		);
-		
-		$goodsList = $this->goods_service->getCommandGoodsList();
-		$this->assign('goodsList',$goodsList);
 	}
 	
 	private function _getArticleContent($key){
@@ -37,13 +33,12 @@ class About extends Ydzj_Controller {
 		
 		$article = $this->Article_Model->getFirstByKey($key,'article_title');
 		$this->assign('article',$article);
-		
 		$this->assign('breadcrumb',$this->breadcrumb());
 		
 	}
 	
 	
-	public function index()
+	public function introduce()
 	{
 		$key = '企业简介';
 		$this->_getArticleContent($key);
@@ -53,18 +48,16 @@ class About extends Ydzj_Controller {
 	}
 	
 	
-	public function thinking()
+	public function philosophy()
 	{
 		$key = '公司理念';
 		$this->_getArticleContent($key);
-		
 		$this->seo($key);
 		
 		$this->display('common/art');
 	}
 	
-	
-	public function moreintro()
+	public function presence()
 	{
 		$key = '企业风采';
 		$this->_getArticleContent($key);

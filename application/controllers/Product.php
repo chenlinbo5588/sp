@@ -35,9 +35,6 @@ class Product extends Ydzj_Controller {
 		);
 		$this->assign('sideNavs',$this->sideNavs);
 		
-		$goodsList = $this->goods_service->getCommandGoodsList();
-		$this->assign('goodsList',$goodsList);
-		
 	}
 	
 	

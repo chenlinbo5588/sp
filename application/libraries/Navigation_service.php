@@ -17,7 +17,9 @@ class Navigation_service extends Base_service {
 	}
 	
 	public function getClassTreeHTML(){
-		$list = $this->_navigationModel->getList();
+		$list = $this->_navigationModel->getList(array(
+			'order' => 'pid ASC , displayorder ASC'
+		));
 		
 		if($list){
 			return self::$CI->phptree->makeTreeForHtml($list,array(
@@ -28,8 +30,25 @@ class Navigation_service extends Base_service {
 		}else{
 			return array();
 		}
-		
 	}
+	
+	public function getClassTree(){
+		$list = $this->_navigationModel->getList(array(
+			'order' => 'pid ASC , displayorder ASC'
+		));
+		
+		if($list){
+			return self::$CI->phptree->makeTree($list,array(
+				'primary_key' => 'id',
+				'parent_key' => 'pid',
+				'expanded' => true
+			));
+		}else{
+			
+			return array();
+		}
+	}
+	
 	
 	
 	public function getParentsById($id = 0,$field = '*'){
@@ -151,20 +170,7 @@ class Navigation_service extends Base_service {
 	
 	
 	
-	public function getClassTree(){
-		$list = $this->_navigationModel->getList();
-		
-		if($list){
-			return self::$CI->phptree->makeTree($list,array(
-				'primary_key' => 'id',
-				'parent_key' => 'pid',
-				'expanded' => true
-			));
-		}else{
-			
-			return array();
-		}
-	}
+	
 	
 	public function getClassByParentId($id = 0){
 		$list = $this->_navigationModel->getList(array(

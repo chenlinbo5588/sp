@@ -15,11 +15,25 @@ class Ydzj_Controller extends MY_Controller {
 	public function __construct(){
 		parent::__construct();
 		
-		$this->load->library('Seo_service');
+		$this->load->library(array('Seo_service','Navigation_service'));
 		$this->form_validation->set_error_delimiters('<label class="form_error">','</label>');
+		
+		$this->getSiteNavs();
 		
 		$this->_initLogin();
 	}
+	
+	
+	/**
+	 * 获得导航
+	 */
+	public function getSiteNavs(){
+		$navTree = $this->navigation_service->getClassTree();
+		$this->assign('topNavs',$navTree);
+		//print_r($navTree);
+		
+	}
+	
 	
 	
 	protected function _initLibrary(){

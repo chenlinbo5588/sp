@@ -23,14 +23,14 @@
           <td colspan="2" class="required"><label class="validation" for="name_cn">导航中文名称:</label></td>
         </tr>
         <tr class="noborder">
-          <td class="vatop rowform"><input type="text" value="{$info['name_cn']|escape}" name="name_cn" id="name_cn" maxlength="20" class="txt"></td>
+          <td class="vatop rowform"><input type="text" value="{$info['name_cn']|escape}" name="name_cn" id="name_cn" class="txt"></td>
           <td class="vatop tips">{form_error('name_cn')}</td>
         </tr>
         <tr class="noborder">
           <td colspan="2" class="required"><label class="validation" for="name_en">导航英文名称:</label></td>
         </tr>
         <tr class="noborder">
-          <td class="vatop rowform"><input type="text" value="{$info['name_en']|escape}" name="name_en" id="name_en" maxlength="20" class="txt"></td>
+          <td class="vatop rowform"><input type="text" value="{$info['name_en']|escape}" name="name_en" id="name_en" class="txt"></td>
           <td class="vatop tips">{form_error('name_en')}</td>
         </tr>
         <tr>

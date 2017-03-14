@@ -51,10 +51,10 @@
           <td class="w96">title</td><td><input id="SEO[index][title]" name="SEO[index][title]" value="{$currentSetting['index']['title']|escape}" class="w300" type="text"/></td>
         </tr>
         <tr class="noborder">
-          <td class="w96">keywords</td><td><input id="SEO[index][keywords]" name="SEO[index][keywords]" value="{$currentSetting['index']['keywords']|escape}" class="w300" type="text" maxlength="200" /></td>
+          <td class="w96">keywords</td><td><input id="SEO[index][keywords]" name="SEO[index][keywords]" value="{$currentSetting['index']['keywords']|escape}" class="w300" type="text" /></td>
         </tr>
         <tr class="noborder">
-          <td class="w96">description</td><td><input id="SEO[index][description]" name="SEO[index][description]" value="{$currentSetting['index']['description']|escape}" class="w300" type="text" maxlength="200"/></td>
+          <td class="w96">description</td><td><input id="SEO[index][description]" name="SEO[index][description]" value="{$currentSetting['index']['description']|escape}" class="w300" type="text" /></td>
         </tr>
       </tbody>
       <tfoot>

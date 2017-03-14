@@ -1,6 +1,6 @@
 {include file="common/website_header.tpl"}
 	<div class="linePg">
-		<div class="{$pgClass}"></div>
+		<div class="commonPg {$pgClass}"></div>
 		<div class="boxz clearfix mg10">
 			{if !$isMobile}{include file="common/side_nav.tpl"}{/if}
 			<div class="contentArea">

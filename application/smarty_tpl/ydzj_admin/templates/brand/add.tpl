@@ -24,7 +24,7 @@
           <td colspan="2" class="required"><label class="validation" for="brand_name">品牌名称:</label></td>
         </tr>
         <tr class="noborder">
-          <td class="vatop rowform"><input type="text" value="{$info['brand_name']|escape}" name="brand_name" id="brand_name" maxlength="20" class="txt"></td>
+          <td class="vatop rowform"><input type="text" value="{$info['brand_name']|escape}" name="brand_name" id="brand_name" class="txt"></td>
           <td class="vatop tips">{form_error('brand_name')}</td>
         </tr>
         <tr>

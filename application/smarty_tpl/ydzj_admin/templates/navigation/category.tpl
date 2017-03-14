@@ -58,11 +58,15 @@
   $(function(){
     
     bindDeleteEvent(function(ids,json){
+        showToast('success',json.message);
+        
         for(var i = 0; i < ids.length; i++){
             $("#row" + ids[i]).remove();
             $(".row" + ids[i]).remove();
         }
         refreshFormHash(json.data);
+    },function(){
+        showToast('error','删除错误');
     });
     
     

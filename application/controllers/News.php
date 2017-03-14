@@ -52,9 +52,6 @@ class News extends Ydzj_Controller {
 			'首页' => site_url('/'),
 		);
 		
-		
-		//$goodsList = $this->goods_service->getCommandGoodsList();
-		//$this->assign('goodsList',$goodsList);
 	}
 	
 	

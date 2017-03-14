@@ -939,19 +939,27 @@ input[type=text].validation_error {
 	1border-top:1px solid #fff;
 }
 
-.aboutPg , .newsPg, .productPg , .marketPg, .servicePg, .contactsPg , .docPg {
+.commonPg {
 	background:url(../img/cmp/2.jpg) no-repeat center center;
 	height:260px;
 }
 
 
+.newsPg {
+	background:url(../img/cmp/2.jpg) no-repeat center center;
+	height:260px;
+} 
 .productPg {
+	height:260px;
 	background:url(../img/cmp/3.jpg) no-repeat center center;
 }
  
 .marketPg {
+	height:260px;
 	background:url(../img/cmp/2.jpg) no-repeat center center;
 }
+
+
 
 .breadcrumb {
 	padding: 8px 0 8px 5px;
@@ -979,6 +987,7 @@ input[type=text].validation_error {
 	width:200px;
 	float: left;
 	position: relative;
+	top: -62px;
 }
 
 
@@ -1373,21 +1382,18 @@ input[type=text].validation_error {
 	}
 	
 	
-	.aboutPg , .newsPg, .productPg , .marketPg, .servicePg, .contactsPg , .docPg {
+	.commonPg {
 		background:url(../img/cmp/m2.jpg) no-repeat center top;
 		height:250px;
 	}
 	
 	.newsPg {
 		background:url(../img/cmp/m1.jpg) no-repeat center top;
+		height:250px;
 	}
 	
 	.productPg {
 		background:url(../img/cmp/m3.jpg) no-repeat center top;
-	}
-	 
-	.marketPg {
-		background:url(../img/cmp/m2.jpg) no-repeat center top;
 	}
 	
 	.sideNav {

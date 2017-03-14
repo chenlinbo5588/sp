@@ -560,7 +560,7 @@ function bindDeleteEvent(customSuccessFn,customErrorFn){
 		showToast('error',"删除出错，服务器异常，请稍后再次尝试");
 	}
 	
-	$("a.delete").bind("click",function(){
+	$("body").delegate("a.delete","click",function(){
 		var triggerObj = $(this);
 		
 		var title = triggerObj.attr('data-title');
@@ -571,7 +571,7 @@ function bindDeleteEvent(customSuccessFn,customErrorFn){
 		ui_confirm(triggerObj,[$(this).attr("data-id")],$(this).attr("data-url"),'你确定要删除<span class="hightlight">' + title + '</span>吗？','json',customSuccessFn ? customSuccessFn : successCallback,customErrorFn ? customErrorFn: errorCallback);
   	});
   	
-  	$(".deleteBtn").bind("click",function(){
+  	$("body").delegate(".deleteBtn","click",function(){
   		var triggerObj = $(this);
   		var ids = getIDS(triggerObj);
   		var url = triggerObj.attr("data-url");

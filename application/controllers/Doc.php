@@ -12,7 +12,7 @@ class Doc extends Ydzj_Controller {
 	public function __construct(){
 		parent::__construct();
 		
-		$this->load->library(array('Article_service','Goods_service'));
+		$this->load->library(array('Article_service'));
 		
 		$this->assign('pgClass',strtolower(get_class()).'Pg');
 		$this->modKey = $this->input->get_post('catname');
@@ -61,8 +61,7 @@ class Doc extends Ydzj_Controller {
 			'首页' => site_url('/'),
 			'服务中心' => site_url('service/customer'),
 		);
-		$goodsList = $this->goods_service->getCommandGoodsList();
-		$this->assign('goodsList',$goodsList);
+		
 	}
 	
 	public function download(){

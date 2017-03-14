@@ -9,7 +9,6 @@ class Market extends Ydzj_Controller {
 	public function __construct(){
 		parent::__construct();
 		
-		$this->load->library('Goods_service');
 		$this->load->model('Article_Model');
 		
 		$this->assign('pgClass',strtolower(get_class()).'Pg');
@@ -26,8 +25,7 @@ class Market extends Ydzj_Controller {
 			$this->modKey => $tempAr[$this->modKey]['url']
 		);
 		
-		$goodsList = $this->goods_service->getCommandGoodsList();
-		$this->assign('goodsList',$goodsList);
+	
 	}
 	
 	private function _getArticleContent($key){
