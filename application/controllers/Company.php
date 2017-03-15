@@ -4,36 +4,28 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Company extends Ydzj_Controller {
 	
 	private $sideNavs = null;
-	private $modKey = '走进陆恒';
+	
 	
 	public function __construct(){
 		parent::__construct();
+		//print_r($this->uri);
 		
-		$this->load->model('Article_Model');
 		
-		$tempAr = config_item('pageConf');
 		
-		$this->sideNavs = $tempAr[$this->modKey]['sideNav'];
-		$this->assign('sideNavs',$this->sideNavs);
-		
-		$this->assign('sideTitle',$this->modKey);
-		$this->assign('sideTitleUrl',$tempAr[$this->modKey]['url']);
-		
-		$this->_navigation = array(
-			'首页' => site_url('/'),
-			$this->modKey => $tempAr[$this->modKey]['url']
-		);
 	}
 	
 	private function _getArticleContent($key){
+		$article = $this->Article_Model->getFirstByKey($key,'article_id');
 		
-		$this->_navigation[$key] = $this->sideNavs[$key];
-		
-		$article = $this->Article_Model->getFirstByKey($key,'article_title');
+		$this->_navigation[$key] = $this->sideNavs[$article['article_title']];
 		$this->assign('article',$article);
 		$this->assign('breadcrumb',$this->breadcrumb());
 		
 	}
+	
+	
+	
+	
 	
 	
 	public function introduce()

@@ -261,7 +261,7 @@ input[type=checkbox],input[type=radio] {
         .tab-base a:hover { color: #09C; background-position: 0 -220px; }
             .tab-base a span { color: #555; background: url(../img/sky/bg_position.gif) no-repeat 9999px 9999px; float: left; padding-right: 9px; }
                 .tab-base a:hover span {  background-position: 100% -220px;}
-        .tab-base a.current, .tab-base a:hover.current { background-position: 0 -240px; cursor: default;}
+        .tab-base a.current, .tab-base a:hover.current { background-position: 0 -240px; }
             .tab-base a.current span, .tab-base a:hover.current span{ color: #FFF; background-position: 100% -240px;}
 
 

@@ -10,7 +10,7 @@ class News extends Ydzj_Controller {
 	
 	public function __construct(){
 		parent::__construct();
-		$this->assign('pgClass',strtolower(get_class()).'Pg');
+		
 		$this->modKey = $this->input->get_post('catname');
 		
 		if(empty($this->modKey)){
@@ -39,7 +39,7 @@ class News extends Ydzj_Controller {
 			
 			if($sideNavs){
 				foreach($sideNavs as $nav){
-					$this->sideNavs[$nav['name']] = site_url('news/plist/?ac_id=').$nav['id'];
+					$this->sideNavs[$nav['name']] = base_url('news/plist/'.$nav['id'].'.html');
 				}
 			}
 			
@@ -58,6 +58,9 @@ class News extends Ydzj_Controller {
 	
 	public function plist()
 	{
+		
+		$param = $this->uri->ruri_to_assoc();
+		print_r($param);
 		
 		$keyword = $this->input->get_post('keyword') ? $this->input->get_post('keyword') : '';
 		$currentAcId = $this->input->get_post('ac_id');

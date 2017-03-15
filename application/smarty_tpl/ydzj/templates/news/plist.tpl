@@ -1,8 +1,8 @@
 {include file="common/website_header.tpl"}
 	<div class="linePg">
-		<div class="{$pgClass}"></div>
+		<div class="commonPg {$pgClass}"></div>
 		<div class="boxz clearfix mg10">
-			<form id="listForm" name="listForm" action="{site_url('news/news_list')}" method="get">
+			<form id="listForm" name="listForm" action="{base_url('news/plist.html')}" method="get">
 			<input type="hidden" name="page" value="{$currentPage}"/>
 			<input type="hidden" name="ac_id" value="{$currentAcId}"/>
 			{if !$isMobile}{include file="./news_side.tpl"}{/if}

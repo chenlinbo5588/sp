@@ -69,7 +69,13 @@
           <td class="align-center">{if $item['article_show']}是{else}否{/if}</td>
           <td class="nowrap align-center">{$item['gmt_create']|date_format:"%Y-%m-%d %H:%M:%S"}</td>
           <td class="align-center">
-          	<p>{if $articleClassList[$item['ac_id']]['ac_detail_tpl']}<a href="{site_url($articleClassList[$item['ac_id']]['ac_detail_tpl'])}?ac_id={$item['ac_id']}&id={$item['article_id']}" target="_blank">查看</a> | {/if}<a href="{admin_site_url('article/edit')}?article_id={$item['article_id']}">编辑</a></p>
+            {if $articleClassList[$item['ac_id']]['ac_code']}
+            <a href="{base_url($articleClassList[$item['ac_id']]['ac_code']|cat:'/'|cat:$item['article_id']|cat:'.html')}" target="_blank">查看</a>
+            {else}
+            <a href="{base_url('index/article/'|cat:$item['article_id']|cat:'.html')}" target="_blank">查看</a>
+            {/if}
+            |
+          	<a href="{admin_site_url('article/edit')}?article_id={$item['article_id']}">编辑</a>
           </td>
         </tr>
       	{/foreach}

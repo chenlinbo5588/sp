@@ -286,7 +286,7 @@ class MY_Controller extends CI_Controller {
     	if($viewname == ''){
     		$tempPath = array();
     		
-    		$paramAr = $this->uri->segment_array();
+    		$paramAr = $this->uri->rsegment_array();
     		//print_r($paramAr);
     		$startIndex = 1;
     		

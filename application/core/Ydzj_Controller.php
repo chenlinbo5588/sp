@@ -10,7 +10,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Ydzj_Controller extends MY_Controller {
 	
 	public $_profile = array();
-	
+	public $_siteNavs = array();
 	
 	public function __construct(){
 		parent::__construct();
@@ -28,11 +28,15 @@ class Ydzj_Controller extends MY_Controller {
 	 * 获得导航
 	 */
 	public function getSiteNavs(){
-		$navTree = $this->navigation_service->getClassTree();
-		$this->assign('topNavs',$navTree);
+		$this->_siteNavs = $this->navigation_service->getClassTree();
+		
+		$this->assign('siteNavs',$this->_siteNavs);
+		$this->assign('idReplacement','{ID}');
 		//print_r($navTree);
 		
 	}
+	
+	
 	
 	
 	
@@ -85,6 +89,74 @@ class Ydzj_Controller extends MY_Controller {
 		$this->load->library('email');
 		$this->email->initialize($config);
 	}
+	
+	
+	
+	/**
+	 * 通用网站文章方法
+	 */
+	public function article(){
+		
+		$this->load->library('Article_service');
+		
+		$navId = $this->uri->rsegment(3);
+		
+		$articleId = $this->uri->rsegment(4);
+		
+		$navigationInfo = $this->Navigation_Model->getFirstByKey($navId,'id');
+		$article = $this->Article_Model->getFirstByKey($articleId,'article_id');
+		$articleClassInfo = $this->Article_Class_Model->getFirstByKey($article['ac_id'],'ac_id');
+		
+		$currentTopIndex = 0;
+		$findNavId = $navId;
+		if($navigationInfo['pid'] != 0){
+			$findNavId =  $navigationInfo['pid'];
+		}
+		
+		foreach($this->_siteNavs as $topIndex => $topNav){
+			$currentTopIndex = $topIndex;
+			
+			if($findNavId == $topNav['id']){
+				break;
+			}
+			if(!empty($topNav['children'])){
+				foreach($topNav['children'] as $subNav){
+					if($findNavId == $subNav['id']){
+						break;
+					}
+				}
+			}
+		}
+		
+		$currentSideNav = $this->_siteNavs[$currentTopIndex];
+		
+		
+		//print_r($this->uri);
+		//print_r($this->_siteNavs);
+		//$this->sideNavs = $tempAr[$this->modKey]['sideNav'];
+		
+		
+		
+		$moduleUrl = str_replace('{ID}',$currentSideNav['id'],$currentSideNav['url_cn']);
+		
+		
+		
+		$this->_navigation = array(
+			'首页' => base_url('/'),
+			$currentSideNav['name_cn'] => $moduleUrl
+		);
+		
+		$this->assign('sideTitleUrl',$moduleUrl);
+		$this->assign('sideNavs',$currentSideNav['children']);
+		$this->assign('sideTitle',$currentSideNav['name_cn']);
+		$this->assign('article',$article);
+		$this->assign('breadcrumb',$this->breadcrumb());
+		$this->seo($article['article_title']);
+		
+		$this->display('common/art');
+	}
+	
+	
 	
 	/**
 	 * 左快捷导航

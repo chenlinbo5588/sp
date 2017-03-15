@@ -5,7 +5,7 @@
       <ul class="tab-base">
       	<li><a href="{admin_site_url('navigation/category')}"><span>管理</span></a></li>
       	<li><a {if empty($info['id'])}class="current"{/if} href="{admin_site_url('navigation/add')}"><span>新增</span></a></li>
-      	{if $info['id']}<li><a class="current"><span>编辑</span></a></li>{/if}
+      	{if $info['id']}<li><a class="current" href="{admin_site_url('navigation/edit/')}?id={$info['id']}"><span>编辑</span></a></li>{/if}
       </ul>
     </div>
   </div>
@@ -52,7 +52,7 @@
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input type="text" value="{$info['url_cn']|escape}" name="url_cn" id="url_cn" class="txt"></td>
-          <td class="vatop tips">{form_error('url_cn')}</td>
+          <td class="vatop tips">{form_error('url_cn')}<span class="tips">{literal}{ID}{/literal} 表示当即记录的ID 对于某些需要在显示页面中展示紫导航的页面需要插入该值</span></td>
         </tr>
         <tr class="noborder">
           <td colspan="2" class="required"><label class="validation" for="url_en">导航链接(英文版):</label></td>

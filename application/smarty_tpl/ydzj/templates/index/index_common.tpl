@@ -11,11 +11,11 @@
 			<span class="hotlink">
 				<strong>热门搜索:　</strong>
 				{foreach from=$hotwords item=item}
-				<a href="{site_url('product/plist/')}?keyword={urlencode($item)}">{$item|escape}</a>
+				<a href="{base_url('product/plist/keyword/'|cat:urlencode($item))}">{$item|escape}</a>
 				{/foreach}
 			</span>
 			<div class="searchform">
-				{form_open(site_url('product/plist'),'id="searchForm"')}
+				{form_open(base_url('product/plist'),'id="searchForm"')}
 				<input type="text" name="keyword" class="txt" value="" placeholder="输入产品名称"/><input type="image" name="search" src="{resource_url('img/btns/search_btn.png')}"/>
 				</form>
 			</div>
@@ -32,20 +32,20 @@
 				</li>
 				<li class="col" >
 					<div class="colPanel newslist bd">
-						<h3 class="panelTitel"><span>企业新闻</span><a class="more fr" href="{site_url('news/news_list?ac_id=11')}">更多&gt;&gt;</a></h3>
+						<h3 class="panelTitel"><span>企业新闻</span><a class="more fr" href="{site_url('news/plist/acid/11')}">更多&gt;&gt;</a></h3>
 						<ol>
 							{foreach from=$qiyeList item=item}
-							<li><a href="{site_url('news/detail/')}?id={$item['article_id']}">{$item['article_title']|escape}</a><span>【{$item['publish_time']|date_format:"%Y-%m-%d"}】</span></li>
+							<li><a href="{base_url('news/detail/'|cat:$item['article_id'])}">{$item['article_title']|escape}</a><span>【{$item['publish_time']|date_format:"%Y-%m-%d"}】</span></li>
 							{/foreach}
 						</ol>
 					</div>
 				</li>
 			 	<li class="col">
 					<div class="colPanel newslist">
-						<h3 class="panelTitel"><span>行业动态</span><a class="more fr" href="{site_url('news/news_list?ac_id=12')}">更多&gt;&gt;</a></h3>
+						<h3 class="panelTitel"><span>行业动态</span><a class="more fr" href="{base_url('news/plist/acid/12')}">更多&gt;&gt;</a></h3>
 						<ol class="clearfix">
 							{foreach from=$industryList item=item}
-							<li><a href="{site_url('news/detail/')}?id={$item['article_id']}">{$item['article_title']|escape}</a><span>【{$item['publish_time']|date_format:"%Y-%m-%d"}】</span></li>
+							<li><a href="{base_url('news/detail/'|cat:$item['article_id'])}">{$item['article_title']|escape}</a><span>【{$item['publish_time']|date_format:"%Y-%m-%d"}】</span></li>
 							{/foreach}
 						</ol>
 					</div>

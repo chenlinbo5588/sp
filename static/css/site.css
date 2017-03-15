@@ -1007,6 +1007,12 @@ input[type=text].validation_error {
     font-size: 14px;
 }
 
+.sideNav li.current {
+	
+	
+}
+
+
 .sideNav .itemTitle {
 	padding: 15px 10px;
 	text-align: center;

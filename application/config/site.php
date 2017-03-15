@@ -100,7 +100,7 @@ $config['weixin_img_size'] = array(
 	's' => array('width' => 200,'height' => 200,'maintain_ratio' => false,'quality' => 100),
 );
 
-
+/*
 
 $config['pageConf'] = array(
 	'走进陆恒' => array(
@@ -137,3 +137,4 @@ $config['pageConf'] = array(
 	
 
 );
+*/

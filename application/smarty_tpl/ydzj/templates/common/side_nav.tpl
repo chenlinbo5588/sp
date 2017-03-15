@@ -1,8 +1,8 @@
 			<div class="sideNav">
 				<ul class="sideItem">
-					<li class="itemTitle"><h3><a href="{$sideTitleUrl}">{$sideTitle}</a></h3></li>
+					<li class="itemTitle"><h3><a href="{$sideTitleUrl}">{$sideTitle|escape}</a></h3></li>
 					{foreach from=$sideNavs item=item key=key}
-					<li><a href="{$item}">{$key}</a></li>
+					<li><a href="{str_replace($idReplacement,$item['id'],$item['url_cn'])}">{$item['name_cn']|escape}</a></li>
 					{/foreach}
 				</ul>
 			</div>
