@@ -39,7 +39,7 @@ class News extends Ydzj_Controller {
 			
 			if($sideNavs){
 				foreach($sideNavs as $nav){
-					$this->sideNavs[$nav['name']] = site_url('news/news_list/?ac_id=').$nav['id'];
+					$this->sideNavs[$nav['name']] = site_url('news/plist/?ac_id=').$nav['id'];
 				}
 			}
 			
@@ -56,7 +56,7 @@ class News extends Ydzj_Controller {
 	
 	
 	
-	public function news_list()
+	public function plist()
 	{
 		
 		$keyword = $this->input->get_post('keyword') ? $this->input->get_post('keyword') : '';
@@ -92,7 +92,7 @@ class News extends Ydzj_Controller {
 				//'call_js' => 'search_page',
 				'form_id' => '#listForm',
 				'anchor' => 'listmao',
-				'base_link' => site_url('news/news_list/?')."ac_id={$currentAcId}&keyword={$keyword}"
+				'base_link' => site_url("news/plist/{$currentAcId}/{$keyword}/")
 			)
 		);
 		
@@ -115,7 +115,7 @@ class News extends Ydzj_Controller {
 				}
 				
 				if(empty($newsArtile['jump_url'])){
-					$newsArtile['jump_url'] = site_url('news/detail?id=') . $newsArtile['id'].'&ac_id='.$newsArtile['ac_id'];
+					$newsArtile['jump_url'] = site_url("news/detail/{$newsArtile['ac_id']}/{$newsArtile['id']}");
 				}
 				
 				if(trim($newsArtile['digest'])){
@@ -158,7 +158,7 @@ class News extends Ydzj_Controller {
 			foreach($parents as $pitem){
 				$this->seoKeys[] = $pitem['name'];
 				
-				$this->_navigation[$pitem['name']] = site_url('news/news_list?id='.$pitem['id']);
+				$this->_navigation[$pitem['name']] = site_url("news/plist/{$pitem['ac_id']}/{$pitem['id']}.html");
 			}
 		}
 		
@@ -171,6 +171,8 @@ class News extends Ydzj_Controller {
 		$id = $this->input->get_post('id');
 		$ac_id = $this->input->get_post('ac_id');
 		$info = $this->Cms_Article_Model->getFirstByKey($id,'id');
+		
+		
 		if($info){
 			
 			if($info['article_click'] == 0){
@@ -182,11 +184,11 @@ class News extends Ydzj_Controller {
 			$nextArticle = $this->cms_service->getNextByArticle($info);
 			$preArticle = $this->cms_service->getPreByArticle($info);
 			if($nextArticle && empty($nextArticle['jump_url'])){
-				$nextArticle['jump_url'] = site_url('news/detail?id=') . $nextArticle['id'].'&ac_id='.$nextArticle['ac_id'];
+				$nextArticle['jump_url'] = site_url("news/detail/{$nextArticle['ac_id']}/{$nextArticle['id']}.html");
 			}
 			
 			if($preArticle && empty($preArticle['article_url'])){
-				$preArticle['jump_url'] = site_url('news/detail?id=') . $preArticle['id'].'&ac_id='.$preArticle['ac_id'];
+				$preArticle['jump_url'] = site_url("news/detail/{$preArticle['ac_id']}/{$preArticle['id']}.html");
 			}
 			
 			//print_r($preArticle);
