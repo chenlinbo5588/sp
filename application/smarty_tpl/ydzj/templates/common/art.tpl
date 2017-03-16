@@ -5,7 +5,7 @@
 			{if !$isMobile}{include file="common/side_nav.tpl"}{/if}
 			<div class="contentArea">
 				<div class="breadcrumb">{$breadcrumb}</div>
-				<div class="bd respond_img" id="articleInfo">
+				<div class="bd {if $isMobile}respond_img{/if}" id="articleInfo">
 					{$article['article_content']}
 				</div>
 			</div>

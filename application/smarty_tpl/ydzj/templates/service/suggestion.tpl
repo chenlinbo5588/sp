@@ -1,6 +1,6 @@
 {include file="common/website_header.tpl"}
 	<div class="linePg">
-		<div class="{$pgClass}"></div>
+		<div class="commonPg {$pgClass}"></div>
 		<div class="boxz clearfix mg10">
 			{if !$isMobile}{include file="common/side_nav.tpl"}{/if}
 			<div class="contentArea">
@@ -8,7 +8,7 @@
 				<div class="bd" id="articleInfo" style="border:1px solid #dcdcdc;">
 					<h3>请按要求填写您的准确信息，相关人员将在第一时间与您联系</h3>
 					<a name="formmap">&nbsp;</a>
-					{form_open(site_url('contacts/suggestion/#formmap'),'id="suggestion_form"')}
+					{form_open(base_url('service/suggestion.html#formmap'),'id="suggestion_form"')}
 						<table class="suggest">
 							<tr><td style="width:80px;"><span>您的姓名:</span><em>*</em></td><td><input type="text" name="username" value="{$info['username']|escape}" placeholder="请输入您的用户名"/>{form_error('username')}</td></tr>
 							<tr><td><span>公司名称:</span><em>*</em></td><td><input type="text" name="company_name" value="{$info['company_name']|escape}" placeholder="请输入您的公司名称"/>{form_error('company_name')}</td></tr>

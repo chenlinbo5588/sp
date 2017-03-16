@@ -15,7 +15,7 @@ class Ydzj_Controller extends MY_Controller {
 	public function __construct(){
 		parent::__construct();
 		
-		$this->load->library(array('Seo_service','Navigation_service'));
+		$this->load->library(array('Seo_service','Navigation_service','Article_service'));
 		$this->form_validation->set_error_delimiters('<label class="form_error">','</label>');
 		
 		$this->getSiteNavs();
@@ -97,10 +97,7 @@ class Ydzj_Controller extends MY_Controller {
 	 */
 	public function article(){
 		
-		$this->load->library('Article_service');
-		
 		$navId = $this->uri->rsegment(3);
-		
 		$articleId = $this->uri->rsegment(4);
 		
 		$navigationInfo = $this->Navigation_Model->getFirstByKey($navId,'id');
@@ -109,6 +106,7 @@ class Ydzj_Controller extends MY_Controller {
 		
 		$currentTopIndex = 0;
 		$findNavId = $navId;
+		
 		if($navigationInfo['pid'] != 0){
 			$findNavId =  $navigationInfo['pid'];
 		}
@@ -130,28 +128,34 @@ class Ydzj_Controller extends MY_Controller {
 		
 		$currentSideNav = $this->_siteNavs[$currentTopIndex];
 		
-		
 		//print_r($this->uri);
 		//print_r($this->_siteNavs);
 		//$this->sideNavs = $tempAr[$this->modKey]['sideNav'];
-		
-		
-		
 		$moduleUrl = str_replace('{ID}',$currentSideNav['id'],$currentSideNav['url_cn']);
-		
-		
-		
+		//@todo 需要支持中英文
 		$this->_navigation = array(
 			'首页' => base_url('/'),
-			$currentSideNav['name_cn'] => $moduleUrl
+			$currentSideNav['name_cn'] => $moduleUrl,
+		);
+			
+		if($navigationInfo['pid'] != 0){
+			$this->_navigation[$navigationInfo['name_cn']] = str_replace('{ID}',$navigationInfo['id'],$navigationInfo['url_cn']);
+		}
+		
+		
+		$this->assign(
+			array(
+				'currentModule' => $this->uri->rsegment(1),
+				'currentSideUrl' => base_url($this->uri->uri_string()),
+				'sideTitleUrl' => $moduleUrl,
+				'sideNavs' => $currentSideNav['children'],
+				'sideTitle' => $currentSideNav['name_cn'],
+				'article' => $article,
+				'breadcrumb'=>$this->breadcrumb()
+			)
 		);
 		
-		$this->assign('sideTitleUrl',$moduleUrl);
-		$this->assign('sideNavs',$currentSideNav['children']);
-		$this->assign('sideTitle',$currentSideNav['name_cn']);
-		$this->assign('article',$article);
-		$this->assign('breadcrumb',$this->breadcrumb());
-		$this->seo($article['article_title']);
+		$this->seo($article['article_title'].' '.$currentSideNav['name_cn']);
 		
 		$this->display('common/art');
 	}

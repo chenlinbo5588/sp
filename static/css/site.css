@@ -762,7 +762,7 @@ input[type=text].validation_error {
 	color:#fff;
 }
 
-#homeNav li.current a.link0, #homeNav .current a.link1:hover {
+#homeNav li.current a.link0, #homeNav .current a.link1:hover,#homeNav li.selected a.link0 {
 	background:#ED6D00;
 	color:#fff;
 }
@@ -941,21 +941,26 @@ input[type=text].validation_error {
 
 .commonPg {
 	background:url(../img/cmp/2.jpg) no-repeat center center;
-	height:260px;
+	height:230px;
 }
 
 
 .newsPg {
 	background:url(../img/cmp/2.jpg) no-repeat center center;
-	height:260px;
+	height:230px;
 } 
 .productPg {
-	height:260px;
+	height:230px;
 	background:url(../img/cmp/3.jpg) no-repeat center center;
 }
- 
+
+.service {
+	height:230px;
+	background:url(../img/cmp/4.jpg) no-repeat center center;
+}
+
 .marketPg {
-	height:260px;
+	height:230px;
 	background:url(../img/cmp/2.jpg) no-repeat center center;
 }
 
@@ -1008,8 +1013,8 @@ input[type=text].validation_error {
 }
 
 .sideNav li.current {
-	
-	
+	border-bottom: 2px solid #35449D;
+    background-color: #e9e9e9;
 }
 
 
@@ -1035,6 +1040,11 @@ input[type=text].validation_error {
 
 .contentArea {
 	margin-left:210px;
+	border:1px solid #e1e1e1;
+	border-radius:5px;
+    -webkit-border-radius:5px;
+    -moz-border-radius:5px;
+    -o-border-radius:5px;
 }
 
 .contentArea .bd {

@@ -54,8 +54,21 @@ $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
 
-$route['index/article/(.*)\.html'] = 'index/article/$1';
-$route['([a-z]+)/(:num)/(:num)\.html'] = '$1/article/$2/$3';
-$route['news/(.*)\.html'] = 'news/$1';
-$route['product/(.*)\.html'] = 'product/$1';
+//首页
+$route['^index\.html'] = 'index';
+
+
+$route['^([a-z]+\d?)\/([a-z]+\d?)\.html'] = '$1/$2';
+
+//通用文章业
+$route['^index/article/(.*)\.html'] = 'index/article/$1';
+
+//网站文章详情页面
+$route['^([a-z]+)/(:num)/(:num)\.html'] = '$1/article/$2/$3';
+
+//新闻相关页面
+$route['^news/(.*)\.html'] = 'news/$1';
+
+//产品页面
+$route['^product/(.*)\.html'] = 'product/$1';
 

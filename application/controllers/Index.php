@@ -31,6 +31,8 @@ class Index extends Ydzj_Controller {
 		$this->assign('hotwords',$hotwords);
 		$this->assign('qiyeList',$qiyeList);
 		$this->assign('industryList',$industryList);
+		
+		$this->assign('currentModule','index');
 		$this->display();
 	}
 	
