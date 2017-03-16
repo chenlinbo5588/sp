@@ -50,6 +50,10 @@ class Navigation_service extends Base_service {
 	}
 	
 	
+	public function getInfoByUrl($url){
+		return $this->_navigationModel->getFirstByKey($url,'url_cn');
+	}
+	
 	
 	public function getParentsById($id = 0,$field = '*'){
 

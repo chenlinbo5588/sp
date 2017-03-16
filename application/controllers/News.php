@@ -4,26 +4,20 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class News extends Ydzj_Controller {
 	
 	private $sideNavs = null;
-	private $modKey = '';
 	private $topClassId = 0;
 	private $seoKeys = array();
 	
 	public function __construct(){
 		parent::__construct();
 		
-		$this->modKey = $this->input->get_post('catname');
-		
-		if(empty($this->modKey)){
-			$this->modKey = '新闻资讯';
-		}
-		
+		$this->assign('currentModule','news');
+		$this->modKey = '新闻资讯';
 		$this->assign('sideTitle',$this->modKey);
 		
-		$this->load->library(array('Cms_service','Goods_service'));
+		$this->load->library(array('Cms_service'));
 		
 		$articleClass = $this->Cms_Article_Class_Model->getList(array(
 			'where' => array(
-				'name' => $this->modKey,
 				'pid' => 0
 			)
 		));
@@ -39,7 +33,7 @@ class News extends Ydzj_Controller {
 			
 			if($sideNavs){
 				foreach($sideNavs as $nav){
-					$this->sideNavs[$nav['name']] = base_url('news/plist/'.$nav['id'].'.html');
+					$this->sideNavs[$nav['name']] = base_url('news/plist/ac/'.$nav['id'].'.html');
 				}
 			}
 			
@@ -58,12 +52,12 @@ class News extends Ydzj_Controller {
 	
 	public function plist()
 	{
-		
 		$param = $this->uri->ruri_to_assoc();
-		print_r($param);
 		
-		$keyword = $this->input->get_post('keyword') ? $this->input->get_post('keyword') : '';
-		$currentAcId = $this->input->get_post('ac_id');
+		//print_r($param);
+		
+		$keyword = $param['kw'];
+		$currentAcId = $param['ac'];
 		
 		if(empty($currentAcId)){
 			$currentAcId = $this->topClassId;
@@ -94,8 +88,7 @@ class News extends Ydzj_Controller {
 				'current_page' => $currentPage,
 				//'call_js' => 'search_page',
 				'form_id' => '#listForm',
-				'anchor' => 'listmao',
-				'base_link' => site_url("news/plist/{$currentAcId}/{$keyword}/")
+				'base_link' => base_url("news/plist/ac/{$currentAcId}.html?kw={$keyword}")
 			)
 		);
 		
@@ -160,7 +153,6 @@ class News extends Ydzj_Controller {
 			
 			foreach($parents as $pitem){
 				$this->seoKeys[] = $pitem['name'];
-				
 				$this->_navigation[$pitem['name']] = site_url("news/plist/{$pitem['ac_id']}/{$pitem['id']}.html");
 			}
 		}

@@ -91,18 +91,9 @@ class Ydzj_Controller extends MY_Controller {
 	}
 	
 	
-	
-	/**
-	 * 通用网站文章方法
-	 */
-	public function article(){
-		
-		$navId = $this->uri->rsegment(3);
-		$articleId = $this->uri->rsegment(4);
+	protected function prepareSideNav($navId){
 		
 		$navigationInfo = $this->Navigation_Model->getFirstByKey($navId,'id');
-		$article = $this->Article_Model->getFirstByKey($articleId,'article_id');
-		$articleClassInfo = $this->Article_Class_Model->getFirstByKey($article['ac_id'],'ac_id');
 		
 		$currentTopIndex = 0;
 		$findNavId = $navId;
@@ -126,7 +117,23 @@ class Ydzj_Controller extends MY_Controller {
 			}
 		}
 		
-		$currentSideNav = $this->_siteNavs[$currentTopIndex];
+		return array($this->_siteNavs[$currentTopIndex],$navigationInfo);
+		
+	}
+	
+	
+	/**
+	 * 通用网站文章方法
+	 */
+	public function article(){
+		
+		$navId = $this->uri->rsegment(3);
+		$articleId = $this->uri->rsegment(4);
+		
+		$article = $this->Article_Model->getFirstByKey($articleId,'article_id');
+		$articleClassInfo = $this->Article_Class_Model->getFirstByKey($article['ac_id'],'ac_id');
+		
+		list($currentSideNav,$navigationInfo) = $this->prepareSideNav($navId);
 		
 		//print_r($this->uri);
 		//print_r($this->_siteNavs);
@@ -142,7 +149,6 @@ class Ydzj_Controller extends MY_Controller {
 			$this->_navigation[$navigationInfo['name_cn']] = str_replace('{ID}',$navigationInfo['id'],$navigationInfo['url_cn']);
 		}
 		
-		
 		$this->assign(
 			array(
 				'currentModule' => $this->uri->rsegment(1),
@@ -156,7 +162,6 @@ class Ydzj_Controller extends MY_Controller {
 		);
 		
 		$this->seo($article['article_title'].' '.$currentSideNav['name_cn']);
-		
 		$this->display('common/art');
 	}
 	

@@ -58,7 +58,7 @@ $route['translate_uri_dashes'] = FALSE;
 $route['^index\.html'] = 'index';
 
 
-$route['^([a-z]+\d?)\/([a-z]+\d?)\.html'] = '$1/$2';
+$route['^([a-z]+)\/([a-z]+)\.html'] = '$1/$2';
 
 //通用文章业
 $route['^index/article/(.*)\.html'] = 'index/article/$1';

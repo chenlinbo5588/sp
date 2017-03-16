@@ -10,6 +10,7 @@ class Service extends Ydzj_Controller {
 	}
 	
 	
+	/*
 	public function map(){
 		$key = '在线地图';
 		
@@ -21,6 +22,7 @@ class Service extends Ydzj_Controller {
 		$this->assign('company_address',$this->_siteSetting['company_address']);
 		$this->display();
 	}
+	*/
 	
 	private function _getRules(){
 		
@@ -67,10 +69,7 @@ class Service extends Ydzj_Controller {
 	
 	public function suggestion(){
 		$feedback = '';
-		
-		$key = '投诉建议';
-		$this->_navigation[$key] = base_url('contacts/suggestion.html');
-		$this->assign('breadcrumb',$this->breadcrumb());
+		$itemSide = $this->navigation_service->getInfoByUrl(base_url('service/suggestion.html'));
 		
 		if($this->isPostRequest()){
 			
@@ -91,9 +90,30 @@ class Service extends Ydzj_Controller {
 			}
 		}
 		
-		$this->assign('info',$info);
-		$this->assign('feedback',$feedback);
-		$this->seo($key);
+		list($currentSideNav,$navigationInfo) = $this->prepareSideNav($itemSide['id']);
+		$moduleUrl = str_replace('{ID}',$currentSideNav['id'],$currentSideNav['url_cn']);
+		
+		$this->_navigation = array(
+			'首页' => base_url('/'),
+			$currentSideNav['name_cn'] => $moduleUrl,
+		);
+		$this->_navigation[$itemSide['name_cn']] = base_url('service/suggestion.html');
+		
+		$this->assign(
+			array(
+			    'info' => $info,
+			    'feedback'=>$feedback,
+				'currentModule' => $this->uri->rsegment(1),
+				'currentSideUrl' => base_url($this->uri->uri_string()),
+				'sideTitleUrl' => $moduleUrl,
+				'sideNavs' => $currentSideNav['children'],
+				'sideTitle' => $currentSideNav['name_cn'],
+				'breadcrumb'=>$this->breadcrumb()
+			)
+		);
+		
+		
+		$this->seo($itemSide['name_cn'].' '.$currentSideNav['name_cn']);
 		$this->display();
 	}
 }
