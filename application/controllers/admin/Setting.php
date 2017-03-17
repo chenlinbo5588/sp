@@ -25,7 +25,7 @@ class Setting extends Ydzj_Admin_Controller {
 			'site_name',
 			'site_logo',
 			'icp_number',
-			'site_phone',//客服电话
+			'site_tel', //客服电话
 			'site_qq',
 			'site_email',
 			'statistics_code',
@@ -35,7 +35,7 @@ class Setting extends Ydzj_Admin_Controller {
 			'company_address',
 			'company_intro',
 			'site_mobile',
-			'site_tel', //招商电话
+			'site_phone',//招商电话
 			'site_faxno',
 		);
 		

@@ -4,7 +4,6 @@
 		<div class="boxz clearfix mg10">
 			<form id="listForm" name="listForm" action="{base_url('news/plist.html')}" method="get">
 			<input type="hidden" name="page" value="{$currentPage}"/>
-			<input type="hidden" name="ac_id" value="{$currentAcId}"/>
 			{if !$isMobile}{include file="./news_side.tpl"}{/if}
 			<div class="contentArea">
 				<div class="breadcrumb"><span>您所在的位置:</span>{$breadcrumb}</div>

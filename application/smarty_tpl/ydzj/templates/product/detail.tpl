@@ -2,7 +2,7 @@
 	<div class="linePg">
 		<div class="{$pgClass}"></div>
 		<div class="boxz clearfix mg10">
-			<form id="detailForm" name="detailForm" action="{site_url('product/plist')}" method="get">
+			<form id="detailForm" name="detailForm" action="{base_url('product/plist')}" method="get">
 			{if !$isMobile}{include file="./product_side.tpl"}{/if}
 			<div class="contentArea">
 				<div class="breadcrumb"><span>您所在的位置:</span>{$breadcrumb}</div>
@@ -27,8 +27,8 @@
 							{$info['goods_intro']}
 						</div>
 						<div class="articleRelate clearfix">
-							<div class="fr"><span>上一个产品：{if empty($preProduct)}无{else}<a href="{site_url('product/detail/?id=')}{$preProduct['goods_id']}&gc_id={$preProduct['gc_id']}">{$preProduct['goods_name']|escape}</a>{/if}</div>
-							<div class="fl"><span>下一个产品：{if empty($nextProduct)}无{else}<a href="{site_url('product/detail/?id=')}{$nextProduct['goods_id']}&gc_id={$nextProduct['gc_id']}">{$nextProduct['goods_name']|escape}</a>{/if}</div>
+							<div class="fr"><span>上一个产品：{if empty($preProduct)}无{else}<a href="{$preProduct['url']}">{$preProduct['goods_name']|escape}</a>{/if}</div>
+							<div class="fl"><span>下一个产品：{if empty($nextProduct)}无{else}<a href="{$nextProduct['url']}">{$nextProduct['goods_name']|escape}</a>{/if}</div>
 						</div>
 					</div>
 					{else}

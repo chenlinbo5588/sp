@@ -49,10 +49,17 @@
           <td class="vatop tips"><span class="vatop rowform"></span></td>
         </tr>
         <tr>
-          <td colspan="2" class="required"><label for="site_phone">客服电话:</label></td>
+          <td colspan="2" class="required"><label for="site_phone">招商电话:</label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input id="site_phone" name="site_phone" value="{$currentSetting['site_phone']['value']|escape}" class="txt" type="text" /></td>
+          <td class="vatop tips"><span class="vatop rowform">前台页面下侧可以显示，方便访问者遇到问题时咨询，多个请用半角逗号 "," 隔开</span></td>
+        </tr>
+        <tr>
+          <td colspan="2" class="required"><label for="site_tel">客服电话:</label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform"><input id="site_tel" name="site_tel" value="{$currentSetting['site_tel']['value']|escape}" class="txt" type="text" /></td>
           <td class="vatop tips"><span class="vatop rowform">前台页面下侧可以显示，方便访问者遇到问题时咨询，多个请用半角逗号 "," 隔开</span></td>
         </tr>
         <tr>
@@ -62,13 +69,7 @@
           <td class="vatop rowform"><input id="site_mobile" name="site_mobile" value="{$currentSetting['site_mobile']['value']|escape}" class="txt" type="text" /></td>
           <td class="vatop tips"><span class="vatop rowform">前台页面下侧可以显示，方便访问者遇到问题时咨询，多个请用半角逗号 "," 隔开</span></td>
         </tr>
-        <tr>
-          <td colspan="2" class="required"><label for="site_tel">招商电话:</label></td>
-        </tr>
-        <tr class="noborder">
-          <td class="vatop rowform"><input id="site_tel" name="site_tel" value="{$currentSetting['site_tel']['value']|escape}" class="txt" type="text" /></td>
-          <td class="vatop tips"><span class="vatop rowform">前台页面下侧可以显示，方便访问者遇到问题时咨询，多个请用半角逗号 "," 隔开</span></td>
-        </tr>
+        
         <tr>
           <td colspan="2" class="required"><label for="site_faxno">传真号码:</label></td>
         </tr>

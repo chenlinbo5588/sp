@@ -2,9 +2,9 @@
 	<div class="linePg">
 		<div class="{$pgClass}"></div>
 		<div class="boxz clearfix mg10">
-			<form id="listForm" name="listForm" action="{site_url('product/plist')}" method="get">
+			<form id="listForm" name="listForm" action="{base_url('product/plist.html')}" method="get">
 			<input type="hidden" name="page" value="{$currentPage}"/>
-			<input type="hidden" name="gc_id" value="{$currentGcId}"/>
+			
 			{if !$isMobile}{include file="./product_side.tpl"}{/if}
 			<div class="contentArea">
 				<div class="breadcrumb"><span>您所在的位置:</span>{$breadcrumb}</div>
@@ -13,9 +13,9 @@
 					<ul class="liststyle1 productList clearfix">
 					{foreach from=$list['data'] item=item}
 					<li class="liststyle1Item">
-						<a class="priviewLink" href="{site_url('product/detail/?id=')}{$item['goods_id']}&gc_id={$item['gc_id']}"><img class="previewPic" src="{if $item['goods_pic_m']}{resource_url($item['goods_pic_m'])}{else if $item['goods_pic_b']}{resource_url($item['goods_pic_b'])}{else}{resource_url($item['goods_pic'])}{/if}" alt="{$item['article_title']|escape}"/></a>
+						<a class="priviewLink" href="{base_url('product/detail/'|cat:$item['gc_id']|cat:'_'|cat:$item['goods_id']|cat:'.html')}"><img class="previewPic" src="{if $item['goods_pic_m']}{resource_url($item['goods_pic_m'])}{else if $item['goods_pic_b']}{resource_url($item['goods_pic_b'])}{else}{resource_url($item['goods_pic'])}{/if}" alt="{$item['article_title']|escape}"/></a>
 						<div class="previewCont">
-							<h4 class="productName"><a href="{site_url('product/detail/?id=')}{$item['goods_id']}&gc_id={$item['gc_id']}">{$item['goods_name']|escape}</a></h4>
+							<h4 class="productName"><a href="{base_url('product/detail/'|cat:$item['gc_id']|cat:'_'|cat:$item['goods_id']|cat:'.html')}">{$item['goods_name']|escape}</a></h4>
 							<p class="productDetail mute">{$item['digest']}</p>
 						</div>
 					</li>

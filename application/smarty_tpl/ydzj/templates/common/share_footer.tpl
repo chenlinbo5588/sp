@@ -18,7 +18,7 @@
                                 <ul id="contact_way">
                                     {*<li class="first"><span>客服热线:</span><strong>{$siteSetting['site_phone']|escape}</strong><li>
                                     <li><span>移动电话:</span><strong>{$siteSetting['site_mobile']|escape}</strong><li>*}
-                                    <li><span>招商电话:</span><strong>{$siteSetting['site_tel']|escape}</strong><li>
+                                    <li><span>客服电话:</span><strong>{$siteSetting['site_tel']|escape}</strong><li>
                                     {*<li><span>传真: </span><strong>{$siteSetting['site_faxno']|escape}</strong><li>*}
                                 </ul>
                             </td>

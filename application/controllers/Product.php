@@ -10,30 +10,36 @@ class Product extends Ydzj_Controller {
 	
 	public function __construct(){
 		parent::__construct();
-		$this->assign('pgClass',strtolower(get_class()).'Pg');
-		$this->assign('sideTitle',$this->modKey);
+		
+		$navigationInfo = $this->navigation_service->getInfoByName('产品中心');
 		
 		$this->load->library('Goods_service');
-		
 		$topClass = $this->Goods_Class_Model->getList(array(
 			'where' => array(
 				'gc_parent_id' => 0
 			)
 		));
 		
-		
 		if($topClass){
 			foreach($topClass as $nav){
-				$this->sideNavs[$nav['gc_name']] = site_url('product/plist/?gc_id=').$nav['gc_id'];
+				$this->sideNavs[$nav['gc_name']] = base_url("product/plist/{$nav['gc_id']}.html");
 			}
 		}
 		
-		
 		$this->_navigation = array(
-			'首页' => site_url('/'),
-			$this->modKey => site_url('product/plist'),
+			'首页' => base_url('/'),
+			$this->modKey => base_url('product/plist.html'),
 		);
-		$this->assign('sideNavs',$this->sideNavs);
+		
+		
+		$this->assign(array(
+			'currentModule' => 'product',
+			'pgClass' => 'productPg',
+			'sideTitle' => $navigationInfo['name_cn'],
+			'sideTitleUrl' => $navigationInfo['url_cn'],
+			'sideNavs' => $this->sideNavs
+		));
+		
 		
 	}
 	
@@ -41,8 +47,10 @@ class Product extends Ydzj_Controller {
 	
 	public function plist()
 	{
+		
+		$currentGcId = $this->uri->rsegment(3);
 		$keyword = $this->input->get_post('keyword') ? $this->input->get_post('keyword') : '';
-		$currentGcId = $this->input->get_post('gc_id');
+		
 		
 		if(empty($currentGcId)){
 			$currentGcId = 0;
@@ -66,8 +74,7 @@ class Product extends Ydzj_Controller {
 				'page_size' => 16,
 				'current_page' => $currentPage,
 				'form_id' => '#listForm',
-				'anchor' => 'listmao',
-				'base_link' => site_url('product/plist/?')."gc_id={$currentGcId}&keyword={$keyword}"
+				'base_link' => base_url("product/plist/{$currentGcId}.html?&keyword={$keyword}")
 			)
 		);
 		
@@ -77,9 +84,7 @@ class Product extends Ydzj_Controller {
 		
 		$list = $this->Goods_Model->getList($condition);
 		
-		
 		$cutLen = 300;
-		
 		if($this->agent->is_mobile()){
 			$cutLen = 80;
 		}
@@ -127,9 +132,10 @@ class Product extends Ydzj_Controller {
 				$parents = array_reverse($parents);
 			}
 			
+			
 			foreach($parents as $pitem){
 				$this->seoKeys[] = $pitem['gc_name'];
-				$this->_navigation[$pitem['gc_name']] = site_url('product/plist?id='.$pitem['gc_id']);
+				$this->_navigation[$pitem['gc_name']] = base_url("product/plist/{$pitem['gc_id']}.html");
 			}
 		}
 		
@@ -139,13 +145,17 @@ class Product extends Ydzj_Controller {
 	
 	public function detail(){
 		
-		$id = $this->input->get_post('id');
-		$gc_id = $this->input->get_post('gc_id');
+		//$id = $this->input->get_post('id');
+		//$gc_id = $this->input->get_post('gc_id');
+		
+		$idInfo = $this->uri->rsegment(3);
+		
+		//print_r($idInfo);
+		list($gc_id,$id )  = explode('_',$idInfo);
+		
 		$info = $this->Goods_Model->getFirstByKey($id,'goods_id');
 		
-		
 		if($info){
-			
 			if($info['goods_click'] == 0){
 				$info['goods_click']++;
 			}
@@ -162,15 +172,23 @@ class Product extends Ydzj_Controller {
 			
 			$this->_breadCrumbLinks($info['gc_id']);
 			
-			
 			$nextProduct = $this->goods_service->getNextByProduct($info);
 			$preProduct = $this->goods_service->getPreByProduct($info);
 			
-			$this->assign('imgList',$currentFiles);
-			$this->assign('nextProduct',$nextProduct);
-			$this->assign('preProduct',$preProduct);
+			if($nextProduct){
+				$nextProduct['url'] = base_url("product/detail/{$nextProduct['gc_id']}_{$nextProduct['goods_id']}.html");
+				$this->assign('nextProduct',$nextProduct);
+			}
 			
-			$this->_navigation[$info['goods_name']] = site_url('product/plist?id='.$info['id'].'&=gc_id='.$info['gc_id']);
+			if($preProduct){
+				$preProduct['url'] = base_url("product/detail/{$preProduct['gc_id']}_{$preProduct['goods_id']}.html");
+				$this->assign('preProduct',$preProduct);
+			}
+			
+			$this->assign('imgList',$currentFiles);
+			
+			
+			$this->_navigation[$info['goods_name']] = base_url('product/detail/'.$info['gc_id'].'_'.$info['goods_id'].'.html');
 			
 			$this->Goods_Model->increseOrDecrease(array(
 				array('key' => 'goods_click','value'=> 'goods_click + 1')

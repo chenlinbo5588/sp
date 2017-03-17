@@ -10,12 +10,9 @@ class News extends Ydzj_Controller {
 	public function __construct(){
 		parent::__construct();
 		
-		$this->assign('currentModule','news');
-		$this->modKey = '新闻资讯';
-		$this->assign('sideTitle',$this->modKey);
+		$navigationInfo = $this->navigation_service->getInfoByName('新闻资讯');
 		
 		$this->load->library(array('Cms_service'));
-		
 		$articleClass = $this->Cms_Article_Class_Model->getList(array(
 			'where' => array(
 				'pid' => 0
@@ -33,31 +30,31 @@ class News extends Ydzj_Controller {
 			
 			if($sideNavs){
 				foreach($sideNavs as $nav){
-					$this->sideNavs[$nav['name']] = base_url('news/plist/ac/'.$nav['id'].'.html');
+					$this->sideNavs[$nav['name']] = base_url('news/plist/'.$nav['id'].'.html');
 				}
 			}
-			
 		}
 		
 		
-		$this->assign('sideNavs',$this->sideNavs);
+		$this->assign(array(
+			'currentModule' => 'news',
+			'pgClass' => 'newsPg',
+			'sideTitle' => $navigationInfo['name_cn'],
+			'sideTitleUrl' => $navigationInfo['url_cn'],
+			'sideNavs' => $this->sideNavs
+		));
 		
 		$this->_navigation = array(
-			'首页' => site_url('/'),
+			'首页' => base_url('/'),
 		);
-		
 	}
 	
 	
 	
 	public function plist()
 	{
-		$param = $this->uri->ruri_to_assoc();
-		
+		$currentAcId = $this->uri->rsegment(3);
 		//print_r($param);
-		
-		$keyword = $param['kw'];
-		$currentAcId = $param['ac'];
 		
 		if(empty($currentAcId)){
 			$currentAcId = $this->topClassId;
@@ -70,6 +67,7 @@ class News extends Ydzj_Controller {
 		
 		//print_r($childIds);
 		$currentPage = $this->input->get_post('page') ? $this->input->get_post('page') : 1;
+		$keyword = $this->input->get_post('keyword');
 		
 		//echo $currentPage;
 		$condition = array(
@@ -88,7 +86,7 @@ class News extends Ydzj_Controller {
 				'current_page' => $currentPage,
 				//'call_js' => 'search_page',
 				'form_id' => '#listForm',
-				'base_link' => base_url("news/plist/ac/{$currentAcId}.html?kw={$keyword}")
+				'base_link' => base_url("news/plist/{$currentAcId}.html?keyword={$keyword}")
 			)
 		);
 		
@@ -111,7 +109,7 @@ class News extends Ydzj_Controller {
 				}
 				
 				if(empty($newsArtile['jump_url'])){
-					$newsArtile['jump_url'] = site_url("news/detail/{$newsArtile['ac_id']}/{$newsArtile['id']}");
+					$newsArtile['jump_url'] = base_url("news/detail/{$newsArtile['ac_id']}_{$newsArtile['id']}.html");
 				}
 				
 				if(trim($newsArtile['digest'])){
@@ -151,9 +149,10 @@ class News extends Ydzj_Controller {
 				$parents = array_reverse($parents);
 			}
 			
+			//print_r($parents);
 			foreach($parents as $pitem){
 				$this->seoKeys[] = $pitem['name'];
-				$this->_navigation[$pitem['name']] = site_url("news/plist/{$pitem['ac_id']}/{$pitem['id']}.html");
+				$this->_navigation[$pitem['name']] = site_url("news/plist/{$pitem['id']}.html");
 			}
 		}
 		
@@ -162,11 +161,10 @@ class News extends Ydzj_Controller {
 	
 	
 	public function detail(){
+		$idInfo = $this->uri->rsegment(3);
 		
-		$id = $this->input->get_post('id');
-		$ac_id = $this->input->get_post('ac_id');
+		list($ac_id,$id )  = explode('_',$idInfo);
 		$info = $this->Cms_Article_Model->getFirstByKey($id,'id');
-		
 		
 		if($info){
 			
@@ -178,12 +176,15 @@ class News extends Ydzj_Controller {
 			$this->_breadCrumbLinks($info['ac_id']);
 			$nextArticle = $this->cms_service->getNextByArticle($info);
 			$preArticle = $this->cms_service->getPreByArticle($info);
+			
+			//print_r($preArticle);
+			
 			if($nextArticle && empty($nextArticle['jump_url'])){
-				$nextArticle['jump_url'] = site_url("news/detail/{$nextArticle['ac_id']}/{$nextArticle['id']}.html");
+				$nextArticle['article_url'] = base_url("news/detail/{$nextArticle['ac_id']}_{$nextArticle['id']}.html");
 			}
 			
-			if($preArticle && empty($preArticle['article_url'])){
-				$preArticle['jump_url'] = site_url("news/detail/{$preArticle['ac_id']}/{$preArticle['id']}.html");
+			if($preArticle && empty($preArticle['jump_url'])){
+				$preArticle['article_url'] = base_url("news/detail/{$preArticle['ac_id']}_{$preArticle['id']}.html");
 			}
 			
 			//print_r($preArticle);

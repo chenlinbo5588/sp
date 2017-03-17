@@ -37,33 +37,5 @@ class Index extends Ydzj_Controller {
 	}
 	
 	
-	/**
-	 * 通用文章详情
-	 */
-	public function article(){
-		
-		$this->load->model('Article_Model');
-		$articleId = $this->uri->rsegment(3);
-		
-		
-		
-		
-		
-		/*
-		$this->assign('sideNavs',$this->sideNavs);
-		$this->assign('sideTitle',$this->modKey);
-		$this->assign('sideTitleUrl',$tempAr[$this->modKey]['url']);
-		*/
-		
-		$this->_navigation = array(
-			'首页' => site_url('/'),
-			$this->modKey => $tempAr[$this->modKey]['url']
-		);
-		
-		
-		
-		
-		$this->display('common/art');
-	}
 
 }
