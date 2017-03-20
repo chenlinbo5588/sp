@@ -12,7 +12,7 @@
 				    	<p class="lixi1"> <a>手机:13758123686</a><span> (销售部)</span></p>
 				    	<p class="lixi2"> <a>电话:0571-86759585</a><span> (总机)</span></p>
 				    </div>
-				    <div id="langDiv"><a class="cn" href="/?lang=cn"><img src="{resource_url('img/chn.png')}"/>中文版 </a> | <a class="eng" href="{site_url('/?lang=en')}"><img src="{resource_url('img/gbr.png')}"/>English </a></div>
+				    <div id="langDiv"><a class="cn" href="{base_url('/?lang=chinese')}"><img src="{resource_url('img/chn.png')}"/>中文版 </a> | <a class="eng" href="{base_url('/?lang=english')}"><img src="{resource_url('img/gbr.png')}"/>English </a></div>
 	           		{if $isMobile}
 	           		<a href="javascript:void(0);" id="naviText">导航</a>
 	           		{/if}

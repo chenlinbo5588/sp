@@ -4,6 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class MY_Controller extends CI_Controller {
 
 	public $_inApp = false;
+	public $_currentLang = '';
 	public $_verifyName = 'verify';
 	public $_lastVisit = 'lastvisit';
 	public $_reqtime ;
@@ -25,17 +26,57 @@ class MY_Controller extends CI_Controller {
 		parent::__construct();
 		$this->_reqtime = $this->input->server('REQUEST_TIME');
 		
+		
+		$this->_initLanguage();
+		
 		$this->_initLibrary();
 		$this->_initApp();
 		
 		$this->_initSmarty();
 		$this->_security();
 		$this->_initMobile();
+		
+		
+		
+		
 		$this->_initSiteSetting();
 		$this->_initSeoSetting();
 		
 		$this->smartyConfig();
 	}
+	
+	
+	public function _initLanguage(){
+		
+		$lang = $this->input->cookie('lang');
+		$lang2 = $this->input->get('lang');
+		if(empty($lang)){
+			if($lang2){
+				if(in_array(array('chinese','english'),$lang)){
+					$this->_currentLang = $lang;
+					$this->input->set_cookie('lang',$lang,CACHE_ONE_MONTH);
+				}
+			}else{
+				$this->input->set_cookie('lang','cn',CACHE_ONE_MONTH);
+			}
+		}else if($lang != $lang2 && !empty($lang2)){
+			if(in_array(array('chinese','english'),$lang2)){
+				$this->_currentLang = $lang2;
+				$this->input->set_cookie('lang',$lang2,CACHE_ONE_MONTH);
+			}
+		}
+		
+		
+		
+		
+		if(empty($this->_currentLang)){
+			$this->_currentLang = 'chinese';
+		}
+		
+		$this->config->set_item('language',$this->_currentLang);
+		
+	}
+	
 
 
 	protected function _verify($type = 'alnum' ,$len = 5 , $seconds = 120){
@@ -154,7 +195,6 @@ class MY_Controller extends CI_Controller {
 	    	$this->getCacheObject()->save(CACHE_KEY_SiteSetting,$settingList,CACHE_ONE_DAY);
     	}
     	
-    	//var_dump($settingList);
     	$this->_siteSetting = $settingList;
     	
     	$this->assign('siteSetting',$this->_siteSetting);
@@ -307,6 +347,10 @@ class MY_Controller extends CI_Controller {
     	
     	$this->_smarty->assign($this->_seo);
     	
+    	//$this->_smarty->assign('siteConfig',$this->config->config);
+    	
+    	$this->loadPageLang();
+    	
     	
     	if($this->input->is_ajax_request()){
     		$viewname = $viewname.'_ajax';
@@ -318,6 +362,7 @@ class MY_Controller extends CI_Controller {
     	
     	$realPath = $tplDir.$viewname.'.tpl';
     	//echo $realPath;
+    	
     	if(file_exists($realPath)){
     		$this->output->set_output($this->_smarty->fetch($realPath));
     	}else{
@@ -325,6 +370,26 @@ class MY_Controller extends CI_Controller {
     	}
     	
     }
+    
+    
+    /**
+     * 
+     */
+    public function loadPageLang(){
+    	$page = $this->uri->rsegment_array();
+    	
+    	print_r($page);
+    	//echo APPPATH."language/{$this->_currentLang}/{$page[2]}/{$page[1]}_lang.php";
+    	if(file_exists(APPPATH."language/{$this->_currentLang}/{$page[2]}/{$page[1]}_lang.php")){
+    		$langArray = $this->lang->load($page[1],"{$this->_currentLang}/{$page[2]}",true);
+    		
+    		print_r($langArray);
+    	}
+    	
+    	
+    }
+    
+    
     
     public function seoTitle($title){
     	$this->_seo['SEO_title'] = $title;
