@@ -24,11 +24,18 @@
     <table class="table tb-type2">
       <tbody>
         <tr class="noborder">
-          <td colspan="2" class="required"><label class="validation" for="gc_name">分类名称:</label></td>
+          <td colspan="2" class="required"><label class="validation" for="name_cn">分类中文名称:</label></td>
         </tr>
         <tr class="noborder">
-          <td class="vatop rowform"><input type="text" value="{$info['gc_name']|escape}" name="gc_name" id="gc_name" class="txt"></td>
-          <td class="vatop tips">{form_error('gc_name')}</td>
+          <td class="vatop rowform"><input type="text" value="{$info['name_cn']|escape}" name="name_cn" id="name_cn" class="txt"></td>
+          <td class="vatop tips">{form_error('name_cn')}</td>
+        </tr>
+        <tr class="noborder">
+          <td colspan="2" class="required"><label class="validation" for="name_en">分类英文名称:</label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform"><input type="text" value="{$info['name_en']|escape}" name="name_en" id="name_en" class="txt"></td>
+          <td class="vatop tips">{form_error('name_en')}</td>
         </tr>
         <tr>
           <td colspan="2" class="required"><label for="gc_parent_id">上级分类:</label></td>

@@ -73,7 +73,8 @@ class Cms_Article_Class extends Ydzj_Admin_Controller {
 	
 	private function _getRules($action = 'add'){
 		
-		$this->form_validation->set_rules('name','名称','required|min_length[1]|max_length[30]');
+		$this->form_validation->set_rules('name_cn','中文名称','required|min_length[1]|max_length[30]');
+		$this->form_validation->set_rules('name_en','英文名称','required|min_length[1]|max_length[30]');
 		$this->form_validation->set_rules('list_tplname','文章列表模版名称','required|min_length[1]|max_length[30]');
 		$this->form_validation->set_rules('detail_tplname','文章详情页模版名称','required|min_length[1]|max_length[30]');
 		
@@ -170,7 +171,8 @@ class Cms_Article_Class extends Ydzj_Admin_Controller {
 	
 	private function _prepareData($action = 'add'){
 		$info = array(
-			'name' => $this->input->post('name'),
+			'name_cn' => $this->input->post('name_cn'),
+			'name_en' => $this->input->post('name_en'),
 			'pid' => $this->input->post('pid') ? $this->input->post('pid') : 0,
 			'list_tplname' => $this->input->post('list_tplname'),
 			'detail_tplname' => $this->input->post('detail_tplname'),

@@ -160,7 +160,8 @@ class Goods_Class extends Ydzj_Admin_Controller {
 	
 	private function _getRules($action = 'add'){
 		
-		$this->form_validation->set_rules('gc_name','分类名称',"required");
+		$this->form_validation->set_rules('name_cn','分类中文名称',"required|min_length[1]|max_length[100]");
+		$this->form_validation->set_rules('name_en','分类英文名称',"required|min_length[1]|max_length[100]");
 		
 		if($this->input->post('gc_parent_id')){
 			$this->form_validation->set_rules('gc_parent_id','上级分类', "in_db_list[{$this->Goods_Class_Model->_tableRealName}.gc_id]|callback_checkpid[{$action}]");
@@ -182,7 +183,8 @@ class Goods_Class extends Ydzj_Admin_Controller {
 	private function _prepareGoodClassData(){
 		
 		$info = array(
-			'gc_name' => $this->input->post('gc_name'),
+			'name_cn' => $this->input->post('name_cn'),
+			'name_en' => $this->input->post('name_en'),
 			'gc_parent_id' => $this->input->post('gc_parent_id') ? $this->input->post('gc_parent_id') : 0,
 			'gc_pic_id' => $this->input->post('gc_pic_id') ? $this->input->post('gc_pic_id') : 0,
 			'gc_pic' => $this->input->post('gc_pic') ? $this->input->post('gc_pic') : '',
@@ -255,7 +257,7 @@ class Goods_Class extends Ydzj_Admin_Controller {
 						$tmp[] = '';
 					}
 					//分类名称
-					$tmp['gc_name'] = $v['gc_name'];
+					$tmp['name_cn'] = $v['name_cn'];
 					//转码 utf-gbk
 					if (strtoupper(config_item('charset')) == 'UTF-8'){
 						switch ($_POST['if_convert']){
@@ -329,7 +331,7 @@ class Goods_Class extends Ydzj_Admin_Controller {
 					$insert_array = array();
 					$insert_array['gc_sort'] = $tmp_array[0];
 					$insert_array['gc_parent_id'] = $$tmp_deep;
-					$insert_array['gc_name'] = $tmp_array[count($tmp_array)-1];
+					$insert_array['name_cn'] = $tmp_array[count($tmp_array)-1];
 					$gc_id = $this->Goods_Class_Model->_add($insert_array);
 					
 					//赋值这个深度父ID
@@ -371,7 +373,7 @@ class Goods_Class extends Ydzj_Admin_Controller {
 						$insert_array = array();
 						$insert_array['gc_sort'] = $tmp_array[0];
 						$insert_array['gc_parent_id'] = $$tmp_deep;
-						$insert_array['gc_name'] = $tmp_array[count($tmp_array)-1];
+						$insert_array['name_cn'] = $tmp_array[count($tmp_array)-1];
 						$gc_id = $this->Goods_Class_Model->_add($insert_array);
 						
 						//赋值这个深度父ID
@@ -484,15 +486,15 @@ class Goods_Class extends Ydzj_Admin_Controller {
 				$update_tag	= array();
 				if(isset($gc_list['0']['gc_id']) && $gc_list['0']['gc_id'] != '0'){
 					$update_tag['gc_id_1']		= $gc_list['0']['gc_id'];
-					$update_tag['gc_tag_name']	.= $gc_list['0']['gc_name'];
+					$update_tag['gc_tag_name']	.= $gc_list['0']['name_cn'];
 				}
 				if(isset($gc_list['1']['gc_id']) && $gc_list['1']['gc_id'] != '0'){
 					$update_tag['gc_id_2']		= $gc_list['1']['gc_id'];
-					$update_tag['gc_tag_name']	.= "&nbsp;&gt;&nbsp;".$gc_list['1']['gc_name'];
+					$update_tag['gc_tag_name']	.= "&nbsp;&gt;&nbsp;".$gc_list['1']['name_cn'];
 				}
 				if(isset($gc_list['2']['gc_id']) && $gc_list['2']['gc_id'] != '0'){
 					$update_tag['gc_id_3']		= $gc_list['2']['gc_id'];
-					$update_tag['gc_tag_name']	.= "&nbsp;&gt;&nbsp;".$gc_list['2']['gc_name'];
+					$update_tag['gc_tag_name']	.= "&nbsp;&gt;&nbsp;".$gc_list['2']['name_cn'];
 				}
 				unset($gc_list);
 				

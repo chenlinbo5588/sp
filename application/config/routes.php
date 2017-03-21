@@ -63,7 +63,7 @@ $route['^index\.html'] = 'index';
 //$route['^index/article/(.*)\.html'] = 'index/article/$1';
 
 //网站文章详情页面
-$route['^article/([a-z]+)/(:num)_(:num)\.html'] = '$1/article/$2/$3';
+$route['^([a-z]+)/(:num)_(:num)\.html'] = '$1/article/$2/$3';
 
 //相关页面
 $route['^news/(.*)\.html'] = 'news/$1';

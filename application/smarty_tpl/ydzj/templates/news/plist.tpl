@@ -6,7 +6,7 @@
 			<input type="hidden" name="page" value="{$currentPage}"/>
 			{if !$isMobile}{include file="./news_side.tpl"}{/if}
 			<div class="contentArea">
-				<div class="breadcrumb"><span>您所在的位置:</span>{$breadcrumb}</div>
+				<div class="breadcrumb"><span>{$your_position}:</span>{$breadcrumb}</div>
 				<div class="bd bdlist">
 					<a name="listmao"></a>
 					<ul class="newsList clearfix">
@@ -16,7 +16,7 @@
 						<span class="pubtime">【{$item['publish_time']|date_format:"%Y-%m-%d"}】</span>
 					</li>
 					{foreachelse}
-					<li>没有找到符合得记录</li>
+					<li>{$not_found}</li>
 					{/foreach}
 					</ul>
 				</div>

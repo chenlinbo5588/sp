@@ -135,7 +135,7 @@ class Brand extends Ydzj_Admin_Controller {
 		
 		if($info['class_id']){
 			$goodsClassInfo = $this->Goods_Class_Model->getFirstByKey($info['class_id'],'gc_id');
-			$info['brand_class'] = $goodsClassInfo['gc_name'];
+			$info['brand_class'] = $goodsClassInfo['name_cn'];
 		}
 		
 		return $info;

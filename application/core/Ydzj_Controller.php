@@ -139,14 +139,25 @@ class Ydzj_Controller extends MY_Controller {
 		//print_r($this->_siteNavs);
 		//$this->sideNavs = $tempAr[$this->modKey]['sideNav'];
 		$moduleUrl = str_replace('{ID}',$currentSideNav['id'],$currentSideNav['url_cn']);
-		//@todo 需要支持中英文
+		
+		$homeKey = '首页';
+		$urlKey = 'url_cn';
+		$nameKey = 'name_cn';
+		
+		if($this->_currentLang == 'english'){
+			$homeKey = 'Home';
+			$urlKey = 'url_en';
+			$nameKey = 'name_en';
+		}
+		
+		
 		$this->_navigation = array(
-			'首页' => base_url('/'),
-			$currentSideNav['name_cn'] => $moduleUrl,
+			$homeKey => base_url('/'),
+			$currentSideNav[$nameKey] => $moduleUrl,
 		);
-			
+		
 		if($navigationInfo['pid'] != 0){
-			$this->_navigation[$navigationInfo['name_cn']] = str_replace('{ID}',$navigationInfo['id'],$navigationInfo['url_cn']);
+			$this->_navigation[$navigationInfo[$nameKey]] = str_replace('{ID}',$navigationInfo['id'],$navigationInfo[$urlKey]);
 		}
 		
 		$this->assign(
@@ -155,13 +166,16 @@ class Ydzj_Controller extends MY_Controller {
 				'currentSideUrl' => base_url($this->uri->uri_string()),
 				'sideTitleUrl' => $moduleUrl,
 				'sideNavs' => $currentSideNav['children'],
-				'sideTitle' => $currentSideNav['name_cn'],
+				'sideTitle' => $currentSideNav[$nameKey],
+				'nameKey' => $nameKey,
+				'urlKey' => $urlKey,
 				'article' => $article,
 				'breadcrumb'=>$this->breadcrumb()
 			)
 		);
 		
-		$this->seo($article['article_title'].' '.$currentSideNav['name_cn']);
+		$this->seo($article['article_title'].' '.$currentSideNav[$nameKey]);
+		
 		$this->display('common/art');
 	}
 	

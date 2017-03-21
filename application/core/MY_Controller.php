@@ -50,29 +50,20 @@ class MY_Controller extends CI_Controller {
 		
 		$lang = $this->input->cookie('lang');
 		$lang2 = $this->input->get('lang');
-		if(empty($lang)){
-			if($lang2){
-				if(in_array(array('chinese','english'),$lang)){
-					$this->_currentLang = $lang;
-					$this->input->set_cookie('lang',$lang,CACHE_ONE_MONTH);
-				}
-			}else{
-				$this->input->set_cookie('lang','cn',CACHE_ONE_MONTH);
-			}
-		}else if($lang != $lang2 && !empty($lang2)){
-			if(in_array(array('chinese','english'),$lang2)){
-				$this->_currentLang = $lang2;
-				$this->input->set_cookie('lang',$lang2,CACHE_ONE_MONTH);
-			}
+		
+		if(in_array($lang2,array('chinese','english'))){
+			$this->_currentLang = $lang2;
 		}
 		
-		
-		
+		if(empty($this->_currentLang) && in_array($lang,array('chinese','english'))){
+			$this->_currentLang = $lang;
+		}
 		
 		if(empty($this->_currentLang)){
 			$this->_currentLang = 'chinese';
 		}
 		
+		$this->input->set_cookie('lang',$this->_currentLang,CACHE_ONE_MONTH);
 		$this->config->set_item('language',$this->_currentLang);
 		
 	}
@@ -345,10 +336,8 @@ class MY_Controller extends CI_Controller {
     	$unchangeTplName = $viewname;
     	$tplDir = $this->_smarty->getTemplateDir(0);
     	
-    	$this->_smarty->assign($this->_seo);
-    	
-    	//$this->_smarty->assign('siteConfig',$this->config->config);
-    	
+    	$this->assign($this->_seo);
+    	$this->assign('currentLang',$this->_currentLang);
     	$this->loadPageLang();
     	
     	
@@ -377,16 +366,11 @@ class MY_Controller extends CI_Controller {
      */
     public function loadPageLang(){
     	$page = $this->uri->rsegment_array();
-    	//print_r($page);
-    	//echo APPPATH."language/{$this->_currentLang}/{$page[2]}/{$page[1]}_lang.php";
     	
     	if(file_exists(APPPATH."language/{$this->_currentLang}/{$page[1]}_lang.php")){
     		$langArray = $this->lang->load($page[1],'',true);
-    		
-    		print_r($langArray);
-    	}
-    	
-    	
+    		$this->assign($langArray);
+   		}
     }
     
     

@@ -10,6 +10,17 @@ class News extends Ydzj_Controller {
 	public function __construct(){
 		parent::__construct();
 		
+		$homeKey = '首页';
+		$urlKey = 'url_cn';
+		$nameKey = 'name_cn';
+		
+		if($this->_currentLang == 'english'){
+			$homeKey = 'Home';
+			$urlKey = 'url_en';
+			$nameKey = 'name_en';
+		}
+		
+		
 		$navigationInfo = $this->navigation_service->getInfoByName('新闻资讯');
 		
 		$this->load->library(array('Cms_service'));
@@ -30,22 +41,24 @@ class News extends Ydzj_Controller {
 			
 			if($sideNavs){
 				foreach($sideNavs as $nav){
-					$this->sideNavs[$nav['name']] = base_url('news/plist/'.$nav['id'].'.html');
+					$this->sideNavs[$nav[$nameKey]] = base_url('news/plist/'.$nav['id'].'.html');
 				}
 			}
 		}
 		
 		
+		
+		
 		$this->assign(array(
 			'currentModule' => 'news',
 			'pgClass' => 'newsPg',
-			'sideTitle' => $navigationInfo['name_cn'],
-			'sideTitleUrl' => $navigationInfo['url_cn'],
-			'sideNavs' => $this->sideNavs
+			'sideTitle' => $navigationInfo[$nameKey],
+			'sideTitleUrl' => $navigationInfo[$urlKey],
+			'sideNavs' => $this->sideNavs,
 		));
 		
 		$this->_navigation = array(
-			'首页' => base_url('/'),
+			$homeKey => base_url('/'),
 		);
 	}
 	
@@ -149,10 +162,16 @@ class News extends Ydzj_Controller {
 				$parents = array_reverse($parents);
 			}
 			
+			$nameKey = 'name_cn';
+			if($this->_currentLang == 'english'){
+				$nameKey = 'name_en';
+			}
+			
 			//print_r($parents);
 			foreach($parents as $pitem){
-				$this->seoKeys[] = $pitem['name'];
-				$this->_navigation[$pitem['name']] = site_url("news/plist/{$pitem['id']}.html");
+				$this->seoKeys[] = $pitem[$nameKey];
+				$this->_navigation[$pitem[$nameKey]] = base_url("news/plist/{$pitem['id']}.html");
+				
 			}
 		}
 		

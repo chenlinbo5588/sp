@@ -175,7 +175,7 @@ class Goods_service extends Base_service {
 		}
 	}
 	
-	public function tagAdd($param){
+	public function tagAdd($param,$nameKey = 'name_cn'){
 		$class_id_1		= '';
 		$class_id_2		= '';
 		$class_id_3		= '';
@@ -186,10 +186,12 @@ class Goods_service extends Base_service {
 		$type_id		= '';
 		$condition_str	= '';
 		
+		
+		
 		if(is_array($param) && !empty($param)){	//一级
 			foreach ($param as $value){
 				$class_id_1		= $value['gc_id'];
-				$class_name_1	= trim($value['gc_name']);
+				$class_name_1	= trim($value[$nameKey]);
 				$class_id		= $value['gc_id'];
 				$type_id		= $value['type_id'];
 				$class_id_2		= '';
@@ -200,14 +202,14 @@ class Goods_service extends Base_service {
 				if(is_array($value['children']) && !empty($value['children'])){	//二级
 					foreach ($value['children'] as $val){
 						$class_id_2		= $val['gc_id'];
-						$class_name_2	= trim($val['gc_name']);
+						$class_name_2	= trim($val[$nameKey]);
 						$class_id		= $val['gc_id'];
 						$type_id		= $val['type_id'];
 						
 						if(is_array($val['children']) && !empty($val['children'])){	//三级
 							foreach ($val['children'] as $v){
 								$class_id_3		= $v['gc_id'];
-								$class_name_3	= trim($v['gc_name']);
+								$class_name_3	= trim($v[$nameKey]);
 								$class_id		= $v['gc_id'];
 								$type_id		= $v['type_id'];
 								

@@ -21,11 +21,18 @@
     <table class="table tb-type2">
       <tbody>
         <tr class="noborder">
-          <td colspan="2" class="required"><label class="validation" for="name">{#cms_title_class#}名称:</label></td>
+          <td colspan="2" class="required"><label class="validation" for="name_cn">{#cms_title_class#}中文名称:</label></td>
         </tr>
         <tr class="noborder">
-          <td class="vatop rowform"><input type="text" value="{$info['name']|escape}" name="name" id="name" class="txt"></td>
-          <td class="vatop tips">{form_error('name')}</td>
+          <td class="vatop rowform"><input type="text" value="{$info['name_cn']|escape}" name="name_cn" id="name_cn" class="txt"></td>
+          <td class="vatop tips">{form_error('name_cn')}</td>
+        </tr>
+        <tr class="noborder">
+          <td colspan="2" class="required"><label class="validation" for="name_cn">{#cms_title_class#}英文名称:</label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform"><input type="text" value="{$info['name_en']|escape}" name="name_en" id="name_en" class="txt"></td>
+          <td class="vatop tips">{form_error('name_en')}</td>
         </tr>
         <tr>
           <td colspan="2" class="required"><label for="pid">上级分类:</label></td>

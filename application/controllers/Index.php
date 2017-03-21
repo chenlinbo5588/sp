@@ -18,7 +18,7 @@ class Index extends Ydzj_Controller {
 		$goodsList = $this->goods_service->getCommandGoodsList();
 		$this->assign('goodsList',$goodsList);
 		
-		$this->assign('homeSliderImg',range(1,3));		
+		$this->assign('homeSliderImg',range(1,3));
 		// 获得 企业新闻
 		$qiyeList = $this->cms_service->getCommandArticleList(11);
 		// 行业动态

@@ -6,8 +6,8 @@
 					{/foreach}
 				</ul>
 				<div class="search sideItem">
-					<h3 class="itemTitle">产品搜索</h3>
-					<div><input type="text" name="keyword" value="{$keyword}" placeholder="请输入关键字"/></div>
-					<div><input type="submit" class="orangeBtn btn" name="search" value="查询"/></div>
+					<h3 class="itemTitle">{$search_product}</h3>
+					<div><input type="text" name="keyword" value="{$keyword}" placeholder="{$input_keyword}"/></div>
+					<div><input type="submit" class="orangeBtn btn" name="search" value="{$search}"/></div>
 				</div>
 			</div>

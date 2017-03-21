@@ -14,7 +14,7 @@
 		{else}
 		<img fieldid="{$item['gc_id']}" status="open" nc_type="flex" src="{resource_url('img/tv-item1.gif')}">
 		{/if}
-		<span title="可编辑下级分类名称" class="editable tooltip">{$item['gc_name']|escape}</span>
+		<span title="可编辑下级分类名称" class="editable tooltip">{$item['name_cn']|escape}</span>
 		{if $deep != 2}<a class="btn-add-nofloat marginleft" href="{admin_site_url('goods_class/add')}?gc_parent_id={$item['gc_id']}"><span>新增下级</span></a>{/if}
 	</td>
 	<td></td>

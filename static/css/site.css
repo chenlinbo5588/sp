@@ -599,7 +599,7 @@ input[type=text].validation_error {
 }
 
 .panelTitel {
-	font-size:15px;
+	font-size:13px;
 	background:#e2e2e2;
 	padding: 5px;
 	font-weight: bold;
@@ -742,7 +742,7 @@ input[type=text].validation_error {
 	display: block;
     width: 100%;
     font-weight: bold;
-    font-size: 16px;
+    font-size: 15px;
    	/*color:#0138B7;*/
     text-decoration: none;
     height: 40px;
@@ -815,7 +815,7 @@ input[type=text].validation_error {
 
 
 .more {
-	font-size:14px;
+	font-size:13px;
 }
 
 

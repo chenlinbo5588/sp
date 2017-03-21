@@ -5,8 +5,6 @@ class Service extends Ydzj_Controller {
 	
 	public function __construct(){
 		parent::__construct();
-		
-		$this->assign('pgClass','service');
 	}
 	
 	
@@ -71,6 +69,23 @@ class Service extends Ydzj_Controller {
 		$feedback = '';
 		$itemSide = $this->navigation_service->getInfoByUrl(base_url('service/suggestion.html'));
 		
+		$message = '您的投诉建议意见已完成提交,我们的工作人员交尽快处理。';
+		$homeKey = '首页';
+		$urlKey = 'url_cn';
+		$nameKey = 'name_cn';
+		
+		if($this->_currentLang == 'english'){
+			$homeKey = 'Home';
+			$urlKey = 'url_en';
+			$nameKey = 'name_en';
+		}
+		
+		
+		if($this->_currentLang == 'english'){
+			
+			$message = 'We have recevied your suggest, we will keep in touch with you as soon as possible';
+		}
+		
 		if($this->isPostRequest()){
 			
 			$this->load->model('Suggestion_Model');
@@ -86,18 +101,21 @@ class Service extends Ydzj_Controller {
 				
 				$newid = $this->Suggestion_Model->_add($info);
 				unset($info);
-				$this->assign('alertMsg', '您的投诉建议意见已完成提交,我们的工作人员交尽快处理。');
+				
+				
+				$this->assign('alertMsg', $message);
 			}
 		}
 		
 		list($currentSideNav,$navigationInfo) = $this->prepareSideNav($itemSide['id']);
-		$moduleUrl = str_replace('{ID}',$currentSideNav['id'],$currentSideNav['url_cn']);
+		$moduleUrl = str_replace('{ID}',$currentSideNav['id'],$currentSideNav[$urlKey]);
+		
 		
 		$this->_navigation = array(
-			'首页' => base_url('/'),
-			$currentSideNav['name_cn'] => $moduleUrl,
+			$homeKey => base_url('/'),
+			$currentSideNav[$nameKey] => $moduleUrl,
 		);
-		$this->_navigation[$itemSide['name_cn']] = base_url('service/suggestion.html');
+		$this->_navigation[$itemSide[$nameKey]] = base_url('service/suggestion.html');
 		
 		$this->assign(
 			array(
@@ -107,13 +125,15 @@ class Service extends Ydzj_Controller {
 				'currentSideUrl' => base_url($this->uri->uri_string()),
 				'sideTitleUrl' => $moduleUrl,
 				'sideNavs' => $currentSideNav['children'],
-				'sideTitle' => $currentSideNav['name_cn'],
+				'sideTitle' => $currentSideNav[$nameKey],
+				'nameKey' => $nameKey,
+				'urlKey' => $urlKey,
 				'breadcrumb'=>$this->breadcrumb()
 			)
 		);
 		
 		
-		$this->seo($itemSide['name_cn'].' '.$currentSideNav['name_cn']);
+		$this->seo($itemSide[$nameKey].' '.$currentSideNav[$nameKey]);
 		$this->display();
 	}
 }

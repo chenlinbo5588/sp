@@ -44,7 +44,7 @@
           </td>
           <td class="w48 sort"><span class="editable ">{$item['ac_sort']}</span></td>
           <td class="name">
-          	<span title="可编辑" class="editable ">{$item['name']|escape}</span>
+          	<span title="可编辑" class="editable ">{$item['name_cn']|escape}</span>
           	<a class="btn-add-nofloat marginleft" href="{admin_site_url('cms_article_class/add')}?pid={$item['id']}"><span>新增下级</span></a>
           </td>
           <td></td>

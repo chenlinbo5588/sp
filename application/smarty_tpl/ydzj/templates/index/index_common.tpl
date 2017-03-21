@@ -9,7 +9,7 @@
 	<div class="boxz mg5">
 		<div class="searchbar clearfix">
 			<span class="hotlink">
-				<strong>热门搜索:　</strong>
+				<strong>{$hotkeyword}:　</strong>
 				{foreach from=$hotwords item=item}
 				<a href="{base_url('product/plist/keyword/'|cat:urlencode($item))}">{$item|escape}</a>
 				{/foreach}
@@ -26,13 +26,13 @@
 			<ul class="threeCol clearfix">
 				<li class="col">
 					<div class="colPanel">
-						<h3 class="panelTitel">走进{config_item('site_name')}</h3>
+						<h3 class="panelTitel">{$goin}{config_item('site_name')}</h3>
 						{include file="./index_goin.tpl"}
 					</div>
 				</li>
 				<li class="col" >
 					<div class="colPanel newslist bd">
-						<h3 class="panelTitel"><span>企业新闻</span><a class="more fr" href="{site_url('news/plist/acid/11')}">更多&gt;&gt;</a></h3>
+						<h3 class="panelTitel"><span>{$news2}</span><a class="more fr" href="{site_url('news/plist/acid/11')}">{$more}&gt;&gt;</a></h3>
 						<ol>
 							{foreach from=$qiyeList item=item}
 							<li><a href="{base_url('news/detail/'|cat:$item['article_id'])}">{$item['article_title']|escape}</a><span>【{$item['publish_time']|date_format:"%Y-%m-%d"}】</span></li>
@@ -42,7 +42,7 @@
 				</li>
 			 	<li class="col">
 					<div class="colPanel newslist">
-						<h3 class="panelTitel"><span>行业动态</span><a class="more fr" href="{base_url('news/plist/acid/12')}">更多&gt;&gt;</a></h3>
+						<h3 class="panelTitel"><span>{$news}</span><a class="more fr" href="{base_url('news/plist/acid/12')}">{$more}&gt;&gt;</a></h3>
 						<ol class="clearfix">
 							{foreach from=$industryList item=item}
 							<li><a href="{base_url('news/detail/'|cat:$item['article_id'])}">{$item['article_title']|escape}</a><span>【{$item['publish_time']|date_format:"%Y-%m-%d"}】</span></li>
@@ -52,7 +52,7 @@
 				</li>
 			</ul>
 			<div class="panelContent" id="starProducts">
-				<h3 class="panelTitel"><span>推荐产品</span><a class="more fr" href="{site_url('product/plist')}">更多&gt;&gt;</a></h3>
+				<h3 class="panelTitel"><span>{$recommend_product}</span><a class="more fr" href="{site_url('product/plist')}">{$more}&gt;&gt;</a></h3>
 				<div class="product pd5">
 					<ul id="hotProductSwiper">
 						{foreach from=$goodsList item=item}

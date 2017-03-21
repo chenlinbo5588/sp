@@ -4,12 +4,23 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Product extends Ydzj_Controller {
 	
 	private $sideNavs = null;
-	private $modKey = '产品中心';
 	private $seoKeys = array();
 	
 	
 	public function __construct(){
 		parent::__construct();
+		
+		
+		$homeKey = '首页';
+		$urlKey = 'url_cn';
+		$nameKey = 'name_cn';
+		
+		if($this->_currentLang == 'english'){
+			$homeKey = 'Home';
+			$urlKey = 'url_en';
+			$nameKey = 'name_en';
+		}
+		
 		
 		$navigationInfo = $this->navigation_service->getInfoByName('产品中心');
 		
@@ -22,24 +33,23 @@ class Product extends Ydzj_Controller {
 		
 		if($topClass){
 			foreach($topClass as $nav){
-				$this->sideNavs[$nav['gc_name']] = base_url("product/plist/{$nav['gc_id']}.html");
+				$this->sideNavs[$nav[$nameKey]] = base_url("product/plist/{$nav['gc_id']}.html");
 			}
 		}
 		
 		$this->_navigation = array(
-			'首页' => base_url('/'),
-			$this->modKey => base_url('product/plist.html'),
+			$homeKey => base_url('/'),
+			$navigationInfo[$nameKey] => base_url('product/plist.html'),
 		);
 		
 		
 		$this->assign(array(
 			'currentModule' => 'product',
 			'pgClass' => 'productPg',
-			'sideTitle' => $navigationInfo['name_cn'],
-			'sideTitleUrl' => $navigationInfo['url_cn'],
+			'sideTitle' => $navigationInfo[$nameKey],
+			'sideTitleUrl' => $navigationInfo[$urlKey],
 			'sideNavs' => $this->sideNavs
 		));
-		
 		
 	}
 	
@@ -47,10 +57,8 @@ class Product extends Ydzj_Controller {
 	
 	public function plist()
 	{
-		
 		$currentGcId = $this->uri->rsegment(3);
 		$keyword = $this->input->get_post('keyword') ? $this->input->get_post('keyword') : '';
-		
 		
 		if(empty($currentGcId)){
 			$currentGcId = 0;
@@ -132,10 +140,15 @@ class Product extends Ydzj_Controller {
 				$parents = array_reverse($parents);
 			}
 			
+			$nameKey = 'name_cn';
+			if($this->_currentLang == 'english'){
+				$nameKey = 'name_en';
+			}
+			
 			
 			foreach($parents as $pitem){
-				$this->seoKeys[] = $pitem['gc_name'];
-				$this->_navigation[$pitem['gc_name']] = base_url("product/plist/{$pitem['gc_id']}.html");
+				$this->seoKeys[] = $pitem[$nameKey];
+				$this->_navigation[$pitem[$nameKey]] = base_url("product/plist/{$pitem['gc_id']}.html");
 			}
 		}
 		
