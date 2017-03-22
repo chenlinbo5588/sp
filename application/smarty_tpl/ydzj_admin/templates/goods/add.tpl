@@ -4,7 +4,8 @@
       <h3>商品</h3>
       <ul class="tab-base">
       	<li><a href="{admin_site_url('goods/index')}"><span>管理</span></a></li>
-      	<li><a class="current"><span>{if $info['goods_id']}编辑{else}新增{/if}</span></a></li>
+      	<li><a {if empty($info['goods_id'])}class="current"{/if} href="{admin_site_url('goods/add')}"><span>新增</span></a></li>
+        {if $info['goods_id']}<li><a class="current"><span>编辑</span></a></li>{/if}
       </ul>
     </div>
   </div>
@@ -19,11 +20,18 @@
     <table class="table tb-type2">
       <tbody>
         <tr class="noborder">
-          <td colspan="2" class="required"><label class="validation" for="goods_name">商品名称:</label></td>
+          <td colspan="2" class="required"><label class="validation" for="goods_name">商品中文名称:</label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input type="text" value="{$info['goods_name']|escape}" name="goods_name" id="goods_name" class="txt"></td>
           <td class="vatop tips">{form_error('goods_name')}</td>
+        </tr>
+        <tr class="noborder">
+          <td colspan="2"><label for="goods_name_en">商品英文名称:</label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform"><input type="text" value="{$info['goods_name_en']|escape}" name="goods_name_en" id="goods_name_en" class="txt"></td>
+          <td class="vatop tips">{form_error('goods_name_en')}</td>
         </tr>
         <tr class="noborder">
           <td colspan="2" class="required"><label class="validation" for="goods_name">商品代码:{$info['goods_code']}</label></td>
@@ -87,7 +95,7 @@
        		</td>
        	</tr>
         <tr>
-          <td colspan="2" class="required"><label class="validation">商品描述: </label>{form_error('goods_intro')}</td>
+          <td colspan="2" class="required"><label class="validation">商品中文描述: </label>{form_error('goods_intro')}</td>
         </tr>
         <tr>
         	<td colspan="2" ><textarea id="goods_intro" name="goods_intro" style="width:100%;height:480px;visibility:hidden;">{$info['goods_intro']}</textarea></td>
@@ -97,6 +105,37 @@
 				
 	            KindEditor.ready(function(K) {
 	                editor1 = K.create('textarea[name="goods_intro"]', {
+	                    uploadJson : '{admin_site_url("common/pic_upload")}?mod=goods',
+	                    extraFileUploadParams:{ formhash: formhash },
+	                    allowImageUpload : true,
+	                    allowFlashUpload : false,
+	                    allowMediaUpload : false,
+	                    formatUploadUrl : false,
+	                    allowFileManager : false,
+	                    afterCreate : function() {
+	                    	
+	                    },
+	                    afterChange : function() {
+	                    	$("input[name=formhash]").val(formhash);
+	                    },
+	                    afterUpload : function(url,data) {
+	                    	formhash = data.formhash;
+		                }
+	                });
+	            });
+	        </script>
+        </tr>
+        <tr>
+          <td colspan="2" class="required"><label class="validation">商品英文描述: </label>{form_error('goods_intro_en')}</td>
+        </tr>
+        <tr>
+        	<td colspan="2" ><textarea id="goods_intro_en" name="goods_intro_en" style="width:100%;height:480px;visibility:hidden;">{$info['goods_intro_en']}</textarea></td>
+        	{include file="common/ke.tpl"}
+			<script type="text/javascript">
+	            var editor1;
+				
+	            KindEditor.ready(function(K) {
+	                editor1 = K.create('textarea[name="goods_intro_en"]', {
 	                    uploadJson : '{admin_site_url("common/pic_upload")}?mod=goods',
 	                    extraFileUploadParams:{ formhash: formhash },
 	                    allowImageUpload : true,

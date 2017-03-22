@@ -13,7 +13,10 @@ $config['aliyun_dm'] = array(
 );
 
 
-$config['allowed_img_types'] = 'jpg|jpeg|png';
+$config['forground_image_allow_ext'] = 'jpg|jpeg|png';
+$config['background_image_allow_ext'] = 'jpg|jpeg|png';
+$config['image_max_filesize'] = '1024';
+
 
 $config['mail_list'] = array(
 	'sina.com','126.com','163.com','gmail.com','qq.com','vip.qq.com','hotmail.com','sohu.com','139.com','vip.sina.com','21cn.cn','189.cn','sina.cn'

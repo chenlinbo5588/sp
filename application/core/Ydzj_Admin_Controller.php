@@ -22,6 +22,13 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 		$this->load->model('Role_Model');
 	}
 	
+	
+	public function _initLanguage(){
+		parent::_initLanguage();
+		$this->config->set_item('language','chinese');
+	}
+	
+	
 	private function _initAdminLogin(){
 		
 		//print_r($this->session->all_userdata());

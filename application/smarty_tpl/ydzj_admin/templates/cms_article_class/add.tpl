@@ -2,7 +2,7 @@
 {config_load file="article.conf"}
   <div class="fixed-bar">
 		<div class="item-title">
-		  <h3>文章分类</h3>
+		  <h3>CMS文章分类</h3>
 		  <ul class="tab-base">
             <li><a href="{admin_site_url('cms_article_class/category')}"><span>列表</span></a></li>
             <li><a {if empty($info['id'])}class="current"{/if} href="{admin_site_url('cms_article_class/add')}"><span>新增</span></a></li>
