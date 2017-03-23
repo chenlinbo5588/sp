@@ -12,7 +12,7 @@
   <div class="fixed-empty"></div>
   <div class="feedback">{$feedback}</div>
   {if $info['goods_id']}
-  {form_open_multipart(admin_site_url('goods/edit'),'id="goods_form"')}
+  {form_open_multipart(admin_site_url('goods/edit?goods_id='|cat:$info['goods_id']),'id="goods_form"')}
   {else}
   {form_open_multipart(admin_site_url('goods/add'),'id="goods_form"')}
   {/if}
@@ -33,9 +33,11 @@
           <td class="vatop rowform"><input type="text" value="{$info['goods_name_en']|escape}" name="goods_name_en" id="goods_name_en" class="txt"></td>
           <td class="vatop tips">{form_error('goods_name_en')}</td>
         </tr>
+        {if $info['goods_id']}
         <tr class="noborder">
           <td colspan="2" class="required"><label class="validation" for="goods_name">商品代码:{$info['goods_code']}</label></td>
         </tr>
+        {/if}
         <tr>
           <td colspan="2" class="required"><label for="brandId">品牌:</label></td>
         </tr>
@@ -80,7 +82,7 @@
           <td class="vatop tips"><span class="vatop rowform">上传商品默认主图，如多规格值时将默认使用该图或分规格上传各规格主图；支持jpg，建议使用尺寸800x800像素以上、大小不超过1M的正方形图片，上传后的图片将会自动保存在图片空间的默认分类中。</span></td>
         </tr>
        	<tr>
-          <td colspan="2" class="required">商品展示图片上传(JPG格式 , 用于显示在详情页面):</td>
+          <td colspan="2" class="required">商品图片上传(JPG格式 , 用于显示在详情页面幻灯片展示):</td>
         </tr>
         <tr class="noborder">
           <td colspan="2" id="divComUploadContainer"><input type="file" multiple="multiple" id="fileupload" name="fileupload" /></td>
@@ -95,7 +97,7 @@
        		</td>
        	</tr>
         <tr>
-          <td colspan="2" class="required"><label class="validation">商品中文描述: </label>{form_error('goods_intro')}</td>
+          <td colspan="2" class="required"><label class="validation">商品中文版描述: </label>{form_error('goods_intro')}</td>
         </tr>
         <tr>
         	<td colspan="2" ><textarea id="goods_intro" name="goods_intro" style="width:100%;height:480px;visibility:hidden;">{$info['goods_intro']}</textarea></td>
@@ -126,16 +128,16 @@
 	        </script>
         </tr>
         <tr>
-          <td colspan="2" class="required"><label class="validation">商品英文描述: </label>{form_error('goods_intro_en')}</td>
+          <td colspan="2"><label">商品英文版描述: </label>{form_error('goods_intro_en')}</td>
         </tr>
         <tr>
         	<td colspan="2" ><textarea id="goods_intro_en" name="goods_intro_en" style="width:100%;height:480px;visibility:hidden;">{$info['goods_intro_en']}</textarea></td>
         	{include file="common/ke.tpl"}
 			<script type="text/javascript">
-	            var editor1;
+	            var editor2;
 				
 	            KindEditor.ready(function(K) {
-	                editor1 = K.create('textarea[name="goods_intro_en"]', {
+	                editor2 = K.create('textarea[name="goods_intro_en"]', {
 	                    uploadJson : '{admin_site_url("common/pic_upload")}?mod=goods',
 	                    extraFileUploadParams:{ formhash: formhash },
 	                    allowImageUpload : true,
@@ -159,7 +161,7 @@
         <tr>
           <td colspan="2" class="required">是否推荐: </td>
         </tr>
-        <tr class="noborder">
+        <tr>
           <td class="vatop rowform onoff"><label for="goods_commend1" {if $info['goods_commend']}class="cb-enable selected"{else}class="cb-enable"{/if}><span>是</span></label>
             <label for="goods_commend0" {if $info['goods_commend']}class="cb-disable"{else}class="cb-disable selected"{/if}><span>否</span></label>
             <input id="goods_commend1" name="goods_commend" {if $info['goods_commend']}checked{/if} value="1" type="radio">
@@ -169,7 +171,7 @@
         <tr>
           <td colspan="2" class="required">审核通过: </td>
         </tr>
-        <tr class="noborder">
+        <tr>
           <td class="vatop rowform onoff"><label for="goods_verify1" {if $info['goods_verify']}class="cb-enable selected"{else}class="cb-enable"{/if}><span>是</span></label>
             <label for="goods_verify0" {if $info['goods_verify']}class="cb-disable"{else}class="cb-disable selected"{/if}><span>否</span></label>
             <input id="goods_verify1" name="goods_verify" {if $info['goods_verify']}checked{/if} value="1" type="radio">
@@ -179,13 +181,14 @@
         <tr>
           <td colspan="2" class="required">是否发布: </td>
         </tr>
-        <tr class="noborder">
+        <tr>
           <td class="vatop rowform onoff"><label for="goods_state1" {if $info['goods_state']}class="cb-enable selected"{else}class="cb-enable"{/if}><span>是</span></label>
             <label for="goods_state0" {if $info['goods_state']}class="cb-disable"{else}class="cb-disable selected"{/if}><span>否</span></label>
             <input id="goods_state1" name="goods_state" {if $info['goods_state']}checked{/if} value="1" type="radio">
             <input id="goods_state0" name="goods_state" {if $info['goods_state'] == 0}checked{/if} value="0" type="radio"></td>
           <td class="vatop tips">是否发布。</td>
         </tr>
+        
       </tbody>
       <tfoot>
         <tr>

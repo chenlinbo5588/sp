@@ -97,9 +97,21 @@ class Product extends Ydzj_Controller {
 			$cutLen = 80;
 		}
 		
+		
+		
 		if($list['data']){
 			$count = 0;
 			foreach($list['data'] as $key => $product){
+				if('english' == $this->_currentLang){
+					if(!empty($product['goods_name_en'])){
+						$product['goods_name'] = $product['goods_name_en'];
+					}
+					
+					if(!empty(trim(strip_tags($product['goods_intro_en'])))){
+						$product['goods_intro'] = $product['goods_intro_en'];
+					}
+				}
+				
 				if($product['goods_pic']){
 					$product['goods_pic'] = resource_url($product['goods_pic']);
 				}else{
@@ -168,6 +180,11 @@ class Product extends Ydzj_Controller {
 		
 		$info = $this->Goods_Model->getFirstByKey($id,'goods_id');
 		
+		$nameKey = 'goods_name';
+		if('english' == $this->_currentLang && !empty($info['goods_name_en'])){
+			$nameKey = 'goods_name_en';
+		}
+			
 		if($info){
 			if($info['goods_click'] == 0){
 				$info['goods_click']++;
@@ -177,11 +194,10 @@ class Product extends Ydzj_Controller {
 				'where' => array('goods_id' => $id)
 			));
 			
-			/*
-			if(empty($currentFiles)){
-				$currentFiles[] = array('goods_image' => 'img/default.jpg');
+			if(empty($currentFiles) && empty($info['goods_pic'])){
+				$info['goods_pic_b'] = 'img/default.jpg';
+				$info['goods_pic'] = $info['goods_pic_b'];
 			}
-			*/
 			
 			$this->_breadCrumbLinks($info['gc_id']);
 			
@@ -200,8 +216,7 @@ class Product extends Ydzj_Controller {
 			
 			$this->assign('imgList',$currentFiles);
 			
-			
-			$this->_navigation[$info['goods_name']] = base_url('product/detail/'.$info['gc_id'].'_'.$info['goods_id'].'.html');
+			$this->_navigation[$info[$nameKey]] = base_url('product/detail/'.$info['gc_id'].'_'.$info['goods_id'].'.html');
 			
 			$this->Goods_Model->increseOrDecrease(array(
 				array('key' => 'goods_click','value'=> 'goods_click + 1')
@@ -211,7 +226,9 @@ class Product extends Ydzj_Controller {
 		}
 		
 		$tempSeo = array_reverse($this->seoKeys);
-		$this->seo($info['goods_name'] .' - '.$tempSeo[0], implode(',',$tempSeo));
+		
+		
+		$this->seo($info[$nameKey] .' - '.$tempSeo[0], implode(',',$tempSeo));
 		
 		$this->assign('breadcrumb',$this->breadcrumb());
 		$this->assign('info',$info);

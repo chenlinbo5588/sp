@@ -89,10 +89,10 @@ class Goods extends Ydzj_Admin_Controller {
 	
 	private function _getRules(){
 		$this->form_validation->set_rules('goods_name','商品中文名称','required|max_length[60]');
-		$this->form_validation->set_rules('goods_name_en','商品名称','required|max_length[60]');
+		$this->form_validation->set_rules('goods_name_en','商品英文名称','required|max_length[60]');
 		$this->form_validation->set_rules('gc_id','商品分类',"required|in_db_list[{$this->Goods_Class_Model->_tableRealName}.gc_id]");
 		$this->form_validation->set_rules('goods_intro','商品中文简介','required');
-		$this->form_validation->set_rules('goods_intro_en','商品英文简介','required');
+		//$this->form_validation->set_rules('goods_intro_en','商品英文简介','required');
 		$this->form_validation->set_rules('goods_commend','是否推荐','required|in_list[0,1]');
 		$this->form_validation->set_rules('goods_verify','是否审核','required|in_list[0,1]');
 		$this->form_validation->set_rules('goods_state','是否发布','required|in_list[0,1]');
@@ -126,9 +126,9 @@ class Goods extends Ydzj_Admin_Controller {
 	
 	private function _prepareGoodsData(){
 		
-		$fileInfo = $this->attachment_service->addImageAttachment('goods_pic',array(),FROM_BACKGROUND,'goods');
+		$fileInfo = $this->attachment_service->addImageAttachment('goods_pic',array('widthout_db' => true),FROM_BACKGROUND,'goods');
 		
-		//print_r($fileInfo);
+		
 		$info = array(
 			'goods_name' => $this->input->post('goods_name'),
 			'goods_name_en' => $this->input->post('goods_name_en'),
@@ -362,7 +362,6 @@ class Goods extends Ydzj_Admin_Controller {
 			$this->_getRules();
 			
 			for($i = 0; $i < 1; $i++){
-				
 				$postInfo = $this->_prepareGoodsData();
 				$fileList = $this->_getFileList();
 				
@@ -397,14 +396,15 @@ class Goods extends Ydzj_Admin_Controller {
 				
 				$feedback = getSuccessTip('保存成功');
 			}
-		}else{
-			
-			$fileList = $this->Goods_Images_Model->getList(array(
-				'where' => array('goods_id' => $id)
-			));
 			
 		}
 		
+		
+		$fileList = $this->Goods_Images_Model->getList(array(
+			'where' => array('goods_id' => $id)
+		));
+			
+			
 		$this->assign('fileList',$fileList);
 		
 		$this->assign('info',$info);

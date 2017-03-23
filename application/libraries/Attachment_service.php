@@ -35,10 +35,13 @@ class Attachment_service extends Base_service {
 		
 		if($destPath == ''){
 			$config['file_path'] = 'static/attach/'.date("Y/m/d/");
+			$config['upload_path'] = ROOTPATH . '/'.$config['file_path'];
+			
 			make_dir($config['upload_path']);
+		}else{
+			$config['upload_path'] = $destPath;
 		}
-		
-        $config['upload_path'] = ROOTPATH . '/'.$config['file_path'];
+        
 		$config['file_ext_tolower'] = true;
 		$config['encrypt_name'] = true;
 		$config['max_size'] = 2048;
@@ -236,7 +239,7 @@ class Attachment_service extends Base_service {
 			//print_r($fileData);
 			return $fileData;
 		}else{
-			log_message('info',$this->getErrorMsg());
+			log_message('error',$this->getErrorMsg());
 			return false;
 		}
 		
@@ -252,12 +255,11 @@ class Attachment_service extends Base_service {
 		$commonConfig = $this->getUploadConfig();
 		$config = $this->getImageConfig($from);
 		
-		
 		$config = array_merge($commonConfig,$config);
 		if(!empty($moreConfig)){
 			$config = array_merge($config,$moreConfig);
 		}
-		
+		//print_r($config);
 		return $this->addAttachment($filename,$config,$from,$mod);
 		
 	}
@@ -279,7 +281,7 @@ class Attachment_service extends Base_service {
 	 * @param datatype $uploadName 上传名
 	 * @param datatype $fromBg description
 	 */
-	public function pic_upload($uid,$uploadName , $fromBg = 0,$mod = ''){
+	public function pic_upload($uid,$uploadName ,$fromBg = 0,$mod = ''){
 		
 		$this->setUid($uid);
 		$fileData = $this->addImageAttachment($uploadName,array('widthout_db' => true),$fromBg,$mod);
