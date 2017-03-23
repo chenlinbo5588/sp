@@ -26,13 +26,13 @@
 			<ul class="threeCol clearfix">
 				<li class="col">
 					<div class="colPanel">
-						<h3 class="panelTitel">{$goin}{config_item('site_name')}</h3>
+						<h3 class="panelTitel">{$goin} {if $currentLang == 'english'}{$siteSetting['site_shorten']|escape}{else}{$siteSetting['site_shortname']|escape}{/if}</h3>
 						{include file="./index_goin.tpl"}
 					</div>
 				</li>
 				<li class="col" >
 					<div class="colPanel newslist bd">
-						<h3 class="panelTitel"><span>{$news2}</span><a class="more fr" href="{site_url('news/plist/acid/11')}">{$more}&gt;&gt;</a></h3>
+						<h3 class="panelTitel"><span>{$news2}</span><a class="more fr" href="{site_url('news/plist/acid/11')}">{$cm_more}&gt;&gt;</a></h3>
 						<ol>
 							{foreach from=$qiyeList item=item}
 							<li><a href="{base_url('news/detail/'|cat:$item['article_id'])}">{$item['article_title']|escape}</a><span>【{$item['publish_time']|date_format:"%Y-%m-%d"}】</span></li>
@@ -42,7 +42,7 @@
 				</li>
 			 	<li class="col">
 					<div class="colPanel newslist">
-						<h3 class="panelTitel"><span>{$news}</span><a class="more fr" href="{base_url('news/plist/acid/12')}">{$more}&gt;&gt;</a></h3>
+						<h3 class="panelTitel"><span>{$news}</span><a class="more fr" href="{base_url('news/plist/acid/12')}">{$cm_more}&gt;&gt;</a></h3>
 						<ol class="clearfix">
 							{foreach from=$industryList item=item}
 							<li><a href="{base_url('news/detail/'|cat:$item['article_id'])}">{$item['article_title']|escape}</a><span>【{$item['publish_time']|date_format:"%Y-%m-%d"}】</span></li>
@@ -57,8 +57,8 @@
 					<ul id="hotProductSwiper">
 						{foreach from=$goodsList item=item}
 			            <li>
-			            	<div class="pic"><a href="{site_url('product/detail/')}?id={$item['goods_id']}&gc_id={$item['gc_id']}" target="_blank"><img class="respond_img" src="{if $item['goods_pic_m']}{resource_url($item['goods_pic_m'])}{else if $item['goods_pic_b']}{resource_url($item['goods_pic_b'])}{else}{resource_url('img/default.jpg')}{/if}" title="{$item['goods_name']|escape}"/></a></div>
-			            	<div class="title"><a href="{site_url('product/detail/')}?id={$item['goods_id']}&gc_id={$item['gc_id']}" target="_blank">{$item['goods_name']|escape}</a></div>
+			            	<div class="pic"><a href="{base_url('product/detail/'|cat:$item['gc_id']|cat:'_'|cat:$item['goods_id']|cat:'.html')}" target="_blank"><img class="respond_img" src="{if $item['goods_pic_m']}{resource_url($item['goods_pic_m'])}{else if $item['goods_pic_b']}{resource_url($item['goods_pic_b'])}{else}{resource_url('img/default.jpg')}{/if}" title="{$item['goods_name']|escape}"/></a></div>
+			            	<div class="title"><a href="{base_url('product/detail/'|cat:$item['gc_id']|cat:'_'|cat:$item['goods_id']|cat:'.html')}" target="_blank">{$item['goods_name']|escape}</a></div>
 			            </li>
 			            {/foreach}
 				    </ul>

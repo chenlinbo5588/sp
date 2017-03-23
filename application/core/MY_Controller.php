@@ -371,10 +371,17 @@ class MY_Controller extends CI_Controller {
     public function loadPageLang(){
     	$page = $this->uri->rsegment_array();
     	
+    	$langArray = array();
+    	if(file_exists(APPPATH."language/{$this->_currentLang}/common_lang.php")){
+    		$langArray = $this->lang->load('common','',true);
+    	}
+    	
+    	
     	if(file_exists(APPPATH."language/{$this->_currentLang}/{$page[1]}_lang.php")){
-    		$langArray = $this->lang->load($page[1],'',true);
-    		$this->assign($langArray);
+    		$langArray = array_merge($langArray,$this->lang->load($page[1],'',true));
    		}
+   		
+   		$this->assign($langArray);
     }
     
     

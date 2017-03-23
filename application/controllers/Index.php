@@ -23,8 +23,13 @@ class Index extends Ydzj_Controller {
 		$qiyeList = $this->cms_service->getCommandArticleList(11);
 		// 行业动态
 		$industryList = $this->cms_service->getCommandArticleList(12);
-
-		$hotkeys = $this->_getSiteSetting('hotwords');
+		
+		if($this->_currentLang == 'english'){
+			$hotkeys = $this->_getSiteSetting('hotwords_en');
+		}else{
+			$hotkeys = $this->_getSiteSetting('hotwords');
+		}
+		
 		$hotwords = explode(',',$hotkeys);
 		
 		$this->seo();

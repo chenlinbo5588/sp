@@ -27,12 +27,12 @@
 							{$info['goods_intro']}
 						</div>
 						<div class="articleRelate clearfix">
-							<div class="fr"><span>{$prev_product}：{if empty($preProduct)}无{else}<a href="{$preProduct['url']}">{$preProduct['goods_name']|escape}</a>{/if}</div>
-							<div class="fl"><span>{$next_product}：{if empty($nextProduct)}无{else}<a href="{$nextProduct['url']}">{$nextProduct['goods_name']|escape}</a>{/if}</div>
+							<div class="fr"><span>{$prev_product}：{if empty($preProduct)}{$cm_none}{else}<a href="{$preProduct['url']}">{$preProduct['goods_name']|escape}</a>{/if}</div>
+							<div class="fl"><span>{$next_product}：{if empty($nextProduct)}{$cm_none}{else}<a href="{$nextProduct['url']}">{$nextProduct['goods_name']|escape}</a>{/if}</div>
 						</div>
 					</div>
 					{else}
-					<div class="errorPage">{$not_found_msg}<a href="javascript:history.go(-1);">{$goback}</a></div>
+					<div class="errorPage">{$not_found_msg}<a href="javascript:history.go(-1);">{$cm_goback}</a></div>
 					{/if}
 				</div>
 			</div>

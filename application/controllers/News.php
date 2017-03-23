@@ -48,7 +48,6 @@ class News extends Ydzj_Controller {
 		
 		
 		
-		
 		$this->assign(array(
 			'currentModule' => 'news',
 			'pgClass' => 'newsPg',
@@ -133,18 +132,25 @@ class News extends Ydzj_Controller {
 			}
 		}
 		
-		//print_r($list);
-		$this->assign('list',$list);
-		$this->assign('page',$list['pager']);
-		$this->assign('currentPage',$currentPage);
-		$this->assign('currentAcId',$currentAcId);
-		$this->assign('keyword',$keyword);
-		
 		
 		$tempSeo = array_reverse($this->seoKeys);
 		$this->seo($tempSeo[0], implode(',',$tempSeo));
 		
-		$this->assign('breadcrumb',$this->breadcrumb());
+		
+		
+		$this->assign(
+			array(
+				'list' => $list,
+				'page' => $list['pager'],
+				'currentPage' => $currentPage,
+				'currentAcId' => $currentAcId,
+				'keyword'=>$keyword,
+				'breadcrumb' => $this->breadcrumb(),
+				'currentSideUrl' => base_url($this->uri->uri_string)
+			)
+		);
+		
+		
 		$this->display();
 		
 	}

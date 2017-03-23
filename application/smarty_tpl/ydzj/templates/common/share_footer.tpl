@@ -4,27 +4,27 @@
                 <div class="boxz clearfix">
                     <div class="qrcode">
                         <img src="{resource_url('img/cmp/ma.png')}" style="width:120px;height:120px;"/>
-                        <br/><span>{if $currentLang == 'english'}Scan Visit By Mobile{else}扫描二维码:访问手机版{/if}</span>
+                        <br/><span>{$cm_visit_mobile}</span>
                     </div>
                     <table>
                     	<tr>
                             <td><img src="{resource_url('img/cmp/logo2.png')}"/></td>
                         </tr>
                         <tr>
-                            <td>{if $currentLang == 'english'}Address:{else}地址:{/if}&nbsp; {$siteSetting['company_address']|escape} </td>
+                            <td>{$cm_company_address}&nbsp;： {$siteSetting['company_address']|escape} </td>
                         </tr>
                         <tr>
                             <td>
                                 <ul id="contact_way">
                                     {*<li class="first"><span>客服热线:</span><strong>{$siteSetting['site_phone']|escape}</strong><li>
                                     <li><span>移动电话:</span><strong>{$siteSetting['site_mobile']|escape}</strong><li>*}
-                                    <li><span>{if $currentLang == 'english'}Service Tel:{else}客服电话:{/if}</span><strong>{$siteSetting['site_tel']|escape}</strong><li>
+                                    <li><span>{$cm_service_tel}&nbsp;： </span><strong>{$siteSetting['site_tel']|escape}</strong><li>
                                     {*<li><span>传真: </span><strong>{$siteSetting['site_faxno']|escape}</strong><li>*}
                                 </ul>
                             </td>
                         </tr>
                         <tr>
-                            <td>{if $currentLang == 'english'}Email:{else}邮箱:{/if}&nbsp; <a href="mailto:{$siteSetting['site_email']}">{$siteSetting['site_email']|escape}</a></td>
+                            <td>{$cm_email}&nbsp;： <a href="mailto:{$siteSetting['site_email']}">{$siteSetting['site_email']|escape}</a></td>
                         </tr>
                         {*
                         <tr>
@@ -36,7 +36,7 @@
             </div>
             <div class="row2">
                 <div class="boxz">
-                    <div>Coppyright &copy {$smarty.now|date_format:"%Y"} {config_item('site_name')} ALL rights reserved. </div>
+                    <div>Coppyright &copy {$smarty.now|date_format:"%Y"} {if $currentLang == 'english'}{$siteSetting['site_name_en']|escape}{else}{$siteSetting['site_name']|escape}{/if} ALL rights reserved. </div>
                     <div><a href="http://www.miibeian.gov.cn/" target="_blank" rel="nofollow">ICP {$siteSetting['icp_number']|escape}</a> {*<a class="fr" href="{site_url('member/admin_login')}">管理页面</a>*}</div>
                     <div>{$siteSetting['statistics_code']}</div>
                 </div>

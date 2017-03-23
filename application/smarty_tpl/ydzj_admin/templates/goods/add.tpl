@@ -27,7 +27,7 @@
           <td class="vatop tips">{form_error('goods_name')}</td>
         </tr>
         <tr class="noborder">
-          <td colspan="2"><label for="goods_name_en">商品英文名称:</label></td>
+          <td colspan="2" class="required"><label class="validation" for="goods_name_en">商品英文名称:</label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input type="text" value="{$info['goods_name_en']|escape}" name="goods_name_en" id="goods_name_en" class="txt"></td>

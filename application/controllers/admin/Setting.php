@@ -23,6 +23,9 @@ class Setting extends Ydzj_Admin_Controller {
 		
 		$settingKey = array(
 			'site_name',
+			'site_shortname',
+			'site_name_en',
+			'site_shorten',
 			'site_logo',
 			'icp_number',
 			'site_tel', //客服电话
@@ -325,28 +328,33 @@ class Setting extends Ydzj_Admin_Controller {
 	public function search(){
 		
 		if($this->isPostRequest()){
-			$this->form_validation->set_rules('hotwords','热门搜索关键词','required');
+			$this->form_validation->set_rules('hotwords','热门搜索中文关键词','required');
+			$this->form_validation->set_rules('hotwords_en','热门搜索英文关键词','required');
 			
 			if($this->form_validation->run()){
 				
-				if($this->Setting_Model->update(array('value' => $this->input->post('hotwords')),array('name' => 'hotwords')) >= 0){
+				if($this->admin_service->updateSetting(array(
+					array('name' => 'hotwords','value' => $this->input->post('hotwords')),
+					array('name' => 'hotwords_en','value' => $this->input->post('hotwords_en')),
+				)) >= 0){
+				
 					$feedback = getSuccessTip('保存成功');
-					
 					$this->_clearCache();
-					
-					$currentSetting = $this->admin_service->getSettingList(array(
-						'where' => array('name' => 'hotwords' )
-					));
 							
 				}else{
 					$feedback = getErrorTip('保存失败');
 				}
 			}
-		}else{
-			$currentSetting = $this->admin_service->getSettingList(array(
-				'where' => array('name' => 'hotwords' )
-			));
 		}
+		
+		$currentSetting = $this->admin_service->getSettingList(array(
+			'where_in' => array(
+				array('key' => 'name','value' => array('hotwords','hotwords_en'))
+			
+			)
+		));
+		
+			
 		$this->assign('feedback',$feedback);
 		$this->assign('currentSetting',$currentSetting);
 		$this->display();

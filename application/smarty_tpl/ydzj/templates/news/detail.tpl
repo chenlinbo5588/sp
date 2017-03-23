@@ -17,11 +17,11 @@
 					</div>
 					
 					<div class="articleRelate clearfix">
-						<div class="prevArticle"><span>{$prev_article}：{if empty($preArticle)}{$none}{else}<a href="{$preArticle['article_url']}">{$preArticle['article_title']|escape}</a>{/if}</div>
-						<div class="nextArticle"><span>{$next_article}：{if empty($nextArticle)}{$none}{else}<a href="{$nextArticle['article_url']}">{$nextArticle['article_title']|escape}</a>{/if}</div>
+						<div class="prevArticle"><span>{$prev_article}：{if empty($preArticle)}{$cm_none}{else}<a href="{$preArticle['article_url']}">{$preArticle['article_title']|escape}</a>{/if}</div>
+						<div class="nextArticle"><span>{$next_article}：{if empty($nextArticle)}{$cm_none}{else}<a href="{$nextArticle['article_url']}">{$nextArticle['article_title']|escape}</a>{/if}</div>
 					</div>
 					{else}
-					<div class="errorPage">{$not_found_msg}<a href="javascript:history.go(-1);">{$goback}</a></div>
+					<div class="errorPage">{$not_found_msg}<a href="javascript:history.go(-1);">{$cm_goback}</a></div>
 					{/if}
 				</div>
 			</div>

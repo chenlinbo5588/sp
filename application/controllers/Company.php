@@ -5,5 +5,10 @@ class Company extends Ydzj_Controller {
 	
 	public function __construct(){
 		parent::__construct();
+		
+		
+		$this->assign(array(
+			'pgClass' => 'companyPg',
+		));
 	}
 }

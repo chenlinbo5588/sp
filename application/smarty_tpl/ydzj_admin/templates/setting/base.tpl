@@ -14,11 +14,32 @@
     <table class="table tb-type2">
       <tbody>
         <tr class="noborder">
-          <td colspan="2" class="required"><label for="site_name">网站名称:</label></td>
+          <td colspan="2" class="required"><label for="site_name">网站中文全称:</label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input id="site_name" name="site_name" value="{$currentSetting['site_name']['value']|escape}" class="txt" type="text" /></td>
           <td class="vatop tips">{form_error('site_name')}<span class="vatop rowform">网站名称，将显示在前台顶部欢迎信息等位置</span></td>
+        </tr>
+        <tr class="noborder">
+          <td colspan="2" class="required"><label for="site_shortname">网站中文简称:</label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform"><input id="site_shortname" name="site_shortname" value="{$currentSetting['site_shortname']['value']|escape}" class="txt" type="text" /></td>
+          <td class="vatop tips">{form_error('site_shortname')}<span class="vatop rowform">网站名称，将显示在前台顶部欢迎信息等位置</span></td>
+        </tr>
+        <tr class="noborder">
+          <td colspan="2" class="required"><label for="site_name_en">网站英文全称:</label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform"><input id="site_name_en" name="site_name_en" value="{$currentSetting['site_name_en']['value']|escape}" class="txt" type="text" /></td>
+          <td class="vatop tips">{form_error('site_name_en')}<span class="vatop rowform">网站名称，将显示在前台顶部欢迎信息等位置</span></td>
+        </tr>
+        <tr class="noborder">
+          <td colspan="2" class="required"><label for="site_shorten">网站英文简称:</label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform"><input id="site_shorten" name="site_shorten" value="{$currentSetting['site_shorten']['value']|escape}" class="txt" type="text" /></td>
+          <td class="vatop tips">{form_error('site_shorten')}<span class="vatop rowform">网站名称，将显示在前台顶部欢迎信息等位置</span></td>
         </tr>
         <tr>
           <td colspan="2" class="required"><label for="site_logo">网站Logo:</label></td>

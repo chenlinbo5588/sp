@@ -64,9 +64,12 @@ class Product extends Ydzj_Controller {
 			$currentGcId = 0;
 		}
 		
+		
 		$this->_breadCrumbLinks($currentGcId);
 		$childIds = $this->goods_service->getAllChildGoodsClassByPid($currentGcId);
 		$childIds[] = $currentGcId;
+		
+		//print_r($childIds);
 		
 		$currentPage = $this->input->get_post('page') ? $this->input->get_post('page') : 1;
 		
@@ -86,17 +89,26 @@ class Product extends Ydzj_Controller {
 			)
 		);
 		
+		
+		
 		if($keyword){
-			$condition['like']['goods_name'] = $keyword;
+			
+			if('english' == $this->_currentLang){
+				$condition['like']['goods_name_en'] = $keyword;
+			}else{
+				$condition['like']['goods_name'] = $keyword;
+			}
+			
 		}
 		
 		$list = $this->Goods_Model->getList($condition);
+		
+		//print_r($list);
 		
 		$cutLen = 300;
 		if($this->agent->is_mobile()){
 			$cutLen = 80;
 		}
-		
 		
 		
 		if($list['data']){
@@ -123,19 +135,22 @@ class Product extends Ydzj_Controller {
 			}
 		}
 		
-		
-		//print_r($list);
-		$this->assign('list',$list);
-		$this->assign('page',$list['pager']);
-		$this->assign('currentPage',$currentPage);
-		$this->assign('currentGcId',$currentGcId);
-		$this->assign('keyword',$keyword);
-		
-		
 		$tempSeo = array_reverse($this->seoKeys);
 		$this->seo($tempSeo[0], implode(',',$tempSeo));
 		
-		$this->assign('breadcrumb',$this->breadcrumb());
+		
+		$this->assign(
+			array(
+				'list' => $list,
+				'page' => $list['pager'],
+				'currentPage' => $currentPage,
+				'currentGcId' => $currentGcId,
+				'keyword'=>$keyword,
+				'breadcrumb' => $this->breadcrumb(),
+				'currentSideUrl' => base_url($this->uri->uri_string)
+			)
+		);
+		
 		$this->display();
 	}
 	
