@@ -14,3 +14,4 @@ $lang['next_product'] = '下一个产品';
 $lang['product_name'] = '产品名称';
 $lang['product_no'] = '产品编号';
 $lang['online_date'] = '上架时间';
+$lang['productSideTitle'] = '产品中心';

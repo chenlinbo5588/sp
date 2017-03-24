@@ -3,7 +3,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class News extends Ydzj_Controller {
 	
-	private $sideNavs = null;
 	private $topClassId = 0;
 	private $seoKeys = array();
 	
@@ -24,41 +23,21 @@ class News extends Ydzj_Controller {
 		$navigationInfo = $this->navigation_service->getInfoByName('新闻资讯');
 		
 		$this->load->library(array('Cms_service'));
-		$articleClass = $this->Cms_Article_Class_Model->getList(array(
-			'where' => array(
-				'pid' => 0
-			)
-		));
+		$articleClassTree = $this->cms_service->getArticleClassTree();
 		
-		if($articleClass[0]){
-			$this->topClassId = $articleClass[0]['id'];
-			
-			$sideNavs = $this->Cms_Article_Class_Model->getList(array(
-				'where' => array(
-					'pid' => $this->topClassId
-				)
-			));
-			
-			if($sideNavs){
-				foreach($sideNavs as $nav){
-					$this->sideNavs[$nav[$nameKey]] = base_url('news/plist/'.$nav['id'].'.html');
-				}
-			}
-		}
 		
+		$this->_navigation = array(
+			$homeKey => base_url('/'),
+			$navigationInfo[$nameKey] => base_url('news/plist.html'),
+		);
 		
 		
 		$this->assign(array(
 			'currentModule' => 'news',
 			'pgClass' => 'newsPg',
-			'sideTitle' => $navigationInfo[$nameKey],
-			'sideTitleUrl' => $navigationInfo[$urlKey],
-			'sideNavs' => $this->sideNavs,
+			'sideNavs' => $articleClassTree,
 		));
 		
-		$this->_navigation = array(
-			$homeKey => base_url('/'),
-		);
 	}
 	
 	

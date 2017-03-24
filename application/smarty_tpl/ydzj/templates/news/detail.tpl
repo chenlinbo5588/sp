@@ -2,7 +2,7 @@
 	<div class="linePg">
 		<div class="{$pgClass}"></div>
 		<div class="boxz clearfix mg10">
-			<form id="detailForm" name="detailForm" action="{site_url('news/news_list')}" method="get">
+			<form id="detailForm" name="detailForm" action="{base_url('news/plist.html')}" method="get">
 			{if !$isMobile}{include file="./news_side.tpl"}{/if}
 			<div class="contentArea">
 				<div class="breadcrumb"><span>{$your_position}:</span>{$breadcrumb}</div>

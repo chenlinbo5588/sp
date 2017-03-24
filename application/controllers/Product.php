@@ -3,7 +3,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Product extends Ydzj_Controller {
 	
-	private $sideNavs = null;
 	private $seoKeys = array();
 	
 	
@@ -25,17 +24,7 @@ class Product extends Ydzj_Controller {
 		$navigationInfo = $this->navigation_service->getInfoByName('产品中心');
 		
 		$this->load->library('Goods_service');
-		$topClass = $this->Goods_Class_Model->getList(array(
-			'where' => array(
-				'gc_parent_id' => 0
-			)
-		));
-		
-		if($topClass){
-			foreach($topClass as $nav){
-				$this->sideNavs[$nav[$nameKey]] = base_url("product/plist/{$nav['gc_id']}.html");
-			}
-		}
+		$goodsClassTree = $this->goods_service->getGoodClassTree();
 		
 		$this->_navigation = array(
 			$homeKey => base_url('/'),
@@ -46,9 +35,7 @@ class Product extends Ydzj_Controller {
 		$this->assign(array(
 			'currentModule' => 'product',
 			'pgClass' => 'productPg',
-			'sideTitle' => $navigationInfo[$nameKey],
-			'sideTitleUrl' => $navigationInfo[$urlKey],
-			'sideNavs' => $this->sideNavs
+			'sideNavs' => $goodsClassTree
 		));
 		
 	}

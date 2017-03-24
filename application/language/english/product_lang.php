@@ -14,3 +14,4 @@ $lang['next_product'] = 'Next Product';
 $lang['product_name'] = 'Product Name';
 $lang['product_no'] = 'Product No.';
 $lang['online_date'] = 'Publish Date';
+$lang['productSideTitle'] = 'Product Center';
