@@ -45,6 +45,7 @@ class Goods_service extends Base_service {
 		$list = $this->_goodsClassModel->getList();
 		
 		if($list){
+			self::$CI->phptree->resetData();
 			return self::$CI->phptree->makeTreeForHtml($list,array(
 				'primary_key' => 'gc_id',
 				'parent_key' => 'gc_parent_id',
@@ -164,6 +165,7 @@ class Goods_service extends Base_service {
 		$list = $this->_goodsClassModel->getList();
 		
 		if($list){
+			self::$CI->phptree->resetData();
 			return self::$CI->phptree->makeTree($list,array(
 				'primary_key' => 'gc_id',
 				'parent_key' => 'gc_parent_id',

@@ -37,6 +37,35 @@ class Goods_Class extends Ydzj_Admin_Controller {
 	}
 	
 	
+	
+	public function getNavUrl(){
+		$gcId = $this->input->get_post('gc_id');
+		$info = $this->Goods_Class_Model->getById(array(
+			'where' => array(
+				'gc_id' => intval($gcId)
+			
+			)
+		));
+		
+		if(empty($info)){
+			$this->jsonOutput('',array(
+				'name_cn' => '产品中心',
+				'name_en' => 'Products',
+				'url_cn' => base_url('product/plist.html'),
+				'url_en' => base_url('product/plist.html'),
+			));
+		}else{
+			$this->jsonOutput('',array(
+				'name_cn' => $info['name_cn'],
+				'name_en' => $info['name_en'],
+				'url_cn' => base_url('product/plist/'.$info['gc_id'].'.html'),
+				'url_en' => base_url('product/plist/'.$info['gc_id'].'.html'),
+			));
+		}
+	}
+	
+	
+	
 	public function delete(){
 		
 		$delId = $this->input->post('id');

@@ -24,28 +24,31 @@ class Service extends Ydzj_Controller {
 	
 	private function _getRules(){
 		
-		$this->form_validation->set_rules('username','姓名','required|min_length[1]|max_length[30]');
-		$this->form_validation->set_rules('company_name','公司名称','required|min_length[1]|max_length[100]');
-		$this->form_validation->set_rules('mobile','手机号码','required|valid_mobile');
+		$langData = $this->lang->load('service','',true);
 		
-		$this->form_validation->set_rules('city','城市','required');
+		
+		$this->form_validation->set_rules('username',$langData['sug_username'],'required|min_length[1]|max_length[30]');
+		$this->form_validation->set_rules('company_name',$langData['sug_company'],'required|min_length[1]|max_length[100]');
+		$this->form_validation->set_rules('mobile',$langData['sug_mobile'],'required|valid_mobile');
+		
+		$this->form_validation->set_rules('city',$langData['sug_city'],'required');
 		
 		
 		if($this->input->post('tel')){
-			$this->form_validation->set_rules('tel','固定电话','required|max_length[20]');
+			$this->form_validation->set_rules('tel',$langData['sug_tel'],'required|max_length[20]');
 		}
 		
 		if($this->input->post('email')){
-			$this->form_validation->set_rules('email','联系邮箱','required|valid_email');
+			$this->form_validation->set_rules('email',$langData['sug_email'],'required|valid_email');
 		}
 		
 		if($this->input->post('weixin')){
-			$this->form_validation->set_rules('weixin','微信号','required');
+			$this->form_validation->set_rules('weixin',$langData['sug_wechat'],'required');
 		}
 		
-		$this->form_validation->set_rules('doc_no','合同号','required');
-		$this->form_validation->set_rules('remark','备注','required|max_length[200]');
-		$this->form_validation->set_rules('auth_code','验证码','required|callback_validateAuthCode');
+		$this->form_validation->set_rules('doc_no',$langData['sug_docno'],'required');
+		$this->form_validation->set_rules('remark',$langData['sug_remark'],'required|max_length[200]');
+		$this->form_validation->set_rules('auth_code',$langData['sug_captcha'],'required|callback_validateAuthCode');
 		
 		$info = array(
 			'username' => $this->input->post('username'),

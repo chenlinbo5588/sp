@@ -1,14 +1,14 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Company extends Ydzj_Controller {
+class About extends Ydzj_Controller {
 	
 	public function __construct(){
 		parent::__construct();
 		
 		
 		$this->assign(array(
-			'pgClass' => 'companyPg',
+			'pgClass' => 'aboutPg',
 		));
 	}
 }

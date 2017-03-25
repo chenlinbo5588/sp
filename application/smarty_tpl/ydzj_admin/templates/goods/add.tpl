@@ -5,7 +5,7 @@
       <ul class="tab-base">
       	<li><a href="{admin_site_url('goods/index')}"><span>管理</span></a></li>
       	<li><a {if empty($info['goods_id'])}class="current"{/if} href="{admin_site_url('goods/add')}"><span>新增</span></a></li>
-        {if $info['goods_id']}<li><a class="current"><span>编辑</span></a></li>{/if}
+        {if $info['goods_id']}<li><a class="current"  href="{admin_site_url('goods/edit/')}?goods_id={$info['goods_id']}" ><span>编辑</span></a></li>{/if}
       </ul>
     </div>
   </div>

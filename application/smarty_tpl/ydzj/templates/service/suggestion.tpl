@@ -6,22 +6,22 @@
 			<div class="contentArea">
 				<div class="breadcrumb">{$breadcrumb}</div>
 				<div class="bd" id="articleInfo" style="border:1px solid #dcdcdc;">
-					<h3>请按要求填写您的准确信息，相关人员将在第一时间与您联系</h3>
+					<h3>{$sug_tip}</h3>
 					<a name="formmap">&nbsp;</a>
 					{form_open(base_url('service/suggestion.html#formmap'),'id="suggestion_form"')}
 						<table class="suggest">
-							<tr><td style="width:80px;"><span>您的姓名:</span><em>*</em></td><td><input type="text" name="username" value="{$info['username']|escape}" placeholder="请输入您的用户名"/>{form_error('username')}</td></tr>
-							<tr><td><span>公司名称:</span><em>*</em></td><td><input type="text" name="company_name" value="{$info['company_name']|escape}" placeholder="请输入您的公司名称"/>{form_error('company_name')}</td></tr>
-							<tr><td><span>手机号码:</span><em>*</em></td><td><input type="text" name="mobile" value="{$info['mobile']|escape}" placeholder="请输入您的手机号码"/>{form_error('mobile')}</td></tr>
-							<tr><td><span>所在城市:</span><em>*</em></td><td><input type="text" name="city" value="{$info['city']|escape}" placeholder="请输入您的所在城市"/>{form_error('city')}</td></tr>
-							<tr><td><span>座机:</span><em>:</em></td><td><input type="text" name="tel" value="{$info['tel']|escape}" placeholder="请输入您的座机号码"/>{form_error('tel')}</td></tr>
-							<tr><td><span>联系邮箱:</span><em></em></td><td><input type="text" name="email" value="{$info['email']|escape}" placeholder="请输入您的邮箱"/>{form_error('email')}</td></tr>
-							<tr><td><span>微信号:</span><em></em></td><td><input type="text" name="weixin" value="{$info['weixin']|escape}" placeholder="请输入您的微信号"/>{form_error('weixin')}</td></tr>
-							<tr><td><span>合同号:</span><em>*</em></td><td><input type="text" name="doc_no" value="{$info['doc_no']|escape}" placeholder="请输入您的合同号"/>{form_error('doc_no')}</td></tr>
-							<tr><td><span>备注:</span><em>*</em></td><td><textarea style="width:200px;height:80px;" name="remark">{$info['remark']|escape}</textarea>{form_error('remark')}</td></tr>
-							<tr><td><span>验证码:</span><em>*</em></td><td><input type="text" name="auth_code" value="" placeholder="请输入验证码"/>{form_error('auth_code')}</td></tr>
-							<tr><td></td><td><img id="auth_code" src="{site_url('captcha/index')}"/>&nbsp;<a id="refreshBtn" href="javascript:void(0);">看不清，点击刷新</a></td></tr>
-							<tr><td></td><td><input class="link_btn" type="submit" name="tj" value="提交"/></td></tr>
+							<tr><td style="width:120px;"><span>{$sug_username}:</span><em>*</em></td><td><input type="text" name="username" value="{$info['username']|escape}" placeholder="{$sug_please}{$sug_username}"/>{form_error('username')}</td></tr>
+							<tr><td><span>{$sug_company}:</span><em>*</em></td><td><input type="text" name="company_name" value="{$info['company_name']|escape}" placeholder="{$sug_please}{$sug_company}"/>{form_error('company_name')}</td></tr>
+							<tr><td><span>{$sug_mobile}:</span><em>*</em></td><td><input type="text" name="mobile" value="{$info['mobile']|escape}" placeholder="{$sug_please}{$sug_mobile}"/>{form_error('mobile')}</td></tr>
+							<tr><td><span>{$sug_city}:</span><em>*</em></td><td><input type="text" name="city" value="{$info['city']|escape}" placeholder="{$sug_please}{$sug_city}"/>{form_error('city')}</td></tr>
+							<tr><td><span>{$sug_tel}:</span><em>:</em></td><td><input type="text" name="tel" value="{$info['tel']|escape}" placeholder="{$sug_please}{$sug_tel}"/>{form_error('tel')}</td></tr>
+							<tr><td><span>{$sug_email}:</span><em></em></td><td><input type="text" name="email" value="{$info['email']|escape}" placeholder="{$sug_please}{$sug_email}"/>{form_error('email')}</td></tr>
+							<tr><td><span>{$sug_wechat}:</span><em></em></td><td><input type="text" name="weixin" value="{$info['weixin']|escape}" placeholder="{$sug_please}{$sug_wechat}"/>{form_error('weixin')}</td></tr>
+							<tr><td><span>{$sug_docno}:</span><em>*</em></td><td><input type="text" name="doc_no" value="{$info['doc_no']|escape}" placeholder="{$sug_please}{$sug_docno}"/>{form_error('doc_no')}</td></tr>
+							<tr><td><span>{$sug_remark}:</span><em>*</em></td><td><textarea style="width:200px;height:80px;" name="remark">{$info['remark']|escape}</textarea>{form_error('remark')}</td></tr>
+							<tr><td><span>{$sug_captcha}:</span><em>*</em></td><td><input type="text" name="auth_code" value="" placeholder="{$sug_please}{$sug_captcha}"/>{form_error('auth_code')}</td></tr>
+							<tr><td></td><td><img id="auth_code" src="{site_url('captcha/index')}"/>&nbsp;<a id="refreshBtn" href="javascript:void(0);">{$sug_tip2}</a></td></tr>
+							<tr><td></td><td><input class="link_btn" type="submit" name="tj" value="{$sug_submit}"/></td></tr>
 						</table>
 					</form>
 				</div>

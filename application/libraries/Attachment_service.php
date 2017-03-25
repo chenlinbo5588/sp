@@ -212,6 +212,11 @@ class Attachment_service extends Base_service {
 	 */
 	public function addAttachment($filename, $config = array(),$from = 0,$mod = ''){
 		//print_r($config);
+		
+		if(empty($config['upload_path'])){
+			$config = array_merge($this->getUploadConfig(),$config);
+		}
+		
 		self::$CI->load->library('upload', $config);
 		if(self::$CI->upload->do_upload($filename)){
 			$fileData = self::$CI->upload->data();
@@ -252,13 +257,9 @@ class Attachment_service extends Base_service {
 	public function addImageAttachment($filename, $moreConfig = array(),$from = 0,$mod = ''){
 		
 		//处理照片
-		$commonConfig = $this->getUploadConfig();
 		$config = $this->getImageConfig($from);
+		$config = array_merge($config,$moreConfig);
 		
-		$config = array_merge($commonConfig,$config);
-		if(!empty($moreConfig)){
-			$config = array_merge($config,$moreConfig);
-		}
 		//print_r($config);
 		return $this->addAttachment($filename,$config,$from,$mod);
 		

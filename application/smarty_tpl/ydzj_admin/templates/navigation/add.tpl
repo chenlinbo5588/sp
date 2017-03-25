@@ -20,6 +20,77 @@
     <table class="table tb-type2">
       <tbody>
         <tr class="noborder">
+          <td colspan="2" class="required"><label>导航类型</label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform">
+              <ul class="nofloat">
+              <li class="left w100pre"><span class="radio">
+                <input type="radio"  value="0" name="nav_type" id="diy" onclick="showType('diy');">
+                <label for="diy">自定义导航</label>
+                </span></li>
+              <li class="left w100pre"><span class="radio">
+                <input type="radio"  value="1" name="nav_type" id="goods_class" onclick="showType('goods_class');">
+                <label for="goods_class">商品分类</label>
+                </span>
+                <select name="goods_class_id" id="goods_class_id" style="display: none;">
+                      <option value="">请选择</option>
+                      <option value="0">全部分类</option>
+		              {foreach from=$goodsClass item=item}
+		              <option {if $info['item_id'] == $item['gc_id']}selected{/if} value="{$item['gc_id']}">{str_repeat('&nbsp;&nbsp;',$item['level'])}{$item['level']+1} {$item['name_cn']}</option>
+		              {/foreach}
+                 </select>
+              </li>
+              <li class="left w100pre"><span class="radio">
+                <input type="radio"  value="2" name="nav_type" id="article_class" onclick="showType('article_class');">
+                <label for="article_class">文章分类</label>
+                </span>
+                <select name="article_class_id" id="article_class_id" style="display: none;">
+                    <option value="">请选择</option>
+                    <option value="0">全部分类</option>
+                    {foreach from=$articleClass item=item}
+                    <option {if $info['item_id'] == $item['ac_id']}selected{/if} value="{$item['ac_id']}">{str_repeat('&nbsp;&nbsp;',$item['level'])}{$item['level']+1} {$item['name_cn']}</option>
+                    {/foreach}
+                </select>
+              </li>
+              <li class="left w100pre"><span class="radio">
+                <input type="radio"  value="3" name="nav_type" id="article" onclick="showType('article');">
+                <label for="article">文章</label>
+                </span>
+                <input type="text" id="article_id"  name="article_id" value="" placeholder="请输入文章ID" style="display: none;"/>
+              </li>
+              <li class="left w100pre"><span class="radio">
+                <input type="radio"  value="4" name="nav_type" id="cms_article_class" onclick="showType('cms_article_class');">
+                <label for="cms_article_class">CMS文章分类</label>
+                </span>
+                <select name="cms_article_class_id" id="cms_article_class_id" style="display: none;">
+                    <option value="">请选择</option>
+                    <option value="0">全部分类</option>
+                    {foreach from=$cmsArticleClass item=item}
+                    <option {if $info['item_id'] == $item['id']}selected{/if} value="{$item['id']}">{str_repeat('&nbsp;&nbsp;',$item['level'])}{$item['level']+1} {$item['name_cn']}</option>
+                    {/foreach}
+                </select>
+              </li>
+              <li class="left w100pre"><span class="radio">
+                <input type="radio"  value="5" name="nav_type" id="cms_article" onclick="showType('cms_article');">
+                <label for="article">CMS文章</label>
+                </span>
+                <input type="text" id="cms_article_id"  name="cms_article_id" value="" placeholder="请输入CMS文章ID" style="display: none;"/>
+              </li>
+              {*
+              <li class="left w100pre"><span class="radio">
+                <input type="radio"  value="4" name="nav_type" id="activity" onclick="showType('activity');">
+                <label for="activity">活动</label>
+                </span>
+                <select name="activity_id" id="activity_id" style="display: none;">
+                </select>
+              </li>
+              *}
+            </ul>
+            </td>
+           <td class="vatop tips"></td>
+        </tr>
+        <tr class="noborder">
           <td colspan="2" class="required"><label class="validation" for="name_cn">导航中文名称:</label></td>
         </tr>
         <tr class="noborder">
@@ -51,15 +122,36 @@
           <td colspan="2" class="required"><label class="validation" for="url_cn">导航链接(中文版):</label></td>
         </tr>
         <tr class="noborder">
-          <td class="vatop rowform"><input type="text" value="{$info['url_cn']|escape}" name="url_cn" id="url_cn" class="txt"></td>
-          <td class="vatop tips">{form_error('url_cn')}<span class="tips">{literal}{ID}{/literal} 表示当即记录的ID 对于某些需要在显示页面中展示紫导航的页面需要插入该值</span></td>
+          <td class="vatop rowform"><input type="text" value="{$info['url_cn']|escape}" name="url_cn" id="url_cn" class="txt url"></td>
+          <td class="vatop tips">{form_error('url_cn')}<span class="tips">{literal}{ID}{/literal} 表示当即记录的ID 对于某些需要在显示页面中自动展示当前导航子导航的页面需要插入该值</span></td>
         </tr>
         <tr class="noborder">
           <td colspan="2" class="required"><label class="validation" for="url_en">导航链接(英文版):</label></td>
         </tr>
         <tr class="noborder">
-          <td class="vatop rowform"><input type="text" value="{$info['url_en']|escape}" name="url_en" id="url_en" class="txt">{*<input type="button" name="thesame" value="和中文版链接一致"/>*}</td>
+          <td class="vatop rowform"><input type="text" value="{$info['url_en']|escape}" name="url_en" id="url_en" class="txt url">{*<input type="button" name="thesame" value="和中文版链接一致"/>*}</td>
           <td class="vatop tips">{form_error('url_en')}</td>
+        </tr>
+        <tr>
+          <td colspan="2" class="required"><label>
+            <label for="type">所在位置:</label>
+            </label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform"><ul>
+             {*
+              <li>
+                <label><input type="radio" value="0" {if $info['nav_location'] == 0}checked="checked"{/if} name="nav_location">顶部</label>
+              </li>
+              *}
+              <li>
+                <label><input type="radio" {if $info['nav_location'] == 1}checked="checked"{/if} value="1" name="nav_location">主导航</label>
+              </li>
+              <li>
+                <label><input type="radio" {if $info['nav_location'] == 2}checked="checked"{/if} value="2" name="nav_location">底部</label>
+              </li>
+            </ul></td>
+          <td class="vatop tips"></td>
         </tr>
         <tr class="noborder">
           <td colspan="2" class="required"><label class="validation" for="url_en">跳转方式:</label></td>
@@ -86,4 +178,52 @@
       </tfoot>
     </table>
   </form>
+  <script>
+    function showType(type){
+	    $('#goods_class_id').css('display','none');
+	    $('#article_class_id').css('display','none');
+	    $('#cms_article_class_id').css('display','none');
+	    $('#article_id').css('display','none');
+	    $('#cms_article_id').css('display','none');
+	    
+	    if(type == 'diy'){
+	        $('input.url').attr('disabled',false);
+	    }else{
+	        //$('input.url').attr('disabled',true);
+	        $('#'+type+'_id').show();   
+	    }
+	}
+	
+	$(function(){
+	   var setInfo = function(json){
+           $("#name_cn").val(json.data.name_cn);
+           $("#name_en").val(json.data.name_en);
+           $("#url_cn").val(json.data.url_cn);
+           $("#url_en").val(json.data.url_en);
+       }
+	   
+	   $("#goods_class_id").bind("change",function(){
+	       $.getJSON("{admin_site_url('goods_class/getNavUrl')}",{ gc_id: $(this).val() },setInfo )
+	   });
+	   
+	   $("#article_class_id").bind("change",function(){
+           $.getJSON("{admin_site_url('article_class/getNavUrl')}",{ ac_id: $(this).val() }, setInfo)
+       });
+       
+       $("#article_id").bind("blur",function(){
+           $.getJSON("{admin_site_url('article/getNavUrl')}",{ id: $(this).val() }, setInfo)
+       });
+       
+       $("#cms_article_class_id").bind("change",function(){
+           $.getJSON("{admin_site_url('cms_article_class/getNavUrl')}",{ id: $(this).val() }, setInfo)
+       });
+       
+       $("#cms_article_id").bind("blur",function(){
+           $.getJSON("{admin_site_url('cms_article/getNavUrl')}",{ id: $(this).val() }, setInfo)
+       });
+       
+	
+	});
+	
+  </script>
 {include file="common/main_footer.tpl"}

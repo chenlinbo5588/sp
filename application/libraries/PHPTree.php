@@ -37,6 +37,13 @@ class PHPTree{
 	
 	/* 层次暂存 */
 	protected static $level = array();
+	
+	/* 重置数据 */
+	public static function resetData(){
+		self::$result = array();
+		self::$level = array();
+	}
+	
 	/**
 
 	 * @name 生成树形结构

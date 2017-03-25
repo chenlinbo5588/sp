@@ -22,6 +22,7 @@ class Cms_service extends Base_service {
 		$list = $this->_cmsArticleClassModel->getList();
 		
 		if($list){
+			self::$CI->phptree->resetData();
 			return self::$CI->phptree->makeTreeForHtml($list,array(
 				'primary_key' => 'id',
 				'parent_key' => 'pid',
@@ -36,6 +37,7 @@ class Cms_service extends Base_service {
 		$list = $this->_cmsArticleClassModel->getList();
 		
 		if($list){
+			self::$CI->phptree->resetData();
 			return self::$CI->phptree->makeTree($list,array(
 				'primary_key' => 'id',
 				'parent_key' => 'pid',

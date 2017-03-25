@@ -2,8 +2,8 @@
 	<div class="linePg">
 		<div class="{$pgClass}"></div>
 		<div class="boxz clearfix mg10">
-			<form id="detailForm" name="detailForm" action="{base_url('news/plist.html')}" method="get">
-			{if !$isMobile}{include file="./news_side.tpl"}{/if}
+			<form id="detailForm" name="detailForm" action="{base_url('article/plist.html')}" method="get">
+			{if !$isMobile}{include file="./article_side.tpl"}{/if}
 			<div class="contentArea">
 				<div class="breadcrumb"><span>{$your_position}:</span>{$breadcrumb}</div>
 				<div class="bd bdlist">
@@ -13,7 +13,7 @@
 						<div><em class="mute">{$visit_count}:</em><strong>{$info['article_click']}</strong><em class="mute">{$online_date}:</em><strong>{$info['gmt_create']|date_format:"%Y-%m-%d"}</strong></div>
 					</div>
 					<div class="articleContent">
-						{$info['content']}
+						{$info['article_content']}
 					</div>
 					
 					<div class="articleRelate clearfix">
@@ -26,7 +26,7 @@
 				</div>
 			</div>
 			</form>
-			{if $isMobile}{include file="./news_side.tpl"}{/if}
+			{if $isMobile}{include file="./article_side.tpl"}{/if}
 		</div>
 	</div>
 {include file="common/website_footer.tpl"}

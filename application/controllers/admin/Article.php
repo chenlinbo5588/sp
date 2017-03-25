@@ -52,6 +52,45 @@ class Article extends Ydzj_Admin_Controller {
 	}
 	
 	
+	public function getNavUrl(){
+		$id = $this->input->get_post('id');
+		$info = $this->Article_Model->getById(array(
+			'where' => array(
+				'article_id' => intval($id)
+			
+			)
+		));
+		
+		
+		if(empty($info)){
+			$this->jsonOutput('',array(
+				'name_cn' => '',
+				'name_en' => '',
+				'url_cn' => '',
+				'url_en' => '',
+			));
+		}else{
+			
+			
+			$articleClassInfo = $this->Article_Class_Model->getById(
+				array(
+					'where' => array(
+						'ac_id' => $info['ac_id']
+					
+					)
+				)
+			);
+			
+			$this->jsonOutput('',array(
+				'name_cn' => $info['article_title'],
+				'name_en' => $info['article_title'],
+				'url_cn' => base_url($articleClassInfo['ac_code'].'/{ID}_'.$info['article_id'].'.html'),
+				'url_en' => base_url($articleClassInfo['ac_code'].'/{ID}_'.$info['article_id'].'.html'),
+			));
+		}
+	}
+	
+	
 	
 	private function _getRules(){
 		$this->form_validation->set_rules('article_title','文章标题','required|max_length[80]');
@@ -231,7 +270,8 @@ class Article extends Ydzj_Admin_Controller {
 	
 	public function addfile(){
 		$json = array('error' => 1, 'formhash'=>$this->security->get_csrf_hash(),'id' => 0,'msg' => '上次失败');
-		$fileData = $this->attachment_service->addImageAttachment('fileupload',array(
+		
+		$fileData = $this->attachment_service->addAttachment('fileupload',array(
 			'allowed_types' => 'jpg|jpeg|pdf|doc|docx'
 		),FROM_BACKGROUND,'article');
 		

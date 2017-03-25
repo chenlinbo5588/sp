@@ -22,6 +22,8 @@ class Navigation_service extends Base_service {
 		));
 		
 		if($list){
+			
+			self::$CI->phptree->resetData();
 			return self::$CI->phptree->makeTreeForHtml($list,array(
 				'primary_key' => 'id',
 				'parent_key' => 'pid',
@@ -38,6 +40,7 @@ class Navigation_service extends Base_service {
 		));
 		
 		if($list){
+			self::$CI->phptree->resetData();
 			return self::$CI->phptree->makeTree($list,array(
 				'primary_key' => 'id',
 				'parent_key' => 'pid',

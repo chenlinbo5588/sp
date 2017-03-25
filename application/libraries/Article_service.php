@@ -24,6 +24,7 @@ class Article_service extends Base_service {
 		$list = $this->_articleClassModel->getList();
 		
 		if($list){
+			self::$CI->phptree->resetData();
 			return self::$CI->phptree->makeTreeForHtml($list,array(
 				'primary_key' => 'ac_id',
 				'parent_key' => 'ac_parent_id',
@@ -159,6 +160,7 @@ class Article_service extends Base_service {
 		$list = $this->_articleClassModel->getList();
 		
 		if($list){
+			self::$CI->phptree->resetData();
 			return self::$CI->phptree->makeTree($list,array(
 				'primary_key' => 'ac_id',
 				'parent_key' => 'ac_parent_id',
@@ -177,5 +179,37 @@ class Article_service extends Base_service {
 		));
 		
 		return $this->toEasyUseArray($list,'ac_id');
+	}
+	
+	
+	public function getNextByArticle($article){
+		$article = $this->_articleModel->getList(array(
+			'where' => array('ac_id' => $article['ac_id'], 'article_id >' => $article['article_id'] , 'article_show' => 1),
+			'order' => 'article_id ASC',
+			'limit' => 1
+		));
+		
+		if($article[0]){
+			return $article[0];
+		}else{
+			return false;
+		}
+	}
+	
+	
+	public function getPreByArticle($article){
+		$article = $this->_articleModel->getList(array(
+			'where' => array('ac_id' => $article['ac_id'], 'article_id <' => $article['article_id'] , 'article_show' => 1),
+			'order' => 'article_id DESC',
+			'limit' => 1
+		));
+		
+		 //print_r($article);
+		
+		if($article[0]){
+			return $article[0];
+		}else{
+			return false;
+		}
 	}
 }

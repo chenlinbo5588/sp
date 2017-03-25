@@ -37,6 +37,38 @@ class Article_Class extends Ydzj_Admin_Controller {
 	}
 	
 	
+	public function getNavUrl(){
+		$id = $this->input->get_post('ac_id');
+		$info = $this->Article_Class_Model->getById(array(
+			'where' => array(
+				'ac_id' => intval($id)
+			
+			)
+		));
+		
+		if(empty($info)){
+			$this->jsonOutput('',array(
+				'name_cn' => '文章列表',
+				'name_en' => 'Article',
+				'url_cn' => base_url('article/plist.html'),
+				'url_en' => base_url('article/plist.html'),
+			));
+		}else{
+			$this->jsonOutput('',array(
+				'name_cn' => $info['name_cn'],
+				'name_en' => $info['name_en'],
+				'url_cn' => base_url('article/plist/'.$info['ac_id'].'.html'),
+				'url_en' => base_url('article/plist/'.$info['ac_id'].'.html'),
+			));
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
 	public function delete(){
 		
 		$delId = $this->input->get_post('id');
@@ -59,7 +91,6 @@ class Article_Class extends Ydzj_Admin_Controller {
 		
 		$feedback = '';
 		$treelist = $this->article_service->getArticleClassTreeHTML();
-		
 		$ac_parent_id = $this->input->get_post('ac_parent_id');
 		
 		
@@ -73,7 +104,9 @@ class Article_Class extends Ydzj_Admin_Controller {
 			for($i = 0; $i < 1; $i++){
 				
 				$info = array(
-					'ac_name' => $this->input->post('ac_name'),
+					'name_cn' => $this->input->post('name_cn'),
+					'name_en' => $this->input->post('name_en'),
+					'ac_code' => strtolower(trim($this->input->post('ac_code'))),
 					'ac_parent_id' => $this->input->post('ac_parent_id') ? $this->input->post('ac_parent_id') : 0,
 					'ac_sort' => $this->input->post('ac_sort') ? $this->input->post('ac_sort') : 255
 				);
@@ -94,12 +127,59 @@ class Article_Class extends Ydzj_Admin_Controller {
 		}
 		
 		
-		$this->assign('info',$info);
-		$this->assign('feedback',$feedback);
-
+		$this->assign(array(
+			'info' => $info,
+			'feedback' => $feedback,
+			'list' => $treelist,
+		));
 		
-		$this->assign('list',$treelist);
 		$this->display();
+	}
+	
+	
+	/**
+	 * 文章分类子目录代码，在相同的父级列表中互不相同
+	 */
+	public function checkaccode($accode,$extra = ''){
+		
+		
+		/*
+		$pid = $this->input->post('ac_parent_id');
+		$acid = $this->input->post('ac_id');
+		
+		
+		$data = $this->Article_Class_Model->getList(array(
+			'where' => array(
+				'ac_code' => strtolower($accode),
+			)
+		));
+		
+		if($extra == 'add'){
+			if(empty($data)){
+				return true;
+			}else{
+				$this->form_validation->set_message('checkaccode','%s 已经存在');
+				return false;
+			}
+			
+		}else{
+			if(empty($data)){
+				return true;
+			}else{
+				foreach($data as $item){
+					$item['ac_parent_id'] == $pid;
+				}
+			}
+			
+			if(!empty($data[0]) && $data[0]['ac_id'] == $acid){
+				return true;
+			}else{
+				$this->form_validation->set_message('checkaccode',' %s 已经存在');
+				return false;
+			}
+		}
+		*/
+		
 	}
 	
 	
@@ -160,7 +240,10 @@ class Article_Class extends Ydzj_Admin_Controller {
 	
 	private function _getRules($action = 'add'){
 		
-		$this->form_validation->set_rules('ac_name','分类名称',"required");
+		$this->form_validation->set_rules('name_cn','文章分类中文名称',"required");
+		$this->form_validation->set_rules('name_en','文章分类英文名称',"required");
+		$this->form_validation->set_rules('ac_code','文章分类目录代码',"required|alpha_numeric");
+		
 		
 		if($this->input->post('ac_parent_id')){
 			$this->form_validation->set_rules('ac_parent_id','上级分类', "in_db_list[{$this->Article_Class_Model->_tableRealName}.ac_id]|callback_checkpid[{$action}]");
@@ -190,13 +273,15 @@ class Article_Class extends Ydzj_Admin_Controller {
 				
 				$info = array(
 					'ac_id' => $ac_id,
-					'ac_name' => $this->input->post('ac_name'),
+					'name_cn' => $this->input->post('name_cn'),
+					'name_en' => $this->input->post('name_en'),
+					'ac_code' => strtolower(trim($this->input->post('ac_code'))),
 					'ac_parent_id' => $this->input->post('ac_parent_id') ? $this->input->post('ac_parent_id') : 0,
 					'ac_sort' => $this->input->post('ac_sort') ? $this->input->post('ac_sort') : 255
 				);
 				
 				if(!$this->form_validation->run()){
-					$feedback = $this->form_validation->error_string();
+					$feedback = getErrorTip($this->form_validation->error_string());
 					break;
 				}
 				
@@ -209,10 +294,12 @@ class Article_Class extends Ydzj_Admin_Controller {
 			}
 		}
 		
+		$this->assign(array(
+			'info' => $info,
+			'feedback' => $feedback,
+			'list' => $treelist,
+		));
 		
-		$this->assign('info',$info);
-		$this->assign('feedback',$feedback);
-		$this->assign('list',$treelist);
 		
 		$this->display('article_class/add');
 	}

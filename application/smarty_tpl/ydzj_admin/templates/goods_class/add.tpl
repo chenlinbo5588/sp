@@ -5,7 +5,7 @@
       <ul class="tab-base">
       	<li><a href="{admin_site_url('goods_class/category')}"><span>管理</span></a></li>
       	<li><a {if empty($info['gc_id'])}class="current"{/if} href="{admin_site_url('goods_class/add')}"><span>新增</span></a></li>
-        {if $info['gc_id']}<li><a class="current"><span>编辑</span></a></li>{/if}
+        {if $info['gc_id']}<li><a class="current" href="{admin_site_url('goods_class/edit/')}?gc_id={$info['gc_id']}" ><span>编辑</span></a></li>{/if}
       	<li><a href="{admin_site_url('goods_class/export')}"><span>导出</span></a></li>
       	<li><a href="{admin_site_url('goods_class/import')}"><span>导入</span></a></li>
       	<li><a href="{admin_site_url('goods_class/tag')}"><span>TAG管理</span></a></li>

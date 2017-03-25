@@ -942,13 +942,12 @@ input[type=text].validation_error {
 	height:230px;
 }
 
-
-.companyPg {
+.aboutPg {
 	background:url(../img/cmp/1.jpg) no-repeat center center;
     height:230px;
 }
 
-.newsPg {
+.cmsPg {
 	background:url(../img/cmp/5.jpg) no-repeat center center;
 	height:230px;
 } 
@@ -1044,6 +1043,8 @@ input[type=text].validation_error {
 
 .sideNav li.current a {
 	color:#ED6D00;
+	font-size: 16px;
+    font-weight: bold;
 }
 
 .sideNav .oneItem a:hover {
@@ -1417,7 +1418,7 @@ input[type=text].validation_error {
 		height:250px;
 	}
 	
-	.newsPg {
+	.cmsPg {
 		background:url(../img/cmp/m1.jpg) no-repeat center top;
 		height:250px;
 	}

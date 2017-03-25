@@ -273,7 +273,7 @@
           	<select name="category" id="category">
 	          <option value="">请选择...</option>
 	          {foreach from=$goodsClassHTML item=item}
-	          <option value="{$item['gc_id']}">{str_repeat('......',$item['level'])}{$item['level']+1} {$item['gc_name']}</option>
+	          <option value="{$item['gc_id']}">{str_repeat('&nbsp;&nbsp;',$item['level'])}{$item['level']+1} {$item['name_cn']}</option>
 	          {/foreach}
 	        </select>
           </td>

@@ -71,6 +71,33 @@ class Cms_Article extends Ydzj_Admin_Controller {
 	}
 	
 	
+	public function getNavUrl(){
+		$id = $this->input->get_post('id');
+		$info = $this->Cms_Article_Model->getById(array(
+			'where' => array(
+				'id' => intval($id)
+			
+			)
+		));
+		
+		if(empty($info)){
+			$this->jsonOutput('',array(
+				'name_cn' => '',
+				'name_en' => '',
+				'url_cn' => '',
+				'url_en' => '',
+			));
+		}else{
+			$this->jsonOutput('',array(
+				'name_cn' => $info['article_title'],
+				'name_en' => $info['article_title'],
+				'url_cn' => base_url('cms/detail/'.$info['id'].'.html'),
+				'url_en' => base_url('cms/detail/'.$info['id'].'.html'),
+			));
+		}
+	}
+	
+	
 	/**
 	 * 
 	 */

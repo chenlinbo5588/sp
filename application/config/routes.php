@@ -66,7 +66,9 @@ $route['^index\.html'] = 'index';
 $route['^([a-z]+)/(:num)_(:num)\.html'] = '$1/article/$2/$3';
 
 //相关页面
-$route['^news/(.*)\.html'] = 'news/$1';
+$route['^cms/(.*)\.html'] = 'cms/$1';
+$route['^cms/detail/(\d+)\.html'] = 'cms/detail/$1';
+$route['^article/(\d+)\.html'] = 'article/detail/$1';
 $route['^service/(.*)\.html'] = 'service/$1';
 $route['^product/(.*)\.html'] = 'product/$1';
 

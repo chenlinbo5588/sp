@@ -9,6 +9,10 @@
 
 #adminlogin h1 {
 	text-align:center;
+    height: 60px;
+    line-height: 60px;
+    border-bottom: 2px solid #35449D;
+    margin: 10px 0;
 }
 
 #adminlogin .side_lb {

@@ -312,7 +312,7 @@ input[type=checkbox],input[type=radio] {
 #table_area_box_edit label { vertical-align: top; display: inline-block; *display: inline; width: 25%; margin: 0 0 10px 0; *zoom: 1; }
 #table_area_box_edit input[type="checkbox"] { vertical-align: middle;}
 
-    .rowform{ width:306px; overflow:auto; }
+    .rowform{ width:400px; overflow:auto; }
 
         .rowform .txt, .rowform textarea{ margin-right:10px; width:250px; }
         .rowform .txt2, .rowform textarea{ margin-right:10px; width:110px; }

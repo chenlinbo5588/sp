@@ -34,6 +34,7 @@ class Navigation extends Ydzj_Admin_Controller {
 		$this->assign('parentId',$parentId);
 		$this->assign('deep',$deep + 1);
 		$this->assign('id',$id);
+		$this->assign('idReplacement','{ID}');
 		
 		$this->display();
 	}
@@ -63,6 +64,8 @@ class Navigation extends Ydzj_Admin_Controller {
 		$feedback = '';
 		$treelist = $this->navigation_service->getClassTreeHTML();
 		
+		$this->load->library(array('Cms_service','Article_service','Goods_service'));
+		
 		$ac_parent_id = $this->input->get_post('pid');
 		
 		
@@ -80,6 +83,7 @@ class Navigation extends Ydzj_Admin_Controller {
 					'name_en' => $this->input->post('name_en'),
 					'url_cn' => $this->input->post('url_cn'),
 					'url_en' => $this->input->post('url_en'),
+					'nav_type' => $this->input->post('nav_type'),
 					'jump_type' => $this->input->post('jump_type'),
 					'pid' => $this->input->post('pid') ? $this->input->post('pid') : 0,
 					'displayorder' => $this->input->post('displayorder') ? $this->input->post('displayorder') : 255
@@ -103,11 +107,15 @@ class Navigation extends Ydzj_Admin_Controller {
 		}
 		
 		
-		$this->assign('info',$info);
-		$this->assign('feedback',$feedback);
+		$this->assign(array(
+			'info' => $info,
+			'feedback' => $feedback,
+			'goodsClass' => $this->goods_service->getGoodsClassTreeHTML(),
+			'articleClass' => $this->article_service->getArticleClassTreeHTML(),
+			'cmsArticleClass' => $this->cms_service->getArticleClassTreeHTML(),
+			'list' => $treelist
+		));
 
-		
-		$this->assign('list',$treelist);
 		$this->display();
 	}
 	
@@ -169,8 +177,11 @@ class Navigation extends Ydzj_Admin_Controller {
 	
 	private function _getRules($action = 'add'){
 		
+		$this->form_validation->set_rules('nav_type','导航类型',"required|in_list[0,1,2,3,4,5]");
+		
 		$this->form_validation->set_rules('name_cn','导航中文名称',"required|min_length[1]|max_length[50]");
 		$this->form_validation->set_rules('name_en','导航英文名称',"required|min_length[1]|max_length[50]");
+		
 		
 		if($this->input->post('pid')){
 			$this->form_validation->set_rules('pid','上级分类', "in_db_list[{$this->Navigation_Model->_tableRealName}.id]|callback_checkpid[{$action}]");
@@ -193,6 +204,8 @@ class Navigation extends Ydzj_Admin_Controller {
 		$feedback = '';
 		$treelist = $this->navigation_service->getClassTreeHTML();
 		$id = $this->input->get_post('id');
+		
+		$this->load->library(array('Cms_service','Article_service','Goods_service'));
 		
 		$info = $this->Navigation_Model->getFirstByKey($id,'id');
 		
@@ -229,9 +242,15 @@ class Navigation extends Ydzj_Admin_Controller {
 		}
 		
 		
-		$this->assign('info',$info);
-		$this->assign('feedback',$feedback);
-		$this->assign('list',$treelist);
+		$this->assign(array(
+			'info' => $info,
+			'feedback' => $feedback,
+			'goodsClass' => $this->goods_service->getGoodsClassTreeHTML(),
+			'articleClass' => $this->article_service->getArticleClassTreeHTML(),
+			'cmsArticleClass' => $this->cms_service->getArticleClassTreeHTML(),
+			'list' => $treelist
+		));
+		
 		
 		$this->display('navigation/add');
 	}

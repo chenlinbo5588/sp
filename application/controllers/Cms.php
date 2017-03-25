@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class News extends Ydzj_Controller {
+class Cms extends Ydzj_Controller {
 	
 	private $topClassId = 0;
 	private $seoKeys = array();
@@ -28,13 +28,13 @@ class News extends Ydzj_Controller {
 		
 		$this->_navigation = array(
 			$homeKey => base_url('/'),
-			$navigationInfo[$nameKey] => base_url('news/plist.html'),
+			$navigationInfo[$nameKey] => base_url('cms/plist.html'),
 		);
 		
 		
 		$this->assign(array(
-			'currentModule' => 'news',
-			'pgClass' => 'newsPg',
+			'currentModule' => 'cms',
+			'pgClass' => 'cmsPg',
 			'sideNavs' => $articleClassTree,
 		));
 		
@@ -77,7 +77,7 @@ class News extends Ydzj_Controller {
 				'current_page' => $currentPage,
 				//'call_js' => 'search_page',
 				'form_id' => '#listForm',
-				'base_link' => base_url("news/plist/{$currentAcId}.html?keyword={$keyword}")
+				'base_link' => base_url("cms/plist/{$currentAcId}.html?keyword={$keyword}")
 			)
 		);
 		
@@ -100,7 +100,7 @@ class News extends Ydzj_Controller {
 				}
 				
 				if(empty($newsArtile['jump_url'])){
-					$newsArtile['jump_url'] = base_url("news/detail/{$newsArtile['ac_id']}_{$newsArtile['id']}.html");
+					$newsArtile['jump_url'] = base_url("cms/detail/{$newsArtile['id']}.html");
 				}
 				
 				if(trim($newsArtile['digest'])){
@@ -155,7 +155,7 @@ class News extends Ydzj_Controller {
 			//print_r($parents);
 			foreach($parents as $pitem){
 				$this->seoKeys[] = $pitem[$nameKey];
-				$this->_navigation[$pitem[$nameKey]] = base_url("news/plist/{$pitem['id']}.html");
+				$this->_navigation[$pitem[$nameKey]] = base_url("cms/plist/{$pitem['id']}.html");
 				
 			}
 		}
@@ -165,9 +165,8 @@ class News extends Ydzj_Controller {
 	
 	
 	public function detail(){
-		$idInfo = $this->uri->rsegment(3);
+		$id = $this->uri->rsegment(3);
 		
-		list($ac_id,$id )  = explode('_',$idInfo);
 		$info = $this->Cms_Article_Model->getFirstByKey($id,'id');
 		
 		if($info){
@@ -184,11 +183,11 @@ class News extends Ydzj_Controller {
 			//print_r($preArticle);
 			
 			if($nextArticle && empty($nextArticle['jump_url'])){
-				$nextArticle['article_url'] = base_url("news/detail/{$nextArticle['ac_id']}_{$nextArticle['id']}.html");
+				$nextArticle['article_url'] = base_url("cms/detail/{$nextArticle['id']}.html");
 			}
 			
 			if($preArticle && empty($preArticle['jump_url'])){
-				$preArticle['article_url'] = base_url("news/detail/{$preArticle['ac_id']}_{$preArticle['id']}.html");
+				$preArticle['article_url'] = base_url("cms/detail/{$preArticle['id']}.html");
 			}
 			
 			//print_r($preArticle);
@@ -200,7 +199,7 @@ class News extends Ydzj_Controller {
 			),array('id' => $id));
 			
 		}else{
-			$this->_breadCrumbLinks($ac_id);
+			$this->_breadCrumbLinks($info['ac_id']);
 		}
 		
 		$tempSeo = array_reverse($this->seoKeys);

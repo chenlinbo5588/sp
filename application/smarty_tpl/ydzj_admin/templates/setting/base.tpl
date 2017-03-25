@@ -121,41 +121,6 @@
           <td class="vatop tips"><span class="vatop rowform">前台页面底部可以显示第三方统计</span></td>
         </tr>
         <tr>
-          <td colspan="2" class="required"><label for="company_intro">公司简介:</label></td>
-        </tr>
-        <tr>
-        	<td colspan="2" ><textarea id="company_intro" name="company_intro" style="width:100%;height:200px;visibility:hidden;">{$currentSetting['company_intro']['value']}</textarea></td>
-        	{include file="common/ke.tpl"}
-			<script type="text/javascript">
-	            var editor1;
-				
-	            KindEditor.ready(function(K) {
-	                editor1 = K.create('textarea[name="company_intro"]', {
-	                    uploadJson : '{admin_site_url("common/pic_upload")}?mod=setting',
-	                    items : [
-						'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline',
-						'removeformat', '|', 'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist',
-						'insertunorderedlist', '|', 'emoticons'],
-	                    extraFileUploadParams:{ formhash: formhash },
-	                    allowImageUpload : true,
-	                    allowFlashUpload : false,
-	                    allowMediaUpload : false,
-	                    formatUploadUrl : false,
-	                    allowFileManager : false,
-	                    afterCreate : function() {
-	                    	
-	                    },
-	                    afterChange : function() {
-	                    	$("input[name=formhash]").val(formhash);
-	                    },
-	                    afterUpload : function(url,data) {
-	                    	formhash = data.formhash;
-		                }
-	                });
-	            });
-	        </script>
-        </tr>
-        <tr>
           <td colspan="2" class="required"><label for="time_zone"> 默认时区:</label></td>
         </tr>
         <tr class="noborder">

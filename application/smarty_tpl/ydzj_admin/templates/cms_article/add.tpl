@@ -93,6 +93,7 @@
 	            KindEditor.ready(function(K) {
 	                editor1 = K.create('textarea[name="content"]', {
 	                    uploadJson : '{admin_site_url("common/pic_upload")}?mod=article',
+	                    filePostName:'Filedata',
 	                    extraFileUploadParams:{ formhash: formhash },
 	                    allowImageUpload : true,
 	                    allowFlashUpload : false,

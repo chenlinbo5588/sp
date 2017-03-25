@@ -6,7 +6,7 @@
       <ul class="tab-base">
       	<li><a href="{admin_site_url('article/index')}"><span>管理</span></a></li>
       	<li><a {if empty($info['article_id'])}class="current"{/if} href="{admin_site_url('article/add')}"><span>新增</span></a></li>
-      	{if $info['article_id']}<li><a class="current"><span>编辑</span></a></li>{/if}
+      	{if $info['article_id']}<li><a class="current" href="{admin_site_url('article/edit/')}?article_id={$info['article_id']}"><span>编辑</span></a></li>{/if}
       </ul>
     </div>
   </div>
@@ -41,7 +41,7 @@
           	<select name="ac_id" id="articleClassId">
 	          <option value="">请选择...</option>
 	          {foreach from=$articleClassList item=item}
-	          <option {if $info['ac_id'] == $item['ac_id']}selected{/if} value="{$item['ac_id']}">{str_repeat('......',$item['level'])}{$item['ac_name']}</option>
+	          <option {if $info['ac_id'] == $item['ac_id']}selected{/if} value="{$item['ac_id']}">{str_repeat('......',$item['level'])}{$item['name_cn']}</option>
 	          {/foreach}
 	        </select>
           </td>
@@ -100,6 +100,7 @@
 	            KindEditor.ready(function(K) {
 	                editor1 = K.create('textarea[name="article_content"]', {
 	                    uploadJson : '{admin_site_url("common/pic_upload")}?mod=article',
+	                    filePostName:'Filedata',
 	                    extraFileUploadParams:{ formhash: formhash },
 	                    allowImageUpload : true,
 	                    allowFlashUpload : false,

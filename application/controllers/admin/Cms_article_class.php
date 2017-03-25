@@ -36,39 +36,32 @@ class Cms_Article_Class extends Ydzj_Admin_Controller {
 		$this->display();
 	}
 	
-	/*
-	public function index(){
-		
-		$currentPage = $this->input->get_post('page') ? $this->input->get_post('page') : 1;
 	
-		$condition = array(
-			'where' => array(),
-			'order' => 'id ASC',
-			'pager' => array(
-				'page_size' => config_item('page_size'),
-				'current_page' => $currentPage,
-				'call_js' => 'search_page',
-				'form_id' => '#formSearch'
+	public function getNavUrl(){
+		$id = $this->input->get_post('id');
+		$info = $this->Cms_Article_Class_Model->getById(array(
+			'where' => array(
+				'id' => intval($id)
+			
 			)
-		);
+		));
 		
-		$search_name = $this->input->get_post('search_name');
-		
-		if($search_name){
-			$condition['like']['name'] = $search_name;
+		if(empty($info)){
+			$this->jsonOutput('',array(
+				'name_cn' => 'CMS文章列表',
+				'name_en' => 'Cms Article',
+				'url_cn' => base_url('cms/plist.html'),
+				'url_en' => base_url('cms/plist.html'),
+			));
+		}else{
+			$this->jsonOutput('',array(
+				'name_cn' => $info['name_cn'],
+				'name_en' => $info['name_en'],
+				'url_cn' => base_url('cms/plist/'.$info['id'].'.html'),
+				'url_en' => base_url('cms/plist/'.$info['id'].'.html'),
+			));
 		}
-		
-		
-		//print_r($condition);
-		$list = $this->Cms_Article_Class_Model->getList($condition);
-		
-		$this->assign('list',$list);
-		$this->assign('page',$list['pager']);
-		$this->assign('currentPage',$currentPage);
-		
-		$this->display();
 	}
-	*/
 	
 	
 	private function _getRules($action = 'add'){
