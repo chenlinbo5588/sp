@@ -220,6 +220,8 @@ class Goods_Class extends Ydzj_Admin_Controller {
 			'gc_sort' => $this->input->post('gc_sort') ? $this->input->post('gc_sort') : 255
 		);
 		
+		$info['gc_pic'] = str_replace(base_url(),'',$info['gc_pic']);
+		
 		return $info;
 	}
 	

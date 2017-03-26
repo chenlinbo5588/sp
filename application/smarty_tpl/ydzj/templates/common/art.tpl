@@ -6,7 +6,9 @@
 			<div class="contentArea">
 				<div class="breadcrumb">{$breadcrumb}</div>
 				<div class="bd {if $isMobile}respond_img{/if}" id="articleInfo">
+				    <article>
 					{$article['article_content']}
+					</article>
 				</div>
 			</div>
 			{if $isMobile}{include file="common/side_nav.tpl"}{/if}

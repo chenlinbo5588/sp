@@ -785,6 +785,7 @@ tfoot label { +display: inline-block; +float:left; +line-height:38px; /* IE */}
 .home-templates-board-style li.gray em { background-color:#79796A;}
 .home-templates-board-style li i { font-size: 14px; line-height: 24px; color: #FFF; display:none; position: absolute; z-index: 9; top: 0; left: 5px;}
 .home-templates-board-style li.selected i { display: block;}
+.home-templates-board-style li.selected { border:1px dotted black;}
 
 .home-templates-board-layout { background: url(../img/size.gif) no-repeat scroll center top; width: 964px; padding-top: 32px; overflow: hidden;}
 .home-templates-board-layout .left { width: 228px; float: left; margin-left: 2px; margin-bottom: 2px;}

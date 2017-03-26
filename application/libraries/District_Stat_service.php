@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class District_Stat_service extends Base_service {
+class District_stat_service extends Base_service {
 
 	private $_districtStatModel;
 	

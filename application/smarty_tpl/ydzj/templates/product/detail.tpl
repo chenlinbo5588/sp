@@ -7,6 +7,7 @@
 			<div class="contentArea">
 				<div class="breadcrumb"><span>{$your_position}:</span>{$breadcrumb}</div>
 				<div class="bd bdlist">
+				    <article>
 					{if $info}
 					<div class="productInfo">
 						<div class="album" {if !$isMobile}style="width:500px;"{/if}>
@@ -34,6 +35,7 @@
 					{else}
 					<div class="errorPage">{$not_found_msg}<a href="javascript:history.go(-1);">{$cm_goback}</a></div>
 					{/if}
+					</article>
 				</div>
 			</div>
 			{if $isMobile}{include file="./product_side.tpl"}{/if}

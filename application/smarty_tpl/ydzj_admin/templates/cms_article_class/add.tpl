@@ -6,7 +6,7 @@
 		  <ul class="tab-base">
             <li><a href="{admin_site_url('cms_article_class/category')}"><span>列表</span></a></li>
             <li><a {if empty($info['id'])}class="current"{/if} href="{admin_site_url('cms_article_class/add')}"><span>新增</span></a></li>
-      		{if $info['id']}<li><a class="current"><span>编辑</span></a></li>{/if}
+      		{if $info['id']}<li><a class="current" href="{admin_site_url('cms_article_class/edit?id='|cat:$info['id'])}"  ><span>编辑</span></a></li>{/if}
           </ul>
 		</div>
 	</div>
@@ -42,7 +42,7 @@
             <select name="pid">
               <option value="">请选择...</option>
               {foreach from=$list item=item}
-              <option {if $info['pid'] == $item['id']}selected{/if} value="{$item['id']}">{str_repeat('......',$item['level'])}{$item['level']+1} {$item['name']}</option>
+              <option {if $info['pid'] == $item['id']}selected{/if} value="{$item['id']}">{str_repeat('......',$item['level'])}{$item['level']+1} {$item['name_cn']}</option>
               {/foreach}
             </select>
           </td>

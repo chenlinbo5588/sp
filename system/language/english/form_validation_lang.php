@@ -69,9 +69,12 @@ $lang['form_validation_in_list']		= 'The {field} field must be one of: {param}.'
 
 //custome method
 $lang['form_validation_validateAuthCode']						= 'The {field} field is not match.';
+$lang['form_validation_valid_starthttp']						= '{field} must start with http:// or  https:// .';
 $lang['form_validation_valid_date']						= 'The {field} field must contain a valid Date.';
 $lang['form_validation_valid_mobile']					= 'The {field} field must be a valid Chinese Mobile.';
 $lang['form_validation_valid_telephone']				= 'The {field} field must be a valid Chinese Telephone No.';
+$lang['form_validation_valid_username']				= 'The {field} field must be contain a valid nickname rules.';
+$lang['form_validation_valid_password']				= 'The {field} field must be contain alpha-numeric or special symbol characters.';
 $lang['form_validation_is_unique_by_status'] 			= 'The {field} field must contain a unique value.';
 $lang['form_validation_is_unique_not_self'] 			= 'The {field} field must contain a unique value.';
 $lang['form_validation_in_db_list']		= '{field} invalid';

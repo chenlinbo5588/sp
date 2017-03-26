@@ -7,6 +7,7 @@
 			<div class="contentArea">
 				<div class="breadcrumb"><span>{$your_position}:</span>{$breadcrumb}</div>
 				<div class="bd bdlist">
+				    <article>
 					{if $info}
 					<div class="articleHeader">
 						<h1>{$info['article_title']|escape}</h1>
@@ -23,6 +24,7 @@
 					{else}
 					<div class="errorPage">{$not_found_msg}<a href="javascript:history.go(-1);">{$cm_goback}</a></div>
 					{/if}
+					</article>
 				</div>
 			</div>
 			</form>

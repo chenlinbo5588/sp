@@ -1,3 +1,4 @@
+			<aside>
 			<div class="sideNav">
 				<ul class="sideItemWrap">
 					{foreach from=$sideNavs item=item key=key}
@@ -17,3 +18,4 @@
 					<div><input type="submit" class="orangeBtn btn" name="search" value="{$cm_search}"/></div>
 				</div>
 			</div>
+			</aside>

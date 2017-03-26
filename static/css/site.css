@@ -339,7 +339,7 @@ input[type=text].validation_error {
 
 
 
-.pagination { padding: 2px; +position: absolute; +right:6px; text-align:center;}
+.pagination { padding: 3px; +position: absolute; +right:6px; text-align:center;}
 .pagination a {
   padding: 5px 10px;
   background:#fff;
@@ -1393,6 +1393,7 @@ input[type=text].validation_error {
 	
 	#homeNav {
 		display:none;
+		top:0px;
 	}
 	
 	#homeNav li.level0 {
@@ -1414,17 +1415,15 @@ input[type=text].validation_error {
 	
 	
 	.commonPg {
-		background:url(../img/cmp/m2.jpg) no-repeat center top;
-		height:250px;
+		height:140px;
 	}
 	
 	.cmsPg {
-		background:url(../img/cmp/m1.jpg) no-repeat center top;
-		height:250px;
+		height:140px;
 	}
 	
 	.productPg {
-		background:url(../img/cmp/m3.jpg) no-repeat center top;
+	    height:140px;
 	}
 	
 	.sideNav {
@@ -1494,6 +1493,7 @@ input[type=text].validation_error {
 	
 	.contentArea {
 		margin-left:0;
+		margin-bottom: 10px;
 	}
 	
 	
