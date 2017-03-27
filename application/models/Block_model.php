@@ -16,4 +16,18 @@ class Block_Model extends MY_Model {
     	return array_keys(self::$_tableMeta);
     }
     
+    
+    public function getBlockInfoById($blockId){
+    	$blockInfo = $this->Block_Model->getById(array(
+        	'where' => array(
+        		'block_id' => $blockId,
+        		'is_show' => 1
+        	)
+        ));
+        
+        
+        return $blockInfo;
+    	
+    	
+    }
 }

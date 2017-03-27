@@ -47,7 +47,7 @@
           <td class="vatop tips">选择板块色彩风格将影响商城首页模板该区域的边框、背景色、字体色彩，但不会影响板块的内容布局。</td>
         </tr>
         <tr>
-          <td colspan="2" class="required"><label class="validation">排序:</label>
+          <td colspan="2" class="required"><label>排序:</label>
             </td>
         </tr>
         <tr class="noborder">
@@ -76,8 +76,10 @@
   </form>
    <script>
     $(function(){
+    	{if $info['style_name']}
         $(".home-templates-board-style .{$info['style_name']}").addClass("selected");
-    
+    	{/if}
+    	
         $(".home-templates-board-style li").click(function(){
             $(".home-templates-board-style li").removeClass("selected");
             $("#style_name").val($(this).attr("class"));

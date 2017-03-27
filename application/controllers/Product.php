@@ -123,8 +123,17 @@ class Product extends Ydzj_Controller {
 		}
 		
 		$tempSeo = array_reverse($this->seoKeys);
-		$this->seo($tempSeo[0], implode(',',$tempSeo));
+		$seoTitle = '';
+		if(empty($tempSeo)){
+			$seoTitle = '产品中心';
+		}else{
+			$seoTitle = implode(' - ',$tempSeo);
+		}
 		
+		$this->seo(str_replace(
+				array('{name} - {goods_class}'),
+				array($seoTitle),$this->_seoSetting['product']['title']
+			));
 		
 		$this->assign(
 			array(
@@ -186,7 +195,7 @@ class Product extends Ydzj_Controller {
 		if('english' == $this->_currentLang && !empty($info['goods_name_en'])){
 			$nameKey = 'goods_name_en';
 		}
-			
+		
 		if($info){
 			if($info['goods_click'] == 0){
 				$info['goods_click']++;
@@ -229,12 +238,13 @@ class Product extends Ydzj_Controller {
 		
 		$tempSeo = array_reverse($this->seoKeys);
 		
-		
-		$this->seo($info[$nameKey] .' - '.$tempSeo[0], implode(',',$tempSeo));
+		$this->seo(str_replace(
+				array('{name}','{goods_class}'),
+				array($info[$nameKey],implode(' - ',$tempSeo)),$this->_seoSetting['product']['title']
+			));
 		
 		$this->assign('breadcrumb',$this->breadcrumb());
 		$this->assign('info',$info);
-		
 		
 		$this->display();
 		

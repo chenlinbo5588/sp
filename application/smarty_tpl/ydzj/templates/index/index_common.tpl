@@ -1,9 +1,5 @@
-	
 	<div id="homeSwiper">
-	    <div class="sliderItem" style="background:url({resource_url('static/attach/2017/03/02/20150429184803483.jpg')}) no-repeat 50% 0"></div>
-	    <div class="sliderItem" style="background:url({resource_url('static/attach/2017/03/02/201504291847294729.jpg')}) no-repeat 50% 0"></div>
-	    <div class="sliderItem" style="background:url({resource_url('static/attach/2017/03/02/201702161640144014.jpg')}) no-repeat 50% 0"></div>
-	    <div class="sliderItem" style="background:url({resource_url('static/attach/2017/03/02/201702161640474047.jpg')}) no-repeat 50% 0"></div>
+		{block_html id="101"}{/block_html}
 	</div>
 	<div class="boxz"><div id="homeSwiperPager"></div></div>
 	<div class="boxz mg5">
@@ -27,7 +23,13 @@
 				<li class="col">
 					<div class="colPanel">
 						<h3 class="panelTitel">{$goin} {if $currentLang == 'english'}{$siteSetting['site_shorten']|escape}{else}{$siteSetting['site_shortname']|escape}{/if}</h3>
-						{include file="./index_goin.tpl"}
+						<div id="goinSwiper">
+							<div><a href="{site_url('about/index')}"><img src="{resource_url('img/cmp/goin1.jpg')}"/></a></div>
+					        <div><a href="{site_url('about/index')}"><img src="{resource_url('img/cmp/goin2.jpg')}"/></a></div>
+					        <div><a href="{site_url('about/index')}"><img src="{resource_url('img/cmp/goin3.jpg')}"/></a></div>
+					        <div><a href="{site_url('about/index')}"><img src="{resource_url('img/cmp/goin4.jpg')}"/></a></div>
+					        <div><a href="{site_url('about/index')}"><img src="{resource_url('img/cmp/goin5.jpg')}"/></a></div>
+						</div>
 					</div>
 				</li>
 				<li class="col" >

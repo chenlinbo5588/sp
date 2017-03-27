@@ -6,7 +6,7 @@
       <ul class="tab-base">
         <li><a href="{admin_site_url('cms_article/index')}"><span>列表</span></a></li>
         <li><a {if empty($info['id'])}class="current"{/if} href="{admin_site_url('cms_article/add')}"><span>新增</span></a></li>
-      	{if $info['id']}<li><a class="current"><span>编辑</span></a></li>{/if}
+      	{if $info['id']}<li><a class="current" href="{admin_site_url('cms_article/edit?id=')}{$info['id']}"><span>编辑</span></a></li>{/if}
       </ul>
     </div>
   </div>
@@ -35,7 +35,7 @@
           	<select name="ac_id" id="articleClassId">
 	          <option value="">请选择...</option>
 	          {foreach from=$articleClassList item=item}
-	          <option {if $info['ac_id'] == $item['id']}selected{/if} value="{$item['id']}">{str_repeat('......',$item['level'])}{$item['name']}</option>
+	          <option {if $info['ac_id'] == $item['id']}selected{/if} value="{$item['id']}">{str_repeat('......',$item['level'])}{$item['name_cn']}</option>
 	          {/foreach}
 	        </select>
           </td>
@@ -113,6 +113,7 @@
 	            });
 	        </script>
         </tr>
+        {*
         <tr>
           <td colspan="2" class="required"><label class="validation">{#keyword#}:</label></td>
         </tr>
@@ -120,6 +121,7 @@
           <td class="vatop rowform"><input type="text" name="keyword" value="{$info['keyword']|escape}" class="txt"/></td>
           <td class="vatop tips">{form_error('keyword')}</td>
         </tr>
+        *}
         <tr>
           <td colspan="2" class="required"><label>文章作者:</label></td>
         </tr>
@@ -127,6 +129,7 @@
           <td class="vatop rowform"><input type="text" name="author" value="{$info['author']|escape}" class="txt"/></td>
           <td class="vatop tips">{form_error('author')}</td>
         </tr>
+        {*
         <tr>
           <td colspan="2" class="required"><label>文章标签:</label></td>
         </tr>
@@ -156,6 +159,7 @@
           </td>
           <td class="vatop tips">{form_error('comment_flag')}</td>
         </tr>
+        *}
         <tr>
           <td colspan="2" class="required"><label class="validation">{#article_state#}:</label></td>
         </tr>
@@ -212,13 +216,6 @@
         <tr class="noborder">
           <td class="vatop rowform"><textarea name="verify_reason" style="width:300px;height:80px;"></textarea></td>
           <td class="vatop tips">{form_error('verify_reason')} {$info['verify_reason']|escape}</td>
-        </tr>
-        <tr>
-          <td colspan="2" class="required"><label>文章摘要(不填默认自动摘录正文内容):</label></td>
-        </tr>
-        <tr class="noborder">
-          <td class="vatop rowform"><textarea name="digest" style="width:300px;height:80px;">{$info['digest']|escape}</textarea></td>
-          <td class="vatop tips">{form_error('digest')}</td>
         </tr>
       </tbody>
       <tfoot>

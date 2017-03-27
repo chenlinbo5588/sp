@@ -10,6 +10,7 @@
     </div>
   </div>
   <div class="fixed-empty"></div>
+  <div class="feedback">{$feedback}</div>
   <table class="table tb-type2" id="prompt">
     <tbody>
       <tr class="space odd">
@@ -29,11 +30,12 @@
   
   <div class="homepage-focus" id="homepageFocusTab">
     <ul class="tab-menu">
-      <li class="current" form="upload_screen_form"><a href="{admin_site_url('web/screenpic')}">全屏(背景)焦点大图</a></li>
-      <li form="upload_screen_en_form"><a href="{admin_site_url('web/screenpic')}">关于我们 焦点图</a></li>
+      <li {if $code_id == 102}class="current"{/if}><a href="{admin_site_url('web/screenpic?code_id=102')}">全屏(背景)焦点大图</a></li>
+      {*<li {if $code_id == 122}class="current"{/if}><a href="{admin_site_url('web/screenpic?code_id=122')}">关于我们焦点图</a></li>
+      <li {if $code_id == 123}class="current"{/if}><a href="{admin_site_url('web/screenpic?code_id=123')}">推荐商品</a></li>*}
     </ul>
-    <form id="upload_screen_form" class="tab-content" name="upload_screen_form" enctype="multipart/form-data" method="post" action="{admin_site_url('web/screenpic')}" target="upload_pic">
-      <input type="hidden" name="code_id" value="101">
+    <form id="upload_screen_form" name="upload_screen_form"  method="post" action="{admin_site_url('web/screenpic')}">
+      <input type="hidden" name="code_id" value="{$code_id}">
       <div class="full-screen-slides">
 	      <ul>
 	         {foreach from=$screen_list item=item key=key}
@@ -44,7 +46,7 @@
 	          {/foreach}
 	      </ul>
       </div>
-      <a href="index.php?act=web_api&op=html_update&web_id=101" class="btn"><span>更新板块内容</span></a></div>
+      <div><input type="submit" name="submit" value="更新" class="msbtn"/></div>
     </form>
   </div>
 <script>

@@ -112,10 +112,19 @@ class Cms extends Ydzj_Controller {
 		}
 		
 		
+		
 		$tempSeo = array_reverse($this->seoKeys);
-		$this->seo($tempSeo[0], implode(',',$tempSeo));
+		$seoTitle = '';
+		if(empty($tempSeo)){
+			$seoTitle = '新闻资讯';
+		}else{
+			$seoTitle = implode(' - ',$tempSeo);
+		}
 		
-		
+		$this->seo(str_replace(
+				array('{article_class}'),
+				array($seoTitle),$this->_seoSetting['article']['title']
+			));
 		
 		$this->assign(
 			array(
@@ -194,6 +203,9 @@ class Cms extends Ydzj_Controller {
 			$this->assign('nextArticle',$nextArticle);
 			$this->assign('preArticle',$preArticle);
 			
+			$this->_navigation[$info['article_title']] = base_url('cms/detail/'.$info['id'].'.html');
+			
+			
 			$this->Cms_Article_Model->increseOrDecrease(array(
 				array('key' => 'article_click','value'=> 'article_click + 1')
 			),array('id' => $id));
@@ -203,7 +215,11 @@ class Cms extends Ydzj_Controller {
 		}
 		
 		$tempSeo = array_reverse($this->seoKeys);
-		$this->seo($info['article_title'] .' - '.$tempSeo[0], implode(',',$tempSeo));
+		
+		$this->seo(str_replace(
+			array('{name}','{article_class}'),
+			array($info['article_title'],implode(' - ',$tempSeo)),$this->_seoSetting['article_content']['title']
+		));
 		
 		$this->assign('breadcrumb',$this->breadcrumb());
 		$this->assign('info',$info);

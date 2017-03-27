@@ -1,5 +1,5 @@
 {include file="common/main_header.tpl"}
-<div class="fixed-bar">
+  <div class="fixed-bar">
     <div class="item-title">
       <h3>板块管理</h3>
       <ul class="tab-base">
@@ -9,6 +9,9 @@
     </div>
   </div>
   <div class="fixed-empty"></div>
+  {form_open(admin_site_url('block/index'),'id="formSearch"')}
+  <input type="hidden" name="page" value="{$currentPage}"/>
+  </form>
   <table class="table tb-type2" id="prompt">
     <tbody>
       <tr class="space odd">
@@ -24,6 +27,7 @@
       </tr>
     </tbody>
   </table>
+  
     <table class="table tb-type2 nobdb">
       <thead>
         <tr class="thead">

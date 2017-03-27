@@ -32,6 +32,7 @@
 	            <li>站点名称 {#sitename#}，（应用范围：全站）</li>
 	            <li nctype="vmore">名称 {#name#}，（应用范围：团购名称、商品名称、品牌名称、文章标题、分类名称）</li>
 	            <li nctype="vmore">文章分类名称 {#article_class#}，（应用范围：文章分类页）</li>
+	            <li nctype="vmore">商品分类名称 {#goods_class#}，（应用范围：商品分类业，商品详情页）</li>
 	            <li nctype="vmore">店铺名称 {#shopname#}，（应用范围：店铺页）</li>
 	            <li nctype="vmore">关键词 {#key#}，（应用范围：商品关键词、文章关键词、店铺关键词）</li>
 	            <li nctype="vmore">简单描述 {#description#}，（应用范围：商品描述、文章摘要、店铺关键词）</li>
@@ -237,7 +238,7 @@
   </form>
   *}
   {form_open(admin_site_url('setting/seoset'),'name="form_product"')}
-    <span style="display:none" nctype="hide_tag"><a>{#sitename#}</a><a>{#name#}</a><a>{#key#}</a><a>{#description#}</a></span>
+    <span style="display:none" nctype="hide_tag"><a>{#name#}</a><a>{#goods_class#}</a><a>{#sitename#}</a><a>{#key#}</a><a>{#description#}</a></span>
     <table class="table tb-type2">
       <tbody>
         <tr>

@@ -11,7 +11,7 @@ class Block extends Ydzj_Admin_Controller {
 	
 	
 	public function index(){
-		$currentPage = $this->input->get('page') ? $this->input->get('page') : 1;
+		$currentPage = $this->input->get_post('page') ? $this->input->get_post('page') : 1;
 		
 		$condition = array(
 			'order' => 'block_id DESC',
@@ -24,10 +24,10 @@ class Block extends Ydzj_Admin_Controller {
 		);
 		
 		$list = $this->Block_Model->getList($condition);
-		
+	
 		$this->assign('list',$list);
 		$this->assign('page',$list['pager']);
-		
+		$this->assign('currentPage',$currentPage);
 		
 		$this->display();
 		
@@ -108,7 +108,7 @@ class Block extends Ydzj_Admin_Controller {
 				}
 				
 				$feedback = getSuccessTip('保存成功');
-				$info = $this->Block_Model->getFirstByKey($newid,'brand_id');
+				$info = $this->Block_Model->getFirstByKey($newid,'block_id');
 				
 			}
 		}

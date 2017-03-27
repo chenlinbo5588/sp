@@ -123,7 +123,7 @@ class Cms_Article extends Ydzj_Admin_Controller {
 		}
 		
 		//$this->form_validation->set_rules('image_url','文章封面',"required|valid_url");
-		$this->form_validation->set_rules('keyword','文章关键字',"required|max_length[100]");
+		//$this->form_validation->set_rules('keyword','文章关键字',"required|max_length[100]");
 		
 		if($this->input->post('author')){
 			$this->form_validation->set_rules('author','文章作者',"required|max_length[30]");
@@ -133,18 +133,19 @@ class Cms_Article extends Ydzj_Admin_Controller {
 			$this->form_validation->set_rules('article_tag','文章标签',"required|max_length[150]");
 		}
 		
-		$this->form_validation->set_rules('commend_flag','文章标签',"required|in_list[0,1]");
-		$this->form_validation->set_rules('comment_flag','是否允许评论',"required|in_list[0,1]");
+		//$this->form_validation->set_rules('commend_flag','推荐标志',"required|in_list[0,1]");
+		//$this->form_validation->set_rules('comment_flag','是否允许评论',"required|in_list[0,1]");
 		
 		//已发布
 		if($this->input->post('article_state') == 3){
 			//$this->form_validation->set_rules('verify_reason','审核意见',"required|min_length[2]|max_length[150]");
 		}
 		
+		/*
 		if($this->input->post('digest')){
 			$this->form_validation->set_rules('digest','文章摘要',"required|max_length[80]");
 		}
-		
+		*/
 		
 		
 	}
@@ -193,11 +194,11 @@ class Cms_Article extends Ydzj_Admin_Controller {
 			'image_url' => $this->input->post('image_url') ? $this->input->post('image_url') : '',
 			'image_aid' => $this->input->post('image_aid') ? $this->input->post('image_aid') : 0,
 			'content' => $this->input->post('content'),
-			'keyword' => $this->input->post('keyword') ? $this->input->post('keyword') : '',
+			//'keyword' => $this->input->post('keyword') ? $this->input->post('keyword') : '',
 			'article_tag' => $this->input->post('article_tag') ? $this->input->post('article_tag') : '',
 			'article_state' => $this->input->post('article_state'),
-			'commend_flag' => $this->input->post('commend_flag'),
-			'comment_flag' => $this->input->post('comment_flag'),
+			//'commend_flag' => $this->input->post('commend_flag'),
+			//'comment_flag' => $this->input->post('comment_flag'),
 			'verify_reason' => $this->input->post('verify_reason') ? $this->input->post('verify_reason') : '',
 		);
 		
@@ -207,11 +208,13 @@ class Cms_Article extends Ydzj_Admin_Controller {
 			$info['author'] = $this->input->post('author');
 		}
 		
+		/*
 		if(trim($this->input->post('digest'))){
 			$info['digest'] = cutText(trim(html_entity_decode(strip_tags($this->input->post('content')))),80);
 		}else{
 			$info['digest'] = cutText(trim(html_entity_decode(strip_tags($info['content']))),80);
 		}
+		*/
 		
 		$info['image_url'] = str_replace(base_url(),'',$info['image_url']);
 		
@@ -259,8 +262,8 @@ class Cms_Article extends Ydzj_Admin_Controller {
 				$info = $this->Cms_Article_Model->getFirstByKey($newid);
 			}
 		}else{
-			$info['commend_flag'] = 0;
-			$info['comment_flag'] = 0;
+			//$info['commend_flag'] = 0;
+			//$info['comment_flag'] = 0;
 			$info['author'] = $this->_adminProfile['basic']['username'];
 		}
 		

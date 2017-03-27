@@ -10,8 +10,10 @@
 				    <article>
 					{if $info}
 					<div class="articleHeader">
+						{include file="common/baidu_share.tpl"}
 						<h1>{$info['article_title']|escape}</h1>
 						<div><em class="mute">{$visit_count}:</em><strong>{$info['article_click']}</strong><em class="mute">{$online_date}:</em><strong>{$info['gmt_create']|date_format:"%Y-%m-%d"}</strong></div>
+						<span></span>
 					</div>
 					<div class="articleContent">
 						{$info['content']}
@@ -24,6 +26,7 @@
 					{else}
 					<div class="errorPage">{$not_found_msg}<a href="javascript:history.go(-1);">{$cm_goback}</a></div>
 					{/if}
+					
 					</article>
 				</div>
 			</div>
@@ -31,4 +34,5 @@
 			{if $isMobile}{include file="./cms_side.tpl"}{/if}
 		</div>
 	</div>
+	
 {include file="common/website_footer.tpl"}

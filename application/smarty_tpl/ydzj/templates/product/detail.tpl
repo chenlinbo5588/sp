@@ -23,7 +23,9 @@
 							<div><em class="mute">{$product_no}:</em><strong class="goodscode">{$info['goods_code']|escape}</strong></div>
 							<div><em class="mute">{$visit_count}:</em><strong>{$info['goods_click']}</strong></div>
 							<div><em class="mute">{$online_date}:</em><strong>{$info['gmt_create']|date_format:"%Y-%m-%d"}</strong></div>
+							{include file="common/baidu_share.tpl"}
 						</div>
+						
 						<div class="articleContent">
 							{$info['goods_intro']}
 						</div>

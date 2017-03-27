@@ -6,31 +6,73 @@ class Web extends Ydzj_Admin_Controller {
 	private $_screenpicId = 102;
 	
 	
+	
 	public function __construct(){
 		parent::__construct();
-		
 		$this->load->library(array('Block_service','Attachment_service'));
 	}
 	
 	
 	public function screenpic(){
-		
 		$feedback = '';
-		$currentData = $this->block_service->getDataByCodeId($this->_screenpicId);
+		$code_id = $this->input->get_post('code_id');
 		
+		if(empty($code_id)){
+			$code_id = $this->_screenpicId;
+		}
+		
+		$currentData = $this->block_service->getDataByCodeId($code_id);
 		
 		if($this->isPostRequest()){
+			$html = array();
+			foreach($currentData['json_array'] as $item){
+				$html[] = "<a class=\"sliderItemLink\" target=\"_blank\" href=\"{$item['url']}\" title=\"{$item['title']}\"><div class=\"sliderItem\" style=\"background:{$item['color']} url(".resource_url($item['pic_url']).') no-repeat 50% 0"></div></a>';
+			}
 			
+			/*
+			switch($currentData['block_id']){
+				case 101:
+					//首页焦点图
+					foreach($currentData['json_array'] as $item){
+						$html[] = "<a class=\"sliderItemLink\" target=\"_blank\" href=\"{$item['url']}\" title=\"{$item['title']}\"><div class=\"sliderItem\" style=\"background:{$item['color']} url(".resource_url($item['pic_url']).') no-repeat 50% 0"></div></a>';
+					}
+					break;
+				case 122:
+					//关于我们焦点
+					foreach($currentData['json_array'] as $item){
+						$html[] = "<div><a href=\"{$item['url']}\" title=\"{$item['title']}\"><img src=\"".resource_url($item['pic_url']).'"/></a></div>';
+					}
+					break;
+				case 123:
+					//首页推荐商品
+					foreach($currentData['json_array'] as $item){
+						$html[] = "<li><div class=\"pic\"><a href=\"{$item['url']}\" target=\"_blank\"><img class=\"respond_img\" src=\"".resource_url($item['pic_url'])."\" title=\"{$item['title']}\"/></a></div>" + 
+							"<div class=\"title\"><a href=\"{$item['url']}\" target=\"_blank\">{$item['title']}</a></div>";
+					}
+					break;
+				default:
+					break;
+			}
+			*/
+			
+			if($this->Block_Model->update(array('web_html' => implode('',$html)),array('block_id' => $currentData['block_id'])) >= 0){
+				$feedback = getSuccessTip('更新成功');
+			}else{
+				$feedback = getErrorTip('更新失败');
+			}
 			
 		}
 		
 		$this->assign($currentData['var_name'],$currentData['json_array']);
 		$this->assign('feedback',$feedback);
+		$this->assign('code_id',$code_id);
+		
 		$this->display();
 	}
 	
 	
 	private function _getRules(){
+		
 		$this->form_validation->set_rules('title','文字标题','required');
 		$this->form_validation->set_rules('url','图片跳转链接','required|valid_starthttp');
 		
@@ -116,10 +158,9 @@ class Web extends Ydzj_Admin_Controller {
 				$info = $this->_prepareData();
 				
 				if(empty($info['pic_url'])){
-					$feedback = getErrorTip($this->attachment_service->getErrorMsg());
+					$feedback = getErrorTip($this->attachment_service->getErrorMsg('',''));
 					break;
 				}
-				
 				
 				if(!$this->form_validation->run()){
 					$feedback = $this->form_validation->error_string();
@@ -167,7 +208,7 @@ class Web extends Ydzj_Admin_Controller {
 				$info = $this->_prepareData('edit');
 				
 				if(empty($info['pic_url'])){
-					$feedback = getErrorTip($this->attachment_service->getErrorMsg());
+					$feedback = getErrorTip($this->attachment_service->getErrorMsg('',''));
 					break;
 				}
 					
