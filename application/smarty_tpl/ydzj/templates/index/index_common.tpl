@@ -24,30 +24,30 @@
 					<div class="colPanel">
 						<h3 class="panelTitel">{$goin} {if $currentLang == 'english'}{$siteSetting['site_shorten']|escape}{else}{$siteSetting['site_shortname']|escape}{/if}</h3>
 						<div id="goinSwiper">
-							<div><a href="{site_url('about/index')}"><img src="{resource_url('img/cmp/goin1.jpg')}"/></a></div>
-					        <div><a href="{site_url('about/index')}"><img src="{resource_url('img/cmp/goin2.jpg')}"/></a></div>
-					        <div><a href="{site_url('about/index')}"><img src="{resource_url('img/cmp/goin3.jpg')}"/></a></div>
-					        <div><a href="{site_url('about/index')}"><img src="{resource_url('img/cmp/goin4.jpg')}"/></a></div>
-					        <div><a href="{site_url('about/index')}"><img src="{resource_url('img/cmp/goin5.jpg')}"/></a></div>
+							<div><a href="{base_url('about/4_41.html')}"><img src="{resource_url('img/cmp/goin1.jpg')}"/></a></div>
+					        <div><a href="{base_url('about/4_41.html')}"><img src="{resource_url('img/cmp/goin2.jpg')}"/></a></div>
+					        <div><a href="{base_url('about/4_41.html')}"><img src="{resource_url('img/cmp/goin3.jpg')}"/></a></div>
+					        <div><a href="{base_url('about/4_41.html')}"><img src="{resource_url('img/cmp/goin4.jpg')}"/></a></div>
+					        <div><a href="{base_url('about/4_41.html')}"><img src="{resource_url('img/cmp/goin5.jpg')}"/></a></div>
 						</div>
 					</div>
 				</li>
 				<li class="col" >
 					<div class="colPanel newslist bd">
-						<h3 class="panelTitel"><span>{$news2}</span><a class="more fr" href="{site_url('news/plist/acid/11')}">{$cm_more}&gt;&gt;</a></h3>
+						<h3 class="panelTitel"><span>{$news2}</span><a class="more fr" href="{base_url('cms/plist/11.html')}">{$cm_more}&gt;&gt;</a></h3>
 						<ol>
 							{foreach from=$qiyeList item=item}
-							<li><a href="{base_url('news/detail/'|cat:$item['article_id'])}">{$item['article_title']|escape}</a><span>【{$item['publish_time']|date_format:"%Y-%m-%d"}】</span></li>
+							<li><a href="{base_url('cms/detail/'|cat:$item['id']|cat:'.html')}">{$item['article_title']|escape}</a><span>【{$item['publish_time']|date_format:"%Y-%m-%d"}】</span></li>
 							{/foreach}
 						</ol>
 					</div>
 				</li>
 			 	<li class="col">
 					<div class="colPanel newslist">
-						<h3 class="panelTitel"><span>{$news}</span><a class="more fr" href="{base_url('news/plist/acid/12')}">{$cm_more}&gt;&gt;</a></h3>
+						<h3 class="panelTitel"><span>{$news}</span><a class="more fr" href="{base_url('cms/plist/12.html')}">{$cm_more}&gt;&gt;</a></h3>
 						<ol class="clearfix">
 							{foreach from=$industryList item=item}
-							<li><a href="{base_url('news/detail/'|cat:$item['article_id'])}">{$item['article_title']|escape}</a><span>【{$item['publish_time']|date_format:"%Y-%m-%d"}】</span></li>
+							<li><a href="{base_url('cms/detail/'|cat:$item['id']|cat:'.html')}">{$item['article_title']|escape}</a><span>【{$item['publish_time']|date_format:"%Y-%m-%d"}】</span></li>
 							{/foreach}
 						</ol>
 					</div>

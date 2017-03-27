@@ -299,6 +299,9 @@ class MY_Controller extends CI_Controller {
     		$i = 0;
     		
     		foreach($this->_navigation as $key => $item){
+    			
+    			$key = htmlspecialchars($key);
+    			
     			if($i == 0){
     				$temp[] = "<a class=\"first breadlink\" href=\"{$item}\">{$key}</a>";
     			}else{

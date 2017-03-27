@@ -102,11 +102,11 @@ class Product extends Ydzj_Controller {
 			$count = 0;
 			foreach($list['data'] as $key => $product){
 				if('english' == $this->_currentLang){
-					if(!empty($product['goods_name_en'])){
+					if($product['goods_name_en']){
 						$product['goods_name'] = $product['goods_name_en'];
 					}
 					
-					if(!empty(trim(strip_tags($product['goods_intro_en'])))){
+					if(trim(strip_tags($product['goods_intro_en']))){
 						$product['goods_intro'] = $product['goods_intro_en'];
 					}
 				}

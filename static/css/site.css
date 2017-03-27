@@ -1189,7 +1189,6 @@ input[type=text].validation_error {
 	margin:15px 0;
 	overflow: hidden;
     word-wrap: break-word;
-    clear:both;
 }
 
 .articleContent img { 
