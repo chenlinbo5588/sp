@@ -7,11 +7,11 @@
 			<span class="hotlink">
 				<strong>{$hotkeyword}:　</strong>
 				{foreach from=$hotwords item=item}
-				<a href="{base_url('product/plist/keyword/'|cat:urlencode($item))}">{$item|escape}</a>
+				<a href="{base_url('product/plist.html?keyword='|cat:urlencode($item))}">{$item|escape}</a>
 				{/foreach}
 			</span>
 			<div class="searchform">
-				{form_open(base_url('product/plist'),'id="searchForm"')}
+				{form_open(base_url('product/plist.html'),'id="searchForm"')}
 				<input type="text" name="keyword" class="txt" value="" placeholder="输入产品名称"/><input type="image" name="search" src="{resource_url('img/btns/search_btn.png')}"/>
 				</form>
 			</div>
