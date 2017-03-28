@@ -22,7 +22,7 @@
         	<select name="ac_id" id="articleClassId">
 	          <option value="">请选择...</option>
 	          {foreach from=$articleClassList item=item}
-	          <option {if $smarty.post['ac_id'] == $item['ac_id']}selected{/if} value="{$item['ac_id']}">{str_repeat('......',$item['level'])}{$item['level']+1} {$item['ac_name']}</option>
+	          <option {if $smarty.post['ac_id'] == $item['ac_id']}selected{/if} value="{$item['ac_id']}">{str_repeat('......',$item['level'])}{$item['level']+1} {$item['name_cn']}</option>
 	          {/foreach}
 	        </select>
           </td>
@@ -65,7 +65,7 @@
           <td>{$item['article_id']}</td>
           <td>{$item['article_sort']}</td>
           <td>{$item['article_title']|escape}</td>
-          <td>{$articleClassList[$item['ac_id']]['ac_name']}</td>
+          <td>{$articleClassList[$item['ac_id']]['name_cn']}</td>
           <td class="align-center">{if $item['article_show']}是{else}否{/if}</td>
           <td class="nowrap align-center">{$item['gmt_create']|date_format:"%Y-%m-%d %H:%M:%S"}</td>
           <td class="align-center">

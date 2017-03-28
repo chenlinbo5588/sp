@@ -22,7 +22,7 @@
         	<select name="id" id="articleClassId">
 	          <option value="">请选择...</option>
 	          {foreach from=$articleClassList item=item}
-	          <option {if $smarty.post['id'] == $item['id']}selected{/if} value="{$item['id']}">{str_repeat('......',$item['level'])}{$item['name']}</option>
+	          <option {if $smarty.post['id'] == $item['id']}selected{/if} value="{$item['id']}">{str_repeat('......',$item['level'])}{$item['name_cn']}</option>
 	          {/foreach}
 	        </select>
           </td>
@@ -80,7 +80,7 @@
           <td><input type="checkbox" name="id[]" group="chkVal" value="{$item['id']}" class="checkitem"></td>
           <td>{$item['id']}</td>
           <td>{$item['article_title']|escape}</td>
-          <td>{$articleClassList[$item['ac_id']]['name']}</td>
+          <td>{$articleClassList[$item['ac_id']]['name_cn']}</td>
           <td>{$item['article_origin']|escape}</td>
           <td>{$item['origin_address']|escape}</td>
           <td>{$item['author']|escape}</td>
