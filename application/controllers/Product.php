@@ -116,7 +116,7 @@ class Product extends Ydzj_Controller {
 				}else{
 					$product['goods_pic'] = resource_url('img/default.jpg');
 				}
-				$product['digest'] = cutText(html_entity_decode(strip_tags($product['goods_intro'])),$cutLen);
+				$product['digest'] = htmlspecialchars(cutText(html_entity_decode(strip_tags($product['goods_intro'])),$cutLen));
 				$list['data'][$key] = $product;
 				
 			}

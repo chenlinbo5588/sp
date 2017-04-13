@@ -948,7 +948,7 @@ input[type=text].validation_error {
 }
 
 .cmsPg {
-	background:url(../img/cmp/5.jpg) no-repeat center center;
+	background:#EFE9ED url(../img/cmp/5.jpg) no-repeat center center;
 	height:230px;
 } 
 .productPg {
