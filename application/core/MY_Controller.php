@@ -10,7 +10,7 @@ class MY_Controller extends CI_Controller {
 	public $_reqtime ;
 	public $_navigation = array();
 	
-	protected $_siteSetting = array();
+	public $_siteSetting = array();
 	public $_seoSetting = array();
 	
 	
@@ -415,13 +415,36 @@ class MY_Controller extends CI_Controller {
     }
     
     /**
+     * json format
+     */
+    private function _buildJsonFormat($message = '' , $data = array()){
+    	if(is_array($message)){
+    		if (array_key_exists('code', $message)) {
+    			$d = array_merge($message,array('data' => $data));
+    		}else {
+    			$d = array('code' => $message[0],'message' =>$message[1], 'data' => $data);
+    		}
+			
+		}else{
+			$d = array('message' => $message,'data' => $data);
+		}
+		
+		if(config_item('csrf_protection') && $this->isPostRequest()){
+			$d['data'] = array_merge($d['data'],$this->getFormHash());
+		}
+		
+		return $d;
+    }
+    
+    
+    /**
      * 
      */
     public function responseJSON($message = '' , $data = array()){
     	$this->output
 		    	->set_status_header(200)
 		    	->set_content_type('application/json')
-		    	->set_output(json_encode(array('message' => $message,'data' => $data)));
+		    	->set_output(json_encode($this->_buildJsonFormat($message,$data)));
 		    	
 		$this->output->_display();
 		
@@ -434,12 +457,11 @@ class MY_Controller extends CI_Controller {
     public function jsonOutput($message = '' , $data = array() , $cacheTime = 0 ){
     	if(!$this->output->_display_cache($this->config,$this->URI)){
 			// 缓存文件不存在或者是已经失效，设置数据
-			$data = array('message' => $message,'data' => $data);
-			//print_r($data);
+			$d = $this->_buildJsonFormat($message,$data);
 			$this->output
 		    	->set_status_header(200)
 		    	->set_content_type('application/json')
-		    	->set_output(json_encode($data));
+		    	->set_output(json_encode($d));
 		    	
 		    if($cacheTime > 0){
 		    	$this->output->cache($cacheTime);
@@ -449,6 +471,8 @@ class MY_Controller extends CI_Controller {
 }
 
 
-
-include APPPATH.'core/Ydzj_Controller.php';
-include APPPATH.'core/Ydzj_Admin_Controller.php';
+require_once(APPPATH.'libraries'.DIRECTORY_SEPARATOR.'Http_client.php');
+require_once(APPPATH.'libraries'.DIRECTORY_SEPARATOR.'Flexihash.php');
+require_once(APPPATH.'core'.DIRECTORY_SEPARATOR.'Ydzj_Controller.php');
+require_once(APPPATH.'core'.DIRECTORY_SEPARATOR.'MyYdzj_Controller.php');
+require_once(APPPATH.'core'.DIRECTORY_SEPARATOR.'Ydzj_Admin_Controller.php');

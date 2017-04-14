@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 
 /**
- * 运动之家 控制器
+ * 业务逻辑 基础 控制器
  * 
  * 登陆态 和 非登陆态 都可继承
  */
@@ -23,9 +23,12 @@ class Ydzj_Controller extends MY_Controller {
 		$this->_initLogin();
 	}
 	
+	protected function _initLibrary(){
+		parent::_initLibrary();
+	}
 	
 	/**
-	 * 获得导航
+	 * 获取 网站导航 
 	 */
 	public function getSiteNavs(){
 		$this->_siteNavs = $this->navigation_service->getClassTree();
@@ -37,12 +40,19 @@ class Ydzj_Controller extends MY_Controller {
 	}
 	
 	
-	
-	
-	
-	protected function _initLibrary(){
-		parent::_initLibrary();
+	/**
+	 * 加载微信支持文件
+	 */
+	public function loadWeixinSupportFiles(){
+		require_once(WEIXIN_PATH.'errorCode.php');
+		require_once(WEIXIN_PATH.'sha1.php');
+		require_once(WEIXIN_PATH.'xmlparse.php');
+		require_once(WEIXIN_PATH.'pkcs7Encoder.php');
+		require_once(WEIXIN_PATH.'wxBizMsgCrypt.php');
 	}
+	
+	
+	
 	
 	private function _initLogin(){
 		
@@ -216,27 +226,4 @@ class Ydzj_Controller extends MY_Controller {
 		
 		return $city_id;
 	}
-	
-	
-	
 }
-
-
-/**
- * 登陆态
- */
-class MyYdzj_Controller extends Ydzj_Controller {
-	
-	public function __construct(){
-		parent::__construct();
-		
-		if(!$this->isLogin()){
-			redirect('member/login');
-		}
-		
-	}
-	
-}
-
-
-

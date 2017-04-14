@@ -18,4 +18,39 @@ class Wx_Customer_Model extends MY_Model {
     	return array_keys(self::$_tableMeta);
     }
     
+    
+    public function unsubscribe($param){
+    	$now = time();
+        $data = array(
+            'subscribe' => 0
+        );
+        
+        $where = array(
+            'openid' => $param['openid']
+        );
+        
+        return $this->updateByWhere($data, $where);
+    }
+    
+    /**
+     *
+     * @param type $openid
+     * @param type $mobile
+     * @param type $virtual_no 
+     */
+    public function bind($openid , $mobile,$virtual_no){
+        $data = array(
+            'mobile' => $mobile,
+            'virtual_no' => empty($virtual_no) ? '' : $virtual_no
+        );
+        
+        $where = array(
+            'openid' => $openid
+        );
+        
+        return $this->updateByWhere($data, $where);
+        
+    }
+    
+    
 }

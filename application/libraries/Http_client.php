@@ -1,5 +1,4 @@
 <?php
-
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 /*
@@ -7,22 +6,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * and open the template in the editor.
  */
 
-class Weixin_Api {
+class Http_Client {
     
-    public $_baseURL = 'https://api.weixin.qq.com';
+    public $baseURL = 'https://api.weixin.qq.com';
     public $_CI = null;
     
     public function __construct(){
-        $this->_CI = & get_instance();
-        $this->_CI->load->model('Log_Model');
+        $this->_CI = get_instance();
     }
     
-    public function log($level = 1){
-        if('POST' == strtoupper($_SERVER['REQUEST_METHOD'])){
-            $this->_CI->Log_Model->add($_SERVER,$GLOBALS["HTTP_RAW_POST_DATA"]);
-        }else{
-            $this->_CI->Log_Model->add($_SERVER,'');
-        }
+    
+    public function getDefaultHttpHeader(){
+    	return array();
     }
     
     public function request($param, $return = true){
@@ -50,8 +45,18 @@ class Weixin_Api {
 		} else {
 			$param['header'] = true;
 		}
+		
 		@curl_setopt($curl, CURLOPT_HEADER, $param['header']);
         //curl_setopt($curl, CURLOPT_USERAGENT, array_rand($useragent));
+        
+        
+        $defaultHeader = $this->getDefaultHttpHeader();
+        
+        if($defaultHeader){
+        	curl_setopt($curl, CURLOPT_HTTPHEADER, $defaultHeader);
+        }
+        
+        
         /*
 		 * 处理302
 		 */
@@ -60,7 +65,7 @@ class Weixin_Api {
 		} else {
 			$param['location'] = true;
 		}
-		@curl_setopt($curl, CURLOPT_FOLLOWLOCATION, $param['location']);
+		curl_setopt($curl, CURLOPT_FOLLOWLOCATION, $param['location']);
 
 		unset($param['location']);
         
@@ -68,11 +73,11 @@ class Weixin_Api {
 		 * exec执行结果是否保存到变量中
 		 */
 		if (true === $return) {
-			@curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 		}
 
         if(strpos($param['url'],'http') === false){
-            $param['url'] = $this->_baseURL . $param['url'];
+            $param['url'] = $this->baseURL . $param['url'];
         }
         
         if (false !== strstr($param['url'], 'https://', true)) {
@@ -98,12 +103,16 @@ class Weixin_Api {
             curl_setopt($curl, CURLOPT_POSTFIELDS, $param['data']);
             
         }else{
-            if($param['data']){
-                foreach($param['data'] as $key => $value){
-                    $extraParam[] = $key.'='.urlencode($value);
-                }
-            }
-            
+        	if(strtolower($param['method']) == 'put'){
+        		curl_setopt($curl, CURLOPT_PUT, true);
+        		curl_setopt($curl, CURLOPT_POSTFIELDS, $param['data']);
+        	}else{
+        		if($param['data']){
+		            foreach($param['data'] as $key => $value){
+		                $extraParam[] = $key.'='.urlencode($value);
+		            }
+		        }
+        	}
         }
         
         if($extraParam){

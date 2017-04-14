@@ -39,7 +39,9 @@ class Index extends Ydzj_Controller {
 	
 		
 		$this->assign('currentModule','index');
+		
 		$this->display();
+		
 	}
 	
 	
