@@ -3,7 +3,7 @@
 /**
  * 消息控制
  */
-class Weixin extends Ydzj_Controller {
+class Unit_Weixin_test extends Ydzj_Controller {
     public function __construct(){
         parent::__construct();
         
@@ -22,20 +22,20 @@ class Weixin extends Ydzj_Controller {
     }
     
     
-    /**
-     * 创建刷新菜单
-     */
     public function menu(){
+    	$this->weixin_mp_api->initSetting(config_item('mp_test'));
     	if($this->input->is_cli_request()){
     		
     		
     		
     	}
+    	
     }
     
     
+    
     public function devmessage(){
-        $this->weixin_mp_api->initSetting(config_item('mp_test'));
+    	
         
         /*
     	if($this->weixin_mp_api->checkSignature()){
@@ -43,6 +43,8 @@ class Weixin extends Ydzj_Controller {
     	}
     	*/
     	
+    	$this->weixin_mp_api->initSetting(config_item('mp_test'));
+		
         if($this->weixin_mp_api->checkSignature()){
             $postStr = $GLOBALS["HTTP_RAW_POST_DATA"];
             $message = $this->Weixin_mp_api->user_event($postStr);

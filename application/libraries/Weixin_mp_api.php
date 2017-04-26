@@ -8,7 +8,7 @@
 
 class Weixin_Mp_Api extends Http_Client {
     
-    protected $_mpConfig = array();
+    public $_mpConfig = array();
     
     //新的 access token
     public static $_mpAccessToken = '';
@@ -38,8 +38,7 @@ class Weixin_Mp_Api extends Http_Client {
         
         $this->msgCrypt = new WXBizMsgCrypt($config['token'],$config['EncodingAESKey'],$config['appid']);
         
-        $this->_CI->load->model('Mp_Ticket_Model');
-        $this->_CI->load->model('Wx_Customer_Model');
+        $this->_CI->load->model(array('Mp_Ticket_Model','Wx_Customer_Model'));
         
         $this->_CI->Mp_Ticket_Model->deleteByWhere(array(
         	'gmt_create <=' => $this->_CI->_reqtime - 86400
