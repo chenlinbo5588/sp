@@ -58,7 +58,8 @@ class MyYdzj_Controller extends Ydzj_Controller {
 		
 		
 		//检查是否已经认证
-		$this->_checkHasVerify();
+		//$this->_checkHasVerify();
+		
 		$this->_repubList();
 	}
 	

@@ -64,7 +64,7 @@ class Huanxin_api extends Http_Client {
     }
     
     
-    public function getDefaultHttpHeader(){
+    public function getCustomHttpHeader(){
     	if($this->open_type){
     		return array(
 				'Content-Type: application/json',
@@ -88,6 +88,7 @@ class Huanxin_api extends Http_Client {
     	);
     	
     	$param = array(
+    		'custom_header' => $this->getCustomHttpHeader(),
     		'url' => '/users',
     		'method' => 'post',
     		'data' => json_encode($str)
@@ -125,6 +126,7 @@ class Huanxin_api extends Http_Client {
     	$str = '{"grant_type":"client_credentials","client_id":"'.$this->client_id.'","client_secret":"'.$this->appSecret.'"}';
     	
     	$param = array(
+    		'custom_header' => $this->getCustomHttpHeader(),
     		'url' => '/token',
     		'method' => 'post',
     		'data' => $str
@@ -144,6 +146,7 @@ class Huanxin_api extends Http_Client {
     	);
     	
     	$param = array(
+    		'custom_header' => $this->getCustomHttpHeader(),
     		'url' => "/users/{$username}/password",
     		'method' => 'post',
     		'data' => json_encode($str)
@@ -183,6 +186,7 @@ class Huanxin_api extends Http_Client {
     	}
     	
     	$param = array(
+    		'custom_header' => $this->getCustomHttpHeader(),
             'url' => '/messages',
             'method' => 'post',
             'data' => json_encode($str)

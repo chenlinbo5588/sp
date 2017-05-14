@@ -15,11 +15,6 @@ class Http_Client {
         $this->_CI = get_instance();
     }
     
-    
-    public function getDefaultHttpHeader(){
-    	return array();
-    }
-    
     public function request($param, $return = true){
         
         $curl = curl_init();
@@ -49,11 +44,8 @@ class Http_Client {
 		@curl_setopt($curl, CURLOPT_HEADER, $param['header']);
         //curl_setopt($curl, CURLOPT_USERAGENT, array_rand($useragent));
         
-        
-        $defaultHeader = $this->getDefaultHttpHeader();
-        
-        if($defaultHeader){
-        	curl_setopt($curl, CURLOPT_HTTPHEADER, $defaultHeader);
+        if($param['custom_header'] ){
+        	curl_setopt($curl, CURLOPT_HTTPHEADER, $param['custom_header']);
         }
         
         

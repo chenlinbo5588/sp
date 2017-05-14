@@ -26,7 +26,7 @@ class Yunxin_api extends Http_Client {
     }
     
     
-    public function getDefaultHttpHeader(){
+    public function getCustomHttpHeader(){
     	$headers = $this->custom_header();
     	$headers[] = 'Content-Type: application/x-www-form-urlencoded;charset=utf-8';
     	
@@ -61,6 +61,7 @@ class Yunxin_api extends Http_Client {
     	));
     	
     	$param = array(
+    		'custom_header' => $this->getCustomHttpHeader(),
     		'url' => 'user/create.action',
     		'method' => 'post',
     		'data' => $str
@@ -89,6 +90,7 @@ class Yunxin_api extends Http_Client {
     	));
     	
     	$param = array(
+    		'custom_header' => $this->getCustomHttpHeader(),
             'url' => '/user/refreshToken.action',
             'method' => 'post',
             'data' => $str

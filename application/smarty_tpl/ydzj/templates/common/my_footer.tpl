@@ -25,18 +25,6 @@
 <a class="backToTop" href="#top"></a>
 <script type="text/javascript" src="{resource_url('js/swfobject/swfobject.js')}"></script>
 <script type="text/javascript" src="{resource_url('js/my/notify.js')}"></script>
-{if $currentGroupId == 2}
-<div id="walkthrough-content" style="display:none;">
-    <div id="walkthrough-1">
-        <h3>欢迎来到{$siteSetting['site_name']}</h3>
-        <p>您还没有进行卖家认证，<br/>通过卖家认证后可维护库存,<br/>并获得系统及时的匹配提醒<br/></p>
-        <p></p>
-        <p><a class="link_btn" href="{site_url('my/seller_verify?remind=false')}">马上去认证</a></p>
-    </div>
-</div>
-<link href="{resource_url('css/pagewalk/jquery.pagewalkthrough.css')}" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="{resource_url('js/jquery.pagewalkthrough.js')}"></script>
-{/if}
 <script>
 var soundSwfUrl = "{resource_url('js/swfobject/sound.swf')}",
     expressSwfUrl = "{resource_url('js/swfobject/expressInstall.swf')}",
