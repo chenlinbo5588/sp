@@ -48,7 +48,7 @@
     </div><!-- //end of wrap -->
     {if !$isMobile}
     <div class="qqchat">
-    	<a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=173151624&site=qq&menu=yes"><img border="0" src="http://wpa.qq.com/pa?p=2:173151624:53" alt="点击这里给我发消息" title="点击这里给我发消息"/></a>
+    	<a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin={$siteSetting['site_qq']}&site=qq&menu=yes"><img border="0" src="http://wpa.qq.com/pa?p=2:{$siteSetting['site_qq']}:53" alt="点击这里给我发消息" title="点击这里给我发消息"/></a>
     </div>
     {/if}
     <!--[if lt IE 9]>

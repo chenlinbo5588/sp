@@ -102,13 +102,20 @@ class Product extends Ydzj_Controller {
 			$count = 0;
 			foreach($list['data'] as $key => $product){
 				if('english' == $this->_currentLang){
+					$product['digest'] = htmlspecialchars(cutText(html_entity_decode(strip_tags($product['goods_intro_en'])),$cutLen));
+					
 					if($product['goods_name_en']){
 						$product['goods_name'] = $product['goods_name_en'];
 					}
 					
 					if(trim(strip_tags($product['goods_intro_en']))){
 						$product['goods_intro'] = $product['goods_intro_en'];
+						
+						
 					}
+				}else{
+					
+					$product['digest'] = htmlspecialchars(cutText(html_entity_decode(strip_tags($product['goods_intro'])),$cutLen));
 				}
 				
 				if($product['goods_pic']){
@@ -116,7 +123,8 @@ class Product extends Ydzj_Controller {
 				}else{
 					$product['goods_pic'] = resource_url('img/default.jpg');
 				}
-				$product['digest'] = htmlspecialchars(cutText(html_entity_decode(strip_tags($product['goods_intro'])),$cutLen));
+				
+				
 				$list['data'][$key] = $product;
 				
 			}
@@ -192,8 +200,14 @@ class Product extends Ydzj_Controller {
 		$info = $this->Goods_Model->getFirstByKey($id,'goods_id');
 		
 		$nameKey = 'goods_name';
+		$introKey = 'goods_intro';
+		
 		if('english' == $this->_currentLang && !empty($info['goods_name_en'])){
 			$nameKey = 'goods_name_en';
+		}
+		
+		if('english' == $this->_currentLang && !empty($info['goods_intro_en'])){
+			$introKey = 'goods_intro_en';
 		}
 		
 		if($info){
@@ -209,6 +223,10 @@ class Product extends Ydzj_Controller {
 				$info['goods_pic_b'] = 'img/default.jpg';
 				$info['goods_pic'] = $info['goods_pic_b'];
 			}
+			
+			
+			$info['goods_name'] = $info[$nameKey];
+			$info['goods_intro'] = $info[$introKey];
 			
 			$this->_breadCrumbLinks($info['gc_id']);
 			
