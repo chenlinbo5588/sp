@@ -25,6 +25,9 @@
 	top:150px;
 	z-index: 20;
 	display:none;
+	background: #fff;
+    border: 1px solid #dcdcdc;
+    padding: 5px
 }
 
  #search {
@@ -34,7 +37,7 @@
     right: 50px;
  }
  
- #search_result {
+#resultWrap {
 	position: fixed;
 	right: 110px;
 	top: 98px;
@@ -47,6 +50,15 @@
 	display:none;
  }
  
+#folderText {
+	text-align: center;
+    background: #dbf9ab;
+    color: #07074e;
+    border-bottom: 1px solid #dcdcdc;
+    cursor: pointer;
+    font-weight: bold;
+}
+
  #search_result li {
     cursor:pointer;
     padding:5px;

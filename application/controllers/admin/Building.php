@@ -82,7 +82,7 @@ class Building extends Ydzj_Admin_Controller {
 			'id_card' => array('title' => '身份证号码' , 'required' => false , 'rule' => 'required|min_length[15]|max_length[18]'),
 			'people_num' => array('title' => '家庭在册人数' , 'required' => false , 'rule' => 'required'),
 			'address' => array('title' => '地址' , 'required' => true , 'rule' => 'required|max_length[80]'),
-			'land_no' => array('title' => '土地使用权证号' , 'required' => false , 'rule' => 'max_length[50]'),
+			'land_no' => array('title' => '土地使用权证号' , 'required' => true , 'rule' => 'max_length[50]'),
 			'zddh' => array('title' => '宗地地号' , 'required' => false , 'rule' => 'max_length[50]'),
 			'land_oa' => array('title' => '土地权属性质' , 'required' => false , 'rule' => 'max_length[20]'),
 			'jzw_ydmj' => array('title' => '用地面积' , 'required' => false , 'rule' => 'numeric|greater_than_equal_to[0]'),
@@ -93,8 +93,8 @@ class Building extends Ydzj_Admin_Controller {
 			'jzw_unit' => array('title' => '建筑单元数' , 'required' => false , 'rule' => 'is_natural_no_zero'),
 			'sp_new' => array('title' => '审批时间(新建)' , 'required' => false , 'rule' => 'max_length[30]'),
 			'sp_ycyj' => array('title' => '审批时间(原拆原建)' , 'required' => false , 'rule' => 'max_length[30]'),
-			'sp_ydmj' => array('title' => '批准用地面积' , 'required' => false , 'rule' => 'numeric|greater_than_equal_to[0]'),
-			'sp_jzmj' => array('title' => '批准建筑面积' , 'required' => false , 'rule' => 'numeric|greater_than_equal_to[0]'),
+			'sp_ydmj' => array('title' => '批准用地面积' , 'required' => true , 'rule' => 'numeric|greater_than_equal_to[0]'),
+			'sp_jzmj' => array('title' => '批准建筑面积' , 'required' => true , 'rule' => 'numeric|greater_than_equal_to[0]'),
 			'illegal_de' => array('title' => '违法现象' , 'required' => false , 'rule' => '',
 						'type' => 'select' , 'dataSource' => array('请选择' => '请选择' , '全部违建' => '全部违建' ,'部分违建' => '部分违建' , '全部合法' => '全部合法','其他' => '其他')
 			),
@@ -170,6 +170,8 @@ class Building extends Ydzj_Admin_Controller {
 				
 				$geometry = array('x' => $addParam['x'] ,'y' => $addParam['y']);
 				unset($addParam['x'],$addParam['y']);
+				
+				$addParam = $this->_setMjField($addParam);
 				
 				//一个点
 				$param = array(
@@ -265,9 +267,34 @@ class Building extends Ydzj_Admin_Controller {
 		}
 		
 		exit(json_encode($json));
+	}
+	
+	
+	private function _getMjFields(){
+		$mjKeysArray = array(
+				'jzw_ydmj',
+				'jzw_jzzdmj',
+				'jzw_jzmj',
+				'sp_ydmj',
+				'sp_jzmj',
+				'wf_wjmj'
+			);
+			
+		return $mjKeysArray;
+	}
+	
+	private function _setMjField($pParam){
 		
+		$mjFields = $this->_getMjFields();
+		foreach($mjFields as $field){
+			if(empty(trim($pParam[$field]))){
+				$pParam[$field] = 0;
+			}else{
+				$pParam[$field] = floatval(trim($pParam[$field]));
+			}
+		}
 		
-		
+		return $pParam;
 	}
 	
 	
@@ -278,6 +305,8 @@ class Building extends Ydzj_Admin_Controller {
 		
 		$id = $this->input->get_post('id');
 		$this->assign('id',$id);
+		
+		
 		
 		$wz = config_item('feature_url');
 		$this->featurerest->setUrl(config_item('arcgis_server'),$wz['wzd']);
@@ -298,6 +327,8 @@ class Building extends Ydzj_Admin_Controller {
 				
 				//一个点, 要转成整数 比较重要
 				$updateParam['OBJECTID'] = intval($id);
+				$updateParam = $this->_setMjField($updateParam);
+				
 				$param = array(
 					array(
 						"geometry" => $geometry,
@@ -330,6 +361,17 @@ class Building extends Ydzj_Admin_Controller {
 				*/
 			}
 			
+			$mjKeysArray = $this->_getMjFields();
+
+			foreach($mjKeysArray as $mjKey){
+				if(0 == $info['features'][0]['attributes'][$mjKey]){
+					$info['features'][0]['attributes'][$mjKey] = '';
+				}else{
+					$info['features'][0]['attributes'][$mjKey] = sprintf("%.2f",$info['features'][0]['attributes'][$mjKey]);
+				}
+				
+			}
+
 			$this->assign('info',$info['features'][0]);
 			$photos = trim($info['features'][0]['attributes']['photos']);
 			//file_put_contents("query.txt",print_r($photos,true),FILE_APPEND);

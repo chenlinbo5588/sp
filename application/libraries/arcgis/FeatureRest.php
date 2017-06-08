@@ -20,20 +20,79 @@ class FeatureRest extends Http_Client {
      */
     public function setUrl($baseUrl,$featureUrl){
     	$this->_baseURL = $baseUrl;
-    	$this->_featureUrl = $featureUrl;
+    	$this->setFeatureUrl($featureUrl);
+    	
     }
     
     
     public function setFeatureUrl($url){
     	$this->_featureUrl = $url;
+        
+        if(substr($this->_featureUrl, -1, 1) != '/'){
+        	$this->_featureUrl .= '/';
+        }
     }
     
-    public function query($data){
+    
+    
+    ///http://192.168.5.100/arcgis/rest/services/zd2cad/GPServer/zd2cad/jobs/j97d3a8a066fc44f0a361beb8a75d194e?f=json
+    public function getJobStatus($jobId){
     	
     	$default = array(
         	'f' => 'json',
+        );
+        
+        $data = array_merge($default,$data);
+        
+    	$param = array(
+            'url' => $this->_baseURL.$this->_featureUrl.'jobs/'.$jobId,
+            'method' => 'post',
+            'data' => $data
+        );
+       
+        $respone = $this->request($param);
+        $result = json_decode($respone,true);
+        
+        if($result['jobStatus'] == 'esriJobSucceeded'){
+        	return true;
+        }else{
+        	
+        }
+        
+        //file_put_contents("job.txt",print_r($result,true),FILE_APPEND);
+    	
+    	
+    }
+    
+    
+    public function submitJob($data){
+    	
+    	$default = array(
+        	'f' => 'json',
+        );
+        
+        $data = array_merge($default,$data);
+        
+    	$param = array(
+            'url' => $this->_baseURL.$this->_featureUrl.'submitJob',
+            'method' => 'post',
+            'data' => $data
+        );
+       
+        $respone = $this->request($param);
+        $result = json_decode($respone,true);
+        
+        //file_put_contents("job.txt",print_r($result,true),FILE_APPEND);
+    	return $result;
+    	
+    }
+    
+    
+    public function query($data){
+    	$default = array(
+        	'f' => 'json',
         	'outFields' => '*',
-        	'returnGeometry' => 'true'
+			'returnGeometry' => 'true'
         );
         
         $data = array_merge($default,$data);
@@ -52,6 +111,64 @@ class FeatureRest extends Http_Client {
     }
     
     
+    
+    /**
+     * 
+     */
+    public function applyEdits($data){
+        
+    	$this->_featureUrl = str_replace('/MapServer','/FeatureServer',$this->_featureUrl);
+    	
+    	$param = array(
+            'url' => $this->_baseURL.$this->_featureUrl.'applyEdits',
+            'method' => 'post',
+            'data' => array(
+            	'f' => 'json',
+            	'edits' => json_encode(array($data))
+            
+            )
+        );
+        
+        //file_put_contents("query.txt",print_r($param['data'],true));
+        //file_put_contents("query.txt",print_r($param,true),FILE_APPEND);
+        $respone = $this->request($param);
+        $result = json_decode($respone,true);
+        
+        //file_put_contents("query.txt",print_r($result,true),FILE_APPEND);
+        
+    	return $result;
+        
+    }
+    
+    
+    
+    
+    /**
+     * 删除要素
+     */
+    public function deleteFeature($data){
+    	
+    	$json = array(
+        	'f' => 'json',
+        );
+    	
+    	
+    	$data = array_merge($json,$data);
+    	
+    	$this->_featureUrl = str_replace('/MapServer','/FeatureServer',$this->_featureUrl);
+    	
+    	$param = array(
+            'url' => $this->_baseURL.$this->_featureUrl.'deleteFeatures',
+            'method' => 'post',
+            'data' => json_encode($data)
+        );
+        
+        $respone = $this->request($param);
+        $result = json_decode($respone,true);
+    	return $result;
+    }
+    
+    
     /**
      * 添加Feature
      */
@@ -63,7 +180,9 @@ class FeatureRest extends Http_Client {
         );
             
         //file_put_contents("json.txt",$json);
-            
+        $this->_featureUrl = str_replace('/MapServer','/FeatureServer',$this->_featureUrl);
+        
+        
     	$param = array(
             'url' => $this->_baseURL.$this->_featureUrl.'addFeatures',
             'method' => 'post',
@@ -92,8 +211,9 @@ class FeatureRest extends Http_Client {
         	'f' => 'json',
         	'features' => json_encode($data)
         );
-            
-        //file_put_contents("json.txt",print_r($json,true));
+        
+        
+        $this->_featureUrl = str_replace('/MapServer','/FeatureServer',$this->_featureUrl);
             
     	$param = array(
             'url' => $this->_baseURL.$this->_featureUrl.'updateFeatures',

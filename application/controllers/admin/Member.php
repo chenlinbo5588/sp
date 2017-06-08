@@ -393,7 +393,7 @@ class Member extends Ydzj_Admin_Controller {
 				}
 				
 				if($password){
-					$updateData['password'] = $password;
+					$updateData['password'] = $this->encrypt->encode($password);
 				}
 				
 				//print_r($updateData);

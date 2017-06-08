@@ -17,18 +17,13 @@
 			*}
 			<tr>
 				<td>手机账号</td>
-				<td><i class="fa fa-phone" aria-hidden="true"></i>&nbsp;<a href="javascript:void(0);">{$profile['basic']['mobile']|escape}</a><a class="warning"  href="{site_url('my/change_mobile')}">更换手机号码</a></td>
+				<td><i class="fa fa-phone" aria-hidden="true"></i>&nbsp;<a href="javascript:void(0);">{$profile['basic']['mobile']|escape}</a></td>
 			</tr>
 			<tr>
 				<td>邮箱地址</td>
 				<td>
 				    <div>
 				        <span id="emailAddr">{$profile['basic']['email']|escape}</span>&nbsp;<a id="edit_email" class="warning" href="javascript:void(0);">修改</a>
-				        <span id="emailVerfiyText">{if $profile['basic']['email_status'] == 1}已认证{else}未认证{/if}邮箱</span>
-				    </div>
-				    <div id="emailAddrVerfiy" {if $profile['basic']['email_status'] == 1}style="display:none;"{/if}>
-				        <span class="hightlight">邮箱尚未认证,可能无法收到邮件提醒</span>
-				        <a class="warning" href="{site_url('my/verify_email')}" title="马上认证邮箱">马上认证邮箱</a>
 				    </div>
 			   </td>
 			</tr>
@@ -61,6 +56,7 @@
 				<td>注册IP</td>
 				<td>{$profile['basic']['reg_ip']|escape}</td>
 			</tr>
+			{*
 			<tr>
 				<td>积分</td>
 				<td>{$profile['basic']['credits']|escape}</td>
@@ -72,6 +68,7 @@
 					<input class="action" type="button" name="copylink" value="复制推广链接"/>
 				</td>
 			</tr>
+			*}
 		</tbody>
 	</table>
 	{include file="common/jquery_validation.tpl"}

@@ -4,7 +4,7 @@
    {include file="common/arcgis_common.tpl"}
    <style type="text/css">
 	.loca {
-		position:absolute;
+		position:static;
 	}
    </style>
    <script type="text/javascript" src="{resource_url('js/ajaxfileupload/ajaxfileupload.js')}"></script>
@@ -15,7 +15,7 @@
       $(function(){
       		buildingInfoDlg = $("#buildingInfoDlg" ).dialog({
 		        autoOpen: false,
-		        width: '65%',
+		        width: '98%',
 		        modal: false,
 		        open:function(){
 		        	
@@ -102,6 +102,7 @@
         var resizeTimer;
         map = new Map("mapDiv",{ zoom: 1, showLabels : true,scalebarUnit: "dual" });
         var layerZq = new esri.layers.ArcGISDynamicMapServiceLayer("http://{config_item('arcgis_server_ip')}/arcgis/rest/services/basemapzq/MapServer");
+        //var layerZq = new esri.layers.ArcGISTiledMapServiceLayer("http://{config_item('arcgis_server_ip')}/arcgis/rest/services/basemapzq/MapServer");
         var allFeatureMap = new esri.layers.ArcGISDynamicMapServiceLayer("http://{config_item('arcgis_server_ip')}/arcgis/rest/services/zqwj/cljz/MapServer");
 
 	    dojo.connect(map, 'onLoad', function(theMap) {
@@ -288,9 +289,13 @@
                //results = queryResults.features;
                
                results = queryResults;
-               $("#search_result").html('');
+               $("#search_result").html('').show();
                var itemAr = [];
                
+	       if(results.length){
+		   $("#folderText").html('收起结果(' + results.length + ')');
+	       }
+
                for(var i = 0; i < results.length; i++){
                	   /*
                    var graphic = new Graphic(results[i].geometry,searchPicSym, results[i].attributes);
@@ -309,6 +314,7 @@
                             var pointlocation = new Point(data.geometry);
                             var graphic1 = new Graphic(pointlocation,searchPicSym,data.attributes);
                             //searchLayer.add(graphic1);
+			    map.setScale(500);
                             map.centerAt(pointlocation);
                        });
 	                   
@@ -321,7 +327,7 @@
                }
                
                map.getLayer("panWork").clear();
-               $("#search_result").show();
+               $("#resultWrap").show();
                
                searchingLock = false;
                $("#searchText").removeClass("txt-loading");
@@ -332,7 +338,7 @@
             function queryTaskErrorHandler(queryError){
                searchingLock = false;
                $("#searchText").removeClass("txt-loading");
-               $("#search_result").hide();
+               $("#resultWrap").hide();
                
                //console.log("error", queryError.error.details);
             }
@@ -341,7 +347,8 @@
         $("#searchText").bind("keyup",function(e){
             //console.log(e);
             if($.trim($(this).val()) =='' && 8 == e.keyCode){
-                $("#search_result").html('').hide();
+                $("#resultWrap").hide();
+		$("#search_result").html('');
                 $("#statictsHTML").hide();
                 searchLayer.clear();
                 buildingLayer.clearSelection();
@@ -356,6 +363,25 @@
             searchTask();
         });
         
+
+	$("#folderText").bind("click",function(){
+            var text = $(this).html();
+
+	    if(/收起/.test(text)){
+		text = text.replace('收起','展开');
+		$(this).html(text);
+
+		$("#search_result").slideUp();
+	    }else if(/展开/.test(text)){
+		text = text.replace('展开','收起');
+		$(this).html(text);
+		$("#search_result").slideDown();
+	    }
+
+	    
+        });
+
+
         
         var tjTask = function(){
         
@@ -528,9 +554,11 @@
    <div id="search">
         <select name="village" style="height:33px;">
             <option value="">全部</option>
+	    <option value="陈家村">陈家村</option>
+	    <option value="叶家村">叶家村</option>
+	    {*
             <option value="巴里村">巴里村</option>
             <option value="柴家村">柴家村</option>
-            <option value="陈家村">陈家村</option>
             <option value="东埠头村">东埠头村</option>
             <option value="古窑浦村">古窑浦村</option>
             <option value="洪魏村">洪魏村</option>
@@ -538,14 +566,17 @@
             <option value="裘家村">裘家村</option>
             <option value="戎家村">戎家村</option>
             <option value="五姓点村">五姓点村</option>
-            <option value="叶家村">叶家村</option>
             <option value="长溪村">长溪村</option>
+	    *}
         </select>
         <input type="text" name="keyword" id="searchText" class="" style="height: 28px;width: 300px;" value="" placeholder="请输入关键字(如编号，户主名称，身份证号码)"/>
         <input type="button" name="search" id="searchBtn" class="msbtn" value="查询"/>
         <input type="button" name="tj" id="tjBtn" class="msbtn btndisabled" value="统计"/>
    </div>
-   <ul id="search_result"></ul>
+   <div id="resultWrap">
+	<div id="folderText"></div>
+	<ul id="search_result"></ul>
+   </div>
    <div id="statictsHTML">
       <div><strong>调查存量建筑个数: </strong><span class="stats" id="countResult"></span></div>
       <div><strong>建筑物用地面积合计(M<sup>2</sup>): </strong><span class="stats" id="ydmjResult"></span></div>
