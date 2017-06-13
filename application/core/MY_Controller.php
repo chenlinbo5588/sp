@@ -187,16 +187,9 @@ class MY_Controller extends CI_Controller {
     	}
     	
     	$this->_siteSetting = $settingList;
-    	
     	$this->assign('siteSetting',$this->_siteSetting);
     	
-    	
-    	$siteNameKey = 'site_name';
-    	if($this->_currentLang == 'english'){
-    		$siteNameKey .= '_en';
-    	}
-    	
-    	$this->config->set_item('site_name',$this->_siteSetting[$siteNameKey]);
+    	$this->config->set_item('site_name',$this->_siteSetting['site_name']);
     	$this->config->set_item('image_max_filesize',$this->_siteSetting['image_max_filesize']);
     	$this->config->set_item('background_image_allow_ext',$this->_siteSetting['background_image_allow_ext']);
     	$this->config->set_item('forground_image_allow_ext',$this->_siteSetting['forground_image_allow_ext']);
@@ -213,9 +206,6 @@ class MY_Controller extends CI_Controller {
 	    	$seoList = array();
 	    	
 	    	$siteNameKey = 'site_name';
-	    	if($this->_currentLang == 'english'){
-	    		$siteNameKey .= '_en';
-	    	}
 	    	
 	    	foreach($temp as $item){
 	    		$item['title'] = str_replace(array('{sitename}'),array($this->_siteSetting[$siteNameKey]),$item['title']);
@@ -407,16 +397,10 @@ class MY_Controller extends CI_Controller {
     
     public function seo($title = '',$keyword = '', $desc = ''){
     	//print_r($this->_seoSetting);
-    	$siteNameKey = 'site_name';
-    	if($this->_currentLang == 'english'){
-    		$siteNameKey .= '_en';
-    	}
-	    	
-	    	
     	if($title){
     		$this->_seo['SEO_title'] = $title;
     	}else{
-    		$this->_seo['SEO_title'] = $this->_siteSetting[$siteNameKey];
+    		$this->_seo['SEO_title'] = $this->_siteSetting['site_name'];
     	}
     	
     	if($keyword){
