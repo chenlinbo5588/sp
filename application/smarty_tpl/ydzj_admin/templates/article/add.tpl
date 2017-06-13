@@ -41,7 +41,7 @@
           	<select name="ac_id" id="articleClassId">
 	          <option value="">请选择...</option>
 	          {foreach from=$articleClassList item=item}
-	          <option {if $info['ac_id'] == $item['ac_id']}selected{/if} value="{$item['ac_id']}">{str_repeat('......',$item['level'])}{$item['name_cn']}</option>
+	          <option {if $info['ac_id'] == $item['ac_id']}selected{/if} value="{$item['ac_id']}">{str_repeat('......',$item['level'])}{$item['name_cn']}({$item['name_en']})</option>
 	          {/foreach}
 	        </select>
           </td>

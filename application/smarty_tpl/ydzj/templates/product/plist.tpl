@@ -16,7 +16,7 @@
 						<a class="priviewLink" href="{base_url('product/detail/'|cat:$item['gc_id']|cat:'_'|cat:$item['goods_id']|cat:'.html')}"><img class="previewPic" src="{if $item['goods_pic_m']}{resource_url($item['goods_pic_m'])}{else if $item['goods_pic_b']}{resource_url($item['goods_pic_b'])}{else}{resource_url($item['goods_pic'])}{/if}" alt="{$item['article_title']|escape}"/></a>
 						<div class="previewCont">
 							<h4 class="productName"><a href="{base_url('product/detail/'|cat:$item['gc_id']|cat:'_'|cat:$item['goods_id']|cat:'.html')}">{$item['goods_name']|escape}</a></h4>
-							<p class="productDetail mute">{$item['digest']}</p>
+							{*<p class="productDetail mute">{$item['digest']}</p>*}
 						</div>
 					</li>
 					{foreachelse}

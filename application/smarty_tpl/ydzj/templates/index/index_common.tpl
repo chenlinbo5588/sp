@@ -59,8 +59,8 @@
 					<ul id="hotProductSwiper">
 						{foreach from=$goodsList item=item}
 			            <li>
-			            	<div class="pic"><a href="{base_url('product/detail/'|cat:$item['gc_id']|cat:'_'|cat:$item['goods_id']|cat:'.html')}" target="_blank"><img class="respond_img" src="{if $item['goods_pic_m']}{resource_url($item['goods_pic_m'])}{else if $item['goods_pic_b']}{resource_url($item['goods_pic_b'])}{else}{resource_url('img/default.jpg')}{/if}" title="{$item['goods_name']|escape}"/></a></div>
-			            	<div class="title"><a href="{base_url('product/detail/'|cat:$item['gc_id']|cat:'_'|cat:$item['goods_id']|cat:'.html')}" target="_blank">{$item['goods_name']|escape}</a></div>
+			            	<div class="pic"><a href="{base_url('product/detail/'|cat:$item['gc_id']|cat:'_'|cat:$item['goods_id']|cat:'.html')}" target="_blank"><img class="respond_img" src="{if $item['goods_pic_m']}{resource_url($item['goods_pic_m'])}{else if $item['goods_pic_b']}{resource_url($item['goods_pic_b'])}{else}{resource_url('img/default.jpg')}{/if}" title="{if $currentLang == 'english'}{$item['goods_name_en']|escape}{else}{$item['goods_name']|escape}{/if}"/></a></div>
+			            	<div class="title"><a href="{base_url('product/detail/'|cat:$item['gc_id']|cat:'_'|cat:$item['goods_id']|cat:'.html')}" target="_blank">{if $currentLang == 'english'}{$item['goods_name_en']|escape}{else}{$item['goods_name']|escape}{/if}</a></div>
 			            </li>
 			            {/foreach}
 				    </ul>

@@ -102,8 +102,11 @@ class Cms_Article extends Ydzj_Admin_Controller {
 	 * 
 	 */
 	private function _getRules($action = 'add',$info = array()){
-		$this->form_validation->set_rules('article_title','文章标题','required|max_length[80]');
-		$this->form_validation->set_rules('content','文章内容','required');
+		$this->form_validation->set_rules('article_title','文章中文标题','required|max_length[80]');
+		$this->form_validation->set_rules('article_title_en','文章英文标题','required|max_length[80]');
+		$this->form_validation->set_rules('content','文章中文版内容','required');
+		
+		
 		$this->form_validation->set_rules('ac_id','文章分类','required|in_db_list['.$this->Cms_Article_Class_Model->getTableRealName().'.id]');
 		
 		if($this->input->post('article_origin')){
@@ -186,6 +189,7 @@ class Cms_Article extends Ydzj_Admin_Controller {
 		
 		$info = array(
 			'article_title' => $this->input->post('article_title'),
+			'article_title_en' => $this->input->post('article_title_en'),
 			'ac_id' => $this->input->post('ac_id') ? $this->input->post('ac_id') : 0,
 			'article_origin' => $this->input->post('article_origin') ? $this->input->post('article_origin') : '',
 			'origin_address' => $this->input->post('origin_address') ? $this->input->post('origin_address') : '',
@@ -194,6 +198,7 @@ class Cms_Article extends Ydzj_Admin_Controller {
 			'image_url' => $this->input->post('image_url') ? $this->input->post('image_url') : '',
 			'image_aid' => $this->input->post('image_aid') ? $this->input->post('image_aid') : 0,
 			'content' => $this->input->post('content'),
+			'content_en' => $this->input->post('content_en'),
 			//'keyword' => $this->input->post('keyword') ? $this->input->post('keyword') : '',
 			'article_tag' => $this->input->post('article_tag') ? $this->input->post('article_tag') : '',
 			'article_state' => $this->input->post('article_state'),

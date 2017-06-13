@@ -11,17 +11,17 @@
 					{if $info}
 					<div class="articleHeader">
 						{include file="common/baidu_share.tpl"}
-						<h1>{$info['article_title']|escape}</h1>
+						<h1>{if $currentLang == 'english' && $info['article_title_en']}{$info['article_title_en']|escape}{else}{$info['article_title']|escape}{/if}</h1>
 						<div><em class="mute">{$visit_count}:</em><strong>{$info['article_click']}</strong><em class="mute">{$online_date}:</em><strong>{$info['gmt_create']|date_format:"%Y-%m-%d"}</strong></div>
 						<span></span>
 					</div>
 					<div class="articleContent">
-						{$info['content']}
+						{if $currentLang == 'english' && $info['content_en']}{$info['content_en']}{else}{$info['content']}{/if}
 					</div>
 					
 					<div class="articleRelate clearfix">
-						<div class="prevArticle"><span>{$prev_article}：{if empty($preArticle)}{$cm_none}{else}<a href="{$preArticle['article_url']}">{$preArticle['article_title']|escape}</a>{/if}</div>
-						<div class="nextArticle"><span>{$next_article}：{if empty($nextArticle)}{$cm_none}{else}<a href="{$nextArticle['article_url']}">{$nextArticle['article_title']|escape}</a>{/if}</div>
+						<div class="prevArticle"><span>{$prev_article}：{if empty($preArticle)}{$cm_none}{else}<a href="{$preArticle['article_url']}">{if $currentLang == 'english' && $preArticle['article_title_en']}{$preArticle['article_title_en']|escape}{else}{$preArticle['article_title']|escape}{/if}</a>{/if}</div>
+						<div class="nextArticle"><span>{$next_article}：{if empty($nextArticle)}{$cm_none}{else}<a href="{$nextArticle['article_url']}">{if $currentLang == 'english' && $nextArticle['article_title_en']}{$nextArticle['article_title_en']|escape}{else}{$nextArticle['article_title']|escape}{/if}</a>{/if}</div>
 					</div>
 					{else}
 					<div class="errorPage">{$not_found_msg}<a href="javascript:history.go(-1);">{$cm_goback}</a></div>

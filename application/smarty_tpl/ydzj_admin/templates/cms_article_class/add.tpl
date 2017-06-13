@@ -42,7 +42,7 @@
             <select name="pid">
               <option value="">请选择...</option>
               {foreach from=$list item=item}
-              <option {if $info['pid'] == $item['id']}selected{/if} value="{$item['id']}">{str_repeat('......',$item['level'])}{$item['level']+1} {$item['name_cn']}</option>
+              <option {if $info['pid'] == $item['id']}selected{/if} value="{$item['id']}">{str_repeat('......',$item['level'])}{$item['level']+1} {$item['name_cn']}({$item['name_en']})</option>
               {/foreach}
             </select>
           </td>

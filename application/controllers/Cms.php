@@ -82,7 +82,12 @@ class Cms extends Ydzj_Controller {
 		);
 		
 		if($keyword){
-			$condition['like']['article_title'] = $keyword;
+			if($this->_currentLang == 'english'){
+				$condition['like']['article_title_en'] = $keyword;
+			}else{
+				$condition['like']['article_title'] = $keyword;
+			}
+			
 		}
 		
 		$list = $this->Cms_Article_Model->getList($condition);
@@ -107,6 +112,12 @@ class Cms extends Ydzj_Controller {
 					$newsArtile['digest'] = cutText(html_entity_decode(strip_tags($newsArtile['content'])),120);
 				}
 				
+				
+				if($this->_currentLang == 'english' && $newsArtile['article_title_en']){
+					$newsArtile['article_title'] = $newsArtile['article_title_en'];
+				}
+				
+				
 				$list['data'][$key] = $newsArtile;
 			}
 		}
@@ -116,14 +127,14 @@ class Cms extends Ydzj_Controller {
 		$tempSeo = array_reverse($this->seoKeys);
 		$seoTitle = '';
 		if(empty($tempSeo)){
-			$seoTitle = '新闻资讯';
+			$seoTitle = $this->_currentLang == 'english' ? 'News' : '新闻资讯';
 		}else{
 			$seoTitle = implode(' - ',$tempSeo);
 		}
 		
 		$this->seo(str_replace(
 				array('{article_class}'),
-				array($seoTitle),$this->_seoSetting['article']['title']
+				array( $seoTitle),$this->_seoSetting['article']['title']
 			));
 		
 		$this->assign(
@@ -203,8 +214,12 @@ class Cms extends Ydzj_Controller {
 			$this->assign('nextArticle',$nextArticle);
 			$this->assign('preArticle',$preArticle);
 			
-			$this->_navigation[$info['article_title']] = base_url('cms/detail/'.$info['id'].'.html');
 			
+			if($this->_currentLang == 'english' && $info['article_title_en']){
+				$this->_navigation[$info['article_title_en']] = base_url('cms/detail/'.$info['id'].'.html');
+			}else{
+				$this->_navigation[$info['article_title']] = base_url('cms/detail/'.$info['id'].'.html');
+			}
 			
 			$this->Cms_Article_Model->increseOrDecrease(array(
 				array('key' => 'article_click','value'=> 'article_click + 1')

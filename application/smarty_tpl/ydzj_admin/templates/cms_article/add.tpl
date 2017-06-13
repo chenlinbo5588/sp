@@ -21,11 +21,18 @@
   	<table class="table tb-type2 nobdb">
       <tbody>
         <tr class="noborder">
-          <td colspan="2" class="required"><label class="validation">标题:</label></td>
+          <td colspan="2" class="required"><label class="validation">中文标题:</label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input type="text" value="{$info['article_title']|escape}" name="article_title" id="article_title" class="txt"></td>
           <td class="vatop tips">{form_error('article_title')}</td>
+        </tr>
+        <tr class="noborder">
+          <td colspan="2" class="required"><label class="validation">英文标题:</label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform"><input type="text" value="{$info['article_title_en']|escape}" name="article_title_en" id="article_title_en" class="txt"></td>
+          <td class="vatop tips">{form_error('article_title_en')}</td>
         </tr>
         <tr>
           <td colspan="2" class="required"><label class="validation" for="ac_id">所属分类:</label></td>
@@ -35,7 +42,7 @@
           	<select name="ac_id" id="articleClassId">
 	          <option value="">请选择...</option>
 	          {foreach from=$articleClassList item=item}
-	          <option {if $info['ac_id'] == $item['id']}selected{/if} value="{$item['id']}">{str_repeat('......',$item['level'])}{$item['name_cn']}</option>
+	          <option {if $info['ac_id'] == $item['id']}selected{/if} value="{$item['id']}">{str_repeat('......',$item['level'])}{$item['name_cn']}({$item['name_en']})</option>
 	          {/foreach}
 	        </select>
           </td>
@@ -83,7 +90,7 @@
 	    	<td colspan="2"><div id="preview">{if $info['image_url']}<img src="{resource_url($info['image_url'])}" width="{$imageConfig['m']['width']}" height="{$imageConfig['m']['height']}"/>{/if}</div></td>
 	    </tr>
         <tr>
-          <td colspan="2" class="required"><label class="validation">文章内容:</label>{form_error('content')}</td>
+          <td colspan="2" class="required"><label class="validation">文章中文内容:</label>{form_error('content')}</td>
         </tr>
         <tr>
         	<td colspan="2" ><textarea id="content" name="content" style="width:100%;height:480px;visibility:hidden;">{$info['content']}</textarea></td>
@@ -112,6 +119,36 @@
 	                });
 	            });
 	        </script>
+        </tr>
+        <tr>
+          <td colspan="2"><label>文章英文内容:</label>{form_error('content_en')}</td>
+        </tr>
+        <tr>
+            <td colspan="2" ><textarea id="content_en" name="content_en" style="width:100%;height:480px;visibility:hidden;">{$info['content_en']}</textarea></td>
+            <script type="text/javascript">
+                var editor2;
+                KindEditor.ready(function(K) {
+                    editor2 = K.create('textarea[name="content_en"]', {
+                        uploadJson : '{admin_site_url("common/pic_upload")}?mod=article',
+                        filePostName:'Filedata',
+                        extraFileUploadParams:{ formhash: formhash },
+                        allowImageUpload : true,
+                        allowFlashUpload : false,
+                        allowMediaUpload : false,
+                        formatUploadUrl : false,
+                        allowFileManager : false,
+                        afterCreate : function() {
+                            
+                        },
+                        afterChange : function() {
+                            $("input[name=formhash]").val(formhash);
+                        },
+                        afterUpload : function(url,data) {
+                            formhash = data.formhash;
+                        }
+                    });
+                });
+            </script>
         </tr>
         {*
         <tr>

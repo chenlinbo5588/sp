@@ -60,7 +60,7 @@
           	<select name="gc_id" id="goodsClassId">
 	          <option value="">请选择...</option>
 	          {foreach from=$goodsClassList item=item}
-	          <option {if $info['gc_id'] == $item['gc_id']}selected{/if} value="{$item['gc_id']}">{str_repeat('......',$item['level'])}{$item['level']+1} {$item['name_cn']}</option>
+	          <option {if $info['gc_id'] == $item['gc_id']}selected{/if} value="{$item['gc_id']}">{str_repeat('......',$item['level'])}{$item['level']+1} {$item['name_cn']}({$item['name_en']})</option>
 	          {/foreach}
 	        </select>
           </td>

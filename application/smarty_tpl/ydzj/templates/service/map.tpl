@@ -6,7 +6,7 @@
 			<div class="contentArea">
 				<div class="breadcrumb">{$breadcrumb}</div>
 				<div class="bd" id="articleInfo">
-					<h2>{$siteSetting['site_name']|escape}</h2>
+					<h2>{if $currentLang == 'english'}{$siteSetting['site_name_en']|escape}{else}{$siteSetting['site_name']|escape}{/if}</h2>
 					<address><label>公司地址:</label><span>{$siteSetting['company_address']|escape}</span></address>
 					<div id="mapDiv" style="height:400px;"></div>
 				</div>
@@ -51,7 +51,7 @@
 	    	var opts = {
 			  width : 200,     // 信息窗口宽度
 			  height: 100,     // 信息窗口高度
-			  title : "{$siteSetting['site_name']|escape}" , // 信息窗口标题
+			  title : "{if $currentLang == 'english'}{$siteSetting['site_name_en']|escape}{else}{$siteSetting['site_name']|escape}{/if}" , // 信息窗口标题
 			  enableMessage:true,//设置允许信息窗发送短息
 			  message:"亲耐滴，晚上一起吃个饭吧？戳下面的链接看下地址喔~"
 			}

@@ -102,8 +102,6 @@ class Product extends Ydzj_Controller {
 			$count = 0;
 			foreach($list['data'] as $key => $product){
 				if('english' == $this->_currentLang){
-					$product['digest'] = htmlspecialchars(cutText(html_entity_decode(strip_tags($product['goods_intro_en'])),$cutLen));
-					
 					if($product['goods_name_en']){
 						$product['goods_name'] = $product['goods_name_en'];
 					}
@@ -111,11 +109,7 @@ class Product extends Ydzj_Controller {
 					if(trim(strip_tags($product['goods_intro_en']))){
 						$product['goods_intro'] = $product['goods_intro_en'];
 						
-						
 					}
-				}else{
-					
-					$product['digest'] = htmlspecialchars(cutText(html_entity_decode(strip_tags($product['goods_intro'])),$cutLen));
 				}
 				
 				if($product['goods_pic']){
@@ -124,25 +118,26 @@ class Product extends Ydzj_Controller {
 					$product['goods_pic'] = resource_url('img/default.jpg');
 				}
 				
-				
 				$list['data'][$key] = $product;
 				
 			}
 		}
 		
+		
 		$tempSeo = array_reverse($this->seoKeys);
+		
 		$seoTitle = '';
 		if(empty($tempSeo)){
-			$seoTitle = '产品中心';
+			$seoTitle = $this->_currentLang == 'english' ? 'Product Center' : '产品中心';
 		}else{
 			$seoTitle = implode(' - ',$tempSeo);
 		}
 		
 		$this->seo(str_replace(
-				array('{name} - {goods_class}'),
-				array($seoTitle),$this->_seoSetting['product']['title']
+				array('{name} -', '{goods_class}'),
+				array('',$seoTitle),$this->_seoSetting['product']['title']
 			));
-		
+			
 		$this->assign(
 			array(
 				'list' => $list,
