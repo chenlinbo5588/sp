@@ -31,7 +31,7 @@
           <td class="vatop tips"><span class="vatop rowform">前台页面底部可以显示 ICP 备案信息，如果网站已备案，在此输入你的授权码，它将显示在前台页面底部，如果没有请留空</span></td>
         </tr>
         <tr>
-          <td colspan="2" class="required"><label for="company_address">公司地址:</label></td>
+          <td colspan="2" class="required"><label for="company_address">地址:</label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input id="company_address" name="company_address" value="{$currentSetting['company_address']['value']|escape}" class="txt" type="text" /></td>
@@ -70,21 +70,21 @@
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input id="site_email" name="site_email" value="{$currentSetting['site_email']['value']}" class="txt" type="text" /></td>
-          <td class="vatop tips"><span class="vatop rowform">前台卖家中心页面右下侧可以显示，方便卖家遇到问题时咨询</span></td>
+          <td class="vatop tips"><span class="vatop rowform">前台页面右下侧可以显示，方便用户遇到问题时咨询</span></td>
         </tr>
         <tr>
           <td colspan="2" class="required"><label for="site_weixn">官方QQ号:</label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input id="site_qq" name="site_qq" value="{$currentSetting['site_qq']['value']}" class="txt" type="text" /></td>
-          <td class="vatop tips"><span class="vatop rowform">前台卖家中心页面右下侧可以显示，方便卖家遇到问题时咨询</span></td>
+          <td class="vatop tips"><span class="vatop rowform">前台页面右下侧可以显示，方便用户遇到问题时咨询</span></td>
         </tr>
         <tr>
           <td colspan="2" class="required"><label for="site_weixn">官方微信号:</label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input id="site_weixin" name="site_weixin" value="{$currentSetting['site_weixin']['value']}" class="txt" type="text" /></td>
-          <td class="vatop tips"><span class="vatop rowform">前台卖家中心页面右下侧可以显示，方便卖家遇到问题时咨询</span></td>
+          <td class="vatop tips"><span class="vatop rowform">前台页面右下侧可以显示，方便用户遇到问题时咨询</span></td>
         </tr>
          <tr>
           <td colspan="2" class="required"><label for="statistics_code">第三方流量统计代码:</label></td>

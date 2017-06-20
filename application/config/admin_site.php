@@ -59,13 +59,17 @@ $config['navs'] = array(
 		'member' => array(
 			array('title' => '操作员管理','url' => 'member/index'),
 			array('title' => '操作员通知','url' => 'notify/index'),
-			array('title' => '操作员认证','url' => 'seller/index'),
+			//array('title' => '操作员认证','url' => 'seller/index'),
 		),
 		'notify' => 'member',
 		'seller' => 'member',
 		'building' => array(
-			array('title' => '存量建筑调查点','url' => 'building/index'),
+			array('title' => '地图浏览','url' => 'building/index'), 
+			array('title' => '权利人','url' => 'person/index'), 
+			array('title' => '房屋建筑','url' => 'house/index'), 
 		),
+		'person' => 'building',
+		'house' => 'building',
 		'goods' => array(
 			array('title' => '商品','url' => 'goods/index'),
 			array('title' => '商品分类','url' => 'goods_class/category'),
@@ -122,6 +126,7 @@ $config['navs'] = array(
 		),
 		'member' => array(
 			'member/index' => '管理',
+			'member/add' => '添加',
 		),
 		'notify' => array(
 			'notify/index' => '通知管理',

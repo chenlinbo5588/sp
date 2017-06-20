@@ -16,7 +16,7 @@
     <form action="{site_url($uri_string)}" method="get" id="formSearch">
         <input type="hidden" name="page" value=""/>
         <input type="hidden" name="read" value="{$read}"/>
-        <table class="fulltable">
+        <table class="fulltable bordered">
             <colgroup>
                 <col width="50%"/>
                 <col width="20%"/>

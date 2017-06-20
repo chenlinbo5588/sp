@@ -645,35 +645,6 @@ EOT;
 	}
 	
 	
-	public function create_member_color(){
-		
-		$sql = <<< EOF
-CREATE TABLE `sp_member_color{i}` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `uid` int(10) unsigned NOT NULL DEFAULT '0',
-  `color_name` varchar(10) NOT NULL DEFAULT '',
-  `gmt_create` int(10) unsigned NOT NULL DEFAULT '0',
-  `gmt_modify` int(10) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `idx_ucolor` (`uid`,`color_name`),
-  KEY `idx_ctime` (`gmt_create`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-EOF;
-
-		$pm = $this->load->get_config('split_color');
-		
-		
-		print_r($pm);
-		
-		foreach($pm as $p){
-			
-			$exexSQL = str_replace('{i}',$p,$sql);
-			$this->Member_Model->execSQL($exexSQL);
-		}
-		
-		
-	}
 	
 	
 	

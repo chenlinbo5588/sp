@@ -11,7 +11,4 @@
 			    	{/foreach}
 			   	</div>
 			</div>
-	        <div id="repub" {if empty($repubList) || $norepub}style="display:none;"{/if}>
-	           <a class="title" href="{site_url('hp/add')}">您有<em>{count($repubList)}</em>个待发布求货</a><a class="detail" data-url="{site_url('my_req/repub')}" href="javascript:void(0);">详情</a>
-	        </div>
 			<div class="feedback">{$feedback}</div>

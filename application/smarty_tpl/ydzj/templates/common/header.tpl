@@ -8,7 +8,6 @@
 <meta name="keywords" content="{$SEO_keywords}" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,minimal-ui">
 <link rel="stylesheet" href="{resource_url('css/site.css',true)}"/>
-<link href="{resource_url('font-awesome/css/font-awesome.min.css')}" rel="stylesheet" type="text/css"/>
 <script>
 var cookiedomain = "{config_item('cookie_domain')}",
     cookiepath = "{config_item('cookie_path')}",
@@ -41,11 +40,11 @@ var cookiedomain = "{config_item('cookie_domain')}",
                 
 	            <div id="homeSideLinks">
 	               {if $profile}
-	                   <a href="{site_url('my/index')}">{$profile['basic']['username']|escape}</a>
+	                   <a href="{site_url('my/index')}">{$profile['basic']['username']|escape}({$profile['basic']['village']})</a>
 	                   <a class="action" href="{site_url('member/logout')}">退出</a>
 	               {else}
 	                   <a class="login action" href="{site_url('member/login')}">登陆</a>
-	                   <a class="register action" href="{site_url('member/register')}">注册</a>
+	                   {*<a class="register action" href="{site_url('member/register')}">注册</a>*}
 	               {/if}
 	            </div>
             </div>

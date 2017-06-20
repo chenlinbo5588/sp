@@ -3,13 +3,27 @@
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input type="text" id="passwd" value="{$info['passwd']}" name="passwd" class="txt"></td>
-          <td class="vatop tips"></td>
+          <td class="vatop tips">密码长度6~12位,英文字母、数字、特殊符号</td>
         </tr>
         <tr>
           <td colspan="2" class="required"><label class="validation" for="passwd2">密码确认:</label>{form_error('passwd2')}</td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input type="text" id="passwd2" value="{$info['passwd2']}" name="passwd2" class="txt"></td>
+          <td class="vatop tips">密码长度6~12位,英文字母、数字、特殊符号</td>
+        </tr>
+        <tr>
+          <td colspan="2" class="required"><label class="validation" for="village_id">所在村:</label>{form_error('village_id')}</td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform">
+          	<select name="village_id">
+          		<option value="">请选择</option>
+          		{foreach from=$villageList item=item}
+          		<option value="{$item['id']}" {if $info['village_id'] == $item['id']}selected{/if}>{$item['xzqmc']|escape}({$item['xzqdm']|escape})</option>
+          		{/foreach}
+          	</select>
+          </td>
           <td class="vatop tips"></td>
         </tr>
         <tr>

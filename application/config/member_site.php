@@ -14,6 +14,14 @@ $config['navs'] = array(
 		'inventory' => array(
 			'title' => '库存',
 			'url' => 'inventory/index'
+		),
+		'person' => array(
+			'title' => '数据管理',
+			'url' => 'person/index'
+		),
+		'house' => array(
+			'title' => '数据管理',
+			'url' => 'house/index'
 		)
 	),
 	'side' => array(
@@ -22,14 +30,18 @@ $config['navs'] = array(
 			array('title' => '消息通知','url' => 'pm/index'),
 			array('title' => '修改密码','url' => 'my/change_psw'),
 			array('title' => '修改手机','url' => 'my/change_mobile'),
-			array('title' => '提醒设置','url' => 'notify/index'),
 			array('title' => '卖家认证','url' => 'my/seller_verify'),
 		),
-		'my_pm' => 'my',
-		'hp' => array(
-			array('title' => '货品查询','url' => 'hp/index')
+		'person' => array(
+			array('title' => '权利人管理','url' => 'person/index')
 		),
-		'my_req' => 'hp'
+		'house' => array(
+			array('title' => '房屋建筑管理','url' => 'house/index'),
+			array('title' => '地图浏览','url' => 'house/map'),
+		),
+		'my_pm' => 'my',
+		
+		
 	),
 	'sub' => array (
 		

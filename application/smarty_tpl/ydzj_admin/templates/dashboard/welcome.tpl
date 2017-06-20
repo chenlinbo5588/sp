@@ -20,7 +20,7 @@
         </ul>
       </dd>
     </dl>
-    *}
+    
     <dl class="shop">
       <dt>
         <div class="ico"><i></i><sub title="新增场馆数"><span><em id="statistics_store"></em></span></sub></div>
@@ -36,7 +36,7 @@
         </ul>
       </dd>
     </dl>
-    {*
+    
     <dl class="team">
       <dt>
         <div class="ico"><i></i></div>
@@ -62,8 +62,7 @@
       </dt>
       <dd>
         <ul>
-          <li class="w50pre normal"><a href="{admin_site_url('member/index')}">当前操作员数量<sub><em>16</em></sub></a></li>
-          <li class="w50pre normal"><a href="{admin_site_url('seller/index')}">操作员审核<sub><em>0</em></sub></a></li>
+          <li class="w100pre normal"><a href="{admin_site_url('member/index')}">操作员<sub><em>0</em></sub></a></li>
         </ul>
       </dd>
     </dl>
@@ -110,8 +109,7 @@
       </dt>
       <dd>
         <ul>
-          <li class="w50pre none"><a href="{admin_site_url('cms_article')}">文章审核<sub><em id="statistics_cms_article_verify">0</em></sub></a></li>
-          <li class="w50pre none"><a href="javascript:void(0);">评论审核<sub></sub></a></li>
+          <li class="w100pre none"><a href="{admin_site_url('cms_article/index')}">文章审核<sub><em id="statistics_cms_article_verify">0</em></sub></a></li>
         </ul>
       </dd>
     </dl>

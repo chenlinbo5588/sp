@@ -85,7 +85,7 @@ class My extends MyYdzj_Controller {
 		
 		
 		$this->_breadCrumbs[] = array(
-			'title' => '卖家认证',
+			'title' => '用户认证',
 			'url' => $this->uri->uri_string
 		);
 		

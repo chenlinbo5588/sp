@@ -3,8 +3,8 @@
     		<div class="row1">
     			<div class="boxz clearfix">
     				<div class="qrcode">
-    					<img src="{resource_url('img/qrcode.png')}" style="width:120px;height:120px;"/>
-    					<br/><span>扫描二维码:掌起发布</span>
+    					{*<img src="{resource_url('img/qrcode.png')}" style="width:120px;height:120px;"/>
+    					<br/><span>扫描二维码:掌起发布</span>*}
     				</div>
     				<table>
     					<tr>
@@ -31,14 +31,6 @@
     <!--[if lt IE 9]>
     <script type="text/javascript" src="{resource_url('js/respond.min.js')}"></script>
 	<script type="text/javascript" src="{resource_url('js/html5shiv.js')}"></script>
-	<![endif]-->
-	<!--[if lte IE 9]>
-	<script src="{resource_url('js/jquery.placeholder.min.js')}"></script>
-	<script>
-	    $(function(){
-	        $('input, textarea').placeholder();
-	    });
-	</script>
 	<![endif]-->
 	<script>
 		$(function(){

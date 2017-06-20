@@ -74,10 +74,7 @@ sub, sup {
     position:relative; 
     vertical-align:baseline; 
 }
-img { 
-    height: auto; 
-    width: auto\9; 
-}
+
 sup { 
     top:-0.5em; 
 } 
@@ -86,13 +83,16 @@ sub {
 }
 
 a {
-	color:#333;
+	color:#007AC2;
 }
 
 /* 让链接在 hover 状态下显示下划线 */ 
 a:hover { 
     text-decoration:underline; 
-} 
+}
+
+
+
 /* 默认不显示下划线，保持页面简洁 */ 
 ins,a { 
     text-decoration:none; 
@@ -163,9 +163,9 @@ input[type=button], input[type=submit], input[type=reset] {
 }
 
 /** 通用样式 **/
-input[type=text],input[type=password] {
-    height:20px;
-    padding: 5px 0;
+input[type=text],input[type=password],select {
+    height:28px;
+    line-height:28px;
     border:1px solid #d0d0d0;
     border-radius:5px;
     -webkit-border-radius:5px;
@@ -173,6 +173,10 @@ input[type=text],input[type=password] {
     -o-border-radius:5px;
     text-indent:3px;
     
+}
+
+select {
+	min-width:80px;
 }
 
 input[type=checkbox],input[type=radio] {
@@ -208,14 +212,13 @@ input[type=text]:focus , input[type=password]:focus ,textarea:focus {
 .w830 { width: 830px;}
 
 .w18pre { width: 18%;}
+.w20pre { width: 20%;}
 .w33pre  { width: 33%;}
 .w34pre  { width: 34%;}
 .w25pre { width: 25%;}
 .w40pre { width: 40%;}
 .w50pre { width: 50%;}
 .w100pre { width: 100%; }
-
-
 
 .h36 { height: 36px;}
 
@@ -228,8 +231,8 @@ input[type=text]:focus , input[type=password]:focus ,textarea:focus {
 .size-88x29 { width: 88px; height: 29px;}
 .size-68x34 { width: 68px; height: 34px;}
 .size-72x72 { width: 72px; height: 72px;}
+.size-80x80 { width: 80px; height: 80px;}
 .size-106x106 { width: 106px; height: 106px;}
-
 .size-200x200 { width: 200px; height: 200px;}
 
 
@@ -256,6 +259,9 @@ input[type=text]:focus , input[type=password]:focus ,textarea:focus {
 .placeholder { color: #aaa; }
 
 
+.align-right {
+	text-align:right;
+}
 
 .pd5 {
     padding: 5px;	
@@ -279,6 +285,16 @@ input[type=text]:focus , input[type=password]:focus ,textarea:focus {
 
 .required em {
 	color:red;
+}
+
+
+.formtable .required {
+	display:block;
+	background:url(../img/sky/bg_position.gif) no-repeat -620px -654px;
+	text-indent:2em;
+	height: 30px;
+	line-height:30px;
+    overflow: hidden;
 }
 
 
@@ -351,9 +367,10 @@ input[type=text]:focus , input[type=password]:focus ,textarea:focus {
 }
 
 
-label.error {
+.error {
 	color:red;
 }
+
 label.validation{font-weight:700; background: url(../img/sky/bg_position.gif) no-repeat scroll -620px -660px; padding-left:16px;}
 
 input[type=text].error,input[type=password].error {
@@ -413,6 +430,13 @@ input[type=text].valid , input[type=password].valid {
 }
 
 
+.excel {
+	width:32px;
+	height:16px;
+	display:inline-block;
+	background:url(../img/fileico_v4.png) no-repeat -22px 0;
+}
+
 
 
 
@@ -421,7 +445,7 @@ input[type=text].valid , input[type=password].valid {
     border: 1px solid #473e86;
     padding: 0 5px;
     color: #473e86;
-    font-size: 16px;
+    font-size: 14px;
     background-color: white;
     border-radius:5px;
     -webkit-border-radius:5px;
@@ -595,6 +619,7 @@ input[type=text].valid , input[type=password].valid {
 }
 .rounded_box {padding:20px; border:1px solid #d0d0d0;-moz-border-radius:4px;-webkit-border-radius:4px;border-radius:4px; margin:0 0 10px 0; }
 
+.date { background: url(../img/input_date.gif) no-repeat right center; }
 
 /** ajax 加载中样式 **/
 .lightbox {
@@ -699,6 +724,11 @@ input[type=text].valid , input[type=password].valid {
     border-bottom: 1px solid #E7E7E7;
 }
 
+
+#main-content {
+	min-height:600px;
+}
+
 .boxz {
     
     margin:0 auto;
@@ -706,10 +736,28 @@ input[type=text].valid , input[type=password].valid {
 }
 
 
+fieldset {  
+    padding:10px;  
+    margin:10px 0;  
+    color:#333;   
+    border:#06c solid 1px;  
+}
+
+legend {  
+    color:#06c;
+    font-weight:800;   
+    background:#fff;  
+}
 
 table.fulltable {
     width:100%;
+    
 }
+
+table.bordered {
+	border:1px solid #CBCBCB;
+}
+
 
 table.noext {
 	width:auto;
@@ -718,14 +766,23 @@ table.noext {
 
 .fulltable thead th {
 	background-color:#DAF4FE;
+	background-color:#eeeeee;
 	font-weight:bold;
 }
 
 
 .fulltable thead th , .fulltable tbody td {
-	border:1px solid #CBCBCB;
+	border:1px dashed #CBCBCB;
 	border-width:1px 0 1px 0;
-	padding: 3px 2px;
+	padding: 5px;
+}
+
+.bordered tbody td {
+	border:1px dashed #CBCBCB;
+}
+
+.fulltable thead th {
+	border:1px solid #CBCBCB;
 }
 
 .noborder thead th , .noborder tbody td {
@@ -752,50 +809,13 @@ table.noext {
 }
 
 
+.thumblists {}
+.thumblists li { float: left; }
+.thumblists li.picture img { cursor: pointer; }
+.thumblists li.picture div { background:#FFF; float: left;/* if IE7/8/9*/ *text-align: center; display: inline; border: dotted 1px #CBE9F3; float: left; padding: 2px; margin:5px;}
+.thumblists li.picture p { clear:both; line-height: 20px; height:20px; width: 70px; margin: 0 5px;}
+.thumblists li.picture p span { display:inline-block; width: 50%; text-align:center;}
 
-.cityList {
-    
-}
-
-.cityList .row {
-    height:30px;
-    line-height:30px;
-    border-bottom:1px solid #d0d0d0;
-}
-
-.cityList .row a {
-    color:black;
-    text-indent:10px;
-    display:block;
-}
-
-    
-.cityList .goback {
-    background-color:rgb(202, 225, 229);
-}
-    
-
-.cityList .goback a {
-    color:blue;
-    text-align:center;
-}
-
-.cityList .current {
-    background-color:rgb(255, 223, 0);
-}
-
-.title-zh {
-    text-align: center;
-    padding: 180px 0 0 0;
-}
-
-.title-zh .dot {
-	font-size:4em;
-	display: block;
-    float: left;
-    width: 33%;
-    color: #FFE6E6;
-}
 
 /** 页脚和顶部 */
 #footer {
@@ -852,6 +872,77 @@ table.noext {
 .loca div, .loca strong, .crumbs a, a.arrow { float:left; margin-left: 2px;}
 .loca a.arrow { background: url(../img/sky/bg_position.gif) no-repeat scroll -50px -155px; width: 4px; height:8px; margin: 9px 6px 7px 6px; _margin:9px 3px 7px 3px; /* IE6 */}
 
+#mapWrap {
+	position:relative;
+	border:1px solid #d0d0d0;
+	border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -o-border-radius: 5px;
+}
+
+#mapsearch {
+    position: absolute;
+    z-index: 20;
+    top: 20px;
+    right: 10px;
+ }
+ 
+#toolbox h4 {
+    border-bottom: 1px solid black;
+    background: #FACBCB;
+}
+
+.panTool button {
+	display: block;
+    width: 100%;
+    cursor: pointer;
+}
+ 
+#resultWrap {
+	position: absolute;
+    right: 10px;
+    top: 60px;
+	z-index: 20;
+	background-color: #fff;
+	width: 350px;
+	max-height: 480px;
+	overflow: auto;
+	border:1px solid #dcdcdc;
+	display:none;
+ }
+ 
+#folderText {
+	text-align: center;
+    background: #dbf9ab;
+    color: #07074e;
+    border-bottom: 1px solid #dcdcdc;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+ #search_result li {
+    cursor:pointer;
+    padding:5px;
+    border-bottom:1px dotted #dcdcdc;            
+ }
+ 
+ #search_result li:hover {
+   background:yellow;
+ }
+ 
+ 
+ #toolbox {
+   position:absolute;
+   right:0px;
+   bottom:0px;
+   width: 180px;
+   z-index:19;
+   background:rgba(255,255,255,0.7);
+ }
+ 
+
+
 .codeimg {
 	width:120px;
 	height:30px;
@@ -875,6 +966,8 @@ table.noext {
 	right:0px;
 	top:0px;
 }
+
+
 
 /* 前台登陆  */
 #loginPanel,#register {
@@ -908,7 +1001,7 @@ table.noext {
     position: absolute;
     right: 7px;
     cursor: pointer;
-    top: 6px;
+    top: 5px;
 }
 
 #mobile_authcode {
@@ -917,6 +1010,9 @@ table.noext {
     right: 4px;
     top: 5px;
 }
+
+
+
 
 
 /* 客服入口 */
@@ -993,7 +1089,7 @@ table.noext {
 
 
 .mynav {
-	width: 150px;
+	width: 120px;
     border: 1px solid #CDCDCD;
     position: absolute;;
     background-color:#fff;
@@ -1006,18 +1102,32 @@ table.noext {
 
 .mynav li {
 	padding:10px 5px;
+	text-align: center;
 }
 
 .mynav li.current {
+	/*
     border: 1px solid #CF246A;
     border-width: 0 3px 0 0;
     background-color: #F7CE98;
+    */
+}
+
+.mynav li.current a {
+	color:#CF246A;
 }
 
 .mynav .segment {
 	background-color:#DAF4FE;
-	text-align: center;
+	background-color:#1f399e;
+	color:#fff;
 	font-size: 15px;
+	border: 1px solid #cacaca;
+    border-width: 1px 0 1px 0;
+}
+
+.mynav .segment.first {
+	border-width: 0 0 1px 0;
 }
 
 .mynav .segment h3 {
@@ -1025,18 +1135,30 @@ table.noext {
 }
 
 .mynav li a {
-	text-indent: 1em;
-    display: inline-block;
+    display: block;
 }
 
 #my .panel_content {
-	margin-left:160px;
+	margin-left:130px;
 }
 
-.goods_search {
+
+.search_panel, .goods_search {
 	position:relative;
     padding: 10px 0;
     margin-bottom: 10px;
+}
+
+.mainside {
+	position: absolute;
+    right: 0;
+    top: -20px;
+}
+
+.search_con {
+	border: 1px solid #dcdcdc;
+    margin: 0 0 10px 0;
+    padding: 5px;
 }
 
 .search_con li {
@@ -1107,87 +1229,6 @@ table.noext {
 }
 
 
-.slot_list {
-	
-	
-}
-
-.slot_item {
-	width: 150px;
-    height: 150px;
-    display: block;
-    float: left;
-    background: url(../img/slot.png) no-repeat center center;
-    border: 1px solid #d0d0d0;
-    margin: 0 5px 5px 0;
-    position:relative;
-    background-color: #F0F6FF;
-}
-
-
-
-.slot_item.disabled {
-	background-color: #DCADAD;
-}
-
-.slot_item .title {
-	height:116px;
-	line-height:116px;
-	display:block;
-	text-align:center;
-	font-size:15px;
-}
-
-
-
-
-.slot_item .goods_code {
-	text-align: center;
-    height: 30px;
-    color: #223990;
-    font-size:15px;
-}
-
-.slot_item .setgc {
-	color:#D84D4D;
-}
-
-
-.slot_item .onoff {
-    position:absolute;
-    right:0;
-    top:0;
-    width:30px;
-    height:20px;
-}
-
-
-.slot_name {
-	font-size:18px;
-	padding:5px;
-	background-color: #FFE1E1;
-}
-
-
-.color_list {
-	
-	
-}
-
-.color_list .list_item {
-	float: left;
-    display: block;
-    /* width: 135px; */
-    background-color: #F6FFF4;
-    /* font-size: 15px; */
-    border: 1px solid #C7C7C7;
-    padding: 3px;
-    height: 20px;
-    margin: 0 5px 5px 0;
-    position: relative;
-}
-
-
 .storeurl {
 	padding: 10px 0;
     font-size: 16px;
@@ -1199,35 +1240,11 @@ table.noext {
 }
 
 
-
-#repub {
-	position: absolute;
-    right: 0;
-    top: 0;
-    background-color: #EF0A80;
-}
-
-#repub a {
-	color:#fff;
-	display:inline-block;
-    /* border: 1px solid #FFFFFF; */
-    /* color: #fff; */
-    padding: 5px;
-    cursor:pointer;
-}
-
-
-
 #process_area {
-	
 	border:1px solid #d0d0d0;
 	margin: 10px 0; 
 }
 
-
-.tuiguang td {
-    background: #E1E2E6;
-}
 
 
 @media (min-width: 1024px) {

@@ -117,3 +117,17 @@ $config['weixin_img_size'] = array(
 	'm' => array('width' => 360,'height' => 200 , 'maintain_ratio' => false,'quality' => 100),
 	's' => array('width' => 200,'height' => 200,'maintain_ratio' => false,'quality' => 100),
 );
+
+
+$config['id_type'] = array(
+	'1' => '身份证',
+	'2' => '工商营业执照'
+);
+
+$config['sex_type'] = array(
+	'1' => '男' ,
+	'2' => '女'
+);
+
+$config['site_town'] = '掌起镇';
+

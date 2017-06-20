@@ -8,7 +8,7 @@ class My_pm extends MyYdzj_Controller {
 		parent::__construct();
 		
 		$this->_breadCrumbs[] = array(
-			'title' => '站内信',
+			'title' => '消息通知',
 			'url' => 'my_pm/index'
 		);
 		
@@ -264,7 +264,6 @@ class My_pm extends MyYdzj_Controller {
 			
 			$feedback = getSuccessTip('设置成功');
 		}
-		
 		
 		
 		$this->_breadCrumbs[] = array(

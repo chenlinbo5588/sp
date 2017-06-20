@@ -32,8 +32,7 @@ class Attachment_service extends Base_service {
         make_dir($config['upload_path']);
         $config['file_ext_tolower'] = true;
 		$config['encrypt_name'] = true;
-		$config['max_size'] = 2048;
-		
+		$config['max_size'] = 1024;
 		
 		return $config;
 	

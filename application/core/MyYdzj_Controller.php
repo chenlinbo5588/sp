@@ -34,7 +34,6 @@ class MyYdzj_Controller extends Ydzj_Controller {
 		*/
 		
 		
-		
 		$refresh = false;
 		$spm = $this->input->get('spm');
 		
@@ -56,10 +55,6 @@ class MyYdzj_Controller extends Ydzj_Controller {
 		$unread = $this->message_service->getUserUnreadCount($this->_loginUID);
 		$this->assign('unreadCount',$unread);
 		
-		
-		//检查是否已经认证
-		$this->_checkHasVerify();
-		$this->_repubList();
 	}
 	
 	
@@ -72,60 +67,17 @@ class MyYdzj_Controller extends Ydzj_Controller {
 		if($this->_newpm){
 			$this->assign('newPm',$this->_newpm);
 		}
-		
-		/*
-		$pmClick = $this->input->get_cookie('pmclick');
-		
-		if(empty($pmClick)){
-			$unread = $this->message_service->getUserUnreadCount($this->_loginUID);
-			
-			$this->input->set_cookie('pmclick', $this->_reqtime,CACHE_ONE_DAY);
-			$this->assign('unreadCount',200);
-		}
-		*/
-	}
-	
-	/**
-	 * 检查是否已认证
-	 */
-	protected function _checkHasVerify(){
-		//认证卖家
-		if(2 == $this->_profile['basic']['group_id']){
-			$this->load->library('Member_service');
-			$groupId = $this->member_service->getUserGroupId($this->_loginUID);
-			
-			if(3 == $groupId){
-				$this->_profile['basic']['group_id'] = $groupId;
-				$this->refreshProfile();
-				$this->getCacheObject()->delete($this->member_service->getUserGroupKey($this->_loginUID));
-			}
-		}
-		
-		$this->assign('currentGroupId',$this->_profile['basic']['group_id']);
-		
 	}
 	
 	
 	/**
-	 * 
+	 * 记录谁操作得
 	 */
-	protected function _addBreadCrumbs(){
-		
-		
-		
-	}
-	
-	
-	private function _repubList(){
-		$repubIds = $this->input->get_cookie('repub');
-		
-		$repubIdArray = array();
-		
-		if($repubIds){
-			$repubIdArray = explode('|',$repubIds);
-		}
-		
-		$this->assign('repubList',$repubIdArray);
+	public function addWhoHasOperated($action = 'add'){
+		return array(
+			"{$action}_uid" => $this->_profile['basic']['uid'],
+			"{$action}_username" => $this->_profile['basic']['username']
+		);
 	}
 	
     

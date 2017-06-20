@@ -488,13 +488,19 @@ $.fn.imageCode = function(setting){
 	return this;
 };
 
-function showToast(icon,message){
-	$.toast({
-		position:'top-center',
-	    text: message,
-	    icon: icon,
-	    loader:false
-	});
+
+function showToast(icon,message,moreSetting){
+	var defaultSetting = {
+			position:'top-center',
+			text: message,
+			icon: icon,
+			hideAfter:5000,
+			loader:false
+		};
+	
+	var setting = $.extend(defaultSetting,moreSetting);
+	
+	$.toast(setting);
 }
 
 /*
@@ -511,44 +517,43 @@ function doAjaxPost(postdata,url,datatype,successFn,errorFn){
 	});
 }
 
-/**
- * 确认对话框
- * @param ids
- * @param url
- * @param title
- * @param dataType
- * @param successFn
- * @param errorFn
- */
-function ui_confirm(trigger,ids,url,title,dataType,successFn,errorFn){
+function ui_confirm(pParam){
 	var lock = false;
+	var postData = $.extend({ "formhash" : formhash} ,pParam.postData );
 	
 	commonDialog = $("#showDlg" ).dialog({
 		title: "提示",
 		autoOpen: false,
 		width: 280,
-		position: trigger ? { my: "center", at: "center", of: trigger } : null,
+		position: pParam.trigger ? { my: "center", at: "center", of: pParam.trigger } : null,
 		modal: true,
 	      buttons: {
 	        "确定": function(){
-	        	/* 防止联系点击确定  */
 	        	if(lock == true){
+	        		showToast('info','操作进行中,请耐心等待');
 	        		return;
 	        	}
 	        	lock = true;
 	        	
 	        	commonDialog.html('<div class="loading_bg">操作进行中,请稍候...</div>');
-	        	doAjaxPost({ "formhash" : formhash ,"id": ids }, url, dataType, function(json){
+	        	
+	        	if($.type(pParam.customDataFn) == 'function'){
+	        		postData = $.extend(postData ,pParam.customDataFn() );
+	        	}else if($.type(pParam.customDataFn) == 'object') {
+	        		postData = $.extend(postData ,pParam.customDataFn );
+	        	}
+	        	
+	        	doAjaxPost(postData, pParam.url, pParam.dataType, function(json){
 	        		lock = false;
 	        		commonDialog.dialog( "close" );
-	        		if(typeof(successFn) != 'undefined'){
-	        			successFn(ids,json);
+	        		if(typeof(pParam.successFn) != 'undefined'){
+	        			pParam.successFn(postData.id,json);
 	        		}
 	        	},function(XMLHttpRequest, textStatus, thrownError){
 	        		lock = false;
 	        		commonDialog.dialog( "close" );
-	        		if(typeof(errorFn) != 'undefined'){
-	        			errorFn(XMLHttpRequest, textStatus, thrownError);
+	        		if(typeof(pParam.errorFn) != 'undefined'){
+	        			pParam.errorFn(XMLHttpRequest, textStatus, thrownError);
 	        		}
 	        	});
 	        },
@@ -559,7 +564,7 @@ function ui_confirm(trigger,ids,url,title,dataType,successFn,errorFn){
 	   open:function(){
 		  
 	   }
-	}).html('<span class="ui-icon ui-icon-alert fl"></span><strong>' + title + '</strong>').dialog("open");
+	}).html('<span class="ui-icon ui-icon-alert fl"></span><strong>' + pParam.titleHTML + '</strong>').dialog("open");
 	
 }
 
@@ -569,10 +574,10 @@ function check_success(message){
 }
 
 
-/**
- * 通用ajax更新
- */
-function bindOpEvent(selector,customSuccessFn,customErrorFn){
+function bindOpEvent(pSetting,customDataFn, customSuccessFn,customErrorFn){
+	var defaultSetting = { selector: '.notexists',forceChecked: true};
+	var setting = $.extend(defaultSetting,pSetting);
+	
 	var successCallback = function(ids,json){
 		if(check_success(json.message)){
 			showToast('success',json.message);
@@ -591,17 +596,28 @@ function bindOpEvent(selector,customSuccessFn,customErrorFn){
 		showToast('error',"执行出错,服务器异常，请稍后再次尝试");
 	}
 	
-	$(selector).bind("click",function(){
+	
+	$(setting.selector).bind("click",function(){
 		var triggerObj = $(this);
 		var ids = getIDS(triggerObj);
 		var url = triggerObj.attr("data-url");
   		var title = triggerObj.attr('data-title');
   		
-  		if(ids.length == 0){
-  			showToast('error','请选勾选.');
-  		}else{
-  			ui_confirm(triggerObj,ids,url,'你确定要' + title + '吗？','json', customSuccessFn ? customSuccessFn : successCallback,customErrorFn ? customErrorFn : errorCallback );
-  		}
+  		if(setting.forceChecked && ids.length == 0){
+			showToast('error','请选勾选.');
+			return ;
+		}
+  		
+		ui_confirm({
+			'trigger':triggerObj,
+			'postData': { id : ids },
+			'customDataFn': customDataFn,
+			'url': url,
+			'titleHTML': title,
+			'dataType' : 'json',
+			'successFn': customSuccessFn ? customSuccessFn : successCallback,
+			'errorFn'  : customErrorFn ? customErrorFn : errorCallback
+		});
   	});
 	
 }
@@ -622,6 +638,90 @@ function getIDS(obj){
 	
 	return ids;
 }
+
+
+/**
+ * 绑定
+ * @param selector
+ */
+function bindCheckAllEvent(selector){
+	$("body").delegate(selector,'click',function(){
+		var group = $(this).prop("name");
+		$("input[group='"+group+"']").prop("checked" , $(this).prop("checked") );
+	});
+}
+
+
+/**
+ * 
+ * @param sucFn 成功事件回调
+ * @param errorFn 失败事件回调
+ */
+function bindDeleteEvent(customSuccessFn,customErrorFn){
+	var successCallback = function(ids,json){
+		if(check_success(json.message)){
+			showToast('success',json.message);
+			
+			for(var i = 0; i < ids.length; i++){
+				$("#row" + ids[i]).remove();
+			}
+		}else{
+			showToast('error',json.message);
+		}
+	}
+	
+	var errorCallback = function(){
+		showToast('error',"删除出错，服务器异常，请稍后再次尝试");
+	}
+	
+	$("a.delete").bind("click",function(){
+		var triggerObj = $(this);
+		
+		var title = triggerObj.attr('data-title');
+		if(typeof(title) == 'undefined'){
+			title = '';
+		}
+		
+		ui_confirm({
+			'trigger':triggerObj,
+			'postData': { id : [$(this).attr("data-id")] },
+			'customDataFn': { } ,
+			'url': triggerObj.attr("data-url"),
+			'titleHTML': '你确定要删除<span class="hightlight">' + title + '</span>吗？',
+			'dataType' : 'json',
+			'successFn':customSuccessFn ? customSuccessFn : successCallback,
+			'errorFn'  : customErrorFn ? customErrorFn : errorCallback
+		});
+		
+  	});
+  	
+  	$(".deleteBtn").bind("click",function(){
+  		var triggerObj = $(this);
+  		var ids = getIDS(triggerObj);
+  		var title = triggerObj.attr('data-title');
+		if(typeof(title) == 'undefined'){
+			title = '';
+		}
+		
+  		if(ids.length == 0){
+  			showToast('error','请选勾选.');
+  		}else{
+  		
+	  		ui_confirm({
+				'trigger':triggerObj,
+				'postData': { id : ids },
+				'customDataFn': { } ,
+				'url': triggerObj.attr("data-url"),
+				'titleHTML': '你确定要删除<span class="hightlight">' + title + '</span>吗？',
+				'dataType' : 'json',
+				'successFn':customSuccessFn ? customSuccessFn : successCallback,
+				'errorFn'  : customErrorFn ? customErrorFn : errorCallback
+			});
+  		}
+  	});
+}
+
+
 
 /**
  * ajax 提交
@@ -667,7 +767,7 @@ function bindAjaxSubmit(classname){
 					var errors = resp.data.errors;
 					var first = null;
 					
-					$("label.errtip").hide();
+					$(".errtip").hide();
 					
 					for(var f in errors){
 						if(first == null){
@@ -686,79 +786,23 @@ function bindAjaxSubmit(classname){
 				}else{
 					showToast('success',resp.message);
 					
-					$("label.errtip").hide();
+					$(".errtip").hide();
 					if(typeof(resp.data.redirectUrl) != "undefined"){
-						
 						setTimeout(function(){
 							location.href = resp.data.redirectUrl;
-						},500);
+						},1000);
 					}
 				}
 			
 			},
 			error:function(xhr, textStatus, errorThrown){
 				lockFn(submitBtn,name,false);
-				
-				alert("服务器发送错误,将重新刷新页面");
+				alert("服务器发送错误,请联系管理员");
 			}
 		});
 		return false;
 	});
 }
-
-
-
-/**
- * 
- * @param sucFn 成功事件回调
- * @param errorFn 失败事件回调
- */
-function bindDeleteEvent(customSuccessFn,customErrorFn){
-	var successCallback = function(ids,json){
-		if(check_success(json.message)){
-			showToast('success',json.message);
-			
-			for(var i = 0; i < ids.length; i++){
-				$("#row" + ids[i]).remove();
-			}
-		}else{
-			showToast('error',json.message);
-		}
-	}
-	
-	var errorCallback = function(){
-		showToast('error',"删除出错，服务器异常，请稍后再次尝试");
-	}
-	
-	$("a.delete").bind("click",function(){
-		var triggerObj = $(this);
-		
-		var title = triggerObj.attr('data-title');
-		if(typeof(title) == 'undefined'){
-			title = '';
-		}
-		
-		ui_confirm(triggerObj,[$(this).attr("data-id")],$(this).attr("data-url"),'你确定要删除<span class="hightlight">' + title + '</span>吗？','json',customSuccessFn ? customSuccessFn : successCallback,customErrorFn ? customErrorFn: errorCallback);
-  	});
-  	
-  	$(".deleteBtn").bind("click",function(){
-  		var triggerObj = $(this);
-  		var ids = getIDS(triggerObj);
-  		var url = triggerObj.attr("data-url");
-  		var title = triggerObj.attr('data-title');
-		if(typeof(title) == 'undefined'){
-			title = '';
-		}
-		
-		
-  		if(ids.length == 0){
-  			showToast('error','请选勾选.');
-  		}else{
-  			ui_confirm(triggerObj,ids,url,'你确定要删除<span class="hightlight">' + title + '</span>吗？','json',customSuccessFn ? customSuccessFn : successCallback,customErrorFn ? customErrorFn: errorCallback);
-  		}
-  	});
-}
-
 
 
 $(function(){
@@ -797,52 +841,5 @@ $(function(){
     	$(formid).find("input[name=page]").val(btn.closest("strong").find("input[name=jumpPage]").val());
     	
     	$(formid).submit();
-    });
-    
-    $("#repub .detail").bind('click',function(){
-    	var repubUrl = $(this).attr('data-url');
-    	
-    	$.get(repubUrl, { },function(resp){
-    		$("#showDlg" ).html(resp).dialog({
-        		title: "重新发布列表",
-        		autoOpen: false,
-        		width: '50%',
-        		height:300,
-        		position: { my: "center", at: "center", of: window },
-        		modal: true
-        	}).dialog('open');
-    		
-    	} ,'html');
-    	
-    });
-    
-    
-    $("body").delegate("input[name=repubcancel]","click",function(){
-        var selected = $("input[name='goods_id[]']:checked").size();
-        if(selected == 0){
-            showToast('error', '请先勾选');
-            return ;
-        }
-        
-        var ids = [];
-        
-        $("input[name='goods_id[]']").not("input:checked").each(function(){
-        	ids.push($(this).val());
-        });
-        
-        $("input[name='goods_id[]']:checked").each(function(){
-        	$("#gid" + $(this).val()).remove();
-        });
-        
-        if(ids.length){
-        	$("#repub .title em").html(ids.length);
-        	$("#repub").show();
-        }else{
-        	$("#repub").hide();
-        }
-        
-        setcookie('repub',ids.join('|'),86400);
-    });
-    
-    
+    });    
 });

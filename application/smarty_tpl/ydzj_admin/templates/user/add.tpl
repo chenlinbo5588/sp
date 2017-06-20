@@ -8,7 +8,7 @@
     <table class="table tb-type2 nobdb">
       <tbody>
         <tr class="noborder">
-          <td colspan="2" class="required"><label class="validation" for="email">登录名:</label></td>
+          <td colspan="2" class="required"><label class="validation" for="email">登录名(邮箱):</label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input type="text" id="email" value="{$info['email']}" name="email" class="txt"></td>

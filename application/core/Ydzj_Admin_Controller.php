@@ -13,7 +13,7 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 		
 		//$this->form_validation->set_error_delimiters('<label class="error">','</label>');
 		$this->_initAdminLogin();
-		//$this->_checkPermission();
+		$this->_checkPermission();
 		$this->load->config('admin_site');
 		
 		$this->_navs();
@@ -90,6 +90,9 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
         $this->_permission['admin/index/nopermission'] = 1;
         $this->_permission['admin/dashboard/welcome'] = 1;
         $this->_permission['admin/dashboard/aboutus'] = 1;
+        $this->_permission['admin/my/logout'] = 1;
+        $this->_permission['admin/common/pic_upload'] = 1;
+        $this->_permission['admin/member/cut_avatar'] = 1;
 
         $this->assign('permission',$this->_permission);
         

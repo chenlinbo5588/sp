@@ -22,6 +22,8 @@ class Member extends Ydzj_Admin_Controller {
 			'近一个月内' => '-30 days',
 		);
 		
+		$this->load->library('Building_service');
+		
 		$this->assign('avatarImageSize',$this->_avatarImageSize);
 	}
 	
@@ -156,29 +158,6 @@ class Member extends Ydzj_Admin_Controller {
 	
 	
 	/**
-	 * 
-	 */
-	private function _setMobileRule($key){
-		$this->form_validation->set_rules($key,'手机号码',array(
-				'required',
-				'valid_mobile',
-				array(
-					'loginname_callable[mobile]',
-					array(
-						$this->Member_Model,'isUnqiueByKey'
-					)
-				)
-			),
-			array(
-				'loginname_callable' => '%s已经被注册'
-			)
-		);
-		
-	}
-	
-	
-	
-	/**
 	 * 保存头像
 	 */
 	public function cut_avatar(){
@@ -231,8 +210,11 @@ class Member extends Ydzj_Admin_Controller {
 	 */
 	private function _addRules(){
 		
+		$this->form_validation->set_rules('village_id','所在村','required|in_db_list['.$this->Village_Model->getTableRealName().'.id]');
+		$this->form_validation->set_rules('mobile','手机号码','required|valid_mobile');
 		
 		$param['email'] = $this->input->post('email');
+		
 		if($param['email']){
 			$this->form_validation->set_rules('email','电子邮箱','valid_email');
 		}
@@ -253,16 +235,35 @@ class Member extends Ydzj_Admin_Controller {
 	}
 	
 	
+	
+	
+	
 	/**
 	 * 后台创建用户,暂时直接 die
 	 */
 	public function add(){
-		die(0);
 		$info = array();
 		
+		$villageList = $this->building_service->getTownVillageList(config_item('site_town'));
+		
 		if($this->isPostRequest()){
+			$this->form_validation->set_rules('username','登陆账号',array(
+					'required',
+					'min_length[2]',
+					'max_length[10]',
+					'valid_username',
+					array(
+						'loginname_callable[username]',
+						array(
+							$this->Member_Model,'isUnqiueByKey'
+						)
+					)
+				),
+				array(
+					'loginname_callable' => '%s已经被注册'
+				)
+			);
 			
-			$this->_setMobileRule('mobile');
 			$this->form_validation->set_rules('passwd','密码','required|valid_password|min_length[6]|max_length[12]');
 			$this->form_validation->set_rules('passwd2','密码确认','required|matches[passwd]');
 			
@@ -273,7 +274,6 @@ class Member extends Ydzj_Admin_Controller {
 			$old_avatar = $this->input->post('old_avatar');
 			if($aid){
 				$member_avatar = $this->input->post('avatar');
-				
 				$avatar = getImgPathArray($member_avatar,$this->_avatarSizeKeys);
 				$avatar['aid'] = $aid;
 			}
@@ -296,14 +296,18 @@ class Member extends Ydzj_Admin_Controller {
 					break;
 				}
 				
+				$villageId = $this->input->post('village_id');
+				
 				$addParam = array(
-					'mobile' => $this->input->post('mobile'),
-					'nickname' => $this->input->post('mobile'),
+					'username' => $this->input->post('username'),
+					'nickname' => $this->input->post('username'),
 					'password' => $this->input->post('passwd'),
+					'village_id' => $villageId,
+					'village' => $villageList[$villageId]['xzqmc'],
+					'mobile' => $this->input->post('mobile'),
 					'qq' => $this->input->post('qq'),
 					'weixin' => $this->input->post('weixin'),
 					'email' => $this->input->post('email'),
-					'username' => $this->input->post('username'),
 					'sex' => $this->input->post('sex'),
 					'freeze' => $this->input->post('freeze'),
 					'channel' => 1	//1 标志直接后台增加
@@ -337,6 +341,8 @@ class Member extends Ydzj_Admin_Controller {
 		}
 		
 		
+		
+		$this->assign('villageList',$villageList);
 		$this->assign('info',$info);
 		$this->display();
 		
@@ -353,6 +359,9 @@ class Member extends Ydzj_Admin_Controller {
 		$this->load->library('Member_service');
 		$info = $this->member_service->getUserInfoById($member_id);
 		//print_r($info);
+		
+		$villageList = $this->building_service->getTownVillageList(config_item('site_town'));
+		
 		
 		if(!empty($member_id) && $this->isPostRequest()){
 			
@@ -373,7 +382,12 @@ class Member extends Ydzj_Admin_Controller {
 					break;
 				}
 				
+				
+				$villageId = $this->input->post('village_id');
+				
 				$updateData = array(
+					'village_id' => $villageId,
+					'village' => $villageList[$villageId]['xzqmc'],
 					'qq' => $this->input->post('qq'),
 					'weixin' => $this->input->post('weixin'),
 					'email' => $this->input->post('email'),
@@ -383,7 +397,6 @@ class Member extends Ydzj_Admin_Controller {
 				);
 				
 				$member_avatar = $this->input->post('avatar');
-				
 				
 				if($member_avatar){
 					$aid = $this->input->post('avatar_id');
@@ -396,7 +409,6 @@ class Member extends Ydzj_Admin_Controller {
 					$updateData['password'] = $this->encrypt->encode($password);
 				}
 				
-				//print_r($updateData);
 				$this->load->library('Member_service');
 				$flag = $this->member_service->updateUserInfo($updateData,$member_id);
 				
@@ -416,6 +428,8 @@ class Member extends Ydzj_Admin_Controller {
 		}
 		
 		$this->assign('info',$info);
+		$this->assign('villageList',$villageList);
+		
 		$this->display();
 	}
 }

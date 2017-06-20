@@ -33,14 +33,14 @@
  #search {
     position: fixed;
     z-index: 20;
-    top: 60px;
+    top: 80px;
     right: 50px;
  }
  
 #resultWrap {
 	position: fixed;
-	right: 110px;
-	top: 98px;
+	right: 60px;
+    top: 120px;
 	z-index: 20;
 	background-color: #fff;
 	width: 350px;
@@ -70,11 +70,11 @@
  }
  
  
- #panbox {
+ #toolbox {
    position:absolute;
    right:0px;
    bottom:0px;
-   width: 180px;
+   width: 150px;
    z-index:19;
    background:rgba(255,255,255,0.7);
  }
@@ -122,4 +122,16 @@
 #photos img {
 	width:80px;
 	height:80px;
+}
+
+.panTool button {
+	display: block;
+    width: 100%;
+    cursor: pointer;
+}
+
+#toolbox h4 {
+    border-bottom: 1px solid black;
+    background: #FACBCB;
+    font-size:12px;
 }

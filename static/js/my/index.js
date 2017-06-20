@@ -112,6 +112,7 @@ $(function(){
 		$('#h').val(c.h);
 	}
 	
+	/*
 	$('#file_upload').uploadify({
         'fileTypeDesc' : '图片文件',
         'buttonText' : '选择图片文件',
@@ -137,6 +138,8 @@ $(function(){
 			}
         }
     });
+	*/
+	
 	
 	$("input[name=copylink]").bind('click',function(){
 		$("#tuiguang").select();

@@ -1,5 +1,5 @@
 {include file="common/main_header.tpl"}
-   <link rel="stylesheet" href="{resource_url('css/zq.css')}"/>
+   <link rel="stylesheet" href="{resource_url('css/zq.css',true)}"/>
    {include file="common/fancybox.tpl"}
    {include file="common/arcgis_common.tpl"}
    <style type="text/css">
@@ -12,17 +12,28 @@
       var map, scalebar,measurement, panWorkLayer, searchLayer ,toolbar,editToolbar, geomTask,undoManager;
       var buildingInfoDlg;
       
+      var villageJson = {$villageListJson};
+      
+      var showDetail = function(evt){
+			buildingInfoDlg.find(".loading_bg").show();
+			buildingInfoDlg.dialog('open');
+			buildingInfoDlg.find(".dlgContent").load('{admin_site_url('building/detail?hid=')}' + evt.graphic.attributes.hid,function(){
+				buildingInfoDlg.find(".loading_bg").hide();
+			});
+		}
+      
       $(function(){
       		buildingInfoDlg = $("#buildingInfoDlg" ).dialog({
 		        autoOpen: false,
-		        width: '98%',
+		        width: '80%',
 		        modal: false,
 		        open:function(){
 		        	
 		        }
 		    });
+		    
+		    $('.fancybox').fancybox();
       });
-    
 
       require([
         "esri/map","esri/dijit/Scalebar","esri/dijit/Legend","esri/toolbars/edit","esri/toolbars/draw","esri/Color",
@@ -116,18 +127,18 @@
 	       });
 	       
 	       var legend = new Legend({
-		    map: map,
-		    arrangement:esri.dijit.Legend.ALIGN_LEFT,
-		    layerInfos:[{ layer : allFeatureMap ,title:'存量建筑图例' }]
-		  }, "legendDiv");
-		  legend.startup();
+			    map: map,
+			    arrangement:esri.dijit.Legend.ALIGN_LEFT,
+			    layerInfos:[{ layer : allFeatureMap ,title:'存量建筑图例' }]
+			  }, "legendDiv");
+			  
+		  	legend.startup();
 		  
 	        measurement = new Measurement({
 			    map: map
 			}, dojo.byId('measurementDiv'));
 			
 			measurement.startup();
-			
 			
 			scalebar = new Scalebar({
 	          map: map,
@@ -142,100 +153,43 @@
         panWorkLayer = new GraphicsLayer({ id : "panWork" });
         searchLayer = new GraphicsLayer({ id : 'search'});
        
-        map.on("layers-add-result", initEditing);
+        //map.on("layers-add-result", initEditing);
         //var nullSymbol = new SimpleMarkerSymbol().setSize(0);
         
         //存量建筑
-        var buildingUrl = "http://{config_item('arcgis_server_ip')}/ArcGIS/rest/services/zqwj/cljz/MapServer/1";
+        //var buildingUrl = "http://{config_item('arcgis_server_ip')}/ArcGIS/rest/services/zqwj/cljz/MapServer/1";
+        var buildingUrl = "{config_item('arcgis_server')}{$mapUrlConfig['编辑要素']['标准建筑点']}";
         //农转用
-        var nzyUrl = "http://{config_item('arcgis_server_ip')}/ArcGIS/rest/services/zqwj/cljz/MapServer/2";
-        var jbntUrl = "http://{config_item('arcgis_server_ip')}/ArcGIS/rest/services/zqwj/cljz/MapServer/3";
-        var villageUrl = "http://{config_item('arcgis_server_ip')}/ArcGIS/rest/services/zqwj/cljz/MapServer/4";
+        //var nzyUrl = "http://{config_item('arcgis_server_ip')}/ArcGIS/rest/services/zqwj/cljz/MapServer/2";
+        //var jbntUrl = "http://{config_item('arcgis_server_ip')}/ArcGIS/rest/services/zqwj/cljz/MapServer/3";
+        var villageUrl = "{config_item('arcgis_server')}{$mapUrlConfig['基本要素']['村界']}";
         
         {literal}
         var buildingLayer = new FeatureLayer(buildingUrl,{
           showLabels:true,
           mode: FeatureLayer.MODE_SELECTION,
-          outFields: ["OBJECTID","bh","name","village","illegal_de","wf_wjmj"],
+          outFields: ['*'],
           id : "building"
         });
         
-        //buildingLayer.setRenderer(new SimpleRenderer(normalSym));
-        
-     	var nzyLayer = new FeatureLayer(nzyUrl,{
-          showLabels:true,
-          mode: FeatureLayer.MODE_SNAPSHOT,
-          outFields: ["OBJECTID","XMMC"],
-          id : "nzy"
-        });
-        var jbntLayer = new FeatureLayer(jbntUrl,{
-          mode: FeatureLayer.MODE_SNAPSHOT,
-          outFields: ["OBJECTID"],
-          id : "jbnt"
-        });
         var villageLayer = new FeatureLayer(villageUrl,{
           mode: FeatureLayer.MODE_SNAPSHOT,
-          outFields: ["OBJECTID","XZQMC"],
+          outFields: ['*'],
           id : "village"
         });
         
      	
-     	var layersNeedAdd = [layerZq,jbntLayer,nzyLayer,villageLayer,buildingLayer,panWorkLayer,searchLayer];
+     	//var layersNeedAdd = [layerZq,jbntLayer,nzyLayer,villageLayer,buildingLayer,panWorkLayer,searchLayer];
+     	var layersNeedAdd = [layerZq,villageLayer,buildingLayer,panWorkLayer,searchLayer];
         map.addLayers(layersNeedAdd);
-        
-        function initEditing (event) {
-          var featureLayerInfos = arrayUtils.map(event.layers, function (layer) {
-            return {
-              "featureLayer": layer.layer
-            };
-          });
-          
-          var settings = {
-            map: map,
-            layerInfos: featureLayerInfos,
-            toolbarVisible: true,
-            showAttachments: true,
-            //enableUndoRedo:true,
-            //undoManager:undoManager,
-            createOptions: {
-                polygonDrawTools: [ 
-                  esri.dijit.editing.Editor.CREATE_TOOL_FREEHAND_POLYGON,
-                  esri.dijit.editing.Editor.CREATE_TOOL_AUTOCOMPLETE
-                ]
-              },
-            toolbarOptions: {
-             reshapeVisible: true,
-             cutVisible: true,
-             mergeVisible: true
-            }
-          };
-          var params = {
-            settings: settings
-          };
-          var editorWidget = new Editor(params, 'editorDiv');
-          editorWidget.startup();
-
-          //snapping defaults to Cmd key in Mac & Ctrl in PC.
-          //specify "snapKey" option only if you want a different key combination for snapping
-          map.enableSnapping();
-        }
         {/literal}
-        var showDetail = function(evt){
-        	buildingInfoDlg.find(".loading_bg").show();
-        	buildingInfoDlg.dialog('open');
-        	buildingInfoDlg.find(".dlgContent").load('{admin_site_url('building/edit?id=')}' + evt.graphic.attributes.OBJECTID,function(){
-        		buildingInfoDlg.find(".loading_bg").hide();
-        	});
-        }
+        
         
         dojo.connect(buildingLayer, "onClick", showDetail);
         dojo.connect(searchLayer, "onClick", showDetail);
         
-        
         var getQuery = function(){
         	var query = new Query();
-            //query.outFields = ["OBJECTID","bh","name","village"];
-            
             //空间搜索 最后一次指定的范围
             if(panWorkLayer.graphics.length > 0){
                 query.geometry = panWorkLayer.graphics[panWorkLayer.graphics.length - 1].geometry ;
@@ -247,20 +201,21 @@
             keywords = keywords.replace("'",'');
             
             if(keywords.length){
-            	query.where = "bh like '%" + keywords +  "%' or name like '%" + keywords + "%' or id_card like '%" + keywords + "%'";
+            	query.where = "name like '%" + keywords + "%' or id_no like '%" + keywords + "%'";
             }
             
             if(village && village != ''){
             	if(query.where){
-            		query.where = "village ='" + village + "' AND (" + query.where + ")";
+            		query.where = "village_id =" + village + " AND (" + query.where + ")";
             	}else{
-            		query.where = "village ='" + village + "'";
+            		query.where = "village_id =" + village + "";
             	}
             }
             
             if(!query.where){
-            	query.where = '1=1';
+            	query.where = "1=1";
             }
+            
             
             query.returnGeometry = true;
             return query;
@@ -268,8 +223,6 @@
         
         
         var searchingLock = false;
-        
-        
         var searchTask = function(){
             if(searchingLock){
                 return;
@@ -285,27 +238,31 @@
             
             function queryTaskExecuteCompleteHandler(queryResults){
                //console.log("complete", queryResults);
-               searchLayer.clear();
+               //searchLayer.clear();
                //results = queryResults.features;
                
                results = queryResults;
                $("#search_result").html('').show();
                var itemAr = [];
                
-	       if(results.length){
-		   $("#folderText").html('收起结果(' + results.length + ')');
-	       }
+	       	   $("#folderText").html('收起结果(' + results.length + ')');
 
                for(var i = 0; i < results.length; i++){
                	   /*
                    var graphic = new Graphic(results[i].geometry,searchPicSym, results[i].attributes);
-                   
                    if(typeof(results[i].attributes.bh) == "undefined"){
                         //console.log(results[i].attributes);
                         continue;
                    }
                    */
-                   var item = $("<li><div>【" + results[i].attributes.bh + " 】" +  results[i].attributes.name + " " + results[i].attributes.village + "</div></li>");
+                   
+                   var item ;
+                   
+                   if(typeof(villageJson[results[i].attributes.village_id]) != 'undefined'){
+                   		item = $("<li>【" + villageJson[results[i].attributes.village_id].xzqmc + "】" +  results[i].attributes.name +  "</li>");
+                   }else{
+                   		item = $("<li>" +  results[i].attributes.name + "</li>");
+                   }
                    
                    var bindFunc = function(data){
                         //console.log(data);
@@ -314,7 +271,7 @@
                             var pointlocation = new Point(data.geometry);
                             var graphic1 = new Graphic(pointlocation,searchPicSym,data.attributes);
                             //searchLayer.add(graphic1);
-			    map.setScale(500);
+			    			map.setScale(500);
                             map.centerAt(pointlocation);
                        });
 	                   
@@ -348,9 +305,9 @@
             //console.log(e);
             if($.trim($(this).val()) =='' && 8 == e.keyCode){
                 $("#resultWrap").hide();
-		$("#search_result").html('');
+				$("#search_result").html('');
                 $("#statictsHTML").hide();
-                searchLayer.clear();
+                //searchLayer.clear();
                 buildingLayer.clearSelection();
             }
         
@@ -364,92 +321,29 @@
         });
         
 
-	$("#folderText").bind("click",function(){
+		$("#folderText").bind("click",function(){
             var text = $(this).html();
-
-	    if(/收起/.test(text)){
-		text = text.replace('收起','展开');
-		$(this).html(text);
-
-		$("#search_result").slideUp();
-	    }else if(/展开/.test(text)){
-		text = text.replace('展开','收起');
-		$(this).html(text);
-		$("#search_result").slideDown();
-	    }
-
-	    
+		    if(/收起/.test(text)){
+				text = text.replace('收起','展开');
+				$(this).html(text);
+				$("#search_result").slideUp();
+		    }else if(/展开/.test(text)){
+				text = text.replace('展开','收起');
+				$(this).html(text);
+				$("#search_result").slideDown();
+		    }
         });
 
-
-        
-        var tjTask = function(){
-        
-        	var countStatDef = new StatisticDefinition();
-		    countStatDef.statisticType = "count";
-		    countStatDef.onStatisticField = "bh"
-		    countStatDef.outStatisticFieldName = "bhcount";
-		    
-        	var jzw_ydmjStatDef = new StatisticDefinition();
-		    jzw_ydmjStatDef.statisticType = "sum";
-		    jzw_ydmjStatDef.onStatisticField = "jzw_ydmj";
-		    jzw_ydmjStatDef.outStatisticFieldName = "jzw_ydmj";
-		    
-		    var jzw_jzzdmjStatDef = new StatisticDefinition();
-		    jzw_jzzdmjStatDef.statisticType = "sum";
-		    jzw_jzzdmjStatDef.onStatisticField = "jzw_jzzdmj";
-		    jzw_jzzdmjStatDef.outStatisticFieldName = "jzw_jzzdmj";
-		    
-		    var jzw_jzmjStatDef = new StatisticDefinition();
-		    jzw_jzmjStatDef.statisticType = "sum";
-		    jzw_jzmjStatDef.onStatisticField = "jzw_jzmj";
-		    jzw_jzmjStatDef.outStatisticFieldName = "jzw_jzmj";
-		    
-		    var sp_ydmjStatDef = new StatisticDefinition();
-		    sp_ydmjStatDef.statisticType = "sum";
-		    sp_ydmjStatDef.onStatisticField = "sp_ydmj";
-		    sp_ydmjStatDef.outStatisticFieldName = "sp_ydmj";
-		    
-		    var sp_jzmjStatDef = new StatisticDefinition();
-		    sp_jzmjStatDef.statisticType = "sum";
-		    sp_jzmjStatDef.onStatisticField = "sp_jzmj";
-		    sp_jzmjStatDef.outStatisticFieldName = "sp_jzmj";
-		    
-		    var wfmjStatDef = new StatisticDefinition();
-		    wfmjStatDef.statisticType = "sum";
-		    wfmjStatDef.onStatisticField = "wf_wjmj";
-		    wfmjStatDef.outStatisticFieldName = "wf_wjmj";
-		    
-		    var queryParams = getQuery();
-		    queryParams.outStatistics = [countStatDef,jzw_ydmjStatDef,jzw_jzzdmjStatDef,jzw_jzmjStatDef,sp_ydmjStatDef,sp_jzmjStatDef,wfmjStatDef];
-    		buildingLayer.queryFeatures(queryParams, function(results){
-    			//console.log(results);
-    			var stats = results.features[0].attributes;
-    			
-    			$("#countResult").html(stats.bhcount);
-    			$("#ydmjResult").html(stats.jzw_jzmj);
-    			$("#jzzdmjResult").html(stats.jzw_jzzdmj);
-    			$("#jzmjResult").html(stats.jzmj);
-    			$("#spydmjResult").html(stats.sp_ydmj);
-    			$("#spjzmjResult").html(stats.sp_jzmj);
-    			$("#wfjzmjResult").html(stats.wf_wjmj);
-    			$("#statictsHTML").show();
-    			
-    			searchTask();
-    		});
-        };
-        
         
         $("#tjBtn").bind("click",function(){
             tjTask();
         });
         
         //画笔
-        $("#panbox button").bind("click",activateTool);
+        $(".panTool button").bind("click",activateTool);
         map.on("load", createToolbar);
         
         function activateTool(event) {
-           
           if($(this).html() == '清空'){
             map.getLayer("panWork").clear();
             return ;
@@ -478,7 +372,6 @@
             //console.log(evt.mapPoint);
             editToolbar.deactivate();
           });
-          
         }
 
         function addToMap(evt) {
@@ -527,84 +420,48 @@
       });
    </script>
 
-   <div id="panbox">
-   	  <div id="measurementDiv"></div>
+   <div id="toolbox">
    	  <div id="legendDiv"></div>
-      <span>画笔:</span>
-      {*
-      <button data-sharp="Point">点</button>
-      <button data-sharp="Multi Point">多点</button>
-      *}
-      <button data-sharp="Line">线</button>
-      <button data-sharp="Polyline">多段线</button>
-      <button data-sharp="Freehand Polyline">自由多段线</button>
-      <button data-sharp="Polygon">面</button>
-      <button data-sharp="Freehand Polygon">自由面</button>
-      {*
-      <!--The Arrow,Triangle,Circle and Ellipse types all draw with the polygon symbol-->
-      <button data-sharp="Arrow">箭头</button>
-      <button data-sharp="Triangle">三角形</button>
-      *}
-      <button data-sharp="Circle">圆形</button>
-      <button data-sharp="Ellipse">椭圆行</button>
-
-      <button id="clearBtn">清空</button>
+   	  <h4>测量工具:</h4>
+   	  <div id="measurementDiv"></div>
+   	  <div class="panTool">
+	      <h4>画笔:</h4>
+	      {*
+	      <button data-sharp="Point">点</button>
+	      <button data-sharp="Multi Point">多点</button>
+	      *}
+	      <button data-sharp="Line">线</button>
+	      <button data-sharp="Polyline">多段线</button>
+	      <button data-sharp="Freehand Polyline">自由多段线</button>
+	      <button data-sharp="Polygon">面</button>
+	      <button data-sharp="Freehand Polygon">自由面</button>
+	      {*
+	      <!--The Arrow,Triangle,Circle and Ellipse types all draw with the polygon symbol-->
+	      <button data-sharp="Arrow">箭头</button>
+	      <button data-sharp="Triangle">三角形</button>
+	      *}
+	      <button data-sharp="Circle">圆形</button>
+	      <button data-sharp="Ellipse">椭圆行</button>
+	
+	      <button id="clearBtn">清空</button>
+	    </div>
    </div>
    
    <div id="search">
         <select name="village" style="height:33px;">
             <option value="">全部</option>
-	    <option value="陈家村">陈家村</option>
-	    <option value="叶家村">叶家村</option>
-	    {*
-            <option value="巴里村">巴里村</option>
-            <option value="柴家村">柴家村</option>
-            <option value="东埠头村">东埠头村</option>
-            <option value="古窑浦村">古窑浦村</option>
-            <option value="洪魏村">洪魏村</option>
-            <option value="厉家村">厉家村</option>
-            <option value="裘家村">裘家村</option>
-            <option value="戎家村">戎家村</option>
-            <option value="五姓点村">五姓点村</option>
-            <option value="长溪村">长溪村</option>
-	    *}
+            {foreach from=$villageList item=item}
+	    	<option value="{$item['id']}">{$item['xzqmc']|escape}</option>
+	    	{/foreach}
         </select>
-        <input type="text" name="keyword" id="searchText" class="" style="height: 28px;width: 300px;" value="" placeholder="请输入关键字(如编号，户主名称，身份证号码)"/>
+        <input type="text" name="keyword" id="searchText" class="" style="height: 28px;width: 300px;" value="" placeholder="请输入关键字(户主名称，身份证号码)"/>
         <input type="button" name="search" id="searchBtn" class="msbtn" value="查询"/>
-        <input type="button" name="tj" id="tjBtn" class="msbtn btndisabled" value="统计"/>
    </div>
    <div id="resultWrap">
-	<div id="folderText"></div>
+	<div id="folderText">收起</div>
 	<ul id="search_result"></ul>
    </div>
-   <div id="statictsHTML">
-      <div><strong>调查存量建筑个数: </strong><span class="stats" id="countResult"></span></div>
-      <div><strong>建筑物用地面积合计(M<sup>2</sup>): </strong><span class="stats" id="ydmjResult"></span></div>
-      <div><strong>建筑物占地面积合计(M<sup>2</sup>): </strong><span class="stats" id="jzzdmjResult"></span></div>
-      <div><strong>建筑物建筑面积合计(M<sup>2</sup>): </strong><span class="stats" id="jzmjResult"></span></div>
-      <div><strong>审批用地面积合计(M<sup>2</sup>): </strong><span class="stats" id="spydmjResult"></span></div>
-      <div><strong>审批建筑面积合计(M<sup>2</sup>): </strong><span class="stats" id="spjzmjResult"></span></div>
-      <div><strong>违法面积合计(M<sup>2</sup>): </strong><span class="stats" id="wfjzmjResult"></span></div>
-    </div>  
    <div id="mapDiv"></div>
-   {*
-   <div id="villageDiv">
-   		<ul class="clearfix">
-			<li><label><input type="radio" value="巴里村" name="village"/>巴里村</label></li>
-			<li><label><input type="radio" value="柴家村" name="village"/>柴家村</label></li>
-			<li><label><input type="radio" value="陈家村" name="village"/>陈家村</label></li>
-			<li><label><input type="radio" value="东埠头村" name="village"/>东埠头村</label></li>
-			<li><label><input type="radio" value="古窑浦村" name="village"/>古窑浦村</label></li>
-			<li><label><input type="radio" value="洪魏村" name="village"/>洪魏村</label></li>
-			<li><label><input type="radio" value="厉家村" name="village"/>厉家村</label></li>
-			<li><label><input type="radio" value="裘家村" name="village"/>裘家村</label></li>
-			<li><label><input type="radio" value="戎家村" name="village"/>戎家村</label></li>
-			<li><label><input type="radio" value="五姓点村" name="village"/>五姓点村</label></li>
-			<li><label><input type="radio" value="叶家村" name="village"/>叶家村</label></li>
-			<li><label><input type="radio" value="长溪村" name="village"/>长溪村</label></li>
-		</ul>
-   </div>
-   *}
    <div id="buildingInfoDlg" title="详情" style="display:none;">
    		<div class="loading_bg">加载中...</div>
    		<div class="dlgContent"></div>

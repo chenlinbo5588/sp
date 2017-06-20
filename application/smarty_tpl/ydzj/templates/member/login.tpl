@@ -1,4 +1,10 @@
 {include file="common/header.tpl"}
+<style>
+body {
+	background:url({resource_url('img/login/bg_1.jpg')}) no-repeat center center;
+}
+
+</style>
 {if !$profile}
 <div class="boxz">
 	<ul id="loginPanel" class="panel">
@@ -20,10 +26,12 @@
 	            <div class="codeimg" id="authImg" title="点击图片刷新">正在获取验证码...</div>
 	        </li>
 	        <li class="row"><input class="master_btn at_txt" type="submit" name="login" value="登陆"/></li>
+	        {*
 	        <li class="row clearfix">
 	            <a class="fl" href="{site_url('member/register')}" title="注册">注册</a>
 	            <a class="fr"  href="{site_url('member/forget')}" title="忘记密码">忘记密码</a>
 	        </li>
+	        *}
 	    </form>
 	</ul>
 </div>

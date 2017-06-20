@@ -72,7 +72,7 @@
             <span class="type-file-box">
               <input type='text' name='article_pic' value="{$info['article_pic']}" id='article_pic' class='type-file-text' />
               <input type='button' name='button' id='button' value='' class='type-file-button' />
-              <input name="_pic" type="file" class="type-file-file" id="_pic" size="30" hidefocus="true" />
+              <input name="imgFile" type="file" class="type-file-file" id="_pic" size="30" hidefocus="true" />
             </span>
             </td>
           <td class="vatop tips">支持格式jpg</td>

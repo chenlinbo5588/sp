@@ -152,7 +152,6 @@ class FeatureRest extends Http_Client {
         	'f' => 'json',
         );
     	
-    	
     	$data = array_merge($json,$data);
     	
     	$this->_featureUrl = str_replace('/MapServer','/FeatureServer',$this->_featureUrl);
@@ -160,11 +159,18 @@ class FeatureRest extends Http_Client {
     	$param = array(
             'url' => $this->_baseURL.$this->_featureUrl.'deleteFeatures',
             'method' => 'post',
-            'data' => json_encode($data)
+            'data' => $data
         );
+        
+        //file_put_contents("delete.txt",print_r($data,true));
+        //file_put_contents("delete.txt",print_r($param,true),FILE_APPEND);
         
         $respone = $this->request($param);
         $result = json_decode($respone,true);
+        
+        
+        //file_put_contents("delete.txt",print_r($respone,true),FILE_APPEND);
+        //file_put_contents("delete.txt",print_r($result,true),FILE_APPEND);
     	return $result;
     }
     

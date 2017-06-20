@@ -10,18 +10,7 @@ class Member extends Ydzj_Controller {
 	
 	public function index()
 	{	
-		/*
-		$this->email->from('tdkc_of_cixi@163.com', '运动之家');
-		$this->email->to('104071152@qq.com');
-		//$this->email->cc('another@another-example.com');
-		//$this->email->bcc('them@their-example.com');
 		
-		$this->email->subject('【运动之家 邮件激活】');
-		$this->email->message('尊敬的'.$this->input->post('nickname').'用户,欢迎你加入运动之家， 点击以下链接进行邮件激活,链接2小时内有效');
-		if($this->email->send()){
-			$this->assign('tip_email',true);
-		}
-		*/
 	}
 	
 	private function _rememberLoginName($loginName, $liveSeconds = 2592000){

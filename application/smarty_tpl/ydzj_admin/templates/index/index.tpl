@@ -182,7 +182,6 @@ $(function(){
 </script>
 </head>
 <body style="margin: 0px;" scroll="no">
-<div id="pagemask"></div>
 <div id="dialog" style="display:none">
   <div class="title">
     <h3>管理中心导航</h3>

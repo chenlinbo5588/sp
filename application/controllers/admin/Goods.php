@@ -257,7 +257,6 @@ class Goods extends Ydzj_Admin_Controller {
 		$fileData = $this->attachment_service->addImageAttachment('fileupload',array(),FROM_BACKGROUND,'goods');
 		if($fileData){
 			
-			
 			$fileData = $this->attachment_service->resize($fileData);
 			
 			$info = array(
