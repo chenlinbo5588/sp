@@ -23,7 +23,7 @@ $config['CGCS2000'] = array(
 		'存量建筑要素' => 'towncljz/jzd/MapServer'
 	),
 	'编辑要素' => array(
-		'存量建筑' => 'zqwj/cljz/FeatureServer/1/',
+		//'存量建筑' => 'zqwj/cljz/FeatureServer/1/',
 		'标准建筑点' => 'towncljz/jzd/FeatureServer/1'
 	)
 );

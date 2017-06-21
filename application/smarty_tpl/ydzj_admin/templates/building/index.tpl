@@ -9,12 +9,14 @@
    </style>
    <script type="text/javascript" src="{resource_url('js/ajaxfileupload/ajaxfileupload.js')}"></script>
    <script>
-      var map, scalebar,measurement, panWorkLayer, searchLayer ,toolbar,editToolbar, geomTask,undoManager;
+      var map,resizeTimer, scalebar,measurement, panWorkLayer, searchLayer ,toolbar,editToolbar, geomTask,undoManager;
+      var markerInterval, markerDirection = true;
       var buildingInfoDlg;
       
       var villageJson = {$villageListJson};
       
       var showDetail = function(evt){
+      		buildingInfoDlg.find(".dlgContent").html('');
 			buildingInfoDlg.find(".loading_bg").show();
 			buildingInfoDlg.dialog('open');
 			buildingInfoDlg.find(".dlgContent").load('{admin_site_url('building/detail?hid=')}' + evt.graphic.attributes.hid,function(){
@@ -97,6 +99,7 @@
         esriConfig.defaults.io.alwaysUseProxy = false;
         
         var searchPicSym = new PictureMarkerSymbol('{resource_url('img/new.png')}', 32, 32);
+        searchPicSym.setOffset(0,20);
         var hightLightPicSym = new PictureMarkerSymbol('{resource_url('img/new2.png')}', 32, 32); 
         
         var hightLightSym = new SimpleMarkerSymbol();
@@ -110,16 +113,24 @@
         // ArcGIS 10.0
         //esriConfig.defaults.geometryService = new GeometryService("http://{config_item('arcgis_server_ip')}/arcgis/rest/services/Geometry/GeometryServer");
         
-        var resizeTimer;
         map = new Map("mapDiv",{ zoom: 1, showLabels : true,scalebarUnit: "dual" });
-        var layerZq = new esri.layers.ArcGISDynamicMapServiceLayer("http://{config_item('arcgis_server_ip')}/arcgis/rest/services/basemapzq/MapServer");
-        //var layerZq = new esri.layers.ArcGISTiledMapServiceLayer("http://{config_item('arcgis_server_ip')}/arcgis/rest/services/basemapzq/MapServer");
-        var allFeatureMap = new esri.layers.ArcGISDynamicMapServiceLayer("http://{config_item('arcgis_server_ip')}/arcgis/rest/services/zqwj/cljz/MapServer");
-
+        
+        {if 'production' == $smarty.const.ENVIRONMENT}
+        var layerZq = new esri.layers.ArcGISTiledMapServiceLayer("{config_item('arcgis_server')}{$mapUrlConfig['基本要素']['底图']}");
+        {else}
+        var layerZq = new esri.layers.ArcGISDynamicMapServiceLayer("{config_item('arcgis_server')}{$mapUrlConfig['基本要素']['底图']}");
+        {/if}
+        
+        //var allFeatureMap = new esri.layers.ArcGISDynamicMapServiceLayer("http://{config_item('arcgis_server_ip')}/arcgis/rest/services/zqwj/cljz/MapServer");
+        var allFeatureMap = new esri.layers.ArcGISDynamicMapServiceLayer("{config_item('arcgis_server')}{$mapUrlConfig['基本要素']['存量建筑要素']}");
+        
 	    dojo.connect(map, 'onLoad', function(theMap) {
 	      map.graphics.enableMouseEvents();
 	      dojo.connect(dijit.byId('mapDiv'), 'resize', function() {
-	        clearTimeout(resizeTimer);
+	      	if(resizeTimer){
+	      		clearTimeout(resizeTimer);
+	      	}
+	        
 	        resizeTimer = setTimeout(function() {
 	          map.resize();
 	          map.reposition();
@@ -178,7 +189,6 @@
           id : "village"
         });
         
-     	
      	//var layersNeedAdd = [layerZq,jbntLayer,nzyLayer,villageLayer,buildingLayer,panWorkLayer,searchLayer];
      	var layersNeedAdd = [layerZq,villageLayer,buildingLayer,panWorkLayer,searchLayer];
         map.addLayers(layersNeedAdd);
@@ -186,7 +196,7 @@
         
         
         dojo.connect(buildingLayer, "onClick", showDetail);
-        dojo.connect(searchLayer, "onClick", showDetail);
+        //dojo.connect(searchLayer, "onClick", showDetail);
         
         var getQuery = function(){
         	var query = new Query();
@@ -270,7 +280,30 @@
                             //var textSymbol =  new TextSymbol(data.attributes.name).setColor(new Color([255,255,0])).setAlign(Font.ALIGN_START).setFont(new Font("12pt").setWeight(Font.WEIGHT_BOLD)) ;
                             var pointlocation = new Point(data.geometry);
                             var graphic1 = new Graphic(pointlocation,searchPicSym,data.attributes);
-                            //searchLayer.add(graphic1);
+                            searchLayer.add(graphic1);
+                            
+                            if(markerInterval){
+                            	searchPicSym.setOffset(0,20);
+                            	clearInterval(markerInterval);
+                            }
+                            
+                            markerInterval = setInterval(function(){
+                            	if(30 == searchPicSym.yoffset){
+                            		markerDirection = !markerDirection;
+                            	}else if(20 == searchPicSym.yoffset){
+                            		markerDirection = true;
+                            	}
+                            	
+                            	if(markerDirection){
+                            		searchPicSym.setOffset(0,searchPicSym.yoffset + 1);
+                            	}else{
+                            		searchPicSym.setOffset(0,searchPicSym.yoffset - 1);
+                            	}
+                            	
+                            	graphic1.setSymbol(searchPicSym);
+                            },30);
+                            
+                            
 			    			map.setScale(500);
                             map.centerAt(pointlocation);
                        });
@@ -307,7 +340,7 @@
                 $("#resultWrap").hide();
 				$("#search_result").html('');
                 $("#statictsHTML").hide();
-                //searchLayer.clear();
+                searchLayer.clear();
                 buildingLayer.clearSelection();
             }
         

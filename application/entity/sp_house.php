@@ -32,6 +32,7 @@ $entity = array(
 'illegal' => 'tinyint',
 'wf_wjsj' => 'date',
 'wf_wjmj' => 'double',
+'wf_jzmj' => 'double',
 'x' => 'double',
 'y' => 'double',
 'deal_way' => 'tinyint',

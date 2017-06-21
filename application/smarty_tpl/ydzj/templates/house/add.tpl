@@ -137,7 +137,8 @@
 	        minScale:3000,
 	        displayOnPan:false
 	    });
-        
+	    
+	    buildingLayer.setDefinitionExpression("village_id = {$profile['basic']['village_id']}");
         
         var layersNeedAdd = [layerWx,villageLayer,buildingLayer];
         map.addLayers(layersNeedAdd);

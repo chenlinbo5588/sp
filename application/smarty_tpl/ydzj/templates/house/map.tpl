@@ -13,8 +13,8 @@
       }
    </style>
    <script>
-      var map, scalebar,measurement, panWorkLayer, toolbar,editToolbar,buildingInfoDlg;
-      
+      var map,resizeTimer, scalebar,measurement, panWorkLayer,searchLayer, toolbar,editToolbar,buildingInfoDlg;
+      var markerInterval, markerDirection = true;
       $(function(){
       		buildingInfoDlg = $("#buildingInfoDlg" ).dialog({
 		        autoOpen: false,
@@ -29,6 +29,9 @@
       });
       
 	var showDetail = function(evt){
+		//console.log(evt);
+		
+		buildingInfoDlg.find(".dlgContent").html('');
 		buildingInfoDlg.find(".loading_bg").show();
 		buildingInfoDlg.dialog('open');
 		buildingInfoDlg.find(".dlgContent").load('{site_url('house/detail?hid=')}' + evt.graphic.attributes.hid,function(){
@@ -81,21 +84,23 @@
         esriConfig.defaults.io.alwaysUseProxy = false;
         
         var searchPicSym = new PictureMarkerSymbol('{resource_url('img/new.png')}', 32, 32);
-        var hightLightPicSym = new PictureMarkerSymbol('{resource_url('img/new2.png')}', 32, 32); 
+        searchPicSym.setOffset(0,20);
+        var hightLightPicSym = new PictureMarkerSymbol('{resource_url('img/new2.png')}', 32, 32);
+        
         
         esriConfig.defaults.geometryService = new GeometryService("{config_item('arcgis_server')}{$mapUrlConfig['工具']['几何']}");
         
-        var sym = new SimpleMarkerSymbol();
-        sym.setColor(new Color([255,0,0]));
-        
-        var resizeTimer;
         map = new Map("mapDiv",{ showLabels : true ,logo: false });
         
-        //var layerWx = new esri.layers.ArcGISTiledMapServiceLayer("{config_item('arcgis_server')}{$mapUrlConfig['基本要素']['底图']}");
+        {if 'production' == $smarty.const.ENVIRONMENT}
+        var layerWx = new esri.layers.ArcGISTiledMapServiceLayer("{config_item('arcgis_server')}{$mapUrlConfig['基本要素']['底图']}");
+        {else}
         var layerWx = new esri.layers.ArcGISDynamicMapServiceLayer("{config_item('arcgis_server')}{$mapUrlConfig['基本要素']['底图']}");
+        {/if}
         var allFeatureMap = new esri.layers.ArcGISDynamicMapServiceLayer("{config_item('arcgis_server')}{$mapUrlConfig['基本要素']['存量建筑要素']}");
         
         panWorkLayer = new GraphicsLayer({ id : "panWork" });
+        searchLayer = new GraphicsLayer({ id : 'search'});
         
         var villageLayer = new FeatureLayer("{config_item('arcgis_server')}{$mapUrlConfig['基本要素']['村界']}",{
           showLabels:true,
@@ -108,22 +113,18 @@
 	        showLabels:true,
 	        mode: FeatureLayer.MODE_ONDEMAND,
 	        outFields: ['*'],
-	        id : 'building',
-	        displayOnPan:false
+	        id : 'building'
 	    });
 	    
 	    buildingLayer.setDefinitionExpression("village_id = {$profile['basic']['village_id']}");
 	    
-	    dojo.connect(buildingLayer, "onLoad", function(){
-	    	dojo.connect(buildingLayer, "onClick", showDetail);
-		});
-		
+	    dojo.connect(buildingLayer, "onClick", showDetail);
         dojo.connect(villageLayer, "onLoad", function(){
         	map.setExtent(villageLayer.fullExtent);
 		});
 		
 		
-		var layersNeedAdd = [layerWx,villageLayer,buildingLayer,panWorkLayer];
+		var layersNeedAdd = [layerWx,villageLayer,buildingLayer,panWorkLayer,searchLayer];
         map.addLayers(layersNeedAdd);
 		
 		$(".panTool button").bind("click",activateTool);
@@ -209,7 +210,10 @@
 	    dojo.connect(map, 'onLoad', function(theMap) {
 	      
 	      dojo.connect(dijit.byId('mapDiv'), 'resize', function() {
-	        clearTimeout(resizeTimer);
+	      	if(resizeTimer){
+	      		clearTimeout(resizeTimer);
+	      	}
+	      	
 	        resizeTimer = setTimeout(function() {
 	          map.resize();
 	          map.reposition();
@@ -283,9 +287,36 @@
                    var bindFunc = function(data){
                         //console.log(data);
                         $(item).bind("click",function(){
+                        	searchLayer.clear();
+                        	
                             //var textSymbol =  new TextSymbol(data.attributes.name).setColor(new Color([255,255,0])).setAlign(Font.ALIGN_START).setFont(new Font("12pt").setWeight(Font.WEIGHT_BOLD)) ;
                             var pointlocation = new Point(data.geometry);
                             var graphic1 = new Graphic(pointlocation,searchPicSym,data.attributes);
+                            
+                            searchLayer.add(graphic1);
+                            
+                            if(markerInterval){
+                            	searchPicSym.setOffset(0,20);
+                            	clearInterval(markerInterval);
+                            }
+                            
+                            markerInterval = setInterval(function(){
+                            	if(30 == searchPicSym.yoffset){
+                            		markerDirection = !markerDirection;
+                            	}else if(20 == searchPicSym.yoffset){
+                            		markerDirection = true;
+                            	}
+                            	
+                            	if(markerDirection){
+                            		searchPicSym.setOffset(0,searchPicSym.yoffset + 1);
+                            	}else{
+                            		searchPicSym.setOffset(0,searchPicSym.yoffset - 1);
+                            	}
+                            	
+                            	
+                            	graphic1.setSymbol(searchPicSym);
+                            },30);
+                            
 			    			map.setScale(500);
                             map.centerAt(pointlocation);
                        });
@@ -295,6 +326,7 @@
                    bindFunc(results[i]);
                    
                    $("#search_result").append(item);
+                   
                }
                
                map.getLayer("panWork").clear();
@@ -320,6 +352,8 @@
             if($.trim($(this).val()) =='' && 8 == e.keyCode){
                 $("#resultWrap").hide();
 				$("#search_result").html('');
+				searchLayer.clear();
+				
                 //buildingLayer.clearSelection();
             }
         

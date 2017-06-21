@@ -102,10 +102,11 @@ $config['house_validation'] = array(
 		'sp_ycyj' => array('title' => '审批时间(原拆原建)' , 'condition' => true , 'whenSelfNotEmpty' => true, 'defaultValue' => NULL , 'rule' => 'required|valid_date'),
 		'sp_ydmj' => array('title' => '批准用地面积' , 'condition' => true , 'whenSelfNotEmpty' => true, 'defaultValue' => 0, 'rule' => 'required|numeric|greater_than_equal_to[0]'),
 		'sp_jzmj' => array('title' => '批准建筑面积' , 'condition' => true , 'whenSelfNotEmpty' => true, 'defaultValue' => 0, 'rule' => 'required|numeric|greater_than_equal_to[0]'),
-		'illegal' => array('title' => '违法现象' , 'condition' => true , 'whenSelfNotEmpty' => true,'defaultValue' => 0, 'rule' => 'required|in_list[1,2,3]'),
+		'illegal' => array('title' => '违法现象' , 'required' => true , 'rule' => 'required|in_list[0,1,2,3]'),
 		
 		'wf_wjsj' => array('title' => '违建时间' , 'condition' => true , 'whenSelfNotEmpty' => true, 'defaultValue' => NULL , 'rule' => 'required|valid_date'),
-		'wf_wjmj' => array('title' => '违建面积' , 'condition' => true , 'whenSelfNotEmpty' => true, 'defaultValue' => 0, 'rule' => 'required|numeric|greater_than_equal_to[0]'),
+		'wf_wjmj' => array('title' => '违建占地面积' , 'condition' => true , 'whenSelfNotEmpty' => true, 'defaultValue' => 0, 'rule' => 'required|numeric|greater_than_equal_to[0]'),
+		'wf_jzmj' => array('title' => '违建建筑面积' , 'condition' => true , 'whenSelfNotEmpty' => true, 'defaultValue' => 0, 'rule' => 'required|numeric|greater_than_equal_to[0]'),
 		
 		'cate' => array('title' => '使用分类' , 'condition' => true , 'whenSelfNotEmpty' => true, 'defaultValue' => 0, 'rule' => 'required|in_list[1,2,3,4]'),
 		'deal_way' => array('title' => '分类处置办法' ,'condition' => true , 'whenSelfNotEmpty' => true, 'defaultValue' => 0, 'rule' => 'required|in_list[1,2,3,4]')   ,

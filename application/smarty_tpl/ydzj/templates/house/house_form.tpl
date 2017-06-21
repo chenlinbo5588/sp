@@ -8,8 +8,10 @@
    	   <legend>{if $info['hid']}编辑{else}添加{/if}存量建筑点</legend>
 	   <input type="hidden" name="owner_id" value="{$info['owner_id']}" />
 	   <input type="hidden" name="hid" value="{$info['hid']}"/>
+	   <div class="hightlight">注:面积单位统一平方米 M<sup>2</sup></div>
 	   <table class="fulltable noext formtable">
 	   		<tbody>
+	   			
 		   		<tr>
 		   			<td><lable class="required">X坐标(自动填入):</label></td>
 		   			<td><input type="text" name="x" value="{$info['x']}"><div class="errtip" id="error_x"></div></td>
@@ -78,7 +80,7 @@
 		   			
 		   		</tr>
 		   		<tr>
-		   			<td><lable>{#illegal#}:</label></td>
+		   			<td><lable class="required">{#illegal#}:</label></td>
 		   			<td>
 		   				<select name="illegal">
 		   					<option value="">请选择</option>
@@ -93,6 +95,10 @@
 		   			<td><input type="text" name="wf_wjsj" class="date" value="{if $info['wf_wjsj']}{$info['wf_wjsj']|date_format:"%Y-%m-%d"}{/if}"><div class="errtip" id="error_wf_wjsj"></div></td>
 		   			<td><lable>{#wf_wjmj#}</label></td>
 		   			<td><input type="text" name="wf_wjmj" value="{$info['wf_wjmj']|escape}"><div class="errtip" id="error_wf_wjmj"></div></td>
+		   			<td><lable>{#wf_jzmj#}</label></td>
+		   			<td><input type="text" name="wf_jzmj" value="{$info['wf_jzmj']|escape}"><div class="errtip" id="error_wf_jzmj"></div></td>
+		   		</tr>
+		   		<tr>
 		   			<td><lable>{#cate#}</label></td>
 		   			<td>
 		   				<select name="cate">
@@ -104,9 +110,6 @@
 		   				</select>
 		   				<div class="errtip" id="error_cate"></div>
 		   			</td>
-		   			
-		   		</tr>
-		   		<tr>
 		   			<td><lable>{#deal_way#}</label></td>
 		   			<td>
 		   				<select name="deal_way">
@@ -119,7 +122,7 @@
 		   				<div class="errtip" id="error_deal_way"></div>
 		   			</td>
 		   			<td>添加照片</td>
-		   			<td colspan="5">
+		   			<td colspan="4">
 		   				<div>
                             <a class="upload-button" href="javascript:void(0);"><span id="UploaderPlaceholder_1"></span></a>
                             <span class="Uploader" data-url="{site_url('house/addimg')}"  data-allowsize="1Mb" data-allowfile="*.jpg" ></span>
