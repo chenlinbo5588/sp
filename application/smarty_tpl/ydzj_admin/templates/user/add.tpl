@@ -37,7 +37,7 @@
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input type="password" id="admin_password" name="admin_password" class="txt"></td>
-          <td class="vatop tips">请输入密码 {form_error('admin_password')}</td>
+          <td class="vatop tips">请输入密码 允许字母、数字、特殊符合 {form_error('admin_password')}</td>
         </tr>
         <tr>
           <td colspan="2" class="required"><label class="validation" for="admin_rpassword">确认密码:</label></td>

@@ -77,7 +77,7 @@
     <script>
         $(function(){
             bindDeleteEvent();
-            {if $read == 0 && $type == 'receive'}bindOpEvent("input.updateBtn");{/if}
+            {if $read == 0 && $type == 'receive'}bindOpEvent({ selector : "input.updateBtn" } );{/if}
         });
     </script>
     {include file="common/jquery_validation.tpl"}

@@ -120,11 +120,11 @@ class User extends Ydzj_Admin_Controller {
 		
 		
 		if($action == 'add'){
-			$this->form_validation->set_rules('admin_password','密码','required|min_length[6]|max_length[12]|alpha_dash');
+			$this->form_validation->set_rules('admin_password','密码','required|min_length[6]|max_length[12]|valid_password');
 			$this->form_validation->set_rules('admin_rpassword','确认密码','required|matches[admin_password]');
 		}else{
 			if($this->input->post('admin_password')){
-				$this->form_validation->set_rules('admin_password','密码','required|min_length[6]|max_length[12]|alpha_dash');
+				$this->form_validation->set_rules('admin_password','密码','required|min_length[6]|max_length[12]|valid_password');
 				$this->form_validation->set_rules('admin_rpassword','确认密码','required|matches[admin_password]');
 			}
 		}
@@ -148,29 +148,6 @@ class User extends Ydzj_Admin_Controller {
 		
 		return $info;
 	}
-	
-	private function _prepareRoleData(){
-		
-		$info = array(
-			'name' => $this->input->post('name'),
-			'permission' => $this->input->post('permission'),
-			'status' => $this->input->post('status'),
-		);
-		
-		
-		
-		if(is_array($this->input->post('permission'))){
-			$info['permission'] = array_flip($this->input->post('permission'));
-			
-		}else{
-			$info['permission'] = array();
-		}
-			
-		
-		return $info;
-	}
-	
-	
 	
 	
 	
@@ -197,7 +174,7 @@ class User extends Ydzj_Admin_Controller {
 					break;
 				}
 				
-				$info['password'] = $this->_getEncodePassword($info['admin_password'],$info['email']);
+				$info['password'] = $this->_getEncodePassword($info['password'],$info['email']);
 				$info = array_merge($info,$this->addWhoHasOperated('add'));
 				
 				if(($newid = $this->Adminuser_Model->_add($info)) < 0){
