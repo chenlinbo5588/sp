@@ -92,11 +92,9 @@
         
         map = new Map("mapDiv",{ showLabels : true ,logo: false });
         
-        {if 'production' == $smarty.const.ENVIRONMENT}
         var layerWx = new esri.layers.ArcGISTiledMapServiceLayer("{config_item('arcgis_server')}{$mapUrlConfig['基本要素']['底图']}");
-        {else}
-        var layerWx = new esri.layers.ArcGISDynamicMapServiceLayer("{config_item('arcgis_server')}{$mapUrlConfig['基本要素']['底图']}");
-        {/if}
+        //var layerWx = new esri.layers.ArcGISDynamicMapServiceLayer("{config_item('arcgis_server')}{$mapUrlConfig['基本要素']['底图']}");
+        
         var allFeatureMap = new esri.layers.ArcGISDynamicMapServiceLayer("{config_item('arcgis_server')}{$mapUrlConfig['基本要素']['存量建筑要素']}");
         
         panWorkLayer = new GraphicsLayer({ id : "panWork" });

@@ -77,8 +77,8 @@
         var resizeTimer;
         map = new Map("mapDiv",{ showLabels : true, logo: false });
         
-        //var layerWx = new esri.layers.ArcGISTiledMapServiceLayer("{config_item('arcgis_server')}{$mapUrlConfig['基本要素']['底图']}");
-        var layerWx = new esri.layers.ArcGISDynamicMapServiceLayer("{config_item('arcgis_server')}{$mapUrlConfig['基本要素']['底图']}");
+        var layerWx = new esri.layers.ArcGISTiledMapServiceLayer("{config_item('arcgis_server')}{$mapUrlConfig['基本要素']['底图']}");
+        //var layerWx = new esri.layers.ArcGISDynamicMapServiceLayer("{config_item('arcgis_server')}{$mapUrlConfig['基本要素']['底图']}");
         
         var villageLayer = new FeatureLayer("{config_item('arcgis_server')}{$mapUrlConfig['基本要素']['村界']}",{
           showLabels:true,
