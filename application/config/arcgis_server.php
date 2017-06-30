@@ -12,6 +12,8 @@ $config['feature_url'] = array(
 	'wzd' => 'zqwj/cljz/FeatureServer/1/'
 );
 
+//ArcGISTiledMapServiceLayer
+$config['basemapType'] = 'ArcGISDynamicMapServiceLayer';
 
 $config['CGCS2000'] = array(
 	'工具' => array(

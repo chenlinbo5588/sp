@@ -115,7 +115,7 @@
         
         map = new Map("mapDiv",{ zoom: 1, showLabels : true,scalebarUnit: "dual" });
         
-        var layerZq = new esri.layers.ArcGISTiledMapServiceLayer("{config_item('arcgis_server')}{$mapUrlConfig['基本要素']['底图']}");
+        var layerZq = new esri.layers.{config_item('basemapType')}("{config_item('arcgis_server')}{$mapUrlConfig['基本要素']['底图']}");
         //var layerZq = new esri.layers.ArcGISDynamicMapServiceLayer("{config_item('arcgis_server')}{$mapUrlConfig['基本要素']['底图']}");
         
         //var allFeatureMap = new esri.layers.ArcGISDynamicMapServiceLayer("http://{config_item('arcgis_server_ip')}/arcgis/rest/services/zqwj/cljz/MapServer");
