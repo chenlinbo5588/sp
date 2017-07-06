@@ -14,6 +14,7 @@ class Index extends Ydzj_Controller {
 	 */
 	public function index()
 	{
+		/*
 		$this->load->library(array('Goods_service','Cms_service'));
 		$goodsList = $this->goods_service->getCommandGoodsList();
 		$this->assign('goodsList',$goodsList);
@@ -41,6 +42,7 @@ class Index extends Ydzj_Controller {
 		$this->assign('currentModule','index');
 		
 		$this->display();
+		*/
 		
 	}
 	
