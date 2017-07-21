@@ -76,7 +76,7 @@ class Index extends Ydzj_Admin_Controller {
 	{
 		
 		//print_r($this->session->all_userdata());
-		//$this->display('index/index');
-		$this->display('dashboard/welcome');
+		$this->display('index/index');
+		//$this->display('dashboard/welcome');
 	}
 }

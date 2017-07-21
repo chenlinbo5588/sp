@@ -22,13 +22,21 @@ class Member extends Ydzj_Admin_Controller {
 			'近一个月内' => '-30 days',
 		);
 		
-		$this->load->library('Building_service');
+		$this->_subNavs = array(
+			'modulName' => '会员管理',
+			'subNavs' => array(
+				'管理' => 'member/index',
+				'添加' => 'member/add',
+			),
+		);
+		
 		
 		$this->assign('avatarImageSize',$this->_avatarImageSize);
+		
 	}
 	
 	public function index(){
-		$this->load->library(array('Member_service','Common_District_service'));
+		$this->load->library(array('Member_service','Common_district_service'));
 		
 		$currentPage = $this->input->get_post('page') ? $this->input->get_post('page') : 1;
 		$condition = array(
@@ -210,7 +218,7 @@ class Member extends Ydzj_Admin_Controller {
 	 */
 	private function _addRules(){
 		
-		$this->form_validation->set_rules('village_id','所在村','required|in_db_list['.$this->Village_Model->getTableRealName().'.id]');
+		$this->form_validation->set_rules('dept_id','所在办事机构','required|in_db_list['.$this->Dept_Model->getTableRealName().'.id]');
 		$this->form_validation->set_rules('mobile','手机号码','required|valid_mobile');
 		
 		$param['email'] = $this->input->post('email');
@@ -244,7 +252,8 @@ class Member extends Ydzj_Admin_Controller {
 	public function add(){
 		$info = array();
 		
-		$villageList = $this->building_service->getTownVillageList(config_item('site_town'));
+		$this->load->model('Dept_Model');
+		$deptList = $this->Dept_Model->getList(array('status' => 1),'id');
 		
 		if($this->isPostRequest()){
 			$this->form_validation->set_rules('username','登陆账号',array(
@@ -296,14 +305,13 @@ class Member extends Ydzj_Admin_Controller {
 					break;
 				}
 				
-				$villageId = $this->input->post('village_id');
+				$deptId = $this->input->post('dept_id');
 				
 				$addParam = array(
-					'username' => $this->input->post('username'),
-					'nickname' => $this->input->post('username'),
+					'username' => trim($this->input->post('username')),
+					'nickname' => trim($this->input->post('username')),
 					'password' => $this->input->post('passwd'),
-					'village_id' => $villageId,
-					'village' => $villageList[$villageId]['xzqmc'],
+					'dept_id' => $deptId,
 					'mobile' => $this->input->post('mobile'),
 					'qq' => $this->input->post('qq'),
 					'weixin' => $this->input->post('weixin'),
@@ -321,11 +329,15 @@ class Member extends Ydzj_Admin_Controller {
 				$this->load->library('Register_service');
 				$result = $this->register_service->createMember($addParam);
 				
-				if($result['code'] == 'success'){
-					$this->assign('feedback',getSuccessTip('添加成功'));
-				}else{
+				if($result['code'] != 'success'){
 					$this->assign('feedback',getErrorTip('添加失败'));
+					$info = $_POST;
+					
+					break;
 				}
+				
+				$this->assign('feedback',getSuccessTip('添加成功'));
+				//$info = $this->Member_Model->getFirstByKey($result['data']['uid'],'uid');
 			}
 		}else{
 			
@@ -342,7 +354,7 @@ class Member extends Ydzj_Admin_Controller {
 		
 		
 		
-		$this->assign('villageList',$villageList);
+		$this->assign('deptList',$deptList);
 		$this->assign('info',$info);
 		$this->display();
 		
@@ -360,7 +372,10 @@ class Member extends Ydzj_Admin_Controller {
 		$info = $this->member_service->getUserInfoById($member_id);
 		//print_r($info);
 		
-		$villageList = $this->building_service->getTownVillageList(config_item('site_town'));
+		$this->load->model('Dept_Model');
+		$deptList = $this->Dept_Model->getList(array('status' => 1),'id');
+		
+		$this->_subNavs['subNavs']['编辑'] = 'member/edit?id='.$member_id;
 		
 		
 		if(!empty($member_id) && $this->isPostRequest()){
@@ -383,11 +398,10 @@ class Member extends Ydzj_Admin_Controller {
 				}
 				
 				
-				$villageId = $this->input->post('village_id');
+				$deptId = $this->input->post('dept_id');
 				
 				$updateData = array(
-					'village_id' => $villageId,
-					'village' => $villageList[$villageId]['xzqmc'],
+					'dept_id' => $deptId,
 					'qq' => $this->input->post('qq'),
 					'weixin' => $this->input->post('weixin'),
 					'email' => $this->input->post('email'),
@@ -428,7 +442,7 @@ class Member extends Ydzj_Admin_Controller {
 		}
 		
 		$this->assign('info',$info);
-		$this->assign('villageList',$villageList);
+		$this->assign('deptList',$deptList);
 		
 		$this->display();
 	}

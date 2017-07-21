@@ -3,7 +3,7 @@
 
 <div id="imgCut" title="头像裁切">
 	<div id="srcImg"></div>
-	<form id="cutForm" action="{admin_site_url('member/set_avatar')}" method="post">
+	{form_open(admin_site_url('member/set_avatar'),'id="cutForm"')}
 	  <input type="hidden" name="avatar" value=""/>
       <input type="hidden" id="x" name="x"/>
       <input type="hidden" id="y" name="y"/>

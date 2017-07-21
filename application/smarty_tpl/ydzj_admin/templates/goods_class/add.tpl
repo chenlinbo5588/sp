@@ -11,7 +11,7 @@
           <td colspan="2" class="required"><label class="validation" for="gc_name">分类名称:</label></td>
         </tr>
         <tr class="noborder">
-          <td class="vatop rowform"><input type="text" value="{$info['gc_name']|escape}" name="gc_name" id="gc_name" maxlength="20" class="txt"></td>
+          <td class="vatop rowform"><input type="text" value="{$info['gc_name']|escape}" name="gc_name" id="gc_name" class="txt"></td>
           <td class="vatop tips">{form_error('gc_name')}</td>
         </tr>
         <tr>

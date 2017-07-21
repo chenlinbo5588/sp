@@ -13,7 +13,7 @@
 	    <li class="tab-item {if $read == 1}current{/if}"><a class="link" href="{site_url($uri_string)}?read=1">已读</a></li>
 	</ul>
 	{/if}
-    <form action="{site_url($uri_string)}" method="get" id="formSearch">
+	{form_open(site_url($uri_string),'method="get" id="formSearch"')}
         <input type="hidden" name="page" value=""/>
         <input type="hidden" name="read" value="{$read}"/>
         <table class="fulltable bordered">
@@ -63,7 +63,7 @@
     </form>
     <div id="privatePmDlg" title="发送私信" style="display:none;">
         <div class="loading_bg" style="display:none;">发送中...</div>
-        <form id="privatePmForm" action="{site_url('my_pm/sendpm')}" method="post">
+        {form_open(site_url('my_pm/sendpm'),'id="privatePmForm"')}
             <table class="fulltable noborder">
                 <tr><td><input type="text" class="at_txt" name="to_username" value="" placeholder="请输入对方登陆账号"/></td></tr>
                 <tr><td><input type="text" class="at_txt" name="title" value="" placeholder="请输入消息标题，最大30个字"/></td></tr>

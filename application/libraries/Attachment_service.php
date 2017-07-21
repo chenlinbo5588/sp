@@ -7,18 +7,41 @@ class Attachment_service extends Base_service {
 	
 	private $_attachModel ;
 	private $_imageSizeConfig ;
-	
+	private $_attachtHashObj = null;
 
 	public function __construct(){
 		parent::__construct();
 		
-		self::$CI->load->model('Attachment_Model');
+		self::$CI->load->model(array('Attachment_Model'));
 		self::$CI->load->library('image_lib');
 		
 		$this->_attachModel = self::$CI->Attachment_Model;
 		$this->_imageSizeConfig = config_item('default_img_size');
+		
 	}
 	
+	/**
+	 * 获得 file hash object
+	 */
+	public function getAttachmentHashObj(){
+		if(!$this->_attachtHashObj){
+			$this->_attachtHashObj = new Flexihash();
+			$this->_attachtHashObj->addTargets(self::$CI->load->get_config('split_attachment'));
+		}
+		return $this->_attachtHashObj;
+	}
+	
+	/**
+	 * 设置操作用户
+	 */
+	public function setUserInfo($userProfile){
+		$this->_userInfo = $userProfile;
+	}
+	
+	
+	/**
+	 * 设置图片大小
+	 */
 	public function setImageSizeConfig($config){
 		$this->_imageSizeConfig = $config;
 	}
@@ -29,26 +52,76 @@ class Attachment_service extends Base_service {
 	public function getUploadConfig(){
 		$config['file_path'] = 'static/attach/'.date("Y/m/d/");
         $config['upload_path'] = ROOTPATH . '/'.$config['file_path'];
+        
         make_dir($config['upload_path']);
         $config['file_ext_tolower'] = true;
 		$config['encrypt_name'] = true;
-		$config['max_size'] = 1024;
+		$config['max_size'] = config_item('image_max_filesize');
 		
 		return $config;
 	
 	}
+	
 	
 	/**
-	 * 获得图片上传配置
+	 * 获得文件上传的路径
 	 */
-	public function getImageUploadConfig(){
-		$config['allowed_types'] = config_item('allowed_img_types');
+	public function getFileConfig(){
+		
+		$config['file_path'] = date("Y/m/d/");
+        $config['upload_path'] = dirname(ROOTPATH) . '/filestore/'.$config['file_path'];
+        
+        
+        make_dir($config['upload_path']);
+        $config['file_ext_tolower'] = true;
+		$config['encrypt_name'] = true;
+		$config['max_size'] = config_item('image_max_filesize');
 		
 		return $config;
 	}
 	
-	public function setUserInfo($userProfile){
-		$this->_userInfo = $userProfile;
+	
+	/**
+	 * 获得附件信息
+	 */
+	public function getFileInfoByIds($pFileIds,$tableId = ''){
+		$this->_attachModel->setTableId($tableId);
+		
+		return $this->_attachModel->getList(array(
+			'where_in' => array(
+				array('key' => 'id','value' => $pFileIds)
+			)
+		));
+		
+	}
+	
+	
+	/**
+	 * 
+	 */
+	public function setAttachmentTableId($tableId = ''){
+		$this->_attachModel->setTableId($tableId);
+	}
+	
+	
+	/**
+	 * 添加文件
+	 */
+	public function addFile($filename, $config = array(),$from = 0,$mod = ''){
+		$config = $this->getFileConfig();
+		
+		if(FROM_BACKGROUND == $from){
+			$config['allowed_types'] = str_replace(',','|',config_item('background_image_allow_ext'));
+		}else{
+			$config['allowed_types'] = str_replace(',','|',config_item('forground_image_allow_ext'));
+		}
+		
+		
+		if(!empty($moreConfig)){
+			$config = array_merge($config,$moreConfig);
+		}
+		
+		return $this->addAttachment($filename,$config,$from,$mod);
 	}
 	
 	
@@ -196,21 +269,28 @@ class Attachment_service extends Base_service {
 			
 			if($this->_userInfo){
 				$fileData['uid'] = $this->_userInfo['uid'];
+				$fileData['username'] = $this->_userInfo['username'];
 				
+				/*
 				if($from == FROM_BACKGROUND){
 					$fileData['username'] = $this->_userInfo['username'];
 				}else{
 					$fileData['username'] = $this->_userInfo['nickname'];
 				}
+				*/
 			}
 			
 			
 			$fileData['image_width'] = $fileData['image_width'] ? $fileData['image_width'] : 0;
 			$fileData['image_height'] = $fileData['image_height'] ? $fileData['image_height'] : 0;
 			$fileData['mod'] = $mod;
-			
 			$fileData['upload_from'] = $from;
-			$file_id = self::$CI->Attachment_Model->_add($fileData);
+			
+			if($config['expire_time']){
+				$fileData['expire_time'] = $config['expire_time'];
+			}
+			
+			$file_id = $this->_attachModel->_add($fileData);
 			$fileData['id'] = $file_id;
 			
 			//print_r($fileData);
@@ -224,6 +304,8 @@ class Attachment_service extends Base_service {
 	
 	
 	
+	
+	
 	/**
 	 * 添加图片附件信息
 	 * 
@@ -231,7 +313,12 @@ class Attachment_service extends Base_service {
 	public function addImageAttachment($filename, $moreConfig = array(),$from = 0,$mod = ''){
 		//处理照片
 		$config = $this->getUploadConfig();
-		$config['allowed_types'] = config_item('allowed_img_types');
+		
+		if(FROM_BACKGROUND == $from){
+			$config['allowed_types'] = str_replace(',','|',config_item('background_image_allow_ext'));
+		}else{
+			$config['allowed_types'] = str_replace(',','|',config_item('forground_image_allow_ext'));
+		}
 		
 		if(!empty($moreConfig)){
 			$config = array_merge($config,$moreConfig);

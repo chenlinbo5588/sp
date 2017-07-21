@@ -22,6 +22,15 @@ class Message extends Ydzj_Admin_Controller {
 			'email_pass',
 			'email_pass_len'
 		);
+		
+		$this->_subNavs = array(
+			'modulName' => '消息通知',
+			'subNavs' => array(
+				'邮件设置' => 'message/email',
+				'邮件模版' => 'message/email_tpl',
+			),
+		);
+		
 	}
 	
 	
@@ -193,12 +202,10 @@ class Message extends Ydzj_Admin_Controller {
 	
 	
 	public function email_tpl_edit(){
-		
 		$code = $this->input->get_post('code');
 		
-		$this->_subNavs['message/email_tpl_edit?code='.$code] = '编辑消息模板';
-		
 		$feedback = '';
+		$this->_subNavs['subNavs']['编辑邮件模版'] = 'message/email_tpl_edit?code='.$code;
 		
 		if($this->isPostRequest()){
 			

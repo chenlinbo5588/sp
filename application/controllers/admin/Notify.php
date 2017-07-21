@@ -19,6 +19,16 @@ class Notify extends Ydzj_Admin_Controller {
 		$this->assign('msgMode',$this->_msgModel);
 		$this->assign('sendWays',$this->_sendWays);
 		$this->load->library('Message_service');
+		
+		
+		$this->_subNavs = array(
+			'modulName' => '会员通知',
+			'subNavs' => array(
+				'管理' => 'notify/index',
+				'添加' => 'notify/add',
+			),
+		);
+		
 	}
 	
 	
@@ -154,10 +164,15 @@ class Notify extends Ydzj_Admin_Controller {
 		$info['users'] = str_replace('|',"\r\n",$info['users']);
 		$info['send_ways'] = explode(',',$info['send_ways']);
 		
-		$this->assign('info',$info);
-		$this->assign('group',$groupList);
+		$this->_subNavs['subNavs']['通知详情'] = 'notify/detail?id='.$id;
 		
-		$this->assign('detail',true);
+		$this->assign(array(
+			'info' => $info,
+			'group' => $groupList,
+			'detail' => true
+		));
+		
+		
 		$this->display('notify/add');
 	}
 }

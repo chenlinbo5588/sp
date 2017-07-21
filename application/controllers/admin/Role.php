@@ -8,6 +8,15 @@ class Role extends Ydzj_Admin_Controller {
 		parent::__construct();
 		
 		$this->load->model(array('Adminuser_Model','Fn_Model','Role_Model'));
+		
+		$this->_subNavs = array(
+			'modulName' => '角色',
+			'subNavs' => array(
+				'管理' => 'role/index',
+				'添加' => 'role/add',
+			),
+		);
+		
 	}
 	
 	
@@ -205,6 +214,8 @@ class Role extends Ydzj_Admin_Controller {
 		$this->assign('action','edit');
 		
 		$id = $this->input->get_post('id');
+		
+		$this->_subNavs['subNavs']['编辑角色'] = 'role/edit?id='.$id;
 		
 		if($this->isPostRequest()){
 			$this->assign('ispost',true);

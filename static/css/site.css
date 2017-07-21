@@ -371,8 +371,9 @@ input[type=text]:focus , input[type=password]:focus ,textarea:focus {
 	color:red;
 }
 
-label.validation{font-weight:700; background: url(../img/sky/bg_position.gif) no-repeat scroll -620px -660px; padding-left:16px;}
-
+label.validation {font-weight:700; background: url(../img/sky/bg_position.gif) no-repeat scroll -620px -660px; padding-left:16px;}
+.formtable label.error {font-weight:700; background: url(../img/sky/bg_position.gif) no-repeat scroll -620px -730px; padding-left:25px;}
+ 
 input[type=text].error,input[type=password].error {
     border:1px solid red;
     background:#fff url(../img/access_disallow.gif) no-repeat right center;
@@ -771,7 +772,7 @@ table.noext {
 }
 
 
-.fulltable thead th , .fulltable tbody td {
+.fulltable thead th , .fulltable tbody td, .fulltable tfoot td {
 	border:1px dashed #CBCBCB;
 	border-width:1px 0 1px 0;
 	padding: 5px;
@@ -1130,9 +1131,15 @@ table.noext {
 	border-width: 0 0 1px 0;
 }
 
+
 .mynav .segment h3 {
 	font-weight:bold;
 }
+
+.mynav .segment a {
+	color:#fff;
+}
+
 
 .mynav li a {
     display: block;
@@ -1293,6 +1300,12 @@ table.noext {
         float:none;
         display:block;
     }
+    
+    .mynav {
+    	width:auto;
+    	position:static;
+    }
+    
 	
     #my .panel_content {
         margin-left:0;

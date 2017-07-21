@@ -1,6 +1,6 @@
 {include file="common/main_header.tpl"}
 {config_load file="member.conf"}
-  <form class="formSearch" method="get" name="formSearch" id="formSearch" action="{admin_site_url('member')}">
+  {form_open(admin_site_url('member/index'),'class="formSearch" name="formSearch" id="formSearch"')}
     <input type="hidden" name="page" value=""/>
     <table class="tb-type1 noborder search">
       <tbody>

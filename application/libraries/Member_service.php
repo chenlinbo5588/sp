@@ -70,7 +70,7 @@ class Member_service extends Base_service {
 				break;
 			}
 			
-			$result = $this->successRetun(array('basic' => $userInfo));
+			$result = $this->successReturn(array('basic' => $userInfo));
 		}
 		
 		return $result;

@@ -7,7 +7,7 @@
             <a href="javascript:void(0);" class="kf-biz"><span class="icon"></span>商务咨询</a>
         </div>
         <div class="visitor">
-            <form>
+            {form_open()}
                 <div class="form-group">
                     <input class="form-control name" placeholder="姓名" type="text">
                 </div>

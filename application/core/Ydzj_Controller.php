@@ -17,8 +17,6 @@ class Ydzj_Controller extends MY_Controller {
 	public $_adminLastVisitKey;
 	
 	
-	
-	
 	public function __construct(){
 		parent::__construct();
 		
@@ -36,71 +34,7 @@ class Ydzj_Controller extends MY_Controller {
 		$this->_userKeepFresh();
 		$this->_initLogin();
 	}
-	
-	
-	/**
-	 * 导航相关
-	 */
-	protected function _navs(){
-		$navs = $this->uri->segments;
-		$moduleIndex = 1;
-		
-		
-		if($navs[1] == 'admin'){
-			$navs = array_slice($navs,1,3);
-			$moduleIndex = 0;
-		}
-		
-		//功能 url 访问路径
-        $funcUrl = implode('/',$navs);
-		
-        $currentUri = $_SERVER['REQUEST_URI'];
-        if(preg_match("/^\/index.php\/admin\//",$currentUri,$match)){
-        	$currentUri = substr($currentUri,17);
-        }
-		
-		$modulName = $navs[$moduleIndex];
-		$moduleUrl = $modulName.'/';
-		
-		$configNav = config_item('navs');
-		$topSelect = $configNav['main'][$navs[$moduleIndex]];
-		
-		// 由于主菜单 下 有其他子菜单，使用其他菜单功能是，蒋顶部导航选择
-		if(empty($topSelect)){
-			$topSelect = $configNav['main'][$configNav['side'][$navs[$moduleIndex]]];
-		}
-		
-		$this->_subNavs = $configNav['sub'][$modulName];
-		$this->_breadCrumbs[] = $topSelect;
-		
-		
-		$sideMenu = array();
-		if(is_string($configNav['side'][$modulName])){
-			$sideMenu = $configNav['side'][$configNav['side'][$modulName]];
-		}else{
-			$sideMenu = $configNav['side'][$modulName];
-		}
-		
-		
-		if($configNav['sub_parent'][$funcUrl]){
-			$this->_breadCrumbs[] = $configNav['sub_parent'][$funcUrl];
-		}
-		
-		if($configNav['sub'][$modulName][$funcUrl]){
-			$this->_breadCrumbs[] = array('url' => $funcUrl , 'title'=> $configNav['sub'][$modulName][$funcUrl]);
-		}
-		
-		$this->assign('uri_string',$this->uri->uri_string);
-		$this->assign('currentTopNav',$topSelect);
-		//$this->assign('currentURL',$currentUri);
-        
-        $this->assign('modulName',$modulName);
-        $this->assign('moduleUrl',$moduleUrl);
-        $this->assign('funcUrl',$funcUrl);
-        
-        $this->assign('navs',$configNav);
-	}
-	
+
 	
 	protected function _initLibrary(){
 		parent::_initLibrary();
@@ -169,24 +103,6 @@ class Ydzj_Controller extends MY_Controller {
 	public function getAppTemplateDir(){
 		return 'ydzj';
 	}
-	
-	protected function _getCity(){
-		
-		$city_id = $this->input->get_cookie('city');
-		if($city_id == NULL){
-			if($this->_profile['basic']['district_bind'] != 0){
-				$city_id = $this->_profile['basic']['d2'];
-			}else{
-				//$city_id = 176; //默认宁波市;
-				$city_id = 0; //默认全国;
-			}
-		}
-		
-		$this->input->set_cookie('city',$city_id,2592000);
-		
-		return $city_id;
-	}
-	
 	
 	protected function refreshProfile(){
 		$this->session->set_userdata(array(

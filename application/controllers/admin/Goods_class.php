@@ -199,7 +199,6 @@ class Goods_Class extends Ydzj_Admin_Controller {
 		$gc_id = $this->input->get_post('gc_id');
 		$info = $this->Goods_Class_Model->getFirstByKey($gc_id,'gc_id');
 		
-		$this->_subNavs[] = array('url' => 'goods_class/edit?gc_id='.$gc_id, 'title' => '编辑');
 		
 		if($this->isPostRequest()){
 			

@@ -13,10 +13,11 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 		
 		//$this->form_validation->set_error_delimiters('<label class="error">','</label>');
 		$this->_initAdminLogin();
-		$this->_checkPermission();
+		//$this->_checkPermission();
+		
 		$this->load->config('admin_site');
 		
-		$this->_navs();
+		$this->_cssList = array_merge($this->_cssList, config_item('admin_css'));
 	}
 	
 	
@@ -125,6 +126,8 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 		return 'ydzj_admin';
 		//return str_replace('_controller','',strtolower(get_class()));
 	}
+	
+	
 	
 }
 

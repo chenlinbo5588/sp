@@ -14,7 +14,6 @@ class MY_Controller extends CI_Controller {
 	
 	public $_reqtime;
 	
-	protected $_subNavs;
 	protected $_breadCrumbs;
 	
 	protected $_siteSetting = array();
@@ -26,12 +25,16 @@ class MY_Controller extends CI_Controller {
 		'SEO_keywords' => ''
 	);
 	
+	//后台  三级子导航
+	public $_subNavs = array();
 	public $_smarty = null;
+	public $_cssList = array();
+	public $_jsList = array();
+	
 	
 	public function __construct(){
 		parent::__construct();
 		$this->_reqtime = $this->input->server('REQUEST_TIME');
-		$this->_subNavs = array();
 		$this->_breadCrumbs = array();
 		$this->_verifyName = 'verify';
 		
@@ -138,6 +141,9 @@ class MY_Controller extends CI_Controller {
     	$this->_siteSetting = $settingList;
     	$this->assign('siteSetting',$this->_siteSetting);
     	$this->config->set_item('site_name',$this->_siteSetting['site_name']);
+    	$this->config->set_item('image_max_filesize',$this->_siteSetting['image_max_filesize']);
+    	$this->config->set_item('forground_image_allow_ext',$this->_siteSetting['forground_image_allow_ext']);
+    	$this->config->set_item('background_image_allow_ext',$this->_siteSetting['background_image_allow_ext']);
     }
     
     
@@ -190,7 +196,7 @@ class MY_Controller extends CI_Controller {
     	
     	$this->load->database();
     	
-		$this->load->helper(array('form','directory','file', 'url','string'));
+		$this->load->helper(array('form','directory','file', 'url','string','number'));
 		$this->load->driver('cache');
 		
 		$this->load->model(array('Setting_Model','Member_Model','Seo_Model'));
@@ -244,16 +250,25 @@ class MY_Controller extends CI_Controller {
     	}
     	
     	$realPath = $tplDir.$viewname.'.tpl';
+    	
     	//echo $realPath;
-    	$this->assign(array('subNavs' => $this->_subNavs,'breadCrumbs' => $this->_breadCrumbs));
+    	$this->assign(array(
+    		'funcUrl' => preg_replace('/^\/index\.php\/admin\/(.*)/','${1}',$_SERVER['REQUEST_URI']),//后台使用
+			'breadCrumbs' => $this->_breadCrumbs,
+			'cssList' => $this->_cssList,
+			'uri_string' => $this->uri->uri_string,
+			'PHPSID' => $this->session->session_id
+ 		));
+ 		
+ 		$this->assign($this->_subNavs);
     	
 		if(file_exists($realPath)){
     		$this->output->set_output($this->_smarty->fetch($realPath));
     	}else{
     		$this->output->set_output($this->_smarty->fetch($tplDir.$unchangeTplName.'.tpl'));
     	}
-    	
     }
+    
     
     public function seoTitle($title = ''){
     	if($title){

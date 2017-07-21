@@ -191,7 +191,7 @@ $(function(){
 	        <dt>设置</dt>
 	        <dd><a href="javascript:void(0)" onclick="openItem('base,setting,setting')">站点设置</a></dd>
 	        <dd><a href="javascript:void(0)" onclick="openItem('param,upload,setting')">上传设置</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('seoset,setting,setting')">SEO设置</a></dd>
+	        <dd><a href="javascript:void(0)" onclick="openItem('index,seo,setting')">SEO设置</a></dd>
 	        <dd><a href="javascript:void(0)" onclick="openItem('email,message,setting')">邮件通知</a></dd>
 	        <dd><a href="javascript:void(0)" onclick="openItem('payment,setting,setting')">支付方式</a></dd>
 	        <dd><a href="javascript:void(0)" onclick="openItem('cache,setting,setting')">清理缓存</a></dd>
@@ -207,6 +207,7 @@ $(function(){
             <dd><a href="javascript:void(0)" onclick="openItem('album,member,member')">会员相册</a></dd>
             <dd><a href="javascript:void(0)" onclick="openItem('tag,member,member')">会员标签</a></dd>
         </dl>
+        {*
         <dl>    
             <dt>队伍</dt>
             <dd><a href="javascript:void(0)" onclick="openItem('index,team,team')">队伍管理</a></dd>
@@ -283,6 +284,7 @@ $(function(){
 	        <dd><a href="javascript:void(0)" onclick="openItem('index,tag,cms')">标签管理</a></dd>
 	        <dd><a href="javascript:void(0)" onclick="openItem('index,comment,cms')">评论管理</a></dd>
 	    </dl>
+	    *}
 	    <dl>    
 	        <dt>权限</dt>
 	        <dd><a href="javascript:void(0)" onclick="openItem('user,authority,authority')">管理员管理</a></dd>
@@ -312,6 +314,8 @@ $(function(){
 	                <li><a class="link actived" id="nav_dashboard" href="javascript:;" onclick="openItem('dashboard');"><span>控制台</span></a></li>
 					<li><a class="link" id="nav_setting" href="javascript:;" onclick="openItem('setting');"><span>设置</span></a></li>
 					<li><a class="link" id="nav_member" href="javascript:;" onclick="openItem('member');"><span>会员</span></a></li>
+					<li><a class="link" id="nav_dept" href="javascript:;" onclick="openItem('dept');"><span>办事机构</span></a></li>
+					{*
 					<li><a class="link" id="nav_team" href="javascript:;" onclick="openItem('team');"><span>队伍</span></a></li>
 					<li><a class="link" id="nav_stadium" href="javascript:;" onclick="openItem('stadium');"><span>场馆</span></a></li>
 					<li><a class="link" id="nav_game" href="javascript:;" onclick="openItem('game');"><span>赛事</span></a></li>
@@ -321,7 +325,7 @@ $(function(){
 					<li><a class="link" id="nav_operation" href="javascript:;" onclick="openItem('operation');"><span>运营</span></a></li>
 					<li><a class="link" id="nav_stat" href="javascript:;" onclick="openItem('stat');"><span>统计</span></a></li>
 					<li><a class="link" id="nav_weixin" href="javascript:;" onclick="openItem('weixin');"><span>微信营销</span></a></li>
-					<li><a class="link" id="nav_cms" href="javascript:;" onclick="openItem('cms');"><span>CMS</span></a></li>
+					<li><a class="link" id="nav_cms" href="javascript:;" onclick="openItem('cms');"><span>CMS</span></a></li>*}
 					<li><a class="link" id="nav_authority" href="javascript:;" onclick="openItem('authority');"><span>权限</span></a></li>
 	            </ul>
 	          </nav>
@@ -364,15 +368,16 @@ $(function(){
                   <ol>
                     <li><a href="javascript:void(0);" id="base_setting" onclick="openItem('base,setting,setting');">站点设置</a></li>
                     <li><a href="javascript:void(0);" id="param_upload" onclick="openItem('param,upload,setting');">上传设置</a></li>
-                    <li><a href="javascript:void(0);" id="seoset_setting" onclick="openItem('seoset,setting,setting');">SEO设置</a></li>
+                    <li><a href="javascript:void(0);" id="index_seo" onclick="openItem('index,seo,setting');">SEO设置</a></li>
                     <li><a href="javascript:void(0);" id="email_message" onclick="openItem('email,message,setting');">消息通知</a></li>
+                    {*
                     <li><a href="javascript:void(0);" id="system_payment" onclick="openItem('system,payment,setting');">支付方式</a></li>
                     <li><a href="javascript:void(0);" id="express_setting" onclick="openItem('express,setting,setting');">快递公司</a></li>
-                    <li><a href="javascript:void(0);" id="area_setting" onclick="openItem('area,setting,setting');">配送地区</a></li>
-                    <li><a href="javascript:void(0);" id="cache_setting" onclick="openItem('cache,setting,setting');">清理缓存</a></li>
+                    <li><a href="javascript:void(0);" id="area_setting" onclick="openItem('area,setting,setting');">配送地区</a></li>*}
+                    <li><a href="javascript:void(0);" id="cache_setting" onclick="openItem('cache,setting,setting');">清理缓存</a></li>{*
                     <li><a href="javascript:void(0);" id="perform_setting" onclick="openItem('perform,setting,setting');">性能优化</a></li>
                     <li><a href="javascript:void(0);" id="search_setting" onclick="openItem('search,setting,setting');">搜索设置</a></li>
-                    <li><a href="javascript:void(0);" id="log_setting" onclick="openItem('log,setting,setting');">操作日志</a></li>
+                    <li><a href="javascript:void(0);" id="log_setting" onclick="openItem('log,setting,setting');">操作日志</a></li>*}
                   </ol>
                 </dd>
               </dl>
@@ -384,15 +389,28 @@ $(function(){
                 <dd>
                   <ol>
                     <li><a href="javascript:void(0);" id="index_member" onclick="openItem('index,member,member');">会员管理</a></li>
-                    <li><a href="javascript:void(0);" id="member_notify" onclick="openItem('member,notify,member');">会员通知</a></li>
+                    <li><a href="javascript:void(0);" id="index_notify" onclick="openItem('index,notify,member');">会员通知</a></li>
+                    {*
                     <li><a href="javascript:void(0);" id="credits_member" onclick="openItem('credits,member,member');">积分管理</a></li>
                     <li><a href="javascript:void(0);" id="album_member" onclick="openItem('album,member,member');">会员相册</a></li>
-                    <li><a href="javascript:void(0);" id="tag_member" onclick="openItem('tag,member,member');">会员标签</a></li>
+                    <li><a href="javascript:void(0);" id="tag_member" onclick="openItem('tag,member,member');">会员标签</a></li>*}
                   </ol>
                 </dd>
               </dl>
             </li>
           </ul>
+          <ul id="sort_dept">
+            <li>
+              <dl>
+                <dd>
+                  <ol>
+                    <li><a href="javascript:void(0);" id="index_dept" onclick="openItem('index,dept,dept');">办事机构管理</a></li>
+                  </ol>
+                </dd>
+              </dl>
+            </li>
+          </ul>
+          {*
           <ul id="sort_team">
             <li>
               <dl>
@@ -432,9 +450,9 @@ $(function(){
                   	<li><a href="javascript:void(0);" id="index_goods" onclick="openItem('index,goods,goods');">商品管理</a></li>
                     <li><a href="javascript:void(0);" id="category_goods_class" onclick="openItem('category,goods_class,goods');">分类管理</a></li>
                     <li><a href="javascript:void(0);" id="index_brand" onclick="openItem('index,brand,goods');">品牌管理</a></li>
-                    {*<li><a href="javascript:void(0);" id="type_goods" onclick="openItem('type,goods,goods');">类型管理</a></li>
+                    <li><a href="javascript:void(0);" id="type_goods" onclick="openItem('type,goods,goods');">类型管理</a></li>
                     <li><a href="javascript:void(0);" id="spec_goods" onclick="openItem('spec,goods,goods');">规格管理</a></li>
-                    <li><a href="javascript:void(0);" id="album_goods" onclick="openItem('album,goods,goods');">图片空间</a></li>*}
+                    <li><a href="javascript:void(0);" id="album_goods" onclick="openItem('album,goods,goods');">图片空间</a></li>
                   </ol>
                 </dd>
               </dl>
@@ -457,6 +475,7 @@ $(function(){
               </dl>
             </li>
           </ul>
+          *}
           <ul id="sort_website">
             <li>
               <dl>
@@ -543,9 +562,9 @@ $(function(){
               <dl>
                 <dd>
                   <ol>
-                    <li><a href="javascript:void(0);" id="user_authority" onclick="openItem('user,authority,authority');">管理员管理</a></li>
-                    <li><a href="javascript:void(0);" id="role_authority" onclick="openItem('role,authority,authority');">角色管理</a></li>
-                    <li><a href="javascript:void(0);" id="menu_authority" onclick="openItem('menu,authority,authority');">菜单管理</a></li>
+                    <li><a href="javascript:void(0);" id="index_user" onclick="openItem('index,user,authority');">管理员</a></li>
+                    <li><a href="javascript:void(0);" id="index_role" onclick="openItem('index,role,authority');">角色</a></li>
+                    <li><a href="javascript:void(0);" id="index_menu" onclick="openItem('index,menu,authority');">菜单</a></li>
                   </ol>
                 </dd>
               </dl>

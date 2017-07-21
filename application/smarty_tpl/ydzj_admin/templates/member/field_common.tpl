@@ -17,10 +17,10 @@
         </tr>
         <tr class="noborder">
           <td class="vatop rowform">
-          	<select name="village_id">
+          	<select name="dept_id">
           		<option value="">请选择</option>
-          		{foreach from=$villageList item=item}
-          		<option value="{$item['id']}" {if $info['village_id'] == $item['id']}selected{/if}>{$item['xzqmc']|escape}({$item['xzqdm']|escape})</option>
+          		{foreach from=$deptList item=item}
+          		<option value="{$item['id']}" {if $info['dept_id'] == $item['id']}selected{/if}>{$item['name']|escape}</option>
           		{/foreach}
           	</select>
           </td>

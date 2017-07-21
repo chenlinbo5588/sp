@@ -6,6 +6,13 @@ class Seo extends Ydzj_Admin_Controller {
 	public function __construct(){
 		parent::__construct();
 		$this->load->library(array('Admin_service','Goods_service'));
+		
+		$this->_subNavs = array(
+			'modulName' => 'SEO设置',
+			'subNavs' => array(
+				'基本设置' => 'seo/index' ,
+			),
+		);
 	}
 	
 	

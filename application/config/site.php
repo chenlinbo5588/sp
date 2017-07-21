@@ -12,21 +12,12 @@ $config['aliyun_dm'] = array(
 	'api_secret' => 'mS2THl6kWbsQ7RTo4NDpe5wdNi4U7J'
 );
 
-
-$config['allowed_img_types'] = 'jpg|jpeg|png';
-
 $config['mail_list'] = array(
 	'sina.com','126.com','163.com','gmail.com','qq.com','vip.qq.com','hotmail.com','sohu.com','139.com','vip.sina.com','21cn.cn','189.cn','sina.cn'
 );
 
 
-
 $config['SMS_apikey'] = '';
-
-
-$config['fronted_admin'] = array(
-	
-);
 
 
 $config['notify_ways'] = array(
@@ -51,7 +42,6 @@ $config['huanxin'] = array(
 	'secret' => 'YXA6gvDBESUMtptDHPZearXT4d8YdVE',
 	'open_type' => 1
 );
-
 
 /**
  * 默认图片大小
@@ -128,6 +118,3 @@ $config['sex_type'] = array(
 	'1' => '男' ,
 	'2' => '女'
 );
-
-$config['site_town'] = '掌起镇';
-

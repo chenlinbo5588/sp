@@ -25,7 +25,7 @@ class Register_service extends Base_service {
 		));
 		
 		if($uid > 0){
-			$return = $this->successRetun(array('uid' => $uid));
+			$return = $this->successReturn(array('uid' => $uid));
 		}
 		
 		return $return;
@@ -140,7 +140,7 @@ class Register_service extends Base_service {
 		$uid = self::$memberModel->_add($regParam);
 		
 		if($uid > 0){
-			$return = $this->successRetun(array('uid' => $uid));
+			$return = $this->successReturn(array('uid' => $uid));
 			self::$CI->Security_Control_Model->_add(array(
 				'ip' => $regParam['reg_ip'],
 				'action' => 'register',

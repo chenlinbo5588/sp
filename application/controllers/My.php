@@ -16,18 +16,28 @@ class My extends MyYdzj_Controller {
 		$this->assign('avatarImageSize',$this->_avatarImageSize);
 		
 		
+		$this->_breadCrumbs[] = array(
+			'title' => '个人中心',
+			'url' => strtolower(get_class())
+		);
+	}
+	
+	
+	public function index(){
 		
 		
+		
+		$this->display();
 	}
 	
 	
 	
-	public function index()
+	public function base()
 	{
 		//print_r($this->session->all_userdata());
 		
 		/*
-		$this->load->library('Common_District_service');
+		$this->load->library('Common_district_service');
 		
 		$ds = array();
 		for($i = 1; $i <= 4; $i++){
@@ -44,7 +54,14 @@ class My extends MyYdzj_Controller {
 		$avatarImageSize = config_item('avatar_img_size');
 		$this->assign('avatarImageSize',$avatarImageSize);
 		
+		$this->_breadCrumbs[] = array(
+			'title' => '基本资料',
+			'url' => $this->uri->uri_string
+		);
+		
 		$this->display();
+		
+		
 	}
 	
 	

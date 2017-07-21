@@ -22,7 +22,7 @@
           <td colspan="2" class="required"><label class="validation" for="goods_name">商品名称:</label></td>
         </tr>
         <tr class="noborder">
-          <td class="vatop rowform"><input type="text" value="{$info['goods_name']|escape}" name="goods_name" id="goods_name" maxlength="20" class="txt"></td>
+          <td class="vatop rowform"><input type="text" value="{$info['goods_name']|escape}" name="goods_name" id="goods_name" class="txt"></td>
           <td class="vatop tips">{form_error('goods_name')}</td>
         </tr>
         <tr class="noborder">

@@ -12,7 +12,7 @@
           <td colspan="2" class="required"><label class="validation" for="name">{#cms_title_class#}名称:</label></td>
         </tr>
         <tr class="noborder">
-          <td class="vatop rowform"><input type="text" value="{$info['name']|escape}" name="name" id="name" maxlength="20" class="txt"></td>
+          <td class="vatop rowform"><input type="text" value="{$info['name']|escape}" name="name" id="name" class="txt"></td>
           <td class="vatop tips">{form_error('name')}</td>
         </tr>
         <tr>

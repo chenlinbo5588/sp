@@ -19,6 +19,10 @@ var cookiedomain = "{config_item('cookie_domain')}",
     captchaUrl = "{site_url('captcha/index')}",
     uploadUrl = "{admin_site_url('common/pic_upload')}";
 </script>
+
+{foreach from=$cssList item=cssitem}
+<link href="{resource_url($cssitem,true)}" rel="stylesheet" type="text/css"/>
+{/foreach}
 <script type="text/javascript" src="{resource_url('js/jquery.js')}" ></script>
 {include file="common/jquery_ui.tpl"}
 <link rel="stylesheet" href="{resource_url('js/toast/jquery.toast.min.css')}"/>

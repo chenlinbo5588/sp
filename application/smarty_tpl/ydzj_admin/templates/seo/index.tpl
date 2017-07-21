@@ -1,21 +1,19 @@
 {include file="common/main_header.tpl"}
 {config_load file="seoset.conf"}
-  <div class="fixed-bar">
-    <div class="item-title">
-      {*<h3>{$moduleTitle}</h3>*}
-      <ul class="tab-base">
-        <li><a href="JavaScript:void(0);" nctype="index" class="current"><span>首页</span></a></li>
-        {*<li><a href="JavaScript:void(0);" nctype="group"><span>团购</span></a></li>
-        <li><a href="JavaScript:void(0);" nctype="brand"><span>品牌</span></a></li>
-        <li><a href="JavaScript:void(0);" nctype="credits"><span>积分中心</span></a></li>*}
-        <li><a href="JavaScript:void(0);" nctype="article"><span>文章</span></a></li>
-        {*<li><a href="JavaScript:void(0);" nctype="shop"><span>店铺</span></a></li>*}
-        <li><a href="JavaScript:void(0);" nctype="product"><span>商品</span></a></li>
-        <li><a href="JavaScript:void(0);" nctype="category"><span>商品分类</span></a></li>
-        {*<li><a href="JavaScript:void(0);" nctype="sns"><span>SNS</span></a></li>*}
-      </ul>
-    </div>
-  </div>
+<div class="item-title">
+  <h3>SEO项</h3>
+  <ul id="seoTab" class="tab-base">
+    <li><a href="JavaScript:void(0);" nctype="index" class="current"><span>首页</span></a></li>
+    {*<li><a href="JavaScript:void(0);" nctype="group"><span>团购</span></a></li>
+    <li><a href="JavaScript:void(0);" nctype="brand"><span>品牌</span></a></li>
+    <li><a href="JavaScript:void(0);" nctype="credits"><span>积分中心</span></a></li>*}
+    <li><a href="JavaScript:void(0);" nctype="article"><span>文章</span></a></li>
+    {*<li><a href="JavaScript:void(0);" nctype="shop"><span>店铺</span></a></li>*}
+    <li><a href="JavaScript:void(0);" nctype="product"><span>商品</span></a></li>
+    <li><a href="JavaScript:void(0);" nctype="category"><span>商品分类</span></a></li>
+    {*<li><a href="JavaScript:void(0);" nctype="sns"><span>SNS</span></a></li>*}
+  </ul>
+</div>
   <table class="table tb-type2" id="prompt">
     <tbody>
       <tr class="space odd">
@@ -49,10 +47,10 @@
           <td class="w96">title</td><td><input id="SEO[index][title]" name="SEO[index][title]" value="{$currentSetting['index']['title']|escape}" class="w300" type="text"/></td>
         </tr>
         <tr class="noborder">
-          <td class="w96">keywords</td><td><input id="SEO[index][keywords]" name="SEO[index][keywords]" value="{$currentSetting['index']['keywords']|escape}" class="w300" type="text" maxlength="200" /></td>
+          <td class="w96">keywords</td><td><input id="SEO[index][keywords]" name="SEO[index][keywords]" value="{$currentSetting['index']['keywords']|escape}" class="w300" type="text" /></td>
         </tr>
         <tr class="noborder">
-          <td class="w96">description</td><td><input id="SEO[index][description]" name="SEO[index][description]" value="{$currentSetting['index']['description']|escape}" class="w300" type="text" maxlength="200"/></td>
+          <td class="w96">description</td><td><input id="SEO[index][description]" name="SEO[index][description]" value="{$currentSetting['index']['description']|escape}" class="w300" type="text" /></td>
         </tr>
       </tbody>
       <tfoot>
@@ -326,9 +324,9 @@
 </div>
 <script type="text/javascript">
 $(function(){
-	$('.tab-base').find('a').bind('click',function(){
+	$('#seoTab').find('a').bind('click',function(){
 		$("#tag_tips").css('display','none');
-		$('.tab-base').find('a').removeClass('current');
+		$('#seoTab').find('a').removeClass('current');
 		$(this).addClass('current');
 		$('form').css('display','none');
 		$('form[name="form_'+$(this).attr('nctype')+'"]').css('display','');
@@ -362,7 +360,7 @@ $(function(){
 
 	$('form').css('display','none');
 	$('form[name="form_{$selectedGroup}"]').css('display','');
-	$('.tab-base a[nctype="{$selectedGroup}"]').trigger("click");
+	$('#seoTab a[nctype="{$selectedGroup}"]').trigger("click");
 	
 	$('#category').bind('change',function(){
 		$.getJSON("{admin_site_url('seo/ajax_category/')}?id=" +$(this).val(), function(json){

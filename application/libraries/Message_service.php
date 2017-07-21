@@ -44,7 +44,6 @@ class Message_service extends Base_service {
 		$this->_pmMessageModel = self::$CI->Pm_Message_Model;
 		
 		$this->_siteMessageModel = self::$CI->Site_Message_Model;
-		//$this->_pushChatModel = self::$CI->Push_Chat_Model;
 		$this->_pushEmailModel = self::$CI->Push_Email_Model;
 	}
 	
@@ -149,19 +148,6 @@ class Message_service extends Base_service {
 	}
 	
 	
-	/**
-	 * 获得 chat hash object
-	 */
-	 
-	/*
-	public function getChatHashObj(){
-		if(!$this->_chatHashObject){
-			$this->_chatHashObject = new Flexihash();
-			$this->_chatHashObject->addTargets(self::$CI->load->get_config('split_push_chat'));
-		}
-		return $this->_chatHashObject;
-	}
-	*/
 	
 	/**
 	 * 获得 添加 送给管理的员的邮件model
@@ -510,9 +496,12 @@ class Message_service extends Base_service {
 			*/
 			
 			//插入 用户邮件表 后台自动发送， 私人邮件发送数量太多，可能会被禁
+			
+			/*
 			if($userEmail){
 				$this->addMutiEmailMessageToUser($userEmail,$uid);
 			}
+			*/
 			
 			//插入 用户短信 , 暂时不做 太费钱 
 			

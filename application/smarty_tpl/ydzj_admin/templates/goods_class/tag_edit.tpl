@@ -22,14 +22,14 @@
           <td colspan="2" class="required"><label class="validation" for="gc_tag_name">分类TAG名称:</label></td>
         </tr>
         <tr class="noborder">
-          <td class="vatop rowform"><input type="text" value="{$info['gc_tag_name']}" name="gc_tag_name" id="gc_tag_name" maxlength="20" class="txt"></td>
+          <td class="vatop rowform"><input type="text" value="{$info['gc_tag_name']}" name="gc_tag_name" id="gc_tag_name" class="txt"></td>
           <td class="vatop tips">{form_error('gc_tag_name')}</td>
         </tr>
         <tr>
           <td colspan="2" class="required"><label for="gc_tag_value">分类TAG值:</label></td>
         </tr>
         <tr class="noborder">
-          <td class="vatop rowform"><input type="text" value="{$info['gc_tag_value']}" name="gc_tag_value" id="gc_tag_value" maxlength="20" class="txt"></td>
+          <td class="vatop rowform"><input type="text" value="{$info['gc_tag_value']}" name="gc_tag_value" id="gc_tag_value" class="txt"></td>
           <td class="vatop tips">{form_error('gc_tag_value')}</td>
         </tr>
       </tbody>

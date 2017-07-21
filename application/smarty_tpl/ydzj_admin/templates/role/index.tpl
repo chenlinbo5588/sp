@@ -5,7 +5,7 @@
     <table class="tb-type1 noborder search">
       <tbody>
         <tr>
-          <td>权限组名称</td>
+          <td>角色名称</td>
           <td><input type="text" value="{$smarty.post['keywords']}" name="keywords" class="txt"></td>
           <td>
             <input type="submit" class="msbtn" name="tijiao" value="查询"/>

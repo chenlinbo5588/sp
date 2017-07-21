@@ -9,6 +9,13 @@ class User extends Ydzj_Admin_Controller {
 		
 		$this->load->model(array('Adminuser_Model','Fn_Model','Role_Model'));
 		
+		$this->_subNavs = array(
+			'modulName' => ' 管理员',
+			'subNavs' => array(
+				'管理' => 'user/index',
+				'添加' => 'user/add',
+			),
+		);
 		
 	}
 	
@@ -207,6 +214,9 @@ class User extends Ydzj_Admin_Controller {
 		$roleList = $this->Role_Model->getList();
 		
 		$info = $this->Adminuser_Model->getFirstByKey($id,'uid');
+		
+		
+		$this->_subNavs['subNavs']['编辑管理员'] = 'user/edit?uid='.$id;
 		
 		if($this->isPostRequest()){
 			$this->form_validation->set_rules('email','登陆名','required|valid_email|is_unique_not_self['.$this->Adminuser_Model->getTableRealName().".email.uid.{$id}]");

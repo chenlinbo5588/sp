@@ -9,6 +9,14 @@ class Upload extends Ydzj_Admin_Controller {
 		$this->load->library('Attachment_service');
 		
 		$this->attachment_service->setUserInfo($this->_adminProfile['basic']);
+		
+		$this->_subNavs = array(
+			'modulName' => '上传设置',
+			'subNavs' => array(
+				'上传参数' => 'upload/param',
+				'默认图片' => 'upload/default_image',
+			),
+		);
 	}
 	
 	

@@ -103,407 +103,6 @@ class Tools extends MY_Controller {
 	}
 	
 	
-	public function batch_insert(){
-		
-		$goodsName = array(
-			'卫衣',
-			'护腕',
-			'护膝',
-			'Nike',
-			'Adidas',
-			'乔丹',
-			'匡威',
-			'特步',
-			'361度',
-			'李宁',
-			'阿迪王',
-			'匹克'
-		);
-		
-		$color = array(
-			'黑',
-			'灰',
-			'银',
-			'白',
-			'棕',
-			'香槟',
-			'绿',
-			'蓝',
-			'紫',
-			'红',
-			'黄',
-			'金',
-			'橙',
-			'金属金'
-		);
-		
-		$sex = array('0','1');
-		
-		//2016/9/1 12:16:25
-		//2016/9/13 12:16:25
-		$timestamp = array(1472703385,time());
-		
-		$this->load->model('Hp_Recent_Model');
-		for($i = 0; $i < 100000; $i++){
-			
-			/*
-			$str = array(
-				mt_rand(1,9),
-				mt_rand(1,92),
-				mt_rand(1,999),
-				'00'.mt_rand(0,9)
-			);
-			
-			if($str[1] < 10){
-				$str[1] = '0'.$str[1];
-			}
-			
-			if($str[2] < 10){
-				$str[2] = '0'.$str[2];
-			}
-			*/
-			$gmtcreate = mt_rand($timestamp[0],$timestamp[1]);
-			
-			
-			//$goodsCode = implode('',$str);
-			$goodsCode = random_string('alnum',mt_rand(5,9));
-			
-			$insert = array(
-				'goods_name' => $goodsName[mt_rand(0,(count($goodsName) - 1))],
-				'goods_code' => $goodsCode,
-				'goods_color' => $color[mt_rand(0,count($color) - 1)],
-				'gc_id1' => mt_rand(1,1056),
-				'gc_id2' => mt_rand(1,1056),
-				'gc_id3' => mt_rand(1,1056),
-				'goods_size' => mt_rand(5,48),
-				'quantity' => mt_rand(1,10),
-				'sex' => mt_rand(0,1),
-				'price_max' => mt_rand(0,2000) * mt_rand(0,1),
-				'uid' => mt_rand(1,200),
-				'date_key' => date("Ymd",$gmtcreate),
-				'gmt_create' => $gmtcreate,
-				'gmt_modify' => $gmtcreate
-			);
-			
-			//$insert['price_max'] = $insert['price_min'] * 2;
-			
-			$insert['send_day'] = $gmtcreate + mt_rand(0,3) * 86400;
-			$insert['ip'] = $this->input->ip_address();
-			
-			//$insert['kw'] = $insert['goods_name'].'_'.$insert['goods_code'].'_'.$insert['goods_size'];
-			$insert['kw'] = $insert['goods_code'].'#'.$insert['goods_size'];
-			//$insert['cnum'] = mt_rand(0,$insert['quantity']);
-			
-			$sql = $this->db->insert_string($this->Hp_Recent_Model->getTableRealName(),$insert);
-			$this->db->query($sql);
-			
-			$id = $this->db->insert_id();
-			if($id){
-				echo $id.'<br/>';
-			}else{
-				
-				echo $i.'failed';
-			}
-		}
-		
-		
-		
-	}
-	
-	
-	
-	public function hash_code(){
-		
-		echo base64_encode(md5(mt_rand()));
-	}
-	
-	
-	public function com_address(){
-		$file = 'address.m.csv.txt';
-		
-		for($i = 1; $i <= 36; $i++){
-			echo "sed /1,\$/p address.csv{$i}.txt >> {$file} <br/>";
-		}
-		
-	}
-	
-	public function spl_poi(){
-		$file = file('poi.csv.txt');
-		
-		$lines = array();
-		
-		$i = 1;
-		
-		$line = array();
-		foreach($file as $key => $row){
-			if($key > 0 && $key % 1500 == 0){
-				file_put_contents("poi.csv{$i}.txt",implode('',$line));
-				$i++;
-				
-				$line = array();
-			}
-			
-			$line[] = $row;
-		}
-		
-		if(!empty($line)){
-			file_put_contents("poi.csv{$i}.txt",implode('',$line));
-		}
-		
-	}
-	
-	public function spl_address(){
-		$file = file('address.csv.txt');
-		
-		$lines = array();
-		
-		$i = 1;
-		
-		$line = array();
-		foreach($file as $key => $row){
-			if($key > 0 && $key % 1500 == 0){
-				file_put_contents("address.csv{$i}.txt",implode('',$line));
-				$i++;
-				
-				$line = array();
-			}
-			
-			$line[] = $row;
-		}
-		
-		if(!empty($line)){
-			file_put_contents("address.csv{$i}.txt",implode('',$line));
-		}
-		
-	}
-	
-	public function getxy(){
-		$file = file('poi.plist');
-		$xyList = array();
-		
-		$i = 1;
-		
-		foreach($file as $key => $row){
-			$row = str_replace("\r\n","",$row);
-			if(trim($row) == '<key>x</key>'){
-				$x = str_replace(array('<real>','</real>'),'',trim($file[$key + 1]));
-				$y = str_replace(array('<real>','</real>'),'',trim($file[$key + 3]));
-				
-				$xyList[] = "{$i},{$x},{$y},10";
-				$i++;
-			}
-		}
-		
-		//print_r($xyList);
-		
-		file_put_contents("poi.txt",implode("\r\n",$xyList));
-	}
-	
-	public function poi(){
-		$output = array();
-		
-		$output[] = <<< EOT
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<array>
-EOT;
-
-
-		//$txtFile = file("4444poi.txt");
-		$txtFile = file("poi.m.csv.txt");
-		foreach($txtFile as $line){
-			
-			$line = str_replace("\r\n","",$line);
-			$lineDetail = explode(',',$line);
-
-			$output[] = <<< EOT
-	<dict>
-		<key>attributes</key>
-		<dict>
-			<key>AREMARK</key>
-			<string></string>
-			<key>AROADNAME</key>
-			<string>孙塘南路综合楼</string>
-			<key>AROADNUMBER</key>
-			<string>1</string>
-			<key>ASUFFIX</key>
-			<string>幢</string>
-			<key>PLICENSE</key>
-			<string></string>
-			<key>PNAME</key>
-			<string>gxf</string>
-			<key>PPHONE</key>
-			<string></string>
-			<key>PPHOTOS</key>
-			<string></string>
-		</dict>
-		<key>geometry</key>
-		<dict>
-			<key>spatialReference</key>
-			<dict>
-				<key>wkid</key>
-				<integer>4490</integer>
-			</dict>
-			<key>x</key>
-			<real>{$lineDetail[2]}</real>
-			<key>y</key>
-			<real>{$lineDetail[1]}</real>
-		</dict>
-		<key>symbol</key>
-		<dict>
-			<key>angle</key>
-			<real>0.0</real>
-			<key>color</key>
-			<array>
-				<integer>255</integer>
-				<integer>255</integer>
-				<integer>0</integer>
-				<integer>255</integer>
-			</array>
-			<key>outline</key>
-			<dict>
-				<key>color</key>
-				<array>
-					<integer>0</integer>
-					<integer>0</integer>
-					<integer>0</integer>
-					<integer>255</integer>
-				</array>
-				<key>style</key>
-				<string>esriSLSSolid</string>
-				<key>type</key>
-				<string>esriSLS</string>
-				<key>width</key>
-				<real>1</real>
-			</dict>
-			<key>size</key>
-			<real>12</real>
-			<key>style</key>
-			<string>esriSMSCircle</string>
-			<key>type</key>
-			<string>esriSMS</string>
-			<key>xoffset</key>
-			<real>0.0</real>
-			<key>yoffset</key>
-			<real>0.0</real>
-		</dict>
-	</dict>
-EOT;
-		}
-	
-		
-		$output[] = <<<EOT
-	</array>
-</plist>
-EOT;
-
-
-		file_put_contents("poi.plist",implode("\r\n",$output));
-		
-		
-	}
-	
-	public function address(){
-		
-		$output = array();
-		
-		$output[] = <<< EOT
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<array>
-EOT;
-
-
-		$txtFile = file("address.m.csv.txt");
-		
-		//print_r($txtFile);
-		foreach($txtFile as $line){
-			
-			$line = str_replace("\r\n","",$line);
-			$lineDetail = explode(',',$line);
-
-			$output[] = <<< EOT
-	<dict>
-		<key>attributes</key>
-		<dict>
-			<key>AREMARK</key>
-			<string></string>
-			<key>AROADNAME</key>
-			<string>1</string>
-			<key>AROADNUMBER</key>
-			<string>8</string>
-			<key>ASUFFIX</key>
-			<string>号</string>
-		</dict>
-		<key>geometry</key>
-		<dict>
-			<key>spatialReference</key>
-			<dict>
-				<key>wkid</key>
-				<integer>4490</integer>
-			</dict>
-			<key>x</key>
-			<real>{$lineDetail[2]}</real>
-			<key>y</key>
-			<real>{$lineDetail[1]}</real>
-		</dict>
-		<key>symbol</key>
-		<dict>
-			<key>angle</key>
-			<real>0.0</real>
-			<key>color</key>
-			<array>
-				<integer>0</integer>
-				<integer>0</integer>
-				<integer>255</integer>
-				<integer>255</integer>
-			</array>
-			<key>outline</key>
-			<dict>
-				<key>color</key>
-				<array>
-					<integer>0</integer>
-					<integer>0</integer>
-					<integer>0</integer>
-					<integer>255</integer>
-				</array>
-				<key>style</key>
-				<string>esriSLSSolid</string>
-				<key>type</key>
-				<string>esriSLS</string>
-				<key>width</key>
-				<real>1</real>
-			</dict>
-			<key>size</key>
-			<real>12</real>
-			<key>style</key>
-			<string>esriSMSCircle</string>
-			<key>type</key>
-			<string>esriSMS</string>
-			<key>xoffset</key>
-			<real>0.0</real>
-			<key>yoffset</key>
-			<real>0.0</real>
-		</dict>
-	</dict>
-EOT;
-		}
-	
-		
-		$output[] = <<<EOT
-	</array>
-</plist>
-EOT;
-
-
-		file_put_contents("address.plist",implode("\r\n",$output));
-		
-		
-	}
-	
-	
 	
 	
 	public function image_rename(){
@@ -646,66 +245,6 @@ EOT;
 	
 	
 	
-	
-	
-	/**
-	 * 用户求货信息发布历史记录表
-	 */
-	public function create_hp_pub_tables(){
-		$sql = <<< EOF
-CREATE TABLE `sp_hp_pub{i}` (
-  `goods_id` mediumint(10) unsigned NOT NULL,
-  `goods_name` varchar(40) NOT NULL DEFAULT '' COMMENT '名称',
-  `goods_code` varchar(15) NOT NULL DEFAULT '' COMMENT '用户原始货号',
-  `goods_color` varchar(15) NOT NULL DEFAULT '' COMMENT '颜色',
-  `gc_id1` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '货品一级分类',
-  `gc_id2` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '货品二级分类',
-  `gc_id3` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '货品三级分类',
-  `goods_size` float unsigned NOT NULL DEFAULT '0' COMMENT '尺码 纯数字尺码 如 42',
-  `goods_csize` varchar(10) NOT NULL DEFAULT '' COMMENT '字母或文字尺码',
-  `search_code` varchar(15) NOT NULL DEFAULT '' COMMENT '用于搜索的 去除中划线和下划线 防止分词',
-  `kw` varchar(25) NOT NULL DEFAULT '' COMMENT '货号链接上尺寸 成为一个唯一查找的建',
-  `quantity` smallint(5) unsigned NOT NULL DEFAULT '1' COMMENT '数量',
-  `sex` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '性别',
-  `pub_type` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '0=普通求货 1=批发求货',
-  `price_status` tinyint(3) unsigned NOT NULL DEFAULT '1' COMMENT '1=仅自己可见  0=明价求货',
-  `price_max` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '期望价格范围',
-  `send_zone` varchar(30) NOT NULL DEFAULT '' COMMENT '发货地址',
-  `send_day` int(3) unsigned NOT NULL DEFAULT '0' COMMENT '发货时间',
-  `uid` int(9) unsigned NOT NULL DEFAULT '0',
-  `username` varchar(30) NOT NULL DEFAULT '',
-  `qq` varchar(15) NOT NULL DEFAULT '',
-  `email` varchar(30) NOT NULL DEFAULT '',
-  `mobile` varchar(15) NOT NULL DEFAULT '',
-  `date_key` int(10) unsigned NOT NULL DEFAULT '0',
-  `ip` varchar(15) NOT NULL DEFAULT '',
-  `gmt_create` int(11) unsigned NOT NULL DEFAULT '0',
-  `gmt_modify` int(11) unsigned NOT NULL DEFAULT '0',
-  KEY `idx_uid_dk` (`uid`,`date_key`),
-  KEY `idx_goods_id` (`goods_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户求货发布表';
-
-
-
-
-
-
-EOF;
-
-		$pm = $this->load->get_config('split_hp_pub');
-		
-		
-		print_r($pm);
-		
-		foreach($pm as $p){
-			
-			$exexSQL = str_replace('{i}',$p,$sql);
-			$this->Member_Model->execSQL($exexSQL);
-		}
-		
-	}
-	
-	
 	/**
 	 * 
 	 */
@@ -720,7 +259,7 @@ EOF;
 		
 		$sql = <<< EOF
 CREATE TABLE `sp_push_email{i}` (
-  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+  `id` int(8) unsigned NOT NULL AUTO_INCREMENT,
   `msg_type` tinyint(3) NOT NULL DEFAULT '1' COMMENT '-1 后台系统消息 0=用户消息 1=货品匹配信息',
   `uid` int(9) unsigned NOT NULL DEFAULT '0',
   `username` varchar(30) NOT NULL DEFAULT '',
@@ -758,9 +297,9 @@ EOF;
 	/**
 	 * 
 	 */
-	public function create_hp_batch_tables(){
+	public function create_attachment_tables(){
 		
-		$chat_pm = range(0,29);
+		$chat_pm = range(0,9);
 		
 		foreach($chat_pm as $key => $value){
 			echo "'{$key}' => {$value},<br/>";
@@ -769,73 +308,49 @@ EOF;
 		echo '<br/>';
 		
 		$sql = <<< EOF
-CREATE TABLE `sp_hp_batch{i}` (
-  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-  `uid` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `action` tinyint(3) unsigned DEFAULT '0' COMMENT '0=标题添加操作 1=刷新操作',
-  `batch_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `cnt` smallint(6) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `idx_batch` (`batch_id`),
-  KEY `idx_uid` (`uid`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
-
-
-
-EOF;
-
-		$pm = $this->load->get_config('split_hp_batch');
-		
-		
-		print_r($pm);
-		
-		foreach($pm as $p){
-			
-			$exexSQL = str_replace('{i}',$p,$sql);
-			$this->Member_Model->execSQL($exexSQL);
-		}
-		
-	}
-	
-	
-	
-	
-	/**
-	 * 创建站内聊天信息推送表 ，用户 uid  分表
-	 * 
-	 * 跑批 
-	 */
-	public function create_push_chat_tables(){
-		
-		$sql = <<< EOF
-CREATE TABLE `sp_push_chat{i}` (
-  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-  `msg_type` tinyint(3) NOT NULL DEFAULT '1' COMMENT '-1 后台系统消息 0=用户消息 1=货品匹配信息',
-  `uid` int(9) unsigned NOT NULL DEFAULT '0',
+CREATE TABLE `sp_attachment{i}` (
+  `id` int(20) unsigned NOT NULL AUTO_INCREMENT,
+  `orig_name` varchar(150) NOT NULL DEFAULT '',
+  `file_name` varchar(150) NOT NULL,
+  `file_type` varchar(50) NOT NULL DEFAULT '' COMMENT 'mine type',
+  `file_ext` varchar(10) NOT NULL DEFAULT '',
+  `file_url` varchar(150) NOT NULL DEFAULT '',
+  `raw_name` char(32) NOT NULL DEFAULT '',
+  `file_size` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '如果是目录，则表示该目录下包含的文件大小的合计',
+  `is_image` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `image_width` int(11) unsigned NOT NULL DEFAULT '0',
+  `image_height` int(11) unsigned NOT NULL DEFAULT '0',
+  `image_type` varchar(20) NOT NULL DEFAULT '',
+  `expire_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '0 表示不过期 大于0 到期时间戳',
+  `upload_from` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '上传来源为后台 0=前台 1=后台',
+  `uid` int(8) unsigned NOT NULL DEFAULT '0',
   `username` varchar(30) NOT NULL DEFAULT '',
-  `content` text,
-  `is_send` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `mod` varchar(20) NOT NULL DEFAULT '',
   `gmt_create` int(10) unsigned NOT NULL DEFAULT '0',
   `gmt_modify` int(10) unsigned NOT NULL DEFAULT '0',
+  `ip` varchar(15) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
-  KEY `idx_send` (`is_send`),
-  KEY `idx_uid` (`msg_type`,`uid`),
-  KEY `idx_ctime` (`gmt_create`)
+  KEY `idx_expire` (`expire_time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-EOF;
 
-		$pm = $this->load->get_config('split_push_chat');
-		print_r($pm);
-		foreach($pm as $p){
-			
+
+EOF;
+		
+		
+		
+		foreach($chat_pm as $p){
 			$exexSQL = str_replace('{i}',$p,$sql);
-			$this->Member_Model->execSQL($exexSQL);
+			
+			echo $exexSQL;
+			//$this->Member_Model->execSQL($exexSQL);
 		}
 		
-		
-		
 	}
+	
+	
+	
+	
 	
 	
 	public function get_uid_table(){
@@ -843,27 +358,23 @@ EOF;
 		$uid = $this->input->get('uid');
 		
 		$pm = $this->load->get_config('split_pm');
-		//$push_chat = $this->load->get_config('split_push_chat');
 		$push_email = $this->load->get_config('split_push_email');
 		$hp_batch = $this->load->get_config('split_hp_batch');
 		$hp_pub = $this->load->get_config('split_hp_pub');
 		
 		$pmHash = new Flexihash();
-		//$pushChatHash = new Flexihash();
 		$pushEmailHash = new Flexihash();
 		$hpBatchHash = new Flexihash();
 		$hpPubHash = new Flexihash();
 		
 		
 		$pmHash->addTargets($pm);
-		//$pushChatHash->addTargets($push_chat);
 		$pushEmailHash->addTargets($push_email);
 		$hpBatchHash->addTargets($hp_batch);
 		$hpPubHash->addTargets($hp_pub);
 		
 		echo 'pm_mesage='.$pmHash->lookup($uid);
 		echo '<br/>';
-		//echo 'push_chat='.$pushChatHash->lookup($uid);
 		echo '<br/>';
 		echo 'push_email='.$pushEmailHash->lookup($uid);
 		echo '<br/>';
@@ -900,11 +411,11 @@ EOF;
 		
 		$sql = <<< EOF
 CREATE TABLE `sp_pm_message{i}` (
-  `id` mediumint(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `uid` int(8) unsigned NOT NULL DEFAULT '0',
   `from_uid` int(8) unsigned NOT NULL DEFAULT '0',
   `site_msgid` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '系统消息id',
-  `msg_type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0 = 用户消息  -1=系统消息 1=货品匹配站内信',
+  `msg_type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0 = 用户消息  -1=系统消息 1=站内信',
   `readed` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '1=已读',
   `msg_direction` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '0=接收 1=发送',
   `title` varchar(200) NOT NULL DEFAULT '',
@@ -929,50 +440,13 @@ EOF;
 		foreach($pm as $p){
 			
 			$exexSQL = str_replace('{i}',$p,$sql);
-			$this->Member_Model->execSQL($exexSQL);
+			echo $exexSQL;
+			//$this->Member_Model->execSQL($exexSQL);
 		}
 	}
 	
 	
 	
-	/**
-	 * 暂时不分表， 等用户起来了以后再分表， 因为库存更新频率相对较低
-	 */
-	 
-	/*
-	public function create_member_inventory(){
-		
-		
-		$sql = <<< EOF
-CREATE TABLE `sp_member_inventory{i}` (
-  `uid` int(9) unsigned NOT NULL DEFAULT '0',
-  `slot_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '货柜号',
-  `goods_list` text NOT NULL COMMENT '名称',
-  `enable` tinyint(3) unsigned NOT NULL DEFAULT '1' COMMENT '库存可用性 0=不可用',
-  `kw` text NOT NULL COMMENT '关键字列表',
-  `kw_price` text NOT NULL COMMENT '关键字对应的最低价列表 一一对应',
-  `ip` varchar(15) NOT NULL DEFAULT '',
-  `gmt_modify` int(11) unsigned NOT NULL DEFAULT '0',
-  UNIQUE KEY `idx_slot` (`uid`,`slot_id`),
-  KEY `idx_enable` (`enable`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户库存表';
-
-
-EOF;
-
-		$pm = $this->load->get_config('split_member_inventory');
-		
-		
-		print_r($pm);
-		
-		foreach($pm as $p){
-			
-			$exexSQL = str_replace('{i}',$p,$sql);
-			$this->Member_Model->execSQL($exexSQL);
-		}
-	}
-	
-	*/
 	
 	
 	public function test_hash(){
@@ -1129,24 +603,14 @@ EOF;
         		continue;
         	}
         	
-        	if(preg_match('/^sp_hp_pub\d+$/i',$table,$match)){
-        		continue;
-        	}
         	
-        	if(preg_match('/^sp_hp_batch\d+$/i',$table,$match)){
-        		continue;
-        	}
-        	
-        	if(preg_match('/^sp_member_color\d+$/i',$table,$match)){
+        	if(preg_match('/^sp_attachment\d+$/i',$table,$match)){
         		continue;
         	}
         	
         	
             $fields = $this->db->field_data($table);
-            
-            
-            
-            
+                        
             $str = array();
             foreach($fields as $field){
                 $str[] = "'{$field->name}' => '{$field->type}'";

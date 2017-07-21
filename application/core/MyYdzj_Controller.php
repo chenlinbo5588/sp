@@ -25,14 +25,6 @@ class MyYdzj_Controller extends Ydzj_Controller {
 		$this->load->config('member_site');
 		$this->_loginUID = $this->_profile['basic']['uid'];
 		
-		$this->_navs();
-		
-		
-		/*
-		$this->_pushObject = $this->base_service->getPushObject();
-		$this->assign('pushConfig',config_item('huanxin'));
-		*/
-		
 		
 		$refresh = false;
 		$spm = $this->input->get('spm');
@@ -54,6 +46,7 @@ class MyYdzj_Controller extends Ydzj_Controller {
 		//@待性能优化
 		$unread = $this->message_service->getUserUnreadCount($this->_loginUID);
 		$this->assign('unreadCount',$unread);
+		
 		
 	}
 	

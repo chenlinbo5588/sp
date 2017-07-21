@@ -370,11 +370,11 @@ $config['sess_driver'] = 'database';
 //$config['sess_driver'] = 'redis';
 $config['sess_cookie_name'] = 'sid';
 
-// keep 30 day
-$config['sess_expiration'] = 2592000;
+// keep 1 day
+$config['sess_expiration'] = 86400;
 $config['sess_save_path'] = 'sp_sessions';
 //$config['sess_save_path'] = 'tcp://localhost:6379';
-$config['sess_match_ip'] = FALSE;
+$config['sess_match_ip'] = true;
 $config['sess_time_to_update'] = 300;
 $config['sess_regenerate_destroy'] = FALSE;
 
@@ -461,7 +461,7 @@ $config['csrf_exclude_uris'] = array();
 | 8表示验证问答
 |
 */
-$config['security']['attackevasive'] = '0';
+$config['security']['attackevasive'] = '1|4';
 $config['security']['authkey'] = 'uuAj611ccaWq1d2m';
 $config['security']['visitkey'] = 'vs';
 $config['security']['visitcode'] = 'visitcode';

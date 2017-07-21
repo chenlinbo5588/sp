@@ -7,7 +7,7 @@ class Base_service {
 	public static $dbInstance = null;
 	public static $memberModel = null;
 	public static $adminUserModel = null;
-	public static $districtModel = null;
+	//public static $districtModel = null;
 	public static $form_validation = null;
 	public static $settingModel = null;
 	
@@ -21,13 +21,13 @@ class Base_service {
 		self::$CI = get_instance();
 		self::$CI->load->model(array(
 			'Adminuser_Model',
-			'Common_District_Model'
+			//'Common_district_Model'
 		));
 		
 		self::$form_validation = self::$CI->form_validation;
 		self::$memberModel = self::$CI->Member_Model;
 		self::$adminUserModel = self::$CI->Adminuser_Model;
-		self::$districtModel = self::$CI->Common_District_Model;
+		//self::$districtModel = self::$CI->Common_District_Model;
 		self::$settingModel = self::$CI->Setting_Model;
 		
 		self::$dbInstance = self::$CI->Member_Model->getDb();
@@ -112,7 +112,7 @@ class Base_service {
 	
 	
     
-	protected function successRetun($data = array()){
+	protected function successReturn($data = array()){
 		return array(
 			'code' => 'success',
 			'data' => $data
@@ -157,24 +157,6 @@ class Base_service {
 		return $temp;
     }
     
-    
-    public function addWhoHasOperated($action = 'add',$user = array()){
-    	$rt = array();
-    	
-    	switch($action){
-    		case 'add':
-    			$rt = array('creator' => $user['name']);
-    			break;
-    		case 'edit':
-    			$rt = array('updator' => $user['name']);
-    			break;
-    		default;
-    			break;
-    	}
-    	
-    	return $rt;
-    	
-    }
     
     /**
 	 * 更新网站设置

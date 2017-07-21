@@ -21,48 +21,17 @@
       </dd>
     </dl>
     
-    <dl class="shop">
-      <dt>
-        <div class="ico"><i></i><sub title="新增场馆数"><span><em id="statistics_store"></em></span></sub></div>
-        <h3>存量建筑</h3>
-        <h5>新增审核</h5>
-      </dt>
-      <dd>
-        <ul>
-          <li class="w25pre normal"><a href="javascript:void(0);">已暂缓<sub><em id="statistics_store_expired">1200</em></sub></a></li>
-          <li class="w25pre normal"><a href="javascript:void(0);">已补办<sub><em id="statistics_store_expire">5602</em></sub></a></li>
-          <li class="w25pre normal"><a href="javascript:void(0);">已没收<sub><em id="statistics_store_expire">23</em></sub></a></li>
-          <li class="w25pre normal"><a href="javascript:void(0);">已拆除<sub><em id="statistics_store_expire">450</em></sub></a></li>
-        </ul>
-      </dd>
-    </dl>
     
-    <dl class="team">
-      <dt>
-        <div class="ico"><i></i></div>
-        <h3>巴里村</h3>
-        <h5>审核开通/圈内话题及举报</h5>
-      </dt>
-      <dd>
-        <ul>
-          <li class="w20pre normal"><a href="javascript:void(0);">已暂缓<sub><em>1200</em></sub></a></li>
-          <li class="w20pre normal"><a href="javascript:void(0);">已补办<sub><em>5602</em></sub></a></li>
-          <li class="w20pre normal"><a href="javascript:void(0);">已没收<sub><em>23</em></sub></a></li>
-          <li class="w20pre normal"><a href="javascript:void(0);">已拆除<sub><em>450</em></sub></a></li>
-          <li class="w20pre normal"><a href="javascript:void(0);">举报<sub><em>2</em></sub></a></li>
-        </ul>
-      </dd>
-    </dl>
     *}
     <dl class="member">
       <dt>
-        <div class="ico"><i></i><sub title="操作员总数"><span><em id="statistics_member"></em></span></sub></div>
-        <h3>操作员</h3>
-        <h5>新增操作员</h5>
+        <div class="ico"><i></i><sub title="会员总数"><span><em id="statistics_member"></em></span></sub></div>
+        <h3>会员</h3>
+        <h5>新增会员</h5>
       </dt>
       <dd>
         <ul>
-          <li class="w100pre normal"><a href="{admin_site_url('member/index')}">操作员<sub><em>0</em></sub></a></li>
+          <li class="w100pre normal"><a href="{admin_site_url('member/index')}">会员<sub><em>0</em></sub></a></li>
         </ul>
       </dd>
     </dl>
@@ -100,7 +69,7 @@
       </dd>
     </dl>
     
-    *}
+    
     <dl class="cms">
       <dt>
         <div class="ico"><i></i></div>
@@ -114,7 +83,7 @@
       </dd>
     </dl>
     
-    {*
+    
     <dl class="weixin">
       <dt>
         <div class="ico"><i></i></div>

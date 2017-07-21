@@ -1,6 +1,6 @@
 {include file="common/main_header.tpl"}
 {config_load file="member.conf"}
-  <form class="formSearch" method="get" name="formSearch" id="formSearch" action="{site_url($uri_string)}">
+  {form_open(site_url($uri_string),'class="formSearch" name="formSearch" id="formSearch"')}
 	    <input type="hidden" name="page" value=""/>
 	    <table class="tb-type1 noborder search">
 	      <tbody>
@@ -107,7 +107,7 @@
     </form>
     <div id="reasonDlg" title="卖家认证未通过" style="display:none;">
         <div class="loading_bg" style="display:none;">发送中...</div>
-        <form id="verifyForm" action="{admin_site_url('seller/verify')}" method="post">
+        {form_open(admin_site_url('seller/verify'),'id="verifyForm"')}
             <input type="hidden" name="pass" value=""/>
             <input type="hidden" name="id" value=""/>
             <table class="fulltable noborder">

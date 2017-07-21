@@ -10,7 +10,7 @@ class District extends MY_Controller {
 	public function index()
 	{
 		
-		$this->load->library('Common_District_service');
+		$this->load->library('Common_district_service');
 		$param = $this->uri->uri_to_assoc();
 		
 		$upid = $param['upid'];
