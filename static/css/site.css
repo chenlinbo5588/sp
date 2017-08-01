@@ -888,6 +888,16 @@ table.noext {
     right: 10px;
  }
  
+#toolbox {
+   position:absolute;
+   right:0px;
+   bottom:0px;
+   width: 180px;
+   z-index:19;
+   background:rgba(255,255,255,0.7);
+   filter: progid:DXImageTransform.Microsoft.gradient(enabled='true',startColorstr='#70FFFFFF', endColorstr='#70FFFFFF');
+}
+ 
 #toolbox h4 {
     border-bottom: 1px solid black;
     background: #FACBCB;
@@ -932,14 +942,7 @@ table.noext {
  }
  
  
- #toolbox {
-   position:absolute;
-   right:0px;
-   bottom:0px;
-   width: 180px;
-   z-index:19;
-   background:rgba(255,255,255,0.7);
- }
+
  
 
 
