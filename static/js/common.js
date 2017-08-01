@@ -657,13 +657,16 @@ function bindCheckAllEvent(selector){
  * @param sucFn 成功事件回调
  * @param errorFn 失败事件回调
  */
-function bindDeleteEvent(customSuccessFn,customErrorFn){
+function bindDeleteEvent(pSetting, customSuccessFn,customErrorFn){
+	var defaultSetting = { linkClass: 'a.delete', btnClass : '.deleteBtn' , rowPrefix: '#row' };
+	var setting = $.extend(defaultSetting,pSetting);
+	
 	var successCallback = function(ids,json){
 		if(check_success(json.message)){
 			showToast('success',json.message);
 			
 			for(var i = 0; i < ids.length; i++){
-				$("#row" + ids[i]).remove();
+				$(setting.rowPrefix + ids[i]).remove();
 			}
 		}else{
 			showToast('error',json.message);
@@ -674,7 +677,7 @@ function bindDeleteEvent(customSuccessFn,customErrorFn){
 		showToast('error',"删除出错，服务器异常，请稍后再次尝试");
 	}
 	
-	$("a.delete").bind("click",function(){
+	$("body").delegate(setting.linkClass,"click",function(){
 		var triggerObj = $(this);
 		
 		var title = triggerObj.attr('data-title');
@@ -695,7 +698,7 @@ function bindDeleteEvent(customSuccessFn,customErrorFn){
 		
   	});
   	
-  	$(".deleteBtn").bind("click",function(){
+	$("body").delegate(setting.btnClass,"click",function(){
   		var triggerObj = $(this);
   		var ids = getIDS(triggerObj);
   		var title = triggerObj.attr('data-title');
@@ -706,7 +709,6 @@ function bindDeleteEvent(customSuccessFn,customErrorFn){
   		if(ids.length == 0){
   			showToast('error','请选勾选.');
   		}else{
-  		
 	  		ui_confirm({
 				'trigger':triggerObj,
 				'postData': { id : ids },
@@ -790,7 +792,7 @@ function bindAjaxSubmit(classname){
 					if(typeof(resp.data.redirectUrl) != "undefined"){
 						setTimeout(function(){
 							location.href = resp.data.redirectUrl;
-						},1000);
+						},resp.data.wait ? resp.data.wait : 2000);
 					}
 				}
 			

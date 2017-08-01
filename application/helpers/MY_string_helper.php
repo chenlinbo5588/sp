@@ -101,7 +101,7 @@ function orderValue($searchKeys,$maxSize = 50){
 
 
 
-function step_helper($stepText,$step){
+function step_helper($stepText,$step,$style = 'style1'){
 	$stepHtml = array();
 	$totalStep = count($stepText);
 	
@@ -133,7 +133,57 @@ function step_helper($stepText,$step){
 		$stepHtml[] = $s."\">".($index + 1)."、".$stepText[$index]."</div>";
 	}
 	
-	return '<div class="w-step-row">'.implode('',$stepHtml).'</div>';
+	return '<div class="w-step-'.$style.' clearfix">'.implode('',$stepHtml).'</div>';
+	
+}
+
+
+
+/**
+ * 进度助手
+ */
+function step_helper2($stepConfig,$data = array(),$style = 'style2'){
+	$totalStep = count($stepConfig);
+	$stepHtml = array();
+	
+	$index = 0;
+	//print_r($stepConfig);
+	//print_r($data);
+
+	foreach($stepConfig as $stepName => $stepInfo){
+		//$s = '<div class="w-step'.$totalStep. ' ';
+		$temp = array();
+		
+		$temp[] = '<div class="w-step-item ';
+		$itemClassName = '';
+		if($data['status'] > $stepInfo['statusValue']){
+			$itemClassName = 'w-step-past';
+		}else if($data['status'] == $stepInfo['statusValue']){
+			$itemClassName = 'w-step-cur';
+		}else{
+			$itemClassName = 'w-step-future';
+		}
+		
+		$temp[] = $itemClassName;
+		
+		$index++;
+		
+		if($index == $totalStep){
+			$temp[] = ' w-step-last';
+		}
+		
+		$temp[] = '">';
+		$temp[] = "<h4 class='w-step-title'><em>第".$index."步:</em><span>{$stepName}</span></h4>";
+		$temp[] = "<div class='w-step-content'>";
+		$temp[] = "<div class='w-step-time'>".($data['statusLog'][$stepName]['gmt_create'] ? date('Y-m-d H:i',$data['statusLog'][$stepName]['gmt_create']): '')."</div>";
+		$temp[] = "<div class='w-step-dept'>".$data['statusLog'][$stepName]['dept_sname'].'</div>';
+		$temp[] = '<div class="w-step-username">'.( $data['statusLog'][$stepName]['username']? '经办人:'.$data['statusLog'][$stepName]['username'] : ($itemClassName == 'w-step-cur' ? '未受理':'')).'</div>';
+		$temp[] = '</div></div>';
+		
+		$stepHtml[] = implode('',$temp);
+	}
+	
+	return '<div class="w-step-'.$style.' clearfix">'.implode('',$stepHtml).'</div>';
 	
 }
 

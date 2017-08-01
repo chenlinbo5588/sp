@@ -3,32 +3,6 @@
  */
 $(function(){
 	
-	
-	var validation = $("#notifyForm").validate({
-		rules: {
-			send_group: {
-				required:true
-			},
-			title : {
-				required: true,
-				minlength: 1,
-				maxlength:30
-			}
-		}
-	});
-	
-	
-	$("#notifyForm").submit(function(){
-		if(!validation.valid()){
-			return false;
-		}
-		
-		return true;
-	});
-	
-
-	
-	
 	KindEditor.ready(function(K) {
 		editor1 = K.create('textarea[name="content"]', {
             uploadJson : uploadUrl,
@@ -49,5 +23,22 @@ $(function(){
             }
         });
     });
+	
+	
+	$("input[name=msg_mode]").bind('click',function(){
+		var val = $(this).val();
+		
+		switch(val){
+			case '0':
+				$(".userlist").hide();
+				break;
+			case '1':
+			case '2':
+				$(".userlist").show();
+				break;
+		}
+		
+	})
+	
 	
 });

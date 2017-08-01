@@ -238,42 +238,4 @@ class My_pm extends MyYdzj_Controller {
 	}
 	
 	
-	
-	/**
-	 * 
-	 */
-	public function setting(){
-		$sendWays = config_item('notify_ways');
-		if($this->isPostRequest()){
-			$notifyWays = $this->input->post('notify_ways');
-			$allowWays = array();
-			
-			foreach($notifyWays as $item){
-				if(in_array($item,$sendWays)){
-					$allowWays[] = $item;
-				}
-			}
-			
-			if($allowWays){
-				$this->load->library('Member_service');
-				$rows = $this->member_service->updateNotifyWays($allowWays,$this->_loginUID);
-				
-				$this->_profile['basic']['notify_ways'] = implode(',',$allowWays);
-				$this->refreshProfile();
-			}
-			
-			$feedback = getSuccessTip('设置成功');
-		}
-		
-		
-		$this->_breadCrumbs[] = array(
-			'title' => '提醒设置',
-			'url' => $this->uri->uri_string
-		);
-			
-		$this->assign('feedback',$feedback);
-		$this->assign('currentWays',$this->_profile['basic']['notify_ways']);
-		$this->assign('sendWays',$sendWays);
-		$this->display();
-	}
 }

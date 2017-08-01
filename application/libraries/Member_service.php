@@ -142,55 +142,8 @@ class Member_service extends Base_service {
 		
 		return $groupId;
 		
-		
 	}
 	
 	
-	/**
-	 * 卖家认证
-	 */
-	public function sellerVerify($uid,$flag,$message = ''){
-		$data = array(
-				'verify_result' => $flag,
-				'verify_remark' => $message
-			);
-		
-		if(1 == $data['verify_result']){
-			//group_id :  2 = 未认证会员  3=认证会员  4=大客户
-			$rows = self::$memberModel->updateByWhere(array('group_id' => 3),array('uid' => $uid));
-			
-			if($rows){
-				$tempKey = $this->getUserGroupKey($uid);
-				self::$CI->getCacheObject()->save($tempKey,3,CACHE_ONE_MONTH);
-			}
-			
-		}
-		
-		return $this->_memberSellerModel->update($data,array('uid' => $uid));
-		
-		
-		/*
-		if(is_array($uid)){
-			$condition = array(
-				'where_in' => array(
-					array('key' => 'uid','value' => $uid)
-				)
-			);
-			
-			if(1 == $data['verify_result']){
-				self::$memberModel->updateByCondition(array('group_id' => 3),array('uid' => $uid));
-			}
-			
-			return $this->_memberSellerModel->updateByCondition($data,$condition);
-			
-		}else{
-			if(1 == $data['verify_result']){
-				//group_id :  2 = 未认证会员  3=认证会员  4=大客户
-				self::$memberModel->updateByWhere(array('group_id' => 3),array('uid' => $uid));
-			}
-			
-			return $this->_memberSellerModel->update($data,array('uid' => $uid));
-		}
-		*/
-	}
+	
 }

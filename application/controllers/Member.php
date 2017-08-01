@@ -26,6 +26,13 @@ class Member extends Ydzj_Controller {
 		$profile['chat'] = empty($chatConfig) ? array() : $chatConfig;
 		*/
 		
+		$this->load->model('Dept_Model');
+		
+		$deptInfo = $this->Dept_Model->getFirstByKey($profile['basic']['dept_id']);
+		$profile['basic']['dept_name'] = $deptInfo['name'];
+		$profile['basic']['dept_sname'] = $deptInfo['short_name'];
+		$profile['basic']['dept_type'] = $deptInfo['org_type'];
+		
 		$this->session->set_userdata(array(
 			$this->_profileKey => $profile,
 			$this->_lastVisitKey => $this->_reqtime

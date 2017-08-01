@@ -2,14 +2,17 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 include_once AliyunEmail_PATH.'aliyun-php-sdk-core/Config.php';
-use Dm\Request\V20151123 as Dm;
+//use Dm\Request\V20151123 as Dm;
 
 
 class Message_service extends Base_service {
 
 	private $_msgTemplateModel = null;
 	private $_pmMessageModel = null;
+	
+	//用户组
 	private $_memberGroupModel = null;
+	
 	private $_siteMessageModel = null;
 	//private $_pushChatModel = null;
 	
@@ -29,7 +32,6 @@ class Message_service extends Base_service {
 	private $_setting ;
 	
 	private $_pmHashObject = null;
-	//private $_chatHashObject = null;
 	private $_emailHashObject = null;
 
 	
@@ -56,17 +58,18 @@ class Message_service extends Base_service {
 	public function getAllMemberGroup(){
 		
 		if(!$this->_memberGroupModel){
-			self::$CI->load->model('Member_Group_Model');
-			$this->_memberGroupModel = self::$CI->Member_Group_Model;
+			
+			self::$CI->load->model('Dept_Model');
+			$this->_memberGroupModel = self::$CI->Dept_Model;
 		}
 		
 		
 		$cacheObject = self::$CI->getCacheObject();
-		$groupList = $cacheObject->get('Member_Group');
+		$groupList = $cacheObject->get('Member_Dept');
 		
 		if(empty($groupList)){
-			$groupList = $this->_memberGroupModel->getList();
-			$cacheObject->save('Member_Group',$groupList,CACHE_ONE_DAY);
+			$groupList = $this->_memberGroupModel->getList(array('order' => 'displayorder ASC , id DESC'),'');
+			$cacheObject->save('Member_Dept',$groupList,CACHE_ONE_DAY);
 		}
 		
 		return $groupList;
@@ -97,7 +100,6 @@ class Message_service extends Base_service {
 		
 		
 		$data = array(
-			'msg_type' => 1,//全体
 			'msg_mode' => 1,//白名单
 			'send_ways' => '站内信',
 		);
@@ -354,16 +356,9 @@ class Message_service extends Base_service {
 	 */
 	public function getLastestSysPm($userProfile,$uid){
 		//file_put_contents('debug.txt',print_r($userProfile,true));
-		
-		//系统消息
-		$currentUserSysId = intval($userProfile['basic']['msgid']);
-		
-		//用户站内信消息
-		$currentUserPmId = intval($userProfile['basic']['pm_id']);
-		
 		$list = $this->_siteMessageModel->getList(array(
 			'where' => array(
-				'id > ' => $currentUserSysId
+				'id > ' => intval($userProfile['basic']['msgid'])
 			),
 			'limit' => 10
 		));
@@ -372,7 +367,7 @@ class Message_service extends Base_service {
 			'select' => 'id',
 			'where' => array(
 				'uid' => $uid,
-				'id > ' => $currentUserPmId
+				'id > ' => intval($userProfile['basic']['pm_id'])
 			),
 			'limit' => 10
 		),$uid);
@@ -381,28 +376,23 @@ class Message_service extends Base_service {
 		$userPmCount = count($userPmList);
 		
 		//print_r($list);
-		//print_r($userPmList);
-		$userGroup = $userProfile['basic']['group_id'];
+		///print_r($userPmList);
 		$accept = false;
 		
 		//站内信,仅保存下标
 		$sysPm = array();
 		
-		
 		//用户站内信;
 		$userPm = array();
-		$userChat = array();
+		
 		$userEmail = array();
 		
 		if($systemCount){
 			foreach($list as $key => $item){
 				$accept = false;
 				
-				if( 1 == $item['msg_type']){
-					//全体
-					$accept = true;
-				}else if($item['msg_type'] == $userGroup){
-					//已当前用户所属的 用户组一致
+				$destDepts = explode(',',$item['groups']);
+				if(in_array($userProfile['basic']['dept_id'],$destDepts)){
 					$accept = true;
 				}
 				
@@ -447,18 +437,6 @@ class Message_service extends Base_service {
 					);
 				}
 				
-				/*
-				if(strpos($sendWays,'聊天窗口') !== false){
-					// do insert
-					$userChat[] = array(
-						'uid' => $uid,
-						'msg_type' => -1,
-						'username' => $userProfile['chat']['username'],
-						'content' => strip_tags($list[$pmIndex]['content']),
-					);
-				}
-				*/
-				
 				
 				if(strpos($sendWays,'邮件') !== false){
 					// do nothing current
@@ -487,13 +465,7 @@ class Message_service extends Base_service {
 				$pmInsertRows = $this->_pmMessageModel->batchInsert($userPm);
 			}
 			
-			//插入 用户聊天信息表 后台自动发送
-			/*
-			if($userChat){
-				$this->setPushChatTableByUid($uid);
-				$this->_pushChatModel->batchInsert($userChat);
-			}
-			*/
+			
 			
 			//插入 用户邮件表 后台自动发送， 私人邮件发送数量太多，可能会被禁
 			
@@ -621,7 +593,7 @@ class Message_service extends Base_service {
     		$emailConfig = config_item('aliyun_dm');
     		$iClientProfile = DefaultProfile::getProfile("cn-hangzhou", $emailConfig['api_key'], $emailConfig['api_secret']);
     		$this->_email = new DefaultAcsClient($iClientProfile);
-    		$this->_emailRequest = new Dm\SingleSendMailRequest();
+    		//$this->_emailRequest = new Dm\SingleSendMailRequest();
 		    $this->_emailRequest->setAccountName($emailConfig['account']);
 		    $this->_emailRequest->setFromAlias($this->_setting['site_name']);
 		    $this->_emailRequest->setAddressType(1);

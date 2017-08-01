@@ -2,7 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 
-$config['cache_driver'] = 'redis';
+$config['cache_driver'] = 'file';
 
 $config['log_threshold'] = 2;
 
@@ -16,4 +16,4 @@ $config['page_size'] = 15;
 
 
 //站内信更新检查时间间隔
-$config['pmcheck_interval'] = 15;
+$config['pmcheck_interval'] = 5;

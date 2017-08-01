@@ -80,6 +80,7 @@ class Dept extends Ydzj_Admin_Controller {
 		$this->form_validation->set_rules('name','办事机构全称','required');
 		$this->form_validation->set_rules('short_name','办事机构简称','required');
 		$this->form_validation->set_rules('status','是否启用','required|in_list[0,1]');
+		$this->form_validation->set_rules('org_type','机构类型','required');
 		
 		if($this->input->post('displayorder')){
 			$this->form_validation->set_rules('displayorder','排序',"is_natural|less_than[256]");
@@ -127,6 +128,7 @@ class Dept extends Ydzj_Admin_Controller {
 			'code' => strtoupper($this->input->post('code')),
 			'name' => $this->input->post('name'),
 			'short_name' => $this->input->post('short_name'),
+			'org_type' => $this->input->post('org_type'),
 			'status' => $this->input->post('status'),
 			'displayorder' => $this->input->post('displayorder') ? intval($this->input->post('displayorder')) : 255
 		);
@@ -148,7 +150,7 @@ class Dept extends Ydzj_Admin_Controller {
 		if($this->isPostRequest()){
 			$this->_getRules();
 			
-			$this->form_validation->set_rules('code','机构代码','required|alpha|max_length[3]|is_unique['.$this->Dept_Model->getTableRealName().'.code]');
+			$this->form_validation->set_rules('code','机构代码','required|alpha|max_length[5]|is_unique['.$this->Dept_Model->getTableRealName().'.code]');
 			
 			
 			for($i = 0; $i < 1; $i++){
@@ -165,6 +167,10 @@ class Dept extends Ydzj_Admin_Controller {
 					$feedback = getErrorTip('保存失败');
 					break;
 				}
+				
+				
+				$cacheObject = $this->getCacheObject();
+				$cacheObject->delete('Member_Dept');
 				
 				$feedback = getSuccessTip('保存成功');
 				$info = $this->Dept_Model->getFirstByKey($newid,'id');
@@ -192,7 +198,7 @@ class Dept extends Ydzj_Admin_Controller {
 		
 		if($this->isPostRequest()){
 			
-			$this->form_validation->set_rules('code','机构代码','required|alpha|max_length[3]|is_unique_not_self['.$this->Dept_Model->getTableRealName().'.code.id.'.$id.']');
+			$this->form_validation->set_rules('code','机构代码','required|alpha|max_length[5]|is_unique_not_self['.$this->Dept_Model->getTableRealName().'.code.id.'.$id.']');
 			$this->_getRules();
 			
 			
@@ -221,7 +227,8 @@ class Dept extends Ydzj_Admin_Controller {
 					$info['logo_pic'] = $orignalImage;
 				}
 				
-				
+				$cacheObject = $this->getCacheObject();
+				$cacheObject->delete('Member_Dept');
 				
 				$feedback = getSuccessTip('保存成功');
 			}

@@ -23,7 +23,6 @@ $entity = array(
 'last_loginip' => 'varchar',
 'reg_date' => 'int',
 'reg_ip' => 'varchar',
-'group_id' => 'int',
 'sid' => 'varchar',
 'credits' => 'int',
 'pm_id' => 'int',

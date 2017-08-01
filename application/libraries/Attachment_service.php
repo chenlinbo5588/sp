@@ -4,25 +4,21 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Attachment_service extends Base_service {
 
 	protected $_userInfo;
-	
-	private $_attachModel ;
 	private $_imageSizeConfig ;
-	private $_attachtHashObj = null;
+	
+	//private $_attachtHashObj = null;
 
 	public function __construct(){
 		parent::__construct();
 		
-		self::$CI->load->model(array('Attachment_Model'));
 		self::$CI->load->library('image_lib');
-		
-		$this->_attachModel = self::$CI->Attachment_Model;
 		$this->_imageSizeConfig = config_item('default_img_size');
 		
 	}
 	
 	/**
 	 * 获得 file hash object
-	 */
+	 
 	public function getAttachmentHashObj(){
 		if(!$this->_attachtHashObj){
 			$this->_attachtHashObj = new Flexihash();
@@ -30,6 +26,8 @@ class Attachment_service extends Base_service {
 		}
 		return $this->_attachtHashObj;
 	}
+	*/
+	
 	
 	/**
 	 * 设置操作用户
@@ -71,7 +69,6 @@ class Attachment_service extends Base_service {
 		$config['file_path'] = date("Y/m/d/");
         $config['upload_path'] = dirname(ROOTPATH) . '/filestore/'.$config['file_path'];
         
-        
         make_dir($config['upload_path']);
         $config['file_ext_tolower'] = true;
 		$config['encrypt_name'] = true;
@@ -84,30 +81,26 @@ class Attachment_service extends Base_service {
 	/**
 	 * 获得附件信息
 	 */
-	public function getFileInfoByIds($pFileIds,$tableId = ''){
-		$this->_attachModel->setTableId($tableId);
+	public function getFileInfoByIds($pFileIds,$uid,$fileds = 'id,orig_name,file_size,is_image,file_url,uid,username,gmt_create'){
 		
-		return $this->_attachModel->getList(array(
+		return self::$attachmentModel->getList(array(
+			'select' => $fileds,
+			'where' => array(
+				'uid' => $uid
+			),
 			'where_in' => array(
 				array('key' => 'id','value' => $pFileIds)
-			)
-		));
+			),
+			'order' => 'id DESC'
+		),'id');
 		
-	}
-	
-	
-	/**
-	 * 
-	 */
-	public function setAttachmentTableId($tableId = ''){
-		$this->_attachModel->setTableId($tableId);
 	}
 	
 	
 	/**
 	 * 添加文件
 	 */
-	public function addFile($filename, $config = array(),$from = 0,$mod = ''){
+	public function addFile($filename, $moreConfig = array(),$from = 0,$mod = ''){
 		$config = $this->getFileConfig();
 		
 		if(FROM_BACKGROUND == $from){
@@ -148,7 +141,7 @@ class Attachment_service extends Base_service {
 	 */
 	public function deleteFiles($files , $size = array()){
 		if(is_array($files)){
-			$list = $this->_attachModel->getList(array(
+			$list = self::$attachmentModel->getList(array(
 				'select' => 'file_url',
 				'where_in' => array(
 					array('key' => 'id','value' => $files)
@@ -156,7 +149,7 @@ class Attachment_service extends Base_service {
 			));
 			
 		}else{
-			$list = $this->_attachModel->getList(array(
+			$list = self::$attachmentModel->getList(array(
 				'select' => 'file_url'
 			));
 		}
@@ -168,7 +161,6 @@ class Attachment_service extends Base_service {
 			}
 			
 			$delList = getImgPathArray($file['file_url'] , $size);
-			//file_put_contents("deleteFiles.txt",print_r($delList,true));
 			foreach($delList as $del){
 				@unlink(ROOTPATH.DIRECTORY_SEPARATOR.$del);
 			}
@@ -290,7 +282,7 @@ class Attachment_service extends Base_service {
 				$fileData['expire_time'] = $config['expire_time'];
 			}
 			
-			$file_id = $this->_attachModel->_add($fileData);
+			$file_id = self::$attachmentModel->_add($fileData);
 			$fileData['id'] = $file_id;
 			
 			//print_r($fileData);
@@ -350,13 +342,6 @@ class Attachment_service extends Base_service {
 		//$exif = exif_read_data($fileData['file_url'],0,true);
 		
 		if($fileData){
-			//上传多次情况下，清理上一次上传的文件
-			/*
-			 * 还没有解决，异步上上传后，放弃保存后， 原来的图变被删的问题, 暂时注释
-			if(self::$CI->input->post('id')){
-				$this->deleteFiles(array(self::$CI->input->post('id')),'all');
-			}
-			*/
 			return array('error' => 0, config_item('csrf_token_name') =>self::$CI->security->get_csrf_hash(),'id' => $fileData['id'], 'url'=>base_url($fileData['file_url']));
 		}else{
 			return array('error' => 1, config_item('csrf_token_name') =>self::$CI->security->get_csrf_hash(),'msg'=>$this->getErrorMsg('',''));

@@ -1,9 +1,9 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Member_Group_Model extends MY_Model {
+class Bdc_Log_Model extends MY_Model {
     
-    public $_tableName = 'member_group';
+    public $_tableName = 'bdc_log';
     public static $_tableMeta = null;
 
 
@@ -16,5 +16,4 @@ class Member_Group_Model extends MY_Model {
     	return self::$_tableMeta;
     }
     
-
 }

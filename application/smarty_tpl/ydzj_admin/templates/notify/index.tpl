@@ -14,9 +14,9 @@
       <thead>
         <tr class="thead">
           <th>序号</th>
-          <th>发送类型</th>
           <th>标题</th>
           <th>发送方式</th>
+          <th>目标组</th>
           <th>发送对象匹配模式</th>
           <th>成员</th>
           <th>创建时间</th>
@@ -27,9 +27,9 @@
       	{foreach from=$list['data'] item=item}
       	<tr class="hover edit" id="row{$item['brand_id']}">
           <td>{$item['id']}</td>
-          <td>{$group[$item['msg_type']]}</td>
           <td>{$item['title']|escape}</td>
           <td>{$item['send_ways']}</td>
+          <td>{$item['groups']}</td>
           <td>{$msgMode[$item['msg_mode']]}</td>
           <td>{cutText($item['users'],80)}</td>
           <td>{time_tran($item['gmt_create'])}</td>

@@ -461,7 +461,7 @@ $config['csrf_exclude_uris'] = array();
 | 8表示验证问答
 |
 */
-$config['security']['attackevasive'] = '1|4';
+$config['security']['attackevasive'] = '0';
 $config['security']['authkey'] = 'uuAj611ccaWq1d2m';
 $config['security']['visitkey'] = 'vs';
 $config['security']['visitcode'] = 'visitcode';

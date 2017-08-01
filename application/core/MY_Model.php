@@ -62,6 +62,26 @@ class MY_Model extends CI_Model {
     	return $this->db;
     }
     
+    /**
+     * 事务
+     */
+    public function beginTrans(){
+    	$this->db->trans_begin();
+    }
+    
+    public function rollBackTrans(){
+    	return $this->db->trans_rollback();
+    }
+    
+    public function commitTrans(){
+    	return $this->db->trans_commit();
+    }
+    
+    public function getTransStatus(){
+    	return $this->db->trans_status();
+    }
+    
+    
     
     /**
      * statictis

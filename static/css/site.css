@@ -236,9 +236,7 @@ input[type=text]:focus , input[type=password]:focus ,textarea:focus {
 .size-200x200 { width: 200px; height: 200px;}
 
 
-.disabled {
-	background:#d0d0d0;
-}
+
 
 .muted {
     color:#8C8C8C;
@@ -515,6 +513,10 @@ input[type=text].valid , input[type=password].valid {
 	padding:0 10px;
 }
 
+.disabled {
+	background:#d0d0d0;
+}
+
 .greenBtn {
     background:#34AB75;
 }
@@ -555,15 +557,6 @@ input[type=text].valid , input[type=password].valid {
 
 .grayed {
 	background:#6C6969;
-}
-
-.handle_area {
-    padding:5px 0px;
-}
-
-
-.handle_area .side_lb em {
-    color:red;	
 }
 
 .vtop {
@@ -714,6 +707,7 @@ input[type=text].valid , input[type=password].valid {
 }
 
 #topbar {
+	background:url(../img/top_line.jpg) no-repeat 50% 0;
 	background-color: rgba(242, 242, 242, 0.5);
 	filter: progid:DXImageTransform.Microsoft.gradient(enabled='true',startColorstr='#50000000', endColorstr='#50000000');
     height: 40px;
@@ -853,20 +847,64 @@ table.noext {
 
 
 
-.w-step-row{margin: 10px 0;font-size:14px;color:#fff;text-align:center;width:100%;height:25px;line-height:25px}
-.w-step2{width:49.5%;height:25px;float:left}
-.w-step3{width:33.2%;height:25px;float:left}
-.w-step4{width:24.9%;height:25px;float:left}
-.w-step5{width:19.9%;height:25px;float:left}
-.w-step6{width:16.5%;height:25px;float:left}
-.w-step7{width:14.1%;height:25px;float:left}
-.w-step8{width:12.4%;height:25px;float:left}
-.w-step-cur{background-color:#ed5b5b;text-align:center;}
-.w-step-past{background-color:#f79e9e;text-align:center;}
-.w-step-cur-future{background:url(../img/red-grey.png) no-repeat #cbcbcb;text-align:center}
-.w-step-future-future{background:url(../img/grey-grey.png) no-repeat #cbcbcb;text-align:center}
-.w-step-past-past{background:url(../img/pink-pink.png) no-repeat #f79e9e;text-align:center}
-.w-step-past-cur{background:url(../img/pink-red.png) no-repeat #ed5b5b;text-align:center}
+.w-step-style1 {margin: 10px 0;font-size:14px;color:#fff;text-align:center;width:100%;height:25px;line-height:25px}
+.w-step2{width:49.5%;float:left}
+.w-step3{width:33.2%;float:left}
+.w-step4{width:24.9%;float:left}
+.w-step5{width:19.9%;float:left}
+.w-step6{width:16.5%;float:left}
+.w-step7{width:14.1%;float:left}
+.w-step8{width:12.4%;float:left}
+.w-step-style1 .w-step-cur{background-color:#ed5b5b;text-align:center;}
+.w-step-style1 .w-step-past{background-color:#f79e9e;text-align:center;}
+.w-step-style1 .w-step-cur-future{background:url(../img/red-grey.png) no-repeat #cbcbcb;text-align:center}
+.w-step-style1 .w-step-future-future{background:url(../img/grey-grey.png) no-repeat #cbcbcb;text-align:center}
+.w-step-style1 .w-step-past-past{background:url(../img/pink-pink.png) no-repeat #f79e9e;text-align:center}
+.w-step-style1 .w-step-past-cur{background:url(../img/pink-red.png) no-repeat #ed5b5b;text-align:center}
+
+
+
+.w-step-style2 {
+	margin: 10px 0;
+    font-size: 14px;
+    color: #777777;
+    text-align: center;
+    background: #ececec;
+    position: absolute;
+    right: 1px;
+    top: 0;
+}
+
+
+
+
+.w-step-style2 .w-step-item {
+	margin:5px;
+}
+.w-step-style2 .w-step-title {
+	
+}
+
+.w-step-style2 .w-step-content {
+	padding:5px;
+}
+.w-step-style2 .w-step-past { border:1px solid #077d1e; }
+.w-step-style2 .w-step-past .w-step-title {
+	background:#077d1e;
+	color:#fff;
+}
+
+.w-step-style2 .w-step-cur { border:1px solid #fa9f1a;}
+
+.w-step-style2 .w-step-cur .w-step-title {
+	//background:#2bb646;
+	background:#fa9f1a;
+	color:#fff;
+}
+
+.w-step-style2 .w-step-future {
+	border:1px solid #bababa;
+}
 
 
 .loca { line-height:24px; color:#7292A4; }
@@ -1013,7 +1051,10 @@ table.noext {
 }
 
 
-
+.lsno {
+	font-size:1.3em;
+	font-weight:bold;
+}
 
 
 /* 客服入口 */
@@ -1252,6 +1293,23 @@ table.noext {
 	margin: 10px 0; 
 }
 
+
+.senderList li {
+    border: 1px solid #8e8e8e;
+    float: left;
+    height: 30px;
+    line-height: 30px;
+    background: #efefef;
+    padding: 2px;
+    margin:2px;
+    cursor:pointer;
+}
+
+
+.senderList li.selected {
+	background:#ffe92b;
+	border:1px solid #d20000;
+}
 
 
 @media (min-width: 1024px) {

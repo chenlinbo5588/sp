@@ -28,6 +28,20 @@
           <td class="vatop rowform"><input type="text" value="{$info['short_name']|escape}" name="short_name" id="short_name" class="txt"></td>
           <td class="vatop tips">{form_error('short_name')}</td>
         </tr>
+        <tr class="noborder">
+          <td colspan="2" class="required"><label class="validation" for="org_type">机构类型:</label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform">
+	          	<select name="org_type">
+	          		<option value="">请选择</option>
+	          		<option value="不动产中心" {if $info['org_type'] == '不动产中心'}selected{/if}>不动产中心</option>
+	          		<option value="乡镇业务登记窗口" {if $info['org_type'] == '乡镇业务登记窗口'}selected{/if}>乡镇业务登记窗口</option>
+	          		<option value="测绘单位" {if $info['org_type'] == '测绘单位'}selected{/if}>测绘单位</option>
+	          	</select>
+          </td>
+          <td class="vatop tips">{form_error('org_type')}</td>
+        </tr>
         <tr>
           <td colspan="2" class="required">LOGO标识: </td>
         </tr>

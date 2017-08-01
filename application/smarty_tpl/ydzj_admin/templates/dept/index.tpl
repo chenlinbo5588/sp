@@ -32,6 +32,7 @@
           <th>代码</th>
           <th>全称</th>
           <th>简称</th>
+          <th>机构类型</th>
           <th>LOGO</th>
           <th>状态</th>
           <th class="align-center">操作</th>
@@ -45,6 +46,7 @@
           <td>{$item['code']|escape}</td>
           <td>{$item['name']|escape}</td>
           <td>{$item['short_name']|escape}</td>
+          <td>{$item['org_type']|escape}</td>
           <td class="picture"><div class="brand-picture">{if $item['logo_pic']}<img src="{resource_url($item['logo_pic'])}"/>{/if}</div></td>
           <td class="yes-onoff">
           	<a href="JavaScript:void(0);" {if $item['status']}class="enabled"{else}class="disabled"{/if} data-id="{$item['id']}" data-fieldname="status"><img src="{resource_url('img/transparent.gif')}"></a>
@@ -55,7 +57,7 @@
       </tbody>
       <tfoot>
       	<tr class="tfoot">
-          <td colspan="8">
+          <td colspan="9">
           	<label><input type="checkbox" class="checkall" id="checkallBottom" name="chkVal">全选</label>&nbsp;
           	<a href="javascript:void(0);" class="btn deleteBtn" data-checkbox="del_id[]" data-url="{admin_site_url('dept/delete')}"><span>删除</span></a>
           	{include file="common/pagination.tpl"}

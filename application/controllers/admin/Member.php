@@ -336,6 +336,14 @@ class Member extends Ydzj_Admin_Controller {
 					break;
 				}
 				
+				
+				$info = array(
+					'sex' => 'S',
+					'allowtalk' => 'Y',
+					'freeze' => 'N'
+				);
+				
+			
 				$this->assign('feedback',getSuccessTip('添加成功'));
 				//$info = $this->Member_Model->getFirstByKey($result['data']['uid'],'uid');
 			}

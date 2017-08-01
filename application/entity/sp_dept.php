@@ -6,6 +6,7 @@ $entity = array(
 'code' => 'varchar',
 'name' => 'varchar',
 'short_name' => 'varchar',
+'org_type' => 'varchar',
 'status' => 'tinyint',
 'logo_pic' => 'varchar',
 'displayorder' => 'tinyint',

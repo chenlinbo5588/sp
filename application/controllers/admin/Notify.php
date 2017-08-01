@@ -90,7 +90,7 @@ class Notify extends Ydzj_Admin_Controller {
 			$info['content'] = $this->input->post('content');
 			$info['users'] = $this->input->post('users');
 			
-			$this->form_validation->set_rules('send_group','目标组','required|in_list[1,2,3,4]');
+			$this->form_validation->set_rules('send_group[]','目标组','required');
 			$this->form_validation->set_rules('msg_mode','发送模式','required|in_list[0,1,2]');
 			
 			$this->form_validation->set_rules('send_ways[]','发送方式','required|in_list['.implode(',',$this->_sendWays).']');
@@ -111,12 +111,12 @@ class Notify extends Ydzj_Admin_Controller {
 				}
 				
 				$data = array(
-					'msg_type' => $this->input->post('send_group'),
+					'msg_type' => 0,
 					'msg_mode' => $this->input->post('msg_mode'),
 					'send_ways' => implode(',',$this->input->post('send_ways')),
 					'title' => $this->input->post('title'),
 					'content' => $this->input->post('content'),
-					'groups' => '',
+					'groups' => implode(',',$this->input->post('send_group')),
 					'users' => ''
 				);
 				
@@ -137,7 +137,7 @@ class Notify extends Ydzj_Admin_Controller {
 			$uid = $this->input->get_post('uid');
 			$memberInfo = $this->Member_Model->getFirstByKey($uid,'uid');
 			
-			$info['send_group'] = 1;
+			
 			$info['msg_mode'] = 0;
 			$info['send_ways'] = array('站内信');
 			if($memberInfo){
@@ -162,17 +162,18 @@ class Notify extends Ydzj_Admin_Controller {
 		$info = $this->Site_Message_Model->getFirstByKey($id);
 		
 		$info['users'] = str_replace('|',"\r\n",$info['users']);
+		$info['groups'] = explode(',',$info['groups']);
 		$info['send_ways'] = explode(',',$info['send_ways']);
 		
 		$this->_subNavs['subNavs']['通知详情'] = 'notify/detail?id='.$id;
 		
 		$this->assign(array(
 			'info' => $info,
-			'group' => $groupList,
 			'detail' => true
 		));
 		
-		
+		$this->assign('group',$groupList);
+		$this->assign('inDetail',true);
 		$this->display('notify/add');
 	}
 }

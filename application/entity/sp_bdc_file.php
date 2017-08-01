@@ -2,7 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 $entity = array(
-'bdcdj_id' => 'int',
+'bdc_id' => 'int',
 'fileinfo' => 'text',
 'add_uid' => 'int',
 'add_username' => 'varchar',

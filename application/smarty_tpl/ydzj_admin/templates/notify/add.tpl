@@ -4,15 +4,17 @@
     <table class="table tb-type2">
       <tbody>
         <tr class="noborder">
-          <td colspan="2" class="required"><label>目标组: </label></td>
+          <td colspan="2" class="required"><label class="validation">目标组: </label><label><input type="checkbox" name="ckall" class="checkall" value="全选"/>全选</label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform">
+          	  <ul>
               {foreach from=$group item=item}
-              <label><input type="radio" value="{$item['id']}" name="send_group" {if $info['send_group'] == $item['id']}checked{/if} required >{$item['name']}</label>
+              	<li><label><input type="checkbox" value="{$item['id']}" group="ckall" name="send_group[]" {if $inDetail}{if in_array($item['id'],$info['groups']) }checked{/if}{else}{set_checkbox('send_group[]',$item['id'])}{/if}  >{$item['short_name']}</label></li>
               {/foreach}
+              </ul>
           </td>
-          <td class="vatop tips">{form_error('send_group')}</td>
+          <td class="vatop tips">{form_error('send_group[]')}</td>
         </tr>
         <tr class="noborder">
           <td colspan="2" class="required"><label>发送模式: </label></td>
@@ -26,7 +28,7 @@
           <td class="vatop tips">{form_error('msg_mode')} 白名单:表示只有在列表中的能够收到消息，黑名单：表示除了以上会员列表，其他会员将会收到消息。</td>
         </tr>
         <tr class="noborder">
-          <td colspan="2" class="required"><label>发送方式: </label></td>
+          <td colspan="2" class="required"><label class="validation">发送方式: </label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform">
@@ -36,22 +38,22 @@
           </td>
           <td class="vatop tips">{form_error('send_ways[]')}。</td>
         </tr>
-        <tr>
+        <tr class="userlist" style="display:none;">
           <td colspan="2" class="required"><label class="validation" for="username_list">会员列表: </label></td>
         </tr>
-        <tr class="noborder">
+        <tr class="noborder userlist" style="display:none;">
           <td class="vatop rowform"><textarea id="username_list" name="users" rows="6" class="tarea">{$info['users']}</textarea></td>
           <td class="vatop tips">{form_error('users')} 每行填写一个会员登陆名，表示选择这个组中只有这些会员将接受到消息</td>
         </tr>
         <tr>
-          <td colspan="2" class="required"><label class="validation">消息标题:<span class="hightlight">只有发送方式为站内信和邮件时标题有效，其他方式标题不起实际作用</span></label></td>
+          <td colspan="2" class="required"><label class="validation">消息标题:</label></td>
         </tr>
         <tr>
           <td class="vatop rowform"><input type="text" name="title" class="txt" value="{$info['title']|escape}"/></td>
           <td class="vatop tips">{form_error('title')} 可以插入替换符号 {#username_placeholder#} 表示会员名 </td>
         </tr>
         <tr>
-          <td colspan="2" class="required"><label class="validation">消息正文:<span class="hightlight">只有站内信和邮件支持富文本，其他方式消息通知均为纯文本</span></div></label></td>
+          <td colspan="2" class="required"><label class="validation">消息正文:</div></label></td>
         </tr>
         <tr class="noborder">
           <td colspan="2" class="vatop rowform">
@@ -68,7 +70,6 @@
     </table>
   </form>
   {include file="common/ke.tpl"}
-  {include file="common/jquery_validation.tpl"}
   <script type="text/javascript">
     var editor1;
   </script>

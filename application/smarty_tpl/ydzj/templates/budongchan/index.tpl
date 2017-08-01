@@ -25,7 +25,9 @@
 	            </li>
 	         </ul>
 	        {include file="./list.tpl"}
-		    <div class="align-right">{include file="common/pagination.tpl"}</div>
+		    <div class="align-right mg10">
+		    	{include file="common/pagination.tpl"}
+		    </div>
 	    </form>
     </div>
     <script>

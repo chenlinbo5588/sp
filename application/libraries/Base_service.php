@@ -9,7 +9,11 @@ class Base_service {
 	public static $adminUserModel = null;
 	//public static $districtModel = null;
 	public static $form_validation = null;
+	
+	// 网站设置
 	public static $settingModel = null;
+	// 附件
+	public static $attachmentModel = null;
 	
 	
 	public function __construct(){
@@ -21,6 +25,7 @@ class Base_service {
 		self::$CI = get_instance();
 		self::$CI->load->model(array(
 			'Adminuser_Model',
+			'Attachment_Model'
 			//'Common_district_Model'
 		));
 		
@@ -29,9 +34,11 @@ class Base_service {
 		self::$adminUserModel = self::$CI->Adminuser_Model;
 		//self::$districtModel = self::$CI->Common_District_Model;
 		self::$settingModel = self::$CI->Setting_Model;
+		self::$attachmentModel = self::$CI->Attachment_Model;
 		
 		self::$dbInstance = self::$CI->Member_Model->getDb();
 	}
+	
 	
 	
 	/*

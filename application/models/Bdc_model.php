@@ -1,9 +1,9 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Bdcdj_Model extends MY_Model {
+class Bdc_Model extends MY_Model {
     
-    public $_tableName = 'bdcdj';
+    public $_tableName = 'bdc';
     public static $_tableMeta = null;
 
 

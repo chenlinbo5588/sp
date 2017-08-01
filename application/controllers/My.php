@@ -267,6 +267,17 @@ class My extends MyYdzj_Controller {
 	}
 	
 	
+	/**
+	 * 发送人设置
+	 */
+	public function sender(){
+		
+		
+		
+		$this->display();
+	}
+	
+	
 	
 	/**
 	 * 

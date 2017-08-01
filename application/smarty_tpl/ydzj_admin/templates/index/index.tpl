@@ -314,6 +314,7 @@ $(function(){
 	                <li><a class="link actived" id="nav_dashboard" href="javascript:;" onclick="openItem('dashboard');"><span>控制台</span></a></li>
 					<li><a class="link" id="nav_setting" href="javascript:;" onclick="openItem('setting');"><span>设置</span></a></li>
 					<li><a class="link" id="nav_member" href="javascript:;" onclick="openItem('member');"><span>会员</span></a></li>
+					<li><a class="link" id="nav_bdc" href="javascript:;" onclick="openItem('bdc');"><span>不动产</span></a></li>
 					<li><a class="link" id="nav_dept" href="javascript:;" onclick="openItem('dept');"><span>办事机构</span></a></li>
 					{*
 					<li><a class="link" id="nav_team" href="javascript:;" onclick="openItem('team');"><span>队伍</span></a></li>
@@ -394,6 +395,17 @@ $(function(){
                     <li><a href="javascript:void(0);" id="credits_member" onclick="openItem('credits,member,member');">积分管理</a></li>
                     <li><a href="javascript:void(0);" id="album_member" onclick="openItem('album,member,member');">会员相册</a></li>
                     <li><a href="javascript:void(0);" id="tag_member" onclick="openItem('tag,member,member');">会员标签</a></li>*}
+                  </ol>
+                </dd>
+              </dl>
+            </li>
+          </ul>
+          <ul id="sort_bdc">
+            <li>
+              <dl>
+                <dd>
+                  <ol>
+                    <li><a href="javascript:void(0);" id="index_bdc" onclick="openItem('index,bdc,bdc');">不动产信息</a></li>
                   </ol>
                 </dd>
               </dl>
