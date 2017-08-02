@@ -6,6 +6,6 @@ $entity = array(
 'name' => 'varchar',
 'level' => 'tinyint',
 'usetype' => 'tinyint',
-'upid' => 'mediumint',
+'upid' => 'int',
 'displayorder' => 'smallint'
 );

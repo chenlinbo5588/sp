@@ -2,10 +2,10 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 $entity = array(
-'uid' => 'mediumint',
+'uid' => 'int',
 'id_card' => 'varchar',
-'aid_idcardfront' => 'mediumint',
-'aid_idcardback' => 'mediumint',
+'aid_idcardfront' => 'int',
+'aid_idcardback' => 'int',
 'id_cardfront' => 'varchar',
 'id_cardback' => 'varchar',
 'status' => 'tinyint',

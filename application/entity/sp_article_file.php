@@ -2,9 +2,9 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 $entity = array(
-'id' => 'mediumint',
+'id' => 'int',
 'orig_name' => 'varchar',
-'file_id' => 'mediumint',
+'file_id' => 'int',
 'article_id' => 'int',
 'file_url' => 'varchar',
 'file_size' => 'int',

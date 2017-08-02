@@ -2,7 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 $entity = array(
-'id' => 'mediumint',
+'id' => 'int',
 'orig_name' => 'varchar',
 'file_name' => 'varchar',
 'file_type' => 'varchar',
@@ -17,7 +17,7 @@ $entity = array(
 'status' => 'tinyint',
 'expire_time' => 'int',
 'upload_from' => 'tinyint',
-'uid' => 'mediumint',
+'uid' => 'int',
 'username' => 'varchar',
 'mod' => 'varchar',
 'gmt_create' => 'int',

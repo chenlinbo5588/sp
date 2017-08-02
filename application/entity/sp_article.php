@@ -3,10 +3,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 $entity = array(
 'article_id' => 'int',
-'ac_id' => 'mediumint',
+'ac_id' => 'int',
 'article_url' => 'varchar',
 'article_pic' => 'varchar',
-'article_pic_id' => 'mediumint',
+'article_pic_id' => 'int',
 'article_show' => 'tinyint',
 'article_sort' => 'tinyint',
 'article_title' => 'varchar',
