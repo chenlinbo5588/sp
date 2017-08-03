@@ -9,13 +9,15 @@ class Building_service extends Base_service {
 	private $_personModel ;
 	private $_houseModel;
 	private $_houseImagesModel;
+	private $_houseDetailModel;
+	
 	
 	
 	
 	public function __construct(){
 		parent::__construct();
 		
-		self::$CI->load->model(array('Village_Model', 'Person_Model','House_Model','House_Images_Model'));
+		self::$CI->load->model(array('Village_Model', 'Person_Model','House_Model','House_Images_Model','House_Detail_Model'));
 		self::$CI->load->library('arcgis/FeatureRest');
 		
 		
@@ -23,19 +25,36 @@ class Building_service extends Base_service {
 		$this->_personModel = self::$CI->Person_Model;
 		$this->_houseModel = self::$CI->House_Model;
 		$this->_houseImagesModel = self::$CI->House_Images_Model;
-		
+		$this->_houseDetailModel = self::$CI->House_Detail_Model;
 		
 		$this->_arcgisApiClient = self::$CI->featurerest;
-		
 	}
-	
-	
 	
 	
 	public function setArcgisUrl($baseUrl,$featureUrl){
 		$this->_arcgisApiClient->setUrl($baseUrl,$featureUrl);
 	}
 	
+	
+	public function autoSetXY($houseInfo){
+		//print_r($houseInfo);
+		
+		if($houseInfo['object_id'] && $houseInfo['x'] < 1 ){
+			$result = $this->_arcgisApiClient->query(array(
+				'objectIds' => $houseInfo['object_id']
+			));
+			
+			if($result['features'][0]){
+				$this->_houseModel->update($result['features'][0]['geometry'],array('hid' => $houseInfo['hid']));
+			}
+			
+			$houseInfo = array_merge($houseInfo,$result['features'][0]['geometry']);
+		}
+		
+		return $houseInfo;
+		
+		
+	}
 	
 	public function getTownVillageList($townName){
 		$list = $this->_villageModel->getList(array(
@@ -90,14 +109,18 @@ class Building_service extends Base_service {
 		$personUpdate = array(
 			'yhdz' => count($houseList) > 1 ? 1 : 0,
 			'housecnt' => count($houseList),
-			'total_wjmj' => 0
+			'total_ydmj' => 0,
+			'total_jzzdmj' => 0,
+			'total_jzmj' => 0,
 		);
 		
 		foreach($houseList as $houseItem){
-			$personUpdate['total_wjmj'] += $houseItem['wf_wjmj'];
+			$personUpdate['total_ydmj'] += $houseItem['wf_ydmj'];
+			$personUpdate['total_jzzdmj'] += $houseItem['wf_jzzdmj'];
+			$personUpdate['total_jzmj'] += $houseItem['wf_jzmj'];
 		}
 		
-		$this->_personModel->update($personUpdate,array(
+		return $this->_personModel->update($personUpdate,array(
 			'id' => $personId
 		));
 		
@@ -230,22 +253,10 @@ class Building_service extends Base_service {
 			
 			$this->_houseModel->update(array('photos' => json_encode($imageList)),array('hid' => $pBuildingParam['hid']));
 			
-			//更新person 表统计信息
-			$houseList = $this->_houseModel->getList(array(
-				'where' => array('owner_id' => $pBuildingParam['id'])
-			));
 			
-			$personUpdate = array(
-				'total_wjmj' => 0
-			);
 			
-			foreach($houseList as $houseItem){
-				$personUpdate['total_wjmj'] += $houseItem['wf_wjmj'];
-			}
+			$this->updatePersonHouseByPersonId($personInfo['id']);
 			
-			$this->_personModel->update($personUpdate,array(
-				'id' => $personInfo['id']
-			));
 		}
 		
 		return true;
@@ -379,6 +390,25 @@ class Building_service extends Base_service {
 				return false;
 			}
 		}
+	}
+	
+	
+	/**
+	 * 获得详情
+	 */
+	public function getHouseInfo($pHouseId){
+		
+		$info = $this->_houseModel->getFirstByKey($pHouseId,'hid');
+		
+		$info['photos'] = json_decode($info['photos'],true);
+		$info['houseDetail'] = $this->_houseDetailModel->getList(array(
+			'where'=> array(
+				'house_id' => $info['hid']
+			)
+		));
+		
+		
+		return $info;
 	}
 	
 }

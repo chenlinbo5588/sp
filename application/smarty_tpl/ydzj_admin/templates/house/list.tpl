@@ -18,7 +18,7 @@
                     <th>{#sp_new#}<br/>{#sp_ycyj#}</th>
                     <th>{#sp_ydmj#}<br/>{#sp_jzmj#}</th>
                     <th>{#illegal#}</th>
-                    <th>{#wf_wjsj#}<br/>{#wf_wjmj#}</th>
+                    <th>{#wf_wjsj#}<br/>{#wf_ydmj#}</th>
                     <th>{#deal_way#}</th>
                     <th>{#op#}</th>
                 </tr>
@@ -43,7 +43,7 @@
 		           <td>{$item['sp_new']}<br/>{$item['sp_ycyj']}</td>
 		           <td>{$item['sp_ydmj']}<br/>{$item['sp_jzmj']}</td>
 		           <td>{$illegalList[$item['illegal']]}</td>
-		           <td>{$item['wf_wjsj']}<br/>{$item['wf_wjmj']}</td>
+		           <td>{$item['wf_wjsj']}<br/>{$item['wf_ydmj']}<br/>{$item['wf_jzzdmj']}<br/>{$item['wf_jzmj']}</td>
 		           <td>{$dealWayList[$item['deal_way']]}</td>
 		           <td>
 		           		<a href="{admin_site_url('house/detail?hid='|cat:$item['hid'])}">浏览</a>

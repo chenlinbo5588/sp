@@ -1,4 +1,4 @@
-   {include file="./house_form.tpl"}
+    {include file="./house_form.tpl"}
    	{include file="./house_script.tpl"}
 	<script>
 		

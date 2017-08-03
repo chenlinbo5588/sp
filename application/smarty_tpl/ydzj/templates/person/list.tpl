@@ -12,7 +12,7 @@
                     <th>{#address#}</th>
                     <th>{#yhdz#}</th>
                     <th>{#housecnt#}</th>
-                    <th>{#total_wjmj#}</th>
+                    <th>{#total_ydmj#}<br/>{#total_jzzdmj#}<br/>{#total_jzmj#}</th>
                     <th>{#add_username#}<br/>{#gmt_create#}</th>
                     <th>{#edit_username#}<br/>{#gmt_modify#}</th>
                     <th>{#op#}</th>
@@ -32,7 +32,11 @@
 		           <td>{$item['address']}</td>
 		           <td>{if $item['yhdz'] == 1}是{else}否{/if}</td>
 		           <td>{if $item['housecnt'] == 0}<span>暂无</span>{else}<a href="{site_url('house/index?owner_id='|cat:$item['id'])}">{$item['housecnt']}宅</a>{/if} | <a href="{site_url('house/add?owner_id='|cat:$item['id'])}">添加建筑</a></td>
-		           <td>{$item['total_wjmj']}</td>
+		           <td>
+		           		<div>{$item['total_ydmj']}</div>
+		           		<div>{$item['total_jzzdmj']}</div>
+		           		<div>{$item['total_jzmj']}</div>
+		           </td>
 		           <td>
 		           		{$item['add_username']|escape}<br/>
 		           		{time_tran($item['gmt_create'])}

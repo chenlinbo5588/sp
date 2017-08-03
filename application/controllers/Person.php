@@ -448,8 +448,11 @@ class Person extends MyYdzj_Controller {
 						));
 						
 						if($info){
-							//do update,为了更新数据源安全性 只更新自己村，防止导入时身份证匹配自动更新其他村的
-							$affectRow = $this->Person_Model->update(array_merge($rowValue,$this->addWhoHasOperated('edit')),array('id_no' => $rowValue['id_no'],'village_id' => $this->_profile['basic']['village_id']));
+							if($info['qlr_name'] == $rowValue['qlr_name']){
+								//只有名称相等时 才去更新
+								//do update,为了更新数据源安全性 只更新自己村，防止导入时身份证匹配自动更新其他村的
+								$affectRow = $this->Person_Model->update(array_merge($rowValue,$this->addWhoHasOperated('edit')),array('id_no' => $rowValue['id_no'],'village_id' => $this->_profile['basic']['village_id']));
+							}
 						}else{
 							//do insert
 							$affectRow = $this->Person_Model->_add(array_merge($rowValue,$this->addWhoHasOperated('add')));

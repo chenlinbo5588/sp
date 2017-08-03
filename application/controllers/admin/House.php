@@ -98,22 +98,23 @@ class House extends Ydzj_Admin_Controller {
 		$feedback = '';
 		$hid = $this->input->get_post('hid');
 		
-		$info = $this->House_Model->getFirstByKey($hid,'hid');
-		$person = $this->Person_Model->getFirstByKey($info['owner_id'],'id');
+		$info = $this->building_service->getHouseInfo($hid);
 		$villageList = $this->building_service->getTownVillageList(config_item('site_town'));
+		
+		$this->building_service->setArcgisUrl(config_item('arcgis_server'),$this->_mapConfig['编辑要素']['标准建筑点']);
+		$info = $this->building_service->autoSetXY($info);
 		
 		if($this->isPostRequest()){
 			
 		}else{
 			
-			
 			$houseList = $this->House_Model->getList(array(
 				'where' => array(
-					'owner_id' => $person['id']
+					'owner_id' => $info['owner_id']
 				)
 			));
 			
-			$this->assign('fileList',json_decode($info['photos'],true));
+			$this->assign('fileList',$info['photos']);
 			
 			$this->assign('villageList',$villageList);
 			$this->assign('info',$info);

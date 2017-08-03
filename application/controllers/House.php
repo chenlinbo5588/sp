@@ -131,8 +131,13 @@ class House extends MyYdzj_Controller {
 		$feedback = '';
 		$hid = $this->input->get_post('hid');
 		
-		$info = $this->House_Model->getFirstByKey($hid,'hid');
-		$person = $this->Person_Model->getFirstByKey($info['owner_id'],'id');
+		$info = $this->building_service->getHouseInfo($hid);
+		
+		$this->building_service->setArcgisUrl(config_item('arcgis_server'),$this->_mapConfig['编辑要素']['标准建筑点']);
+		
+		$info = $this->building_service->autoSetXY($info);
+		
+		
 		$villageList = $this->building_service->getTownVillageList(config_item('site_town'));
 		
 		if($this->isPostRequest()){
@@ -148,7 +153,8 @@ class House extends MyYdzj_Controller {
 				}
 				
 				
-				$this->building_service->setArcgisUrl(config_item('arcgis_server'),$this->_mapConfig['编辑要素']['标准建筑点']);
+				$person = $this->Person_Model->getFirstByKey($info['owner_id'],'id');
+				
 				$data['hid'] = $this->input->get_post('hid');
 				$data['object_id'] = $info['object_id'];
 				
@@ -163,10 +169,9 @@ class House extends MyYdzj_Controller {
 			}
 		}else{
 			
-			
 			$houseList = $this->House_Model->getList(array(
 				'where' => array(
-					'owner_id' => $person['id']
+					'owner_id' => $info['owner_id']
 				)
 			));
 			
@@ -176,7 +181,7 @@ class House extends MyYdzj_Controller {
 			);
 			
 			
-			$this->assign('fileList',json_decode($info['photos'],true));
+			$this->assign('fileList',$info['photos']);
 			$this->assign('mapUrlConfig',$this->_mapConfig);
 			$this->assign('villageList',$villageList);
 			$this->assign('info',$info);
@@ -192,9 +197,11 @@ class House extends MyYdzj_Controller {
 		$feedback = '';
 		$hid = $this->input->get_post('hid');
 		
-		$info = $this->House_Model->getFirstByKey($hid,'hid');
-		$person = $this->Person_Model->getFirstByKey($info['owner_id'],'id');
+		$info = $this->building_service->getHouseInfo($hid);
 		$villageList = $this->building_service->getTownVillageList(config_item('site_town'));
+		
+		$this->building_service->setArcgisUrl(config_item('arcgis_server'),$this->_mapConfig['编辑要素']['标准建筑点']);
+		$info = $this->building_service->autoSetXY($info);
 		
 		if($this->isPostRequest()){
 			
@@ -202,7 +209,7 @@ class House extends MyYdzj_Controller {
 			
 			$houseList = $this->House_Model->getList(array(
 				'where' => array(
-					'owner_id' => $person['id']
+					'owner_id' => $info['owner_id']
 				)
 			));
 			
@@ -212,7 +219,7 @@ class House extends MyYdzj_Controller {
 			);
 			
 			
-			$this->assign('fileList',json_decode($info['photos'],true));
+			$this->assign('fileList',$info['photos']);
 			$this->assign('mapUrlConfig',$this->_mapConfig);
 			$this->assign('villageList',$villageList);
 			$this->assign('info',$info);
@@ -257,8 +264,6 @@ class House extends MyYdzj_Controller {
 	
 	
 	public function add(){
-		
-
 		
 		$ownerId = $this->input->get_post('owner_id');
 		$person = $this->Person_Model->getFirstByKey($ownerId,'id');
@@ -418,7 +423,6 @@ class House extends MyYdzj_Controller {
 	 * 
 	 */
 	public function map(){
-		
 		
 		$this->_breadCrumbs[] = array(
 			'title' => '地图浏览',

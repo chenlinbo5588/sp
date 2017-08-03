@@ -71,7 +71,6 @@ $config['person_validation'] = array(
 			'title' => '家庭在册人口数量',
 			'rules' => 'required|is_natural_no_zero'
 		),
-		
 	)
 );
 
@@ -84,29 +83,34 @@ $config['house_validation'] = array(
 		'owner_name' => array('title' => '权力人名称' , 'required' => true , 'rule' => 'required|max_length[200]'),
 		'village_id' => array('title' => '房屋坐落所在村' , 'condition' => true  , 'defaultValue' => 0, 'rule' => 'required|is_natural_no_zero'),
 		'address' => array('title' => '地址' , 'condition' => true , 'whenSelfNotEmpty' => true, 'defaultValue' => '',  'rule' => 'required|max_length[80]'),
-		
 		'land_oa' => array('title' => '土地权属性质' , 'required' => true , 'rule' => 'required|in_list[1,2]'),
 		'land_no' => array('title' => '土地使用权证号' , 'condition' => true , 'whenSelfNotEmpty' => true, 'defaultValue' => '', 'rule' => 'required|max_length[50]'),
+		'pw_no' => array('title' => '批文号' , 'condition' => true , 'whenSelfNotEmpty' => true, 'defaultValue' => '', 'rule' => 'required|max_length[50]'),
 		'zddh' => array('title' => '宗地地号' , 'condition' => true , 'whenSelfNotEmpty' => true, 'defaultValue' => '', 'rule' => 'required|max_length[50]'),
 		'land_cate' => array('title' => '土地类别' , 'condition' => true , 'whenSelfNotEmpty' => true, 'defaultValue' => '', 'rule' => 'required|max_length[50]'),
 		
-		'jzw_ydmj' => array('title' => '用地面积' , 'condition' => true , 'whenSelfNotEmpty' => true, 'defaultValue' => 0, 'rule' => 'required|numeric|greater_than_equal_to[0]'),
-		'jzw_jzzdmj' => array('title' => '建筑占地面积' , 'condition' => true , 'whenSelfNotEmpty' => true, 'defaultValue' =>0, 'rule' => 'required|numeric|greater_than_equal_to[0]'),
-		'jzw_jzmj' => array('title' => '建筑面积' , 'condition' => true , 'whenSelfNotEmpty' => true, 'defaultValue' => 0, 'rule' => 'required|numeric|greater_than_equal_to[0]'),
-		'jzw_plies' => array('title' => '建筑层数' ,'condition' => true , 'whenSelfNotEmpty' => true, 'defaultValue' => '', 'rule' => 'required|max_length[30]'),
+		'sp_new' => array('title' => '审批时间(新建)' , 'condition' => true , 'whenSelfNotEmpty' => true, 'defaultValue' => NULL , 'rule' => 'required|valid_date'),
+		'sp_ycyj' => array('title' => '审批时间(原拆原建)' , 'condition' => true , 'whenSelfNotEmpty' => true, 'defaultValue' => NULL , 'rule' => 'required|valid_date'),
+		'sp_jz' => array('title' => '批准建筑信息(间*层)' ,'condition' => true , 'whenSelfNotEmpty' => true, 'defaultValue' => '', 'rule' => 'required|max_length[50]'),
+		'sp_ydmj' => array('title' => '批准用地面积' , 'condition' => true , 'whenSelfNotEmpty' => true, 'defaultValue' => 0, 'rule' => 'required|numeric|greater_than_equal_to[0]'),
+		'sp_jzzdmj' => array('title' => '批准建筑占地面积' , 'condition' => true , 'whenSelfNotEmpty' => true, 'defaultValue' => 0, 'rule' => 'required|numeric|greater_than_equal_to[0]'),
+		'sp_jzmj' => array('title' => '批准建筑面积' , 'condition' => true , 'whenSelfNotEmpty' => true, 'defaultValue' => 0, 'rule' => 'required|numeric|greater_than_equal_to[0]'),
+		
+		
+		'jzw_ydmj' => array('title' => '用地总面积' , 'condition' => true , 'whenSelfNotEmpty' => true, 'defaultValue' => 0, 'rule' => 'required|numeric|greater_than_equal_to[0]'),
+		'jzw_jzzdmj' => array('title' => '建筑占地总面积' , 'condition' => true , 'whenSelfNotEmpty' => true, 'defaultValue' =>0, 'rule' => 'required|numeric|greater_than_equal_to[0]'),
+		'jzw_jzmj' => array('title' => '建筑总面积' , 'condition' => true , 'whenSelfNotEmpty' => true, 'defaultValue' => 0, 'rule' => 'required|numeric|greater_than_equal_to[0]'),
+		'jzw_plies' => array('title' => '房屋信息(间*层)' ,'condition' => true , 'whenSelfNotEmpty' => true, 'defaultValue' => '', 'rule' => 'required|max_length[30]'),
 		'jzw_jg' => array('title' => '房屋结构' , 'condition' => true , 'whenSelfNotEmpty' => true, 'defaultValue' => '' , 'rule' => 'required|max_length[20]'),
 		'jzw_unit' => array('title' => '幢单元数' , 'condition' => true , 'whenSelfNotEmpty' => true, 'defaultValue' => 0, 'rule' => 'required|is_natural_no_zero'),
 		'purpose' => array('title' => '用途' , 'condition' => true , 'whenSelfNotEmpty' => true, 'defaultValue' => '' , 'rule' => 'required|max_length[50]'),
-
-		'sp_new' => array('title' => '审批时间(新建)' , 'condition' => true , 'whenSelfNotEmpty' => true, 'defaultValue' => NULL , 'rule' => 'required|valid_date'),
-		'sp_ycyj' => array('title' => '审批时间(原拆原建)' , 'condition' => true , 'whenSelfNotEmpty' => true, 'defaultValue' => NULL , 'rule' => 'required|valid_date'),
-		'sp_ydmj' => array('title' => '批准用地面积' , 'condition' => true , 'whenSelfNotEmpty' => true, 'defaultValue' => 0, 'rule' => 'required|numeric|greater_than_equal_to[0]'),
-		'sp_jzmj' => array('title' => '批准建筑面积' , 'condition' => true , 'whenSelfNotEmpty' => true, 'defaultValue' => 0, 'rule' => 'required|numeric|greater_than_equal_to[0]'),
+		
 		'illegal' => array('title' => '违法现象' , 'required' => true , 'rule' => 'required|in_list[0,1,2,3]'),
 		
 		'wf_wjsj' => array('title' => '违建时间' , 'condition' => true , 'whenSelfNotEmpty' => true, 'defaultValue' => NULL , 'rule' => 'required|valid_date'),
-		'wf_wjmj' => array('title' => '违建占地面积' , 'condition' => true , 'whenSelfNotEmpty' => true, 'defaultValue' => 0, 'rule' => 'required|numeric|greater_than_equal_to[0]'),
-		'wf_jzmj' => array('title' => '违建建筑面积' , 'condition' => true , 'whenSelfNotEmpty' => true, 'defaultValue' => 0, 'rule' => 'required|numeric|greater_than_equal_to[0]'),
+		'wf_ydmj' => array('title' => '违建用地总面积' , 'condition' => true , 'whenSelfNotEmpty' => true, 'defaultValue' => 0, 'rule' => 'required|numeric|greater_than_equal_to[0]'),
+		'wf_jzzdmj' => array('title' => '违建建筑占地总面积' , 'condition' => true , 'whenSelfNotEmpty' => true, 'defaultValue' => 0, 'rule' => 'required|numeric|greater_than_equal_to[0]'),
+		'wf_jzmj' => array('title' => '违建建筑总面积' , 'condition' => true , 'whenSelfNotEmpty' => true, 'defaultValue' => 0, 'rule' => 'required|numeric|greater_than_equal_to[0]'),
 		
 		'cate' => array('title' => '使用分类' , 'condition' => true , 'whenSelfNotEmpty' => true, 'defaultValue' => 0, 'rule' => 'required|in_list[1,2,3,4]'),
 		'deal_way' => array('title' => '分类处置办法' ,'condition' => true , 'whenSelfNotEmpty' => true, 'defaultValue' => 0, 'rule' => 'required|in_list[1,2,3,4]')   ,

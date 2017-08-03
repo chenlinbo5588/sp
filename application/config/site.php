@@ -129,5 +129,6 @@ $config['sex_type'] = array(
 	'2' => '女'
 );
 
-$config['site_town'] = '掌起镇';
+//$config['site_town'] = '掌起镇';
+$config['site_town'] = '坎墩街道';
 
