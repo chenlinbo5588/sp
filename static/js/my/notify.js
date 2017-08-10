@@ -13,6 +13,7 @@
 	pmInterval:null,
 	pmInUpdate: false,
 	initSWF: function(targetDiv,soundswf,expressswf){
+		/*
     	var flashvars = {
         };
         var params = {
@@ -24,7 +25,7 @@
         var attributes = {};
         swfobject.embedSWF(soundswf, targetDiv, "1", "1", "9.0.0", expressswf, flashvars, params, attributes);
         this.swfobject = swfobject;
-        
+        */
         return this;
     },
     showToast:function(){
@@ -117,6 +118,7 @@
     },
     
     playSound: function(playTimes) {
+		return;
         var sound = swfobject.getObjectById(this.wrapDiv);
         if (sound) {
             sound.SetVariable("f", this.soudMp3);

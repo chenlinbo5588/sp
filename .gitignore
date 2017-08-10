@@ -3,6 +3,8 @@
 /static/img/captcha/*
 !/static/img/captcha/index.html
 
+static/IMAGE_255x255/
+static/all/
 
 temp/
 /js/arcgis_js_api/
