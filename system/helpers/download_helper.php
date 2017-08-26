@@ -133,19 +133,51 @@ if ( ! function_exists('force_download'))
 		{
 			@ob_clean();
 		}
-
+		
+		if (strpos($_SERVER['HTTP_USER_AGENT'], "MSIE") !== FALSE){
+            //$encoded_filename = urlencode($filename);
+            $encoded_filename = iconv('UTF-8','GBK',$filename);
+            //$encoded_filename = str_replace("+", "%20", $filename);
+            
+			header('Content-Type: "'.$mime.'"');
+			header('Content-Disposition: attachment; filename="'.$encoded_filename.'"');
+			header('Expires: 0');
+			header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+			header("Content-Transfer-Encoding: binary");
+			header('Pragma: public');
+			header("Content-Length: ".$filesize);
+			
+		}else if(strpos($_SERVER['HTTP_USER_AGENT'], "Firefox") !== FALSE){
+            header('Content-Type: "'.$mime.'"');
+			header('Content-Disposition: attachment; filename*="utf8\'\'' . $filename . '"');
+			header("Content-Transfer-Encoding: binary");
+			header('Expires: 0');
+			header('Pragma: no-cache');
+			header("Content-Length: ".$filesize);
+        }else{
+			header('Content-Type: "'.$mime.'"');
+			header('Content-Disposition: attachment; filename="'.$filename.'"');
+			header("Content-Transfer-Encoding: binary");
+			header('Expires: 0');
+			header('Pragma: no-cache');
+			header("Content-Length: ".$filesize);
+		}
+		
+		/*
 		// Generate the server headers
 		header('Content-Type: '.$mime);
 		header('Content-Disposition: attachment; filename="'.$filename.'"');
 		header('Expires: 0');
 		header('Content-Transfer-Encoding: binary');
 		header('Content-Length: '.$filesize);
+		
 
 		// Internet Explorer-specific headers
 		if (isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== FALSE)
 		{
 			header('Cache-Control: no-cache, no-store, must-revalidate');
 		}
+		*/
 
 		header('Pragma: no-cache');
 

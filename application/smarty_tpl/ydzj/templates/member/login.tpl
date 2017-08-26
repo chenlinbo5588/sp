@@ -1,7 +1,11 @@
 {include file="common/header.tpl"}
 <style>
 body {
-	background:url({resource_url('img/login/bg_1.jpg')}) no-repeat center center;
+	background:url({resource_url('img/login/bg_4.jpg')}) no-repeat center center;
+}
+
+#footer .row1 {
+	background:none;
 }
 
 </style>

@@ -177,4 +177,11 @@ class Base_service {
 		$list = self::$settingModel->getList($condition);
 		return $this->toEasyUseArray($list,'name');
 	}
+	
+	
+	public function getMessageService(){
+		self::$CI->load->library('Message_service');
+		return self::$CI->message_service;
+		
+	}
 }

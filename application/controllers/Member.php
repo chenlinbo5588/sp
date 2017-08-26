@@ -88,7 +88,7 @@ class Member extends Ydzj_Controller {
 					}else{
 						//增加已个站内信立刻刷新标志，用户登陆可立刻看到消息刷新
 						$param = $this->encrypt->encode($this->_reqtime + 10);
-						js_redirect('my/index/?spm='.urlencode($param));
+						js_redirect('my/base/?spm='.urlencode($param));
 					}
 					
 				}else{

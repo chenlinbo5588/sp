@@ -4,6 +4,7 @@
 !/static/img/captcha/index.html
 
 
+
 temp/
 /js/arcgis_js_api/
 /static/js/arcgis_js_api/
@@ -31,3 +32,8 @@ proxy.sqlite
 proxy_log.log
 web.config
 samples/
+
+
+static/IMAGE_255x255/
+static/all/
+

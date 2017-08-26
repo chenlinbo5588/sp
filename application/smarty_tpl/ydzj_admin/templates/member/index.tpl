@@ -40,7 +40,7 @@
         <tr class="hover member">
           <td class="w24"></td>
           <td class="w120 picture">
-            <div class=""><span class="thumb"><i></i><img src="{resource_url($item['avatar_s'])}"  data-avatar="{$item['avatar_m']}" /></span></div>
+            <div class=""><span class="thumb"><i></i><img src="{if $item['avatar_s']}{resource_url($item['avatar_s'])}{else}{resource_url($siteSetting['default_user_portrait'])}{/if}"  data-avatar="{$item['avatar_m']}" /></span></div>
           </td>
           <td>{$item['username']|escape}</td>
           <td>{$item['mobile']|escape}</td>

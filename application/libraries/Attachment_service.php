@@ -114,6 +114,7 @@ class Attachment_service extends Base_service {
 			$config = array_merge($config,$moreConfig);
 		}
 		
+		
 		return $this->addAttachment($filename,$config,$from,$mod);
 	}
 	
@@ -213,7 +214,6 @@ class Attachment_service extends Base_service {
 				$currentConfig = $this->_imageSizeConfig[$resizeName];
 			}
 			
-			//file_put_contents("currentResizeConfig.txt",print_r($currentConfig,true));
 			$fileData['img_'.$resizeName] = '';
 			$resize['maintain_ratio'] = $currentConfig['maintain_ratio'];
 			$resize['new_image'] = $fileData['raw_name'].'_'.$resizeName.$fileData['file_ext'];

@@ -364,21 +364,39 @@ input[type=text]:focus , input[type=password]:focus ,textarea:focus {
     text-align: center;
 }
 
-
 .error {
 	color:red;
 }
 
+
+.notfound {
+	border:1px solid #CBCBCB;
+}
+
+.notfound .ico {
+	background: url(../img/error_page_bg.png) no-repeat left center;
+    display: block;
+    height: 43px;
+    line-height: 40px;
+    /* width: 20px; */
+    padding: 0 0 0 40px;
+    color: #b61212;
+}
+
 label.validation {font-weight:700; background: url(../img/sky/bg_position.gif) no-repeat scroll -620px -660px; padding-left:16px;}
 .formtable label.error {font-weight:700; background: url(../img/sky/bg_position.gif) no-repeat scroll -620px -730px; padding-left:25px;}
- 
+
+
 input[type=text].error,input[type=password].error {
     border:1px solid red;
-    background:#fff url(../img/access_disallow.gif) no-repeat right center;
+}
+
+textarea.error {
+	border:1px solid red;
 }
 
 input[type=text].valid , input[type=password].valid {
-	background:#fff url(../img/access_allow.gif) no-repeat right center;
+	
 }
 
 
@@ -600,7 +618,7 @@ input[type=text].valid , input[type=password].valid {
     _position: absolute;
     /* margin-left: 490px; */
     /* left: 50%; */
-    bottom: 20px;
+    bottom: 70px;
     _bottom: "auto";
     cursor: pointer;
     font-size: 0px;
@@ -731,10 +749,9 @@ input[type=text].valid , input[type=password].valid {
 }
 
 
-fieldset {  
-    padding:10px;  
-    margin:10px 0;  
-    color:#333;   
+fieldset {
+	padding:0 10px;
+    color:#333;
     border:#06c solid 1px;  
 }
 
@@ -803,6 +820,31 @@ table.noext {
     border-width:1px;
 }
 
+.shouli {
+	1background:url(../img/workflow.png) ;
+}
+
+.shouli td {
+	
+}
+
+.unshouli td {
+	background:#faf71a;
+}
+
+
+.fixbar {
+	position: fixed;
+	bottom: 0px;
+	left: 0px;
+	width: 100%;
+	padding: 5px 0 5px 0;
+	text-align: center;
+	background: #E0F8D9;
+	z-index:2;
+}
+
+
 
 .thumblists {}
 .thumblists li { float: left; }
@@ -865,14 +907,16 @@ table.noext {
 
 
 .w-step-style2 {
+	width:200px;
 	margin: 10px 0;
     font-size: 14px;
     color: #777777;
-    text-align: center;
+    
     background: #ececec;
     position: absolute;
     right: 1px;
     top: 0;
+    
 }
 
 
@@ -882,19 +926,20 @@ table.noext {
 	margin:5px;
 }
 .w-step-style2 .w-step-title {
-	
+	text-align: center;
 }
 
 .w-step-style2 .w-step-content {
 	padding:5px;
 }
-.w-step-style2 .w-step-past { border:1px solid #077d1e; }
+
+.w-step-style2 .w-step-past  { border:1px solid #077d1e; }
 .w-step-style2 .w-step-past .w-step-title {
 	background:#077d1e;
 	color:#fff;
 }
 
-.w-step-style2 .w-step-cur { border:1px solid #fa9f1a;}
+.w-step-style2 .w-step-cur, .w-step-style2 .step-uncomplete { border:1px solid #fa9f1a;}
 
 .w-step-style2 .w-step-cur .w-step-title {
 	//background:#2bb646;
@@ -902,10 +947,19 @@ table.noext {
 	color:#fff;
 }
 
+.w-step-style2 .step-complete { border:1px solid #077d1e; }
+.w-step-style2 .step-complete .w-step-title {
+	background:#077d1e;
+	color:#fff;
+}
+
 .w-step-style2 .w-step-future {
 	border:1px solid #bababa;
 }
 
+.w-step-style2 .w-step-reason {
+	color:red;
+}
 
 .loca { line-height:24px; color:#7292A4; }
 .loca div, .loca strong, .crumbs a, a.arrow { float:left; margin-left: 2px;}
@@ -1188,6 +1242,7 @@ table.noext {
 
 #my .panel_content {
 	margin-left:130px;
+	min-height:680px;
 }
 
 
@@ -1276,6 +1331,11 @@ table.noext {
 	padding:5px 0;
 }
 
+.pm_content .link {
+	
+	color:blue;
+	text-decoration:underline;
+}
 
 .storeurl {
 	padding: 10px 0;

@@ -202,6 +202,7 @@ class MY_Controller extends CI_Controller {
 		$this->load->model(array('Setting_Model','Member_Model','Seo_Model'));
 		$this->load->library(array('session', 'user_agent','Form_validation','encrypt','PHPTree','Base_service'));
 		
+		
 		$this->base_service->initStaticVars();
 		
     }
@@ -257,7 +258,7 @@ class MY_Controller extends CI_Controller {
 			'breadCrumbs' => $this->_breadCrumbs,
 			'cssList' => $this->_cssList,
 			'uri_string' => $this->uri->uri_string,
-			'PHPSID' => $this->session->session_id
+			'PHPSESSID' => $this->session->session_id
  		));
  		
  		$this->assign($this->_subNavs);

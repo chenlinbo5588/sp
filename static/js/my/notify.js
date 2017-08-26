@@ -13,6 +13,7 @@
 	pmInterval:null,
 	pmInUpdate: false,
 	initSWF: function(targetDiv,soundswf,expressswf){
+		/*
     	var flashvars = {
         };
         var params = {
@@ -24,13 +25,13 @@
         var attributes = {};
         swfobject.embedSWF(soundswf, targetDiv, "1", "1", "9.0.0", expressswf, flashvars, params, attributes);
         this.swfobject = swfobject;
-        
+        */
         return this;
     },
-    showToast:function(){
+    showToast:function(url){
     	$.toast({
             position:'bottom-center',
-            text: "<a href=\"" + this.pmUrl + "\">您有新的消息，请点击查看</a>",
+            text: "<a href=\"" + url + "\">您有新的消息，请点击查看</a>",
             icon: 'info',
             hideAfter:30000,
             bgColor: '#324DFF',
@@ -51,7 +52,7 @@
     		if(that.pmInUpdate){
         		return ;
         	}
-        	
+    		
     		that.pmInUpdate = true;
     		//console.log(that.pmInUpdate);
     		
@@ -63,7 +64,7 @@
     			dataType: 'json',
     			success:function(json){
     				if(json.data.newpm > 0){
-    					that.showToast();
+    					that.showToast(that.pmUrl);
     					that.playSound(1);
     					that.titleChange(50);
     				}
@@ -84,8 +85,8 @@
     },
     
     titleChange: function(){
-    	this.orignalTitle = $("title").html();
-    	$("title").html(this.titleTip);
+    	this.orignalTitle = document.title;
+    	document.title = this.titleTip;
     	
     	var that = this;
     	if(this.titleInterval){
@@ -98,7 +99,7 @@
     		
     		if(that.titleChangeTimes > 100){
     			that.titleChangeTimes = 0;
-    			$("title").html(that.orignalTitle);
+    			document.title = that.orignalTitle;
     			
     			if(that.titleInterval){
     	    		clearInterval(that.titleInterval);
@@ -106,17 +107,20 @@
     			return ;
     		}
     		
-    		var s = $("title").html();
+    		var s = document.title;
+    		
     		if(s == that.titleTip){
-    			$("title").html(that.orignalTitle);
+    			document.title = that.orignalTitle;
     		}else{
-    			$("title").html(that.titleTip);
+    			document.title = that.titleTip;
     		}
     		
     	},500);
     },
     
     playSound: function(playTimes) {
+    	return;
+    	/*
         var sound = swfobject.getObjectById(this.wrapDiv);
         if (sound) {
             sound.SetVariable("f", this.soudMp3);
@@ -136,5 +140,6 @@
             	replayFn(sound,i);
             }
         }
+        */
     }
 };

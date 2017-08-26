@@ -86,9 +86,9 @@ $db['default'] = array(
 */
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'localhost',
-	'username' => 'root',
-	'password' => 'mysql',
+	'hostname' => '192.168.5.100',
+	'username' => 'clb',
+	'password' => '123123',
 	'database' => 'bdc',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',

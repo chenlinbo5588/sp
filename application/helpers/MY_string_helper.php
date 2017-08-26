@@ -164,7 +164,11 @@ function step_helper2($stepConfig,$data = array(),$style = 'style2'){
 			$itemClassName = 'w-step-future';
 		}
 		
-		$temp[] = $itemClassName;
+		if($data['statusLog'][$stepName]['is_complete']){
+			$temp[] = $itemClassName.' step-complete';
+		}else{
+			$temp[] .= $itemClassName.' step-uncomplete';
+		}
 		
 		$index++;
 		
@@ -177,7 +181,10 @@ function step_helper2($stepConfig,$data = array(),$style = 'style2'){
 		$temp[] = "<div class='w-step-content'>";
 		$temp[] = "<div class='w-step-time'>".($data['statusLog'][$stepName]['gmt_create'] ? date('Y-m-d H:i',$data['statusLog'][$stepName]['gmt_create']): '')."</div>";
 		$temp[] = "<div class='w-step-dept'>".$data['statusLog'][$stepName]['dept_sname'].'</div>';
-		$temp[] = '<div class="w-step-username">'.( $data['statusLog'][$stepName]['username']? '经办人:'.$data['statusLog'][$stepName]['username'] : ($itemClassName == 'w-step-cur' ? '未受理':'')).'</div>';
+		$temp[] = '<div class="w-step-username">'.( $data['statusLog'][$stepName]['username']? '<a href="javascript:void(0);" data-href="'.site_url('member/userinfo').'">'.$data['statusLog'][$stepName]['username'].'</a>' : ($itemClassName == 'w-step-cur' ? '未受理': '')).'</div>';
+		$temp[] = '<div class="w-step-remark">'.cutText($data['statusLog'][$stepName]['remark'],50).'</div>';
+		$temp[] = '<div class="w-step-reason">'.($data['statusLog'][$stepName]['reason'] ? '退回原因:'.$data['statusLog'][$stepName]['reason'] : '').'</div>';
+		
 		$temp[] = '</div></div>';
 		
 		$stepHtml[] = implode('',$temp);

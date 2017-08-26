@@ -24,9 +24,6 @@ class My extends MyYdzj_Controller {
 	
 	
 	public function index(){
-		
-		
-		
 		$this->display();
 	}
 	

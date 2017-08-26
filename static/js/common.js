@@ -742,25 +742,40 @@ function bindAjaxSubmit(classname){
 		}
 	}
 	
-	
-	$(classname).submit(function(){
-		var name=$(this).prop("name");
-		var submitBtn = $("input[type=submit]",$(this));
+	var ajaxSubmitFn = function(submitBtn){
 		
-		if(formLock[name]){
+		var opName = submitBtn.prop('value');
+		var formObj = $(submitBtn).parents('form');
+		
+		//console.log(formObj);
+		
+		var formName = formObj.prop("name");
+		var formActionUrl = formObj.prop("action");
+		
+		if(formLock[formName]){
 			return false;
 		}
 		
-		lockFn(submitBtn,name,true);
+		lockFn(submitBtn,formName,true);
+		
+		if(formActionUrl.indexOf('?') == -1){
+			formActionUrl = formActionUrl + '?op=' + encodeURIComponent(opName);
+		}else{
+			formActionUrl = formActionUrl + '&op=' + encodeURIComponent(opName);
+		}
+
 		
 		$.ajax({
 			type:'POST',
-			url: $(this).prop("action"),
+			url: formActionUrl,
 			dataType:'json',
-			data:$(this).serialize(),
+			data:formObj.serialize(),
 			success:function(resp){
-				lockFn(submitBtn,name,false);
+				lockFn(submitBtn,formName,false);
+				
 				refreshFormHash(resp.data);
+				
+				$(".error").removeClass('error');
 				
 				if(!/成功/.test(resp.message)){
 					
@@ -775,15 +790,17 @@ function bindAjaxSubmit(classname){
 						if(first == null){
 							first = f;
 						}
+						
 						$("#error_" + f).html(errors[f]).addClass("error").show();
 					}
 					
 					if($("input[name=" + first + "]").size()){
-						$("input[name=" + first + "]").focus();
+						$("input[name=" + first + "]").addClass('error').focus();
 					}else if($("select[name=" + first + "]").size()){
 						$("select[name=" + first + "]").focus();
+					}else if($("textarea[name=" + first + "]").size()){
+						$("textarea[name=" + first + "]").addClass('error').focus();
 					}
-					
 					
 				}else{
 					showToast('success',resp.message);
@@ -798,12 +815,19 @@ function bindAjaxSubmit(classname){
 			
 			},
 			error:function(xhr, textStatus, errorThrown){
-				lockFn(submitBtn,name,false);
-				alert("服务器发送错误,请联系管理员");
+				lockFn(submitBtn,formName,false);
+				
+				showToast('error',"服务器发送错误,请联系管理员");
 			}
 		});
+	}
+	
+	$(classname + " input[type=submit]").bind('click',function(){
+		//console.log($(this));
+		ajaxSubmitFn($(this));
 		return false;
 	});
+	
 }
 
 

@@ -17,28 +17,32 @@
 	        <tbody>
 		        {foreach from=$list item=item}
 		        <tr id="row{$item['id']}">
-		           <td><a href="{site_url('budongchan/edit?id='|cat:$item['id'])}">{$item['lsno']}</a></td>
-		           <td><a href="{site_url('budongchan/edit?id='|cat:$item['id'])}">{$item['name']|escape}</a></td>
-		           <td>{$id_type[$item['id_type']]}</td>
-		           <td>{$item['id_no']}</td>
-		           <td>{$item['mobile']|escape}</td>
-		           <td>{$item['address']}</td>
-		           <td>{$item['status']}</td>
+		           <td><a href="{site_url('budongchan/edit?id='|cat:$currentBdcList[$item['bdc_id']]['id'])}">{$currentBdcList[$item['bdc_id']]['lsno']}</a></td>
+		           <td><a href="{site_url('budongchan/edit?id='|cat:$currentBdcList[$item['bdc_id']]['id'])}">{$currentBdcList[$item['bdc_id']]['name']|escape}</a></td>
+		           <td>{$id_type[$currentBdcList[$item['bdc_id']]['id_type']]}</td>
+		           <td>{$currentBdcList[$item['bdc_id']]['id_no']}</td>
+		           <td>{$currentBdcList[$item['bdc_id']]['mobile']|escape}</td>
+		           <td>{$currentBdcList[$item['bdc_id']]['address']}</td>
+		           <td>{$currentBdcList[$item['bdc_id']]['status_name']}【{if $currentBdcList[$item['bdc_id']]['cur_uid']}已{else}未{/if}受理】</td>
 		           <td>
-		           		{$item['cur_dept_sname']|escape}<br/>
-		           		{$item['cur_username']|escape}
+		           		<div>{$currentBdcList[$item['bdc_id']]['cur_dept_sname']|escape}</div>
+		           		{if $currentBdcList[$item['bdc_id']]['cur_uid']}
+		           		<div>{$currentBdcList[$item['bdc_id']]['cur_username']|escape}</div>
+		           		{/if}
 		           </td>
 		           <td>
-		           		{$item['add_username']|escape}<br/>
-		           		{time_tran($item['gmt_create'])}
+		           		<div>{$currentBdcList[$item['bdc_id']]['add_username']|escape}</div>
+		           		<div>{time_tran($currentBdcList[$item['bdc_id']]['gmt_create'])}</div>
 		           </td>
 		           <td>
-		           		{$item['edit_username']|escape}<br/>
-		           		{time_tran($item['gmt_modify'])}
+		           		{$currentBdcList[$item['bdc_id']]['edit_username']|escape}</div>
+		           		{if $currentBdcList[$item['bdc_id']]['gmt_modify']}
+		           		<div>{time_tran($currentBdcList[$item['bdc_id']]['gmt_modify'])}</div>
+		           		{/if}
 		           </td>
 		           <td>
-		           		<a href="{site_url('budongchan/edit?id='|cat:$item['id'])}">编辑</a>
-		           		<a href="javascript:void(0);" class="delete" data-id="{$item['id']}" data-title="{$item['name']|escape}以及关联建筑信息" data-url="{site_url('budongchan/delete')}">删除</a>
+		           		{*<a href="{site_url('budongchan/edit?id='|cat:$currentBdcList[$item['bdc_id']]['id'])}">编辑</a>*}
+		           		<a href="javascript:void(0);" class="delete" data-id="{$currentBdcList[$item['bdc_id']]['id']}" data-title="{$currentBdcList[$item['bdc_id']]['name']|escape}以及关联建筑信息" data-url="{site_url('budongchan/delete')}">删除</a>
 		           </td>
 		        <tr>
 		        {foreachelse}

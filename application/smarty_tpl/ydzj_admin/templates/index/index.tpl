@@ -314,19 +314,19 @@ $(function(){
 	                <li><a class="link actived" id="nav_dashboard" href="javascript:;" onclick="openItem('dashboard');"><span>控制台</span></a></li>
 					<li><a class="link" id="nav_setting" href="javascript:;" onclick="openItem('setting');"><span>设置</span></a></li>
 					<li><a class="link" id="nav_member" href="javascript:;" onclick="openItem('member');"><span>会员</span></a></li>
-					<li><a class="link" id="nav_bdc" href="javascript:;" onclick="openItem('bdc');"><span>不动产</span></a></li>
 					<li><a class="link" id="nav_dept" href="javascript:;" onclick="openItem('dept');"><span>办事机构</span></a></li>
-					{*
+					{*<li><a class="link" id="nav_bdc" href="javascript:;" onclick="openItem('bdc');"><span>不动产</span></a></li>
 					<li><a class="link" id="nav_team" href="javascript:;" onclick="openItem('team');"><span>队伍</span></a></li>
 					<li><a class="link" id="nav_stadium" href="javascript:;" onclick="openItem('stadium');"><span>场馆</span></a></li>
 					<li><a class="link" id="nav_game" href="javascript:;" onclick="openItem('game');"><span>赛事</span></a></li>
 					<li><a class="link" id="nav_goods" href="javascript:;" onclick="openItem('goods');"><span>商品</span></a></li>
 					<li><a class="link" id="nav_trade" href="javascript:;" onclick="openItem('trade');"><span>交易</span></a></li>
-					<li><a class="link" id="nav_website" href="javascript:;" onclick="openItem('website');"><span>网站</span></a></li>
+					
 					<li><a class="link" id="nav_operation" href="javascript:;" onclick="openItem('operation');"><span>运营</span></a></li>
 					<li><a class="link" id="nav_stat" href="javascript:;" onclick="openItem('stat');"><span>统计</span></a></li>
-					<li><a class="link" id="nav_weixin" href="javascript:;" onclick="openItem('weixin');"><span>微信营销</span></a></li>
-					<li><a class="link" id="nav_cms" href="javascript:;" onclick="openItem('cms');"><span>CMS</span></a></li>*}
+					<li><a class="link" id="nav_weixin" href="javascript:;" onclick="openItem('weixin');"><span>微信营销</span></a></li>*}
+					<li><a class="link" id="nav_website" href="javascript:;" onclick="openItem('website');"><span>网站</span></a></li>
+					<li><a class="link" id="nav_cms" href="javascript:;" onclick="openItem('cms');"><span>CMS</span></a></li>
 					<li><a class="link" id="nav_authority" href="javascript:;" onclick="openItem('authority');"><span>权限</span></a></li>
 	            </ul>
 	          </nav>
@@ -374,8 +374,8 @@ $(function(){
                     {*
                     <li><a href="javascript:void(0);" id="system_payment" onclick="openItem('system,payment,setting');">支付方式</a></li>
                     <li><a href="javascript:void(0);" id="express_setting" onclick="openItem('express,setting,setting');">快递公司</a></li>
-                    <li><a href="javascript:void(0);" id="area_setting" onclick="openItem('area,setting,setting');">配送地区</a></li>*}
-                    <li><a href="javascript:void(0);" id="cache_setting" onclick="openItem('cache,setting,setting');">清理缓存</a></li>{*
+                    <li><a href="javascript:void(0);" id="area_setting" onclick="openItem('area,setting,setting');">配送地区</a></li>
+                    <li><a href="javascript:void(0);" id="cache_setting" onclick="openItem('cache,setting,setting');">清理缓存</a></li>
                     <li><a href="javascript:void(0);" id="perform_setting" onclick="openItem('perform,setting,setting');">性能优化</a></li>
                     <li><a href="javascript:void(0);" id="search_setting" onclick="openItem('search,setting,setting');">搜索设置</a></li>
                     <li><a href="javascript:void(0);" id="log_setting" onclick="openItem('log,setting,setting');">操作日志</a></li>*}
@@ -495,9 +495,9 @@ $(function(){
                   <ol>
                     <li><a href="javascript:void(0);" id="category_article_class" onclick="openItem('category,article_class,website');">文章分类</a></li>
                     <li><a href="javascript:void(0);" id="index_article" onclick="openItem('index,article,website');">文章管理</a></li>
-                    
+                    {*
                     <li><a href="javascript:void(0);" id="index_suggestion" onclick="openItem('index,suggestion,website');">投诉建议</a></li>
-                    <li><a href="javascript:void(0);" id="index_leavemsg" onclick="openItem('index,leavemsg,website');">客户留言</a></li>
+                    <li><a href="javascript:void(0);" id="index_leavemsg" onclick="openItem('index,leavemsg,website');">客户留言</a></li>*}
                   </ol>
                 </dd>
               </dl>
@@ -558,11 +558,12 @@ $(function(){
                 <dd>
                   <ol>
                   	<li><a href="javascript:void(0);" id="index_cms_article" onclick="openItem('index,cms_article,cms');">文章管理</a></li>
-                  	<li><a href="javascript:void(0);" id="index_cms_article_class" onclick="openItem('index,cms_article_class,cms');">文章分类</a></li>
+                  	<li><a href="javascript:void(0);" id="category_cms_article_class" onclick="openItem('category,cms_article_class,cms');">文章分类</a></li>
+                  	{*
                     <li><a href="JavaScript:void(0);" id="index_tag" onclick="openItem('index,tag,cms');">标签管理</a></li>
                     <li><a href="JavaScript:void(0);" id="index_comment" onclick="openItem('index,comment,cms');">评论管理</a></li>
                     <li><a href="javascript:void(0);" id="index_adv" onclick="openItem('index,adv,cms');">广告管理</a></li>
-                    <li><a href="javascript:void(0);" id="index_recommend" onclick="openItem('index,recommend,cms');">推荐位</a></li>
+                    <li><a href="javascript:void(0);" id="index_recommend" onclick="openItem('index,recommend,cms');">推荐位</a></li>*}
                     <li><a href="javascript:void(0);" id="index_cms" onclick="openItem('index,cms,cms');">CMS设置</a></li>
                   </ol>
                 </dd>

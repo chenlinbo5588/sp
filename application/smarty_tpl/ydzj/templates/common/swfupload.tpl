@@ -12,8 +12,7 @@ function createSwfUpload(index,upload_url,postdata,allowSize, allowFile, handler
         postdata = { };
     }
     
-    postdata = $.extend(postdata, { "PHPSESSID" : '{$PHPSID}' } );
-     
+    postdata = $.extend(postdata, { "PHPSESSID" : '{$PHPSESSID}' } );
     
     var upload = new SWFUpload({
         // Backend Settings
@@ -38,7 +37,7 @@ function createSwfUpload(index,upload_url,postdata,allowSize, allowFile, handler
         button_placeholder_id : "UploaderPlaceholder_" + index,
         // Button Settingsimg/fee
         button_image_url : "{resource_url('img/swfup/XPButtonNoText_61x22.png')}",
-        button_width: 61,
+        button_width: 62,
         button_height: 22,
         button_text : '选择文件',
         button_text_left_padding: 2,

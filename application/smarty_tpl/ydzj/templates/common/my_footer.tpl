@@ -23,7 +23,7 @@
     {include file="common/share_footer.tpl"}
 <div id="soundDiv"></div>
 <a class="backToTop" href="#top"></a>
-<script type="text/javascript" src="{resource_url('js/swfobject/swfobject.js')}"></script>
+{*<script type="text/javascript" src="{resource_url('js/swfobject/swfobject.js')}"></script>*}
 <script type="text/javascript" src="{resource_url('js/my/notify.js')}"></script>
 
 <script>
@@ -40,9 +40,11 @@ notify.updatePm(pmUrl);
 $(function(){
     {if $newPm || !empty($smarty.get.pm)}
     notify.showToast();
+    /*
     setTimeout(function(){
         notify.playSound(1);
     },2000);
+    */
     {/if}
     
     notify.updatePm(pmUrl);

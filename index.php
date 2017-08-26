@@ -290,4 +290,13 @@ switch (ENVIRONMENT)
  *
  * And away we go...
  */
+if(strpos($_SERVER['HTTP_USER_AGENT'],'Flash') !== false){
+	// Code for Session Cookie workaround
+	if (isset($_POST["PHPSESSID"])) {
+		session_id($_POST["PHPSESSID"]);
+	} else if (isset($_GET["PHPSESSID"])) {
+		session_id($_GET["PHPSESSID"]);
+	}
+}
+
 require_once BASEPATH.'core/CodeIgniter.php';

@@ -638,6 +638,83 @@ EOT;
 	
 	
 	
+	public function search_company(){
+		
+		set_time_limit(0);
+		
+		$sphinxClient = new SphinxClient;
+		
+		$this->load->config('sphinx');
+		
+		$configList = config_item('sphinx');
+		
+		$sphinxClient->setServer($configList[0]['host'],$configList[0]['port']);
+		$sphinxClient->setMatchMode(SPH_MATCH_EXTENDED);
+		
+		
+		
+		
+		$this->load->model('Company_Model');
+		
+		$companyList = $this->Company_Model->getList(array(
+			'select' => 'xuhao,townname,name',
+			'where' => array(
+				'found_zd' => '否'
+			),
+			'order' => 'xuhao ASC'
+		));
+		
+		
+		$searchedList = array();
+		
+		$multi = $this->input->get_post('mul');
+		
+		foreach($companyList as $company){
+			$company['name'] = str_replace(array("\r\n","\r","\n"),'',$company['name']);
+			$company['isfound'] = '否';
+			
+			$results = $sphinxClient->Query($company['name'], 'nb');
+			
+			
+			if($results['status'] == 0 && $results['total_found'] > 0){
+				
+				if($multi){
+					$company['zd_id'] = array_keys($results['matches']);
+				}else{
+					$company['zd_id'] = '找到ZD_ID:'.join(',',array_keys($results['matches']));
+				}
+				
+				$company['isfound'] = '是';
+			}
+			
+			$searchedList[] = $company;
+			
+			//print_r($results);
+			
+			//break;
+		}
+		
+		
+		
+		echo '<table>';
+		
+		foreach($searchedList as $company){
+			if(is_array($company['zd_id'])){
+				foreach($company['zd_id'] as $zdId){
+					echo '<tr><td>'.$company['xuhao'].'</td><td>'.$company['townname'].'</td><td>'.$company['name'].'</td><td>'.$company['isfound'].'</td><td>ZD_ID:'.$zdId.'</td></tr>';
+				}
+			}else{
+				echo '<tr><td>'.$company['xuhao'].'</td><td>'.$company['townname'].'</td><td>'.$company['name'].'</td><td>'.$company['isfound'].'</td><td>'.$company['zd_id'].'</td></tr>';
+			}
+		}
+		
+		echo '</table>';
+		
+		
+		
+		//print_r($results);
+	}
+	
 	
 
 }

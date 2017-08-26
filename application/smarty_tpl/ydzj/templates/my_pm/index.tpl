@@ -38,7 +38,7 @@
 	           <tr id="row{$item['id']}">
 		           <td>
 		           <input type="checkbox" name="id[]" group="pmid" value="{$item['id']}"/>
-		           <a href="javascript:void(0);" class="popwin" data-url="{site_url('my_pm/detail')}?id={$item['id']}&uid={$item['uid']}">{if $item['msg_type'] == -1}<strong>【系统消息】</strong>{/if}{$item['title']|escape}</a></td>
+		           <a href="javascript:void(0);" class="popwin" data-url="{site_url('my_pm/detail')}?id={$item['id']}&uid={$item['uid']}">{if $item['msg_type'] == -1}<strong>【系统消息】</strong>{/if}{$item['title']}</a></td>
 		           <td>{if $item['readed'] == 1}已读{else}未读{/if}</td>
 		           <td>{time_tran($item['gmt_create'])}</td>
 		           <td>{if $item['readed'] == 1}{time_tran($item['gmt_modify'])}{/if}</td>

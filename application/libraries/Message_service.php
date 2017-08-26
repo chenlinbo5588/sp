@@ -231,23 +231,28 @@ class Message_service extends Base_service {
 		
 	}
 	
-		
+
 	
 	/**
 	 * 发送私信
 	 */
-	public function sendPrivatePm($toUsername,$from_uid,$title,$content){
+	public function sendPrivatePm($user,$from_uid,$title,$content,$senderAutoPm = true,$escape = true){
 		
-		$userInfo = self::$CI->Member_Model->getById(array(
-			'select' => 'uid',
-			'where' => array(
-				'username' => $toUsername
-			)
-		));
-		
-		if(empty($userInfo)){
-			return false;
+		if(!is_array($user)){
+			$userInfo = self::$CI->Member_Model->getById(array(
+				'select' => 'uid',
+				'where' => array(
+					'username' => $user
+				)
+			));
+			
+			if(empty($userInfo)){
+				return false;
+			}
+		}else{
+			$userInfo = $user;
 		}
+		
 		
 		// 插入两条记录
 		$data = array(
@@ -256,13 +261,18 @@ class Message_service extends Base_service {
 			'msg_type' => 0,
 			'readed' => 1,
 			'msg_direction' => 1,
-			'title' => strip_tags($title),
-			'content' => strip_tags($content)
+			'title' => $escape == true ? strip_tags($title) : $title,
+			'content' => $escape == true ? strip_tags($content) : $content
 		);
 		
-		// 发送方先记录
-		$this->setPmTableByUid($from_uid);
-		$sendId = $this->_pmMessageModel->_add($data);
+		
+		if($senderAutoPm){
+			// 发送方先记录
+			$this->setPmTableByUid($from_uid);
+			$sendId = $this->_pmMessageModel->_add($data);
+		}else{
+			$sendId = 0;
+		}
 		
 		// 接受方再次记录
 		$this->setPmTableByUid($userInfo['uid']);
@@ -358,7 +368,9 @@ class Message_service extends Base_service {
 		//file_put_contents('debug.txt',print_r($userProfile,true));
 		$list = $this->_siteMessageModel->getList(array(
 			'where' => array(
-				'id > ' => intval($userProfile['basic']['msgid'])
+				'id > ' => intval($userProfile['basic']['msgid']),
+				//取用户创建日期之后的
+				'gmt_create >= ' => $userProfile['basic']['gmt_create']
 			),
 			'limit' => 10
 		));

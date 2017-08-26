@@ -12,7 +12,6 @@ class Bdc extends Ydzj_Admin_Controller {
 		$this->attachment_service->setUserInfo($this->_adminProfile['basic']);
 		
 		
-		
 		$this->assign('id_type',config_item('id_type'));
 		$this->assign('sex_type',config_item('sex_type'));
 		
@@ -22,6 +21,7 @@ class Bdc extends Ydzj_Admin_Controller {
 				'管理' => 'bdc/index',
 				'待初审' => 'bdc/first_sh',
 				'待复审' => 'bdc/second_sh',
+				
 			),
 		);
 		

@@ -23,8 +23,6 @@ class House extends MyYdzj_Controller {
 		
 		$this->_mapConfig = $mapUrlConfig;
 		
-		$this->assign('PHPSID',$this->session->session_id);
-		
 	}
 	
 	

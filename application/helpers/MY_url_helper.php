@@ -140,6 +140,18 @@ if ( ! function_exists('urlToPath')) {
 }
 
 
+if ( ! function_exists('attachmentIcon')) {
+	function attachmentExt($fileUrl){
+		if(strrpos($fileUrl,'.')){
+			return 'icon-'.substr($fileUrl,strrpos($fileUrl,'.') + 1);
+		}else{
+			return 'icon-attachment';
+		}
+		
+	}
+}
+
+
 
 
 
