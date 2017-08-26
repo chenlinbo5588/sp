@@ -25,7 +25,6 @@ class Building extends Ydzj_Admin_Controller {
 		$this->assign('mapUrlConfig',$this->_mapConfig);
 		$this->assign('villageList',$this->_villageList);
 		$this->assign('villageListJson',json_encode($this->_villageList));
-		$this->assign('PHPSID',$this->session->session_id);
 		
 	}
 	

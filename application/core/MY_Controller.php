@@ -245,7 +245,12 @@ class MY_Controller extends CI_Controller {
     	
     	$realPath = $tplDir.$viewname.'.tpl';
     	//echo $realPath;
-    	$this->assign(array('subNavs' => $this->_subNavs,'breadCrumbs' => $this->_breadCrumbs));
+    	$this->assign(array(
+			'subNavs' => $this->_subNavs,
+			'breadCrumbs' => $this->_breadCrumbs,
+			'uri_string' => $this->uri->uri_string,
+			'PHPSESSID' => $this->session->session_id
+		));
     	
 		if(file_exists($realPath)){
     		$this->output->set_output($this->_smarty->fetch($realPath));

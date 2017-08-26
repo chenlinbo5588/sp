@@ -657,13 +657,16 @@ function bindCheckAllEvent(selector){
  * @param sucFn 成功事件回调
  * @param errorFn 失败事件回调
  */
-function bindDeleteEvent(customSuccessFn,customErrorFn){
+function bindDeleteEvent(pSetting, customSuccessFn,customErrorFn){
+	var defaultSetting = { linkClass: 'a.delete', btnClass : '.deleteBtn' , rowPrefix: '#row' };
+	var setting = $.extend(defaultSetting,pSetting);
+	
 	var successCallback = function(ids,json){
 		if(check_success(json.message)){
 			showToast('success',json.message);
 			
 			for(var i = 0; i < ids.length; i++){
-				$("#row" + ids[i]).remove();
+				$(setting.rowPrefix + ids[i]).remove();
 			}
 		}else{
 			showToast('error',json.message);
@@ -674,7 +677,7 @@ function bindDeleteEvent(customSuccessFn,customErrorFn){
 		showToast('error',"删除出错，服务器异常，请稍后再次尝试");
 	}
 	
-	$("a.delete").bind("click",function(){
+	$("body").delegate(setting.linkClass,"click",function(){
 		var triggerObj = $(this);
 		
 		var title = triggerObj.attr('data-title');
@@ -695,7 +698,7 @@ function bindDeleteEvent(customSuccessFn,customErrorFn){
 		
   	});
   	
-  	$(".deleteBtn").bind("click",function(){
+	$("body").delegate(setting.btnClass,"click",function(){
   		var triggerObj = $(this);
   		var ids = getIDS(triggerObj);
   		var title = triggerObj.attr('data-title');
@@ -706,7 +709,6 @@ function bindDeleteEvent(customSuccessFn,customErrorFn){
   		if(ids.length == 0){
   			showToast('error','请选勾选.');
   		}else{
-  		
 	  		ui_confirm({
 				'trigger':triggerObj,
 				'postData': { id : ids },
@@ -740,25 +742,40 @@ function bindAjaxSubmit(classname){
 		}
 	}
 	
-	
-	$(classname).submit(function(){
-		var name=$(this).prop("name");
-		var submitBtn = $("input[type=submit]",$(this));
+	var ajaxSubmitFn = function(submitBtn){
 		
-		if(formLock[name]){
+		var opName = submitBtn.prop('value');
+		var formObj = $(submitBtn).parents('form');
+		
+		//console.log(formObj);
+		
+		var formName = formObj.prop("name");
+		var formActionUrl = formObj.prop("action");
+		
+		if(formLock[formName]){
 			return false;
 		}
 		
-		lockFn(submitBtn,name,true);
+		lockFn(submitBtn,formName,true);
+		
+		if(formActionUrl.indexOf('?') == -1){
+			formActionUrl = formActionUrl + '?op=' + encodeURIComponent(opName);
+		}else{
+			formActionUrl = formActionUrl + '&op=' + encodeURIComponent(opName);
+		}
+
 		
 		$.ajax({
 			type:'POST',
-			url: $(this).prop("action"),
+			url: formActionUrl,
 			dataType:'json',
-			data:$(this).serialize(),
+			data:formObj.serialize(),
 			success:function(resp){
-				lockFn(submitBtn,name,false);
+				lockFn(submitBtn,formName,false);
+				
 				refreshFormHash(resp.data);
+				
+				$(".error").removeClass('error');
 				
 				if(!/成功/.test(resp.message)){
 					
@@ -773,15 +790,17 @@ function bindAjaxSubmit(classname){
 						if(first == null){
 							first = f;
 						}
+						
 						$("#error_" + f).html(errors[f]).addClass("error").show();
 					}
 					
 					if($("input[name=" + first + "]").size()){
-						$("input[name=" + first + "]").focus();
+						$("input[name=" + first + "]").addClass('error').focus();
 					}else if($("select[name=" + first + "]").size()){
 						$("select[name=" + first + "]").focus();
+					}else if($("textarea[name=" + first + "]").size()){
+						$("textarea[name=" + first + "]").addClass('error').focus();
 					}
-					
 					
 				}else{
 					showToast('success',resp.message);
@@ -790,18 +809,25 @@ function bindAjaxSubmit(classname){
 					if(typeof(resp.data.redirectUrl) != "undefined"){
 						setTimeout(function(){
 							location.href = resp.data.redirectUrl;
-						},1000);
+						},resp.data.wait ? resp.data.wait : 2000);
 					}
 				}
 			
 			},
 			error:function(xhr, textStatus, errorThrown){
-				lockFn(submitBtn,name,false);
-				alert("服务器发送错误,请联系管理员");
+				lockFn(submitBtn,formName,false);
+				
+				showToast('error',"服务器发送错误,请联系管理员");
 			}
 		});
+	}
+	
+	$(classname + " input[type=submit]").bind('click',function(){
+		//console.log($(this));
+		ajaxSubmitFn($(this));
 		return false;
 	});
+	
 }
 
 

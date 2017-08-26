@@ -12,7 +12,7 @@ function createSwfUpload(index,upload_url,postdata,allowSize, allowFile, handler
         postdata = { };
     }
     
-    postdata = $.extend(postdata, { "PHPSESSID" : '{$PHPSID}' } );
+    postdata = $.extend(postdata, { "PHPSESSID" : '{$PHPSESSID}' } );
      
     
     var upload = new SWFUpload({
