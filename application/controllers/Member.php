@@ -13,9 +13,20 @@ class Member extends Ydzj_Controller {
 		
 	}
 	
+	public function userinfo(){
+		$uid = $this->input->get_post('uid');
+		
+		if($uid){
+			$userInfo = $this->Member_Model->getFirstByKey($uid,'uid','username,mobile,virtual_no');
+			$this->assign('userInfo',$userInfo);
+		}
+		
+		$this->display();
+	}
+	
+	
 	private function _rememberLoginName($loginName, $liveSeconds = 2592000){
 		$this->input->set_cookie('loginname',$loginName, $liveSeconds);
-		
 	}
 	
 	private function _autologin($profile){

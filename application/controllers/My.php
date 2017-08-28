@@ -61,6 +61,10 @@ class My extends MyYdzj_Controller {
 		
 	}
 	
+	public function nopermission(){
+		
+		$this->display('common/nopermission');
+	}
 	
 	
 	private function _tradeUpload(){
@@ -262,18 +266,6 @@ class My extends MyYdzj_Controller {
 		$this->display();
 		
 	}
-	
-	
-	/**
-	 * 发送人设置
-	 */
-	public function sender(){
-		
-		
-		
-		$this->display();
-	}
-	
 	
 	
 	/**

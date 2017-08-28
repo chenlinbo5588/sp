@@ -58,6 +58,7 @@ class Notify extends Ydzj_Admin_Controller {
 		
 		//print_r($condition);
 		$list = $this->Site_Message_Model->getList($condition);
+		
 		$this->assign('list',$list);
 		$this->assign('page',$list['pager']);
 		$this->assign('group',$keyedGroupList);

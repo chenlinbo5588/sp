@@ -1,8 +1,8 @@
 {include file="common/main_header.tpl"}
   {if $info['id']}
-  {form_open(admin_site_url('role/edit'),'id="add_form"')}
+  {form_open(site_url($uri_string),'id="add_form"')}
   {else}
-  {form_open(admin_site_url('role/add'),'id="add_form"')}
+  {form_open(site_url($uri_string),'id="add_form"')}
   {/if}
   <input type="hidden" name="id" value="{$info['id']}"/>
   	<table class="table tb-type2">

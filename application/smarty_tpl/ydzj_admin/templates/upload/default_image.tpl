@@ -2,10 +2,10 @@
   {form_open_multipart(admin_site_url('upload/default_image'),'name="form1"')}
     <table class="table tb-type2">
       <tbody>
-        <tr class="noborder">
+        <tr style="display:none;" class="noborder">
           <td colspan="2" class="required"><label for="default_goods_image">默认商品图片:</label></td>
         </tr>
-        <tr class="noborder">
+        <tr style="display:none;" class="noborder">
           <td class="vatop rowform"><span class="type-file-show"><img class="show_image" src="{resource_url('img/preview.png')}">
             <div class="type-file-preview"><img src="{resource_url($currentSetting['default_goods_image']['value'])}"></div>
             </span><span class="type-file-box">
@@ -13,10 +13,10 @@
             </span></td>
           <td class="vatop tips">300px * 300px</td>
         </tr>
-        <tr>
+        <tr style="display:none;">
           <td colspan="2" class="required"><label for="default_store_logo">默认店铺标志:</label></td>
         </tr>
-        <tr class="noborder">
+        <tr style="display:none;" class="noborder">
           <td class="vatop rowform"><span class="type-file-show"><img class="show_image" src="{resource_url('img/preview.png')}">
             <div class="type-file-preview"><img src="{resource_url($currentSetting['default_store_logo']['value'])}"></div>
             </span><span class="type-file-box">

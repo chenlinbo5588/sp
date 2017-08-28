@@ -40,11 +40,9 @@ notify.updatePm(pmUrl);
 $(function(){
     {if $newPm || !empty($smarty.get.pm)}
     notify.showToast();
-    /*
     setTimeout(function(){
         notify.playSound(1);
     },2000);
-    */
     {/if}
     
     notify.updatePm(pmUrl);

@@ -104,25 +104,8 @@
     {include file="./file_event.tpl"}
     {/if}
     <script>
-    	$(function(){
-	    	$("input[name=to_dept]").bind('click',function(){
-	    		var checked = $(this).prop('checked');
-	    		$(".senderList li").removeClass('selected');
-	    		
-	    		if(checked){
-	    			$(this).parents('li').addClass('selected');
-	    		}
-	    	});
-	    	
-	    	if($("input[name=to_dept]").size() == 1){
-	    		$(".senderList li").addClass('selected');
-	    		$("input[name=to_dept]:eq(0)").prop('checked',true);
-	    	}
-	    	
-	    	$.loadingbar({ urls: [ new RegExp('{site_url('budongchan/deleteFile')}'), new RegExp('{site_url('budongchan/add')}'), new RegExp('{site_url('budongchan/edit')}') ],text:"操作中,请稍后..." ,container : '#bdcWrap' });
-	    	bindDeleteEvent({ linkClass:'a.deleteFile',rowPrefix: '#file' });
-	    	bindAjaxSubmit("#addForm");
-    	})
+    	var urlsConfig = [ new RegExp('{site_url('budongchan/deleteFile')}'), new RegExp('{site_url('budongchan/add')}'), new RegExp('{site_url('budongchan/edit')}') ];
     </script>
+    <script type="text/javascript" src="{resource_url('js/my/budongchan.js',true)}"></script>
 {include file="common/my_footer.tpl"}
 

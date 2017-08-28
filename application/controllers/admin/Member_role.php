@@ -2,18 +2,18 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 
-class Role extends Ydzj_Admin_Controller {
+class Member_Role extends Ydzj_Admin_Controller {
 	
 	public function __construct(){
 		parent::__construct();
 		
-		$this->load->model(array('Adminuser_Model','Fn_Model','Role_Model'));
+		$this->load->model(array('Member_Fn_Model','Member_Role_Model'));
 		
 		$this->_subNavs = array(
-			'modulName' => '角色',
+			'modulName' => '用户角色',
 			'subNavs' => array(
-				'管理' => 'role/index',
-				'添加' => 'role/add',
+				'管理' => 'member_role/index',
+				'添加' => 'member_role/add',
 			),
 		);
 		
@@ -89,22 +89,25 @@ class Role extends Ydzj_Admin_Controller {
 					);
 				}
 				
-				$this->Role_Model->batchUpdate($updateData,'id');
+				$this->Member_Role_Model->batchUpdate($updateData,'id');
 				
 			}
 			
 		}
 		
 		
-		$list = $this->Role_Model->getList($condition);
+		$list = $this->Member_Role_Model->getList($condition);
 		//print_r($list);
 		//print_r($_POST);
+		
 		$this->assign(array(
 			'list' => $list,
 			'page' => $list['pager'],
 			'currentPage' => $currentPage,
-			'editUrl' => admin_site_url('role/edit'),
+			'editUrl' => admin_site_url('member_role/edit'),
 		));
+		
+		
 		
 		$this->display();
 	}
@@ -126,7 +129,7 @@ class Role extends Ydzj_Admin_Controller {
 		
 		if($this->isPostRequest()){
 			
-			$this->form_validation->set_rules('name','权限组名称','required|is_unique['.$this->Role_Model->getTableRealName().'.name]');
+			$this->form_validation->set_rules('name','权限组名称','required|is_unique['.$this->Member_Role_Model->getTableRealName().'.name]');
 			
 			
 			$this->_getRoleRules();
@@ -149,7 +152,7 @@ class Role extends Ydzj_Admin_Controller {
 				
 				$info = array_merge($info,$this->addWhoHasOperated('add'));
 				
-				if(($newid = $this->Role_Model->_add($info)) < 0){
+				if(($newid = $this->Member_Role_Model->_add($info)) < 0){
 					$feedback = getErrorTip('保存失败');
 					break;
 				}
@@ -163,7 +166,7 @@ class Role extends Ydzj_Admin_Controller {
 		}
 		
 		
-		$list = $this->Fn_Model->getList();
+		$list = $this->Member_Fn_Model->getList();
 		$fnTree = $this->phptree->makeTree($list,array(
 			'primary_key' => 'id',
 			'parent_key' => 'parent_id',
@@ -199,7 +202,7 @@ class Role extends Ydzj_Admin_Controller {
 	private function _refreshRoleInfo($id ){
 		
 		
-		$info = $this->Role_Model->getFirstByKey($id,'id');
+		$info = $this->Member_Role_Model->getFirstByKey($id,'id');
 		$info['permission'] = $this->encrypt->decode($info['permission'],config_item('encryption_key').md5($info['name']));
 		$info['permission'] = explode('|',$info['permission']);
 		$info['permission'] = array_flip($info['permission']);
@@ -218,13 +221,13 @@ class Role extends Ydzj_Admin_Controller {
 		$id = $this->input->get_post('id');
 		
 		
-		$this->_subNavs['subNavs']['编辑角色'] = 'role/edit?id='.$id;
+		$this->_subNavs['subNavs']['编辑角色'] = 'member_role/edit?id='.$id;
 		
 		if($this->isPostRequest()){
 			$this->assign('ispost',true);
 			$this->_getRoleRules();
 			
-			$this->form_validation->set_rules('name','权限组名称','required|is_unique_not_self['.$this->Role_Model->getTableRealName().".name.id.{$id}]");
+			$this->form_validation->set_rules('name','权限组名称','required|is_unique_not_self['.$this->Member_Role_Model->getTableRealName().".name.id.{$id}]");
 			
 			
 			$info = $this->_prepareRoleData();
@@ -243,7 +246,7 @@ class Role extends Ydzj_Admin_Controller {
 				
 				$info = array_merge($info,$this->addWhoHasOperated('edit'));
 				
-				if($this->Role_Model->update($info, array('id' => $id)) < 0){
+				if($this->Member_Role_Model->update($info, array('id' => $id)) < 0){
 					$feedback = getErrorTip('保存失败');
 					break;
 				}
@@ -258,7 +261,7 @@ class Role extends Ydzj_Admin_Controller {
 		}
 		
 		
-		$list = $this->Fn_Model->getList();
+		$list = $this->Member_Fn_Model->getList();
 		$fnTree = $this->phptree->makeTree($list,array(
 			'primary_key' => 'id',
 			'parent_key' => 'parent_id',
@@ -273,7 +276,7 @@ class Role extends Ydzj_Admin_Controller {
 		$this->assign('feedback',$feedback);
 		$this->assign('fnTree',$fnTree);
 		
-		$this->display('role/add');
+		$this->display('member_role/add');
 	}
 	
 }

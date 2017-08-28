@@ -2,7 +2,7 @@
 	{config_load file="common.conf"}
 	<div class="search_panel">
 		<div class="mainside">
-			<a class="action" href="{site_url('budongchan/add')}" title="{#bdc_add#}">{#bdc_add#}</a>
+			{if isset($permission['budongchan/add'])}<a class="action" href="{site_url('budongchan/add')}" title="{#bdc_add#}">{#bdc_add#}</a>{/if}
 		</div>
 		<form action="{site_url($uri_string)}" id="formSearch">
 	        <input type="hidden" name="page" value=""/>

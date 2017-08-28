@@ -284,7 +284,11 @@ class Budongchan extends MyYdzj_Controller {
 						break;
 					}
 					
-					$isOk = $this->budongchan_service->editBdc(array_merge($info,$_POST),$this->_profile['basic']);
+					$affectRow = $this->budongchan_service->editBdc(array_merge($info,$_POST),$this->_profile['basic']);
+					if($affectRow >= 0){
+						$isOk = true;
+					}
+					
 				}else if('撤销提交' == $opName){
 					//撤销
 					
@@ -457,7 +461,9 @@ class Budongchan extends MyYdzj_Controller {
 			$json['error'] = 0;
 			$json['orig_name'] = $fileData['orig_name'];
 			$json['url'] = $fileData['file_url'];
-			$json['size'] = byte_format($fileData['file_size'] * 1024);
+			
+			//还原
+			$json['file_size'] = byte_format($fileData['file_size'] * 1024);
 			$json['username'] = $this->_profile['basic']['username'];
 			$json['gmt_create'] = date("Y-m-d H:i:s",$this->_reqtime);
 			

@@ -25,7 +25,7 @@
           <th>&nbsp;</th>
           <th>会员</th>
           <th>登陆账号</th>
-          <th>手机号码</th>
+          <th>手机号码【虚拟号码】</th>
           <th>邮箱</th>
           <th>QQ</th>
           <th>性别</th>
@@ -43,7 +43,7 @@
             <div class=""><span class="thumb"><i></i><img src="{if $item['avatar_s']}{resource_url($item['avatar_s'])}{else}{resource_url($siteSetting['default_user_portrait'])}{/if}"  data-avatar="{$item['avatar_m']}" /></span></div>
           </td>
           <td>{$item['username']|escape}</td>
-          <td>{$item['mobile']|escape}</td>
+          <td>{$item['mobile']|escape}【{if $item['virtual_no']}{$item['virtual_no']}{else}无{/if}】</td>
           <td><div class="im"><span class="email">{if $item['email'] != ''}<a href="mailto:{$item['email']}" class="yes" title="电子邮箱:{$item['email']|escape}">{$item['email']}</a>{/if}</span></div><span>{$item['email']|escape}</span></td>
           <td><div class="im"><span class="qq">{if $item['qq'] != ''}<a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin={$item['qq']}&site=qq&menu=yes" class="yes" alt="点击这里给我发消息  QQ: {$item['qq']|escape}" title="点击这里给我发消息 QQ: {$item['qq']|escape}">{$item['qq']|escape}</a>{/if}</span></div><span>{$item['qq']|escape}</span></td>
           <td>{if $item['sex'] == 'M'}男{elseif $item['sex'] == 'F'}女{else}保密{/if}</td>

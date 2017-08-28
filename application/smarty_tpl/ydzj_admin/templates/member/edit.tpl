@@ -31,6 +31,7 @@
           <td class="vatop tips"></td>
         </tr>
         {include file="./field_common.tpl"}
+        {*
         <tr>
           <td colspan="2" class="required"><label>积分:</label></td>
         </tr>
@@ -38,6 +39,7 @@
           <td class="vatop rowform">积分&nbsp;<strong class="red">{$info['credits']}</strong>&nbsp;</td>
           <td class="vatop tips"></td>
         </tr>
+        *}
       </tbody>
       <tfoot>
         <tr class="tfoot">

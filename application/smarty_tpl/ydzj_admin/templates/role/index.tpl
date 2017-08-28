@@ -1,5 +1,5 @@
 {include file="common/main_header.tpl"}
-  {form_open(admin_site_url('role/index'),'name="formSearch" id="formSearch"')}
+  {form_open(site_url($uri_string),'name="formSearch" id="formSearch"')}
     <input type="hidden" name="page" value=""/>
     <input type="hidden" name="submit_type" id="submit_type" value="" />
     <table class="tb-type1 noborder search">
@@ -33,7 +33,7 @@
           <td>{$item['name']|escape}</td>
           <td>{$item['status']}</td>
           <td>{$item['gmt_create']|date_format:"%Y-%m-%d %H:%M:%S"}</td>
-          <td class="align-center"><a href="{admin_site_url('role/edit')}?id={$item['id']}">编辑</a></td>
+          <td class="align-center"><a href="{$editUrl}?id={$item['id']}">编辑</a></td>
         </tr>
       	{foreachelse}
       	<tr class="no_data">
@@ -45,7 +45,7 @@
       	<tr>
       		<td colspan="5">
       			<label><input type="checkbox" class="checkall" name="chkVal">全选</label>&nbsp;
-          		<a href="javascript:void(0);" class="btn" onclick="$('#submit_type').val('启用');go();"><span>开启</span></a>
+          		<a href="javascript:void(0);" class="btn" onclick="$('#submit_type').val('开启');go();"><span>开启</span></a>
           		<a href="javascript:void(0);" class="btn" onclick="$('#submit_type').val('关闭');go();"><span>关闭</span></a>
           		{include file="common/pagination.tpl"}
           	</td>

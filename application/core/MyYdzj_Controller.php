@@ -21,6 +21,7 @@ class MyYdzj_Controller extends Ydzj_Controller {
 			js_redirect('member/login');
 		}
 		
+		$this->_checkPermission();
 		
 		$this->load->config('member_site');
 		$this->_loginUID = $this->_profile['basic']['uid'];
@@ -46,8 +47,13 @@ class MyYdzj_Controller extends Ydzj_Controller {
 		//@待性能优化
 		$unread = $this->message_service->getUserUnreadCount($this->_loginUID);
 		$this->assign('unreadCount',$unread);
+	}
+	
+	
+	protected function _initLibrary(){
+		parent::_initLibrary();
 		
-		
+		$this->load->model('Member_Role_Model');
 	}
 	
 	
@@ -73,6 +79,51 @@ class MyYdzj_Controller extends Ydzj_Controller {
 		);
 	}
 	
+	
+	private function _checkPermission(){
+        //print_r($this->_adminProfile);
+        $currentUri = $this->uri->uri_string();
+        
+        if($this->_profile['basic']['group_id']){
+            $roleInfo = $this->Member_Role_Model->getFirstByKey($this->_profile['basic']['group_id'],'id');
+            $currentPer = $this->encrypt->decode($roleInfo['permission'],config_item('encryption_key').md5($roleInfo['name']));
+            if(trim($currentPer)){
+                $this->_permission = array_flip(explode('|',$currentPer));
+            }
+        }
+
+        //公共权限
+        $this->_permission['my'] = 1;
+        $this->_permission['my/index'] = 1;
+        $this->_permission['my/base'] = 1;
+        $this->_permission['my/logout'] = 1;
+        $this->_permission['my/change_psw'] = 1;
+        $this->_permission['my/verify_email'] = 1;
+        $this->_permission['my/set_email'] = 1;
+        $this->_permission['my/upload_avatar'] = 1;
+        $this->_permission['my/set_avatar'] = 1;
+        $this->_permission['my/nopermission'] = 1;
+        
+        //消息中心
+        $this->_permission['my_pm'] = 1;
+        $this->_permission['my_pm/index'] = 1;
+        $this->_permission['my_pm/sendpm'] = 1;
+        $this->_permission['my_pm/username_check'] = 1;
+        $this->_permission['my_pm/delete'] = 1;
+        $this->_permission['my_pm/setread'] = 1;
+        $this->_permission['my_pm/detail'] = 1;
+        $this->_permission['my_pm/check_newpm'] = 1;
+       
+        $this->assign('permission',$this->_permission);
+        
+        if(!isset($this->_permission[$currentUri])){
+            if($this->input->is_ajax_request()){
+                $this->responseJSON('没有足够的权限,请联系管理员');
+            }else{
+                redirect(site_url('my/nopermission'));
+            }
+        }
+    }
     
 }
 

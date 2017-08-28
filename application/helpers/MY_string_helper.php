@@ -180,8 +180,8 @@ function step_helper2($stepConfig,$data = array(),$style = 'style2'){
 		$temp[] = "<h4 class='w-step-title'><em>第".$index."步:</em><span>{$stepName}</span></h4>";
 		$temp[] = "<div class='w-step-content'>";
 		$temp[] = "<div class='w-step-time'>".($data['statusLog'][$stepName]['gmt_create'] ? date('Y-m-d H:i',$data['statusLog'][$stepName]['gmt_create']): '')."</div>";
-		$temp[] = "<div class='w-step-dept'>".$data['statusLog'][$stepName]['dept_sname'].'</div>';
-		$temp[] = '<div class="w-step-username">'.( $data['statusLog'][$stepName]['username']? '<a href="javascript:void(0);" data-href="'.site_url('member/userinfo').'">'.$data['statusLog'][$stepName]['username'].'</a>' : ($itemClassName == 'w-step-cur' ? '未受理': '')).'</div>';
+		$temp[] = "<div class='w-step-dept'>".( $data['statusLog'][$stepName]['username']? '<a href="javascript:void(0);" class="loguser" title="点击查看联系方式"  data-url="'.site_url('member/userinfo?uid='.$data['statusLog'][$stepName]['user_id']).'">'.$data['statusLog'][$stepName]['username'].'</a>' : ($itemClassName == 'w-step-cur' ? '<span class="warning">未受理</span>': ''));
+		$temp[] = '&nbsp;'.$data['statusLog'][$stepName]['dept_sname'].'</div>';
 		$temp[] = '<div class="w-step-remark">'.cutText($data['statusLog'][$stepName]['remark'],50).'</div>';
 		$temp[] = '<div class="w-step-reason">'.($data['statusLog'][$stepName]['reason'] ? '退回原因:'.$data['statusLog'][$stepName]['reason'] : '').'</div>';
 		

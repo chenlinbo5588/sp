@@ -2,7 +2,7 @@
  * 个人中心 消息通知
  */
 ;$.fn.myNotify = {
-	wrapDiv: "sound",
+	wrapDiv: "soundDiv",
 	swfobject: null,
 	soudMp3: '',
 	pmUrl:'',
@@ -13,6 +13,7 @@
 	pmInterval:null,
 	pmInUpdate: false,
 	initSWF: function(targetDiv,soundswf,expressswf){
+		
 		/*
     	var flashvars = {
         };
@@ -26,6 +27,7 @@
         swfobject.embedSWF(soundswf, targetDiv, "1", "1", "9.0.0", expressswf, flashvars, params, attributes);
         this.swfobject = swfobject;
         */
+		
         return this;
     },
     showToast:function(url){
@@ -119,7 +121,8 @@
     },
     
     playSound: function(playTimes) {
-    	return;
+    	
+    	return ;
     	/*
         var sound = swfobject.getObjectById(this.wrapDiv);
         if (sound) {

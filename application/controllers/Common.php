@@ -7,7 +7,7 @@ class Common extends Ydzj_Controller {
 		parent::__construct();
 	}
 	
-	
+
 	/**
 	 * 图片上传
 	 *

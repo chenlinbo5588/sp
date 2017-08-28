@@ -16,7 +16,7 @@
           <th>序号</th>
           <th>标题</th>
           <th>发送方式</th>
-          <th>目标组</th>
+          
           <th>发送对象匹配模式</th>
           <th>成员</th>
           <th>创建时间</th>
@@ -29,7 +29,7 @@
           <td>{$item['id']}</td>
           <td>{$item['title']|escape}</td>
           <td>{$item['send_ways']}</td>
-          <td>{$item['groups']}</td>
+          
           <td>{$msgMode[$item['msg_mode']]}</td>
           <td>{cutText($item['users'],80)}</td>
           <td>{time_tran($item['gmt_create'])}</td>
@@ -39,7 +39,7 @@
       </tbody>
       <tfoot>
       	<tr class="tfoot">
-          <td colspan="8">
+          <td colspan="7">
           	{include file="common/pagination.tpl"}
            </td>
         </tr>

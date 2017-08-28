@@ -33,6 +33,8 @@ class Member extends Ydzj_Admin_Controller {
 		
 		$this->assign('avatarImageSize',$this->_avatarImageSize);
 		
+		$this->load->model(array('Dept_Model','Member_Role_Model'));
+		
 	}
 	
 	public function index(){
@@ -219,7 +221,14 @@ class Member extends Ydzj_Admin_Controller {
 	private function _addRules(){
 		
 		$this->form_validation->set_rules('dept_id','所在办事机构','required|in_db_list['.$this->Dept_Model->getTableRealName().'.id]');
+		$this->form_validation->set_rules('group_id','用户角色','required|in_db_list['.$this->Member_Role_Model->getTableRealName().'.id]');
 		$this->form_validation->set_rules('mobile','手机号码','required|valid_mobile');
+		
+		$param['virtual_no'] = $this->input->post('virtual_no');
+		
+		if($param['virtual_no']){
+			$this->form_validation->set_rules('virtual_no','虚拟网号码','required|numeric|min_length[6]|max_length[6]');
+		}
 		
 		$param['email'] = $this->input->post('email');
 		
@@ -252,7 +261,7 @@ class Member extends Ydzj_Admin_Controller {
 	public function add(){
 		$info = array();
 		
-		$this->load->model('Dept_Model');
+		
 		$deptList = $this->Dept_Model->getList(array('status' => 1),'id');
 		
 		if($this->isPostRequest()){
@@ -306,13 +315,16 @@ class Member extends Ydzj_Admin_Controller {
 				}
 				
 				$deptId = $this->input->post('dept_id');
+				$virtualNo = $this->input->post('virtual_no');
 				
 				$addParam = array(
 					'username' => trim($this->input->post('username')),
 					'nickname' => trim($this->input->post('username')),
 					'password' => $this->input->post('passwd'),
+					'group_id' => $this->input->post('group_id'),
 					'dept_id' => $deptId,
 					'mobile' => $this->input->post('mobile'),
+					'virtual_no' => empty($virtualNo) == true ? '': $virtualNo,
 					'qq' => $this->input->post('qq'),
 					'weixin' => $this->input->post('weixin'),
 					'email' => $this->input->post('email'),
@@ -362,8 +374,12 @@ class Member extends Ydzj_Admin_Controller {
 		
 		
 		
-		$this->assign('deptList',$deptList);
-		$this->assign('info',$info);
+		$this->assign(array(
+			'info' => $info,
+			'deptList' => $deptList,
+			'groupList' => $this->Member_Role_Model->getList()
+		));
+
 		$this->display();
 		
 		
@@ -380,7 +396,6 @@ class Member extends Ydzj_Admin_Controller {
 		$info = $this->member_service->getUserInfoById($member_id);
 		//print_r($info);
 		
-		$this->load->model('Dept_Model');
 		$deptList = $this->Dept_Model->getList(array('status' => 1),'id');
 		
 		$this->_subNavs['subNavs']['编辑'] = 'member/edit?id='.$member_id;
@@ -407,8 +422,11 @@ class Member extends Ydzj_Admin_Controller {
 				
 				
 				$deptId = $this->input->post('dept_id');
+				$virtualNo = $this->input->post('virtual_no');
 				
 				$updateData = array(
+					'virtual_no' => empty($virtualNo) == true ? '': $virtualNo,
+					'group_id' => $this->input->post('group_id'),
 					'dept_id' => $deptId,
 					'qq' => $this->input->post('qq'),
 					'weixin' => $this->input->post('weixin'),
@@ -449,9 +467,13 @@ class Member extends Ydzj_Admin_Controller {
 			}
 		}
 		
-		$this->assign('info',$info);
-		$this->assign('deptList',$deptList);
 		
+		$this->assign(array(
+			'info' => $info,
+			'deptList' => $deptList,
+			'groupList' => $this->Member_Role_Model->getList()
+		));
+
 		$this->display();
 	}
 }

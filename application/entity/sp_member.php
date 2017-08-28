@@ -12,6 +12,7 @@ $entity = array(
 'weixin' => 'varchar',
 'sex' => 'char',
 'nickname' => 'varchar',
+'group_id' => 'int',
 'dept_id' => 'int',
 'aid' => 'int',
 'avatar_m' => 'varchar',

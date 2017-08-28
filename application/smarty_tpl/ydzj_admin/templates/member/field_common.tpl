@@ -1,4 +1,11 @@
         <tr>
+          <td colspan="2" class="required"><label for="virtual_no">虚拟网号码:</label>{form_error('virtual_no')}</td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform"><input type="text" id="virtual_no" value="{$info['virtual_no']}" name="virtual_no" class="txt"></td>
+          <td class="vatop tips">添加6位虚拟网号码</td>
+        </tr>
+        <tr>
           <td colspan="2" class="required"><label class="validation" for="passwd">密码:</label>{form_error('passwd')}</td>
         </tr>
         <tr class="noborder">
@@ -13,7 +20,7 @@
           <td class="vatop tips">密码长度6~12位,英文字母、数字、特殊符号</td>
         </tr>
         <tr>
-          <td colspan="2" class="required"><label class="validation" for="village_id">所在村:</label>{form_error('village_id')}</td>
+          <td colspan="2" class="required"><label class="validation" for="village_id">所在部门机构:</label>{form_error('dept_id')}</td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform">
@@ -26,6 +33,22 @@
           </td>
           <td class="vatop tips"></td>
         </tr>
+        
+        <tr>
+          <td colspan="2" class="required"><label class="validation" for="group_id">用户角色:</label>{form_error('group_id')}</td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform">
+          	<select name="group_id">
+          		<option value="">请选择</option>
+          		{foreach from=$groupList item=item}
+          		<option value="{$item['id']}" {if $info['group_id'] == $item['id']}selected{/if}>{$item['name']|escape}</option>
+          		{/foreach}
+          	</select>
+          </td>
+          <td class="vatop tips"></td>
+        </tr>
+        
         <tr>
           <td colspan="2" class="required"><label for="email">电子邮箱:</label>{form_error('email')}</td>
         </tr>

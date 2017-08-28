@@ -250,8 +250,8 @@ class MY_Controller extends CI_Controller {
     		}
     	}
     	
-    	$realPath = $tplDir.$viewname.'.tpl';
-    	
+    	$realPath = $tplDir.$viewname.'.tpl';//print_r($_SERVER);
+    	//echo preg_replace('/^\/index\.php\/admin\/(.*)/','${1}',$_SERVER['REQUEST_URI']);
     	//echo $realPath;
     	$this->assign(array(
     		'funcUrl' => preg_replace('/^\/index\.php\/admin\/(.*)/','${1}',$_SERVER['REQUEST_URI']),//后台使用
