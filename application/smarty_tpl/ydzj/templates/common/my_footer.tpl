@@ -35,11 +35,10 @@ var soundSwfUrl = "{resource_url('js/swfobject/sound.swf')}",
 var notify = $.fn.myNotify.initSWF('soundDiv',soundSwfUrl,expressSwfUrl);
 //notify.setSound('{resource_url('sound/girl.mp3')}');
 notify.setPmUrl("{site_url('my_pm/index')}");
-notify.updatePm(pmUrl);
 
 $(function(){
     {if $newPm || !empty($smarty.get.pm)}
-    notify.showToast();
+    notify.showToast("{site_url('my_pm/index')}");
     setTimeout(function(){
         notify.playSound(1);
     },2000);

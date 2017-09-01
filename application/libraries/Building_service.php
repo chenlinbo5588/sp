@@ -221,7 +221,11 @@ class Building_service extends Base_service {
 				"attributes" => array(
 					'name' => $personInfo['qlr_name'],
 					'id_no' => $personInfo['id_no'],
-					'illegal' => $pBuildingParam['illegal']
+					'illegal' => $pBuildingParam['illegal'],
+					'person_id' => $personInfo['id'],
+					'village_id' => $personInfo['village_id'],
+					'illegal' => $pBuildingParam['illegal'],
+					'hid' => $pBuildingParam['hid']
 				)
 			)
 		);
