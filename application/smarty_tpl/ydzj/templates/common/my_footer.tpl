@@ -7,7 +7,7 @@
             <a href="javascript:void(0);" class="kf-biz"><span class="icon"></span>商务咨询</a>
         </div>
         <div class="visitor">
-            <form>
+            {form_open()}
                 <div class="form-group">
                     <input class="form-control name" placeholder="姓名" type="text">
                 </div>
@@ -33,7 +33,7 @@ var soundSwfUrl = "{resource_url('js/swfobject/sound.swf')}",
     pmUrl = "{site_url('my_pm/check_newpm')}";
     
 var notify = $.fn.myNotify.initSWF('soundDiv',soundSwfUrl,expressSwfUrl);
-//notify.setSound('{resource_url('sound/girl.mp3')}');
+notify.setSound('{resource_url('sound/girl.mp3')}');
 notify.setPmUrl("{site_url('my_pm/index')}");
 
 $(function(){
