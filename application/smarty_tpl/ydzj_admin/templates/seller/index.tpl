@@ -21,9 +21,9 @@
 	            </td>
 	            <td>认证状态</td>
 	            <td>
-	                <label><input type="checkbox" name="verify_result[]" {if in_array(0,$search_map['verify_result'])}checked{/if} value="0"/>未审核</lable>
-	                <label><input type="checkbox" name="verify_result[]" {if in_array(1,$search_map['verify_result'])}checked{/if} value="1"/>已通过</lable>
-	                <label><input type="checkbox" name="verify_result[]" {if in_array(-1,$search_map['verify_result'])}checked{/if} value="-1"/>未通过</lable>
+	                <label><input type="checkbox" name="verify_result[]" {if in_array(0,$search_map['verify_result'])}checked{/if} value="0"/>未审核</label>
+	                <label><input type="checkbox" name="verify_result[]" {if in_array(1,$search_map['verify_result'])}checked{/if} value="1"/>已通过</label>
+	                <label><input type="checkbox" name="verify_result[]" {if in_array(-1,$search_map['verify_result'])}checked{/if} value="-1"/>未通过</label>
 	            <td>
 	              <input type="submit" class="msbtn" name="tijiao" value="查询"/>
 	            </td>

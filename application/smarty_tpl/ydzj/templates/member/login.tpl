@@ -4,6 +4,13 @@ body {
 	background:url({resource_url('img/login/bg_4.jpg')}) no-repeat center center;
 }
 
+#logo a, #footer .row1 td {
+	color:#fff;
+}
+#main-content {
+	min-height:500px;
+}
+
 #footer .row1 {
     background:none;
 }
