@@ -771,13 +771,14 @@ function bindAjaxSubmit(classname){
 			dataType:'json',
 			data:formObj.serialize(),
 			success:function(resp){
-				lockFn(submitBtn,formName,false);
 				
 				refreshFormHash(resp.data);
 				
 				$(".error").removeClass('error');
 				
 				if(!/成功/.test(resp.message)){
+					
+					lockFn(submitBtn,formName,false);
 					
 					showToast('error',resp.message);
 					
@@ -810,6 +811,8 @@ function bindAjaxSubmit(classname){
 						setTimeout(function(){
 							location.href = resp.data.redirectUrl;
 						},resp.data.wait ? resp.data.wait : 2000);
+					}else{
+						lockFn(submitBtn,formName,false);
 					}
 				}
 			
