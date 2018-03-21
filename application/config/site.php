@@ -125,10 +125,11 @@ $config['id_type'] = array(
 );
 
 $config['sex_type'] = array(
+	'0' => '未知',
 	'1' => '男' ,
 	'2' => '女'
 );
 
 //$config['site_town'] = '掌起镇';
-$config['site_town'] = '坎墩街道';
+$config['site_town'] = '庵东镇';
 
