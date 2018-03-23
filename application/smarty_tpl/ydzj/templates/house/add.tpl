@@ -77,6 +77,7 @@
 	  
       require([
         "esri/map", 
+        "esri/InfoTemplate",
         "esri/layers/GraphicsLayer","esri/graphic", 
         "esri/Color",
         "esri/geometry/Point",
@@ -97,6 +98,7 @@
         "dojo/domReady!"
       ], function(
         Map,
+        InfoTemplate,
         GraphicsLayer,Graphic,
         Color,
         Point,
@@ -140,7 +142,16 @@
 	    
 	    buildingLayer.setDefinitionExpression("village_id = {$profile['basic']['village_id']}");
         
-        var layersNeedAdd = [layerWx,villageLayer,buildingLayer];
+        
+        zdLayer = new FeatureLayer("{config_item('arcgis_server')}{$mapUrlConfig['基本要素']['宗地']}",{
+	        mode: FeatureLayer.MODE_ONDEMAND,
+	        outFields: ['OBJECTID','QLRMC','TDZL'],
+	        minScale:1000,
+	        id : 'zd'
+	    });
+	    
+	    
+        var layersNeedAdd = [layerWx,villageLayer,zdLayer,buildingLayer];
         map.addLayers(layersNeedAdd);
         
         dojo.connect(villageLayer, "onLoad", function(){

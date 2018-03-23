@@ -41,7 +41,7 @@
   
       
       require([
-        "esri/map","esri/dijit/Scalebar","esri/dijit/Legend","esri/dijit/Measurement","esri/toolbars/edit","esri/toolbars/draw","esri/Color",
+        "esri/map","esri/InfoTemplate","esri/dijit/Scalebar","esri/dijit/Legend","esri/dijit/Measurement","esri/toolbars/edit","esri/toolbars/draw","esri/Color",
         "esri/dijit/editing/Editor","esri/geometry/Point","esri/geometry/Polyline","esri/geometry/Polygon","esri/geometry/Circle",
         "esri/layers/GraphicsLayer","esri/graphic", 
         "esri/symbols/SimpleMarkerSymbol","esri/symbols/SimpleLineSymbol","esri/symbols/SimpleFillSymbol",
@@ -62,7 +62,7 @@
         "dijit/WidgetSet", 
         "dojo/domReady!"
       ], function(
-        Map,Scalebar,Legend, Measurement,Edit,Draw, Color,
+        Map,InfoTemplate,Scalebar,Legend, Measurement,Edit,Draw, Color,
         Editor,Point, Polyline, Polygon,Circle,
         GraphicsLayer,Graphic,
         SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol,
@@ -107,6 +107,7 @@
           id : "village"
         });
         
+        
         buildingLayer = new FeatureLayer("{config_item('arcgis_server')}{$mapUrlConfig['编辑要素']['标准建筑点']}",{
 	        showLabels:true,
 	        mode: FeatureLayer.MODE_ONDEMAND,
@@ -114,15 +115,38 @@
 	        id : 'building'
 	    });
 	    
+	    
 	    buildingLayer.setDefinitionExpression("village_id = {$profile['basic']['village_id']}");
 	    
 	    dojo.connect(buildingLayer, "onClick", showDetail);
         dojo.connect(villageLayer, "onLoad", function(){
-        	map.setExtent(villageLayer.fullExtent);
+        	//map.setExtent(villageLayer.fullExtent);
 		});
 		
 		
-		var layersNeedAdd = [layerWx,villageLayer,buildingLayer,panWorkLayer,searchLayer];
+		{literal}
+		var infoTemplate = new InfoTemplate();
+          infoTemplate.setTitle("宗地 ${QLRMC}");
+          infoTemplate.setContent("<table><tr><td>土地证号:</td><td>${TDZH}</td></tr>" + 
+          "<tr><td>土地坐落:</td><td>${TDZL}</td></tr>" + 
+          "<tr><td>实测面积:</td><td>${SCMJ}</td></tr>" + 
+          "<tr><td>建筑面积:</td><td>${JZMJ}</td></tr>" + 
+          "<tr><td>建筑物占地面积:</td><td>${JZWZDMJ}</td></tr>" + 
+          "<tr><td>建筑物容积率:</td><td>${JZRJL}</td></tr>" + 
+          "<tr><td>建筑密度:</td><td>${JZMD}</td></tr></table>");
+		
+         {/literal}
+                                  
+		zdLayer = new FeatureLayer("{config_item('arcgis_server')}{$mapUrlConfig['基本要素']['宗地']}",{
+	        mode: FeatureLayer.MODE_ONDEMAND,
+	        outFields: ['OBJECTID','QLRMC','TDZL','TDZH','SCMJ','JZMJ','JZWZDMJ','JZRJL','JZMD'],
+	        infoTemplate: infoTemplate,
+	        minScale:1000,
+	        id : 'zd'
+	    });
+		
+		
+		var layersNeedAdd = [layerWx,villageLayer,zdLayer,buildingLayer,panWorkLayer,searchLayer];
         map.addLayers(layersNeedAdd);
 		
 		$(".panTool button").bind("click",activateTool);

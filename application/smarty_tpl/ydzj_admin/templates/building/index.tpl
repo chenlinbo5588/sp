@@ -38,7 +38,7 @@
       });
 
       require([
-        "esri/map","esri/dijit/Scalebar","esri/dijit/Legend","esri/toolbars/edit","esri/toolbars/draw","esri/Color",
+        "esri/map","esri/InfoTemplate","esri/dijit/Scalebar","esri/dijit/Legend","esri/toolbars/edit","esri/toolbars/draw","esri/Color",
         "esri/dijit/editing/Editor","esri/geometry/Point","esri/geometry/Polyline","esri/geometry/Polygon","esri/geometry/Circle",
         "esri/symbols/SimpleMarkerSymbol","esri/symbols/SimpleLineSymbol","esri/symbols/SimpleFillSymbol",
         "esri/symbols/TextSymbol","esri/symbols/Font", "esri/symbols/PictureMarkerSymbol",
@@ -68,7 +68,7 @@
         "dijit/layout/ContentPane", 
         "dojo/domReady!"
       ], function(
-        Map,Scalebar,Legend, Edit,Draw, Color,
+        Map,InfoTemplate,Scalebar,Legend, Edit,Draw, Color,
         Editor,Point, Polyline, Polygon,Circle,
         SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol,
         TextSymbol,Font, PictureMarkerSymbol,
@@ -186,8 +186,30 @@
           id : "village"
         });
         
+        
+		var infoTemplate = new InfoTemplate();
+          infoTemplate.setTitle("宗地 ${QLRMC}");
+          infoTemplate.setContent("<table><tr><td>土地证号:</td><td>${TDZH}</td></tr>" + 
+          "<tr><td>土地坐落:</td><td>${TDZL}</td></tr>" + 
+          "<tr><td>实测面积:</td><td>${SCMJ}</td></tr>" + 
+          "<tr><td>建筑面积:</td><td>${JZMJ}</td></tr>" + 
+          "<tr><td>建筑物占地面积:</td><td>${JZWZDMJ}</td></tr>" + 
+          "<tr><td>建筑物容积率:</td><td>${JZRJL}</td></tr>" + 
+          "<tr><td>建筑密度:</td><td>${JZMD}</td></tr></table>");
+		
+         {/literal}
+                                  
+		zdLayer = new FeatureLayer("{config_item('arcgis_server')}{$mapUrlConfig['基本要素']['宗地']}",{
+	        mode: FeatureLayer.MODE_ONDEMAND,
+	        outFields: ['OBJECTID','QLRMC','TDZL','TDZH','SCMJ','JZMJ','JZWZDMJ','JZRJL','JZMD'],
+	        infoTemplate: infoTemplate,
+	        minScale:2000,
+	        id : 'zd'
+	    });
+	    
+        {literal}
      	//var layersNeedAdd = [layerZq,jbntLayer,nzyLayer,villageLayer,buildingLayer,panWorkLayer,searchLayer];
-     	var layersNeedAdd = [layerZq,villageLayer,buildingLayer,panWorkLayer,searchLayer];
+     	var layersNeedAdd = [layerZq,villageLayer,zdLayer,buildingLayer,panWorkLayer,searchLayer];
         map.addLayers(layersNeedAdd);
         {/literal}
         

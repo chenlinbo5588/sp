@@ -20,6 +20,7 @@ $config['CGCS2000'] = array(
 		'底图' => 'basemapfb/MapServer',
 		//'村界' => 'zqwj/cljz/MapServer/4',
 		'村界' => 'towncljz/xzqfb/MapServer/0',
+		'宗地' => 'towncljz/zdfb/MapServer/0',
 		//'存量建筑要素' => 'towncljz/jzd/MapServer'
 		'存量建筑要素' => 'towncljz/jzdfb/MapServer'
 	),

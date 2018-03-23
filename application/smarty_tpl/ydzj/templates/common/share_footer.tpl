@@ -21,7 +21,7 @@
     		</div>
     		<div class="row2">
     			<div class="boxz">
-    				<div>Coppyright &copy; {$smarty.now|date_format:"%Y"} {config_item('site_name')} ALL rights reserved. <a href="{site_url('member/admin_login')}">后台管理</a></div>
+    				<div>Coppyright &copy; {$smarty.now|date_format:"%Y"} {config_item('site_name')} ALL rights reserved. <a href="{site_url('member/admin_login')}" target="_blank">后台管理</a></div>
     				<div>{$siteSetting['icp_number']|escape}</div>
     				<div>{$siteSetting['statistics_code']}</div>
 		        </div>
