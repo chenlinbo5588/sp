@@ -169,11 +169,17 @@ class Attachment_service extends Base_service {
 			$resizeName = '';
 			if(is_array($overideConfig)){
 				$resizeName = $resizeIndex;
-				$currentConfig = array_merge($this->_imageSizeConfig[$resizeName],$overideConfig);
+				if($this->_imageSizeConfig[$resizeName]){
+					$currentConfig = array_merge($this->_imageSizeConfig[$resizeName] ,$overideConfig);
+				}else{
+					$currentConfig = $this->_imageSizeConfig[$resizeName];
+				}
+				
 			}else{
 				$resizeName = $overideConfig;
 				$currentConfig = $this->_imageSizeConfig[$resizeName];
 			}
+			
 			
 			//file_put_contents("currentResizeConfig.txt",print_r($currentConfig,true));
 			$fileData['img_'.$resizeName] = '';
