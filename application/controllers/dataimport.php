@@ -6,6 +6,7 @@ define('NEED_CL','需测量');
 class Dataimport extends Ydzj_Controller {
 
 	private $_resident;
+	private $_fileName = 'kdstnc.xlsx';
 
     public function __construct(){
         parent::__construct();
@@ -21,18 +22,8 @@ class Dataimport extends Ydzj_Controller {
     }
     
     
-    public function index(){
-    	
-    	
-    	header("Content-Type: text/html;charset=utf8");
-
-        
-        
-        
-        $personList = $this->Person_Model->getList(array(),'refno');
-        
-        $this->load->file(PHPExcel_PATH.'PHPExcel.php');
-        
+    private function _prepareExcel(){
+    	$this->load->file(PHPExcel_PATH.'PHPExcel.php');
 
         //$this->load->library('image_lib');
         
@@ -40,8 +31,15 @@ class Dataimport extends Ydzj_Controller {
         $cacheSettings = array( 'dir'  => ROOTPATH.'/temp' );
         PHPExcel_Settings::setLocale('zh_CN');
         PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
-        
-        $objPHPexcel =  PHPExcel_IOFactory::load(ROOTPATH.'/house.xls');
+    }
+    
+    
+    public function import_person(){
+    	
+    	header("Content-Type: text/html;charset=utf8");
+    	$this->_prepareExcel();
+    	
+        $objPHPexcel =  PHPExcel_IOFactory::load(ROOTPATH.'/'.$this->_fileName);
         $objPHPexcel->setActiveSheetIndex(0);
     	
     	$objWorksheet = $objPHPexcel->getActiveSheet(0); 
@@ -50,21 +48,83 @@ class Dataimport extends Ydzj_Controller {
     	$startRow = 0;
 		$readAddOn = 5;	
 		
-		/*
-		echo '<table>';
-		echo '<tr>';
-		echo '<td>编号</td><td>户主(权利人)</td><td>身份证号</td><td>建筑物座落地址</td><td>宗地号</td><td>土地使用权证号</td><td>批文号</td>';
-		echo '<td>建筑信息（间*层）</td><td>用地面积（发证面积）</td><td>建筑占地面积</td><td>建筑面积</td><td>土地权属性质</td>';
+    	//导入人
+		for($rowIndex = ($startRow + $readAddOn); $rowIndex <= $highestRow; $rowIndex++){
+    		
+    		$personItem = array(
+    			'town' => '坎墩街道',
+    			'village_id' => 268,
+    			'village' => '四塘南村',
+    			'refno' => $this->_cleanValue($objWorksheet->getCell('B'.$rowIndex)->getValue()),
+    			'qlr_name' => $this->_cleanValue($objWorksheet->getCell('C'.$rowIndex)->getValue()),
+    			'id_no' => $this->_cleanValue($objWorksheet->getCell('D'.$rowIndex)->getValue()),
+    			'id_type' => 1,
+				'sex' => 0,
+    			'isdie' => 0,
+    			'address' => $this->_cleanValue($objWorksheet->getCell('F'.$rowIndex)->getValue()),
+    			'housecnt' => 1,
+    			'family_num' => 1,
+    			'ip' => $this->input->ip_address(),
+    			'gmt_create' => $this->_reqtime,
+    			'gmt_modify' => $this->_reqtime,
+    		);
+    		
+    		$familyNum = $this->_cleanValue($objWorksheet->getCell('E'.$rowIndex)->getValue());
+    		
+    		if(strpos($familyNum,'已故') !== false){
+    			$personItem['isdie'] = 1;
+    		}else{
+    			$personItem['family_num'] = intval($familyNum);
+    		}
+    		
+    		if($personItem['id_no']){
+    			$sexFlag = substr($personItem['id_no'],-2,1);
+    			if($sexFlag % 2  == 0){
+    				$personItem['sex'] = 2;
+    			}else if($sexFlag % 2  != 0){
+    				$personItem['sex'] = 1;
+    			}
+    		}
+    		
+    		echo '<div>'.$this->db->insert_string($this->Person_Model->getTableRealName(),$personItem).';</div>';
+		}
 		
 		
-		echo '<td>用地面积</td><td>房屋结构</td><td>建筑物占地总面积</td><td>建筑总面积</td>';
 		
-		echo '</tr>';
-		*/
+    }
+    
+    
+    public function index(){
+    	
+    	
+    	header("Content-Type: text/html;charset=utf8");
+
+		$subPart = $this->input->get('part');
+        
+        if(empty($subPart)){
+        	$subPart = 'house';
+        }
+        
+        $this->_prepareExcel();
+        
+        
+        // 人
+        $personList = $this->Person_Model->getList(array(),'refno');
+        
+        // 房子
+        $houseList = $this->House_Model->getList(array(),'refno');
+        
+        $objPHPexcel =  PHPExcel_IOFactory::load(ROOTPATH.'/'.$this->_fileName);
+        $objPHPexcel->setActiveSheetIndex(0);
+    	
+    	$objWorksheet = $objPHPexcel->getActiveSheet(0); 
+    	$highestRow = $objWorksheet->getHighestRow();
+    	
+    	$startRow = 0;
+		$readAddOn = 5;	
+		
 		
     	for($rowIndex = ($startRow + $readAddOn); $rowIndex <= $highestRow; $rowIndex++){
-    		
-    		echo '<tr>';
     		
     		$houseItem = array(
     			'refno' => $this->_cleanValue($objWorksheet->getCell('A'.$rowIndex)->getValue()),
@@ -85,7 +145,7 @@ class Dataimport extends Ydzj_Controller {
     			'jzw_jzzdmj' => floatval(str_replace(NEED_CL,0,$this->_cleanValue($objWorksheet->getCell('AN'.$rowIndex)->getValue()))),
     			'jzw_jzmj' => floatval(str_replace(NEED_CL,0,$this->_cleanValue($objWorksheet->getCell('AO'.$rowIndex)->getValue()))),
     			
-    			'remark' => $this->_cleanValue($objWorksheet->getCell('BK'.$rowIndex)->getValue()),
+    			'remark' => '主体建筑建造时间'.$this->_cleanValue($objWorksheet->getCell('AP'.$rowIndex)->getValue()).','.$this->_cleanValue($objWorksheet->getCell('BK'.$rowIndex)->getValue()),
     		);
     		
     		
@@ -138,12 +198,23 @@ class Dataimport extends Ydzj_Controller {
     			$fwjg = $this->_cleanValue($objWorksheet->getCell($jzInfoItem['房屋结构'].$rowIndex)->getValue());
     			if($fwjg){
     				$fwCount++;
-    				$jzInfoArray[] = array(
-    					'jzw_jzzdmj' => floatval(str_replace(NEED_CL,0,$this->_cleanValue($objWorksheet->getCell($jzInfoItem['建筑占地面积'].$rowIndex)->getValue()))),
+    				
+    				$hasNeedCL = $this->_cleanValue($objWorksheet->getCell($jzInfoItem['建筑占地面积'].$rowIndex)->getValue());
+    				
+    				$tempHouseItem = array(
+    					'owner_id' => $houseList[$houseItem['refno']]['owner_id'],
+    					'house_id' => $houseList[$houseItem['refno']]['hid'],
+    					'jzw_jzzdmj' => floatval(str_replace(NEED_CL,0,$hasNeedCL)),
     					'jzw_jg' => $fwjg,
     					'jzw_plies' => $this->_cleanValue($objWorksheet->getCell($jzInfoItem['建筑信息'].$rowIndex)->getValue()),
     					'jzw_jzmj' => floatval(str_replace(NEED_CL,0,$this->_cleanValue($objWorksheet->getCell($jzInfoItem['建筑面积'].$rowIndex)->getValue()))),
     				);
+    				
+    				if(strpos($hasNeedCL,NEED_CL) !== false){
+    					$tempHouseItem['remark'] = NEED_CL;
+    				}
+    				
+    				$jzInfoArray[] = $tempHouseItem;
     			}
     		}
     		
@@ -157,7 +228,7 @@ class Dataimport extends Ydzj_Controller {
     		
     		$houseItem['jzw_jg'] = implode(',',$fwJgCombine);
     		$houseItem['jzw_plies'] = implode(',',$fwJz);
-    		$houseItem['cate'] = 1;
+    		$houseItem['cate'] = 1;// 1 民宅类  2 公益类 3 经营类 4 农民公寓
     		
     		
     		
@@ -229,20 +300,22 @@ class Dataimport extends Ydzj_Controller {
     		$houseItem['photos'] = '[]';
     		
     		
-    		//房屋信息
-    		//echo '<div>'.$this->db->insert_string($this->House_Model->getTableRealName(),$houseItem).';</div>';
-    		
-    		//房屋详情
-    		foreach($jzInfoArray as $fwInfo){
-    			$fwInfo['refno'] = $houseItem['refno'];
-    			echo '<div>'.$this->db->insert_string($this->House_Detail_Model->getTableRealName(),$fwInfo).';</div>';
+    		if($subPart == 'house'){
+    			//房屋信息
+    			echo '<div>'.$this->db->insert_string($this->House_Model->getTableRealName(),$houseItem).';</div>';
     		}
     		
-    		//echo '</tr>';
+    		if($subPart == 'house_detail'){
+	    		//房屋详情记录
+	    		foreach($jzInfoArray as $fwInfo){
+	    			$fwInfo['refno'] = $houseItem['refno'];
+	    			echo '<div>'.$this->db->insert_string($this->House_Detail_Model->getTableRealName(),$fwInfo).';</div>';
+	    		}
+    		}
+    		
     	}
     	
     	
-    	//echo '</table>';
     	
     }
     
@@ -252,42 +325,61 @@ class Dataimport extends Ydzj_Controller {
      * 图片处理
      */
     public function imageJson(){
-    	$txt = file(ROOTPATH.'/1.txt');
+    	
+    	
+    	$destDir = ROOTPATH.'/static/attach/2017/08/03';
     	
     	$jsonArray = array();
-    	
-    	
-        
         $houseList = $this->House_Model->getList(array(),'refno');
     	
+    	//echo count($houseList);
     	$cp = array();
     	$cut = array();
     	
-    	
-    	foreach($txt as $line){
-    		$line = $this->_cleanValue($line);
+    	foreach (glob($destDir."/*",GLOB_ONLYDIR) as $filename) {
+    		$dirname = basename($filename);
+    		$refNo = $dirname;
     		
-    		$fields = explode('/',$line);
-    		
-    		if($houseList['A'.$fields[0]]){
-    			$item = array(
-	    			'person_id' => $houseList['A'.$fields[0]]['owner_id'],
-	    			'house_id' => $houseList['A'.$fields[0]]['hid'],
-	    			'image_url' => 'static/attach/2017/08/03/' .$fields[1],
-	    			'image_url_b' => 'static/attach/2017/08/03/' .str_replace('.jpg','_b.jpg',$fields[1]),
-	    			'image_url_m' => 'static/attach/2017/08/03/' .str_replace('.jpg','_m.jpg',$fields[1]),
-	    		);
-	    		
-	    		$cp[] = "cp {$line} /f/code/CodeIgniter-3.0.0/static/attach/2017/08/03";
-	    		$cut[] = "convert -resize 800x1200 {$fields[1]} ".str_replace('.jpg','_b.jpg',$fields[1]);
-	    		$cut[] = "convert -resize 300x400 {$fields[1]} ".str_replace('.jpg','_m.jpg',$fields[1]);
-	    		
-	    		echo '<div>'.$this->db->insert_string($this->House_Images_Model->getTableRealName(),$item).';</div>';
+    		/*
+    		if(preg_match('/^.*?_(.*)$/i',$dirname,$match)){
+    			$refNo = $match[1];
     		}
-    	}
+    		*/
+    		
+    		
+    		foreach (glob("{$filename}/*.JPG") as $imgFileName) {
+    			$imgList = array();
+    			
+    			$imgList[] = str_replace(ROOTPATH.'/','',$imgFileName);
+    			$imgList[] = str_replace(ROOTPATH.'/','',str_replace('.JPG','_b.JPG',$imgFileName));
+    			$imgList[] = str_replace(ROOTPATH.'/','',str_replace('.JPG','_m.JPG',$imgFileName));
+    			
+    			if($imgList){
+	    			$cut[] = "convert -resize 800x1200 {$imgList[0]} ".str_replace('.JPG','_b.JPG',"{$imgList[0]}");
+		    		$cut[] = "convert -resize 300x400 {$imgList[0]} ".str_replace('.JPG','_m.JPG',"{$imgList[0]}");
+	    		}
+	    		
+    			if($houseList['A'.$refNo]){
+	    			$item = array(
+		    			'person_id' => $houseList['A'.$refNo]['owner_id'],
+		    			'house_id' => $houseList['A'.$refNo]['hid'],
+		    			'image_url' => $imgList[0],
+		    			'image_url_b' => $imgList[1],
+		    			'image_url_m' => $imgList[2],
+		    			'add_uid' =>  $houseList['A'.$refNo]['add_uid'],
+		    			'add_username' =>  $houseList['A'.$refNo]['add_username'],
+		    			'gmt_create' =>  $houseList['A'.$refNo]['gmt_create'],
+		    			'gmt_modify' =>  $houseList['A'.$refNo]['gmt_modify']
+		    		);
+		    		
+		    		echo '<div>'.$this->db->insert_string($this->House_Images_Model->getTableRealName(),$item).';</div>';
+	    		}else{
+	    			//echo '<div style="color:red;">'.$refNo.'</div>';
+	    		}
+    		}
+    		//print_r($imgList);
+		}
     	
-    	
-    	file_put_contents("cp.txt",implode("\r\n",$cp));
     	file_put_contents("cut.txt",implode("\r\n",$cut));
     }
     

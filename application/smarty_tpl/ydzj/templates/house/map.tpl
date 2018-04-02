@@ -118,7 +118,7 @@
 	    
 	    dojo.connect(buildingLayer, "onClick", showDetail);
         dojo.connect(villageLayer, "onLoad", function(){
-        	map.setExtent(villageLayer.fullExtent);
+        	//map.setExtent(villageLayer.fullExtent);
 		});
 		
 		
