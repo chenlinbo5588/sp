@@ -176,6 +176,7 @@ EOF;
         
         //file_put_contents("debug.txt",print_r($result,true),FILE_APPEND);
         if(empty($customer) && !empty($result)){
+        	$result['appid'] = $this->_mpConfig['appid'];
             $this->_CI->Wx_Customer_Model->_add($result,true);
             $customer = $result;
         }else if(($this->_CI->_reqtime - $customer['gmt_modify']) >  86400 ){
@@ -250,12 +251,15 @@ EOF;
             if(!$isError){
                 $xml = new DOMDocument();
                 $xml->loadXML($message);
+                
+                
                 $rt['ToUserName'] = $xml->getElementsByTagName('ToUserName');
                 $rt['FromUserName'] = $xml->getElementsByTagName('FromUserName');
                 $rt['MsgType'] = $xml->getElementsByTagName('MsgType');
                 $rt['Event'] = $xml->getElementsByTagName('Event');
                 $rt['EventKey'] = $xml->getElementsByTagName('EventKey');
 
+				
                 $toUserName = $rt['ToUserName']->item(0)->nodeValue;
                 $fromUserName = $rt['FromUserName']->item(0)->nodeValue;
                 $msgType = $rt['MsgType']->item(0)->nodeValue;
@@ -295,7 +299,7 @@ EOF;
                 
             }
             */
-			$filename = APPPATH.'libraries'.DIRECTORY_SEPARATOR.$this->_mpConfig['folder'].DIRECTORY_SEPARATOR.$className.'.php';
+			$filePath = APPPATH.'libraries'.DIRECTORY_SEPARATOR.$this->_mpConfig['folder'].DIRECTORY_SEPARATOR.$className.'.php';
         }
         
         if(file_exists($filePath)){
@@ -304,11 +308,16 @@ EOF;
             $responseObj->delegate = $this;
             
             $encryptMsg = '';
-	        $return = $this->msgCrypt->encryptMsg($responseObj->response($message),$_GET['timestamp'],$_GET['nonce'],$encryptMsg);
-	        
-	        if(ErrorCode::$OK == $return){
-	            echo $encryptMsg;
-	        }
+            $respMessage = $responseObj->response($message);
+            
+            if(!empty($respMessage)){
+            	$return = $this->msgCrypt->encryptMsg($respMessage,$_GET['timestamp'],$_GET['nonce'],$encryptMsg);
+		        if(ErrorCode::$OK == $return){
+		            echo $encryptMsg;
+		        }
+            }else{
+            	echo "";
+            }
         }
     }
     

@@ -14,6 +14,9 @@ class Weixin extends Ydzj_Controller {
     	
     }
     
+    
+    
+    
     public function index()
     {
         
