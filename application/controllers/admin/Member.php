@@ -388,6 +388,7 @@ class Member extends Ydzj_Admin_Controller {
 				$updateData = array(
 					'village_id' => $villageId,
 					'village' => $villageList[$villageId]['xzqmc'],
+					'mobile' => $this->input->post('mobile'),
 					'qq' => $this->input->post('qq'),
 					'weixin' => $this->input->post('weixin'),
 					'email' => $this->input->post('email'),

@@ -46,9 +46,11 @@ class Building_service extends Base_service {
 			
 			if($result['features'][0]){
 				$this->_houseModel->update($result['features'][0]['geometry'],array('hid' => $houseInfo['hid']));
+				
+				$houseInfo = array_merge($houseInfo,$result['features'][0]['geometry']);
 			}
 			
-			$houseInfo = array_merge($houseInfo,$result['features'][0]['geometry']);
+			
 		}
 		
 		return $houseInfo;
@@ -203,6 +205,18 @@ class Building_service extends Base_service {
 		}
 	}
 	
+	public function refreshHouseImage($pHid){
+		
+		//将图片更新的house表photos 字段中
+		$imageList = $this->_houseImagesModel->getList(array(
+			'select' => 'id,image_url,image_url_b,image_url_m',
+			'where' => array(
+				'house_id' => $pHid
+			)
+		));
+		
+		return $this->_houseModel->update(array('photos' => json_encode($imageList)),array('hid' => $pHid));
+	}
 	
 	/**
 	 * 更新
@@ -248,16 +262,7 @@ class Building_service extends Base_service {
 		
 		if($affectRow >= 0){
 			//将图片更新的house表photos 字段中
-			$imageList = $this->_houseImagesModel->getList(array(
-				'select' => 'id,image_url,image_url_b,image_url_m',
-				'where' => array(
-					'house_id' => $pBuildingParam['hid']
-				)
-			));
-			
-			$this->_houseModel->update(array('photos' => json_encode($imageList)),array('hid' => $pBuildingParam['hid']));
-			
-			
+			$this->refreshHouseImage($pBuildingParam['hid']);
 			
 			$this->updatePersonHouseByPersonId($personInfo['id']);
 			

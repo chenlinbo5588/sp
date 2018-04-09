@@ -344,6 +344,11 @@ class House extends MyYdzj_Controller {
 			
 			$imageId = $this->House_Images_Model->_add(array_merge($info,$this->addWhoHasOperated('add')));
 			if($imageId){
+				
+				if($info['house_id']){
+					$this->building_service->refreshHouseImage($info['house_id']);
+				}
+				
 				$info['error'] = 0;
 				$info['msg'] = '上传成功';
 				$info['id'] = $imageId;  //照片ID

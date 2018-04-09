@@ -26,7 +26,7 @@
         </tr>
         <tr class="noborder">
           <td class="vatop rowform">
-            <p><input type="text"  id="email" value="{$info['mobile']|escape}" name="mobile" class="txt">{form_error('mobile')}</p>
+            <p><input type="text"  id="mobile" value="{$info['mobile']|escape}" name="mobile" class="txt">{form_error('mobile')}</p>
           </td>
           <td class="vatop tips"></td>
         </tr>
