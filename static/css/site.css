@@ -1259,13 +1259,15 @@ table.noext {
 
 @media (min-width: 1024px) {
     .boxz {
-        width:980px;
+        /*width:980px;*/
+        width:100%;
     }
 }
 
 @media (min-width: 1280px) {
     .boxz {
-        width:1024px;
+        /*width:1024px;*/
+        width:100%;
     }
 }
 
