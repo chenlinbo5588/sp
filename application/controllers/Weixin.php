@@ -9,18 +9,55 @@ class Weixin extends Ydzj_Controller {
         
         $this->loadWeixinSupportFiles();
         
+        
         $this->load->config('weixin');
     	$this->load->library('Weixin_mp_api');
     	
+    	
+    	
     }
     
-    
+    /**
+     * 更新 AccessToken ,每小时刷新一次
+     */
+         
+    public function refreshTicket(){
+    	if(!$this->input->is_cli_request()){
+    		die(0);
+    	}
+    	
+    	$this->Mp_Ticket_Model->deleteByCondition(array(
+        	'where' => array(
+        		'gmt_create <=' => $this->_reqtime - 86400
+        	),
+        	'limit' => 5
+        ));
+        
+        $mpConfig = config_item('mp');
+    	
+    	$tickets = $this->Mp_Ticket_Model->getList(array(
+            'where' => array(
+            	'appid' => $mpConfig['appid'],
+                'gmt_create >= ' => $this->_reqtime - 3600
+            ),
+            'order' => 'id DESC',
+            'limit' => 2
+        ));
+        
+        if(empty($tickets)){
+        	
+	        $ticket = $this->weixin_mp_api->getAccessToken($mpConfig);
+	    	if($ticket){
+	    		$row = $this->Mp_Ticket_Model->_add(array('appid' => $mpConfig['appid'], 'access_token' => $ticket['access_token'],'expire_in' => $ticket['expires_in'], 'gmt_create' => $this->_reqtime));
+	    	}
+        }
+    }
     
     
     public function index()
     {
         
-        echo md5(mt_rand());
+        //echo md5(mt_rand());
         //$this->display();
     }
     
@@ -49,7 +86,7 @@ class Weixin extends Ydzj_Controller {
         if($this->weixin_mp_api->checkSignature()){
             $postStr = $GLOBALS["HTTP_RAW_POST_DATA"];
             $message = $this->Weixin_mp_api->user_event($postStr);
-            $this->Weixin_mp_api->responseMessage($message);
+            $this->weixin_mp_api->responseMessage($message);
         }
     	
     }
@@ -89,8 +126,8 @@ class Weixin extends Ydzj_Controller {
     <Encrypt><![CDATA[edGy0veIVq0X6CWPPOIWHwBu2c5IZ8TqZcCzJN7j5WHVcHSd9TWpYdW+cb6prxPWmb9EqK3eXhUM21o4rS8redlTjI0l2PeZyOm9sPBOUIOJQKxF4pIJYCz2XMxeD9GSBJgXS1ixLL/oQSotq938LUKXZ1FCQelduQmaG1zAdWz5pX1udUC9oTZQtpZohjtwV4R7mMFTMWz/NdTk0fwCU/s5mj6uKM3WcYFDiL1767taJW0vejhZj1bRiVyFWwn84rGbfaXHseeMeodAj0ivYNmWgT09Yz1SMwQaHetsXpK3mTGvEogmK8B1kKfdg4H30102U4nIpsbs+MlxD7nRNW9NtA1ONKvjUXK/BVjQX0UfYe4SsD7/dINId8MS2hNwu0D1uQ1LaLnvdf6WJkCxK7vxWXLhqx+vE8CtV9Iym4dD/6rfGqIdEbHrVslclCqlYthpWcsiftyNwhM+NxIElw==]]></Encrypt>
 </xml>';
             */
-            $message = $this->Weixin_mp_api->user_event($postStr);
-            $this->Weixin_mp_api->responseMessage($message);
+            $message = $this->weixin_mp_api->user_event($postStr);
+            $this->weixin_mp_api->responseMessage($message);
         }
     }
     

@@ -99,7 +99,7 @@ class Wxnews extends Ydzj_Admin_Controller {
     	foreach($d['data'] as $dt){
     		if(empty($dt['media_id'])){
     			$file = str_replace('http://'.$_SERVER['SERVER_NAME'].'/','',$dt['preview_url']);
-        		$result = $mpMediaApiObj->uploadMedia(ROOT_DIR.'/'.$file,'image');
+        		$result = $mpMediaApiObj->uploadImg(ROOT_DIR.'/'.$file);
         		
         		if($result['media_id']){
         			$this->News_Model->updateMedia($dt['id'],$result);

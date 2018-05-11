@@ -18,7 +18,6 @@ class Ydzj_Controller extends MY_Controller {
 		$this->load->library(array('Seo_service','Navigation_service','Article_service'));
 		$this->form_validation->set_error_delimiters('<label class="form_error">','</label>');
 		
-		//$this->getSiteNavs();
 		
 		$this->_initLogin();
 	}
@@ -27,17 +26,6 @@ class Ydzj_Controller extends MY_Controller {
 		parent::_initLibrary();
 	}
 	
-	/**
-	 * 获取 网站导航 
-	 */
-	public function getSiteNavs(){
-		$this->_siteNavs = $this->navigation_service->getClassTree();
-		
-		$this->assign('siteNavs',$this->_siteNavs);
-		$this->assign('idReplacement','{ID}');
-		//print_r($navTree);
-		
-	}
 	
 	
 	/**

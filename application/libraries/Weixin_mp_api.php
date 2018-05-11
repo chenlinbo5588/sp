@@ -23,44 +23,46 @@ class Weixin_Mp_Api extends Http_Client {
     
     public function __construct(){
         parent::__construct();
+        
+        $this->_CI->load->model(array('Mp_Ticket_Model','Wx_Customer_Model'));
+        
     }
+    
     
     /**
      * 获得控制器
      */
     public function getCI(){
     	return $this->_CI;
+    }
+    
+    
+    public function fetchToken(){
+        $tickets = $this->_CI->Mp_Ticket_Model->getList(array(
+            'where' => array(
+            	//'appid' => $pConfig['appid'],
+                'gmt_create >= ' => $this->_CI->_reqtime - 10800
+            ),
+            'order' => 'id DESC',
+            'limit' => 2
+        ));
+        
+        if(!empty($tickets)){
+        	return $tickets[0]['access_token'];
+        }else{
+        	log_message('error',"Ticket已失效,更新处理异常");
+            return '';
+        }
     	
     }
+    
     
     public function initSetting($config){
         $this->_mpConfig = $config;
         
         $this->msgCrypt = new WXBizMsgCrypt($config['token'],$config['EncodingAESKey'],$config['appid']);
         
-        $this->_CI->load->model(array('Mp_Ticket_Model','Wx_Customer_Model'));
-        
-        $this->_CI->Mp_Ticket_Model->deleteByWhere(array(
-        	'gmt_create <=' => $this->_CI->_reqtime - 86400
-        ));
-        
-        /**
-         * 获得 AccessToken ,每小时刷新一次
-         */
-        $tickets = $this->_CI->Mp_Ticket_Model->getList(array(
-            'where' => array(
-            	'appid' => $this->_mpConfig['appid'],
-                'gmt_create >= ' => $this->_CI->_reqtime - 3600
-            ),
-            'order' => 'id DESC',
-            'limit' => 1
-        ));
-        
-        if(!empty($tickets)){
-        	Weixin_Mp_Api::$_mpAccessToken = $tickets[0]['access_token'];
-        }else{
-            $this->getAccessToken();
-        }
+        Weixin_Mp_Api::$_mpAccessToken = $this->fetchToken();
         
         $this->_menuStr = <<< EOF
                 {
@@ -140,18 +142,19 @@ EOF;
     }
     
     
-    public function getAccessToken(){
+    public function getAccessToken($pConfig){
         $param = array(
-            'url' => '/cgi-bin/token?grant_type=client_credential&appid='.$this->_mpConfig['appid'].'&secret='.$this->_mpConfig['app_secret'],
+            'url' => '/cgi-bin/token?grant_type=client_credential&appid='.$pConfig['appid'].'&secret='.$pConfig['app_secret'],
             'method' => 'get'
         );
         $respone = $this->request($param);
         $result = json_decode($respone,true);
         
         if($result['access_token']){
-            Weixin_Mp_Api::$_mpAccessToken = $result['access_token'];
-            
-            $row = $this->_CI->Mp_Ticket_Model->_add(array('appid' => $this->_mpConfig['appid'], 'access_token' => $result['access_token'],'expire_in' => $result['expires_in'], 'gmt_create' => $this->_CI->_reqtime));
+        	return $result;
+        }else{
+        	log_message('error',"获取Ticket失败,".$respone);
+        	return '';
         }
     }
     
@@ -194,10 +197,10 @@ EOF;
      * {"errcode":0,"errmsg":"ok"}
      */
     
-    public function uploadMedia($file , $type = 'image'){
+    public function uploadImg($file){
         
         $param = array(
-            'url' => 'http://file.api.weixin.qq.com/cgi-bin/media/upload?access_token='.Weixin_Mp_Api::$_mpAccessToken .'&type='.$type,
+            'url' => '/cgi-bin/media/uploadimg?access_token='.Weixin_Mp_Api::$_mpAccessToken,
             'method' => 'post',
             'data' => array(
             	'media' => '@'.$file
