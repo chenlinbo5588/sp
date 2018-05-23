@@ -1,67 +1,71 @@
-{include file="common/header.tpl"}
-<style>
-
-#adminlogin {
-	width:100%;
-	max-width:640px;
-	margin: 0 auto;
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>{$SEO_title}</title>
+<link href="{resource_url('css/admin_login.css')}" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="{resource_url('js/jquery.js')}"></script>
+<script type="text/javascript" src="{resource_url('js/common.js',true)}"></script>
+<style type="text/css">
+body {
+	background-color: #666666;
+	background-image: url("");
+	background-repeat: no-repeat;
+	background-position: center top;
+	background-attachment: fixed;
+	background-clip: border-box;
+	background-size: cover;
+	background-origin: padding-box;
+	width: 100%;
+	padding: 0;
 }
-
-#adminlogin h1 {
-	text-align:center;
-    height: 60px;
-    line-height: 60px;
-    border-bottom: 2px solid #35449D;
-    margin: 10px 0;
-}
-
-#adminlogin .side_lb {
-	width:23%;
-	display:block;
-	float:left;
-}
-
-#adminlogin .at_txt {
-	width:70%;
-}
-
 </style>
-{if !$manage_profile}
-<div class="handle_area" id="adminlogin">
-    <div class="feedback">{$feedback}</div>
-    <h1>管理后台登陆</h1>
+</head>
+<body>
+<div class="bg-dot"></div>
+<div class="login-layout">
+  <div class="top">
+    <h5>{$SEO_title}<em></em></h5>
+    <h2>{config_item('site_name')}</h2>
+    <h6></h6>
+  </div>
+  <div class="box">
     {form_open(site_url('member/admin_login'))}
         <input type="hidden" name="returnUrl" value="{$returnUrl}"/>
-        <div class="row clearfix">
-            <label class="side_lb" for="email_text">用户名：</label><input id="email_text" class="at_txt" type="text" name="email" value="{set_value('email')}" placeholder="请输入邮箱"/>
-        </div>
-        {form_error('email')}
-        <div class="row clearfix">
-            <label class="side_lb" for="password_text">密码：</label><input id="password_text" class="at_txt" type="password" name="password" value="{set_value('password')}" placeholder="请输入您的登陆密码"/>
-        </div>
-        {form_error('password')}
-        <div class="row clearfix">
-            <label class="side_lb" for="authcode_text">验证码：</label><input id="authcode_text" class="at_txt" type="text" name="auth_code" value="{set_value('auth_code')}" placeholder="请输入4位验证码"/>
-        </div>
-        {form_error('auth_code')}
-        <div class="row clearfix">
-            <label class="side_lb" for="authcode_text">&nbsp;</label>
-            <img class="nature" id="authImg" src="{site_url('captcha')}" title="点击图片刷新"/>&nbsp;<a href="javascript:void(0)" id="refreshBtn">看不请,点击刷新验证码</a>
-        </div>
+        <span><label>帐号</label><input name="email" id="user_name" autocomplete="off" type="text" class="input-text"/></span>
+	    <span><label>密码</label><input name="password" id="password" class="input-password" autocomplete="off" type="password" /></span>
+	    <span>
+	      	<div class="code">
+	        	<div class="arrow"></div>
+	        	<div class="code-img" id="authImg"></div>
+	        </div>
+	      	<input name="auth_code" type="text" class="input-code" id="captcha" placeholder="输入验证" title="验证码为4个字符" autocomplete="off" value="" >
+	    </span> 
+	    <span><input name="nchash" type="hidden" value="08b16cf4" /><input name="" class="input-button" type="submit" value="登录"></span>
+	      
         
-        <div class="row"><input class="master_btn" type="submit" name="login" value="登陆"/></div>
-        {*<div class="row center"><a href="{site_url('member/login')}" title="去前台登陆">去前台登陆</a></div>*}
-    </form>
+        </form>
+  </div>
 </div>
-{else}
-您已登陆 ,点击进入<a href="{site_url('sp_admin')}"> 管理中心 </a>
-{/if}
-	<script>
-	var imgUrl = "{site_url('captcha')}";
-	$(function(){
-		$("#refreshBtn").bind("click",function(){
-			$("#authImg").attr("src",imgUrl + "?t=" + Math.random());
-		});
+<div class="bottom">
+  <h6 title="{config_item('site_name')}">Coppyright &copy; {$smarty.now|date_format:"%Y"} {config_item('site_name')} ALL rights reserved.</h6>
+</div>
+<script type="text/javascript">
+	$(document).ready(function(){
+	    var bg='url({resource_url('img/login/bg_1.jpg')})';
+	    $("body").css("background-image",bg);
+	    //Hide Show verification code
+	    $("#hide").click(function(){
+	        $(".code").fadeOut("slow");
+	    });
+	    $("#captcha").focus(function(){
+	        $(".code").fadeIn("fast");
+	    });
+	    
+	    var imgCode1 = $.fn.imageCode({ wrapId: "#authImg", captchaUrl : "{site_url('captcha/index')}" });
+	    setTimeout(imgCode1.refreshImg,500);
+	    
 	});
-	</script>
-{include file="common/footer.tpl"}
+</script>
+</body>
+</html>

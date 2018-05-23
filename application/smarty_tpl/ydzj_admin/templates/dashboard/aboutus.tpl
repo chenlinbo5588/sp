@@ -36,7 +36,7 @@
       <tr class="noborder">
         <td></td>
         <td>设计师&nbsp;:&nbsp;</td>
-        <td class="team"><a href="http://user.qzone.qq.com/78580355" target="_blank"  class="qzone">卫勤</a></td>
+        <td class="team"><a href="http://user.qzone.qq.com/78580355" target="_blank"  class="qzone">xxxx</a></td>
       </tr>
     </tbody>
     <tfoot>

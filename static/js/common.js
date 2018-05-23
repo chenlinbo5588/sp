@@ -97,6 +97,39 @@ function refreshFormHash(data){
 }
 
 
+function setcookie(cookieName, cookieValue, seconds, path, domain, secure) {
+	if(cookieValue == '' || seconds < 0) {
+		cookieValue = '';
+		seconds = -2592000;
+	}
+	if(seconds) {
+		var expires = new Date();
+		expires.setTime(expires.getTime() + seconds * 1000);
+	}
+	domain = !domain ? cookiedomain : domain;
+	path = !path ? cookiepath : path;
+	document.cookie = escape(cookiepre + cookieName) + '=' + escape(cookieValue)
+		+ (expires ? '; expires=' + expires.toGMTString() : '')
+		+ (path ? '; path=' + path : '/')
+		+ (domain ? '; domain=' + domain : '')
+		+ (secure ? '; secure' : '');
+}
+
+function getcookie(name, nounescape) {
+	name = cookiepre + name;
+	var cookie_start = document.cookie.indexOf(name);
+	var cookie_end = document.cookie.indexOf(";", cookie_start);
+	if(cookie_start == -1) {
+		return '';
+	} else {
+		var v = document.cookie.substring(cookie_start + name.length + 1, (cookie_end > cookie_start ? cookie_end : document.cookie.length));
+		return !nounescape ? unescape(v) : v;
+	}
+}
+
+function set_pagesize(obj){
+	setcookie('page_size',obj.options[obj.selectedIndex].value);
+}
 /**
  * 分页
  * @param page
@@ -279,10 +312,8 @@ function districtSelect(isBind){
 	}else{
 		$(".cityGroupWrap .citySelect").unbind("change.districtSelect");
 	}
-	
+
 }
-
-
 
 /**
  * 浮动DIV定时显示提示信息,如操作成功, 失败等
@@ -317,13 +348,69 @@ function showTips( tips, height, time ){
 }
 
 
-function showToast(icon,message){
-	$.toast({
-		position:'top-center',
-	    text: message,
-	    icon: icon,
-	    loader:false
-	});
+$.fn.imageCode = function(setting){
+	var defaultSetting = {
+		'callbackFn' : function() {}	
+	};
+	
+	setting = $.extend({},setting);
+	
+	var wrap = $(setting.wrapId);
+	
+	
+	var isRequesting = false;
+	var _refreshImg = function(){
+		if(isRequesting == true){
+			return ;
+		}
+		
+		wrap.html("正在刷新....");
+		isRequesting = true;
+		
+		$.ajax({
+			type:'GET',
+			url:setting.captchaUrl,
+			data : { t: Math.random() },
+			success: function( json){
+				isRequesting = false;
+				if(typeof(json.img) != "undefined"){
+					wrap.html(json.img);
+				}else{
+					wrap.html("点击重新刷新");
+				}
+				
+				if(setting.callbackFn){
+					setting.callbackFn(json);
+				}
+			},
+			error: function(XMLHttpRequest, textStatus, thrownError){
+				isRequesting = false;
+			}
+		});
+    };
+	
+    wrap.bind("click.imageCode",_refreshImg);
+    
+	//setTimeout(_refreshImg,500);
+	
+	this.refreshImg = _refreshImg;
+	return this;
+};
+
+
+
+function showToast(icon,message,moreSetting){
+	var defaultSetting = {
+			position:'top-center',
+			text: message,
+			icon: icon,
+			hideAfter:5000,
+			loader:false
+		};
+	
+	var setting = $.extend(defaultSetting,moreSetting);
+	
+	$.toast(setting);
 }
 
 /*
@@ -340,44 +427,43 @@ function doAjaxPost(postdata,url,datatype,successFn,errorFn){
 	});
 }
 
-/**
- * 确认对话框
- * @param ids
- * @param url
- * @param title
- * @param dataType
- * @param successFn
- * @param errorFn
- */
-function ui_confirm(trigger,ids,url,title,dataType,successFn,errorFn){
+function ui_confirm(pParam){
 	var lock = false;
+	var postData = $.extend({ "formhash" : formhash} ,pParam.postData );
 	
 	commonDialog = $("#showDlg" ).dialog({
 		title: "提示",
 		autoOpen: false,
 		width: 280,
-		position: trigger ? { my: "center", at: "center", of: trigger } : null,
+		position: pParam.trigger ? { my: "center", at: "center", of: pParam.trigger } : null,
 		modal: true,
 	      buttons: {
 	        "确定": function(){
-	        	/* 防止联系点击确定  */
 	        	if(lock == true){
+	        		showToast('info','操作进行中,请耐心等待');
 	        		return;
 	        	}
 	        	lock = true;
 	        	
 	        	commonDialog.html('<div class="loading_bg">操作进行中,请稍候...</div>');
-	        	doAjaxPost({ "formhash" : formhash ,"id": ids }, url, dataType, function(json){
+	        	
+	        	if($.type(pParam.customDataFn) == 'function'){
+	        		postData = $.extend(postData ,pParam.customDataFn() );
+	        	}else if($.type(pParam.customDataFn) == 'object') {
+	        		postData = $.extend(postData ,pParam.customDataFn );
+	        	}
+	        	
+	        	doAjaxPost(postData, pParam.url, pParam.dataType, function(json){
 	        		lock = false;
 	        		commonDialog.dialog( "close" );
-	        		if(typeof(successFn) != 'undefined'){
-	        			successFn(ids,json);
+	        		if(typeof(pParam.successFn) != 'undefined'){
+	        			pParam.successFn(postData.id,json);
 	        		}
 	        	},function(XMLHttpRequest, textStatus, thrownError){
 	        		lock = false;
 	        		commonDialog.dialog( "close" );
-	        		if(typeof(errorFn) != 'undefined'){
-	        			errorFn(XMLHttpRequest, textStatus, thrownError);
+	        		if(typeof(pParam.errorFn) != 'undefined'){
+	        			pParam.errorFn(XMLHttpRequest, textStatus, thrownError);
 	        		}
 	        	});
 	        },
@@ -388,7 +474,7 @@ function ui_confirm(trigger,ids,url,title,dataType,successFn,errorFn){
 	   open:function(){
 		  
 	   }
-	}).html('<span class="ui-icon ui-icon-alert fl"></span><strong>' + title + '</strong>').dialog("open");
+	}).html('<span class="ui-icon ui-icon-alert fl"></span><strong>' + pParam.titleHTML + '</strong>').dialog("open");
 	
 }
 
@@ -398,10 +484,10 @@ function check_success(message){
 }
 
 
-/**
- * 通用ajax更新
- */
-function bindOpEvent(selector,customSuccessFn,customErrorFn){
+function bindOpEvent(pSetting,customDataFn, customSuccessFn,customErrorFn){
+	var defaultSetting = { selector: '.notexists',forceChecked: true};
+	var setting = $.extend(defaultSetting,pSetting);
+	
 	var successCallback = function(ids,json){
 		if(check_success(json.message)){
 			showToast('success',json.message);
@@ -420,17 +506,28 @@ function bindOpEvent(selector,customSuccessFn,customErrorFn){
 		showToast('error',"执行出错,服务器异常，请稍后再次尝试");
 	}
 	
-	$(selector).bind("click",function(){
+	
+	$(setting.selector).bind("click",function(){
 		var triggerObj = $(this);
 		var ids = getIDS(triggerObj);
 		var url = triggerObj.attr("data-url");
   		var title = triggerObj.attr('data-title');
   		
-  		if(ids.length == 0){
-  			showToast('error','请选勾选.');
-  		}else{
-  			ui_confirm(triggerObj,ids,url,'你确定要' + title + '吗？','json', customSuccessFn ? customSuccessFn : successCallback,customErrorFn ? customErrorFn : errorCallback );
-  		}
+  		if(setting.forceChecked && ids.length == 0){
+			showToast('error','请选勾选.');
+			return ;
+		}
+  		
+		ui_confirm({
+			'trigger':triggerObj,
+			'postData': { id : ids },
+			'customDataFn': customDataFn,
+			'url': url,
+			'titleHTML': title,
+			'dataType' : 'json',
+			'successFn': customSuccessFn ? customSuccessFn : successCallback,
+			'errorFn'  : customErrorFn ? customErrorFn : errorCallback
+		});
   	});
 	
 }
@@ -452,6 +549,92 @@ function getIDS(obj){
 	return ids;
 }
 
+
+/**
+ * 绑定
+ * @param selector
+ */
+function bindCheckAllEvent(selector){
+	$("body").delegate(selector,'click',function(){
+		var group = $(this).prop("name");
+		$("input[group='"+group+"']").prop("checked" , $(this).prop("checked") );
+	});
+}
+
+
+/**
+ * 
+ * @param sucFn 成功事件回调
+ * @param errorFn 失败事件回调
+ */
+function bindDeleteEvent(pSetting, customSuccessFn,customErrorFn){
+	var defaultSetting = { linkClass: 'a.delete', btnClass : '.deleteBtn' , rowPrefix: '#row' };
+	var setting = $.extend(defaultSetting,pSetting);
+	
+	var successCallback = function(ids,json){
+		if(check_success(json.message)){
+			showToast('success',json.message);
+			
+			for(var i = 0; i < ids.length; i++){
+				$(setting.rowPrefix + ids[i]).remove();
+			}
+		}else{
+			showToast('error',json.message);
+		}
+	}
+	
+	var errorCallback = function(){
+		showToast('error',"删除出错，服务器异常，请稍后再次尝试");
+	}
+	
+	$("body").delegate(setting.linkClass,"click",function(){
+		var triggerObj = $(this);
+		
+		var title = triggerObj.attr('data-title');
+		if(typeof(title) == 'undefined'){
+			title = '';
+		}
+		
+		ui_confirm({
+			'trigger':triggerObj,
+			'postData': { id : [$(this).attr("data-id")] },
+			'customDataFn': { } ,
+			'url': triggerObj.attr("data-url"),
+			'titleHTML': '你确定要删除<span class="hightlight">' + title + '</span>吗？',
+			'dataType' : 'json',
+			'successFn':customSuccessFn ? customSuccessFn : successCallback,
+			'errorFn'  : customErrorFn ? customErrorFn : errorCallback
+		});
+		
+  	});
+  	
+	$("body").delegate(setting.btnClass,"click",function(){
+  		var triggerObj = $(this);
+  		var ids = getIDS(triggerObj);
+  		var title = triggerObj.attr('data-title');
+		if(typeof(title) == 'undefined'){
+			title = '';
+		}
+		
+  		if(ids.length == 0){
+  			showToast('error','请选勾选.');
+  		}else{
+	  		ui_confirm({
+				'trigger':triggerObj,
+				'postData': { id : ids },
+				'customDataFn': { } ,
+				'url': triggerObj.attr("data-url"),
+				'titleHTML': '你确定要删除<span class="hightlight">' + title + '</span>吗？',
+				'dataType' : 'json',
+				'successFn':customSuccessFn ? customSuccessFn : successCallback,
+				'errorFn'  : customErrorFn ? customErrorFn : errorCallback
+			});
+  		}
+  	});
+}
+
+
+
 /**
  * ajax 提交
  * @param classname
@@ -469,124 +652,95 @@ function bindAjaxSubmit(classname){
 		}
 	}
 	
-	
-	$(classname).submit(function(){
-		var name=$(this).prop("name");
-		var submitBtn = $("input[type=submit]",$(this));
+	var ajaxSubmitFn = function(submitBtn){
 		
-		if(formLock[name]){
+		var opName = submitBtn.prop('value');
+		var formObj = $(submitBtn).parents('form');
+		
+		//console.log(formObj);
+		
+		var formName = formObj.prop("name");
+		var formActionUrl = formObj.prop("action");
+		
+		if(formLock[formName]){
 			return false;
 		}
 		
-		lockFn(submitBtn,name,true);
+		lockFn(submitBtn,formName,true);
+		
+		if(formActionUrl.indexOf('?') == -1){
+			formActionUrl = formActionUrl + '?op=' + encodeURIComponent(opName);
+		}else{
+			formActionUrl = formActionUrl + '&op=' + encodeURIComponent(opName);
+		}
+
 		
 		$.ajax({
 			type:'POST',
-			url: $(this).prop("action"),
+			url: formActionUrl,
 			dataType:'json',
-			data:$(this).serialize(),
+			data:formObj.serialize(),
 			success:function(resp){
-				lockFn(submitBtn,name,false);
+				
 				refreshFormHash(resp.data);
 				
+				$(".error").removeClass('error');
+				
 				if(!/成功/.test(resp.message)){
+					
+					lockFn(submitBtn,formName,false);
 					
 					showToast('error',resp.message);
 					
 					var errors = resp.data.errors;
 					var first = null;
 					
-					$("label.errtip").hide();
+					$(".errtip").hide();
 					
 					for(var f in errors){
 						if(first == null){
 							first = f;
 						}
+						
 						$("#error_" + f).html(errors[f]).addClass("error").show();
 					}
 					
 					if($("input[name=" + first + "]").size()){
-						$("input[name=" + first + "]").focus();
+						$("input[name=" + first + "]").addClass('error').focus();
 					}else if($("select[name=" + first + "]").size()){
 						$("select[name=" + first + "]").focus();
+					}else if($("textarea[name=" + first + "]").size()){
+						$("textarea[name=" + first + "]").addClass('error').focus();
 					}
-					
 					
 				}else{
 					showToast('success',resp.message);
 					
-					$("label.errtip").hide();
+					$(".errtip").hide();
 					if(typeof(resp.data.redirectUrl) != "undefined"){
-						
 						setTimeout(function(){
 							location.href = resp.data.redirectUrl;
-						},500);
+						},resp.data.wait ? resp.data.wait : 2000);
+					}else{
+						lockFn(submitBtn,formName,false);
 					}
 				}
 			
 			},
 			error:function(xhr, textStatus, errorThrown){
-				lockFn(submitBtn,name,false);
+				lockFn(submitBtn,formName,false);
 				
-				alert("服务器发送错误,将重新刷新页面");
+				showToast('error',"服务器发送错误,请联系管理员");
 			}
 		});
+	}
+	
+	$(classname + " input[type=submit]").bind('click',function(){
+		//console.log($(this));
+		ajaxSubmitFn($(this));
 		return false;
 	});
-}
-
-
-
-
-/**
- * 
- * @param sucFn 成功事件回调
- * @param errorFn 失败事件回调
- */
-function bindDeleteEvent(customSuccessFn,customErrorFn){
-	var successCallback = function(ids,json){
-		if(check_success(json.message)){
-			showToast('success',json.message);
-			
-			for(var i = 0; i < ids.length; i++){
-				$("#row" + ids[i]).remove();
-			}
-		}else{
-			showToast('error',json.message);
-		}
-	}
 	
-	var errorCallback = function(){
-		showToast('error',"删除出错，服务器异常，请稍后再次尝试");
-	}
-	
-	$("body").delegate("a.delete","click",function(){
-		var triggerObj = $(this);
-		
-		var title = triggerObj.attr('data-title');
-		if(typeof(title) == 'undefined'){
-			title = '';
-		}
-		
-		ui_confirm(triggerObj,[$(this).attr("data-id")],$(this).attr("data-url"),'你确定要删除<span class="hightlight">' + title + '</span>吗？','json',customSuccessFn ? customSuccessFn : successCallback,customErrorFn ? customErrorFn: errorCallback);
-  	});
-  	
-  	$("body").delegate(".deleteBtn","click",function(){
-  		var triggerObj = $(this);
-  		var ids = getIDS(triggerObj);
-  		var url = triggerObj.attr("data-url");
-  		var title = triggerObj.attr('data-title');
-		if(typeof(title) == 'undefined'){
-			title = '';
-		}
-		
-		
-  		if(ids.length == 0){
-  			showToast('error','请选勾选.');
-  		}else{
-  			ui_confirm(triggerObj,ids,url,'你确定要删除<span class="hightlight">' + title + '</span>吗？','json',customSuccessFn ? customSuccessFn : successCallback,customErrorFn ? customErrorFn: errorCallback);
-  		}
-  	});
 }
 
 
@@ -714,7 +868,7 @@ function bindDeleteEvent(customSuccessFn,customErrorFn){
 
 $(function(){
 	// 全选 start
-	$('.checkall').click(function(){
+	$("body").delegate('.checkall','click',function(){
 		var group = $(this).prop("name");
 		$("input[group="+group+"]").prop("checked" , $(this).prop("checked") );
 	});

@@ -62,7 +62,7 @@ class Weixin_Mp_Api extends Http_Client {
         
         $this->msgCrypt = new WXBizMsgCrypt($config['token'],$config['EncodingAESKey'],$config['appid']);
         
-        Weixin_Mp_Api::$_mpAccessToken = $this->fetchToken();
+        self::$_mpAccessToken = $this->fetchToken();
         
         $this->_menuStr = <<< EOF
                 {
@@ -169,7 +169,7 @@ EOF;
         $customer =  $this->_CI->Wx_Customer_Model->getFirstByKey($openId,'openid');
         if(empty($customer)){
             $param = array(
-                'url' => '/cgi-bin/user/info?access_token='.Weixin_Mp_Api::$_mpAccessToken.'&openid='.$openId.'&lang=zh_CN',
+                'url' => '/cgi-bin/user/info?access_token='.self::$_mpAccessToken.'&openid='.$openId.'&lang=zh_CN',
                 'method' => 'get'
             );
             //file_put_contents("debug.txt",print_r($param,true),FILE_APPEND);
@@ -200,7 +200,7 @@ EOF;
     public function uploadImg($file){
         
         $param = array(
-            'url' => '/cgi-bin/media/uploadimg?access_token='.Weixin_Mp_Api::$_mpAccessToken,
+            'url' => '/cgi-bin/media/uploadimg?access_token='.self::$_mpAccessToken,
             'method' => 'post',
             'data' => array(
             	'media' => '@'.$file
@@ -222,7 +222,7 @@ EOF;
     public function menu_create(){
         
         $param = array(
-            'url' => '/cgi-bin/menu/create?access_token='.Weixin_Mp_Api::$_mpAccessToken,
+            'url' => '/cgi-bin/menu/create?access_token='.self::$_mpAccessToken,
             'method' => 'post',
             'data' => $this->_menuStr
         );
@@ -350,7 +350,7 @@ EOF;
     public function uploadnews($info){
         
         $param = array(
-            'url' => '/cgi-bin/media/uploadnews?access_token='.Weixin_Mp_Api::$_mpAccessToken ,
+            'url' => '/cgi-bin/media/uploadnews?access_token='.self::$_mpAccessToken ,
             'method' => 'post',
         );
         
@@ -396,7 +396,7 @@ EOF;
     	
     	
     	$param = array(
-            'url' => '/cgi-bin/message/mass/preview?access_token='.Weixin_Mp_Api::$_mpAccessToken ,
+            'url' => '/cgi-bin/message/mass/preview?access_token='.self::$_mpAccessToken ,
             'method' => 'post',
         );
         
@@ -422,7 +422,7 @@ EOF;
      */
     public function sendMessageByOpenIds($media_id , $openids){
     	$param = array(
-            'url' => '/cgi-bin/message/mass/send?access_token='.Weixin_Mp_Api::$_mpAccessToken ,
+            'url' => '/cgi-bin/message/mass/send?access_token='.self::$_mpAccessToken ,
             'method' => 'post',
         );
         
@@ -444,6 +444,23 @@ EOF;
    "msgtype":"mpnews"
 }
 EOF;
+        $respone = $this->request($param);
+        $result = json_decode($respone,true);
+        
+        return $result;
+    }
+    
+    
+    /**
+     * 小程序获取用户信息
+     */
+    public function getWeixinUserByCode($config,$code){
+    	
+    	$param = array(
+            'url' => "/sns/jscode2session?appid={$config['appid']}&secret={$config['app_secret']}&js_code={$code}&grant_type=authorization_code" ,
+            'method' => 'get',
+        );
+        
         $respone = $this->request($param);
         $result = json_decode($respone,true);
         

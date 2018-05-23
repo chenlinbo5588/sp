@@ -19,6 +19,16 @@ $config['mp'] = array(
     )
 );
 
+$config['mp_xcxTdkc'] = array(
+	'folder' => 'xcxtdkc',
+	'EncodingType' => '安全模式',//兼容模式  安全模式
+	'appid' => 'wxb0296a06cfe15d4c',
+    'app_secret' => '58a783ce5f1675bc3fa5f0ddc4a27eee',
+    'token' => '41eba4b3e62bdf6bd9720ca4dac430e7', //用于消息签名验证
+    'EncodingAESKey' => 'S0hLztiWysdSv12U40d0HtLDfjbWD55MFNkfHuPfl64', // 消息加解密key
+);
+
+
 // 微信测试账户
 $config['mp_test'] = array(
 	'folder' => 'tdkcdev',

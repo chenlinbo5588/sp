@@ -1130,73 +1130,13 @@ input[type=text].validation_error {
 }
 
 
-.newsList li {
-    position: relative;
-    /* height: 85px; */
-    overflow: hidden;
-    /* text-overflow: ellipsis; */
-    border-bottom: 1px dashed #BAB9B9;
-    margin: 10px 0;
-    padding: 5px 0;
-}
 
-.newsList .previewPic {
-	width:100px;
-	height:80px;
-}
-
-.newsList .previewLink {
-	position:absolute;
-}
-
-.newsList .previewCont {
-	
-	margin: 0 0 0 120px;
-}
-
-.newsList .pubtime {
-	position: absolute;
-    right: 0;
-    top: 0;
-}
 
 
 .search div {
 	text-align:center;
 	padding:5px 0 ;
 }
-
-.articleHeader  {
-	text-align:center;
-	border-bottom:1px dashed #666;
-	padding:5px 0;
-	
-}
-
-
-
-
-.articleHeader h1 {
-	font-size:18px;
-	margin:5px 0;
-}
-
-.articleHeader em {
-	padding: 0 10px;
-}
-
-.articleContent {
-	margin:40px 0;
-	overflow: hidden;
-    word-wrap: break-word;
-}
-
-.articleContent img { 
-    height: auto; 
-    width: auto\9; 
-    max-width:100%;
-}
-
 
 
 .errorPage {
@@ -1209,128 +1149,6 @@ input[type=text].validation_error {
 }
 
 
-.productInfo {
-	position:relative;
-}
-
-.productInfo .textDesc {
-	position: absolute;
-    left: 530px;
-    top: 0;
-}
-
-.textDesc div {
-	
-	margin: 5px 0;
-}
-
-.textDesc em {
-	padding: 0 10px 0 0;
-}
-
-.goodscode {
-	color:#f00;
-}
-
-
-.suggest td {
-	padding: 5px 0;
-	vertical-align:middle;
-}
-
-
-.suggest td em {
-	
-	color:red;
-}
-
-.suggest input {
-	width:200px;
-}
-
-
-.suggest .form_error {
-	background:url(../img/error.gif) no-repeat left center;
-	padding-left: 20px;
-    margin: 0 0 0 5px;
-}
-
-.filelist {
-    
-}
-
-
-.fileitem {
-	background: #D8D8D8;
-	margin: 0 0 5px 0;
-	1padding: 10px 5px;
-	position: relative;
-	1height:40px;
-	
-}
-
-.fileitem .filename {
-	width: 50%;
-    display: inline-block;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-size:14px;
-    color:#ed6d00;
-    padding:0 0 0 5px;
-}
-
-.fileitem .filetype, .fileitem .filesize {
-	line-height:40px;
-}
-
-.fileitem em {
-	color:#666;
-}
-
-
-.fileitem .pubtime {
-	
-}
-
-
-.fileitem .downlink {
-	position: absolute;
-    /* top: 50%; */
-    right: 0;
-    /* margin: -5px 10px 0 0; */
-    width: 10%;
-    background: #ED6D00;
-    
-    color:#fff;
-    text-align: center;
-    height:40px;
-    line-height:40px;
-}
-
-.fileitem .wj {
-	display: inline-block;
-    width: 60px;
-    color: #999;
-}
-
-
-.fileitem .filetype, .fileitem .filesize {
-	color:#666;
-}
-
-.articleRelate {
-	border:1px dashed #d0d0d0;
-    padding: 5px;
-}
-
-.articleRelate .prevArticle {
-	float:right;
-}
-
-.articleRelate .nextArticle {
-	float:left;
-}
 
 .qqchat {
 	position: fixed;
