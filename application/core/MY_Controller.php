@@ -472,6 +472,7 @@ class MY_Controller extends CI_Controller {
 
 
 require_once(APPPATH.'libraries'.DIRECTORY_SEPARATOR.'Http_client.php');
+require_once(APPPATH.'libraries'.DIRECTORY_SEPARATOR.'Weixin_api.php');
 require_once(APPPATH.'libraries'.DIRECTORY_SEPARATOR.'Flexihash.php');
 require_once(APPPATH.'core'.DIRECTORY_SEPARATOR.'Ydzj_Controller.php');
 require_once(APPPATH.'core'.DIRECTORY_SEPARATOR.'MyYdzj_Controller.php');

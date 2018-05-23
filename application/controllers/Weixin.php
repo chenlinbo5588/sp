@@ -4,17 +4,11 @@
  * 消息控制
  */
 class Weixin extends Ydzj_Controller {
+	
     public function __construct(){
         parent::__construct();
         
-        $this->loadWeixinSupportFiles();
-        
-        
-        $this->load->config('weixin');
     	$this->load->library('Weixin_mp_api');
-    	
-    	
-    	
     }
     
     /**
@@ -75,15 +69,17 @@ class Weixin extends Ydzj_Controller {
     
     
     public function devmessage(){
-        $this->weixin_mp_api->initSetting(config_item('mp_test'));
+    	$mpConfig = config_item('mp_test');
+    	
+        $this->weixin_mp_api->initSetting($mpConfig);
         
         /*
-    	if($this->weixin_mp_api->checkSignature()){
+    	if($this->weixin_mp_api->checkSignature($mpConfig['token'])){
     		echo $_GET["echostr"];
     	}
     	*/
     	
-        if($this->weixin_mp_api->checkSignature()){
+        if($this->weixin_mp_api->checkSignature($mpConfig['token'])){
             $postStr = $GLOBALS["HTTP_RAW_POST_DATA"];
             $message = $this->Weixin_mp_api->user_event($postStr);
             $this->weixin_mp_api->responseMessage($message);
@@ -107,16 +103,17 @@ class Weixin extends Ydzj_Controller {
         ///signature=ce40a74f36a702b9754b9b120623e1c749e81315&timestamp=1418015929&nonce=2097909623&encrypt_type=aes&msg_signature=0e35c960849aa61f38f73fae23bc9e667644dce9 
         
         
-        $this->weixin_mp_api->initSetting(config_item('mp'));
+        $mpConfig = config_item('mp');
+        $this->weixin_mp_api->initSetting($mpConfig);
 		/*
-    	if($this->weixin_mp_api->checkSignature()){
+    	if($this->weixin_mp_api->checkSignature($mpConfig['token'])){
     		echo $_GET["echostr"];
     	}
 		die(0);
 		*/
         
         //valid signature , option
-        if($this->weixin_mp_api->checkSignature()){
+        if($this->weixin_mp_api->checkSignature($mpConfig['token'])){
             $postStr = $GLOBALS["HTTP_RAW_POST_DATA"];
             
             //?signature=21b04411b91ca74175cf9a4f2bb56ccaa712bb08&timestamp=1418017063&nonce=459089760&encrypt_type=aes&msg_signature=5f0b52560150baab17196a5c571ea1f7633a7f3d

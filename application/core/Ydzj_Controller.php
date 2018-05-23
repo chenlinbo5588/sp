@@ -27,21 +27,6 @@ class Ydzj_Controller extends MY_Controller {
 	}
 	
 	
-	
-	/**
-	 * 加载微信支持文件
-	 */
-	public function loadWeixinSupportFiles(){
-		require_once(WEIXIN_PATH.'errorCode.php');
-		require_once(WEIXIN_PATH.'sha1.php');
-		require_once(WEIXIN_PATH.'xmlparse.php');
-		require_once(WEIXIN_PATH.'pkcs7Encoder.php');
-		require_once(WEIXIN_PATH.'wxBizMsgCrypt.php');
-	}
-	
-	
-	
-	
 	private function _initLogin(){
 		
 		$this->session->set_userdata(array('lastvisit' => $this->_reqtime));

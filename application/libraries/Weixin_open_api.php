@@ -6,38 +6,12 @@
  * 微信开放平台 API 实现
  */
 
-class Weixin_Open_Api extends Http_Client {
+class Weixin_Open_Api extends Weixin_Api {
     
-    protected $_openConfig = array();
     
-    public function __construct($config){
+    
+    public function __construct(){
         parent::__construct();
-        $this->_openConfig = $config;
-    }
-    
-    /**
-     * 验证签名
-     * @return boolean 
-     */
-    public function checkSignature(){
-        
-        $signature = $_GET["signature"];
-        $timestamp = $_GET["timestamp"];
-        $nonce = $_GET["nonce"];	
-       
-        $token = $this->_openConfig['token'];
-        
-        $tmpArr = array($token, $timestamp, $nonce);
-        sort($tmpArr, SORT_STRING);
-        $tmpStr = implode( $tmpArr );
-        $tmpStr = sha1( $tmpStr );
-
-        if( $tmpStr == $signature ){
-            return true;
-        }else{
-            return false;
-        }
-        
     }
     
     

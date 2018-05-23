@@ -6,9 +6,9 @@
  * 公众平台 API 实现
  */
 
-class Weixin_Mp_Api extends Http_Client {
+class Weixin_Mp_Api extends Weixin_api {
     
-    public $_mpConfig = array();
+    private $_mpConfig = array();
     
     //新的 access token
     public static $_mpAccessToken = '';
@@ -26,14 +26,6 @@ class Weixin_Mp_Api extends Http_Client {
         
         $this->_CI->load->model(array('Mp_Ticket_Model','Wx_Customer_Model'));
         
-    }
-    
-    
-    /**
-     * 获得控制器
-     */
-    public function getCI(){
-    	return $this->_CI;
     }
     
     
@@ -121,25 +113,6 @@ EOF;
 
     }
     
-    public function checkSignature(){
-        
-        $signature = $_GET["signature"];
-        $timestamp = $_GET["timestamp"];
-        $nonce = $_GET["nonce"];
-        
-        $token = $this->_mpConfig['token'];
-        
-        $tmpArr = array($token, $timestamp, $nonce);
-        sort($tmpArr, SORT_STRING);
-        $tmpStr = implode( $tmpArr );
-        $tmpStr = sha1( $tmpStr );
-
-        if( $tmpStr == $signature ){
-            return true;
-        }else{
-            return false;
-        }
-    }
     
     
     public function getAccessToken($pConfig){
@@ -451,20 +424,6 @@ EOF;
     }
     
     
-    /**
-     * 小程序获取用户信息
-     */
-    public function getWeixinUserByCode($config,$code){
-    	
-    	$param = array(
-            'url' => "/sns/jscode2session?appid={$config['appid']}&secret={$config['app_secret']}&js_code={$code}&grant_type=authorization_code" ,
-            'method' => 'get',
-        );
-        
-        $respone = $this->request($param);
-        $result = json_decode($respone,true);
-        
-        return $result;
-    }
+    
 }
 
