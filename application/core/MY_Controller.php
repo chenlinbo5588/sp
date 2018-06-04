@@ -10,6 +10,8 @@ class MY_Controller extends CI_Controller {
 	public $_reqtime ;
 	public $_navigation = array();
 	
+	protected $_subNavs;
+	
 	public $_siteSetting = array();
 	public $_seoSetting = array();
 	
@@ -33,6 +35,7 @@ class MY_Controller extends CI_Controller {
 		$this->_initApp();
 		
 		$this->_initSmarty();
+		
 		$this->_security();
 		$this->_initMobile();
 		
@@ -152,6 +155,8 @@ class MY_Controller extends CI_Controller {
     		return $this->_siteSetting;
     	}
     }
+    
+    
     	
     /**
      * 返回缓存类型
@@ -230,10 +235,17 @@ class MY_Controller extends CI_Controller {
     	$dir = $this->getAppTemplateDir();
     	
     	$this->_smarty->setTemplateDir(SMARTY_TPL_PATH.$dir.DS.'templates'.DS);
+    	
+    	$this->_smarty->addTemplateDir(SMARTY_TPL_PATH.'templates'.DS);
+    	
         $this->_smarty->setCompileDir(SMARTY_TPL_PATH.$dir.DS.'templates_c'.DS);
-        $this->_smarty->addPluginsDir(SMARTY_TPL_PATH.$dir.DS.'plugins'.DS);
+        
+        $this->_smarty->addPluginsDir(SMARTY_TPL_PATH.'plugins'.DS);
+        
         $this->_smarty->setCacheDir(SMARTY_TPL_PATH.$dir.DS.'cache'.DS);
-        $this->_smarty->setConfigDir(SMARTY_TPL_PATH.$dir.DS.'config'.DS);
+        
+        $this->_smarty->setConfigDir(SMARTY_TPL_PATH.'config'.DS);
+        $this->_smarty->addConfigDir(SMARTY_TPL_PATH.$dir.DS.'config'.DS);
     	
     }
     
@@ -290,34 +302,6 @@ class MY_Controller extends CI_Controller {
     }
     
     
-    public function breadcrumb(){
-    	
-    	if($this->_navigation){
-    		
-    		$temp = array();
-    		
-    		$i = 0;
-    		
-    		foreach($this->_navigation as $key => $item){
-    			
-    			$key = htmlspecialchars($key);
-    			
-    			if($i == 0){
-    				$temp[] = "<a class=\"first breadlink\" href=\"{$item}\">{$key}</a>";
-    			}else{
-    				$temp[] = "<a class=\"breadlink\" href=\"{$item}\">{$key}</a>";
-    			}
-    			
-    			$i++;
-    		}
-    		
-    		return implode('<em>&gt;</em>',$temp);
-    	}else{
-    		return '';
-    	}
-    }
-    
-    
     public function display($viewname = ''){
     	//echo $this->uri->uri_string();
     	
@@ -348,6 +332,11 @@ class MY_Controller extends CI_Controller {
     	$this->loadPageLang();
     	
     	
+    	$gobackUrl = $this->input->get_post('gobackUrl');
+		if(empty($gobackUrl)){
+			$gobackUrl = $this->input->server('HTTP_REFERER');
+		}
+    	
     	if($this->input->is_ajax_request()){
     		$viewname = $viewname.'_ajax';
     	}else{
@@ -358,6 +347,15 @@ class MY_Controller extends CI_Controller {
     	
     	$realPath = $tplDir.$viewname.'.tpl';
     	//echo $realPath;
+    	
+    	$this->assign(array(
+			'subNavs' => $this->_subNavs,
+            'uri_string' => $this->uri->uri_string,
+            'PHPSESSID' => $this->session->session_id,
+            'gobackUrl' => $gobackUrl
+        ));
+    	
+    	
     	
     	if(file_exists($realPath)){
     		$this->output->set_output($this->_smarty->fetch($realPath));
@@ -467,6 +465,23 @@ class MY_Controller extends CI_Controller {
 		    	$this->output->cache($cacheTime);
 		    }
 		}
+    }
+    
+    /**
+     * 不包装
+     */
+    public function jsonOutput2($message = '' ,$data = array(),$formated = false){
+    	
+    	if($formated){
+    		$d = $this->_buildJsonFormat($message,$data);
+    	}else{
+    		$d = array_merge($data,array('message' => $message));
+    	}
+    	
+		$this->output
+	    	->set_status_header(200)
+	    	->set_content_type('application/json')
+	    	->set_output(json_encode($d));
     }
 }
 

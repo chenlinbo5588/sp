@@ -236,7 +236,6 @@ $(function(){
 	        <dd><a href="javascript:void(0)" onclick="openItem('spec,goods,goods')">规格管理</a></dd>
 	        <dd><a href="javascript:void(0)" onclick="openItem('album,goods,goods')">图片空间</a></dd>
 	    </dl>
-	    {*
 	    <dl>    
 	        <dt>交易</dt>
 	        <dd><a href="javascript:void(0)" onclick="openItem('index,order,trade')">订单管理</a></dd>
@@ -247,7 +246,7 @@ $(function(){
 	        <dd><a href="javascript:void(0)" onclick="openItem('evaluate,trade,trade')">评价管理</a></dd>
 	        <dd><a href="javascript:void(0)" onclick="openItem('complain,trade,trade')">投诉管理</a></dd>
 	    </dl>
-	    *}
+	    
 	    <dl>    
 	        <dt>网站</dt>
 	        <dd><a href="javascript:void(0)" onclick="openItem('category,article_class,website')">文章分类</a></dd>
@@ -324,14 +323,15 @@ $(function(){
 	                <li><a class="link actived" id="nav_dashboard" href="javascript:;" onclick="openItem('dashboard');"><span>控制台</span></a></li>
 					<li><a class="link" id="nav_setting" href="javascript:;" onclick="openItem('setting');"><span>设置</span></a></li>
 					<li><a class="link" id="nav_member" href="javascript:;" onclick="openItem('member');"><span>会员</span></a></li>
+					<li><a class="link" id="nav_service" href="javascript:;" onclick="openItem('service');"><span>服务</span></a></li>
 					{*<li><a class="link" id="nav_team" href="javascript:;" onclick="openItem('team');"><span>队伍</span></a></li>
 					<li><a class="link" id="nav_stadium" href="javascript:;" onclick="openItem('stadium');"><span>场馆</span></a></li>
 					<li><a class="link" id="nav_game" href="javascript:;" onclick="openItem('game');"><span>赛事</span></a></li>*}
 					<li><a class="link" id="nav_goods" href="javascript:;" onclick="openItem('goods');"><span>商品</span></a></li>
-					{*<li><a class="link" id="nav_trade" href="javascript:;" onclick="openItem('trade');"><span>交易</span></a></li>*}
+					<li><a class="link" id="nav_trade" href="javascript:;" onclick="openItem('trade');"><span>交易</span></a></li>
 					<li><a class="link" id="nav_website" href="javascript:;" onclick="openItem('website');"><span>网站</span></a></li>
-					{*<li><a class="link" id="nav_operation" href="javascript:;" onclick="openItem('operation');"><span>运营</span></a></li>
-					<li><a class="link" id="nav_stat" href="javascript:;" onclick="openItem('stat');"><span>统计</span></a></li>
+					<li><a class="link" id="nav_operation" href="javascript:;" onclick="openItem('operation');"><span>运营</span></a></li>
+					{*<li><a class="link" id="nav_stat" href="javascript:;" onclick="openItem('stat');"><span>统计</span></a></li>
 					<li><a class="link" id="nav_weixin" href="javascript:;" onclick="openItem('weixin');"><span>微信营销</span></a></li>*}
 					<li><a class="link" id="nav_cms" href="javascript:;" onclick="openItem('cms');"><span>CMS</span></a></li>
 					<li><a class="link" id="nav_authority" href="javascript:;" onclick="openItem('authority');"><span>权限</span></a></li>
@@ -344,7 +344,7 @@ $(function(){
 	            <ul id="skin" class="skin"><span>换肤</span>
 	              <li id="skin_0" class="" title="默认风格"></li>
 	            </ul>
-	            {*<div class="sitemap"><a id="siteMapBtn" href="#rhis" onclick="showBg('dialog','dialog_content');"><span>管理地图</span></a></div>*}
+	            <div class="sitemap"><a id="siteMapBtn" href="#rhis" onclick="showBg('dialog','dialog_content');"><span>管理地图</span></a></div>
 	            <div class="toolmenu"><span class="bar-btn"></span>
 	              <ul class="bar-list">
 	                <li><a onclick="openItem('clear,cache,setting');" href="javascript:void(0)">更新站点缓存</a></li>
@@ -405,6 +405,25 @@ $(function(){
               </dl>
             </li>
           </ul>
+          <ul id="sort_service">
+            <li>
+              <dl>
+                <dd>
+                  <ol>
+                    <li><a href="javascript:void(0);" id="category_basic_data" onclick="openItem('category,basic_data,service');">基础数据</a></li>
+                    <li><a href="javascript:void(0);" id="index_worker" onclick="openItem('index,worker,service');">家政从业人员</a></li>
+                    <li><a href="javascript:void(0);" id="index_repair" onclick="openItem('index,repair,service');">报修</a></li>
+                    <li><a href="javascript:void(0);" id="index_worker" onclick="openItem('index,yuesao,service');">月嫂</a></li>
+                    <li><a href="javascript:void(0);" id="index_worker" onclick="openItem('index,baomu,service');">保姆</a></li>
+                    <li><a href="javascript:void(0);" id="index_owner" onclick="openItem('index,owner,service');">业主</a></li>
+                    <li><a href="javascript:void(0);" id="index_room" onclick="openItem('index,room,service');">房间</a></li>
+                    <li><a href="javascript:void(0);" id="index_building" onclick="openItem('index,building,service');">幢</a></li>
+                    <li><a href="javascript:void(0);" id="index_resident" onclick="openItem('index,resident,service');">小区</a></li>
+                  </ol>
+                </dd>
+              </dl>
+            </li>
+          </ul>
           {*
           <ul id="sort_team">
             <li>
@@ -446,15 +465,15 @@ $(function(){
                     <li><a href="javascript:void(0);" id="category_goods_class" onclick="openItem('category,goods_class,goods');">分类管理</a></li>
                     <li><a href="javascript:void(0);" id="index_brand" onclick="openItem('index,brand,goods');">品牌管理</a></li>
                     <li><a href="javascript:void(0);" id="index_goods" onclick="openItem('index,goods,goods');">商品管理</a></li>
-                    {*<li><a href="javascript:void(0);" id="type_goods" onclick="openItem('type,goods,goods');">类型管理</a></li>
+                    <li><a href="javascript:void(0);" id="type_goods" onclick="openItem('type,goods,goods');">类型管理</a></li>
                     <li><a href="javascript:void(0);" id="spec_goods" onclick="openItem('spec,goods,goods');">规格管理</a></li>
-                    <li><a href="javascript:void(0);" id="album_goods" onclick="openItem('album,goods,goods');">图片空间</a></li>*}
+                    <li><a href="javascript:void(0);" id="album_goods" onclick="openItem('album,goods,goods');">图片空间</a></li>
                   </ol>
                 </dd>
               </dl>
             </li>
           </ul>
-          {*
+          
           <ul id="sort_trade">
             <li>
               <dl>
@@ -463,16 +482,13 @@ $(function(){
                     <li><a href="javascript:void(0);" id="index_order" onclick="openItem('index,order,trade');">订单管理</a></li>
                     <li><a href="javascript:void(0);" id="refund_order" onclick="openItem('refund,order,trade');">退款管理</a></li>
                     <li><a href="javascript:void(0);" id="returned_order" onclick="openItem('returned,order,trade');">退货管理</a></li>
-                    <li><a href="javascript:void(0);" id="consulting_trade" onclick="openItem('consulting,trade,trade');">咨询管理</a></li>
-                    <li><a href="javascript:void(0);" id="inform_trade" onclick="openItem('inform,trade,trade');">举报管理</a></li>
-                    <li><a href="javascript:void(0);" id="evaluate_trade" onclick="openItem('evaluate,trade,trade');">评价管理</a></li>
-                    <li><a href="javascript:void(0);" id="complain_trade" onclick="openItem('complain,trade,trade');">投诉管理</a></li>
+                    
                   </ol>
                 </dd>
               </dl>
             </li>
           </ul>
-          *}
+          
           <ul id="sort_website">
             <li>
               <dl>
@@ -487,28 +503,35 @@ $(function(){
                     <li><a href="JavaScript:void(0);" id="index_comment" onclick="openItem('index,comment,website');">评论管理</a></li>
                     <li><a href="javascript:void(0);" id="index_adv" onclick="openItem('index,adv,website');">广告管理</a></li>
                     <li><a href="javascript:void(0);" id="index_recommend" onclick="openItem('index,recommend,website');">推荐位</a></li>*}
-                    <li><a href="javascript:void(0);" id="index_suggestion" onclick="openItem('index,suggestion,website');">投诉建议</a></li>
+                    
                     {*<li><a href="javascript:void(0);" id="index_leavemsg" onclick="openItem('index,leavemsg,website');">客户留言</a></li>*}
                   </ol>
                 </dd>
               </dl>
             </li>
           </ul>
-          {*
+          
           <ul id="sort_operation">
             <li>
               <dl>
                 <dd>
                   <ol>
                     <li><a href="javascript:void(0);" id="setting_operation" onclick="openItem('setting,operation,operation');">基本设置</a></li>
-                    <li><a href="javascript:void(0);" id="groupbuy_operation" onclick="openItem('groupbuy,operation,operation');">团购管理</a></li>
+                    <!--<li><a href="javascript:void(0);" id="groupbuy_operation" onclick="openItem('groupbuy,operation,operation');">团购管理</a></li>
                     <li><a href="javascript:void(0);" id="zk_operation" onclick="openItem('zk,operation,operation');">限时折扣</a></li>
                     <li><a href="javascript:void(0);" id="mansong_operation" onclick="openItem('mansong,operation,operation');">满即送</a></li>
-                    <li><a href="javascript:void(0);" id="bundling_operation" onclick="openItem('bundling,operation,operation');">优惠套装</a></li>
+                    <li><a href="javascript:void(0);" id="bundling_operation" onclick="openItem('bundling,operation,operation');">优惠套装</a></li>-->
                     <li><a href="javascript:void(0);" id="voucher_operation" onclick="openItem('voucher,operation,operation');">代金券</a></li>
                     <li><a href="javascript:void(0);" id="bill_operation" onclick="openItem('bill,operation,operation');">结算管理</a></li>
                     <li><a href="javascript:void(0);" id="activity_operation" onclick="openItem('activity,operation,operation');">活动管理</a></li>
                     <li><a href="javascript:void(0);" id="pointprod_operation" onclick="openItem('pointprod,operation,operation');">兑换礼品</a></li>
+                    <li><a href="javascript:void(0);" id="consulting_operation" onclick="openItem('consulting,operation,operation');">咨询管理</a></li>
+                    <li><a href="javascript:void(0);" id="inform_operation" onclick="openItem('inform,operation,operation');">举报管理</a></li>
+                    <li><a href="javascript:void(0);" id="evaluate_operation" onclick="openItem('evaluate,operation,operation');">评价管理</a></li>
+                    <li><a href="javascript:void(0);" id="index_suggestion" onclick="openItem('index,suggestion,operation');">投诉建议</a></li>
+                    
+                    <li><a href="javascript:void(0);" id="complain_operation" onclick="openItem('complain,operation,operation');">投诉管理</a></li>
+                    
                   </ol>
                 </dd>
               </dl>
@@ -543,7 +566,6 @@ $(function(){
               </dl>
             </li>
           </ul>
-          *}
           <ul id="sort_cms">
             <li>
               <dl>

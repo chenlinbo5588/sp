@@ -13,7 +13,7 @@ class VerifyCode_Log_Model extends MY_Model {
     }
     
     protected function _metaData(){
-    	return array_keys(self::$_tableMeta);
+    	return self::$_tableMeta;
     }
     
     public function checkVerifyCode($phone,$code){
@@ -21,7 +21,7 @@ class VerifyCode_Log_Model extends MY_Model {
     }
     
     public function getVerifyCodeByPhone($phone,$field = '*'){
-        $sql = "SELECT {$field} FROM ".$this->_tableRealName ." WHERE phone = ?"; 
+        $sql = "SELECT {$field} FROM ".$this->getTableRealName() ." WHERE phone = ?"; 
         $query = $this->db->query($sql, array($phone));
         $row = $query->result_array();
         

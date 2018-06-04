@@ -52,7 +52,7 @@ $(function(){
 });
 </script>
 
-{include file="common/baidu_map.tpl"}
+{include file="baidu_map.tpl"}
 {validation_errors()}
 {$message}
 {form_open_multipart(admin_site_url('stadium/add'),$formAttr)}

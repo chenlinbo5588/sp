@@ -155,7 +155,7 @@ class Brand extends Ydzj_Admin_Controller {
 				$info = $this->_prepareBrandData();
 				
 				if(!$this->form_validation->run()){
-					$feedback = $this->form_validation->error_string();
+					$feedback = getErrorTip($this->form_validation->error_string());
 					break;
 				}
 				

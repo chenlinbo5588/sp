@@ -153,7 +153,7 @@ EOF;
         //file_put_contents("debug.txt",print_r($result,true),FILE_APPEND);
         if(empty($customer) && !empty($result)){
         	$result['appid'] = $this->_mpConfig['appid'];
-            $this->_CI->Wx_Customer_Model->_add($result,true);
+            $this->_CI->Wx_Customer_Model->_add($result);
             $customer = $result;
         }else if(($this->_CI->_reqtime - $customer['gmt_modify']) >  86400 ){
             //自动更新

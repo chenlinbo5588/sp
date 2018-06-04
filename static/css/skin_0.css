@@ -587,7 +587,7 @@ table.search { margin: 12px 0 6px 4px;}
 .power-onoff a:hover.disabled {background-position: -160px -580px;}
 .power-onoff a:active.disabled {background-position: -200px -580px;}
 
-.msbtn  {
+.msbtn,.salvebtn  {
     display:inline-block;
     cursor:pointer;
     background-color:#db3652;
@@ -603,12 +603,16 @@ table.search { margin: 12px 0 6px 4px;}
     
 }
 
-.msbtn:hover {
+.msbtn:hover, .salvebtn:hover {
 	box-shadow:0px 0px 15px #443636;
     -moz-box-shadow:0px 0px 15px #443636;
     -o-box-shadow:0px 0px 15px #443636;
     -webkit-box-shadow:0px 0px 15px #443636;
 	
+}
+
+.salvebtn {
+	background:gray;
 }
 
 

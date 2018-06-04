@@ -13,6 +13,7 @@ class Weixin_Xcx_Api extends Weixin_api {
     public function __construct(){
         parent::__construct();
         
+        $this->_CI->load->model(array('Wx_Customer_Model'));
         
     }
    
@@ -37,5 +38,38 @@ class Weixin_Xcx_Api extends Weixin_api {
         
         return $result;
     }
+    
+    
+    /**
+     * 绑定用户
+     */
+    public function getBindUser($wxResp){
+		
+		if($wxResp['unionid']){
+			$userInfo = $this->_CI->Wx_Customer_Model->getFirstByKey($wxResp['unionid'],'unionid');
+			
+		}else if($wxResp['openid']){
+			$userInfo = $this->_CI->Wx_Customer_Model->getById(array(
+				'where' => array(
+					'openid' => $wxResp['openid'],
+					'appid' => $this->_xcxConfig['appid']
+				)
+			));
+		}
+		
+		return $userInfo;
+	}
+	
+	
+	/**
+	 * 登记微信用户信息
+	 */
+	public function addWxUser($wxResp){
+		
+		$result['appid'] = $this->_xcxConfig['appid'];
+        $result = array_merge($result,$wxResp);
+        
+        return $this->_CI->Wx_Customer_Model->_add($result,false);
+	}
 }
 

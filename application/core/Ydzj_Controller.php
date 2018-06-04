@@ -10,17 +10,49 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Ydzj_Controller extends MY_Controller {
 	
 	public $_profile = array();
-	public $_siteNavs = array();
 	
 	public function __construct(){
 		parent::__construct();
 		
-		$this->load->library(array('Seo_service','Navigation_service','Article_service'));
+		$this->load->library(array('Seo_service','Article_service'));
 		$this->form_validation->set_error_delimiters('<label class="form_error">','</label>');
 		
-		
+		$this->_navs();
 		$this->_initLogin();
 	}
+	
+	/**
+     * 导航相关
+     */
+    protected function _navs(){
+		/*
+		$navs = $this->uri->rsegments;
+		
+		if($navs[1] == 'admin'){
+			$navs = array_slice($navs,1,3);
+		}
+		
+		//功能 url 访问路径
+	    $funcUrl = implode('/',$navs);
+	    
+	    print_r($_SERVER);
+	    */
+	    
+	    $currentUri = $_SERVER['REQUEST_URI'];
+	    if(preg_match("/^\/index.php\/admin\//",$currentUri,$match)){
+	    	$currentUri = substr($currentUri,17);
+	    }
+		
+		/*
+		if(strpos($currentUri,'?') !== false){
+			$currentUri = substr($currentUri,0,strpos($currentUri,'?'));
+		}
+		*/
+		
+	    $this->assign('currentUri',strtolower($currentUri));
+	}
+	
+	
 	
 	protected function _initLibrary(){
 		parent::_initLibrary();
