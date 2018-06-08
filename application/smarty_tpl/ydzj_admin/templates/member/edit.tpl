@@ -97,15 +97,7 @@
         <tr class="noborder">
           <td class="vatop rowform">
             <input type="hidden" name="avatar_id" value=""/>
-            <span class="type-file-show">
-            <img class="show_image" src="{resource_url('img/preview.png')}">
-            <div class="type-file-preview" style="display: none;"><img id="view_img"></div>
-            </span>
-            <span class="type-file-box">
-              <input type='text' name='member_avatar' id='member_avatar' class='type-file-text' />
-              <input type='button' name='button' id='button' value='' class='type-file-button' />
-              <input name="_pic" type="file" class="type-file-file" id="_pic" size="30" hidefocus="true" />
-            </span>
+            <input type="file" id="fileupload" name="member_avatar" />
             </td>
           <td class="vatop tips">支持格式jpg</td>
         </tr>
@@ -162,7 +154,9 @@
   </form>
 <script type="text/javascript" src="{resource_url('js/dialog/dialog.js')}" id="dialog_js"></script>
 <script type="text/javascript" src="{resource_url('js/jquery-ui/jquery.ui.js')}"></script>
-<script type="text/javascript" src="{resource_url('js/ajaxfileupload/ajaxfileupload.js')}"></script>
+
+
+{include file="common/jcrop.tpl"}
 <script type="text/javascript" src="{resource_url('js/jquery.Jcrop/jquery.Jcrop.js')}"></script>
 <link href="{resource_url('js/jquery.Jcrop/jquery.Jcrop.min.css')}" rel="stylesheet" type="text/css"/>
 {include file="member/member_common.tpl"}

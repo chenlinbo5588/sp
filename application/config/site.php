@@ -43,7 +43,8 @@ $config['notify_ways'] = array(
  */
 $config['default_img_size'] = array(
 	'b' => array('width' => 800,'height' => 600 , 'maintain_ratio' => false,'quality' => 90),
-	'm' => array('width' => 400,'height' => 300 , 'maintain_ratio' => false,'quality' => 90)
+	'm' => array('width' => 400,'height' => 300 , 'maintain_ratio' => false,'quality' => 90),
+	's' => array('width' => 120,'height' => 120 , 'maintain_ratio' => false,'quality' => 90)
 );
 
 /**
@@ -103,41 +104,40 @@ $config['weixin_img_size'] = array(
 	's' => array('width' => 200,'height' => 200,'maintain_ratio' => false,'quality' => 100),
 );
 
-/*
 
-$config['pageConf'] = array(
-	'走进陆恒' => array(
-		'url' => site_url('about'),
-		'sideNav' => array(
-			'企业简介' => site_url('about/index'),
-			'公司理念' => site_url('about/thinking'),
-			'企业风采' => site_url('about/moreintro'),
-		)
-	),
-	'营销招商' => array(
-		'url' => site_url('market/agency'),
-		'sideNav' => array(
-			'经销招商' => site_url('market/agency'),
-			'运营特点' => site_url('market/cooperation'),
-		)
-	),
-	'服务中心' => array(
-		'url' => site_url('service/customer'),
-		'sideNav' => array(
-			'客户服务' => site_url('service/customer'),
-			'产品资料' => site_url('doc/product_list'),
-		)
-	),
-	'联系我们' => array(
-		'url' => site_url('contacts/index'),
-		'sideNav' => array(
-			'售后中心' => site_url('contacts/customer_service'),
-			'招商电话' => site_url('contacts/merchants_telephone'),
-			'投诉建议' => site_url('contacts/suggestion'),
-			'在线地图' => site_url('contacts/map'),
-		)
-	),
-	
-
+//
+$config['province_idcard'] = array(
+	'110000' => '北京市',
+	'120000' => '天津市',
+	'130000' => '河北省',
+	'140000' => '山西省',
+	'150000' => '内蒙古自治区',
+	'210000' => '辽宁省',
+	'220000' => '吉林省',
+	'230000' => '黑龙江省',
+	'310000' => '上海市',
+	'320000' => '江苏省',
+	'330000' => '浙江省',
+	'340000' => '安徽省',
+	'350000' => '福建省',
+	'360000' => '江西省',
+	'370000' => '山东省',
+	'410000' => '河南省',
+	'420000' => '湖北省',
+	'430000' => '湖南省',
+	'440000' => '广东省',
+	'450000' => '广西壮族自治区',
+	'460000' => '海南省',
+	'500000' => '重庆市',
+	'510000' => '四川省',
+	'520000' => '贵州省',
+	'530000' => '云南省',
+	'540000' => '西藏自治区',
+	'610000' => '陕西省',
+	'620000' => '甘肃省',
+	'630000' => '青海省',
+	'640000' => '宁夏回族自治区',
+	'650000' => '新疆维吾尔自治区',
+	'710000' => '台湾省',
+	'810000' => '香港特别行政区',
 );
-*/

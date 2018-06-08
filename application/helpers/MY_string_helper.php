@@ -49,3 +49,23 @@ function cut($str, $len, $mode = true) {
 	}
 	return ($mode) ? $tmp . '...' : $tmp;
 }
+
+
+/**
+ * 获得属相
+ */
+function getShuXiang($birthday){
+	$year = substr($birthday,0,4); 
+	
+	$data = array('鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪');
+	$index = ($year-1900)%12;
+ 
+    return $data[$index];
+    
+    /*
+	$bornTagarray = array('狗', '猪', '鼠', '牛', '虎', '兔', '龙', '蛇', '马', '羊','猴', '鸡'); 
+	$index = $year%12; 
+	$bornTag = $bornTagarray[$index]; 
+	
+	return $bornTag; */
+}		

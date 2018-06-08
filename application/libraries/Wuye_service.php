@@ -5,14 +5,17 @@ class Wuye_service extends Base_service {
 	
 	private $_basicDataModel = null;
 	private $_workerModel = null;
+	private $_workerImagesModel = null;
 	
 
 	public function __construct(){
 		parent::__construct();
 		
-		self::$CI->load->model(array('Basic_Data_Model','Worker_Model'));
+		self::$CI->load->model(array('Basic_Data_Model','Worker_Model','Worker_Images_Model'));
 		$this->_basicDataModel = self::$CI->Basic_Data_Model;
 		$this->_workerModel = self::$CI->Worker_Model;
+		$this->_workerImagesModel = self::$CI->Worker_Images_Model;
+		
 	}
 	
 	
@@ -237,4 +240,26 @@ class Wuye_service extends Base_service {
 			return true;
 		}
 	}
+	
+	
+	/**
+	 * 获得分组
+	 */
+	public function getBasicDataByName($pName){
+		
+		$tempInfo = $this->_basicDataModel->getById(array(
+			'select' => 'id',
+			'where' => array('show_name' => $pName,'pid' => 0)
+		));
+		
+		
+		return $this->_basicDataModel->getList(array(
+			'where' => array(
+				'pid' => $tempInfo['id'],
+				'enable' => 1
+			),
+			'order' => 'displayorder ASC'
+		),'id');
+	}
+	
 }

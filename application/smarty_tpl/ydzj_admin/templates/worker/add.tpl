@@ -3,114 +3,160 @@
   {include file="common/sub_nav.tpl"}
   {if $info['id']}
   {form_open_multipart(admin_site_url($moduleClassName|cat:'/edit?id='|cat:$info['id']),'id="infoform"')}
+  <input type="hidden" name="id" value="{$info['id']}"/>
   {else}
   {form_open_multipart(admin_site_url($moduleClassName|cat:'/add'),'id="infoform"')}
   {/if}
     <table class="table tb-type2">
       <tbody>
         <tr class="noborder">
-          <td colspan="2" class="required"><label class="validation" for="name">姓名:</label></td>
+          <td colspan="2" class="required"><label class="validation" for="name">{#name#}:</label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input type="text" value="{$info['name']|escape}" name="name" id="name" class="txt"></td>
           <td class="vatop tips">{form_error('name')}</td>
         </tr>
         <tr>
-          <td colspan="2" class="required"><label for="id_type">品牌:</label></td>
+          <td colspan="2" class="required"><label class="validation" for="id_type">{#id_type#}:</label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform">
           	<select name="id_type" id="id_type">
-	          <option value="">请选择...</option>
-	          {foreach from=$brandList item=item}
-	          <option {if $info['brand_id'] == $item['brand_id']}selected{/if} value="{$item['brand_id']}">{$item['brand_name']}</option>
+	          <option value="" >请选择...</option>
+	          {foreach from=$idTypeList item=item}
+	          <option {if $info['id_type'] == $item['id']}selected{/if} value="{$item['id']}">{$item['show_name']}</option>
 	          {/foreach}
 	        </select>
           </td>
-          <td class="vatop tips">{form_error('brand_id')} 商品的品牌</td>
+          <td class="vatop tips">{form_error('id_type')}</td>
         </tr>
         <tr class="noborder">
-          <td colspan="2" class="required"><label class="validation" for="goods_name_en">商品英文名称:</label></td>
+          <td colspan="2" class="required"><label class="validation" for="id_no">{#id_no#}:</label></td>
         </tr>
         <tr class="noborder">
-          <td class="vatop rowform"><input type="text" value="{$info['goods_name_en']|escape}" name="goods_name_en" id="goods_name_en" class="txt"></td>
-          <td class="vatop tips">{form_error('goods_name_en')}</td>
+          <td class="vatop rowform"><input type="text" value="{$info['id_no']|escape}" name="id_no" id="id_no" class="txt"></td>
+          <td class="vatop tips">{form_error('id_no')}</td>
         </tr>
-        {if $info['goods_id']}
-        <tr class="noborder">
-          <td colspan="2" class="required"><label class="validation" for="goods_name">商品代码:{$info['goods_code']}</label></td>
-        </tr>
-        {/if}
         <tr>
-          <td colspan="2" class="required"><label for="brandId">品牌:</label></td>
+          <td colspan="2" class="required"><label class="validation" for="age">{#sex#}:</label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform">
-          	<select name="brand_id" id="brandId">
+          	<select name="sex">
+          		<option value="2" {if $info['sex'] == 2}selected{/if}>女</option>
+          		<option value="1" {if $info['sex'] == 1}selected{/if}>男</option>
+          	</select>
+          </td>
+          <td class="vatop tips">{form_error('sex')}</td>
+        </tr>
+        <tr>
+          <td colspan="2" class="required"><label class="validation" for="age">{#age#}:</label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform"><input type="text" value="{$info['age']|escape}" name="age" id="age" class="txt"></td>
+          <td class="vatop tips">{form_error('age')}</td>
+        </tr>
+        <tr class="noborder">
+          <td colspan="2" class="required"><label class="validation" for="id_no">{#birthday#}:</label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform"><input type="text" class="datepicker" value="{$info['birthday']|escape}" name="birthday" id="birthday" class="txt"></td>
+          <td class="vatop tips">{form_error('birthday')}</td>
+        </tr>
+        <tr class="noborder">
+          <td colspan="2" class="required"><label class="validation" for="jiguan">{#jiguan#}:</label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform">
+          	<select name="jiguan" id="jiguan">
 	          <option value="">请选择...</option>
-	          {foreach from=$brandList item=item}
-	          <option {if $info['brand_id'] == $item['brand_id']}selected{/if} value="{$item['brand_id']}">{$item['brand_name']}</option>
+	          {foreach from=$jiguanList item=item}
+	          <option {if $info['jiguan'] == $item['id']}selected{/if} value="{$item['id']}">{$item['show_name']}</option>
 	          {/foreach}
 	        </select>
           </td>
-          <td class="vatop tips">{form_error('brand_id')} 商品的品牌</td>
+          <td class="vatop tips">{form_error('jiguan')}</td>
         </tr>
-        <tr>
-          <td colspan="2" class="required"><label class="validation" for="goodsClassId">商品分类:</label></td>
+        <tr class="noborder">
+          <td colspan="2" class="required"><label class="validation" for="name">{#mobile#}:</label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform"><input type="text" value="{$info['mobile']|escape}" name="mobile" id="mobile" class="txt"></td>
+          <td class="vatop tips">{form_error('mobile')}</td>
+        </tr>
+        <tr class="noborder">
+          <td colspan="2" class="required"><label class="validation" for="name">{#address#}:</label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform"><input type="text" value="{$info['address']|escape}" name="address" id="address" class="txt"></td>
+          <td class="vatop tips">{form_error('address')}</td>
+        </tr>
+        <tr class="noborder">
+          <td colspan="2" class="required"><label class="validation" for="id_no">{#degree#}:</label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform">
-          	<select name="gc_id" id="goodsClassId">
+          	<select name="degree" id="degree">
 	          <option value="">请选择...</option>
-	          {foreach from=$goodsClassList item=item}
-	          <option {if $info['gc_id'] == $item['gc_id']}selected{/if} value="{$item['gc_id']}">{str_repeat('......',$item['level'])}{$item['level']+1} {$item['name_cn']}</option>
+	          {foreach from=$xueliList item=item}
+	          <option {if $info['degree'] == $item['id']}selected{/if} value="{$item['id']}">{$item['show_name']}</option>
 	          {/foreach}
 	        </select>
           </td>
-          <td class="vatop tips">{form_error('class_id')} 商品的分类</td>
+          <td class="vatop tips">{form_error('degree')}</td>
         </tr>
         <tr>
-          <td colspan="2" class="required">商品主图: </td>
+          <td colspan="2" class="required">人员照片: </td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform">
-          	<input type="hidden" name="old_pic" value="{if $info['goods_pic']}{$info['goods_pic']}{/if}"/>
+          	<input type="hidden" name="old_pic" value="{if $info['old_pic']}{$info['old_pic']}{/if}"/>
           	<span class="type-file-show">
           		<img class="show_image" src="{resource_url('img/preview.png')}">
-          		<div class="type-file-preview">{if $info['goods_pic_m']}<img src="{resource_url($info['goods_pic_m'])}">{else if $info['goods_pic_b']}<img src="{resource_url($info['goods_pic_b'])}">{else}<img src="{resource_url($info['goods_pic'])}">{/if}</div>
+          		<div class="type-file-preview">{if $info['avatar_m']}<img src="{resource_url($info['avatar_m'])}">{else if $info['avatar_b']}<img src="{resource_url($info['avatar_b'])}">{else}<img src="{resource_url($info['avatar'])}">{/if}</div>
             </span>
-            <span class="type-file-box"><input type='text' name='goods_pic_txt' value="{if $info['goods_pic']}{$info['goods_pic']}{/if}" id='goods_pic_txt' class='type-file-text' /><input type='button' name='button' id='button1' value='' class='type-file-button' />
-            <input name="goods_pic" type="file" class="type-file-file" id="goods_pic" size="30" hidefocus="true" nc_type="change_brand_logo">
+            <span class="type-file-box"><input type='text' name='worker_pic_txt' value="{if $info['avatar']}{$info['avatar']}{/if}" id='worker_pic_txt' class='type-file-text' /><input type='button' name='button' id='button1' value='' class='type-file-button' />
+            <input name="worker_pic" type="file" class="type-file-file" id="worker_pic" size="30" hidefocus="true" nc_type="change_brand_logo">
             </span></td>
-          <td class="vatop tips"><span class="vatop rowform">上传商品默认主图，如多规格值时将默认使用该图或分规格上传各规格主图；支持jpg，建议使用尺寸800x800像素以上、大小不超过1M的正方形图片，上传后的图片将会自动保存在图片空间的默认分类中。</span></td>
+          <td class="vatop tips"><span class="vatop rowform">工作人员照片。</span></td>
         </tr>
        	<tr>
-          <td colspan="2" class="required">商品图片上传(JPG格式 , 用于显示在详情页面幻灯片展示):</td>
+          <td colspan="2" class="required">其他证件图片上传(JPG格式):</td>
         </tr>
         <tr class="noborder">
-          <td colspan="2" id="divComUploadContainer"><input type="file" multiple="multiple" id="fileupload" name="fileupload" /></td>
+          <td colspan="2">
+          	<input type="file" multiple="multiple" id="fileupload" name="fileupload" />
+          	<style>
+   				.bar {
+				    height: 18px;
+				    background: green;
+				}
+   			</style>
+   			<div id="progress" style="width:200px;margin:5px 0;">
+			    <div class="bar" style="width: 0%;"></div>
+			</div>
+          </td>
         </tr>
         <tr>
        		<td colspan="2">
        			<ul id="thumbnails" class="thumblists">
        			{foreach from=$fileList item=item}
-       			<li id="{$item['goods_image_aid']}" class="picture"><input type="hidden" name="file_id[]" value="{$item['goods_image_aid']}" /><div class="size-64x64"><span class="thumb"><i></i><img src="{resource_url($item['goods_image_b'])}" alt="" width="64px" height="64px"/></span></div><p><span><a href="javascript:insert_editor('{resource_url($item['goods_image_b'])}');">插入</a></span><span><a href="javascript:del_file_upload('{$item['goods_image_aid']}');">删除</a></span></p></li>
+       			<li id="{$item['image_aid']}" class="picture"><input type="hidden" name="file_id[]" value="{$item['image_aid']}" /><div class="size-64x64"><span class="thumb"><i></i><img src="{resource_url($item['image_b'])}" alt="" width="64px" height="64px"/></span></div><p><span><a href="javascript:del_file_upload('{$item['image_aid']}');">删除</a></span></p></li>
        			{/foreach}
        			</ul>
        		</td>
        	</tr>
         <tr>
-          <td colspan="2" class="required"><label class="validation">商品中文版描述: </label>{form_error('goods_intro')}</td>
+          <td colspan="2" class="required"><label>备注: </label>{form_error('remark')}</td>
         </tr>
         <tr>
-        	<td colspan="2" ><textarea id="goods_intro" name="goods_intro" style="width:100%;height:480px;visibility:hidden;">{$info['goods_intro']}</textarea></td>
+        	<td colspan="2" ><textarea id="remark" name="remark" style="width:100%;height:300px;visibility:hidden;">{$info['remark']}</textarea></td>
         	{include file="common/ke.tpl"}
 			<script type="text/javascript">
 	            var editor1;
-				
 	            KindEditor.ready(function(K) {
-	                editor1 = K.create('textarea[name="goods_intro"]', {
-	                    uploadJson : '{admin_site_url("common/pic_upload")}?mod=goods',
+	                editor1 = K.create('textarea[name="remark"]', {
+	                    uploadJson : '{admin_site_url("common/pic_upload")}?mod={$moduleClassName}',
 	                    filePostName:'Filedata',
 	                    extraFileUploadParams:{ formhash: formhash },
 	                    allowImageUpload : true,
@@ -131,68 +177,6 @@
 	            });
 	        </script>
         </tr>
-        <tr>
-          <td colspan="2"><label">商品英文版描述: </label>{form_error('goods_intro_en')}</td>
-        </tr>
-        <tr>
-        	<td colspan="2" ><textarea id="goods_intro_en" name="goods_intro_en" style="width:100%;height:480px;visibility:hidden;">{$info['goods_intro_en']}</textarea></td>
-        	{include file="common/ke.tpl"}
-			<script type="text/javascript">
-	            var editor2;
-				
-	            KindEditor.ready(function(K) {
-	                editor2 = K.create('textarea[name="goods_intro_en"]', {
-	                    uploadJson : '{admin_site_url("common/pic_upload")}?mod=goods',
-	                    extraFileUploadParams:{ formhash: formhash },
-	                    allowImageUpload : true,
-	                    allowFlashUpload : false,
-	                    allowMediaUpload : false,
-	                    formatUploadUrl : false,
-	                    allowFileManager : false,
-	                    afterCreate : function() {
-	                    	
-	                    },
-	                    afterChange : function() {
-	                    	$("input[name=formhash]").val(formhash);
-	                    },
-	                    afterUpload : function(url,data) {
-	                    	formhash = data.formhash;
-		                }
-	                });
-	            });
-	        </script>
-        </tr>
-        <tr>
-          <td colspan="2" class="required">是否推荐: </td>
-        </tr>
-        <tr>
-          <td class="vatop rowform onoff"><label for="goods_commend1" {if $info['goods_commend']}class="cb-enable selected"{else}class="cb-enable"{/if}><span>是</span></label>
-            <label for="goods_commend0" {if $info['goods_commend']}class="cb-disable"{else}class="cb-disable selected"{/if}><span>否</span></label>
-            <input id="goods_commend1" name="goods_commend" {if $info['goods_commend']}checked{/if} value="1" type="radio">
-            <input id="goods_commend0" name="goods_commend" {if $info['goods_commend'] == 0}checked{/if} value="0" type="radio"></td>
-          <td class="vatop tips">选择被推荐的图片将在所有商品列表页“推荐商品”位置展现。</td>
-        </tr>
-        <tr>
-          <td colspan="2" class="required">审核通过: </td>
-        </tr>
-        <tr>
-          <td class="vatop rowform onoff"><label for="goods_verify1" {if $info['goods_verify']}class="cb-enable selected"{else}class="cb-enable"{/if}><span>是</span></label>
-            <label for="goods_verify0" {if $info['goods_verify']}class="cb-disable"{else}class="cb-disable selected"{/if}><span>否</span></label>
-            <input id="goods_verify1" name="goods_verify" {if $info['goods_verify']}checked{/if} value="1" type="radio">
-            <input id="goods_verify0" name="goods_verify" {if $info['goods_verify'] == 0}checked{/if} value="0" type="radio"></td>
-          <td class="vatop tips">选择被推荐的图片将在所有商品列表页“推荐商品”位置展现。</td>
-        </tr>
-        <tr>
-          <td colspan="2" class="required">是否发布: </td>
-        </tr>
-        <tr>
-          <td class="vatop rowform onoff"><label for="goods_state1" {if $info['goods_state']}class="cb-enable selected"{else}class="cb-enable"{/if}><span>是</span></label>
-            <label for="goods_state0" {if $info['goods_state']}class="cb-disable"{else}class="cb-disable selected"{/if}><span>否</span></label>
-            <input id="goods_state1" name="goods_state" {if $info['goods_state']}checked{/if} value="1" type="radio">
-            <input id="goods_state0" name="goods_state" {if $info['goods_state'] == 0}checked{/if} value="0" type="radio"></td>
-          <td class="vatop tips">是否发布。</td>
-        </tr>
-        
       </tbody>
       <tfoot>
         <tr>
@@ -203,17 +187,16 @@
   </form>
   {include file="common/fileupload.tpl"}
   <script type="text/javascript">
-  	function insert_editor(file_path){
-		editor1.insertHtml('<img src="'+ file_path + '" alt="'+ file_path + '"/>');
-	}
-	
+  	
+  	var province_idcard = {$province_idcard};
+  	
 	function del_file_upload(file_id)
 	{
 	    if(!window.confirm('您确定要删除吗?')){
 	        return;
 	    }
 	    
-	    $.getJSON('{admin_site_url("goods/delimg")}?mod=goods&file_id=' + file_id + "&goods_id=" + $("input[name=goods_id]").val(), function(result){
+	    $.getJSON('{admin_site_url($moduleClassName|cat:"/delimg")}?mod={$moduleClassName}&file_id=' + file_id + "&id=" + $("input[name=id]").val(), function(result){
 	    	refreshFormHash(result.data);
 	    	
 	        if(result){
@@ -225,28 +208,75 @@
 	}
 	
 	$(function(){
-		$("#goods_pic").change(function(){
-			$("#goods_pic_txt").val($(this).val());
+	
+		$( ".datepicker" ).datepicker();
+		
+		$("#worker_pic").change(function(){
+			$("#worker_pic_txt").val($(this).val());
+		});
+		
+		$("#id_no").bind("focusout",function(){
+			var idNo = $.trim($(this).val());
+			var idType = $("#id_type option:selected").html();
+			if(('身份证' == idType || '驾驶证' == idType) && idNo.length >= 15){
+				var sex = parseInt(idNo.substring(idNo.length - 2, idNo.length - 1));
+				
+				if(sex % 2 == 0){
+					$("select[name=sex]").find("option:eq(0)").attr("selected","selected");
+				}else{
+					$("select[name=sex]").find("option:eq(1)").attr("selected","selected");
+				}
+				
+				var birthday = idNo.substring(6,14);
+				$("#birthday").val(birthday.substring(0,4) + '-' + birthday.substring(4,6) + '-' + birthday.substring(6,8));
+				
+				var currentYear = (new Date()).getFullYear();
+				var age = currentYear - parseInt(birthday.substring(0,4));
+				$("#age").val(age);
+				
+				if(typeof(province_idcard[idNo.substring(0,3) + "000"])){
+					var provinceName = province_idcard[idNo.substring(0,3) + "000"];
+					
+					$("#jiguan option").each(function(){
+						if(provinceName == $(this).html()){
+							$(this).attr("selected","selected");
+						}
+					});
+					
+				}
+			}
+			
 		});
 		
 		// 图片上传
 	    $('#fileupload').each(function(){
 	        $(this).fileupload({
 	            dataType: 'json',
-	            url: '{admin_site_url("goods/addimg")}?mod=goods',
+	            url: '{admin_site_url($moduleClassName|cat:"/addimg")}?mod={$moduleClassName}',
+	            add: function (e, data) {
+	            	$('#progress .bar').css('width',0);
+					data.submit();
+		        },
 	            done: function (e,data) {
 	            	refreshFormHash(data.result);
-	            	
 	                if(data.result.error == 0){
 	                	add_uploadedfile(data.result);
 	                }
-	            }
+	            },
+	            progressall: function (e, data) {
+			        var progress = parseInt(data.loaded / data.total * 100, 10);
+					//console.log(progress);
+			        $('#progress .bar').css(
+			            'width',
+			            progress + '%'
+			        );
+			    }
 	        });
 	    });
 	    
 	    function add_uploadedfile(file_data)
 		{
-		    var newImg = '<li id="' + file_data.id + '" class="picture"><input type="hidden" name="file_id[]" value="' + file_data.id + '" /><div class="size-64x64"><span class="thumb"><i></i><img src="' + file_data.url + '" alt="" width="64px" height="64px"/></span></div><p><span><a href="javascript:insert_editor(\'' + file_data.url + '\');">插入</a></span><span><a href="javascript:del_file_upload(\'' + file_data.id + '\');">删除</a></span></p></li>';
+		    var newImg = '<li id="' + file_data.id + '" class="picture"><input type="hidden" name="file_id[]" value="' + file_data.id + '" /><div class="size-64x64"><span class="thumb"><i></i><img src="' + file_data.url + '" alt="" width="64px" height="64px"/></span></div><p><span><a href="javascript:del_file_upload(\'' + file_data.id + '\');">删除</a></span></p></li>';
 		    $('#thumbnails').prepend(newImg);
 		}
 	})

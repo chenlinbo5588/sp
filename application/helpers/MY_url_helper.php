@@ -122,7 +122,6 @@ if ( ! function_exists('js_redirect'))
 
 if ( ! function_exists('urlToPath')) {
 	function urlToPath($url){
-		//���ݴ���
 		if(strpos($url,'http://') !== false){
 			$tempUrl = parse_url($url);
 			

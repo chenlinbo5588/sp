@@ -6,23 +6,14 @@
     <table class="tb-type1 noborder search">
       <tbody>
         <tr>
-          <th><label for="search_goods_name">商品名称</label></th>
-          <td><input type="text" value="{$smarty.post['search_goods_name']|escape}" name="search_goods_name" id="search_goods_name" class="txt"></td>
+          <th><label for="name">{#name#}</label></th>
+          <td><input type="text" value="{$smarty.get['name']|escape}" name="name" id="name" class="txt"></td>
           <th><label>审核</label></th>
           <td>
           	<select name="goods_verify">
               <option value="全部">请选择...</option>
               {foreach from=$searchMap['goods_verify'] item=item key=key}
               <option value="{$key}" {if $smarty.post['goods_verify'] == $key}selected{/if}>{$key}</option>
-              {/foreach}
-            </select>
-          </td>
-          <th><label>商品发布状态</label></th>
-          <td>
-          	<select name="goods_state">
-              <option value="全部">请选择...</option>
-              {foreach from=$searchMap['goods_state'] item=item key=key}
-              <option value="{$key}" {if $smarty.post['goods_state'] == $key}selected{/if}>{$key}</option>
               {/foreach}
             </select>
           </td>
@@ -47,66 +38,42 @@
 		          {/foreach}
 		        </select>
 	        </td>
-	        <th><label>商品推荐状态</label></th>
-          <td>
-          	<select name="goods_commend">
-              <option value="全部">请选择...</option>
-              {foreach from=$searchMap['goods_commend'] item=item key=key}
-              <option value="{$key}" {if $smarty.post['goods_commend'] == $key}selected{/if}>{$key}</option>
-              {/foreach}
-            </select>
-          </td>
         </tr>
       </tbody>
     </table>
   </form>
-  <table class="table tb-type2" id="prompt">
-    <tbody>
-      <tr class="space odd">
-        <th colspan="12"><div class="title"><h5>操作提示</h5><span class="arrow"></span></div>
-        </th>
-      </tr>
-      <tr>
-        <td>
-        	<ul>
-              <li>上架，当商品处于非上架状态时，前台将不能浏览该商品，管理员可控制商品上架状态</li>
-            </ul>
-        </td>
-      </tr>
-    </tbody>
-  </table>
     <table class="table tb-type2">
       <thead>
         <tr class="thead">
           <th class="w24"></th>
-          <th colspan="2">商品名称</th>
-          <th>商品代码</th>
-          <th>品牌&分类</th>
-          <th class="align-center">商品状态</th>
-          <th class="align-center">审核状态</th>
-          <th class="align-center">推荐状态</th>
-          <th class="align-center">操作</th>
+          <th colspan="2">{#name#}</th>
+          <th>{#id_type#}</th>
+          <th>{#id_no#}</th>
+          <th>{#sex#}</th>
+          <th>{#age#}</th>
+          <th>{#jiguan#}</th>
+          <th>{#mobile#}</th>
+          <th>{#address#}</th>
+          <th>操作</th>
         </tr>
       </thead>
       <tbody>
       	{foreach from=$list['data'] item=item}
-      	<tr class="hover edit" id="row{$item['goods_id']}">
-          <td><input type="checkbox" name="id[]" group="chkVal" value="{$item['goods_id']}" class="checkitem"></td>
-          <td class="w60 picture"><img class="size-100x100" src="{if $item['goods_pic_m']}{resource_url($item['goods_pic_m'])}{else if $item['goods_pic_b']}{resource_url($item['goods_pic_b'])}{else if $item['goods_pic']}{resource_url($item['goods_pic'])}{else}{resource_url('img/default.jpg')}{/if}"/></td>
+      	<tr class="hover edit" id="row{$item['id']}">
+          <td><input type="checkbox" name="id[]" group="chkVal" value="{$item['id']}" class="checkitem"></td>
+          <td class="w60 picture"><img class="size-100x100" src="{if $item['avatar_s']}{resource_url($item['avatar_s'])}{else if $item['avatar_b']}{resource_url($item['avatar_b'])}{else if $item['avatar_m']}{resource_url($item['avatar_m'])}{else}{resource_url('img/default.jpg')}{/if}"/></td>
           <td class="goods-name w270">
-          	<p><span>{$item['goods_name']|escape}</span></p>
-            {*<p class="store">所属店铺:官方店铺</p>*}
+          	<p><span>{$item['name']|escape}</span></p>
          </td>
-         <td>{$item['goods_code']|escape}</td>
-         <td>
-          	<p>{$brandList[$item['brand_id']]['brand_name']}</p>
-            <p>{$goodsClassList[$item['gc_id']]['name_cn']}</p>
-          </td>
-          <td class="align-center">{if $item['goods_state'] == 1}已发布{else}未发布{/if}</td>
-          <td class="align-center">{if $item['goods_commend'] == 1}已{else}未{/if}推荐</td>
-          <td class="align-center">{if $item['goods_verify'] == 1}已审核{else}未审核{/if}</td>
-          <td class="align-center">
-          	<p><a href="{site_url('product/detail')}?gc_id={$item['gc_id']}&id={$item['goods_id']}" target="_blank">查看</a> | <a href="{admin_site_url('goods/edit')}?goods_id={$item['goods_id']}">编辑</a></p>
+         <td>{$item['id_type']}</td>
+         <td>{$item['id_no']}</td>
+         <td>{$item['sex']}</td>
+         <td>{$item['age']}</td>
+         <td>{$item['jiguan']}</td>
+         <td>{$item['mobile']}</td>
+         <td>{$item['address']|escape}</td>
+         <td class="align-center">
+          	<p><a href="{site_url($moduleClassName|cat:'/detail')}?id={$item['id']}" target="_blank">查看</a> | <a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}">编辑</a></p>
           </td>
         </tr>
         {/foreach}
@@ -115,7 +82,7 @@
       	<tr class="tfoot">
           <td colspan="9">
           	<label><input type="checkbox" class="checkall" id="checkallBottom" name="chkVal">全选</label>&nbsp;
-          	<a href="javascript:void(0);" class="btn deleteBtn" data-checkbox="id[]" data-url="{admin_site_url('goods/delete')}"><span>删除</span></a>
+          	<a href="javascript:void(0);" class="btn deleteBtn" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/delete')}"><span>删除</span></a>
           	{include file="common/pagination.tpl"}
            </td>
         </tr>

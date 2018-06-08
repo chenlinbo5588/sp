@@ -76,6 +76,7 @@ $lang['form_validation_valid_mobile']					= '{field}必须是一个有效的手�
 $lang['form_validation_valid_telephone']				= '{field}必须是一个有效的固定电话号码.';
 $lang['form_validation_valid_username']				= '{field}必须符合用户名规则 字母、数字、下划线、汉字.';
 $lang['form_validation_valid_password']				= '{field}必须符合昵称规则 字母、数字、特殊符号.';
+$lang['form_validation_valid_idcard']				= '{field}必须一个有效的身份证号码.';
 $lang['form_validation_is_unique_by_status'] 			= '{field}已被占用 .';
 $lang['form_validation_is_unique_not_self'] 			= '{field}已被占用.';
 $lang['form_validation_in_db_list']		= '{field}无效';

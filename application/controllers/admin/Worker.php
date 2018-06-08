@@ -4,6 +4,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Worker extends Ydzj_Admin_Controller {
 	
+	
+	private $_idTypeList;
+	
+	
+	
 	public function __construct(){
 		parent::__construct();
 		
@@ -22,10 +27,9 @@ class Worker extends Ydzj_Admin_Controller {
 		$this->_subNavs = array(
 			array('url' => $this->_className.'/index','title' => '管理'),
 			array('url' => $this->_className.'/add','title' => '新增'),
-			array('url' => $this->_className.'/unverify','title' => '未审核'),
-			array('url' => $this->_className.'/verify','title' => '已审核'),
 		);
 		
+		$this->_idTypeList = $this->wuye_service->getBasicDataByName('证件类型');
 	}
 	
 	
@@ -35,15 +39,12 @@ class Worker extends Ydzj_Admin_Controller {
 		$searchMap['goods_state'] = array('未发布' => '0','正常' => '1');
 		$searchMap['goods_verify'] = array('未通过' => '0','通过' => '1');
 		
-		$brandList = $this->Brand_Model->getList();
-		$brandList = $this->goods_service->toEasyUseArray($brandList,'brand_id');
-		$treelist = $this->goods_service->toEasyUseArray($this->goods_service->getGoodsClassTreeHTML(),'gc_id');
 		
 		$currentPage = $this->input->get_post('page') ? $this->input->get_post('page') : 1;
 	
 		$condition = array(
 			'where' => array(),
-			'order' => 'goods_id DESC',
+			'order' => 'id DESC',
 			'pager' => array(
 				'page_size' => config_item('page_size'),
 				'current_page' => $currentPage,
@@ -76,23 +77,9 @@ class Worker extends Ydzj_Admin_Controller {
 			$condition['where']['goods_state'] = $searchMap[$goodsState];
 		}
 		
-		
-		
-		if($goodsClassId){
-			$goodsClassIdList = $this->goods_service->getAllChildGoodsClassByPid($goodsClassId);
-			$goodsClassIdList[] = $goodsClassId;
-			
-			$condition['where_in'][] = array('key' => 'gc_id', 'value' => $goodsClassIdList);
-			
-		}
-		
-		
 		//print_r($condition);
+		$list = $this->Worker_Model->getList($condition);
 		
-		$list = $this->Goods_Model->getList($condition);
-		
-		$this->assign('brandList',$brandList);
-		$this->assign('goodsClassList',$treelist);
 		$this->assign('list',$list);
 		$this->assign('page',$list['pager']);
 		$this->assign('currentPage',$currentPage);
@@ -103,27 +90,41 @@ class Worker extends Ydzj_Admin_Controller {
 	
 	
 	/**
-	 * 未审核
+	 * 校验规则
 	 */
-	public function unverify(){
-		
-		
-	}
-	
-	
-	
-	
 	private function _getRules(){
-		$this->form_validation->set_rules('goods_name','商品中文名称','required|max_length[60]');
-		$this->form_validation->set_rules('goods_name_en','商品英文名称','required|max_length[60]');
-		$this->form_validation->set_rules('gc_id','商品分类',"required|in_db_list[{$this->Goods_Class_Model->_tableRealName}.gc_id]");
-		$this->form_validation->set_rules('goods_intro','商品中文简介','required');
-		//$this->form_validation->set_rules('goods_intro_en','商品英文简介','required');
-		$this->form_validation->set_rules('goods_commend','是否推荐','required|in_list[0,1]');
-		$this->form_validation->set_rules('goods_verify','是否审核','required|in_list[0,1]');
-		$this->form_validation->set_rules('goods_state','是否发布','required|in_list[0,1]');
+		$this->form_validation->set_rules('name','姓名','required|max_length[60]');
+		
+		if(ENVIRONMENT == 'production'){
+			$idType = $this->input->post('id_type');
+			if('身份证' == $this->_idTypeList[$idType]['show_name'] || '驾驶证' == $this->_idTypeList[$idType]['show_name']){
+				$this->form_validation->set_rules('id_no','证件号码',"required|valid_idcard");
+			}else{
+				$this->form_validation->set_rules('id_no','证件号码',"required|max_length[30]");
+			}
+		}else{
+			$this->form_validation->set_rules('id_no','证件号码',"required|max_length[30]");
+		}
+		
+		$this->form_validation->set_rules('birthday','出生年月','required|valid_date');
+		$this->form_validation->set_rules('age','年龄','required|is_natural_no_zero');
+		$this->form_validation->set_rules('sex','性别','required|is_natural_no_zero');
+		$this->form_validation->set_rules('jiguan','籍贯',"required|is_natural_no_zero");
+		$this->form_validation->set_rules('mobile','手机号码','required|valid_mobile');
+		$this->form_validation->set_rules('address','现居住地址','required|max_length[100]');
+		
+		//$this->form_validation->set_rules('shu','属相','required|is_natural_no_zero');
+		$this->form_validation->set_rules('degree','最高学历','required|is_natural_no_zero');
+		
+		
+		/*
+		$remark = $this->input->post('remark');
+		
+		if($remark){
+			$this->form_validation->set_rules('remark','备注','required');
+		}
+		*/
 	}
-	
 	
 	
 	public function delete(){
@@ -136,7 +137,7 @@ class Worker extends Ydzj_Admin_Controller {
 				$ids = (array)$ids;
 			}
 			
-			$this->Goods_Model->deleteByCondition(array(
+			$this->Worker_Model->deleteByCondition(array(
 				'where_in' => array(
 					array('key' => 'goods_id','value' => $ids)
 				)
@@ -150,43 +151,84 @@ class Worker extends Ydzj_Admin_Controller {
 	}
 	
 	
-	private function _prepareGoodsData(){
-		
-		$fileInfo = $this->attachment_service->addImageAttachment('goods_pic',array('widthout_db' => true),FROM_BACKGROUND,'goods');
-		
+	/**
+	 * 准备数据
+	 */
+	private function _prepareData($action = 'add'){
+		$fileInfo = $this->attachment_service->addImageAttachment('worker_pic',array('widthout_db' => true),FROM_BACKGROUND,'worker');
 		
 		$info = array(
-			'goods_name' => $this->input->post('goods_name'),
-			'goods_name_en' => $this->input->post('goods_name_en'),
-			'gc_id' => $this->input->post('gc_id') ? $this->input->post('gc_id') : 0,
-			'brand_id' => $this->input->post('brand_id') ? $this->input->post('brand_id') : 0,
-			'goods_intro' => $this->input->post('goods_intro') ? $this->input->post('goods_intro') : '',
-			'goods_intro_en' => $this->input->post('goods_intro_en') ? $this->input->post('goods_intro_en') : '',
-			'goods_commend' => $this->input->post('goods_commend') ? $this->input->post('goods_commend') : 0,
-			'goods_verify' => $this->input->post('goods_verify'),
-			'goods_state' => $this->input->post('goods_state'),
+			'name' => $this->input->post('name'),
+			'id_type' => $this->input->post('id_type'),
+			'id_no' => $this->input->post('id_no'),
+			'age' => $this->input->post('age'),
+			'sex' => $this->input->post('sex'),
+			'birthday' => $this->input->post('birthday'),
+			'jiguan' => $this->input->post('jiguan'),
+			'mobile' => $this->input->post('mobile'),
+			'address' => $this->input->post('address'),
+			'degree' => $this->input->post('degree'),
 		);
 		
+		
 		if($fileInfo){
-			$fileInfo = $this->attachment_service->resize($fileInfo);
+			$oldFile = $this->input->post('old_pic');
+			if('add' == $action){
+				//添加页面 删除上一次上传的图片
+				if($oldFile){
+					$oldFiles = getImgPathArray($oldFile,array('b','m','s'));
+					$this->attachment_service->deleteByFileUrl($oldFiles);
+				}
+				
+				//设置新上传的图片
+				$info['avatar'] = $fileInfo['file_url'];
+				
+				//设置上一张图片
+				$info['old_pic'] = $info['avatar'];
+			}else{
+				//编辑页面 
+				
+				$info['old_pic'] = $oldFile;
+				$info['avatar'] = $fileInfo['file_url'];
+			}
 			
-			$info['goods_pic'] = $fileInfo['file_url'];
+			$fileInfo = $this->attachment_service->resize($fileInfo,array('b','m','s'));
 			
 			if($fileInfo['img_b']){
 				//如果裁剪了大图用大图,防止上传超级大图后，前台页面显示好几兆的图片
-				$info['goods_pic_b'] = $fileInfo['img_b'];
+				$info['avatar_b'] = $fileInfo['img_b'];
 			}
 			
 			if($fileInfo['img_m']){
 				//如果裁剪了大图用大图,防止上传超级大图后，前台页面显示好几兆的图片
-				$info['goods_pic_m'] = $fileInfo['img_m'];
+				$info['avatar_m'] = $fileInfo['img_m'];
 			}
 			
-			// 标记上传了新文件
-			$info['file_url'] = $fileInfo['file_url'];
+			if($fileInfo['img_s']){
+				//如果裁剪了大图用大图,防止上传超级大图后，前台页面显示好几兆的图片
+				$info['avatar_s'] = $fileInfo['img_m'];
+			}
 			
+			// 标记上传了新文件,用于删除旧文件用
+			$info['file_url'] = $fileInfo['file_url'];
+		}else{
+			
+			$pic = $this->input->post('old_pic');
+			if($pic){
+				//还是记住上一张
+				$info['old_pic'] = $pic;
+				
+				$info['avatar'] = $pic;
+				$imgs = getImgPathArray($info['avatar'],array('b','m','s'));
+				$info = array_merge($info,$imgs);
+			}
 		}
 		
+		$remark = $this->input->post('remark');
+		
+		if($remark){
+			$info['remark'] = $remark;
+		}
 		
 		return $info;
 	}
@@ -199,143 +241,128 @@ class Worker extends Ydzj_Admin_Controller {
 		$fileList = array();
 		
 		if($file_ids){
-			$fileList = $this->Attachment_Model->getList(array(
-				'select' => 'id,file_url',
+			$fileList = $this->Worker_Images_Model->getList(array(
+				//'select' => 'id as image_aid,file_url',
 				'where_in' => array(
-					array('key' => 'id', 'value' => $file_ids)
+					array('key' => 'image_aid', 'value' => $file_ids)
 				),
 				'order' => 'id DESC'
 			));
-			
-			
 		}
 		
 		return $fileList;
-		
 	}
+	
+	
 	
 	public function add(){
 		$feedback = '';
 		
-		$treelist = $this->goods_service->getGoodsClassTreeHTML();
-		$brandList = $this->Brand_Model->getList();
+		$jiguanList = $this->wuye_service->getBasicDataByName('籍贯');
+		$xueliList = $this->wuye_service->getBasicDataByName('学历');
+		$shuList = $this->wuye_service->getBasicDataByName('属相');
 		
 		if($this->isPostRequest()){
 			$this->_getRules();
 			
 			for($i = 0; $i < 1; $i++){
 				
-				$info = $this->_prepareGoodsData();
+				$info = $this->_prepareData();
 				$fileList = $this->_getFileList();
 				
 				$this->assign('fileList',$fileList);
 				
 				if(!$this->form_validation->run()){
-					$feedback = $this->form_validation->error_string();
+					$feedback = getErrorTip($this->form_validation->error_string());
 					break;
 				}
 				
-				if($this->input->post('goods_state') == 1){
-					$info['public_time'] = $this->input->server('REQUEST_TIME');
+				//获得属相
+				foreach($shuList as $shuItem){
+					if($shuItem['show_name'] == getShuXiang($info['birthday'])){
+						$info['shu'] = $shuItem['id'];
+						break;
+					}
 				}
 				
-				$info['goods_code'] = $info['gc_id'] . '-' . strtolower(substr(md5($info['goods_name']),0,6));
-				
-				if(($newid = $this->Goods_Model->_add($info)) < 0){
+				if(($newid = $this->Worker_Model->_add(array_merge($info,$this->addWhoHasOperated()))) < 0){
 					$feedback = getErrorTip('保存失败');
 					break;
 				}
 				
-				
 				if($fileList){
-					$insData = array();
-					
+					$updateFileIds = array();
 					foreach($fileList as $fileInfo){
-						$imgs = getImgPathArray($fileInfo['file_url'],array('b','m'));
-						
-						$insData[] = array(
-							'goods_id' => $newid,
-							'goods_image_aid' => $fileInfo['id'],
-							'goods_image' => $fileInfo['file_url'],
-							'goods_image_b' => $imgs['img_b'],
-							'goods_image_m' => $imgs['img_m'],
-							'uid' => $this->_adminProfile['basic']['uid'],
-							'gmt_create' => $this->input->server('REQUEST_TIME'),
-							'gmt_modify' => $this->input->server('REQUEST_TIME'),
-						);
+						$updateFileIds[] = $fileInfo['image_aid'];
 					}
 					
-					$this->Goods_Images_Model->batchInsert($insData);
+					$this->Worker_Images_Model->updateByCondition(array(
+						'worker_id' => $newid
+					
+					),array(
+						'where_in' => array(
+							array('key' => 'image_aid', 'value' => $updateFileIds)
+						)
+					));
 				}
 				
 				$feedback = getSuccessTip('保存成功');
-				
-				$info = $this->Goods_Model->getFirstByKey($newid,'goods_id');
+				$info = $this->Worker_Model->getFirstByKey($newid);
 			}
 		}
 		
 		
-		$this->assign('info',$info);
-		$this->assign('feedback',$feedback);
+		$this->assign(array(
+			'province_idcard' => json_encode(config_item('province_idcard')),
+			'idTypeList' => $this->_idTypeList,
+			'jiguanList' => $jiguanList,
+			'xueliList' => $xueliList,
+			'info' => $info,
+			'feedback' => $feedback
+		));
 		
-		$this->assign('brandList',$brandList);
-		$this->assign('goodsClassList',$treelist);
 		$this->display();
 	}
 	
 	
 	public function addimg(){
 		
-		$json = array('error' => 1, 'formhash'=>$this->security->get_csrf_hash(),'id' => 0,'msg' => '上次失败');
+		$json = array('error' => 1, 'formhash'=>$this->security->get_csrf_hash(),'id' => 0,'msg' => '上传失败');
 		
-		$fileData = $this->attachment_service->addImageAttachment('fileupload',array(),FROM_BACKGROUND,'goods');
+		$fileData = $this->attachment_service->addImageAttachment('fileupload',array(),FROM_BACKGROUND,'worker');
 		if($fileData){
-			
 			
 			$fileData = $this->attachment_service->resize($fileData);
 			
 			$info = array(
-				'goods_id' => $this->input->post('goods_id') ? $this->input->post('goods_id') : 0,
-				'goods_image_aid' => $fileData['id'],
-				'goods_image' => $fileData['file_url'],
-				'goods_image_b' => !empty($fileData['img_b']) ? $fileData['img_b'] : '',
-				'goods_image_m' => !empty($fileData['img_m']) ? $fileData['img_m'] : '',
+				'worker_id' => $this->input->post('worker_id') ? $this->input->post('worker_id') : 0,
+				'image_aid' => $fileData['id'],
+				'image' => $fileData['file_url'],
+				'image_b' => !empty($fileData['img_b']) ? $fileData['img_b'] : '',
+				'image_m' => !empty($fileData['img_m']) ? $fileData['img_m'] : '',
 				'uid' => $this->_adminProfile['basic']['uid']
 			);
 			
-			if($info['goods_id']){
-				$imageId = $this->Goods_Images_Model->_add($info);
-				if($imageId){
-					$json['error'] = 0;
-					$json['id'] = $fileData['id'];
-					$json['image_id'] = $imageId;
-					$json['url'] = base_url($fileData['file_url']);
-					
-					//尽量选择小图
-					if($fileData['img_b']){
-						$json['url'] = base_url($fileData['img_b']);
-					}
-					
-				}else{
-					$json['error'] = 0;
-					$json['msg'] = '系统异常';
-					$this->attachment_service->deleteByFileUrl(array(
-						$fileData['file_url'],
-						$fileData['img_b'],
-						$fileData['img_m'],
-					));
-				}
-			}else{
-				//maybe run here
-				
+			$imageId = $this->Worker_Images_Model->_add($info);
+			if($imageId){
 				$json['error'] = 0;
 				$json['id'] = $fileData['id'];
+				$json['image_id'] = $imageId;
 				$json['url'] = base_url($fileData['file_url']);
 				
 				//尽量选择小图
 				if($fileData['img_b']){
 					$json['url'] = base_url($fileData['img_b']);
 				}
+				
+			}else{
+				$json['error'] = 0;
+				$json['msg'] = '系统异常';
+				$this->attachment_service->deleteByFileUrl(array(
+					$fileData['file_url'],
+					$fileData['img_b'],
+					$fileData['img_m'],
+				));
 			}
 			
 		}else{
@@ -348,15 +375,23 @@ class Worker extends Ydzj_Admin_Controller {
 	
 	
 	public function delimg(){
-		$file_id = $this->input->get_post('file_id');
-		$goods_id = $this->input->get_post('goods_id');
+		$file_id = intval($this->input->get_post('file_id'));
+		$worker_id = intval($this->input->get_post('worker_id'));
 		
-		if($goods_id){
-			//如果在商品编辑页面
-			$this->Goods_Images_Model->deleteByCondition(array(
+		if($worker_id){
+			//如果在编辑页面
+			$this->Worker_Images_Model->deleteByCondition(array(
 				'where' => array(
-					'goods_image_aid' => $file_id,
-					'goods_id' => $goods_id,
+					'image_aid' => $file_id,
+					'worker_id' => $worker_id,
+					'uid' => $this->_adminProfile['basic']['uid']
+				)
+			));
+		}else{
+			//在新增界面，还没有worker id
+			$this->Worker_Images_Model->deleteByCondition(array(
+				'where' => array(
+					'image_aid' => $file_id,
 					'uid' => $this->_adminProfile['basic']['uid']
 				)
 			));
@@ -371,45 +406,50 @@ class Worker extends Ydzj_Admin_Controller {
 	}
 	
 	
+	/**
+	 * 编辑工作人员
+	 */
 	public function edit(){
 		
 		$feedback = '';
-		$id = $this->input->get_post('goods_id');
+		$id = $this->input->get_post('id');
 		
-		$treelist = $this->goods_service->getGoodsClassTreeHTML();
-		$brandList = $this->Brand_Model->getList();
+		$jiguanList = $this->wuye_service->getBasicDataByName('籍贯');
+		$xueliList = $this->wuye_service->getBasicDataByName('学历');
+		$shuList = $this->wuye_service->getBasicDataByName('属相');
 		
-		$info = $this->Goods_Model->getFirstByKey($id,'goods_id');
+		$info = $this->Worker_Model->getFirstByKey($id);
 		
 		$fileList = array();
+		
+		
+		$this->_subNavs[] = array('url' => $this->_className.'/edit?id='.$id, 'title' => '编辑');
 		
 		if($this->isPostRequest()){
 			
 			$this->_getRules();
 			
 			for($i = 0; $i < 1; $i++){
-				$postInfo = $this->_prepareGoodsData();
+				$postInfo = $this->_prepareData('edit');
 				$fileList = $this->_getFileList();
 				
-				//没有新上传文件，并且原来有图片
-				if(empty($postInfo['goods_pic']) && !empty($info['goods_pic'])){
-					$postInfo['goods_pic'] = $info['goods_pic'];
-				}
-				
 				$info = $postInfo;
-				$info['goods_id'] = $id;
+				$info['id'] = $id;
 				
 				if(!$this->form_validation->run()){
-					$feedback = $this->form_validation->error_string();
+					$feedback = getErrorTip($this->form_validation->error_string());
 					break;
 				}
 				
-				
-				if($this->input->post('goods_state') == 1){
-					$info['public_time'] = $this->input->server('REQUEST_TIME');
+				//获得属相
+				foreach($shuList as $shuItem){
+					if($shuItem['show_name'] == getShuXiang($info['birthday'])){
+						$info['shu'] = $shuItem['id'];
+						break;
+					}
 				}
 				
-				if($this->Goods_Model->update($info,array('goods_id' => $id)) < 0){
+				if($this->Worker_Model->update($info,array('id' => $id)) < 0){
 					$feedback = getErrorTip('保存失败');
 					break;
 				}
@@ -423,20 +463,22 @@ class Worker extends Ydzj_Admin_Controller {
 				$feedback = getSuccessTip('保存成功');
 			}
 			
+		}else{
+			$fileList = $this->Worker_Images_Model->getList(array(
+				'where' => array('worker_id' => $id)
+			));
 		}
 		
-		
-		$fileList = $this->Goods_Images_Model->getList(array(
-			'where' => array('goods_id' => $id)
+		$this->assign(array(
+			'province_idcard' => json_encode(config_item('province_idcard')),
+			'idTypeList' => $this->_idTypeList,
+			'fileList' => $fileList,
+			'jiguanList' => $jiguanList,
+			'xueliList' => $xueliList,
+			'info' => $info,
+			'feedback' => $feedback
 		));
-			
-			
-		$this->assign('fileList',$fileList);
 		
-		$this->assign('info',$info);
-		$this->assign('feedback',$feedback);
-		$this->assign('brandList',$brandList);
-		$this->assign('goodsClassList',$treelist);
-		$this->display('goods/add');
+		$this->display($this->_className.'/add');
 	}
 }

@@ -30,7 +30,7 @@ class User extends Ydzj_Controller {
 		
 		if($code){
 			
-			$xcxConfig = config_item('mp_xcxTdkc');
+			$xcxConfig = config_item('mp_xcxCswy');
 			
 			$this->weixin_xcx_api->setConfig($xcxConfig);
 			$resp = $this->weixin_xcx_api->getWeixinUserByCode($code);

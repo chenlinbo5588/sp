@@ -32,8 +32,11 @@ class Weixin_Xcx_Api extends Weixin_api {
             'url' => "/sns/jscode2session?appid={$this->_xcxConfig['appid']}&secret={$this->_xcxConfig['app_secret']}&js_code={$code}&grant_type=authorization_code" ,
             'method' => 'get',
         );
-        
+        //file_put_contents('debug3.txt',print_r($param,true));
         $respone = $this->request($param);
+        
+        //file_put_contents('debug3.txt',print_r($respone,true),FILE_APPEND);
+        
         $result = json_decode($respone,true);
         
         return $result;

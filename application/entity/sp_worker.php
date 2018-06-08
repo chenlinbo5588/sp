@@ -14,8 +14,16 @@ $entity = array(
 'birthday' => 'date',
 'shu' => 'int',
 'degree' => 'int',
+'aid' => 'int',
+'avatar' => 'varchar',
+'avatar_b' => 'varchar',
+'avatar_m' => 'varchar',
+'avatar_s' => 'varchar',
+'remark' => 'text',
 'add_uid' => 'int',
 'add_username' => 'varchar',
 'edit_uid' => 'int',
-'edit_username' => 'varchar'
+'edit_username' => 'varchar',
+'gmt_create' => 'int',
+'gmt_modify' => 'int'
 );
