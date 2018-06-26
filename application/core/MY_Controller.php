@@ -325,7 +325,11 @@ class MY_Controller extends CI_Controller {
     	
     	//修改前
     	$unchangeTplName = $viewname;
-    	$tplDir = $this->_smarty->getTemplateDir(0);
+    	$tplDir = $this->_smarty->getTemplateDir();
+    	
+    	$viewFileName = '';
+    	
+    	//print_r($tplDir);
     	
     	$this->assign($this->_seo);
     	$this->assign('currentLang',$this->_currentLang);
@@ -336,16 +340,32 @@ class MY_Controller extends CI_Controller {
 		if(empty($gobackUrl)){
 			$gobackUrl = $this->input->server('HTTP_REFERER');
 		}
+		
+		
+		foreach($tplDir as $tplDirItem){
+			
+			if($this->input->is_ajax_request()){
+	    		$viewname = $viewname.'_ajax';
+	    	}else{
+	    		if($this->agent->is_mobile()){
+	    			$viewname = $viewname . '_mobile';
+	    		}
+	    	}
+	    	
+	    	$realPath = $tplDirItem.$viewname.'.tpl';
+	    	
+	    	if(file_exists($realPath)){
+	    		$viewFileName = $realPath;
+	    		break;
+	    	}else if(file_exists($tplDirItem.$unchangeTplName.'.tpl')){
+	    		$viewFileName = $tplDirItem.$unchangeTplName.'.tpl';
+	    		break;
+	    	}else{
+	    		continue;
+	    	}
+		}
     	
-    	if($this->input->is_ajax_request()){
-    		$viewname = $viewname.'_ajax';
-    	}else{
-    		if($this->agent->is_mobile()){
-    			$viewname = $viewname . '_mobile';
-    		}
-    	}
     	
-    	$realPath = $tplDir.$viewname.'.tpl';
     	//echo $realPath;
     	
     	$this->assign(array(
@@ -356,11 +376,14 @@ class MY_Controller extends CI_Controller {
         ));
     	
     	
-    	
-    	if(file_exists($realPath)){
-    		$this->output->set_output($this->_smarty->fetch($realPath));
+    	if($viewFileName){
+    		$this->output->set_output($this->_smarty->fetch($viewFileName));
     	}else{
-    		$this->output->set_output($this->_smarty->fetch($tplDir.$unchangeTplName.'.tpl'));
+    		
+    		if(ENVIRONMENT == 'development'){
+    			echo "template {$viewname} not found";
+    		}
+    		
     	}
     	
     }

@@ -349,15 +349,15 @@ class Member extends Ydzj_Admin_Controller {
 			$this->load->library('Attachment_service');
 			
 			$fileData = $this->attachment_service->resize(array('file_url' => $src_file) , 
-				array('middle' => array('width' => $this->input->post('w'),'height' => $this->input->post('h'),'maintain_ratio' => false , 'quality' => 100)) , 
+				array('m' => array('width' => $this->input->post('w'),'height' => $this->input->post('h'),'maintain_ratio' => false , 'quality' => 100)) , 
 				array('x_axis' => $this->input->post('x1'), 'y_axis' => $this->input->post('y1')));
 			
 			
 			
-			if($fileData['img_middle']){
+			if($fileData['img_m']){
 				$smallImg = $this->attachment_service->resize(array(
-					'file_url' => $fileData['img_middle']
-				) , array('small') );
+					'file_url' => $fileData['img_m']
+				) , array('s') );
 			}
 			
 			//删除原图
@@ -374,7 +374,7 @@ class Member extends Ydzj_Admin_Controller {
 				exit(json_encode(array(
 					'status' => 1, 
 					'formhash'=>$this->security->get_csrf_hash(),
-					'url'=>base_url($fileData['img_middle']),
+					'url'=>base_url($fileData['img_m']),
 					'picname' => $src_file
 				)));
 			}

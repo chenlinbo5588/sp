@@ -204,6 +204,10 @@ class MY_Form_validation extends CI_Form_validation {
 	
 	
 
+
+	public function error_html($prefix = '', $suffix = ''){
+		return str_replace("\n",'',$this->error_string($prefix,$suffix));
+	}
 }
 // END Form Validation Class
 

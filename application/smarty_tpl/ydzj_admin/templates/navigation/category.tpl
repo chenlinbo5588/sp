@@ -61,7 +61,7 @@
   <script type="text/javascript">
   $(function(){
     
-    bindDeleteEvent(function(ids,json){
+    bindDeleteEvent({ }, function(ids,json){
         showToast('success',json.message);
         
         for(var i = 0; i < ids.length; i++){

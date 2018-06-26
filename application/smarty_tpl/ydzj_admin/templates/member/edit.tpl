@@ -157,8 +157,6 @@
 
 
 {include file="common/jcrop.tpl"}
-<script type="text/javascript" src="{resource_url('js/jquery.Jcrop/jquery.Jcrop.js')}"></script>
-<link href="{resource_url('js/jquery.Jcrop/jquery.Jcrop.min.css')}" rel="stylesheet" type="text/css"/>
 {include file="member/member_common.tpl"}
 
 {include file="common/main_footer.tpl"}

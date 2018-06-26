@@ -412,13 +412,15 @@ $(function(){
                   <ol>
                     <li><a href="javascript:void(0);" id="category_basic_data" onclick="openItem('category,basic_data,service');">基础数据</a></li>
                     <li><a href="javascript:void(0);" id="index_worker" onclick="openItem('index,worker,service');">家政从业人员</a></li>
-                    <li><a href="javascript:void(0);" id="index_repair" onclick="openItem('index,repair,service');">报修</a></li>
-                    <li><a href="javascript:void(0);" id="index_worker" onclick="openItem('index,yuesao,service');">月嫂</a></li>
-                    <li><a href="javascript:void(0);" id="index_worker" onclick="openItem('index,baomu,service');">保姆</a></li>
+                    <li><a href="javascript:void(0);" id="index_yuesao" onclick="openItem('index,yuesao,service');">月嫂</a></li>
+                    <li><a href="javascript:void(0);" id="index_baomu" onclick="openItem('index,baomu,service');">保姆</a></li>
+                    <li><a href="javascript:void(0);" id="index_hugong" onclick="openItem('index,hugong,service');">护工</a></li>
                     <li><a href="javascript:void(0);" id="index_owner" onclick="openItem('index,owner,service');">业主</a></li>
                     <li><a href="javascript:void(0);" id="index_room" onclick="openItem('index,room,service');">房间</a></li>
                     <li><a href="javascript:void(0);" id="index_building" onclick="openItem('index,building,service');">幢</a></li>
                     <li><a href="javascript:void(0);" id="index_resident" onclick="openItem('index,resident,service');">小区</a></li>
+                    
+                    <li><a href="javascript:void(0);" id="index_repair" onclick="openItem('index,repair,service');">报修</a></li>
                   </ol>
                 </dd>
               </dl>

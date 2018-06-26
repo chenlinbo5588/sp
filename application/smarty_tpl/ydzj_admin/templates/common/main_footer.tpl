@@ -10,7 +10,7 @@
 	$(function(){
 		setTimeout(function(){
 			$(".feedback").slideToggle(1000,"linear");
-		},3000);
+		},5000);
 		
 	});
 {/if}

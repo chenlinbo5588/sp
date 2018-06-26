@@ -14,7 +14,7 @@ class Index extends Ydzj_Controller {
 	 */
 	public function index()
 	{
-		echo getShuXiang('19840414');
+		//echo getShuXiang('19840414');
 		/*
 		$this->load->library(array('Goods_service','Cms_service'));
 		$goodsList = $this->goods_service->getCommandGoodsList();

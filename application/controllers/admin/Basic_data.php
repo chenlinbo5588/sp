@@ -10,7 +10,7 @@ class Basic_Data extends Ydzj_Admin_Controller {
 	public function __construct(){
 		parent::__construct();
 		
-		$this->load->library(array('Wuye_service','Attachment_service'));
+		$this->load->library(array('Staff_service','Attachment_service'));
 		$this->_moduleTitle = '基础数据';
 		
 		
@@ -40,7 +40,7 @@ class Basic_Data extends Ydzj_Admin_Controller {
 		
 		$id = $this->input->get_post('pid') ? $this->input->get_post('pid') : 0;
 		
-		$treelist = $this->wuye_service->getBasicDataTreeHTML();
+		$treelist = $this->staff_service->getBasicDataTreeHTML();
 		$deep = 0;
 		
 		
@@ -53,7 +53,7 @@ class Basic_Data extends Ydzj_Admin_Controller {
 			}
 		}
 		
-		$list = $this->wuye_service->getBasicDataByParentId($id);
+		$list = $this->Basic_Data_Model->getByParentId($id);
 		$this->assign('list',$list);
 		$this->assign('parentId',$parentId);
 		$this->assign('deep',$deep + 1);
@@ -126,7 +126,7 @@ class Basic_Data extends Ydzj_Admin_Controller {
 				array(
 					'checkpid_callable['.$action.']',
 					array(
-						$this->wuye_service,'checkpid'
+						$this->staff_service,'checkpid'
 					)
 				)
 			)
@@ -155,11 +155,7 @@ class Basic_Data extends Ydzj_Admin_Controller {
 				$ids = (array)$ids;
 			}
 			
-			$this->Basic_Data_Model->deleteByCondition(array(
-				'where_in' => array(
-					array('key' => 'id','value' => $ids)
-				)
-			));
+			$this->Basic_Data_Model->deleteById($ids[0]);
 			
 			$this->jsonOutput('删除成功',$this->getFormHash());
 		}else{
@@ -188,7 +184,7 @@ class Basic_Data extends Ydzj_Admin_Controller {
 		$feedback = '';
 		$info = array();
 		
-		$treelist = $this->wuye_service->getBasicDataTreeHTML();
+		$treelist = $this->staff_service->getBasicDataTreeHTML();
 		
 		$pid = $this->input->get_post('pid');
 		if($pid){
@@ -214,7 +210,7 @@ class Basic_Data extends Ydzj_Admin_Controller {
 					break;
 				}
 				
-				$treelist = $this->wuye_service->getBasicDataTreeHTML();
+				$treelist = $this->staff_service->getBasicDataTreeHTML();
 				
 				$feedback = getSuccessTip('保存成功,页面将再3秒内自动刷新');
 				$info = $this->Basic_Data_Model->getFirstByKey($newid);
@@ -289,7 +285,7 @@ class Basic_Data extends Ydzj_Admin_Controller {
 		
 		$this->_subNavs[] = array('url' => $this->_className.'/edit?id='.$id, 'title' => '编辑');
 		
-		$treelist = $this->wuye_service->getBasicDataTreeHTML();
+		$treelist = $this->staff_service->getBasicDataTreeHTML();
 		$info = $this->Basic_Data_Model->getFirstByKey($id);
 		
 		if($this->isPostRequest()){
@@ -310,7 +306,7 @@ class Basic_Data extends Ydzj_Admin_Controller {
 					break;
 				}
 				
-				$treelist = $this->wuye_service->getBasicDataTreeHTML();
+				$treelist = $this->staff_service->getBasicDataTreeHTML();
 				
 				$feedback = getSuccessTip('保存成功');
 			}

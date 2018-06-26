@@ -23,7 +23,7 @@
 		{else}
 			<a class="deactive" href="javascript:void(0)">{$cm_alreadylast}</a>
         {/if}
-        {if !$isMobile}<strong><label>{$cm_get}&nbsp:{$page['pageSum']}{$cm_pageunit}{$cm_records}</label>{if $page['shortStyle'] == false}<input type="text" style="width:40px" name="jumpPage" value="{$page['pageNow']}" />&nbsp;<input type="button" name="jumpBtn" value="{$cm_jump}" class="btn orangeBtn jumpBtn" />&nbsp;{/if}
+        {if !$isMobile}<strong><label>{$page['pageSum']}{$cm_pageunit}{$cm_records}</label>{if $page['shortStyle'] == false}<input type="text" style="width:40px" name="jumpPage" value="{$page['pageNow']}" />&nbsp;<input type="button" name="jumpBtn" value="{$cm_jump}" class="btn orangeBtn jumpBtn" />&nbsp;{/if}
         <span>{$page['pageNow']}/{$page['pageLastNum']}</span></strong>{/if}
     {else}
         {if $page['pageSum'] > 0}<strong><label>{$cm_get}{$page['pageSum']}{$page['pageUnit']}{$page['pageTit']}</label>{/if}

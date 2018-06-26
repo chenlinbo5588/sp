@@ -34,7 +34,7 @@
           <td class="w48">
           	<img fieldid="{$item['id']}" status="open" nc_type="flex" src="{resource_url('img/tv-expandable.gif')}">
           </td>
-          <td class="w48 sort"><span class="editable" data-id="{$item['id']}" data-fieldname="displayorder">{$item['displayorder']}</span></td>
+          <td class="w120 sort"><span class="editable deep0" data-id="{$item['id']}" data-fieldname="displayorder">{$item['displayorder']}</span></td>
           <td class="w50pre name">
           	<span title="可编辑" class="editable" data-id="{$item['id']}" data-fieldname="show_name">{$item['show_name']|escape}</span>
           	<a class="btn-add-nofloat marginleft" href="{admin_site_url($moduleClassName|cat:'/add')}?pid={$item['id']}"><span>新增下级</span></a>
@@ -50,7 +50,7 @@
   <script type="text/javascript">
   $(function(){
   
-  	bindDeleteEvent(function(ids,json){
+  	bindDeleteEvent({ }, function(ids,json){
         showToast('success',json.message);
         
         for(var i = 0; i < ids.length; i++){

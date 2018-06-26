@@ -161,9 +161,9 @@ class Attachment_service extends Base_service {
 		
 		
 		// 'big' =
-		//$resizeConfig = array('big');
+		//$resizeConfig = array('b');
 		// 用于覆盖默认配置
-		//$resizeConfig = array('big' => array('maintain_ratio' => false));
+		//$resizeConfig = array('b' => array('maintain_ratio' => false));
 		foreach($resizeConfig as $resizeIndex => $overideConfig){
 			$isOk = false;
 			$resizeName = '';

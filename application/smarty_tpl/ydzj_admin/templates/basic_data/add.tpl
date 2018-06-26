@@ -60,7 +60,7 @@
 		{if $redirectUrl}
 			setTimeout(function(){
 				location.href="{$redirectUrl}";
-			},2000);
+			},1000);
 		{/if}
   </script>
 {include file="common/main_footer.tpl"}

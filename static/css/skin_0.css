@@ -80,14 +80,29 @@ html{ -webkit-text-size-adjust: none;}
 .size-200x200 { width: 200px; height: 200px;}
 
 
+.deep1 {
+	margin-left:10px;
+}
+
+.deep2 {
+	margin-left:20px;
+}
+
+.deep3 {
+	margin-left:30px;
+}
+
+.deep4 {
+	margin-left:40px;
+}
 /* Base
 ---------------------------------------------------------------------*/
 
 h1, h2, h3, h4, h5, h6 { color:#4D5762; position:relative; word-spacing:-0.1em;}
 h4, h5, h6 { font-weight:bold;}
-h1, h2 { line-height:28px; margin-bottom:18px;}
-h1, h2, h3, h4 { margin-top:18px;}
-h3, h4, h6 { line-height:18px; margin-bottom:10px;}
+h1, h2 { line-height:28px; }
+h1, h2, h3, h4 { }
+h3, h4, h6 { }
 h1 { font-size:18px;}
 h2 { font-size:16px;}
 h3 { font-size:15px; color:#09C; margin-bottom:10px;}
@@ -104,7 +119,6 @@ h6 { font-size:12px;}
 
 .tip_success {
     font-weight: bold;
-    text-align: center;
     background-color: green;
     color: white;
     padding: 5px;
@@ -112,7 +126,6 @@ h6 { font-size:12px;}
 
 .tip_error {
 	font-weight: bold;
-    text-align: center;
     background-color: red;
     color: white;
     padding: 5px;
@@ -147,6 +160,28 @@ input[type=checkbox],input[type=radio] {
     vertical-align:middle;
     margin-top:-2px;
     margin-bottom:1px;
+}
+
+
+.fixedBar {
+	position:fixed;
+	bottom:0px;
+	background:#fff;
+    border-top: 1px solid #71cbef;
+    width: 98%;
+    padding: 5px 0;
+}
+
+.fixedHandler {
+	position:fixed;
+	bottom:0px;
+	background:#fff;
+    width: 98%;
+    padding: 5px 0;
+}
+
+.mgbottom {
+	margin-bottom:40px;
 }
 
 /* tip提示 */
@@ -249,12 +284,13 @@ input[type=checkbox],input[type=radio] {
 /*内容页面样式
 ------------------------------------------------------------------- */
 .page { padding: 9px 20px 20px; text-align: left;}
-.fixed-bar {background: #FFF url(../img/sky/fixed_bg.png) repeat-x scroll center bottom; width: 99%; padding: 8px 20px 8px 0; margin-left: 20px; position: fixed; top: 0; left: 0; z-index: 99;}
+.fixed-bar {1background: #FFF url(../img/sky/fixed_bg.png) repeat-x scroll center bottom; background:#fff; width: 98%; padding: 5px 0px; margin-left: 20px; position: fixed; top: 0; left: 0; z-index: 2;border-bottom: 1px solid #71cbef;}
 * html .fixedbar { width: 100%; margin-top: -10px; position: relative; left: -20px;}
+.fixed-bar h1 {margin-top:18px;}
 
 .fixed-empty { height: 50px !important;}
 .item-title { line-height: 20px; margin-bottom: 0 !important; clear: both; overflow: hidden; _padding-bottom: 10px; +padding-bottom: 10px;}
-    .item-title h3 { float: left; margin-right:20px; }
+    .item-title h3 { float: left; margin-right:20px; margin-top: 16px;}
 .tab-base {float: left; overflow: hidden; padding-top:16px; }
     .tab-base li { float: left;}
         .tab-base a { font-weight: 700; line-height: 20px; background: #FFF url(../img/sky/bg_position.gif) no-repeat 0px -200px; height: 20px; float: left; padding-left: 9px; margin-right:2px;  cursor: pointer;}
@@ -267,7 +303,7 @@ input[type=checkbox],input[type=radio] {
 
 /* table
 ------------------------------------------------------------------- */
-.table { clear:both; width:100%; margin-top: 8px}
+.table { clear:both; width:100%; }
     .table th, .table td{ padding:6px !important; }
     .nohover td { background:#FFF !important;}
 
@@ -617,7 +653,7 @@ table.search { margin: 12px 0 6px 4px;}
 
 
 
-a.btn { font-size: 14px; color: #555; font-weight: 700; line-height:18px; background: transparent url(../img/sky/bg_position.gif) no-repeat scroll 0 -280px; display: inline-block; height: 38px; padding-left: 15px; margin-right:6px; cursor: pointer;}
+a.btn { font-size: 14px; color: #555; font-weight: 700; line-height:18px; background: transparent url(../img/sky/bg_position.gif) no-repeat scroll 0 -280px; display: inline-block; height: 38px; padding-left: 15px; cursor: pointer;}
 a.btn:hover { background-position: 0 -318px;}
 a.btn:active { background-position: 0 -356px;}
 a.btn span { background: #FFF url(../img/sky/bg_position.gif) no-repeat scroll 100% -280px; display: inline-block; height: 18px; padding: 10px 15px 10px 0;}
@@ -1560,3 +1596,29 @@ td.trigger i:hover { color: #27A9E3;}
 .stat-info { color: #0099CC; background-color: #F3FBFE; clear: both; padding: 15px; border: solid 1px #DEEFFB;}
 .stat-info span { font-size: 12px; margin-right: 50px; white-space: nowrap;}
 .stat-info span strong { font-size: 14px; font-family: Arial, Helvetica, sans-serif; color: #31444D; margin: 0 2px;}
+
+
+/* common list */
+.ulListStyle1 li {
+    border: 1px solid #8e8e8e;
+    float: left;
+    height: 30px;
+    line-height: 30px;
+    background: #efefef;
+    padding: 2px;
+    margin:2px;
+    cursor:pointer;
+}
+
+.ulListStyle1 li.title {
+	clear:left;
+}
+
+.ulListStyle1 li.title h4 {
+	color:#0d44c6;
+}
+
+.ulListStyle1 li.selected {
+	background:#ffe92b;
+	border:1px solid #d20000;
+}

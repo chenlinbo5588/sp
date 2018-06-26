@@ -15,7 +15,7 @@ $config['aliyun_dm'] = array(
 
 $config['forground_image_allow_ext'] = 'jpg|jpeg|png';
 $config['background_image_allow_ext'] = 'jpg|jpeg|png';
-$config['image_max_filesize'] = '1024';
+$config['image_max_filesize'] = '2048';
 
 
 $config['mail_list'] = array(

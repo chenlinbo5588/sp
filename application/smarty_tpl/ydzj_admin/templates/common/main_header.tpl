@@ -7,7 +7,7 @@
 <meta name="description" content="{$SEO_description}" />
 <meta name="keywords" content="{$SEO_keywords}" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,minimal-ui"/>
-<link href="{resource_url('css/skin_0.css')}" rel="stylesheet" type="text/css" id="cssfile2" />
+<link href="{resource_url('css/skin_0.css',true)}" rel="stylesheet" type="text/css" id="cssfile2" />
 <script type="text/javascript" src="{resource_url('js/jquery.js')}"></script>
 <script type="text/javascript" src="{resource_url('js/jquery-ui/i18n/zh-CN.js')}"></script>
 
@@ -18,6 +18,8 @@ var cookiedomain = "{config_item('cookie_domain')}",
     formhash = "{$formhash}",
     SITEURL = '{base_url()}',
     cityUrl = "{site_url('district/index/')}",
+    commonUploadUrl = "{admin_site_url("common/pic_upload")}",
+    uploadSizeLimit = "{$image_max_filesize}",
     LOADING_IMAGE = "{resource_url('img/loading/loading.gif')}";
     
 </script>
