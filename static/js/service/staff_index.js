@@ -1,4 +1,6 @@
 $(function(){
+	//$('.fixedBar').fixedBar({ css : 'position:fixed;top:60px;background:#fff;'});
+	
 	
 	var successFn = function(ids,resp){
     	if(check_success(resp.message)){

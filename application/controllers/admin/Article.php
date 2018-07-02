@@ -95,7 +95,7 @@ class Article extends Ydzj_Admin_Controller {
 	private function _getRules(){
 		$this->form_validation->set_rules('article_title','文章标题','required|max_length[80]');
 		$this->form_validation->set_rules('article_content','文章内容','required');
-		$this->form_validation->set_rules('ac_id','文章分类',"required|in_db_list[{$this->Article_Class_Model->_tableRealName}.ac_id]");
+		$this->form_validation->set_rules('ac_id','文章分类',"required|in_db_list[".$this->Article_Class_Model->getTableRealName().".ac_id]");
 		
 		if($this->input->post('article_url')){
 			

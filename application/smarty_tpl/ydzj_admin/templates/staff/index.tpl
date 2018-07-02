@@ -3,6 +3,7 @@
   {include file="common/sub_nav.tpl"}
   {form_open(site_url($uri_string),'id="formSearch" method="get"')}
   <input type="hidden" name="page" value="{$currentPage}"/>
+  <div class="fixedBar">
     <table class="tb-type1 noborder search">
       <tbody>
         <tr>
@@ -32,6 +33,7 @@
         </tr>
       </tbody>
     </table>
+  </div>
   </form>
     <table class="table tb-type2 mgbottom">
       <thead>
@@ -79,7 +81,7 @@
         {/foreach}
       </tbody>
     </table>
-    <div class="fixedBar">
+    <div class="fixedOpBar">
     	<label><input type="checkbox" class="checkall" id="checkallBottom" name="chkVal">全选</label>&nbsp;
     	<a href="javascript:void(0);" class="btn handleVerifyBtn" data-title="确定提交审核吗?" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/handle_verify')}"><span>提交审核</span></a>
     	<a href="javascript:void(0);" class="btn verifyBtn" data-title="审核" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/batch_verify')}" data-ajaxformid="#verifyForm"><span>审核</span></a>

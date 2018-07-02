@@ -1,5 +1,5 @@
 		<tr class="noborder">
-          <td colspan="2" class="required">{#people_photo#}: </td>
+          <td colspan="2">{#people_photo#}: </td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform">
@@ -15,7 +15,7 @@
           <td class="vatop tips"></td>
         </tr>
        	<tr class="noborder">
-          <td colspan="2" class="required">{#other_photo#}</td>
+          <td colspan="2">{#other_photo#}</td>
         </tr>
         <tr class="noborder">
        		<td class="vatop rowform" colspan="2">
@@ -32,7 +32,7 @@
        	</tr>
        	{if '保姆' == $moduleTitle || '护工' == $moduleTitle}
        	<tr class="noborder">
-          <td colspan="2" class="required"><label class="validation">{$moduleTitle}{#type#}:</label></td>
+          <td colspan="2"><label class="validation">{$moduleTitle}{#type#}:</label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform">
@@ -61,21 +61,21 @@
        	{/if}
         {include file="worker/basic_info.tpl"}
        	<tr class="noborder">
-          <td colspan="2" class="required"><label class="validation" for="name">{#work_month#}:</label></td>
+          <td colspan="2"><label class="validation" for="name">{#work_month#}:</label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input type="text" value="{$info['work_month']|escape}" name="work_month" id="work_month" class="txt"></td>
           <td class="vatop tips">{form_error('work_month')}</td>
         </tr>
         <tr class="noborder">
-          <td colspan="2" class="required"><label class="validation" for="name">{#service_cnt#}:</label></td>
+          <td colspan="2"><label class="validation" for="name">{#service_cnt#}:</label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input type="text" value="{$info['service_cnt']|escape}" name="service_cnt" id="service_cnt" class="txt"><span>户</span></td>
           <td class="vatop tips">{form_error('service_cnt')}</td>
         </tr>
         <tr class="noborder">
-          <td colspan="2" class="required"><label class="validation">{#region#}:</label>{form_error('region')}</td>
+          <td colspan="2"><label class="validation">{#region#}:</label>{form_error('region')}</td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform" colspan="2">
@@ -88,7 +88,7 @@
           <td class="vatop tips"></td>
         </tr>
         <tr class="noborder">
-          <td colspan="2" class="required"><label class="validation" for="jiguan">{#salary#}:</label></td>
+          <td colspan="2"><label class="validation" for="jiguan">{#salary#}:</label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform">
@@ -102,14 +102,14 @@
           <td class="vatop tips">{form_error('salary')}</td>
         </tr>
         <tr class="noborder">
-          <td colspan="2" class="required"><label class="validation" for="name">{#salary_detail#}:</label></td>
+          <td colspan="2"><label class="validation" for="name">{#salary_detail#}:</label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input type="text" value="{$info['salary_detail']|escape}" name="salary_detail" id="salary_detail" class="txt"></td>
           <td class="vatop tips">{form_error('salary_detail')} <span>如: <strong id="fillText" title="点击填入" data-id="#salary_detail">{if $moduleTitle == '月嫂'}12000元/26天{elseif $moduleTitle == '保姆'}5000元/月{elseif $moduleTitle == '护工'}230元/每天{/if}</strong></td>
         </tr>
         <tr class="noborder">
-          <td colspan="2" class="required"><label class="validation">{$moduleTitle}{#serv_ablity#}:</label>{form_error('serv_ablity[]')}</td>
+          <td colspan="2"><label class="validation">{$moduleTitle}{#serv_ablity#}:</label>{form_error('serv_ablity[]')}</td>
         </tr>
         <tr class="noborder">
           <td class="vatop" colspan="2">
@@ -132,7 +132,7 @@
         </tr>
         {if '月嫂' == $moduleTitle}
         <tr>
-          <td colspan="2" class="required"><label class="validation">{#sbt_exp#}: </label></td>
+          <td colspan="2"><label class="validation">{#sbt_exp#}: </label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform onoff"><label for="sbt_exp1" {if $info['sbt_exp'] == 1}class="cb-enable selected"{else}class="cb-enable"{/if}><span>是</span></label>
@@ -143,7 +143,7 @@
           <td class="vatop tips">{form_error('sbt_exp')}</td>
         </tr>
         <tr>
-          <td colspan="2" class="required"><label class="validation">{#zcbaby_exp#}: </label></td>
+          <td colspan="2"><label class="validation">{#zcbaby_exp#}: </label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform onoff"><label for="zcbaby_exp1" {if $info['zcbaby_exp'] == 1}class="cb-enable selected"{else}class="cb-enable"{/if}><span>是</span></label>

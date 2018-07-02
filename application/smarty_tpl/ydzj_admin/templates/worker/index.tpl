@@ -55,7 +55,7 @@
       </tbody>
     </table>
     
-    <div class="fixedBar">
+    <div class="fixedOpBar">
     	<label><input type="checkbox" class="checkall" id="checkallBottom" name="chkVal">全选</label>&nbsp;
          <a href="javascript:void(0);" class="btn deleteBtn" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/delete')}"><span>删除</span></a>
          {include file="common/pagination.tpl"}

@@ -6,54 +6,71 @@
   <input type="hidden" name="id" value="{$info['id']}"/>
   {else}
   {form_open_multipart(site_url($uri_string),'id="infoform"')}
-  
   {/if}
   <input type="hidden" name="gobackUrl" value="{$gobackUrl}"/>
-    <table class="table tb-type2 mgbottom">
+  <input type="hidden" name="lng" value="{$info['lng']}"/>
+  <input type="hidden" name="lat" value="{$info['lat']}"/>
+    <table class="table tb-type2">
       <tbody>
-      	
       	<tr class="noborder">
-          <td colspan="2" class="required"><label class="validation" for="name">{#resident_name#}:</label></td>
+          <td colspan="2"><label class="validation" for="name">{#resident_name#}:</label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input type="text" value="{$info['name']|escape}" name="name" id="name" class="txt"></td>
-          <td class="vatop tips">{form_error('name')}</td>
-        </tr>
-        
-        <tr class="noborder">
-          <td colspan="2" class="required"><label class="validation" for="address">{#address#}: </label>{form_error('address')}</td>
+          <td class="vatop tips"><label id="error_name"></label>{form_error('name')}</td>
         </tr>
         <tr class="noborder">
-          <td class="vatop rowform"><input type="text" value="{$info['address']|escape}" name="address" id="address" class="txt"></td>
-          <td class="vatop tips">{form_error('address')}</td>
+          <td colspan="2"><label class="validation" for="address">{#address#}: </label>{form_error('address')}</td>
         </tr>
-        
+        <tr class="noborder">
+          <td class="vatop rowform">
+          	<input type="text" value="{$info['address']|escape}" name="address" id="address" class="txt">
+          	<input type="button" name="autoFillAddress" value="自动填入"/>
+          </td>
+          <td class="vatop tips"><label id="error_address"></label>{form_error('address')} 请通过地图选取位置</td>
+        </tr>
+        <tr class="noborder">
+          <td colspan="2"><label class="validation" for="yezhu_cnt">{#yezhu_num#}: </label>{form_error('yezhu_num')}</td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform"><input type="text" value="{$info['yezhu_num']}" name="yezhu_num" id="yezhu_num" class="txt"></td>
+          <td class="vatop tips"><label id="error_yezhu_num"></label>{form_error('yezhu_num')}</td>
+        </tr>
+        <tr class="noborder">
+          <td colspan="2"><label class="validation" for="total_num">{#total_num#}: </label>{form_error('total_num')}</td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform"><input type="text" value="{$info['total_num']}" name="total_num" id="total_num" class="txt"></td>
+          <td class="vatop tips"><label id="error_total_num"></label>{form_error('total_num')}</td>
+        </tr>
         <tr>
-        
-        
+          <td colspan="2"><label>排序:</label></td>
         </tr>
-        
+        <tr class="noborder">
+          <td class="vatop rowform"><input type="text" value="{if $info['displayorder']}{$info['displayorder']}{else}255{/if}" name="displayorder" id="displayorder" class="txt"></td>
+          <td class="vatop tips">{form_error('displayorder')} 数字范围为0~255，数字越小越靠前</td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform">
+          	<input type="submit" name="tijiao" value="保存" class="msbtn"/>
+          	{if $gobackUrl}
+	    	<a href="{$gobackUrl}" class="salvebtn">返回</a>
+	    	{/if}
+          </td>
+        </tr>
       </tbody>
     </table>
-    <div class="fixedBar">
-    	<input type="submit" name="tijiao" value="保存" class="msbtn"/>
-    	{if $gobackUrl}
-    	<a href="{$gobackUrl}" class="salvebtn">返回</a>
-    	{/if}
-    </div>
   </form>
   
+  <div id="container" style="float:left;width:74%;height:600px;"></div>
+  {include file="common/map_loc.tpl"}
+  {include file="common/gaode_map.tpl"}
   <script type="text/javascript">
-  	
-	{if $successMessage}
-		showToast('success','{$successMessage}')
+	var map,initZoom = 13, submitUrl = [new RegExp("{$uri_string}")];
+	{if $info['lng'] && $info['lat']}
+	var centerData = [{$info['lng']},{$info['lat']}];
+	initZoom = 16;
 	{/if}
-	
-	{if $redirectUrl}
-		setTimeout(function(){
-			location.href="{$redirectUrl}";
-		},2000);
-	{/if}
-		
   </script>
+  <script type="text/javascript" src="{resource_url('js/service/wuye.js',true)}"></script>
 {include file="common/main_footer.tpl"}

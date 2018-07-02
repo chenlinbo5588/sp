@@ -107,3 +107,6 @@ define('CACHE_KEY_SiteSetting','siteSettingList');
 
 define('RESP_SUCCESS','响应成功');
 define('RESP_ERROR','响应错误');
+
+define('QUERY_OK',0);
+define('MySQL_Duplicate_CODE',1062);

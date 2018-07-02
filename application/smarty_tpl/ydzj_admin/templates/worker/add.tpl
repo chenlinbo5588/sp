@@ -53,7 +53,7 @@
         </tr>
       </tbody>
     </table>
-    <div class="fixedBar">
+    <div class="fixedOpBar">
     	<input type="submit" name="tijiao" value="保存" class="msbtn"/>
     	{if $gobackUrl}
     	<a href="{$gobackUrl}" class="salvebtn">返回</a>

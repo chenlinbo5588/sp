@@ -1,3 +1,20 @@
+function del_file_upload(file_id)
+{
+    if(!window.confirm('您确定要删除吗?')){
+        return;
+    }
+    
+    $.getJSON(deleteImgUrl + '&file_id=' + file_id + "&id=" + $("input[name=id]").val(), function(result){
+    	refreshFormHash(result.data);
+    	
+        if(result){
+            $('#' + file_id).remove();
+        }else{
+            alert('删除失败');
+        }
+    });
+}
+
 $(function(){
 	
 	KindEditor.ready(function(K) {
@@ -73,22 +90,7 @@ $(function(){
 	}
 	
 	
-	function del_file_upload(file_id)
-	{
-	    if(!window.confirm('您确定要删除吗?')){
-	        return;
-	    }
-	    
-	    $.getJSON(deleteImgUrl + '&file_id=' + file_id + "&id=" + $("input[name=id]").val(), function(result){
-	    	refreshFormHash(result.data);
-	    	
-	        if(result){
-	            $('#' + file_id).remove();
-	        }else{
-	            alert('删除失败');
-	        }
-	    });
-	}
+	
 	
 	
 	$('#fileupload').uploadify({

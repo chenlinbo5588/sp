@@ -2,14 +2,14 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 
-class Resident extends Ydzj_Admin_Controller {
+class Building extends Ydzj_Admin_Controller {
 	
 	public function __construct(){
 		parent::__construct();
 		
 		$this->load->library(array('Wuye_service'));
 		
-		$this->_moduleTitle = '小区';
+		$this->_moduleTitle = '建筑物';
 		$this->_className = strtolower(get_class());
 		
 		
@@ -49,6 +49,7 @@ class Resident extends Ydzj_Admin_Controller {
 		
 		$search['name'] = $this->input->get_post('name');
 		$search['address'] = $this->input->get_post('address');
+		
 		if($search['name']){
 			$condition['like']['name'] = $search['name'];
 		}
@@ -58,7 +59,7 @@ class Resident extends Ydzj_Admin_Controller {
 		}
 		
 		
-		$list = $this->Resident_Model->getList($condition);
+		$list = $this->Building_Model->getList($condition);
 		
 		$this->assign('list',$list);
 		$this->assign('page',$list['pager']);
@@ -73,13 +74,18 @@ class Resident extends Ydzj_Admin_Controller {
 	 * 验证
 	 */
 	private function _getRules(){
-		
+		$this->form_validation->set_rules('resident_id','小区名称','required|in_db_list['.$this->Resident_Model->getTableRealName().'.id]');
 		$this->form_validation->set_rules('address','小区地址','required|min_length[2]|max_length[200]');
-		$this->form_validation->set_rules('yezhu_num','入驻业主数量','required|is_natural');
-		$this->form_validation->set_rules('total_num','总套数','required|is_natural');
+		$this->form_validation->set_rules('nickname','建筑物别名','min_length[2]|max_length[100]');
 		
-		$this->form_validation->set_rules('lng','经度','required|is_numeric');
-		$this->form_validation->set_rules('lat','纬度','required|is_numeric');
+		$this->form_validation->set_rules('unit_num','建筑物单元数量','is_natural|less_than_equal_to[255]');
+		$this->form_validation->set_rules('yezhu_num','入驻业主数量','is_natural');
+		
+		$this->form_validation->set_rules('max_plies','最高层数','is_natural|less_than_equal_to[200]');
+		$this->form_validation->set_rules('floor_plies','地下层数','is_natural|less_than_equal_to[20]');
+		
+		$this->form_validation->set_rules('longitude','经度','is_numeric');
+		$this->form_validation->set_rules('latitude','纬度','is_numeric');
 	}
 	
 	
@@ -97,14 +103,8 @@ class Resident extends Ydzj_Admin_Controller {
 				$ids = (array)$ids;
 			}
 			
-			/*
 			//@todo 
-			$this->Resident_Model->deleteByCondition(array(
-				'where_in' => array(
-					array('key' => 'brand_id','value' => $ids)
-				)
-			));
-			*/
+			
 			
 			$this->jsonOutput('删除成功',$this->getFormHash());
 		}else{
@@ -114,16 +114,48 @@ class Resident extends Ydzj_Admin_Controller {
 	}
 	
 	
+	
+	/**
+	 * 准备页面数据
+	 */
+	private function _preparePageData(){
+		
+		$residentList = $this->Resident_Model->getList(array(
+			'select' => 'id,name,address,lng,lat',
+			'order' => 'displayorder DESC'
+		),'id');
+		
+		$this->assign(array(
+			'residentList' => $residentList,
+			'residentJson' => json_encode($residentList)
+		));
+		
+	}
+	
+	
 	/**
 	 * 
 	 */
 	private function _prepareData(){
-		$displayorder = $this->input->post('displayorder');
+		$data['nickname'] = $this->input->post('nickname');
+		$data['unit_num'] = $this->input->post('unit_num');
+		$data['max_plies'] = $this->input->post('max_plies');
+		$data['floor_plies'] = $this->input->post('floor_plies');
+		$data['total_num'] = $this->input->post('total_num');
+		$data['yezhu_num'] = $this->input->post('yezhu_num');
+		$data['displayorder'] = $this->input->post('displayorder');
 		
 		return array(
-			'displayorder' => $displayorder ? $displayorder : 255
+			'nickname' => $data['nickname'] ? $data['nickname'] : '',
+			'unit_num' => $data['unit_num'] ? $data['unit_num'] : 0,
+			'max_plies' => $data['max_plies'] ? $data['max_plies'] : 1,
+			'floor_plies' => $data['unit_num'] ? $data['floor_plies'] : 0,
+			'total_num' => $data['total_num'] ? $data['total_num'] : 0,
+			'yezhu_num' => $data['yezhu_num'] ? $data['yezhu_num'] : 0,
+			'displayorder' => $data['displayorder'] ? $data['displayorder'] : 255
 		);
 	}
+	
 	
 	/**
 	 * 
@@ -131,6 +163,9 @@ class Resident extends Ydzj_Admin_Controller {
 	public function add(){
 		$feedback = '';
 		//print_r($_FILES);
+		
+		$residentId = $this->input->get_post('resident_id');
+		
 		if($this->isPostRequest()){
 			
 			$this->_getNameRule();
@@ -142,8 +177,8 @@ class Resident extends Ydzj_Admin_Controller {
 					break;
 				}
 				
-				$newid = $this->Resident_Model->_add(array_merge($_POST,$this->_prepareData(),$this->addWhoHasOperated('add')));
-				$error = $this->Resident_Model->getError();
+				$newid =$this->Building_Model->_add(array_merge($_POST,$this->_prepareData(),$this->addWhoHasOperated('add')));
+				$error = $this->Building_Model->getError();
 				
 				if(QUERY_OK != $error['code']){
 					if($error['code'] == MySQL_Duplicate_CODE){
@@ -158,6 +193,11 @@ class Resident extends Ydzj_Admin_Controller {
 				$this->jsonOutput('保存成功,页面即将刷新',array('redirectUrl' => admin_site_url($this->_className.'/edit?id='.$newid)));
 			}
 		}else{
+			
+			if($residentId){
+				$this->assign('info', array('resident_id' => $residentId));
+			}
+			$this->_preparePageData();
 			$this->display();
 		}
 		
@@ -165,13 +205,38 @@ class Resident extends Ydzj_Admin_Controller {
 	
 	
 	/**
+	 * 检查数据合法性
+	 * 检查建筑物名称开头文字必须以小区名称开头
+	 */
+	public function checkName($name){
+		
+		$residentId = $this->input->get_post('resident_id');
+		
+		if(empty($residentId)){
+			return true;
+		}
+		
+		$residentInfo = $this->Resident_Model->getFirstByKey($residentId,'id','name');
+		
+		if(!preg_match("/^{$residentInfo['name']}/is",$name)){
+			$this->form_validation->set_message('checkName',$this->_moduleTitle.'名称必须包含小区名称并且以小区名称开始');
+			return false;
+		}
+		
+		return true;
+		
+	}
+	
+	
+	
+	/**
 	 * 获取
 	 */
 	private function _getNameRule($id = 0){
 		if($id){
-			$this->form_validation->set_rules('name','小区名称','required|min_length[2]|max_length[200]|is_unique_not_self['.$this->Resident_Model->getTableRealName().".name.id.{$id}]");
+			$this->form_validation->set_rules('name','建筑物名称','required|min_length[2]|max_length[200]|callback_checkName|is_unique_not_self['.$this->Building_Model->getTableRealName().".name.id.{$id}]");
 		}else{
-			$this->form_validation->set_rules('name','小区名称','required|min_length[2]|max_length[200]|is_unique['.$this->Resident_Model->getTableRealName().".name]");
+			$this->form_validation->set_rules('name','建筑物名称','required|min_length[2]|max_length[200]|callback_checkName|is_unique['.$this->Building_Model->getTableRealName().".name]");
 		}
 		
 	}
@@ -184,8 +249,9 @@ class Resident extends Ydzj_Admin_Controller {
 		
 		$feedback = '';
 		$id = $this->input->get_post('id');
+		$residentId = $this->input->get_post('resident_id');
 		
-		$info = $this->Resident_Model->getFirstByKey($id);
+		$info = $this->Building_Model->getFirstByKey($id);
 		
 		$this->_subNavs[] = array('url' => $this->_className.'/edit?id='.$id, 'title' => '编辑');
 		
@@ -202,8 +268,9 @@ class Resident extends Ydzj_Admin_Controller {
 					break;
 				}
 				
-				$this->Resident_Model->update($info,array('id' => $id));
-				$error = $this->Resident_Model->getError();
+				$this->Building_Model->update(array_merge($info,$_POST,$this->addWhoHasOperated('add')),array('id' => $id));
+				
+				$error = $this->Building_Model->getError();
 				
 				if(QUERY_OK != $error['code']){
 					if($error['code'] == MySQL_Duplicate_CODE){
@@ -218,8 +285,12 @@ class Resident extends Ydzj_Admin_Controller {
 				$this->jsonOutput('保存成功');
 			}
 		}else{
+			
 			$this->assign('info',$info);
+			
+			$this->_preparePageData();
 			$this->display($this->_className.'/add');
+			
 		}
 		
 	}
@@ -259,7 +330,7 @@ class Resident extends Ydzj_Admin_Controller {
 			$message = $this->form_validation->error_html();
 		}else{
 			
-			if($this->Resident_Model->update($data,array('id' => $id)) < 0){
+			if($this->Building_Model->update($data,array('id' => $id)) < 0){
 				$message = '数据修改失败';
 			}else{
 				$message = '修改成功';

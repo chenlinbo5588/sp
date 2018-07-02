@@ -90,7 +90,7 @@ class Goods extends Ydzj_Admin_Controller {
 	private function _getRules(){
 		$this->form_validation->set_rules('goods_name','商品中文名称','required|max_length[60]');
 		$this->form_validation->set_rules('goods_name_en','商品英文名称','required|max_length[60]');
-		$this->form_validation->set_rules('gc_id','商品分类',"required|in_db_list[{$this->Goods_Class_Model->_tableRealName}.gc_id]");
+		$this->form_validation->set_rules('gc_id','商品分类',"required|in_db_list[".$this->Goods_Class_Model->getTableRealName().".gc_id]");
 		$this->form_validation->set_rules('goods_intro','商品中文简介','required');
 		//$this->form_validation->set_rules('goods_intro_en','商品英文简介','required');
 		$this->form_validation->set_rules('goods_commend','是否推荐','required|in_list[0,1]');

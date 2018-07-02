@@ -57,7 +57,7 @@
           <td class="vatop tips"><span class="vatop rowform">品牌LOGO尺寸要求宽度为150像素，高度为50像素、比例为3:1的图片；支持格式gif,jpg,png</span></td>
         </tr>
         <tr>
-          <td colspan="2" class="required">是否推荐: </td>
+          <td colspan="2">是否推荐: </td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform onoff"><label for="brand_recommend1" {if $info['brand_recommend']}class="cb-enable selected"{else}class="cb-enable"{/if}><span>是</span></label>
@@ -67,7 +67,7 @@
           <td class="vatop tips">{form_error('brand_recommend')} 选择被推荐的图片将在所有品牌列表页“推荐品牌”位置展现。</td>
         </tr>
         <tr>
-          <td colspan="2" class="required"><label>排序:</label></td>
+          <td colspan="2"><label>排序:</label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input type="text" value="{if $info['brand_sort']}{$info['brand_sort']}{else}255{/if}" name="brand_sort" id="brand_sort" class="txt"></td>

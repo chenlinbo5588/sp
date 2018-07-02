@@ -3,10 +3,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 $entity = array(
 'id' => 'int',
+'resident_id' => 'int',
 'name' => 'varchar',
+'nickname' => 'varchar',
 'address' => 'varchar',
-'yezhu_num' => 'int',
+'unit_num' => 'tinyint',
+'max_plies' => 'smallint',
+'floor_plies' => 'tinyint',
 'total_num' => 'int',
+'yezhu_num' => 'int',
 'lng' => 'varchar',
 'lat' => 'varchar',
 'displayorder' => 'int',

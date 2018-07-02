@@ -8,13 +8,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class MY_Model extends CI_Model {
 	
 	private $_tablePre = 'sp_';
-	//private $_tableRealName = '';
 	private $_tableId = '';
 	
     public function __construct(){
         parent::__construct();
         
-        //$this->_tableRealName = $this->getTableRealName();
     }
     
 	
@@ -72,6 +70,14 @@ class MY_Model extends CI_Model {
     
     public function getTransStatus(){
     	return $this->db->trans_status();
+    }
+    
+    
+    /**
+     * 返回错误
+     */
+    public function getError(){
+    	return $this->db->error();
     }
     
     

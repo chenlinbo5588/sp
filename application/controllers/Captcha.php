@@ -14,7 +14,8 @@ class Captcha extends Ydzj_Controller {
         if($this->agent->is_mobile()){
         	$word = random_string('numeric',4);
         }else{
-        	$word = random_string('alnum',4);
+        	//$word = random_string('alnum',4);
+        	$word = random_string('numeric',4);
         }
 
 

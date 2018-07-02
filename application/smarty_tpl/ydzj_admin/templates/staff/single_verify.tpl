@@ -10,7 +10,7 @@
       <tbody>
       	{include file="staff/detail_common.tpl"}
         <tr>
-          <td colspan="2" class="required">{#avatar_photo#}:</td>
+          <td colspan="2">{#avatar_photo#}:</td>
         </tr>
         <tr class="noborder">
           <td colspan="2">
@@ -21,7 +21,7 @@
           </td>
         </tr>
         <tr>
-          <td colspan="2" class="required">{#exp_photo#}:</td>
+          <td colspan="2">{#exp_photo#}:</td>
         </tr>
         <tr>
        		<td colspan="2">
@@ -33,16 +33,16 @@
        		</td>
        	</tr>
         <tr class="noborder">
-          <td colspan="2" class="required"><label>{#bz#}: </label>{form_error('remark')}</td>
+          <td colspan="2"><label>{#bz#}: </label>{form_error('remark')}</td>
         </tr>
         <tr class="noborder">
         	<td colspan="2">{$info['remark']|escape}</td>
         </tr>
         <tr class="noborder">
-          <td colspan="2" class="required"><label>{#verify#}: {$statusConfig[$info['status']]}</label></td>
+          <td colspan="2"><label>{#verify#}: {$statusConfig[$info['status']]}</label></td>
         </tr>
         <tr class="noborder">
-          <td colspan="2" class="required"><label>审核{#bz#}: </label></td>
+          <td colspan="2"><label>审核{#bz#}: </label></td>
         </tr>
         <tr class="noborder">
         	<td colspan="2" >
@@ -51,8 +51,7 @@
         </tr>
       </tbody>
     </table>
-    <div class="fixedBar">
-    	
+    <div class="fixedOpBar">
     	{if $statusConfig[$info['status']] != '已审核'}<input type="submit" name="tijiao" value="审核通过" class="msbtn"/>{/if}
     	<input type="submit" name="tijiao" value="退回" class="msbtn"/>
     	{if $gobackUrl}

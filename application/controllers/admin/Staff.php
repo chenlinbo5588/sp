@@ -433,7 +433,7 @@ abstract class Staff extends Ydzj_Admin_Controller {
 					break;
 				}
 				
-				if(($newid = $this->staff_service->saveStaff($this->_moduleTitle,$info,$this->addWhoHasOperated(),$fileList)) < 0){
+				if(($newid = $this->staff_service->saveStaff($this->_moduleTitle,$info,$this->addWhoHasOperated(),$fileList)) <= 0){
 					$feedback = getErrorTip('保存失败');
 					break;
 				}

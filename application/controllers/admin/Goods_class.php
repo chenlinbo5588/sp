@@ -193,7 +193,7 @@ class Goods_Class extends Ydzj_Admin_Controller {
 		$this->form_validation->set_rules('name_en','分类英文名称',"required|min_length[1]|max_length[100]");
 		
 		if($this->input->post('gc_parent_id')){
-			$this->form_validation->set_rules('gc_parent_id','上级分类', "in_db_list[{$this->Goods_Class_Model->_tableRealName}.gc_id]|callback_checkpid[{$action}]");
+			$this->form_validation->set_rules('gc_parent_id','上级分类', "in_db_list[".$this->Goods_Class_Model->getTableRealName().".gc_id]|callback_checkpid[{$action}]");
 		}
 		
 		

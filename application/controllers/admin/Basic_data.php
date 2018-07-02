@@ -262,7 +262,7 @@ class Basic_Data extends Ydzj_Admin_Controller {
 		
 		$this->form_validation->set_data($data);
 		if(!$this->form_validation->run()){
-			$message = str_replace("\n",'',$this->form_validation->error_string('',''));
+			$message = $this->form_validation->error_html();
 		}else{
 			
 			if($this->Basic_Data_Model->update($data,array('id' => $id)) < 0){

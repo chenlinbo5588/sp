@@ -26,7 +26,7 @@
           </td>
         </tr>
         <tr>
-          <td colspan="2" class="required">{#exp_photo#}:<span class="orange">JPG格式,文件大小2M以内</span></td>
+          <td colspan="2">{#exp_photo#}:<span class="orange">JPG格式,文件大小2M以内</span></td>
         </tr>
         <tr class="noborder">
           <td colspan="2">
@@ -50,7 +50,7 @@
         </tr>
       </tbody>
     </table>
-    <div class="fixedBar">
+    <div class="fixedOpBar">
     	<input type="submit" name="tijiao" value="保存" class="msbtn"/>
     	{if $gobackUrl}
     	<a href="{$gobackUrl}" class="salvebtn">返回</a>

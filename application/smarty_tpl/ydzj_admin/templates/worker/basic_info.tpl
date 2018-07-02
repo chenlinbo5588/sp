@@ -42,7 +42,7 @@
           <td colspan="2" class="required"><label class="validation" for="age">{#age#}:</label></td>
         </tr>
         <tr class="noborder">
-          <td class="vatop rowform"><input type="text" value="{$info['age']|escape}" name="age" id="age" class="txt"></td>
+          <td class="vatop rowform"><input type="text" value="{$info['age']}" name="age" id="age" class="txt"></td>
           <td class="vatop tips">{form_error('age')}</td>
         </tr>
         <tr class="noborder">
@@ -74,7 +74,7 @@
           	<select name="jiguan" id="jiguan">
 	          <option value="">请选择...</option>
 	          {foreach from=$jiguanList item=item}
-	          <option {if $info['jiguan'] == $item['id']}selected{/if} value="{$item['id']}">{$item['show_name']}</option>
+	          <option {if $info['jiguan'] == $item['id']}selected{/if} value="{$item['id']}">{$item['show_name']|escape}</option>
 	          {/foreach}
 	        </select>
           </td>
@@ -84,7 +84,7 @@
           <td colspan="2" class="required"><label class="validation" for="mobile">{#mobile#}:</label></td>
         </tr>
         <tr class="noborder">
-          <td class="vatop rowform"><input type="text" value="{$info['mobile']|escape}" name="mobile" id="mobile" class="txt"></td>
+          <td class="vatop rowform"><input type="text" value="{$info['mobile']}" name="mobile" id="mobile" class="txt"></td>
           <td class="vatop tips">{form_error('mobile')}</td>
         </tr>
         <tr class="noborder">

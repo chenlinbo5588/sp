@@ -184,7 +184,7 @@ class Navigation extends Ydzj_Admin_Controller {
 		
 		
 		if($this->input->post('pid')){
-			$this->form_validation->set_rules('pid','上级分类', "in_db_list[{$this->Navigation_Model->_tableRealName}.id]|callback_checkpid[{$action}]");
+			$this->form_validation->set_rules('pid','上级分类', "in_db_list[".$this->Navigation_Model->getTableRealName().".id]|callback_checkpid[{$action}]");
 		}
 		
 		$this->form_validation->set_rules('url_cn','导航中文链接',"required|valid_url");
