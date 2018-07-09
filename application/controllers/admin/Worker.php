@@ -5,10 +5,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Worker extends Ydzj_Admin_Controller {
 	
 	
-	private $_idTypeList;
-	
-	
-	
 	public function __construct(){
 		parent::__construct();
 		
@@ -29,7 +25,6 @@ class Worker extends Ydzj_Admin_Controller {
 			array('url' => $this->_className.'/add','title' => '新增'),
 		);
 		
-		$this->_idTypeList = $this->staff_service->getTopChildList('证件类型');
 		$this->assign('basicData',$this->staff_service->getBasicDataList());
 	}
 	
@@ -185,7 +180,7 @@ class Worker extends Ydzj_Admin_Controller {
 		
 		$this->assign(array(
 			'province_idcard' => json_encode(config_item('province_idcard')),
-			'idTypeList' => $this->_idTypeList,
+			'idTypeList' => $this->staff_service->getTopChildList('证件类型'),
 			'jiguanList' => $this->staff_service->getTopChildList('籍贯'),
 			'xueliList' => $this->staff_service->getTopChildList('学历'),
 			'marriageList' => $this->staff_service->getTopChildList('婚育状态'),

@@ -116,6 +116,9 @@ h6 { font-size:12px;}
 .orange { color: #F60;}
 .bold {font-weight: bold; color: #545454}
 
+.successText,.successText td {
+	color:green;
+}
 
 .tip_success {
     font-weight: bold;
@@ -921,4 +924,13 @@ tfoot label { +display: inline-block; +float:left; +line-height:38px; /* IE */}
 	position: absolute;
 	right: 5px;
 	top: 5px;
+}
+
+
+.excelDownload {
+	display:block;
+	background:url(../img/filetype_32/xls.gif) no-repeat left center;
+	text-indent:40px;
+	height:40px;
+	line-height:40px;
 }

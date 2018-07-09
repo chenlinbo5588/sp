@@ -23,10 +23,8 @@ $config['mail_list'] = array(
 );
 
 
-
-$config['SMS_apikey'] = '';
-
-
+// @todo 修改 清风
+$config['SMS_apikey'] = 'cfdebd90a76ce2243a66e17ed2dfc682';
 
 
 $config['notify_ways'] = array(

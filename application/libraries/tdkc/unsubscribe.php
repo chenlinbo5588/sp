@@ -19,7 +19,6 @@ class Unsubscribe {
     	$ci = $this->delegate->getCI();
     	
     	$customer = $this->delegate->getUserInfoByOpenId($message['FromUserName']);
-    	$ci->Wx_Customer_Model->update(array('subscribe' => 0), array('openid' => $customer['openid']));
     	
         
         return "";

@@ -187,7 +187,6 @@ class Message extends Ydzj_Admin_Controller {
 			$feedback = '失败';
 		}
 		
-		//file_put_contents('debug.txt',$this->email->print_debugger());
 		$this->jsonOutput('发送'.$feedback,$this->getFormHash());
 		
 	}

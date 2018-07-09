@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Service extends Ydzj_Controller {
+class Service extends Wx_Controller {
 	
 	private $_version = '';
 	
@@ -9,7 +9,7 @@ class Service extends Ydzj_Controller {
 	public function __construct(){
 		parent::__construct();
         
-    	$this->load->library(array('Weixin_xcx_api','Member_service','Staff_service'));
+    	$this->load->library(array('Member_service','Staff_service'));
     	$this->form_validation->set_error_delimiters('','');
     	$this->_version = $this->input->get_post('version');
     	
@@ -71,13 +71,7 @@ class Service extends Ydzj_Controller {
 	 */
 	public function getStaffList(){
 		
-		//$conditionJson = $this->input->get('condition');
-		//$condition = json_encode($conditionJson,true);
-		file_put_contents("search.txt",print_r($GLOBALS["HTTP_RAW_POST_DATA"],true));
-		
-		$searchCondition = json_decode($GLOBALS["HTTP_RAW_POST_DATA"],true);
 		$serveTypeName = $this->input->get_post('serviceTypeName');
-		
 		
 		$page = 1;
 		$searchKeys = array(
@@ -86,15 +80,13 @@ class Service extends Ydzj_Controller {
 			'order' => 'id DESC'
 		);
 		
+		file_put_contents("search.txt",print_r($this->postJson,true));
 		
-		file_put_contents("search.txt",print_r($searchCondition,true),FILE_APPEND);
-		
-		
-		if($searchCondition){
-			$searchKeys['page'] = intval($searchCondition['page']);
+		if($this->postJson){
+			$searchKeys['page'] = intval($this->postJson['page']);
 			
 			$whereIn = array();
-			$groupNameList = array_keys($searchCondition['select']);
+			$groupNameList = array_keys($this->postJson['select']);
 			$groupNameField = array(
 				'服务区域' => 'region',
 				'籍贯' => 'jiguan',
@@ -104,8 +96,8 @@ class Service extends Ydzj_Controller {
 			);
 						
 			foreach($groupNameField as $groupKey => $groupNameField){
-				if($searchCondition['select'][$groupKey]){
-					$whereIn[] = array('key' => $groupNameField ,'value' => $searchCondition['select'][$groupKey]);
+				if($this->postJson['select'][$groupKey]){
+					$whereIn[] = array('key' => $groupNameField ,'value' => $this->postJson['select'][$groupKey]);
 				}
 			}
 			
@@ -113,32 +105,32 @@ class Service extends Ydzj_Controller {
 				$searchKeys['where_in'] = $whereIn;
 			}
 			
-			$this->_getBetweenCondition($searchCondition['select'][$serveTypeName.'服务数量'][0],'service_cnt', $searchKeys);
-			$this->_getBetweenCondition($searchCondition['select'][$serveTypeName.'经验月份'][0],'work_month', $searchKeys);
+			$this->_getBetweenCondition($this->postJson['select'][$serveTypeName.'服务数量'][0],'service_cnt', $searchKeys);
+			$this->_getBetweenCondition($this->postJson['select'][$serveTypeName.'经验月份'][0],'work_month', $searchKeys);
 			
 			
-			if('有' == $searchCondition['select']['双胞胎经验'][0]){
+			if('有' == $this->postJson['select']['双胞胎经验'][0]){
 				$searchKeys['where']['sbt_exp'] = 1;
-			}elseif('无' == $searchCondition['select']['双胞胎经验'][0]){
+			}elseif('无' == $this->postJson['select']['双胞胎经验'][0]){
 				$searchKeys['where']['sbt_exp'] = 0;
 			}
 			
-			if('有' == $searchCondition['select']['早产儿经验'][0]){
+			if('有' == $this->postJson['select']['早产儿经验'][0]){
 				$searchKeys['where']['zcbaby_exp'] = 1;
-			}elseif('无' == $searchCondition['select']['早产儿经验'][0]){
+			}elseif('无' == $this->postJson['select']['早产儿经验'][0]){
 				$searchKeys['where']['zcbaby_exp'] = 0;
 			}
 			
-			if('有' == $searchCondition['select']['照片信息'][0]){
+			if('有' == $this->postJson['select']['照片信息'][0]){
 				$searchKeys['where']['has_photo'] = 1;
-			}elseif('无' == $searchCondition['select']['照片信息'][0]){
+			}elseif('无' == $this->postJson['select']['照片信息'][0]){
 				$searchKeys['where']['has_photo'] = 0;
 			}
 			
 			
-			if('有' == $searchCondition['select']['视频信息'][0]){
+			if('有' == $this->postJson['select']['视频信息'][0]){
 				$searchKeys['where']['has_video'] = 1;
-			}elseif('无' == $searchCondition['select']['视频信息'][0]){
+			}elseif('无' == $this->postJson['select']['视频信息'][0]){
 				$searchKeys['where']['has_video'] = 0;
 			}
 			

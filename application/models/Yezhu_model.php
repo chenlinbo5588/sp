@@ -1,9 +1,9 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Taizhang_Model extends MY_Model {
+class Yezhu_Model extends MY_Model {
     
-    public $_tableName = 'taizhang';
+    public $_tableName = 'yezhu';
     public static $_tableMeta = null;
 
 

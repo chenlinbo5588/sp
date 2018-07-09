@@ -19,6 +19,9 @@ readme.rst
 application/controllers/test/
 
 
+/temp/*
+!/temp/index.html
+
 /application/logs/*
 !/application/logs/index.html
 

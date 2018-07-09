@@ -6,7 +6,7 @@
       <tbody>
       	<tr class="noborder">
           <td colspan="2">
-            <a class="excelDownload" href="{resource_url('example/house.xls')}"><span>点击下载导入例子文件</span></a>
+            <a class="excelDownload" href="{resource_url('example/building.xls')}"><span>点击下载导入例子文件</span></a>
            </td>
         </tr>
         <tr class="noborder">
@@ -53,17 +53,13 @@
 		<thead>
 			<tr>
 				<th>{#building_name#}</th>
-				<th>房间号码</th>
-				<th>建筑面积</th>
 				<th>结果</th>
 			</tr>
 		<thead>
 		<tbody>
 	{foreach from=$result item=item}
-			<tr>
-				<td>{$item['building_name']|escape}</td>
-				<td>{$item['room_num']|escape}</td>
-				<td>{$item['jz_area']|escape}</td>
+			<tr class="{$item['classname']}">
+				<td>{$item['name']|escape}</td>
 				<td>{$item['message']|escape}</td>
 			</tr>
 	{/foreach}

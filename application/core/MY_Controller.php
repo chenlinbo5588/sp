@@ -138,8 +138,8 @@ class MY_Controller extends CI_Controller {
     	$this->_smarty = new Smarty();
         if(ENVIRONMENT == 'production'){
             //运行一段时间后再修改
-            $this->_smarty->compile_check = false;
-            //$this->_smarty->compile_check = true;
+            //$this->_smarty->compile_check = false;
+            $this->_smarty->compile_check = true;
         }else{
             $this->_smarty->compile_check = true;
         }
@@ -461,11 +461,18 @@ class MY_Controller extends CI_Controller {
     /**
      * 
      */
-    public function responseJSON($message = '' , $data = array()){
+    public function responseJSON($message = '' , $data = array(),$formated = true){
+    	
+    	if($formated){
+    		$d = $this->_buildJsonFormat($message,$data);
+    	}else{
+    		$d = array_merge($data,array('message' => $message));
+    	}
+    	
     	$this->output
 		    	->set_status_header(200)
 		    	->set_content_type('application/json')
-		    	->set_output(json_encode($this->_buildJsonFormat($message,$data)));
+		    	->set_output(json_encode($d));
 		    	
 		$this->output->_display();
 		
@@ -515,3 +522,5 @@ require_once(APPPATH.'libraries'.DIRECTORY_SEPARATOR.'Flexihash.php');
 require_once(APPPATH.'core'.DIRECTORY_SEPARATOR.'Ydzj_Controller.php');
 require_once(APPPATH.'core'.DIRECTORY_SEPARATOR.'MyYdzj_Controller.php');
 require_once(APPPATH.'core'.DIRECTORY_SEPARATOR.'Ydzj_Admin_Controller.php');
+
+require_once(APPPATH.'core'.DIRECTORY_SEPARATOR.'Wx_Controller.php');

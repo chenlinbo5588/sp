@@ -11,20 +11,22 @@ class Weixin_Mp_Api extends Weixin_api {
     private $_mpConfig = array();
     
     //新的 access token
-    public static $_mpAccessToken = '';
+    private $_mpAccessToken = '';
     
     //老的 access token ,防止新的解密失败
-    public static $_mpAccessTokenOld = '';
+    private $_mpAccessTokenOld = '';
     
     
     public $msgCrypt = null;
+    
+    
     private $_menuStr = null;
     
     
     public function __construct(){
         parent::__construct();
         
-        $this->_CI->load->model(array('Mp_Ticket_Model','Wx_Customer_Model'));
+        $this->_CI->load->model(array('Mp_Ticket_Model'));
         
     }
     
@@ -32,7 +34,7 @@ class Weixin_Mp_Api extends Weixin_api {
     public function fetchToken(){
         $tickets = $this->_CI->Mp_Ticket_Model->getList(array(
             'where' => array(
-            	//'appid' => $pConfig['appid'],
+            	'appid' => $this->_mpConfig['appid'],
                 'gmt_create >= ' => $this->_CI->_reqtime - 10800
             ),
             'order' => 'id DESC',
@@ -49,13 +51,23 @@ class Weixin_Mp_Api extends Weixin_api {
     }
     
     
+    /**
+     * 获得当前配置
+     */
+    public function getSetting(){
+    	return $this->_mpConfig;
+    }
+    
+    
     public function initSetting($config){
         $this->_mpConfig = $config;
         
         $this->msgCrypt = new WXBizMsgCrypt($config['token'],$config['EncodingAESKey'],$config['appid']);
         
-        self::$_mpAccessToken = $this->fetchToken();
+        $this->_mpAccessToken = $this->fetchToken();
         
+        
+        //@todo delete;
         $this->_menuStr = <<< EOF
                 {
     "button": [
@@ -133,35 +145,77 @@ EOF;
     
     
     
+    /**
+     * 小程序获取用户信息
+     */
+    public function getWeixinUserByCode($code){
+    	
+    	$param = array(
+            'url' => "/sns/jscode2session?appid={$this->_mpConfig['appid']}&secret={$this->_mpConfig['app_secret']}&js_code={$code}&grant_type=authorization_code" ,
+            'method' => 'get',
+        );
+        
+        $respone = $this->request($param);
+        $result = json_decode($respone,true);
+        
+        return $result;
+    }
+    
+    
     
     /**
      * 获得用户信息
      * @param type $openId 
      */
     public function getUserInfoByOpenId($openId){
-        $customer =  $this->_CI->Wx_Customer_Model->getFirstByKey($openId,'openid');
-        if(empty($customer)){
-            $param = array(
-                'url' => '/cgi-bin/user/info?access_token='.self::$_mpAccessToken.'&openid='.$openId.'&lang=zh_CN',
-                'method' => 'get'
-            );
-            //file_put_contents("debug.txt",print_r($param,true),FILE_APPEND);
-            $respone = $this->request($param);
-            $result = json_decode($respone,true);
-        }
+    	
+    	$param = array(
+	        'url' => '/cgi-bin/user/info?access_token='.$this->_mpAccessToken.'&openid='.$openId.'&lang=zh_CN',
+	        'method' => 'get'
+	    );
+	    
+	    $respone = $this->request($param);
+	    $result = json_decode($respone,true);
         
-        //file_put_contents("debug.txt",print_r($result,true),FILE_APPEND);
-        if(empty($customer) && !empty($result)){
-        	$result['appid'] = $this->_mpConfig['appid'];
-            $this->_CI->Wx_Customer_Model->_add($result);
-            $customer = $result;
-        }else if(($this->_CI->_reqtime - $customer['gmt_modify']) >  86400 ){
-            //自动更新
-            $this->_CI->Wx_Customer_Model->update($result, array('openid' => $openId));
-        }
-        
-        return $customer;
+        return $result;
+            
+    	
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    ///////////////////@todo 待重构/////////////////////////
+    
+    
+    
     
     
     /**
@@ -173,7 +227,7 @@ EOF;
     public function uploadImg($file){
         
         $param = array(
-            'url' => '/cgi-bin/media/uploadimg?access_token='.self::$_mpAccessToken,
+            'url' => '/cgi-bin/media/uploadimg?access_token='.$this->_mpAccessToken,
             'method' => 'post',
             'data' => array(
             	'media' => '@'.$file
@@ -195,7 +249,7 @@ EOF;
     public function menu_create(){
         
         $param = array(
-            'url' => '/cgi-bin/menu/create?access_token='.self::$_mpAccessToken,
+            'url' => '/cgi-bin/menu/create?access_token='.$this->_mpAccessToken,
             'method' => 'post',
             'data' => $this->_menuStr
         );
@@ -221,7 +275,6 @@ EOF;
     public function user_event($postStr){
         $message = '';
         $isError =  $this->msgCrypt->decryptMsg($_GET['msg_signature'],$_GET['timestamp'],$_GET['nonce'],$postStr,$message);
-        //file_put_contents("debug.txt",$message);
         
         try {
             if(!$isError){
@@ -323,7 +376,7 @@ EOF;
     public function uploadnews($info){
         
         $param = array(
-            'url' => '/cgi-bin/media/uploadnews?access_token='.self::$_mpAccessToken ,
+            'url' => '/cgi-bin/media/uploadnews?access_token='.$this->_mpAccessToken ,
             'method' => 'post',
         );
         
@@ -369,7 +422,7 @@ EOF;
     	
     	
     	$param = array(
-            'url' => '/cgi-bin/message/mass/preview?access_token='.self::$_mpAccessToken ,
+            'url' => '/cgi-bin/message/mass/preview?access_token='.$this->_mpAccessToken ,
             'method' => 'post',
         );
         
@@ -395,7 +448,7 @@ EOF;
      */
     public function sendMessageByOpenIds($media_id , $openids){
     	$param = array(
-            'url' => '/cgi-bin/message/mass/send?access_token='.self::$_mpAccessToken ,
+            'url' => '/cgi-bin/message/mass/send?access_token='.$this->_mpAccessToken ,
             'method' => 'post',
         );
         

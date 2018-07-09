@@ -20,15 +20,21 @@
           <th class="w24"></th>
           <th>{#displayorder#}</th>
           <th>{#address#}</th>
+          <th>{#jz_area#}</th>
+          <th>{#yezhu_name#}</th>
+          <th>{#mobile#}</th>
           <th class="w72 align-center">操作</th>
         </tr>
       </thead>
       <tbody>
       	{foreach from=$list['data'] item=item}
       	<tr class="hover edit" id="row{$item['id']}">
-          <td><input value="{$item['id']}" class="checkitem" group="chkVal" type="checkbox" name="del_id[]"></td>
+          <td><input value="{$item['id']}" class="checkitem" group="chkVal" type="checkbox" name="id[]"></td>
           <td class="sort"><span class="editable" data-id="{$item['id']}" data-fieldname="displayorder">{$item['displayorder']}</span></td>
-          <td class="name"><span class="editable" data-id="{$item['id']}" data-fieldname="name">{$item['address']|escape}</span></td>
+          <td class="name"><span class="editable" data-id="{$item['id']}" data-fieldname="address">{$item['address']|escape}</span></td>
+          <td>{$item['jz_area']|escape}</td>
+          <td>{if $item['yezhu_id']}{$item['yezhu_id']}{else}暂未入驻{/if}</td>
+          <td>{$item['mobile']|escape}</td>
           <td class="align-center">
           	<a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}">编辑</a>&nbsp;|&nbsp;
           	<a href="javascript:void(0)" class="delete" data-url="{admin_site_url($moduleClassName|cat:'/delete')}" data-id="{$item['id']}">删除</a>

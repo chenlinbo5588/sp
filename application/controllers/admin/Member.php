@@ -280,7 +280,6 @@ class Member extends Ydzj_Admin_Controller {
 			}
 			
 			
-			
 			$this->_addRules();
 			
 			for($i = 0 ; $i < 1; $i++){

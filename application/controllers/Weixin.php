@@ -20,6 +20,19 @@ class Weixin extends Ydzj_Controller {
     		die(0);
     	}
     	
+    	
+    	$groupName = '';
+    	if(empty($_SERVER['argv'][3])){
+    		die(0);
+    	}
+    	
+    	
+    	$groupName = $_SERVER['argv'][3];
+    	if(!in_array($groupName,array('mp','mp_xcxTdkc','mp_xcxCswy'))){
+    		die(0);
+    	}
+    	
+    	
     	$this->Mp_Ticket_Model->deleteByCondition(array(
         	'where' => array(
         		'gmt_create <=' => $this->_reqtime - 86400
@@ -27,7 +40,7 @@ class Weixin extends Ydzj_Controller {
         	'limit' => 5
         ));
         
-        $mpConfig = config_item('mp');
+        $mpConfig = config_item($groupName);
     	
     	$tickets = $this->Mp_Ticket_Model->getList(array(
             'where' => array(

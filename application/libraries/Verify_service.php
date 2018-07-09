@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Verify_service extends Base_service {
 
 	protected $_verifyCodeLogModel;
-	protected $_expiredSeconds = 120;
+	protected $_expiredSeconds = 600;
 
 	public function __construct(){
 		parent::__construct();
@@ -35,7 +35,7 @@ class Verify_service extends Base_service {
 	}
 	
 	/**
-	 * 用统一个 IP 不能 ，同事多次发送不同的手机号码 来请求手机验证码
+	 * 用统一个 IP 不能 ，同时多次发送不同的手机号码 来请求手机验证码
 	 * 60 秒内，不能大于大于 3 条
 	 */
 	public function getIpCount($ip, $seconds = 60){

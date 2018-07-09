@@ -207,7 +207,7 @@ class Resident extends Ydzj_Admin_Controller {
 				
 				if(QUERY_OK != $error['code']){
 					if($error['code'] == MySQL_Duplicate_CODE){
-						$this->jsonOutput($this->input->post('name').'名称已被占用');
+						$this->jsonOutput($this->input->post('name').'名称已存在');
 					}else{
 						$this->jsonOutput('数据库错误,请稍后再次尝试');
 					}

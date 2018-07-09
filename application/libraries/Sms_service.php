@@ -15,6 +15,10 @@ class Sms_service extends Base_service {
 	
 	public function sendMessage($mobile,$code){
 		
+		//@todo 完善
+		//$mobile = '17855827686';
+		return true;
+		
 		$text="【清风官网】您的验证码是{$code}。如非本人操作，请忽略本短信";
 		$data=array('text'=>$text,'apikey'=>config_item('SMS_apikey'),'mobile'=>$mobile);
 		
@@ -25,7 +29,7 @@ class Sms_service extends Base_service {
 			'data' => http_build_query($data)
 		));
 		
-		//file_put_contents("debug.txt",print_r($resp,true));
+		
 		$json = json_decode($resp,true);
 		
 		if(0 == $json['code']){

@@ -1,19 +1,13 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Register extends MY_Controller {
+class Register extends Wx_Controller {
 	
 	
 	public function __construct(){
 		parent::__construct();
 		
-		if(!$this->_inApp){
-			//$this->output->set_status_header(400,'Page Not Found');
-		}
-	}
-	
-	
-	public function index(){
+		$this->form_validation->set_error_delimiters('','');
 		
 	}
 	
@@ -21,13 +15,18 @@ class Register extends MY_Controller {
 	/**
 	 * 请求手机验证码
 	 */
-	public function authcode(){
+	public function getAuthcode(){
 		
 		if($this->isPostRequest()){
 			//sleep(2);
 			for($i = 0; $i < 1; $i++){
-				$this->form_validation->set_error_delimiters('','');
+				
 				$this->form_validation->reset_validation();
+				
+				$this->form_validation->set_data(array(
+					'phoneNo' => $this->postJson['phoneNo']
+				));
+				
 				$this->form_validation->set_rules('phoneNo','手机号码',array(
 						'required',
 						'valid_mobile'
@@ -38,16 +37,14 @@ class Register extends MY_Controller {
 					)
 				);
 				
+				
+				
 				if(!$this->form_validation->run()){
-					$rt['message'] = $this->form_validation->error('phoneNo');
+					$rt['message'] = $this->form_validation->error_html('','');
 					break;
 				}
 				
-				
 				$this->load->library('Verify_service');
-				
-				$phoneNo = $this->input->post('phoneNo');
-				
 				$rt = array(
 					'code' => 'failed',
 					'message' => '请求失败'
@@ -59,29 +56,31 @@ class Register extends MY_Controller {
 				 */
 				$count = $this->verify_service->getIpCount($this->input->ip_address());
 				if($count > 3){
-					$rt['message'] = "攻击行为，请求失败";
+					$rt['message'] = "疑似攻击行为，请求失败";
 					break;
 				}
 				
-				$codeInfo = $this->verify_service->getPhoneVerifyCodeBeforeExpire($phoneNo);
+				
+				$codeInfo = $this->verify_service->getPhoneVerifyCodeBeforeExpire($this->postJson['phoneNo']);
 				if(empty($codeInfo)){
 					$codeInfo = $this->verify_service->createVerifyCode(array(
-						'phone' => $phoneNo
+						'phone' => $this->postJson['phoneNo']
 					));
 				}else{
 					/**
 					 * 再检查 在验证码有效期内，同一个Ip ，同一个号码只能, 不能超过3次
 					 */
 					if($codeInfo['send_normal'] >= 3){
-						$rt['message'] = "攻击行为，请求失败";
+						$rt['message'] = "疑似攻击行为，请求失败";
 						break;
 					}
 				}
 				
 				$rt['code'] = 'success';
 				
-				$this->load->library('ShortMessage_service');
-				if($this->shortmessage_service->sendMessage($phoneNo)){
+				$this->load->library('Sms_service');
+				
+				if($this->sms_service->sendMessage($this->postJson['phoneNo'],$codeInfo['code'])){
 					$this->verify_service->updateSendFlag(array(
 			    		array('key' => 'send_normal' , 'value' => 'send_normal + 1')
 			    	),array('id' => $codeInfo['id']));
@@ -92,14 +91,14 @@ class Register extends MY_Controller {
 				}
 			}
 			
-			if($rt['code'] == 'success'){
-				$this->jsonOutput('成功',$this->getFormHash());
-			}else{
-				$this->jsonOutput($rt['message'],$this->getFormHash());
-			}
 			
+			if($rt['code'] == 'success'){
+				$this->jsonOutput2(RESP_SUCCESS);
+			}else{
+				$this->jsonOutput2($rt['message']);
+			}
 		}else{
-			$this->jsonOutput('非法请求');
+			$this->jsonOutput2(RESP_ERROR);
 		}
 		
 		
@@ -107,32 +106,21 @@ class Register extends MY_Controller {
 	
 	
 	/**
-	 * for ios
+	 * 绑定
 	 */
-	public function step_phone()
+	public function doRegister()
 	{
 		if($this->isPostRequest()){
-			//sleep(2);
+			
 			for($i = 0; $i < 1; $i++){
-				$this->form_validation->set_error_delimiters('','');
 				$this->form_validation->reset_validation();
+				
+				
+				$this->form_validation->set_data($this->postJson);
+				
 				$this->form_validation->set_rules('phoneNo','手机号码',array(
 						'required',
-						'valid_mobile'
-					),
-					array(
-						'required' => '请输入手机号码',
-						'valid_mobile' => '手机号码无效'
-					)
-				);
-				
-				if(!$this->form_validation->run()){
-					$rt['message'] = $this->form_validation->error('phoneNo');
-					break;
-				}
-				
-				$this->form_validation->reset_validation();
-				$this->form_validation->set_rules('phoneNo','手机号码',array(
+						'valid_mobile',
 						array(
 							'loginname_callable[mobile]',
 							array(
@@ -141,88 +129,61 @@ class Register extends MY_Controller {
 						)
 					),
 					array(
-						'loginname_callable' => '%s已经被注册'
+						'loginname_callable' => '%s已经被绑定'
 					)
 				);
 				
-				$this->load->library('Register_service');
-				$this->load->library('Verify_service');
-				
-				$phoneNo = $this->input->post('phoneNo');
+				$this->form_validation->set_rules('session_key','会话Key','required');
 				
 				$rt = array(
 					'code' => 'failed',
 					'message' => '请求失败'
 				);
 				
-				if($this->form_validation->run()){
-					/**
-					 * @todo 同一个IP 不能进行连续注册
-					 */
-					$result = $this->register_service->createHalfRegisterMemebr(array(
-						'mobile' => $phoneNo,
-						'reg_ip' => $this->input->ip_address()
-					));
-				}
-				
-				/**
-				 * 记录该 ip,同一个IP 60秒内请求手机验证码不能大于3次
-				 */
-				$count = $this->verify_service->getIpCount($this->input->ip_address());
-				if($count > 3){
-					$rt['message'] = "攻击行为，请求失败";
+				if(!$this->form_validation->run()){
+					$rt['message'] = $this->form_validation->error_html('','');
 					break;
 				}
 				
-				$codeInfo = $this->verify_service->getPhoneVerifyCodeBeforeExpire($phoneNo);
-				if(empty($codeInfo)){
-					$codeInfo = $this->verify_service->createVerifyCode(array(
-						'phone' => $phoneNo
-					));
-				}else{
-					/**
-					 * 再检查 在验证码有效期内，同一个Ip ，同一个号码只能, 不能超过3次
-					 */
-					if($codeInfo['send_normal'] >= 3){
-						$rt['message'] = "攻击行为，请求失败";
-						break;
-					}
+				
+				//$this->register_service->getIpLimit($this->input->ip_address());
+				$uid = $this->weixin_service->bindMobile($this->postJson);
+				
+				if(!$uid){
+					$rt['message'] = '绑定失败';
+					break;
 				}
 				
 				$rt['code'] = 'success';
-				$this->load->library('ShortMessage_service');
-				if($this->shortmessage_service->sendMessage($phoneNo)){
-					$this->verify_service->sendSuccessAddon($codeInfo['id']);
-				}else{
-					$this->verify_service->sendFailedAddon($codeInfo['id']);
-				}
 			}
 			
 			if($rt['code'] == 'success'){
-				$this->jsonOutput('成功',$this->getFormHash());
+				$this->jsonOutput2(RESP_SUCCESS);
 			}else{
-				$this->jsonOutput($rt['message'],$this->getFormHash());
+				$this->jsonOutput2($rt['message']);
 			}
 			
 		}else{
-			$this->formhash();
+			$this->jsonOutput2('非法请求');
 		}
 	}
 	
 	
-	public function step_authcode(){
+	/**
+	 * 
+	 */
+	public function checkAuthcode(){
 		if($this->isPostRequest()){
 			
-			$this->load->library('Register_service');
-			$this->load->library('Verify_service');
-				
-			if($this->verify_service->isAuthCodeValidate($this->input->post('phoneNo'),$this->input->post('code'))){
-				$this->jsonOutput('成功',$this->getFormHash());
+			$this->load->library(array('Verify_service'));
+			
+			if($this->verify_service->isAuthCodeValidate($this->postJson['phoneNo'],$this->postJson['code'])){
+				$this->jsonOutput2(RESP_SUCCESS);
 			}else{
-				$this->jsonOutput('验证码错误',$this->getFormHash());
+				$this->jsonOutput2('验证码错误');
 			}
-			
-			
+		}else{
+			$this->jsonOutput2(RESP_ERROR);
 		}
 	}
 }

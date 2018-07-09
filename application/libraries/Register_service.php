@@ -59,14 +59,7 @@ class Register_service extends Base_service {
 		
 		$regParam['reg_ip'] = self::$CI->input->ip_address();
 		$regParam['reg_date'] = self::$CI->input->server('REQUEST_TIME');
-						
-		
-		if(empty($regParam['aid'])){
-			$avatarIndex = rand(1,3);
-			$regParam['avatar_middle'] = 'img/avatar/'.$avatarIndex.'@middle.jpg';
-			$regParam['avatar_small'] = 'img/avatar/'.$avatarIndex.'@small.jpg';
-		}
-		
+				
 		$uid = self::$memberModel->_add($regParam);
 		
 		if($uid > 0){

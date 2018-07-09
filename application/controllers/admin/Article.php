@@ -275,7 +275,6 @@ class Article extends Ydzj_Admin_Controller {
 			'allowed_types' => 'jpg|jpeg|pdf|doc|docx'
 		),FROM_BACKGROUND,'article');
 		
-		//file_put_contents('debug.txt',print_r($fileData,true));
 		
 		if($fileData){
 			$fileData['file_id'] = $fileData['id'];

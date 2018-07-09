@@ -92,7 +92,7 @@ class Attachment extends Ydzj_Admin_Controller {
         );
       	$data['file_url'] = $data['file_store_path'].$data['file_md5'].$data['file_extension'];
       	$previewUrl = base_url(substr($urlPath,1).$data['file_url']);
-      	//file_put_contents("aaaa.txt",$previewUrl);
+      	
         try {
             
             $fileId = $this->Attachment_Model->add($data);

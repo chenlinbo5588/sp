@@ -22,7 +22,8 @@ class House extends Ydzj_Admin_Controller {
 		$this->_subNavs = array(
 			array('url' => $this->_className.'/index','title' => '管理'),
 			array('url' => $this->_className.'/add','title' => '添加'),
-			array('url' => $this->_className.'/import','title' => '导入'),
+			array('url' => $this->_className.'/import','title' => $this->_moduleTitle.'导入'),
+			array('url' => $this->_className.'/yezhu_import','title' => '业主导入'),
 		);
 		
 		
@@ -76,14 +77,7 @@ class House extends Ydzj_Admin_Controller {
 	 */
 	private function _getRules(){
 		$this->form_validation->set_rules('resident_id','小区名称','required|in_db_list['.$this->Resident_Model->getTableRealName().'.id]');
-		$this->form_validation->set_rules('address','小区地址','required|min_length[2]|max_length[200]');
-		$this->form_validation->set_rules('nickname','建筑物别名','min_length[2]|max_length[100]');
-		
-		$this->form_validation->set_rules('unit_num','建筑物单元数量','is_natural|less_than_equal_to[255]');
-		$this->form_validation->set_rules('yezhu_num','入驻业主数量','is_natural');
-		
-		$this->form_validation->set_rules('max_plies','最高层数','is_natural|less_than_equal_to[200]');
-		$this->form_validation->set_rules('floor_plies','地下层数','is_natural|less_than_equal_to[20]');
+		$this->form_validation->set_rules('address','房屋地址','required|min_length[2]|max_length[200]');
 		
 		$this->form_validation->set_rules('longitude','经度','is_numeric');
 		$this->form_validation->set_rules('latitude','纬度','is_numeric');
@@ -106,8 +100,8 @@ class House extends Ydzj_Admin_Controller {
 			
 			//@todo 
 			
+			$this->jsonOutput('删除失败，待开发完善',$this->getFormHash());
 			
-			$this->jsonOutput('删除成功',$this->getFormHash());
 		}else{
 			$this->jsonOutput('请求非法',$this->getFormHash());
 			
@@ -121,8 +115,8 @@ class House extends Ydzj_Admin_Controller {
 	 */
 	private function _preparePageData(){
 		
-		$residentList = $this->Bu_Model->getList(array(
-			
+		$residentList = $this->Resident_Model->getList(array(
+			'select' => 'id,name,address,lng,lat',
 			'order' => 'displayorder DESC'
 		),'id');
 		
@@ -174,7 +168,7 @@ class House extends Ydzj_Admin_Controller {
 	
 	
 	/**
-	 * 
+	 * @todo 待完善
 	 */
 	public function add(){
 		$feedback = '';
@@ -225,12 +219,10 @@ class House extends Ydzj_Admin_Controller {
 	 * 检查数据合法性
 	 * 检查建筑物名称开头文字必须以小区名称开头
 	 */
-	public function checkAddress($name){
-		
-		$buildingId = $this->input->get_post('building_id');
+	public function checkAddress($name,$buildingId = 0){
 		
 		if(empty($buildingId)){
-			return true;
+			return true;	
 		}
 		
 		$buildingInfo = $this->Building_Model->getFirstByKey($buildingId,'id','name');
@@ -251,7 +243,9 @@ class House extends Ydzj_Admin_Controller {
 	 */
 	private function _getAddressRule($id = 0){
 		if($id){
-			$this->form_validation->set_rules('address','房屋地址','required|min_length[2]|max_length[200]|callback_checkAddress|is_unique_not_self['.$this->House_Model->getTableRealName().".address.id.{$id}]");
+			$builingInfo = $this->House_Model->getFirstByKey($id,'id','building_id');
+			
+			$this->form_validation->set_rules('address','房屋地址','required|min_length[2]|max_length[200]|callback_checkAddress['.$builingInfo['building_id'].']|is_unique_not_self['.$this->House_Model->getTableRealName().".address.id.{$id}]");
 		}else{
 			$this->form_validation->set_rules('address','房屋地址','required|min_length[2]|max_length[200]|callback_checkAddress|is_unique['.$this->House_Model->getTableRealName().".address]");
 		}
@@ -285,12 +279,12 @@ class House extends Ydzj_Admin_Controller {
 					break;
 				}
 				
-				$this->House_Model->update(array_merge($info,$_POST,$this->addWhoHasOperated('add')),array('id' => $id));
+				$this->House_Model->update(array_merge($info,$_POST,$this->addWhoHasOperated('edit')),array('id' => $id));
 				$error = $this->House_Model->getError();
 				
 				if(QUERY_OK != $error['code']){
 					if($error['code'] == MySQL_Duplicate_CODE){
-						$this->jsonOutput($this->input->post('address').'已被占用');
+						$this->jsonOutput($this->input->post('address').'已存在');
 					}else{
 						$this->jsonOutput('数据库错误,请稍后再次尝试');
 					}
@@ -359,13 +353,11 @@ class House extends Ydzj_Admin_Controller {
 	
 	
 	
-	
 	/**
      * 导入excel
      */
     public function import(){
     	$feedback = '';
-    	$messageType = 'error';
     	
     	
     	$this->form_validation->set_error_delimiters('','');
@@ -431,9 +423,9 @@ class House extends Ydzj_Admin_Controller {
 					for($rowIndex = $startRow; $rowIndex <= $highestRow; $rowIndex++){
 						$tmpRow = array();
 						
-						$tmpRow['building_name'] = $objWorksheet->getCell('A'.$rowIndex)->getValue();
-						$tmpRow['room_num'] = $objWorksheet->getCell('B'.$rowIndex)->getValue();
-						$tmpRow['jz_area'] = $objWorksheet->getCell('C'.$rowIndex)->getValue();
+						$tmpRow['building_name'] = getCleanValue($objWorksheet->getCell('A'.$rowIndex)->getValue());
+						$tmpRow['room_num'] = getCleanValue($objWorksheet->getCell('B'.$rowIndex)->getValue());
+						$tmpRow['jz_area'] = getCleanValue($objWorksheet->getCell('C'.$rowIndex)->getValue());
 						$tmpRow['address'] = $tmpRow['building_name'].$tmpRow['room_num'];
 						
 						$this->form_validation->reset_validation();
@@ -486,6 +478,7 @@ class House extends Ydzj_Admin_Controller {
 							}
 						}else{
 							$tmpRow['message'] = '导入成功';
+							$tmpRow['classname'] = 'successText';
 							$successCnt++;
 						}
 						
@@ -511,6 +504,143 @@ class House extends Ydzj_Admin_Controller {
     	$this->assign(array(
     		'feedback' => $feedback,
     		'residentList' => $residentList
+    	));
+    	
+    	$this->display();
+    	
+    }
+    
+    
+    
+    
+    /**
+     * 导入excel
+     */
+    public function yezhu_import(){
+    	$feedback = '';
+    	
+    	
+    	$this->form_validation->set_error_delimiters('','');
+    	
+    
+    	if($this->isPostRequest()){
+       		
+    		for($i = 0; $i < 1; $i++){
+    			
+    			if(0 != $_FILES['excelFile']['error']){
+    				$feedback = getErrorTip('请上传文件');
+	    			break;
+	    		}
+	    		
+	    		
+	    		require_once PHPExcel_PATH.'PHPExcel.php';
+	    		
+	    		$cacheMethod = PHPExcel_CachedObjectStorageFactory::cache_to_discISAM; 
+		        $cacheSettings = array( 'dir'  => ROOTPATH.'/temp' );
+		        PHPExcel_Settings::setLocale('zh_CN');
+		        PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
+		        
+		        $this->load->library(array('Staff_service'));
+		        
+	    		try {
+	    			
+	    			$excelFile = $_FILES['excelFile']['tmp_name'];
+	    			$objPHPexcel = PHPExcel_IOFactory::load($excelFile);
+					$objWorksheet = $objPHPexcel->getActiveSheet(0); 
+					
+					$startRow = 2;
+					
+					$highestRow = $objWorksheet->getHighestRow();
+					
+					if($highestRow > 1000){
+						$highestRow = 1000;
+					}
+					
+					$result = array();
+					$successCnt = 0;
+					
+					$idTypeList = $this->staff_service->getTopChildList('证件类型');
+					
+					// 列从 0 开始  行从1 开始
+					for($rowIndex = $startRow; $rowIndex <= $highestRow; $rowIndex++){
+						$tmpRow = array();
+						
+						$tmpRow['house_address'] = getCleanValue($objWorksheet->getCell('A'.$rowIndex)->getValue());
+						$tmpRow['yezhu_name'] = getCleanValue($objWorksheet->getCell('B'.$rowIndex)->getValue());
+						$tmpRow['id_type'] = getCleanValue($objWorksheet->getCell('C'.$rowIndex)->getValue());
+						$tmpRow['id_no'] = getCleanValue($objWorksheet->getCell('D'.$rowIndex)->getValue());
+						$tmpRow['jz_area'] = getCleanValue($objWorksheet->getCell('E'.$rowIndex)->getValue());
+						$tmpRow['telephone'] = getCleanValue($objWorksheet->getCell('F'.$rowIndex)->getValue());
+						
+						$this->form_validation->reset_validation();
+						$this->form_validation->set_data($tmpRow);
+						
+						
+						$this->form_validation->set_rules('address','地址','required|in_db_list['.$this->House_Model->getTableRealName().'.address]');
+						$this->form_validation->set_rules('yezhu_name','业主姓名','required');
+						$this->form_validation->set_rules('id_type','证件类型','required|in_list['.implode(',',array_keys($idTypeList)).']');
+						$this->form_validation->set_rules('id_no','证件号码','required');
+						$this->form_validation->set_rules('mobile','手机号码','required|valid_mobile');
+						$this->form_validation->set_rules('telephone','固定电话','valid_telephone');
+						
+						
+						if(!$this->form_validation->run()){
+							//print_r($this->form_validation->error_array());
+							$tmpRow['message'] = $this->form_validation->error_html();
+							$result[] = $tmpRow;
+							continue;
+						}
+						
+						
+						$yezhuInfo = $this->Yezhu_Model->getFirstByKey($tmpRow['id_no'],'id_no','id,mobile');
+						if(empty($yezhuInfo)){
+							$tmpRow['message'] = '无此证件对应的业主';
+							$result[] = $tmpRow;
+							continue;
+						}
+						
+						$updateData = array_merge(array(
+							'yezhu_id' => $yezhuInfo['id'],
+							'mobile' => $tmpRow['mobile'],
+							'telephone' => $tmpRow['telephone']
+						),$this->addWhoHasOperated('edit'));
+						
+						
+						$this->House_Model->updateByWhere($updateData,array(
+							'address' => $tmpRow['house_address']
+						));
+						
+						$error = $this->House_Model->getError();
+						
+						if(QUERY_OK != $error['code']){
+							$tmpRow['message'] = '导入失败';
+						}else{
+							$tmpRow['message'] = '导入成功';
+							$tmpRow['classname'] = 'successText';
+							$successCnt++;
+						}
+						
+						$result[] = $tmpRow;
+					}
+					
+					$feedback = getSuccessTip('导入完成');
+					
+					//print_r($result);
+	    			$this->assign(array(
+						'result' => $result,
+						'successCnt' => $successCnt,
+						
+					));
+					
+	    			@unlink($excelFile);
+	    		}catch(Exception $e){
+	    			$feedback = '导入错误,请检查文件格式是否正确';
+	    		}
+    		}
+    	}
+    	
+    	$this->assign(array(
+    		'feedback' => $feedback
     	));
     	
     	$this->display();

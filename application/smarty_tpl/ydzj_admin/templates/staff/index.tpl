@@ -62,7 +62,7 @@
          <td>{$item['id_no']}</td>
          <td>{if $item['sex'] == 1}男{else}女{/if}</td>
          <td>{$item['age']}</td>
-         <td>{$basicData[$item['jiguan']]['show_name']}</td>
+         <td>{$jiguanList[$item['jiguan']]['show_name']}</td>
          <td>
          	<div>{$statusConfig[$item['status']]}</div>
          	<div>{$item['reason']|escape}</div>

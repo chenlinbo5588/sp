@@ -130,7 +130,7 @@ class Attachment_service extends Base_service {
 			}
 			
 			$delList = getImgPathArray($file['file_url'] , $size);
-			//file_put_contents("deleteFiles.txt",print_r($delList,true));
+			
 			foreach($delList as $del){
 				@unlink(ROOTPATH.DIRECTORY_SEPARATOR.$del);
 			}
@@ -181,7 +181,7 @@ class Attachment_service extends Base_service {
 			}
 			
 			
-			//file_put_contents("currentResizeConfig.txt",print_r($currentConfig,true));
+			
 			$fileData['img_'.$resizeName] = '';
 			$resize['maintain_ratio'] = $currentConfig['maintain_ratio'];
 			$resize['new_image'] = $fileData['raw_name'].'_'.$resizeName.$fileData['file_ext'];

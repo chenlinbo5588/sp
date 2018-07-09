@@ -13,13 +13,25 @@
     <table class="table tb-type2">
       <tbody>
       	<tr class="noborder">
-          <td colspan="2"><label class="validation">{#resident_name#}:</label></td>
+          <td colspan="2"><label class="validation">所在{#resident_name#}:</label></td>
         </tr>
         <tr class="noborder">
         	<td colspan="2">
 	          	<ul class="ulListStyle1 clearfix">
 	          	{foreach from=$residentList item=item}
 	          		<li {if $info['resident_id'] == $item['id']}class="selected"{/if}><label><input type="radio" name="resident_id" {if $info['resident_id'] == $item['id']}checked="checked"{/if} value="{$item['id']}"/><span>{$item['name']|escape}</span></label></li>
+	          	{/foreach}
+	          	</ul>
+	         </td>
+        </tr>
+        <tr class="noborder">
+          <td colspan="2"><label class="validation">所在{#building_name#}:</label></td>
+        </tr>
+        <tr class="noborder">
+        	<td colspan="2">
+	          	<ul class="ulListStyle1 clearfix">
+	          	{foreach from=$buildingList item=item}
+	          		<li {if $info['building_id'] == $item['id']}class="selected"{/if}><label><input type="radio" name="building_id" {if $info['building_id'] == $item['id']}checked="checked"{/if} value="{$item['id']}"/><span>{$item['name']|escape}</span></label></li>
 	          	{/foreach}
 	          	</ul>
 	         </td>
@@ -33,35 +45,6 @@
           </td>
           <td class="vatop tips"><label id="error_address"></label>{form_error('address')}</td>
         </tr>
-        <tr class="noborder">
-          <td colspan="2"><label for="unit_num">{#building#}{#unit_num#}: </label>{form_error('unit_num')}</td>
-        </tr>
-        <tr class="noborder">
-          <td class="vatop rowform"><input type="text" value="{$info['unit_num']|escape}" name="unit_num" id="unit_num" class="txt"></td>
-          <td class="vatop tips">{form_error('unit_num')}</td>
-        </tr>
-        <tr class="noborder">
-          <td colspan="2"><label for="yezhu_num">{#yezhu_num#}: </label>{form_error('yezhu_num')}</td>
-        </tr>
-        <tr class="noborder">
-          <td class="vatop rowform"><input type="text" value="{$info['yezhu_num']|escape}" name="yezhu_num" id="yezhu_num" class="txt"></td>
-          <td class="vatop tips">{form_error('yezhu_num')}</td>
-        </tr>
-        <tr class="noborder">
-          <td colspan="2"><label for="total_num">{#total_num#}: </label>{form_error('total_num')}</td>
-        </tr>
-        <tr class="noborder">
-          <td class="vatop rowform"><input type="text" value="{$info['total_num']}" name="total_num" id="total_num" class="txt"></td>
-          <td class="vatop tips">{form_error('total_num')}</td>
-        </tr>
-        <tr class="noborder">
-          <td colspan="2"><label>{#max_plies#}: </label>{form_error('max_plies')}</td>
-        </tr>
-        <tr class="noborder">
-          <td class="vatop rowform"><input type="text" value="{$info['max_plies']|escape}" name="max_plies" id="max_plies" class="txt"></td>
-          <td class="vatop tips">{form_error('max_plies')}</td>
-        </tr>
-        
         <tr>
           <td colspan="2" class="required"><label>排序:</label></td>
         </tr>
@@ -99,11 +82,17 @@
 	        var checked = $(this).prop('checked');
 	        var id = $(this).val();
 	        if(checked){
+	        
+	        	
+	        
 	        	$("input[name=name]").val($(this).parent().find('span').html());
 	        	
 	        	mapPanTo(id);
 	        }
 	    });
+	    
+	    
+	    
 	});
   </script>
   <script type="text/javascript" src="{resource_url('js/service/wuye.js',true)}"></script>

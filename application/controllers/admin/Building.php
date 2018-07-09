@@ -22,6 +22,7 @@ class Building extends Ydzj_Admin_Controller {
 		$this->_subNavs = array(
 			array('url' => $this->_className.'/index','title' => '管理'),
 			array('url' => $this->_className.'/add','title' => '添加'),
+			array('url' => $this->_className.'/import','title' => '导入'),
 		);
 		
 		
@@ -104,9 +105,8 @@ class Building extends Ydzj_Admin_Controller {
 			}
 			
 			//@todo 
+			$this->jsonOutput('删除失败，待开发完善',$this->getFormHash());
 			
-			
-			$this->jsonOutput('删除成功',$this->getFormHash());
 		}else{
 			$this->jsonOutput('请求非法',$this->getFormHash());
 			
@@ -208,12 +208,10 @@ class Building extends Ydzj_Admin_Controller {
 	 * 检查数据合法性
 	 * 检查建筑物名称开头文字必须以小区名称开头
 	 */
-	public function checkName($name){
-		
-		$residentId = $this->input->get_post('resident_id');
+	public function checkName($name,$residentId = 0){
 		
 		if(empty($residentId)){
-			return true;
+			return true;	
 		}
 		
 		$residentInfo = $this->Resident_Model->getFirstByKey($residentId,'id','name');
@@ -229,12 +227,15 @@ class Building extends Ydzj_Admin_Controller {
 	
 	
 	
+	
 	/**
 	 * 获取
 	 */
 	private function _getNameRule($id = 0){
 		if($id){
-			$this->form_validation->set_rules('name','建筑物名称','required|min_length[2]|max_length[200]|callback_checkName|is_unique_not_self['.$this->Building_Model->getTableRealName().".name.id.{$id}]");
+			$residentInfo = $this->Building_Model->getFirstByKey($id,'id','resident_id');
+			
+			$this->form_validation->set_rules('name','建筑物名称','required|min_length[2]|max_length[200]|callback_checkName['.$residentInfo['resident_id'].']|is_unique_not_self['.$this->Building_Model->getTableRealName().".name.id.{$id}]");
 		}else{
 			$this->form_validation->set_rules('name','建筑物名称','required|min_length[2]|max_length[200]|callback_checkName|is_unique['.$this->Building_Model->getTableRealName().".name]");
 		}
@@ -268,13 +269,13 @@ class Building extends Ydzj_Admin_Controller {
 					break;
 				}
 				
-				$this->Building_Model->update(array_merge($info,$_POST,$this->addWhoHasOperated('add')),array('id' => $id));
+				$this->Building_Model->update(array_merge($info,$_POST,$this->addWhoHasOperated('edit')),array('id' => $id));
 				
 				$error = $this->Building_Model->getError();
 				
 				if(QUERY_OK != $error['code']){
 					if($error['code'] == MySQL_Duplicate_CODE){
-						$this->jsonOutput($this->input->post('name').'名称已被占用');
+						$this->jsonOutput($this->input->post('name').'名称已存在');
 					}else{
 						$this->jsonOutput('数据库错误,请稍后再次尝试');
 					}
@@ -341,4 +342,165 @@ class Building extends Ydzj_Admin_Controller {
 		
 	}
 	
+	
+	
+	/**
+     * 导入excel
+     */
+    public function import(){
+    	$feedback = '';
+    	$this->form_validation->set_error_delimiters('','');
+    	
+    	$residentList = $this->Resident_Model->getList(array(
+			'order' => 'displayorder DESC'
+		),'id');
+		
+    
+    	if($this->isPostRequest()){
+       		
+    		for($i = 0; $i < 1; $i++){
+    			
+    			if(0 != $_FILES['excelFile']['error']){
+    				$feedback = getErrorTip('请上传文件');
+	    			break;
+	    		}
+	    		
+	    		$this->form_validation->reset_validation();
+	    		$this->form_validation->set_rules('resident_id','所在小区','required|is_natural_no_zero');
+	    		
+	    		if(!$this->form_validation->run()){
+	    			$feedback = getErrorTip($this->form_validation->error_html());
+	    			break;
+	    		}
+	    		
+	    		require_once PHPExcel_PATH.'PHPExcel.php';
+	    		
+	    		$cacheMethod = PHPExcel_CachedObjectStorageFactory::cache_to_discISAM; 
+		        $cacheSettings = array( 'dir'  => ROOTPATH.'/temp' );
+		        PHPExcel_Settings::setLocale('zh_CN');
+		        PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
+		        
+		        
+	    		try {
+	    			
+	    			$excelFile = $_FILES['excelFile']['tmp_name'];
+	    			$objPHPexcel = PHPExcel_IOFactory::load($excelFile);
+					$objWorksheet = $objPHPexcel->getActiveSheet(0); 
+					
+					$startRow = 2;
+					
+					$highestRow = $objWorksheet->getHighestRow();
+					
+					if($highestRow > 1000){
+						$highestRow = 1000;
+					}
+					
+					//选中的小区ID
+					$residentId = $this->input->post('resident_id');
+					$residentInfo = $this->Resident_Model->getFirstByKey($residentId);
+					
+					$result = array();
+					$successCnt = 0;
+					
+					// 列从 0 开始  行从1 开始
+					for($rowIndex = $startRow; $rowIndex <= $highestRow; $rowIndex++){
+						$tmpRow = array();
+						
+						$tmpRow['name'] = getCleanValue($objWorksheet->getCell('A'.$rowIndex)->getValue());
+						$tmpRow['address'] = getCleanValue($objWorksheet->getCell('B'.$rowIndex)->getValue());
+						$tmpRow['nickname'] = getCleanValue($objWorksheet->getCell('C'.$rowIndex)->getValue());
+						$tmpRow['unit_num'] = getCleanValue($objWorksheet->getCell('D'.$rowIndex)->getValue());
+						$tmpRow['max_plies'] = getCleanValue($objWorksheet->getCell('E'.$rowIndex)->getValue());
+						$tmpRow['floor_plies'] = getCleanValue($objWorksheet->getCell('F'.$rowIndex)->getValue());
+						$tmpRow['total_num'] = getCleanValue($objWorksheet->getCell('G'.$rowIndex)->getValue());
+						$tmpRow['yezhu_num'] = getCleanValue($objWorksheet->getCell('H'.$rowIndex)->getValue());
+						
+						
+						$this->form_validation->reset_validation();
+						$this->form_validation->set_data($tmpRow);
+						
+						$this->form_validation->set_rules('name','建筑物名称','required|min_length[2]|max_length[200]|callback_checkName['.$residentId.']');
+						$this->form_validation->set_rules('address','地址','required');
+						$this->form_validation->set_rules('nickname','建筑物别名','min_length[1]|max_length[200]');
+						$this->form_validation->set_rules('unit_num','建筑物单元数量','is_natural');
+						$this->form_validation->set_rules('max_plies','最高层数','is_natural');
+						$this->form_validation->set_rules('floor_plies','地下层数','is_natural');
+						$this->form_validation->set_rules('total_num','总套数','is_natural');
+						$this->form_validation->set_rules('yezhu_num','地下层数','is_natural');
+						
+						if(!$this->form_validation->run()){
+							//print_r($this->form_validation->error_array());
+							$tmpRow['message'] = $this->form_validation->error_html();
+							
+							/*
+							if('development' == ENVIRONMENT){
+								$tmpRow['message'] = $this->form_validation->error_html();
+							}else{
+								$tmpRow['message'] = '数据校验失败';
+							}
+							*/
+							
+							$result[] = $tmpRow;
+							continue;
+						}
+						
+						
+						$insertData = array_merge(array(
+							'resident_id' => $residentId,
+							'name' => $tmpRow['name'],
+							'nickname' => empty($tmpRow['nickname']) == true ? '': $tmpRow['nickname'],
+							'address' => $tmpRow['address'],
+							'unit_num' => intval($tmpRow['unit_num']),
+							'max_plies' => intval($tmpRow['max_plies']),
+							'floor_plies' => intval($tmpRow['floor_plies']),
+							'total_num' => intval($tmpRow['total_num']),
+							'yezhu_num' => intval($tmpRow['yezhu_num']),
+							'lng' => $residentInfo['lng'],
+							'lat' => $residentInfo['lat'],
+						),$this->addWhoHasOperated('add'));
+						
+						
+						
+						$this->Building_Model->_add($insertData);
+						
+						$error = $this->Building_Model->getError();
+						
+						if(QUERY_OK != $error['code']){
+							$tmpRow['message'] = '数据库错误';
+							if($error['code'] == MySQL_Duplicate_CODE){
+								$tmpRow['message'] = $this->_moduleTitle.'已经存在';
+							}
+						}else{
+							$tmpRow['message'] = '导入成功';
+							$tmpRow['classname'] = 'successText';
+							$successCnt++;
+						}
+						
+						$result[] = $tmpRow;
+					}
+					
+					$feedback = getSuccessTip('导入完成');
+					
+					//print_r($result);
+	    			$this->assign(array(
+						'result' => $result,
+						'successCnt' => $successCnt,
+						
+					));
+					
+	    			@unlink($excelFile);
+	    		}catch(Exception $e){
+	    			$feedback = '导入错误,请检查文件格式是否正确';
+	    		}
+    		}
+    	}
+    	
+    	$this->assign(array(
+    		'feedback' => $feedback,
+    		'residentList' => $residentList
+    	));
+    	
+    	$this->display();
+    	
+    }
 }
