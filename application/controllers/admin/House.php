@@ -565,11 +565,11 @@ class House extends Ydzj_Admin_Controller {
 					for($rowIndex = $startRow; $rowIndex <= $highestRow; $rowIndex++){
 						$tmpRow = array();
 						
-						$tmpRow['house_address'] = getCleanValue($objWorksheet->getCell('A'.$rowIndex)->getValue());
+						$tmpRow['address'] = getCleanValue($objWorksheet->getCell('A'.$rowIndex)->getValue());
 						$tmpRow['yezhu_name'] = getCleanValue($objWorksheet->getCell('B'.$rowIndex)->getValue());
 						$tmpRow['id_type'] = getCleanValue($objWorksheet->getCell('C'.$rowIndex)->getValue());
 						$tmpRow['id_no'] = getCleanValue($objWorksheet->getCell('D'.$rowIndex)->getValue());
-						$tmpRow['jz_area'] = getCleanValue($objWorksheet->getCell('E'.$rowIndex)->getValue());
+						$tmpRow['mobile'] = getCleanValue($objWorksheet->getCell('E'.$rowIndex)->getValue());
 						$tmpRow['telephone'] = getCleanValue($objWorksheet->getCell('F'.$rowIndex)->getValue());
 						
 						$this->form_validation->reset_validation();
@@ -607,7 +607,7 @@ class House extends Ydzj_Admin_Controller {
 						
 						
 						$this->House_Model->updateByWhere($updateData,array(
-							'address' => $tmpRow['house_address']
+							'address' => $tmpRow['address']
 						));
 						
 						$error = $this->House_Model->getError();

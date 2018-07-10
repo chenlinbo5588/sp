@@ -1,5 +1,4 @@
 {include file="common/main_header.tpl"}
-  {config_load file="basic_data.conf"}
   {include file="common/sub_nav.tpl"}
    <table class="table tb-type2" id="prompt">
     <tbody>

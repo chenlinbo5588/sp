@@ -23,6 +23,7 @@
           <th>{#jz_area#}</th>
           <th>{#yezhu_name#}</th>
           <th>{#mobile#}</th>
+          <th>{#telephone#}</th>
           <th class="w72 align-center">操作</th>
         </tr>
       </thead>
@@ -35,6 +36,7 @@
           <td>{$item['jz_area']|escape}</td>
           <td>{if $item['yezhu_id']}{$item['yezhu_id']}{else}暂未入驻{/if}</td>
           <td>{$item['mobile']|escape}</td>
+          <td>{$item['telephone']|escape}</td>
           <td class="align-center">
           	<a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}">编辑</a>&nbsp;|&nbsp;
           	<a href="javascript:void(0)" class="delete" data-url="{admin_site_url($moduleClassName|cat:'/delete')}" data-id="{$item['id']}">删除</a>

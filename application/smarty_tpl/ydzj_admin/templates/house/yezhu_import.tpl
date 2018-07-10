@@ -40,16 +40,14 @@
 			<tr>
 				<th>{#house_address#}</th>
 				<th>{#yezhu_name#}</th>
-				<th>{#jz_area#}</th>
 				<th>结果</th>
 			</tr>
 		<thead>
 		<tbody>
 	{foreach from=$result item=item}
 			<tr>
-				<td>{$item['house_address']|escape}</td>
+				<td>{$item['address']|escape}</td>
 				<td>{$item['yezhu_name']|escape}</td>
-				<td>{$item['jz_area']|escape}</td>
 				<td>{$item['message']|escape}</td>
 			</tr>
 	{/foreach}
