@@ -55,7 +55,8 @@ class Weixin_service extends Base_service {
 		if(!empty($resp['session_key'])){
 			
 			$data = array(
-				'code' => $pCode
+				'code' => $pCode,
+				'buss_id' => md5(mt_rand())
 			);
 			
 			$insertData = array_merge($data,$resp);
@@ -84,7 +85,8 @@ class Weixin_service extends Base_service {
 	public function checkUserBind($pWeixinUser){
 		
 		$bind = array(
-			'sessionId' => $pWeixinUser['session_key'],
+			//自己的业务ID
+			'sessionId' => $pWeixinUser['buss_id'],
 			'isBind' => false
 		);
 		
@@ -128,11 +130,11 @@ class Weixin_service extends Base_service {
 	/**
 	 * 根据 Session Key 获得
 	 */
-	public function getWeixinUserInfoBySession($pSessionKey){
+	public function getWeixinUserInfoBySession($pSessionId){
 		
 		$weixinInfo = $this->_weixinSessionModel->getList(array(
 			'where' => array(
-				'session_key' => $pSessionKey,
+				'buss_sid' => $pSessionId,
 			),
 			'order' => 'id DESC',
 			'limit' => 1
@@ -150,7 +152,7 @@ class Weixin_service extends Base_service {
 	 * 绑定手机号码
 	 */
 	public function bindMobile($param){
-		$weixinInfo = $this->getWeixinUserInfoBySession($param['session_key']);
+		$weixinInfo = $this->getWeixinUserInfoBySession($param['buss_id']);
 		
 		if(empty($weixinInfo)){
 			return false;
@@ -195,7 +197,24 @@ class Weixin_service extends Base_service {
 			
 			return $uid;
 		}
-		
 	}
 	
+	
+	/////////////////////////////////支付///////////////////////////////////////
+	public function makeOrder($pParam){
+		
+		
+		$setting = $this->_mpApi->getSetting();
+		
+		$data = array(
+			'appid' => $setting['appid'],
+			'mch_id' => $setting['mch_id'],
+			'nonce_str' => '',
+			'sign' => '',
+			'sign_type' => 'MD5',
+		);
+		
+		
+		$data = array_merge($data,$pParam);
+	}
 }

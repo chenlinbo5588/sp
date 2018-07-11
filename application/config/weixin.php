@@ -35,6 +35,8 @@ $config['mp_xcxCswy'] = array(
     'app_secret' => '1b799d65d300b939966e39ecf403427a',
     'token' => '7bec533576c0d3ee0553c9afe92cc252', //用于消息签名验证
     'EncodingAESKey' => 'O1kL9lO5AeIg6Ps72H8zdScbFxpUPu2fMkbtrkh8yE7', // 消息加解密key
+    'mch_id' => '1506987511',
+    'mch_secret' => 'fa3f6c970f97d8ae7caec504c4dfeebb'
 );
 
 

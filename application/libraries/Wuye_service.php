@@ -12,6 +12,8 @@ class Wuye_service extends Base_service {
 	private $_yezhuModel;
 	private $_feeTypeModel;
 	
+	
+	
 	public function __construct(){
 		parent::__construct();
 		
@@ -28,6 +30,9 @@ class Wuye_service extends Base_service {
 		
 	}
 	
+
+	
+
 
 	// 小区管理
 	public function deleteResident($pId){
@@ -199,7 +204,6 @@ class Wuye_service extends Base_service {
 		}
 		
 	}
-	
 	
 	
 }

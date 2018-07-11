@@ -133,7 +133,7 @@ class Register extends Wx_Controller {
 					)
 				);
 				
-				$this->form_validation->set_rules('session_key','会话Key','required');
+				$this->form_validation->set_rules('sid','会话id','required');
 				
 				$rt = array(
 					'code' => 'failed',

@@ -10,7 +10,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Wx_Controller extends MY_Controller {
 	
 	public $postJson = array();
-	public $sessionKey = '';
+	
+	public $bussId = '';
 	
 	public $sessionInfo = array();
 	
@@ -29,21 +30,21 @@ class Wx_Controller extends MY_Controller {
 		$this->load->library(array('Seo_service','Weixin_service','Wuye_service'));
 		$this->form_validation->set_error_delimiters('<label class="form_error">','</label>');
 		
-		$sessionKey = $this->input->get('session_key');
+		$bussId = $this->input->get('sid');
 		
 		if($this->isPostRequest()){
 			$this->postJson = json_decode($GLOBALS["HTTP_RAW_POST_DATA"],true);
 		}
 		
-		if(empty($sessionKey)){
-			if($this->postJson && $this->postJson['session_key']){
-				$sessionKey = $this->postJson['session_key'];
+		if(empty($bussId)){
+			if($this->postJson && $this->postJson['sid']){
+				$bussId = $this->postJson['sid'];
 			}
 		}
 		
-		if(!empty($sessionKey)){
+		if(!empty($bussId)){
 			
-			$this->sessionInfo = $this->weixin_service->getWeixinUserInfoBySession($sessionKey);
+			$this->sessionInfo = $this->weixin_service->getWeixinUserInfoBySession($bussId);
 			
 			if('development' == ENVIRONMENT){
 				$this->memberInfo = $this->wuye_service->initUserInfoBySession($this->sessionInfo,'mobile');
