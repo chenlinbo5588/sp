@@ -2,10 +2,10 @@
   {include file="common/sub_nav.tpl"}
   {config_load file="wuye.conf"}
   {if $info['id']}
-  {form_open_multipart(site_url($uri_string|cat:'?id='|cat:$info['id']),'id="infoform"')}
+  {form_open(site_url($uri_string|cat:'?id='|cat:$info['id']),'id="infoform"')}
   <input type="hidden" name="id" value="{$info['id']}"/>
   {else}
-  {form_open_multipart(site_url($uri_string),'id="infoform"')}
+  {form_open(site_url($uri_string),'id="infoform"')}
   {/if}
   <input type="hidden" name="gobackUrl" value="{$gobackUrl}"/>
   <input type="hidden" name="lng" value="{$info['lng']}"/>

@@ -4,9 +4,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Yezhu extends Ydzj_Admin_Controller {
 	
-	private $_idTypeList;
-	
-	
 	public function __construct(){
 		parent::__construct();
 		
@@ -28,9 +25,6 @@ class Yezhu extends Ydzj_Admin_Controller {
 			array('url' => $this->_className.'/import','title' => '导入'),
 			array('url' => $this->_className.'/export','title' => '导出'),
 		);
-		
-		
-		$this->_idTypeList = $this->staff_service->getTopChildList('证件类型');
 		
 		$this->form_validation->set_error_delimiters('<div>','</div>');
 	}
@@ -232,37 +226,45 @@ class Yezhu extends Ydzj_Admin_Controller {
 		$this->form_validation->set_error_delimiters('','');
 		
 		
-		switch($fieldName){
-			case 'name':
-				$this->form_validation->set_rules('name','业主名称','required|min_length[2]|max_length[20]');
-				break;
-			case 'displayorder';
-				$this->form_validation->set_rules('displayorder','排序',"required|is_natural|less_than[256]");
-				break;
-			default:
-				break;
-		}
-		
-		$data = array(
-	        $fieldName => $newValue,
-		);
-		
-		$message = '修改失败';
-		
-		$this->form_validation->set_data($data);
-		if(!$this->form_validation->run()){
-			$message = $this->form_validation->error_html();
-		}else{
+		for($i = 0 ; $i < 1; $i++){
 			
-			if($this->Yezhu_Model->update($data,array('id' => $id)) < 0){
-				$message = '数据修改失败';
-			}else{
-				$message = '修改成功';
+			$data = array(
+				'id' => $id,
+				'fieldname' => $fieldName,
+				$fieldName => $newValue
+			);
+			
+			$this->form_validation->set_data($data);
+			
+			$this->form_validation->set_rules('id','数据标识','required');
+			$this->form_validation->set_rules('fieldname','字段','in_list[name,displayorder]');
+			
+			
+			switch($fieldName){
+				case 'name':
+					$this->form_validation->set_rules('name','业主名称','required|min_length[2]|max_length[20]');
+					break;
+				case 'displayorder';
+					$this->form_validation->set_rules('displayorder','排序',"required|is_natural|less_than[256]");
+					break;
+				default:
+					break;
 			}
+			
+			$message = '修改失败';
+			
+			if(!$this->form_validation->run()){
+				$message = $this->form_validation->error_html();
+			}else{
+				if($this->Yezhu_Model->update(array($fieldName => $newValue),array('id' => $id)) < 0){
+					$message = '数据修改失败';
+				}else{
+					$message = '修改成功';
+				}
+			}
+			
+			$this->jsonOutput($message);
 		}
-		
-		$this->jsonOutput($message);
-		
 	}
 	
 	

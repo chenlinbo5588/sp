@@ -9,8 +9,22 @@ class Brand extends Ydzj_Admin_Controller {
 		
 		$this->load->library(array('Goods_service','Attachment_service'));
 		
+		$this->_moduleTitle = '品牌';
+		$this->_className = strtolower(get_class());
 		
 		
+		$this->assign(array(
+			'moduleTitle' => $this->_moduleTitle,
+			'moduleClassName' => $this->_className
+		));
+		
+		
+		$this->_subNavs = array(
+			array('url' => $this->_className.'/index','title' => '管理'),
+			array('url' => $this->_className.'/add','title' => '添加'),
+		);
+		
+		$this->form_validation->set_error_delimiters('<div>','</div>');
 		
 	}
 	
@@ -63,10 +77,11 @@ class Brand extends Ydzj_Admin_Controller {
 			
 			$list = $this->Brand_Model->getList($condition);
 			
-			
-			$this->assign('list',$list);
-			$this->assign('page',$list['pager']);
-			$this->assign('currentPage',$currentPage);
+			$this->assign(array(
+				'list' => $list,
+				'page' => $list['pager'],
+				'currentPage' => $currentPage
+			));
 			
 			$this->display();
 		}
@@ -187,6 +202,8 @@ class Brand extends Ydzj_Admin_Controller {
 		$id = $this->input->get_post('brand_id');
 		
 		$treelist = $this->goods_service->getGoodsClassTreeHTML();
+		
+		$this->_subNavs[] = array('url' => $this->_className.'/edit?brand_id='.$id, 'title' => '编辑');
 		
 		$info = $this->Brand_Model->getFirstByKey($id,'brand_id');
 		

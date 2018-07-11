@@ -33,6 +33,9 @@ application/controllers/test/
 /nbproject/private/
 /nbproject/
 
+
+application/third_party/mpdf60/
+
 proxy.sqlite
 proxy_log.log
 web.config

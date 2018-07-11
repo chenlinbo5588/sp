@@ -107,11 +107,12 @@ abstract class Staff extends Ydzj_Admin_Controller {
 		//print_r($condition);
 		$list = $this->staff_service->getStaffListByCondition($this->_moduleTitle,$condition);
 		
-		$this->assign('list',$list);
-		$this->assign('page',$list['pager']);
-		$this->assign('search',$search);
-		
-		$this->assign('currentPage',$search['currentPage']);
+		$this->assign(array(
+			'list' => $list,
+			'page' => $list['pager'],
+			'search' => $search,
+			'currentPage' => $search['currentPage']
+		));
 		
 	}
 	

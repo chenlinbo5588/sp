@@ -1,27 +1,15 @@
 {include file="common/main_header.tpl"}
-  <div class="fixed-bar">
-    <div class="item-title">
-      <h3>品牌</h3>
-      <ul class="tab-base">
-      	<li><a href="{admin_site_url('brand/index')}"><span>管理</span></a></li>
-      	<li><a {if empty($info['brand_id'])}class="current"{/if} href="{admin_site_url('brand/add')}"><span>新增</span></a></li>
-      	{if $info['brand_id']}<li><a class="current"><span>编辑</span></a></li>{/if}
-      </ul>
-    </div>
-  </div>
-  <div class="fixed-empty"></div>
-  <div class="feedback">{$feedback}</div>
-  
+  {include file="common/sub_nav.tpl"}
   {if $info['brand_id']}
-  {form_open_multipart(admin_site_url('brand/edit'),'id="brand_form"')}
+  {form_open_multipart(site_url($uri_string|cat:'?id='|cat:$info['brand_id']),'id="infoform"')}
   {else}
-  {form_open_multipart(admin_site_url('brand/add'),'id="brand_form"')}
+  {form_open_multipart(site_url($uri_string),'id="infoform"')}
   {/if}
   	<input type="hidden" name="brand_id" value="{$info['brand_id']}"/>
     <table class="table tb-type2">
       <tbody>
         <tr class="noborder">
-          <td colspan="2" class="required"><label class="validation" for="brand_name">品牌名称:</label></td>
+          <td colspan="2"><label class="validation" for="brand_name">品牌名称:</label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input type="text" value="{$info['brand_name']|escape}" name="brand_name" id="brand_name" class="txt"></td>

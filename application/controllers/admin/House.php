@@ -63,9 +63,12 @@ class House extends Ydzj_Admin_Controller {
 		
 		$list = $this->House_Model->getList($condition);
 		
-		$this->assign('list',$list);
-		$this->assign('page',$list['pager']);
-		$this->assign('currentPage',$currentPage);
+		$this->assign(array(
+			'list' => $list,
+			'page' => $list['pager'],
+			'currentPage' => $currentPage
+		));
+		
 		
 		$this->display();
 		
@@ -317,37 +320,46 @@ class House extends Ydzj_Admin_Controller {
 		
 		$this->form_validation->set_error_delimiters('','');
 		
-		
-		switch($fieldName){
-			case 'address':
-				$this->_getAddressRule($id);
-				break;
-			case 'displayorder';
-				$this->form_validation->set_rules('displayorder','排序',"required|is_natural|less_than[256]");
-				break;
-			default:
-				break;
-		}
-		
-		$data = array(
-	        $fieldName => $newValue,
-		);
-		
-		$message = '修改失败';
-		
-		$this->form_validation->set_data($data);
-		if(!$this->form_validation->run()){
-			$message = $this->form_validation->error_html();
-		}else{
+		for($i = 0 ; $i < 1; $i++){
 			
-			if($this->House_Model->update($data,array('id' => $id)) < 0){
-				$message = '数据修改失败';
-			}else{
-				$message = '修改成功';
+			$data = array(
+				'id' => $id,
+				'fieldname' => $fieldName,
+				$fieldName => $newValue
+			);
+			
+			$this->form_validation->set_data($data);
+			
+			$this->form_validation->set_rules('id','数据标识','required');
+			$this->form_validation->set_rules('fieldname','字段','in_list[address,displayorder]');
+			
+			
+			switch($fieldName){
+				case 'address':
+					$this->_getAddressRule($id);
+					break;
+				case 'displayorder';
+					$this->form_validation->set_rules('displayorder','排序',"required|is_natural|less_than[256]");
+					break;
+				default:
+					break;
 			}
+			
+			$message = '修改失败';
+			
+			if(!$this->form_validation->run()){
+				$message = $this->form_validation->error_html();
+			}else{
+				
+				if($this->House_Model->update(array($fieldName => $newValue),array('id' => $id)) < 0){
+					$message = '数据修改失败';
+				}else{
+					$message = '修改成功';
+				}
+			}
+			
+			$this->jsonOutput($message);
 		}
-		
-		$this->jsonOutput($message);
 		
 	}
 	
