@@ -93,6 +93,7 @@ define('EntityPATH',APPPATH.'entity/');
 define('PHPExcel_PATH',APPPATH.'/third_party/excel/');
 define('AliyunEmail_PATH',APPPATH.'/third_party/aliyun-php-sdk-dm/');
 define('WEIXIN_PATH',APPPATH.'/third_party/weixin/');
+define('WEIXIN_PAY_PATH',APPPATH.'/third_party/weixinPay/');
 
 define('FROM_BACKGROUND',1);
 define('WEBSITE_FOUNDER',1);

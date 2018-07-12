@@ -64,7 +64,7 @@ class Weixin extends Ydzj_Controller {
     public function index()
     {
         
-        echo md5(mt_rand());
+        //echo md5(mt_rand());
         //$this->display();
     }
     

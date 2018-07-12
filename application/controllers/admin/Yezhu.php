@@ -49,9 +49,14 @@ class Yezhu extends Ydzj_Admin_Controller {
 		
 		
 		$search['name'] = $this->input->get_post('name');
+		$search['mobile'] = $this->input->get_post('mobile');
 		
 		if($search['name']){
 			$condition['like']['name'] = $search['name'];
+		}
+		
+		if($search['mobile']){
+			$condition['like']['mobile'] = $search['mobile'];
 		}
 		
 		$list = $this->Yezhu_Model->getList($condition);

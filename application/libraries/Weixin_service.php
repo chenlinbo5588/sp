@@ -50,18 +50,19 @@ class Weixin_service extends Base_service {
 		//检查 code 
 		$resp = $this->_mpApi->getWeixinUserByCode($pCode);
 		
-		file_put_contents('debug.txt',print_r($resp,true),FILE_APPEND);
+		file_put_contents('debug.txt',print_r($resp,true));
 		
 		if(!empty($resp['session_key'])){
 			
 			$data = array(
 				'code' => $pCode,
-				'buss_id' => md5(mt_rand())
+				'buss_sid' => md5(mt_rand())
 			);
 			
 			$insertData = array_merge($data,$resp);
 			
-			//@todo 待优化，记录可能很快增长
+			file_put_contents('debug.txt',print_r($insertData,true),FILE_APPEND);
+			
 			$newId = $this->_weixinSessionModel->_add($insertData);
 			
 			$errorInfo = $this->_weixinSessionModel->getError();			
@@ -86,7 +87,7 @@ class Weixin_service extends Base_service {
 		
 		$bind = array(
 			//自己的业务ID
-			'sessionId' => $pWeixinUser['buss_id'],
+			'sessionId' => $pWeixinUser['buss_sid'],
 			'isBind' => false
 		);
 		
@@ -109,21 +110,23 @@ class Weixin_service extends Base_service {
 		$mpConfig = $this->_mpApi->getSetting();
 		
 		if($wxResp['unionid']){
-			$userInfo = self::$memberModel->getById(array(
+			$userInfo = self::$memberModel->getList(array(
 				'where' => array(
 					'unionid' => $wxResp['unionid'],
-				)
+				),
+				'limit' => 1
 			));
 			
 		}else if($wxResp['openid']){
-			$userInfo = self::$memberModel->getById(array(
+			$userInfo = self::$memberModel->getList(array(
 				'where' => array(
 					'openid' => $wxResp['openid'],
-				)
+				),
+				'limit' => 1
 			));
 		}
 		
-		return $userInfo;
+		return $userInfo[0];
 	}
 	
 	
@@ -152,7 +155,7 @@ class Weixin_service extends Base_service {
 	 * 绑定手机号码
 	 */
 	public function bindMobile($param){
-		$weixinInfo = $this->getWeixinUserInfoBySession($param['buss_id']);
+		$weixinInfo = $this->getWeixinUserInfoBySession($param['sid']);
 		
 		if(empty($weixinInfo)){
 			return false;
@@ -172,10 +175,14 @@ class Weixin_service extends Base_service {
 			//开发阶段使用手机号码 跑业务逻辑
 			$this->_weixinSessionModel->beginTrans();
 			
-			$uid = self::$CI->register_service->createMember($regData);
+			$resp = self::$CI->register_service->createMember($regData);
 			
-			if($uid){
-				$this->_weixinSessionModel->updateByWhere(array('mobile' => $param['phoneNo']),array('id' => $weixinInfo['id']));
+			if($resp['data']['uid']){
+				$this->_weixinSessionModel->updateByWhere(array('mobile' => $param['phoneNo'],'uid' => $resp['data']['uid']),array('id' => $weixinInfo['id']));
+				
+				//更新业主表中  对应的 uid
+				self::$CI->load->model('Yezhu_Model');
+				self::$CI->Yezhu_Model->updateByWhere(array('uid' => $resp['data']['uid']),array('mobile' => $param['phoneNo']));
 			}
 			
 			if($this->_weixinSessionModel->getTransStatus() === FALSE){
@@ -183,38 +190,20 @@ class Weixin_service extends Base_service {
 				return false;
 			}else{
 				$this->_weixinSessionModel->commitTrans();
-				return $uid;
+				return $resp['data']['uid'];
 			}
 			
 		}else{
 			
-			$uid = self::$CI->register_service->createMember($regData);
+			$resp = self::$CI->register_service->createMember($regData);
 			
 			$error = $this->_weixinSessionModel->getError();
 			if(QUERY_OK != $error['code']){
 				return false;
 			}
 			
-			return $uid;
+			return $resp['data']['uid'];
 		}
 	}
 	
-	
-	/////////////////////////////////支付///////////////////////////////////////
-	public function makeOrder($pParam){
-		
-		
-		$setting = $this->_mpApi->getSetting();
-		
-		$data = array(
-			'appid' => $setting['appid'],
-			'mch_id' => $setting['mch_id'],
-			'nonce_str' => '',
-			'sign' => '',
-			'sign_type' => 'MD5',
-		);
-		
-		
-		$data = array_merge($data,$pParam);
-	}
 }

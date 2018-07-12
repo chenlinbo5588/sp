@@ -8,6 +8,8 @@
 	        <tr>
 	          <th><label for="name">{#yezhu_name#}</label></th>
 	          <td><input class="txt" name="name" value="{$smarty.get['name']|escape}" type="text"></td>
+	          <th><label for="name">{#mobile#}</label></th>
+	          <td><input class="txt" name="mobile" value="{$smarty.get['mobile']|escape}" type="text"></td>
 	          <td><input type="submit" class="msbtn" name="tijiao" value="查询"/></td>
 	        </tr>
 	    </tbody>
@@ -24,6 +26,7 @@
           <th>{#age#}</th>
           <th>{#jiguan#}</th>
           <th>{#mobile#}</th>
+          <th>{#is_bind#}</th>
           <th class="w72 align-center">操作</th>
         </tr>
       </thead>
@@ -39,6 +42,7 @@
          <td>{$item['age']}</td>
          <td>{$basicData[$item['jiguan']]['show_name']}</td>
          <td>{$item['mobile']}</td>
+         <td>{if $item['uid']}已绑定用户{$item['uid']}{else}未绑定{/if}</td>
           <td class="align-center">
           	<a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}">编辑</a>&nbsp;|&nbsp;
           	<a href="javascript:void(0)" class="delete" data-url="{admin_site_url($moduleClassName|cat:'/delete')}" data-id="{$item['id']}">删除</a>

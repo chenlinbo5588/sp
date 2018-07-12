@@ -26,7 +26,7 @@ class User extends Wx_Controller {
 			$weixinUser = $this->weixin_service->getWeixinUserByCode($code);
 			$bindInfo = $this->weixin_service->checkUserBind($weixinUser);
 			
-			if(!empty($weixinUser['buss_id'])){
+			if(!empty($weixinUser['buss_sid'])){
 				$this->jsonOutput2(RESP_SUCCESS,$bindInfo);
 			}else{
 				$this->jsonOutput2('请求微信服务器响应异常');

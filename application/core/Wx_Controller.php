@@ -15,8 +15,6 @@ class Wx_Controller extends MY_Controller {
 	
 	public $sessionInfo = array();
 	
-	public $weixinInfo = array();
-	
 	public $memberInfo = array();
 	
 	public $yezhuInfo = array();
@@ -48,13 +46,12 @@ class Wx_Controller extends MY_Controller {
 			
 			if('development' == ENVIRONMENT){
 				$this->memberInfo = $this->wuye_service->initUserInfoBySession($this->sessionInfo,'mobile');
-				
 			}else{
 				$this->memberInfo = $this->wuye_service->initUserInfoBySession($this->sessionInfo);
 			}
 			
 			if($this->memberInfo){
-				$this->yezhuInfo = $this->wuye_service->getYezhuInfoByMobile($this->memberInfo['mobile']);	
+				$this->yezhuInfo = $this->wuye_service->getYezhuInfoByMobile($this->memberInfo['uid'],'uid');
 			}
 		}
 		

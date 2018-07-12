@@ -10,6 +10,7 @@ $entity = array(
 'openid' => 'varchar',
 'unionid' => 'varchar',
 'mobile' => 'varchar',
+'uid' => 'int',
 'data' => 'text',
 'gmt_create' => 'int'
 );

@@ -12,6 +12,7 @@ $entity = array(
 'birthday' => 'date',
 'jiguan' => 'int',
 'displayorder' => 'int',
+'uid' => 'int',
 'wuye_cnt' => 'tinyint',
 'add_uid' => 'int',
 'add_username' => 'varchar',

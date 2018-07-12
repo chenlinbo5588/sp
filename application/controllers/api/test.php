@@ -15,6 +15,16 @@ class Test extends MY_Controller {
 	
 	public function index(){
 		$code = $this->_verify();
+		
+		$nowstamp = microtime();
+		
+		echo $nowstamp;
+		echo '<br/>';
+		echo time();
+		
+		print_r(explode($nowstamp));
+		
+		
 		//file_put_contents("code.txt",$code);
 		$this->load->view('test',array('code' => $code));
 	}

@@ -148,8 +148,8 @@ class Wuye_service extends Base_service {
 	/**
 	 * 获得业主信息
 	 */
-	public function getYezhuInfoByMobile($pMobile){
-		$yezhuInfo = $this->_yezhuModel->getFirstByKey($pMobile,'mobile','id,name,id_type,id_no');
+	public function getYezhuInfoByMobile($pId,$key = 'mobile'){
+		$yezhuInfo = $this->_yezhuModel->getFirstByKey($pId,$key);
 		
 		//注意身份证件号码的隐藏
 		
@@ -170,7 +170,7 @@ class Wuye_service extends Base_service {
 	public function getYezhuHouseListByYezhu($pYezhu){
 		
 		$yezhuHouseList = $this->_houseModel->getList(array(
-			'select' => 'id,address,jz_area,lng,lat',
+			'select' => 'id,address,jz_area,lng,lat,wuye_expire,nenghao_expire',
 			'where' => array(
 				'yezhu_id' => $pYezhu['id']
 			)
@@ -189,7 +189,7 @@ class Wuye_service extends Base_service {
 	public function getYezhuHouseDetail($houseId,$pYezhu){
 		
 		$houseInfo = $this->_houseModel->getById(array(
-			'select' => 'id,address,jz_area,lng,lat',
+			'select' => 'id,address,jz_area,lng,lat,wuye_expire,nenghao_expire',
 			'where' => array(
 				'id' => $houseId,
 				'yezhu_id' => $pYezhu['id']
