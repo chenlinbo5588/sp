@@ -35,6 +35,9 @@ class House extends Ydzj_Admin_Controller {
 	 * 
 	 */
 	public function index(){
+		
+	
+
 	
 		$currentPage = $this->input->get_post('page') ? $this->input->get_post('page') : 1;
 	

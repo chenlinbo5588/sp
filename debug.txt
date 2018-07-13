@@ -1,0 +1,15 @@
+Array
+(
+    [session_key] => 9CkmPrWGQPs1dqwyldDc3w==
+    [openid] => ojitN5XxmENCQcheZKqKR4_8b2D8
+)
+Array
+(
+    [session_key] => CSjjOpCFBArLfY0PuELBnw==
+    [openid] => ojitN5XxmENCQcheZKqKR4_8b2D8
+)
+Array
+(
+    [session_key] => vCiLSWxVDWmjaddpmH4abw==
+    [openid] => ojitN5XxmENCQcheZKqKR4_8b2D8
+)
