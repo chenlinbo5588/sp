@@ -119,4 +119,15 @@ function sbc_to_dbc($str)
 function getCleanValue($value){
 	$value = preg_replace( '/[\x00-\x1F]/','',$value);
 	return trim(sbc_to_dbc(str_replace(array("\r\n","\n","\r",'  ','　',' '),'',$value)));
-}	
+}
+
+
+function arrayToXML($assocArray){
+	$line = array();
+		
+	foreach($assocArray as $k => $v){
+		$line[] = "<{$k}><![CDATA[{$v}]]></$k>";
+	}
+	
+	return '<xml>'.implode('',$line).'</xml>';
+}

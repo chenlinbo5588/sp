@@ -39,7 +39,7 @@ class PayNotifyCallBack extends WxPayNotify
 	//重写回调处理函数
 	public function NotifyProcess($data, &$msg)
 	{
-		
+		file_put_contents('wuye_callback.txt',print_r($data,true));
 		$notfiyOutput = array();
 		
 		if(!array_key_exists("transaction_id", $data)){
@@ -53,7 +53,7 @@ class PayNotifyCallBack extends WxPayNotify
 		}
 		
 		$orderInfo = $this->_ci->Order_Model->getFirstByKey($data['out_trade_no'],'order_id');
-		if($orderInfo['order_amount'] != $data['total_fee']){
+		if($orderInfo['amount'] != $data['total_fee']){
 			$msg = "订单金额错误";
 			return false;
 		}
@@ -63,11 +63,14 @@ class PayNotifyCallBack extends WxPayNotify
 			return false;
 		}
 		
+		
+		file_put_contents('wuye_callback.txt',print_r($orderInfo,true),FILE_APPEND);
+		
 		//启用事务
 		$this->_ci->Order_Model->beginTrans();
 		
 		$affectRow = $this->_ci->Order_Model->updateByWhere(
-			array('ref_order' => $data['transaction_id'],'status' => OrderStatus::$payed),
+			array('ref_order' => $data['transaction_id'],'status' => OrderStatus::$payed , 'pay_time_end' => $data['time_end']),
 			array('order_id' => $data['out_trade_no'],'status' => OrderStatus::$unPayed)
 		);
 		
@@ -78,6 +81,7 @@ class PayNotifyCallBack extends WxPayNotify
 			switch($orderInfo['order_typename']){
 				case '物业费':
 					$updateKey = 'wuye_expire';
+					break;
 				case '能耗费':
 					$updateKey = 'nenghao_expire';
 					break;
@@ -85,14 +89,31 @@ class PayNotifyCallBack extends WxPayNotify
 					break;
 			}
 			
+			
+			
+			
 			$this->_ci->House_Model->updateByWhere(array(
-				$updateKey => $feeInfo['fee_expire']
+				$updateKey => $feeInfo['fee_expire'],
 			),array(
-				'id' => $orderInfo['goods_id']
+				'id' => $feeInfo['house_id']
 			));
+			
+			//添加物业费缴费记录
+			//@todo 需要安装用户 分表
+			$this->_ci->House_Fee_Model->_add(array(
+				'fee_expire' => $feeInfo['fee_expire'],
+				'uid' => $orderInfo['uid'],
+				'order_id' => $orderInfo['order_id'],
+				'order_status' => $orderInfo['status'],
+				'amount' => $orderInfo['amount'],
+				'fee_name' => $orderInfo['order_typename']
+			));
+			
 			
 			if($this->_ci->Order_Model->getTransStatus() === FALSE){
 				$this->_ci->Order_Model->rollBackTrans();
+				$msg = "订单数据更新失败";
+				
 				return false;
 			}else{
 				$this->_ci->Order_Model->commitTrans();

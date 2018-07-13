@@ -171,37 +171,28 @@ class Weixin_service extends Base_service {
 		);
 		
 		
-		if('development' == ENVIRONMENT){
-			//开发阶段使用手机号码 跑业务逻辑
-			$this->_weixinSessionModel->beginTrans();
+		//开发阶段使用手机号码 跑业务逻辑
+		$this->_weixinSessionModel->beginTrans();
+		
+		$resp = self::$CI->register_service->createMember($regData);
+		
+		if($resp['data']['uid']){
 			
-			$resp = self::$CI->register_service->createMember($regData);
-			
-			if($resp['data']['uid']){
-				$this->_weixinSessionModel->updateByWhere(array('mobile' => $param['phoneNo'],'uid' => $resp['data']['uid']),array('id' => $weixinInfo['id']));
-				
-				//更新业主表中  对应的 uid
-				self::$CI->load->model('Yezhu_Model');
-				self::$CI->Yezhu_Model->updateByWhere(array('uid' => $resp['data']['uid']),array('mobile' => $param['phoneNo']));
+			if('development' == ENVIRONMENT){
+				//开发阶段在 session 中保存手机号码
+				$this->_weixinSessionModel->updateByWhere(array('mobile' => $param['phoneNo']),array('id' => $weixinInfo['id']));
 			}
 			
-			if($this->_weixinSessionModel->getTransStatus() === FALSE){
-				$this->_weixinSessionModel->rollBackTrans();
-				return false;
-			}else{
-				$this->_weixinSessionModel->commitTrans();
-				return $resp['data']['uid'];
-			}
-			
+			//更新业主表中  对应的 uid
+			self::$CI->load->model('Yezhu_Model');
+			self::$CI->Yezhu_Model->updateByWhere(array('uid' => $resp['data']['uid']),array('mobile' => $param['phoneNo']));
+		}
+		
+		if($this->_weixinSessionModel->getTransStatus() === FALSE){
+			$this->_weixinSessionModel->rollBackTrans();
+			return false;
 		}else{
-			
-			$resp = self::$CI->register_service->createMember($regData);
-			
-			$error = $this->_weixinSessionModel->getError();
-			if(QUERY_OK != $error['code']){
-				return false;
-			}
-			
+			$this->_weixinSessionModel->commitTrans();
 			return $resp['data']['uid'];
 		}
 	}

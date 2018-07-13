@@ -38,8 +38,8 @@ class WxPayConfig
 	 * 3.商户服务器要做好病毒和木马防护工作，不被非法侵入者窃取证书文件。
 	 * @var path
 	 */
-	const SSLCERT_PATH = '/data/cert/cswy_apiclient_cert.pem';
-	const SSLKEY_PATH = '/data/cert/cswy_apiclient_key.pem';
+	const SSLCERT_PATH = '/var/data/cert/cswy_apiclient_cert.pem';
+	const SSLKEY_PATH = '/var/data/cert/cswy_apiclient_key.pem';
 	
 	//=======【curl代理设置】===================================
 	/**

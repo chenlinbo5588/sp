@@ -31,9 +31,6 @@ class Wuye_service extends Base_service {
 	}
 	
 
-	
-
-
 	// 小区管理
 	public function deleteResident($pId){
 		//只有悬挂的小区才能被删除
@@ -130,25 +127,14 @@ class Wuye_service extends Base_service {
 		
 		$idVal = $pSession[$idKey];
 		
-		//$info = array();
-		
-		$memberInfo = self::$memberModel->getFirstByKey($idVal,$idKey);
-		
-		/*
-		if($memberInfo){
-			$info['member'] = $memberInfo;
-		}
-		*/
-		
-		
-		return $memberInfo;
+		return self::$memberModel->getFirstByKey($idVal,$idKey);
 		
 	}
 	
 	/**
 	 * 获得业主信息
 	 */
-	public function getYezhuInfoByMobile($pId,$key = 'mobile'){
+	public function getYezhuInfoById($pId,$key = 'uid'){
 		$yezhuInfo = $this->_yezhuModel->getFirstByKey($pId,$key);
 		
 		//注意身份证件号码的隐藏
@@ -176,9 +162,26 @@ class Wuye_service extends Base_service {
 			)
 		));
 		
+		
+		$list = array();
+		
+		
+		foreach($yezhuHouseList as $houseIndex => $houseInfo){
+			if($houseInfo['wuye_expire']){
+				$houseInfo['wuye_expire_date'] = date('Y-m-d',$houseInfo['wuye_expire_date']);
+			}
+			
+			if($houseInfo['nenghao_expire']){
+				$houseInfo['nenghao_expire_date'] = date('Y-m-d',$houseInfo['nenghao_expire']);
+			}
+			
+			$list[] = $houseInfo;
+		}
+		
+		
 		return array(
-			'houseCnt' => count($yezhuHouseList),
-			'houseList' => $yezhuHouseList
+			'houseCnt' => count($list),
+			'houseList' => $list
 		);
 	}
 	
@@ -198,6 +201,14 @@ class Wuye_service extends Base_service {
 		
 		
 		if($houseInfo){
+			if($houseInfo['wuye_expire']){
+				$houseInfo['wuye_expire_date'] = date('Y-m-d',$houseInfo['wuye_expire_date']);
+			}
+			
+			if($houseInfo['nenghao_expire']){
+				$houseInfo['nenghao_expire_date'] = date('Y-m-d',$houseInfo['nenghao_expire']);
+			}
+			
 			return $houseInfo;
 		}else{
 			return array();

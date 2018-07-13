@@ -85,6 +85,10 @@ class Service extends Wx_Controller {
 		if($this->postJson){
 			$searchKeys['page'] = intval($this->postJson['page']);
 			
+			if(empty($searchKeys['page'])){
+				$searchKeys['page'] = 1;
+			}
+			
 			$whereIn = array();
 			$groupNameList = array_keys($this->postJson['select']);
 			$groupNameField = array(

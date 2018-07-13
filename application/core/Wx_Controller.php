@@ -22,6 +22,9 @@ class Wx_Controller extends MY_Controller {
 	public $yezhuHouseList = array();
 	
 	
+	public $unBind = array('isBind' => false);
+	
+	
 	public function __construct(){
 		parent::__construct();
 		
@@ -51,7 +54,7 @@ class Wx_Controller extends MY_Controller {
 			}
 			
 			if($this->memberInfo){
-				$this->yezhuInfo = $this->wuye_service->getYezhuInfoByMobile($this->memberInfo['uid'],'uid');
+				$this->yezhuInfo = $this->wuye_service->getYezhuInfoById($this->memberInfo['mobile'],'mobile');
 			}
 		}
 		

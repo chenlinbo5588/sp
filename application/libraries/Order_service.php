@@ -20,6 +20,14 @@ class OrderStatus
 	
 	//关闭
 	public static $closed = 4;
+	
+	public static $statusName = array(
+		'未支付',
+		'已支付',
+		'退款中',
+		'退款完成',
+		'关闭',
+	);
 }
 
 
@@ -64,60 +72,14 @@ class Order_service extends Base_service {
 	}
 	
 	
-	
-	/**
-	 * 微信签名算法
-	 * 
-	 * @todo 可能需要改造
-	 */
-	public function makeSignature($param,$signKey)
-	{
-		//签名步骤一：按字典序排序参数
-		ksort($param);
-		$string = $this->ToUrlParams($param);
-		
-		
-		//签名步骤二：在string后加入KEY
-		$string = $string . "&key=".$signKey;
-		
-		//签名步骤三：MD5加密
-		$string = md5($string);
-		
-		
-		//签名步骤四：所有字符转为大写
-		$result = strtoupper($string);
-		return $result;
-	}
-	
-	/**
-	 * 转换成 请求字符串
-	 */
-	public function ToUrlParams($param)
-	{
-		$buff = "";
-		foreach ($param as $k => $v)
-		{
-			if($k != "sign" && $v != "" && !is_array($v)){
-				$buff .= $k . "=" . $v . "&";
-			}
-		}
-		
-		$buff = trim($buff, "&");
-		return $buff;
-	}
-	
-	
-	
-	
 	/**
 	 * 创建业务订单
 	 */
 	public function createBussOrder($param){
 		$order = array();
 		
-		//这两个不需要填写
-		//$order['app_id'] = $this->_appConfig['appid'];
-		//$order['mch_id'] = $this->_appConfig['mch_id'];
+		$order['app_id'] = $this->_appConfig['appid'];
+		$order['mch_id'] = $this->_appConfig['mch_id'];
 		
 		$order['order_id'] = $this->_appConfig['mch_id'].date("YmdHis").mt_rand(100,999);
 		
@@ -129,9 +91,12 @@ class Order_service extends Base_service {
 			}
 		}
 		
+		if($param['goods_id']){
+			$order['goods_id'] = $param['goods_id'];
+		}
 		
-		if($param['product_id']){
-			$order['goods_id'] = $param['product_id'];
+		if($param['goods_name']){
+			$order['goods_name'] = $param['goods_name'];
 		}
 		
 		if($param['goods_tag']){
@@ -143,20 +108,34 @@ class Order_service extends Base_service {
 		$order['time_start'] = date("YmdHis");
 		$order['time_expire'] = date("YmdHis", time() + 600);
 		
-		$order['openid'] = $param['openid'];
-		$order['extra_info'] = $param['extra_info'];
+		$order['amount'] = $param['amount'];
+		
+		if($param['openid']){
+			$order['openid'] = $param['openid'];
+		}
+		
+		if($param['unionid']){
+			$order['unionid'] = $param['unionid'];
+		}
+		
+		if($param['extra_info']){
+			$order['extra_info'] = $param['extra_info'];
+		}
 		
 		$order['uid'] = empty($param['uid']) ? 0 : $param['uid'];
 		$order['add_uid'] = empty($param['uid']) ? 0 : $param['uid'];
 		$order['add_username'] = empty($param['add_username']) ? '' : $param['add_username'];
 		
-		$this->_orderModel->_add($order);
+		$order['ip'] = self::$CI->input->ip_address();
+		
+		$newid = $this->_orderModel->_add($order);
 		$error = $this->_orderModel->getError();
 		
 		if(QUERY_OK != $error['code']){
 			return false;
 			
 		}else{
+			$order['id'] = $newid;
 			return $order;
 		}
 	}
@@ -172,6 +151,10 @@ class Order_service extends Base_service {
 		
 		$param['openid'] = $weixinUser['openid'];
 		
+		if($weixinUser['unionid']){
+			$param['unionid']  = $weixinUser['unionid'];
+		}
+		
 		if($param['order_id']){
 			$localOrder = $this->_orderModel->getFirstByKey($param['order_id'],'order_id');
 		}else{
@@ -184,59 +167,149 @@ class Order_service extends Base_service {
 		
 		file_put_contents('wuye.txt',print_r($localOrder,true),FILE_APPEND);
 		
-		$input = new WxPayUnifiedOrder();
-		
-		
-		$input->SetBody($this->_appConfig['name'].'-'.$param['order_typename']);
-		//$input->SetAttach("test");
-		
-		$input->SetOut_trade_no($param['order_id']);
-		
-		//测试阶段 始终用 1分
-		$input->SetTotal_fee("1");
-		
-		$input->SetTime_start($localOrder['time_start']);
-		$input->SetTime_expire($localOrder['time_expire']);
-		
-		
-		if($localOrder['goods_tag']){
-			$input->SetGoods_tag($param['goods_tag']);
-		}
-		
-		$input->SetNotify_url($param['notify_url']);
-		
-		$input->SetTrade_type("JSAPI");
-		
-		if($localOrder['goods_id']){
-			$input->SetProduct_id($param['goods_id']);
-		}
-		
-		$input->SetOpenid($weixinUser['openid']);
-		
-		$weixinOrder = WxPayApi::unifiedOrder($input);
-		
-		file_put_contents('wuye.txt',print_r($weixinOrder,true),FILE_APPEND);
-		
-		if('SUCCESS' == $weixinOrder['return_code'] && 'SUCCESS' == $weixinOrder['result_code']){
-			$callPayJson = array(
-				'timeStamp' => time(),
-				'nonce_str' => WxPayApi::getNonceStr(10),
-				'package' => 'prepay_id='.$weixinOrder['prepay_id'],
-				'signType' => 'MD5'
-			);
-			
-			$callPayJson['paySign'] = $this->makeSignature(array_merge(
-				$callPayJson,array('appId' => $this->_appConfig['appid'])
-			),$this->_appConfig['mch_key']);
-			
-			return $callPayJson;
+		if($param['order_id']){
+			//已有订单重新签发
+			return $this->genPaymentParam($localOrder['prepay_id']);
 			
 		}else{
 			
-			return false;
+			$input = new WxPayUnifiedOrder();
+		
+			$input->SetBody($this->_appConfig['name'].'-'.$param['order_typename']);
+			//$input->SetAttach("test");
+			
+			$input->SetOut_trade_no($localOrder['order_id']);
+			
+			//测试阶段 始终用 1分
+			$input->SetTotal_fee($localOrder['amount']);
+			
+			$input->SetTime_start($localOrder['time_start']);
+			$input->SetTime_expire($localOrder['time_expire']);
+			
+			
+			if($localOrder['goods_tag']){
+				$input->SetGoods_tag($localOrder['goods_tag']);
+			}
+			
+			$input->SetNotify_url($param['notify_url']);
+			
+			$input->SetTrade_type("JSAPI");
+			
+			if($localOrder['goods_id']){
+				$input->SetProduct_id($localOrder['goods_id']);
+			}
+			
+			$input->SetOpenid($localOrder['openid']);
+			
+			
+			$weixinOrder = WxPayApi::unifiedOrder($input);
+			
+			file_put_contents('wuye.txt',print_r($weixinOrder,true),FILE_APPEND);
+			
+			if('SUCCESS' == $weixinOrder['return_code'] && 'SUCCESS' == $weixinOrder['result_code']){
+				
+				//将 prepay_id 保存起来, 用来在用户取消订单后，后续可以再次进行下发 换起支付的参数
+				$this->_orderModel->updateByWhere(array(
+					'prepay_id' => $weixinOrder['prepay_id']
+				),array(
+					'id' => $localOrder['id']
+				));
+				
+				return $this->genPaymentParam($weixinOrder['prepay_id']);
+			}else{
+				return false;
+			}
 		}
 		
 	}
 	
+	
+	/**
+	 * 生成小程序支付参数
+	 */
+	public function genPaymentParam($pPrepayId){
+	
+		$callPayJson = array(
+			'timeStamp' => (string)time(),
+			'nonceStr' => WxPayApi::getNonceStr(10),
+			'package' => 'prepay_id='.$pPrepayId,
+			'signType' => 'MD5'
+		);
+		
+		$signObj = new WxPayResults();
+		$signObj->FromArray(array_merge(
+			$callPayJson,array('appId' => $this->_appConfig['appid'])
+		));
+		
+		$callPayJson['paySign'] = $signObj->MakeSign();
+		
+		return $callPayJson;
+	}
+	
+	
+	
+	/**
+	 * 获得订单列表
+	 */
+	public function getOrderListByCondition($pCondition){
+		$condition = array(
+			'select' => 'order_id,order_typename,status,amount,time_start,time_expire',
+		);
+		
+		$condition = array_merge($condition,$pCondition);
+		$orderList = $this->_orderModel->getList($condition);
+		
+		$statusNameList = OrderStatus::$statusName;
+		
+		if($condition['pager']){
+			if($orderList['data']){
+				foreach($orderList['data'] as $index => $orderItem){
+					$orderItem['statusName'] = $statusNameList[$orderItem['status']];
+					$orderList['data'][$index] = $orderItem;
+				}
+			}
+		}else{
+			
+			if($orderList){
+				foreach($orderList as $index => $orderItem){
+					$orderItem['statusName'] = $statusNameList[$orderItem['status']];
+					$orderList[$index] = $orderItem;
+				}
+			}
+		}
+		
+		return $orderList;
+	}
+	
+	/**
+	 * 根据订单号码获得订单详情
+	 */
+	public function getOrderDetailByOrderId($pOrderId,$pUser = array()){
+		
+		if(empty($orderId)){
+			return false;
+		}
+		
+		$condition = array(
+			'where' => array(
+				'order_id' => $pOrderId
+			)
+		);
+		
+		if($pUser){
+			$condition['where']['uid'] = $pUser['uid'];
+		}
+		
+		$orderInfo = $this->_orderModel->getById($condition);
+		
+		$statusNameList = OrderStatus::$statusName;
+		
+		if($orderInfo){
+			$orderInfo['statusName'] = $statusNameList[$orderInfo['status']];
+		}
+		
+		return $orderInfo;
+		
+	}
 	
 }
