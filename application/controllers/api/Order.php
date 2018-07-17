@@ -26,6 +26,7 @@ class Order extends Wx_Controller {
 	}
 	
 	
+	
 	/**
 	 * 
 	 */
@@ -40,7 +41,9 @@ class Order extends Wx_Controller {
 				$this->form_validation->set_rules('order_typename','in_db_list['.$this->Feetype_Model->getTableRealName().'.name]');
 				$this->form_validation->set_rules('year','缴费年份','required|is_natural_no_zero|greater_than_equal_to['.date('Y').']');
 				
-				$this->form_validation->set_rules('month','缴费到期月份','required|is_natural_no_zero|greater_than_equal_to[1]|less_than_equal_to[12]');
+				$this->form_validation->set_rules('start_month','缴费起始月份','required|is_natural_no_zero|greater_than_equal_to[1]|less_than_equal_to[12]');
+				$this->form_validation->set_rules('end_month','缴费到期月份','required|is_natural_no_zero|greater_than_equal_to[1]|less_than_equal_to[12]');
+				
 				$this->form_validation->set_rules('amount','缴费金额','required');
 				
 				
@@ -50,7 +53,6 @@ class Order extends Wx_Controller {
 				}
 				
 				$this->order_service->setWeixinAppConfig(config_item('mp_xcxCswy'));
-				
 				
 				$this->postJson['pay_channel'] = '微信支付';
 				$this->postJson['pay_method'] = '小程序支付';
@@ -65,12 +67,14 @@ class Order extends Wx_Controller {
 				$this->postJson['notify_url'] = site_url('api/order_wuye/notify');
 				
 				$message = '订单创建失败';
-				
 				//strtotime( "2009-01-31 +1 month" )
-				$expireTs = strtotime($this->postJson['year'].'-'.str_pad($this->postJson['month'],2,'0',STR_PAD_LEFT).'-01 +1 month');
+				
+				$startTs = strtotime($this->postJson['year'].'-'.str_pad($this->postJson['start_month'],2,'0',STR_PAD_LEFT).'-01');
+				$expireTs = strtotime($this->postJson['year'].'-'.str_pad($this->postJson['end_month'],2,'0',STR_PAD_LEFT).'-01 +1 month');
 				
 				$this->postJson['extra_info'] = json_encode(array(
 					'house_id' => $this->postJson['house_id'],
+					'fee_start' => $startTs,
 					'fee_expire' => $expireTs
 				));
 				
@@ -81,6 +85,7 @@ class Order extends Wx_Controller {
 				try {
 					$callPayJson = $this->order_service->createWeixinOrder($this->postJson,$this->sessionInfo);
 					file_put_contents('wuye.txt',print_r($callPayJson,true),FILE_APPEND);
+					
 				}catch(WxPayException $e1){
 					$message = $e1->getMessage();
 				}catch(Exception $e){
@@ -145,6 +150,27 @@ class Order extends Wx_Controller {
 	
 	
 	/**
+	 * 设置是否用户订单
+	 */
+	private function _setIsUserOrderRules(){
+		
+		$this->order_service->setOrderIdRules();
+		
+		$this->form_validation->set_rules('uid','用户标识', array(
+				'required',
+				array(
+					'checkIsUserOrder_callable['.$this->postJson['order_id'].']',
+					array(
+						$this->order_service,'checkIsUserOrder'
+					)
+				)
+			)
+		);
+		
+	}
+	
+	
+	/**
 	 * 获得订单详情
 	 */
 	public function getOrderDetail(){
@@ -152,11 +178,15 @@ class Order extends Wx_Controller {
 		if($this->memberInfo){
 			
 			for($i = 0; $i < 1; $i++){
-				$this->form_validation->set_data($this->postJson);
-				$this->form_validation->set_rules('order_id','订单ID','required|in_db_list['.$this->Order_Model->getTableRealName().'.order_id]');
+				
+				$this->form_validation->set_data(array(
+					'order_id' => $this->postJson['order_id']
+				));
+				
+				$this->order_service->setOrderIdRules();
 				
 				if(!$this->form_validation->run()){
-					$this->jsonOutput2($this->form_validation->error_html());
+					$message = $this->form_validation->error_html();
 					break;
 				}
 				
@@ -170,21 +200,82 @@ class Order extends Wx_Controller {
 	}
 	
 	
+	
+	
 	/**
-	 * 取消
+	 * 关闭订单
 	 */
 	public function closeOrder(){
 		
+		if($this->memberInfo){
+			
+			for($i = 0; $i < 1; $i++){
+				
+				$this->form_validation->set_data(array(
+					'uid' => $this->memberInfo['uid'],
+					'order_id' => $this->postJson['order_id']
+				));
+				
+				
+				$this->_setIsUserOrderRules();
+		
+				if(!$this->form_validation->run()){
+					$this->jsonOutput2($this->form_validation->error_html());
+					break;
+				}
+				
+				$resp = $this->order_service->closeOrderById($this->postJson['order_id']);
+				
+				if(!$resp){
+					$this->jsonOutput2("关闭订单失败");
+					break;
+				}
+				
+				$this->jsonOutput2(RESP_SUCCESS);
+			}
+			
+		}else{
+			$this->jsonOutput2(UNBINDED,$this->unBind);
+		}
 		
 	}
 	
 	
 	/**
-	 * 退款订单
+	 * 订单申请退款
+	 * 
+	 * 
 	 */
-	public function refoundOrder(){
+	public function applyRefundOrder(){
 		
-		
+		if($this->memberInfo){
+			for($i = 0; $i < 1; $i++){
+				
+				$this->form_validation->set_data(array(
+					'uid' => $this->memberInfo['uid'],
+					'order_id' => $this->postJson['order_id'],
+					'reason' => $this->postJson['reason'],
+					'remark' => $this->postJson['remark']
+				));
+				
+				
+				$this->_setIsUserOrderRules();
+				$this->form_validation->set_ruls('reason','退款原因','required|min_length[3]|max_length[100]');
+				$this->form_validation->set_ruls('remark','备注','min_length[3]|max_length[100]');
+				
+				if(!$this->form_validation->run()){
+					$message = $this->form_validation->error_html();
+					break;
+				}
+				
+				
+				$newOrder = $this->order_service->createRefundOrder();
+				
+			}
+			
+		}else{
+			$this->jsonOutput2(UNBINDED,$this->unBind);
+		}
 	}
 	
 }

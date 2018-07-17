@@ -42,6 +42,8 @@ class Order_service extends Base_service {
 	private $_appConfig;
 	private $_paymentConfig;
 	
+	private $_paymentChannel;
+	
 	
 	
 	public function __construct(){
@@ -60,6 +62,9 @@ class Order_service extends Base_service {
 		$this->_wuyeServiecObj = self::$CI->wuye_service;
 		
 		$this->_paymentConfig = config_item('payment');
+		
+		//支付渠道
+		$this->_paymentChannel = $this->_paymentConfig['channel'];
 	}
 	
 	
@@ -134,8 +139,32 @@ class Order_service extends Base_service {
 	}
 	
 	
+	/**
+	 * 创建退订单
+	 */
+	public function createRefundOrder($pOrderId){
+	
+		$oldOrderInfo = $this->getOrderDetailByOrderId($pOrderId);
+		
+		
+		
+		//$this->createBussOrder();
+		
+		
+	}
 	
 	
+	
+	/**
+	 * 检查微信 返回成功状态
+	 */
+	public function checkWeixinRespSuccess($result){
+		if('SUCCESS' == $result['return_code'] && 'SUCCESS' == $result['result_code']){
+			return true;
+		}
+		
+		return false;
+	}
 	
 	/**
 	 * 创建订单
@@ -195,7 +224,7 @@ class Order_service extends Base_service {
 			
 			file_put_contents('wuye.txt',print_r($weixinOrder,true),FILE_APPEND);
 			
-			if('SUCCESS' == $weixinOrder['return_code'] && 'SUCCESS' == $weixinOrder['result_code']){
+			if($this->checkWeixinRespSuccess($weixinOrder)){
 				
 				//将 prepay_id 保存起来, 用来在用户取消订单后，后续可以再次进行下发 换起支付的参数
 				$this->_orderModel->updateByWhere(array(
@@ -206,6 +235,8 @@ class Order_service extends Base_service {
 				
 				return $this->genPaymentParam($weixinOrder['prepay_id']);
 			}else{
+				log_message('error',"return_code={$weixinOrder['return_code']},return_msg={$weixinOrder['return_msg']},order_id={$localOrder['order_id']}");
+				
 				return false;
 			}
 		}
@@ -298,6 +329,88 @@ class Order_service extends Base_service {
 		}
 		
 		return $orderInfo;
+		
+	}
+	
+	
+	/**
+	 * 设置关闭
+	 */
+	private function _closeOrder($pId,$key = 'id'){
+		return $this->_orderModel->updateByWhere(array(
+			'status' => OrderStatus::$closed
+		),array($key => $pId));
+	}
+	
+	
+	/**
+	 * 关闭订单
+	 */
+	public function closeOrderById($pOrderId){
+		
+		$orderInfo = $this->_orderModel->getFirstByKey($pOrderId,'order_id','id,order_id,pay_channel,status');
+		
+		if(empty($orderInfo)){
+			return false;
+		}
+		
+		
+		if($orderInfo['status'] != OrderStatus::$unPayed){
+			return false;
+		}
+		
+		if($orderInfo['pay_channel'] == $this->_paymentConfig['channel']['微信支付']){
+			$wxPayCloseObj = new WxPayCloseOrder();
+			
+			$wxPayCloseObj->SetOut_trade_no($orderInfo['order_id']);
+			
+			$closeResp = WxPayApi::closeOrder($wxPayCloseObj);
+			
+			if(!$this->checkWeixinRespSuccess($closeResp)){
+				log_message('error',"return_code={$closeResp['return_code']},return_msg={$closeResp['return_msg']},order_id={$orderInfo['order_id']}");
+				return false;
+			}
+			
+			return $this->_closeOrder($orderInfo['id']);
+			
+		}else if($orderInfo['pay_channel'] == $this->_paymentConfig['channel']['支付宝支付']){
+			//@todo 待完成
+			return false;
+			
+		}else{
+			//非互联网订单直接关闭
+			return $this->_closeOrder($orderInfo['id']);
+		}
+		
+	}
+	
+	
+	
+	
+	
+	
+	////////////验证规则/////////////////
+	
+	public function setOrderIdRules(){
+		self::$CI->form_validation->set_rules('order_id','订单ID','required|in_db_list['.$this->_orderModel->getTableRealName().'.order_id]');
+	}
+	
+	public function checkIsUserOrder($uid,$orderId = ''){
+		
+		$cnt = $this->_orderModel->getCount(array(
+			'where' => array(
+				'order_id' => $orderId,
+				'uid' => $uid
+			)
+		));
+		
+		if($cnt == 0){
+			self::$CI->form_validation->set_message('checkIsUserOrder_callable','订单号不正确');
+			return false;
+		}else{
+			return true;
+		}
+		
 		
 	}
 	

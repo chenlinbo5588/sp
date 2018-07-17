@@ -5,6 +5,7 @@ $entity = array(
 'id' => 'int',
 'house_id' => 'int',
 'uid' => 'int',
+'fee_start' => 'int',
 'fee_expire' => 'int',
 'order_id' => 'varchar',
 'order_status' => 'tinyint',

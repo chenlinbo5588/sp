@@ -131,3 +131,17 @@ function arrayToXML($assocArray){
 	
 	return '<xml>'.implode('',$line).'</xml>';
 }
+
+
+function arrayToSting($pAr,$sep = '|'){
+	$line = array();
+		
+	foreach($pAr as $k => $v){
+		if(!is_array($v)){
+			$line[] = "{$k}={$v}";
+		}
+	}
+	
+	return implode($sep,$line);
+	
+}

@@ -31,6 +31,8 @@ class Wx_Controller extends MY_Controller {
 		$this->load->library(array('Seo_service','Weixin_service','Wuye_service'));
 		$this->form_validation->set_error_delimiters('<label class="form_error">','</label>');
 		
+		
+		//从GET参数获取身份ID
 		$bussId = $this->input->get('sid');
 		
 		if($this->isPostRequest()){
@@ -48,9 +50,16 @@ class Wx_Controller extends MY_Controller {
 			$this->sessionInfo = $this->weixin_service->getWeixinUserInfoBySession($bussId);
 			
 			if('development' == ENVIRONMENT){
+				//开发环境 ，方面调试
 				$this->memberInfo = $this->wuye_service->initUserInfoBySession($this->sessionInfo,'mobile');
 			}else{
-				$this->memberInfo = $this->wuye_service->initUserInfoBySession($this->sessionInfo);
+				if($this->sessionInfo['unionid']){
+					//开放平台 ，统一用户
+					$this->memberInfo = $this->wuye_service->initUserInfoBySession($this->sessionInfo,'unionid');
+				}else{
+					$this->memberInfo = $this->wuye_service->initUserInfoBySession($this->sessionInfo,'openid');
+				}
+				
 			}
 			
 			if($this->memberInfo){

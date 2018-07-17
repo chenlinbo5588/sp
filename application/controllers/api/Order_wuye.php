@@ -101,6 +101,7 @@ class PayNotifyCallBack extends WxPayNotify
 			//@todo 需要安装用户 分表
 			$this->_ci->House_Fee_Model->_add(array(
 				'house_id' => $feeInfo['house_id'],
+				'fee_start' => $feeInfo['fee_start'],
 				'fee_expire' => $feeInfo['fee_expire'],
 				'uid' => $orderInfo['uid'],
 				'order_id' => $orderInfo['order_id'],
@@ -113,6 +114,8 @@ class PayNotifyCallBack extends WxPayNotify
 				$this->_ci->Order_Model->rollBackTrans();
 				
 				file_put_contents('wuye_callback.txt',print_r(array(
+					'house_id' => $feeInfo['house_id'],
+					'fee_start' => $feeInfo['fee_start'],
 					'fee_expire' => $feeInfo['fee_expire'],
 					'uid' => $orderInfo['uid'],
 					'order_id' => $orderInfo['order_id'],
