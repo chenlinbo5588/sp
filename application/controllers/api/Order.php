@@ -109,13 +109,25 @@ class Order extends Wx_Controller {
 		if($this->memberInfo){
 			
 			$page = $this->postJson['page'];
+			$statusName = $this->postJson['statusName'];
+			
 			if(empty($page)){
 				$page = 1;
 			}
 			
+			$statusNameList = OrderStatus::$statusName;
+			$orderStatus = 0;
+			
+			if (in_array ($statusName, $statusNameList)) {
+				$orderStatus = array_search($statusName,$statusNameList);
+			}else{
+				$orderStatus = -1;
+			}
+			
 			$condition = array(
 				'where' => array(
-					'uid' => $this->memberInfo['uid']
+					'uid' => $this->memberInfo['uid'],
+					'status' => $orderStatus
 				),
 				'pager' => array(
 					'page_size' => config_item('page_size'),
@@ -138,7 +150,6 @@ class Order extends Wx_Controller {
 	public function getOrderDetail(){
 		
 		if($this->memberInfo){
-			
 			
 			for($i = 0; $i < 1; $i++){
 				$this->form_validation->set_data($this->postJson);

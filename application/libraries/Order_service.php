@@ -110,13 +110,6 @@ class Order_service extends Base_service {
 		
 		$order['amount'] = $param['amount'];
 		
-		if($param['openid']){
-			$order['openid'] = $param['openid'];
-		}
-		
-		if($param['unionid']){
-			$order['unionid'] = $param['unionid'];
-		}
 		
 		if($param['extra_info']){
 			$order['extra_info'] = $param['extra_info'];
@@ -151,9 +144,6 @@ class Order_service extends Base_service {
 		
 		$param['openid'] = $weixinUser['openid'];
 		
-		if($weixinUser['unionid']){
-			$param['unionid']  = $weixinUser['unionid'];
-		}
 		
 		if($param['order_id']){
 			$localOrder = $this->_orderModel->getFirstByKey($param['order_id'],'order_id');
@@ -199,8 +189,7 @@ class Order_service extends Base_service {
 				$input->SetProduct_id($localOrder['goods_id']);
 			}
 			
-			$input->SetOpenid($localOrder['openid']);
-			
+			$input->SetOpenid($param['openid']);
 			
 			$weixinOrder = WxPayApi::unifiedOrder($input);
 			
@@ -286,7 +275,7 @@ class Order_service extends Base_service {
 	 */
 	public function getOrderDetailByOrderId($pOrderId,$pUser = array()){
 		
-		if(empty($orderId)){
+		if(empty($pOrderId)){
 			return false;
 		}
 		
