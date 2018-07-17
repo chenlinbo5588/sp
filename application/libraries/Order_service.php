@@ -42,8 +42,7 @@ class Order_service extends Base_service {
 	private $_appConfig;
 	private $_paymentConfig;
 	
-	private $_paymentChannel;
-	
+	private $_orderType;
 	
 	
 	public function __construct(){
@@ -53,7 +52,7 @@ class Order_service extends Base_service {
 		
 		
 		self::$CI->load->model(array(
-			'Order_Model',
+			'Order_Model','Basic_Data_Model'
 		));
 		
 		$this->_orderModel = self::$CI->Order_Model;
@@ -63,8 +62,7 @@ class Order_service extends Base_service {
 		
 		$this->_paymentConfig = config_item('payment');
 		
-		//支付渠道
-		$this->_paymentChannel = $this->_paymentConfig['channel'];
+		
 	}
 	
 	
@@ -146,10 +144,7 @@ class Order_service extends Base_service {
 	
 		$oldOrderInfo = $this->getOrderDetailByOrderId($pOrderId);
 		
-		
-		
-		//$this->createBussOrder();
-		
+		//$newOrderInfo = $this->createBussOrder();
 		
 	}
 	
