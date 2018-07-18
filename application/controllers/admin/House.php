@@ -555,7 +555,7 @@ class House extends Ydzj_Admin_Controller {
 		        PHPExcel_Settings::setLocale('zh_CN');
 		        PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
 		        
-		        $this->load->library(array('Staff_service'));
+		        $this->load->library(array('Basic_data_service'));
 		        
 	    		try {
 	    			
@@ -574,7 +574,7 @@ class House extends Ydzj_Admin_Controller {
 					$result = array();
 					$successCnt = 0;
 					
-					$idTypeList = $this->staff_service->getTopChildList('证件类型');
+					$idTypeList = $this->basic_data_service->getTopChildList('证件类型');
 					
 					// 列从 0 开始  行从1 开始
 					for($rowIndex = $startRow; $rowIndex <= $highestRow; $rowIndex++){

@@ -8,7 +8,7 @@ class Worker extends Ydzj_Admin_Controller {
 	public function __construct(){
 		parent::__construct();
 		
-		$this->load->library(array('Staff_service','Attachment_service'));
+		$this->load->library(array('Basic_data_service','Staff_service','Attachment_service'));
 		$this->attachment_service->setUid($this->_adminProfile['basic']['uid']);
 		
 		$this->_moduleTitle = '家政从业人员';
@@ -25,7 +25,7 @@ class Worker extends Ydzj_Admin_Controller {
 			array('url' => $this->_className.'/add','title' => '新增'),
 		);
 		
-		$this->assign('basicData',$this->staff_service->getBasicDataList());
+		$this->assign('basicData',$this->basic_data_service->getBasicDataList());
 	}
 	
 	
@@ -176,14 +176,14 @@ class Worker extends Ydzj_Admin_Controller {
 	 * 
 	 */
 	private function _commonPageData(){
-		$basicData = $this->staff_service->getAssocBasicDataTree();
+		$basicData = $this->basic_data_service->getAssocBasicDataTree();
 		
 		$this->assign(array(
 			'province_idcard' => json_encode(config_item('province_idcard')),
-			'idTypeList' => $this->staff_service->getTopChildList('证件类型'),
-			'jiguanList' => $this->staff_service->getTopChildList('籍贯'),
-			'xueliList' => $this->staff_service->getTopChildList('学历'),
-			'marriageList' => $this->staff_service->getTopChildList('婚育状态'),
+			'idTypeList' => $this->basic_data_service->getTopChildList('证件类型'),
+			'jiguanList' => $this->basic_data_service->getTopChildList('籍贯'),
+			'xueliList' => $this->basic_data_service->getTopChildList('学历'),
+			'marriageList' => $this->basic_data_service->getTopChildList('婚育状态'),
 		));
 		
 	}

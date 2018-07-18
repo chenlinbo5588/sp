@@ -4,17 +4,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Staff_service extends Base_service {
 	
 	
-	private $_basicDataModel = null;
 	private $_workerModel = null;
 	private $_workerImagesModel = null;
 	private $_staffModel = null;
 	private $_staffImagesModel = null;
 	
 	
+	private $_basicDataService = null;
 	
+	//列表
 	private $_basicData = array();
-	//原始树
-	private $_basicDataTree = array();
 	
 	//键树
 	private $_basicAssocDataTree = array();
@@ -24,11 +23,14 @@ class Staff_service extends Base_service {
 		parent::__construct();
 		
 		self::$CI->load->model(array(
-			'Basic_Data_Model','Worker_Model','Worker_Images_Model',
+			'Worker_Model','Worker_Images_Model',
 			'Staff_Model','Staff_Images_Model'
-		
 		));
-		$this->_basicDataModel = self::$CI->Basic_Data_Model;
+		
+		self::$CI->load->library(array('Basic_data_service'));
+		
+		$this->_basicDataService = self::$CI->basic_data_service;
+		
 		$this->_workerModel = self::$CI->Worker_Model;
 		$this->_workerImagesModel = self::$CI->Worker_Images_Model;
 		$this->_staffModel = self::$CI->Staff_Model;
@@ -36,184 +38,16 @@ class Staff_service extends Base_service {
 		$this->_staffImagesModel = self::$CI->Staff_Images_Model;
 		
 		
-		$this->_basicData = $this->_basicDataModel->getList($this->_getDefaultCondition(),'id');
+		$this->_basicData = Basic_data_service::$basicData;
+		$this->_basicAssocDataTree = Basic_data_service::$basicAssocDataTree;
 		
-		self::$CI->phptree->resetData();
-		$this->_basicDataTree = self::$CI->phptree->makeTree($this->_basicData,array(
-				'primary_key' => 'id',
-				'parent_key' => 'pid',
-				'expanded' => true
-			));
-			
-		$this->makeAssocData($this->_basicDataTree,$this->_basicAssocDataTree);
-		
-	}
-	
-	
-	/**
-	 * 转换成键值的数组
-	 */
-	public function makeAssocData($tempAllData,&$destData){
-		foreach($tempAllData as $basicDataItem){
-			$destData[$basicDataItem['show_name']] = array(
-				'id' => $basicDataItem['id'],
-				'show_name' => $basicDataItem['show_name'],
-				'real_val' => $basicDataItem['real_val'],
-				'displayorder' => $basicDataItem['displayorder'],
-				'pid' => $basicDataItem['pid'],
-				'selected' => false,
-				'style' => ''
-			);
-			
-			if($basicDataItem['children']){
-				$destData[$basicDataItem['show_name']]['children'] = array();
-				$this->makeAssocData($basicDataItem['children'],$destData[$basicDataItem['show_name']]['children']);
-			}
-		}
-	}
-	
-	
-	/**
-	 * 返回键树
-	 */
-	public function getAssocBasicDataTree(){
-		return $this->_basicAssocDataTree;
 	}
 	
 	/**
-	 * 获得顶级的子项
+	 * 获得属相
 	 */
-	public function getTopChildList($pTopName){
-		
-		if(isset($this->_basicAssocDataTree[$pTopName])){
-			return $this->_basicAssocDataTree[$pTopName]['children'];
-		}else{
-			return array();
-		}
-	}
-	
-	
-	private function _getDefaultCondition(){
-		return array(
-			'select' => 'id,show_name,real_val,pid,displayorder,enable', 
-			'where' => array('enable' => 1),
-			'order' => 'displayorder ASC,id DESC'
-		);
-	}
-	
-	/**
-	 * 
-	 */
-	public function getBasicDataTreeHTML($condition = array()){
-		
-		$condition = array_merge($this->_getDefaultCondition(),$condition);
-		
-		$list = $this->_basicDataModel->getList($condition);
-		
-		if($list){
-			self::$CI->phptree->resetData();
-			return self::$CI->phptree->makeTreeForHtml($list,array(
-				'primary_key' => 'id',
-				'parent_key' => 'pid',
-				'expanded' => true
-			));
-		}else{
-			return array();
-		}
-	}
-	
-	
-	/**
-	 * 获得基础数据类别
-	 */
-	public function getBasicDataList($condition = array()){
-		$condition = array_merge($this->_getDefaultCondition(),$condition);
-		return $this->_basicDataModel->getList($condition,'id');
-	}
-	
-	
-	public function getBasicDataTree($condition = array()){
-		$condition = array_merge($this->_getDefaultCondition(),$condition);
-		
-		$list = $this->_basicDataModel->getList($condition);
-		if($list){
-			self::$CI->phptree->resetData();
-			return self::$CI->phptree->makeTree($list,array(
-				'primary_key' => 'id',
-				'parent_key' => 'pid',
-				'expanded' => true
-			));
-		}else{
-			
-			return array();
-		}
-	}
-	
-	
-	
-	/**
-	 * 检查数据合法性
-	 */
-	public function checkpid($pid, $extra = ''){
-		
-		//echo $extra;
-		
-		$deep = $this->_basicDataModel->getDeepById($pid);
-		
-		//最大深度4
-		if($deep >= 4){
-			self::$CI->form_validation->set_message('checkpid_callable','父级只能是一级、二级、三级分类');
-			return false;
-		}
-		
-		if($extra == 'add'){
-			//如果是增加的不需要再网后面继续执行了
-			return true;
-		}
-		
-		//不能是自己，也不能是其下级分类
-		$currentId = self::$CI->input->post('id');
-		
-		$list = $this->_basicDataModel->getList(array(
-			'where' => array('pid' => $currentId)
-		));
-		
-		$subIds = array($currentId);
-		$hasData = true;
-		
-		while($list && $hasData){
-			
-			$ids = array();
-			foreach($list as $item){
-				$subIds[] = $item['id'];
-				$ids[] = $item['id'];
-			}
-			
-			if($ids){
-				$hasData = false;
-			}else{
-				$list = $this->_basicDataModel->getList(array(
-					'where_in' => array(
-						array('key' => 'pid', 'value' => $ids)
-					)
-				));
-			}
-		}
-		
-		//print_r($subIds);
-		if(in_array($pid,$subIds)){
-			self::$CI->form_validation->set_message('checkpid_callable','父级不能选择自己和自己的下级分类');
-			return false;
-		}else{
-			
-			return true;
-		}
-	}
-	
-	
 	public function addShuXiangField($pParam){
-		
-		$shuList = $this->getTopChildList('属相');
+		$shuList = $this->_basicDataService->getTopChildList('属相');
 		
 		//获得属相
 		foreach($shuList as $shuItem){
@@ -239,7 +73,7 @@ class Staff_service extends Base_service {
 			$idType = self::$CI->input->post('id_type');
 			$idName = '';
 			
-			$idTypeList = $this->getTopChildList('证件类型');
+			$idTypeList = $this->_basicDataService->getTopChildList('证件类型');
 			foreach($idTypeList as $idTypeItem){
 				if($idTypeItem['id'] == $idType){
 					$idName = $idTypeItem['show_name'];
@@ -277,22 +111,6 @@ class Staff_service extends Base_service {
 		
 	}
 	
-	/**
-	 * @todo
-	 */
-	public function addServRuleValidVal($groupName){
-		$tempArray = $this->_basicAssocDataTree[$groupName]['children'];
-		
-		
-		foreach($tempArray as $tempItem){
-			
-			
-		}
-		
-		return array();
-		
-		
-	}
 	
 	/**
 	 * 

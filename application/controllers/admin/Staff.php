@@ -5,7 +5,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 abstract class Staff extends Ydzj_Admin_Controller {
 	
 	
-	public $idTypeList;
 	public $_moduleTitle;
 	public $_className;
 	
@@ -17,7 +16,7 @@ abstract class Staff extends Ydzj_Admin_Controller {
 	public function __construct(){
 		parent::__construct();
 		
-		$this->load->library(array('Staff_service','Attachment_service'));
+		$this->load->library(array('Basic_data_service','Staff_service','Attachment_service'));
 		$this->attachment_service->setUid($this->_adminProfile['basic']['uid']);
 		
 		$this->assign(array(
@@ -33,7 +32,6 @@ abstract class Staff extends Ydzj_Admin_Controller {
 			array('url' => $this->_className.'/verify','title' => '已审核'),
 		);
 		
-		$this->idTypeList = $this->staff_service->getTopChildList('证件类型');
 		
 		$this->statusConfig = array(
 			'未提交',
@@ -43,7 +41,7 @@ abstract class Staff extends Ydzj_Admin_Controller {
 		
 		$this->assign(array(
 			'statusConfig' => $this->statusConfig,
-			'basicData' => $this->staff_service->getBasicDataList()
+			'basicData' => $this->basic_data_service->getBasicDataList()
 		));
 	}
 	
@@ -65,7 +63,7 @@ abstract class Staff extends Ydzj_Admin_Controller {
 		
 		$condition = array(
 			'select' => 'id,name,show_name,id_type,id_no,mobile,address,jiguan,age,avatar_m,avatar_s,status,work_month,service_cnt,salary_amount,salary_detail',
-			'where' => array(),
+			'where' => array_merge(array(),$moreSearchVal),
 			'order' => 'id DESC',
 			'pager' => array(
 				'page_size' => config_item('page_size'),
@@ -557,15 +555,15 @@ abstract class Staff extends Ydzj_Admin_Controller {
 	 * 
 	 */
 	private function _commonPageData(){
-		$basicData = $this->staff_service->getAssocBasicDataTree();
+		$basicData = $this->basic_data_service->getAssocBasicDataTree();
 		
 		$pageData = array(
 			'province_idcard' => json_encode(config_item('province_idcard')),
-			'idTypeList' => $this->idTypeList,
-			'jiguanList' => $this->staff_service->getTopChildList('籍贯'),
-			'xueliList' => $this->staff_service->getTopChildList('学历'),
-			'marriageList' => $this->staff_service->getTopChildList('婚育状态'),
-			'regionList' => $this->staff_service->getTopChildList('服务区域'),
+			'idTypeList' => $this->basic_data_service->getTopChildList('证件类型'),
+			'jiguanList' => $this->basic_data_service->getTopChildList('籍贯'),
+			'xueliList' => $this->basic_data_service->getTopChildList('学历'),
+			'marriageList' => $this->basic_data_service->getTopChildList('婚育状态'),
+			'regionList' => $this->basic_data_service->getTopChildList('服务区域'),
 			'salaryList' => $basicData[$this->_moduleTitle]['children'][$this->_moduleTitle.'薪资']['children'],
 			'ablityList' => $basicData[$this->_moduleTitle]['children'][$this->_moduleTitle.'服务能力']['children'],
 		);

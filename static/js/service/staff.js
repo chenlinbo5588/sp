@@ -29,16 +29,23 @@ $(function(){
         	//每次成功上传后执行的回调函数，从服务端返回数据到前端
         	var jsonResp = $.parseJSON(data);
         	
-        	$.get(cutUrl , {url: jsonResp.url ,id: jsonResp.id , x: 200, y: 200 , resize: 0, ratio: 1} , function(html){
-        		$("#avatarDlg").html(html).dialog({
-        			  title:"裁切头像",
-	  	    	      autoOpen: false,
-	  	    	      height: 'auto',
-	  	    	      width: '65%',
-	  	    	      modal: true,
-	  	    	      position: { my : "center", at: "center", of: window }
-	          	}).dialog("open");
-        	});
+        	var doCutFn = function(cutUrl,jsonResp){
+        		$.get(cutUrl , {url: jsonResp.url ,id: jsonResp.id , x: 200, y: 200 , resize: 0, ratio: 1} , function(html){
+            		$("#avatarDlg").html(html).dialog({
+            			  title:"裁切头像",
+    	  	    	      autoOpen: false,
+    	  	    	      height: 'auto',
+    	  	    	      width: '65%',
+    	  	    	      modal: true,
+    	  	    	      position: { my : "center", at: "center", of: window }
+    	          	}).dialog("open");
+            	});
+        	}
+        	
+        	setTimeout(function(){
+        		doCutFn(cutUrl,jsonResp);
+        	},500);
+        	
         },
         'onQueueComplete' : function(queueData) {//上传队列全部完成后执行的回调函数
            // if(img_id_upload.length>0)

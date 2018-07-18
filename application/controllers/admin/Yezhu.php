@@ -7,7 +7,7 @@ class Yezhu extends Ydzj_Admin_Controller {
 	public function __construct(){
 		parent::__construct();
 		
-		$this->load->library(array('Wuye_service','Staff_service'));
+		$this->load->library(array('Wuye_service','Basic_data_service'));
 		
 		$this->_moduleTitle = '业主';
 		$this->_className = strtolower(get_class());
@@ -114,12 +114,12 @@ class Yezhu extends Ydzj_Admin_Controller {
 	 * 
 	 */
 	private function _commonPageData(){
-		$basicData = $this->staff_service->getAssocBasicDataTree();
+		$basicData = $this->basic_data_service->getAssocBasicDataTree();
 		
 		$this->assign(array(
 			'province_idcard' => json_encode(config_item('province_idcard')),
-			'idTypeList' => $this->staff_service->getTopChildList('证件类型'),
-			'jiguanList' => $this->staff_service->getTopChildList('籍贯'),
+			'idTypeList' => $this->basic_data_service->getTopChildList('证件类型'),
+			'jiguanList' => $this->basic_data_service->getTopChildList('籍贯'),
 		));
 	}
 	
@@ -134,7 +134,7 @@ class Yezhu extends Ydzj_Admin_Controller {
 		
 		if($this->isPostRequest()){
 			
-			$this->wuye_service->addYezhuRules($this->staff_service->getTopChildList('证件类型'),$this->input->post('id_type'), 0);
+			$this->wuye_service->addYezhuRules($this->basic_data_service->getTopChildList('证件类型'),$this->input->post('id_type'), 0);
 			
 			for($i = 0; $i < 1; $i++){
 				if(!$this->form_validation->run()){
@@ -181,7 +181,7 @@ class Yezhu extends Ydzj_Admin_Controller {
 		if($this->isPostRequest()){
 			
 			
-			$this->wuye_service->addYezhuRules($this->staff_service->getTopChildList('证件类型'),$this->input->post('id_type'),$info['id']);
+			$this->wuye_service->addYezhuRules($this->basic_data_service->getTopChildList('证件类型'),$this->input->post('id_type'),$info['id']);
 			
 			for($i = 0; $i < 1; $i++){
 				$info = array_merge($info,$_POST,$this->_prepareData(),$this->addWhoHasOperated('edit'));
@@ -322,8 +322,8 @@ class Yezhu extends Ydzj_Admin_Controller {
 					$successCnt = 0;
 					
 					
-					$idTypeList = $this->staff_service->getTopChildList('证件类型');
-					$jiguanList = $this->staff_service->getTopChildList('籍贯');
+					$idTypeList = $this->basic_data_service->getTopChildList('证件类型');
+					$jiguanList = $this->basic_data_service->getTopChildList('籍贯');
 					
 					$provinceIdcard = config_item('province_idcard');
 					

@@ -438,7 +438,10 @@ class Order_service extends Base_service {
 			
 			if(!$this->checkWeixinRespSuccess($closeResp)){
 				log_message('error',"return_code={$closeResp['return_code']},return_msg={$closeResp['return_msg']},order_id={$orderInfo['order_id']}");
-				return false;
+				
+				if('ORDERCLOSED' != $closeResp['return_code']){
+					return false;
+				}
 			}
 			
 			return $this->_closeOrder($orderInfo['id']);

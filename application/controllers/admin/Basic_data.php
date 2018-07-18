@@ -10,10 +10,8 @@ class Basic_Data extends Ydzj_Admin_Controller {
 	public function __construct(){
 		parent::__construct();
 		
-		$this->load->library(array('Staff_service','Attachment_service'));
+		$this->load->library(array('Basic_data_service'));
 		$this->_moduleTitle = '基础数据';
-		
-		
 		
 		$this->_className = strtolower(get_class());
 		
@@ -40,7 +38,7 @@ class Basic_Data extends Ydzj_Admin_Controller {
 		
 		$id = $this->input->get_post('pid') ? $this->input->get_post('pid') : 0;
 		
-		$treelist = $this->staff_service->getBasicDataTreeHTML();
+		$treelist = $this->basic_data_service->getBasicDataTreeHTML();
 		$deep = 0;
 		
 		
@@ -126,16 +124,13 @@ class Basic_Data extends Ydzj_Admin_Controller {
 				array(
 					'checkpid_callable['.$action.']',
 					array(
-						$this->staff_service,'checkpid'
+						$this->basic_data_service,'checkpid'
 					)
 				)
 			)
 		);
 		
-		
-		
 		$this->form_validation->set_rules('enable','开启状态','required|in_list[0,1]');
-		
 				
 		if($this->input->post('displayorder')){
 			$this->form_validation->set_rules('displayorder','排序',"is_natural|less_than[256]");
@@ -184,7 +179,7 @@ class Basic_Data extends Ydzj_Admin_Controller {
 		$feedback = '';
 		$info = array();
 		
-		$treelist = $this->staff_service->getBasicDataTreeHTML();
+		$treelist = $this->basic_data_service->getBasicDataTreeHTML();
 		
 		$pid = $this->input->get_post('pid');
 		if($pid){
@@ -210,7 +205,7 @@ class Basic_Data extends Ydzj_Admin_Controller {
 					break;
 				}
 				
-				$treelist = $this->staff_service->getBasicDataTreeHTML();
+				$treelist = $this->basic_data_service->getBasicDataTreeHTML();
 				
 				$feedback = getSuccessTip('保存成功,页面将再3秒内自动刷新');
 				$info = $this->Basic_Data_Model->getFirstByKey($newid);
@@ -295,7 +290,7 @@ class Basic_Data extends Ydzj_Admin_Controller {
 		
 		$this->_subNavs[] = array('url' => $this->_className.'/edit?id='.$id, 'title' => '编辑');
 		
-		$treelist = $this->staff_service->getBasicDataTreeHTML();
+		$treelist = $this->basic_data_service->getBasicDataTreeHTML();
 		$info = $this->Basic_Data_Model->getFirstByKey($id);
 		
 		if($this->isPostRequest()){
@@ -316,7 +311,7 @@ class Basic_Data extends Ydzj_Admin_Controller {
 					break;
 				}
 				
-				$treelist = $this->staff_service->getBasicDataTreeHTML();
+				$treelist = $this->basic_data_service->getBasicDataTreeHTML();
 				
 				$feedback = getSuccessTip('保存成功');
 			}

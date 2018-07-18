@@ -6,7 +6,7 @@
         <header>
 	        <div id="topBar" class="clearfix">
 		       <div class="boxz clearfix">
-		       		<div id="siteLogo" class="logo"><a href="/"><img src="{resource_url('img/cmp/logo-white.png')}"/></a></div>
+		       		<div id="siteLogo" class="logo"></div>
 		       		<div id="siteContacts">
 		           		<a class="welcome" href="/" title="首页">{if $currentLang == 'english'}Welcome To Visist {$siteSetting['site_name_en']|escape}{else}您好,欢迎访问{$siteSetting['site_name']|escape}{/if}</a>
 		           		<div class="lixi">
