@@ -113,6 +113,9 @@ class Order_service extends Base_service {
 		
 		$order['amount'] = $param['amount'];
 		
+		if($param['order_old']){
+			$order['order_old'] = $param['order_old'];
+		}
 		
 		if($param['extra_info']){
 			$order['extra_info'] = $param['extra_info'];
@@ -140,12 +143,84 @@ class Order_service extends Base_service {
 	/**
 	 * 创建退订单
 	 */
-	public function createRefundOrder($pOrderId){
-	
-		$oldOrderInfo = $this->getOrderDetailByOrderId($pOrderId);
+	public function createRefundOrder($pOrderParam){
+		$oldOrderInfo = $this->getOrderDetailByOrderId($pOrderParam['order_id']);
 		
-		//$newOrderInfo = $this->createBussOrder();
+		$tuiOrder = array(
+			'order_typename' => $oldOrderInfo['order_typename'],
+			'extra_info' => $oldOrderInfo['extra_info'],
+			'amount' => $pOrderParam['amount'],
+			'uid' => $pOrderParam['uid'],
+			'order_old' => $pOrderParam['order_id'],
+			
+		);
 		
+		/*$reurnVal = array(
+			'code' => 'faild',
+			'data' => array()
+		);*/
+		
+		$newOrderInfo = $this->createBussOrder($tuiOrder);
+		
+		if(empty($newOrderInfo)){
+			return false;
+		}
+		
+		try {
+			
+			$wxPayRefund = new WxPayRefund();
+			$wxPayRefund->SetOut_trade_no($pOrderParam['order_id']);
+			$wxPayRefund->SetOut_refund_no($newOrderInfo['order_id']);
+			$wxPayRefund->SetTotal_fee($oldOrderInfo['amount']);
+			$wxPayRefund->SetRefund_fee($pOrderParam['amount']);
+			$wxPayRefund->SetNotify_url($pOrderParam['notify_url']);
+			
+			$refundResp = WxPayApi::refund($wxPayRefund);
+			
+			if(!$this->checkWeixinRespSuccess($refundResp)){
+				return false;
+			}
+			
+			$this->_orderModel->beginTrans();
+			
+			$this->_orderModel->updateByWhere(array(
+				'ref_order' => $refundResp['transaction_id'],
+				'ref_order_refund' => $refundResp['refund_id'],
+			),array('order_id' => $newOrderInfo['order_id']));
+			
+			$houseWuyeInfo = json_decode($oldOrderInfo['extra_info'],true);
+			
+			self::$CI->load->library('Wuye_service');
+			
+			///
+			self::$CI->House_Model->updateByWhere(array(
+				'wuye_expire' => $houseWuyeInfo['fee_start'],
+			),array('id' => $houseWuyeInfo['house_id']));
+			
+			
+			//
+			self::$CI->House_Fee_Model->updateByWhere(array(
+				'order_status' => OrderStatus::$refounded
+			),array('house_id' => $houseWuyeInfo['house_id']));
+			
+			if($this->_orderModel->getTransStatus() === FALSE){
+				$this->_orderModel->rollBackTrans();
+				return false;
+			}else{
+				$this->_orderModel->commitTrans();
+				return true;
+			}
+			
+		}catch(WxPayException $payException){
+			
+			
+			
+		}catch(Exption $e){
+			
+			
+		}
+		
+		return false;
 	}
 	
 	
@@ -378,8 +453,7 @@ class Order_service extends Base_service {
 		}
 		
 	}
-	
-	
+
 	
 	
 	

@@ -275,13 +275,15 @@ class Order extends Wx_Controller {
 		if($this->memberInfo){
 			for($i = 0; $i < 1; $i++){
 				
-				$this->form_validation->set_data(array(
+				$param = array(
 					'uid' => $this->memberInfo['uid'],
 					'order_id' => $this->postJson['order_id'],
+					'amount' => $this->postJson['amount'],
 					'reason' => $this->postJson['reason'],
 					'remark' => $this->postJson['remark']
-				));
+				);
 				
+				$this->form_validation->set_data($param);
 				
 				$this->_setIsUserOrderRules();
 				$this->form_validation->set_ruls('reason','退款原因','required|min_length[3]|max_length[100]');
@@ -292,8 +294,18 @@ class Order extends Wx_Controller {
 					break;
 				}
 				
+				//$param['notify_url'] = site_url('api/order_wuye_refund/notify');
 				
-				$newOrder = $this->order_service->createRefundOrder();
+				$isOk = $this->order_service->createRefundOrder($param);
+				
+				
+				if(!$isOk){
+					$this->jsonOutput2("退款失败");
+					break;
+				}
+				
+				$this->jsonOutput2(RESP_SUCCESS);
+				
 				
 			}
 			
