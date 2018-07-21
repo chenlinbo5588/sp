@@ -78,9 +78,7 @@ class Order extends Wx_Controller {
 						break;
 					}
 					
-					
-					$this->postJson['order_type'] = self::$orderType['nameKey'][$this->postJson['order_typename']]['id'];
-					
+					$this->postJson['order_type'] = Order_service::$orderType['nameKey'][$this->postJson['order_typename']]['id'];
 					$this->postJson['pay_channel'] = '微信支付';
 					$this->postJson['pay_method'] = '小程序支付';
 					
@@ -91,7 +89,7 @@ class Order extends Wx_Controller {
 					$this->postJson['amount'] = 1;
 					
 					//异步回调
-					$this->postJson['notify_url'] = site_url('api/order_wuye/notify');
+					$this->postJson['notify_url'] = site_url(Order_service::$orderType['nameKey'][$this->postJson['order_typename']]['order_url']);
 					
 					$message = '订单创建失败';
 					//strtotime( "2009-01-31 +1 month" )
@@ -302,14 +300,26 @@ class Order extends Wx_Controller {
 					break;
 				}
 				
-				//$param['notify_url'] = site_url('api/order_wuye_refund/notify');
-				
 				$orderInfo = $this->Order_Model->getFirstByKey($this->postJson['order_id'],'order_id');
 				
+				$orderInfo['extra_info'] = json_decode($orderInfo['extra_info']);
 				
+				if(empty($orderInfo['extra_info'])){
+					$param['extra_info'] = array(
+						'reason' => $this->postJson['reason'],
+						'remark' => $this->postJson['remark'],
+					);
+				}else{
+					$param['extra_info'] = array_merge($orderInfo['extra_info'],array(
+						'reason' => $this->postJson['reason'],
+						'remark' => $this->postJson['remark'],
+					));
+				}
+				
+				
+				$param['notify_url'] = site_url(Order_service::$orderType['nameKey'][$orderInfo['order_typename']]['refund_url']);
 				
 				$isOk = $this->order_service->createRefundOrder($param);
-				
 				
 				if(!$isOk){
 					$this->jsonOutput2("退款失败");
