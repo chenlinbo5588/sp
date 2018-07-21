@@ -199,9 +199,9 @@ class Order extends Ydzj_Admin_Controller {
 				$ids = (array)$ids;
 			}
 			
-			$returnVal = $this->staff_service->handleStaffVerify($ids);
 			
-			if($returnVal >= 0){
+			
+			if($returnVal > 0){
 				$this->jsonOutput('提交审核成功',$this->getFormHash());
 			}else{
 				$this->jsonOutput('提交审核失败',$this->getFormHash());

@@ -1,6 +1,5 @@
-{include file="common/main_header.tpl"}
+{include file="common/main_header_navs.tpl"}
   {config_load file="worker.conf"}
-  {include file="common/sub_nav.tpl"}
   {form_open(site_url($uri_string),'id="formSearch" method="get"')}
   <input type="hidden" name="page" value="{$currentPage}"/>
   <div class="fixedBar">
@@ -12,9 +11,10 @@
           <th><label>{#verify#}</label></th>
           <td>
           	<select name="status">
-              <option value="全部" {if $search['status'] == '全部'}selected{/if}>请选择...</option>
-              <option value="待审核" {if $search['status'] == '待审核'}selected{/if}>待审核</option>
-              <option value="已审核" {if $search['status'] == '已审核'}selected{/if}>已审核</option>
+          	  <option value="">请选中</option>
+          	  {foreach from=$statusConfig key=key item=item}
+          	  <option value="{$key}" {if $search['status'] == $key}selected{/if}>{$item}</option>
+          	  {/foreach}
             </select>
           </td>
           <td><input type="submit" class="msbtn" name="tijiao" value="查询"/></td>
@@ -83,8 +83,9 @@
     </table>
     <div class="fixedOpBar">
     	<label><input type="checkbox" class="checkall" id="checkallBottom" name="chkVal">全选</label>&nbsp;
-    	<a href="javascript:void(0);" class="btn handleVerifyBtn" data-title="确定提交审核吗?" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/handle_verify')}"><span>提交审核</span></a>
+    	<a href="javascript:void(0);" class="btn opBtn handleVerifyBtn" data-title="确定提交审核吗?" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/handle_verify')}"><span>提交审核</span></a>
     	<a href="javascript:void(0);" class="btn verifyBtn" data-title="审核" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/batch_verify')}" data-ajaxformid="#verifyForm"><span>审核</span></a>
+        <a href="javascript:void(0);" class="btn opBtn publishBtn" data-title="确定发布吗?" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/batch_published')}"><span>发布</span></a>
         <a href="javascript:void(0);" class="btn deleteBtn" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/delete')}"><span>删除</span></a>
         {include file="common/pagination.tpl"}
     </div>

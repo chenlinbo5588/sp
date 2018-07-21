@@ -79,9 +79,8 @@ class Navigation extends Ydzj_Admin_Controller {
 			for($i = 0; $i < 1; $i++){
 				
 				$info = array(
-					'name_cn' => $this->input->post('name_cn'),
-					'name_en' => $this->input->post('name_en'),
-					'url_cn' => $this->input->post('url_cn'),
+					'name' => $this->input->post('name'),
+					'url' => $this->input->post('url'),
 					'url_en' => $this->input->post('url_en'),
 					'nav_type' => $this->input->post('nav_type'),
 					'jump_type' => $this->input->post('jump_type'),
@@ -179,16 +178,14 @@ class Navigation extends Ydzj_Admin_Controller {
 		
 		$this->form_validation->set_rules('nav_type','导航类型',"required|in_list[0,1,2,3,4,5]");
 		
-		$this->form_validation->set_rules('name_cn','导航中文名称',"required|min_length[1]|max_length[50]");
-		$this->form_validation->set_rules('name_en','导航英文名称',"required|min_length[1]|max_length[50]");
+		$this->form_validation->set_rules('name','导航名称',"required|min_length[1]|max_length[50]");
 		
 		
 		if($this->input->post('pid')){
 			$this->form_validation->set_rules('pid','上级分类', "in_db_list[".$this->Navigation_Model->getTableRealName().".id]|callback_checkpid[{$action}]");
 		}
 		
-		$this->form_validation->set_rules('url_cn','导航中文链接',"required|valid_url");
-		$this->form_validation->set_rules('url_en','导航英文链接',"required|valid_url");
+		$this->form_validation->set_rules('url','导航链接',"required|valid_url");
 		
 		$this->form_validation->set_rules('jump_type','跳转方式',"required|in_list[0,1]");
 		
@@ -215,10 +212,8 @@ class Navigation extends Ydzj_Admin_Controller {
 				
 				$info = array(
 					'id' => $id,
-					'name_cn' => $this->input->post('name_cn'),
-					'name_en' => $this->input->post('name_en'),
-					'url_cn' => $this->input->post('url_cn'),
-					'url_en' => $this->input->post('url_en'),
+					'name' => $this->input->post('name'),
+					'url' => $this->input->post('url'),
 					'jump_type' => $this->input->post('jump_type'),
 					'pid' => $this->input->post('pid') ? $this->input->post('pid') : 0,
 					'displayorder' => $this->input->post('displayorder') ? $this->input->post('displayorder') : 255

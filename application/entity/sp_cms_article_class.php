@@ -3,8 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 $entity = array(
 'id' => 'int',
-'name_cn' => 'varchar',
-'name_en' => 'varchar',
+'name' => 'varchar',
 'sort' => 'tinyint',
 'ac_sort' => 'tinyint',
 'status' => 'int',

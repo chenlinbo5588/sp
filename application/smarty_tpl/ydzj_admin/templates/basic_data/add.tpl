@@ -1,5 +1,4 @@
-{include file="common/main_header.tpl"}
-  {include file="common/sub_nav.tpl"}
+{include file="common/main_header_navs.tpl"}
   {if $info['id']}
   {form_open(admin_site_url($moduleClassName|cat:'/edit?id='|cat:$info['id']),'id="add_form"')}
   {else}

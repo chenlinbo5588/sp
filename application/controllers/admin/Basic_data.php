@@ -52,10 +52,13 @@ class Basic_Data extends Ydzj_Admin_Controller {
 		}
 		
 		$list = $this->Basic_Data_Model->getByParentId($id);
-		$this->assign('list',$list);
-		$this->assign('parentId',$parentId);
-		$this->assign('deep',$deep + 1);
-		$this->assign('id',$id);
+		
+		$this->assign(array(
+			'list' => $list,
+			'parentId' => $parentId,
+			'deep' => $deep + 1,
+			'id' => $id
+		));
 		
 		$this->display();
 	}
@@ -116,11 +119,14 @@ class Basic_Data extends Ydzj_Admin_Controller {
 		
 	}
 	
-	
+	/**
+	 * 校验规则
+	 */
 	private function _getRules($action){
 		$this->form_validation->set_rules('show_name','显示名称','trim|required|min_length[1]|max_length[50]');
 		
 		$this->form_validation->set_rules('pid','父级分类', array(
+				'in_db_list['.$this->Basic_Data_Model->getTableRealName().".id]",
 				array(
 					'checkpid_callable['.$action.']',
 					array(
@@ -248,7 +254,7 @@ class Basic_Data extends Ydzj_Admin_Controller {
 			$this->form_validation->set_data($data);
 			
 			$this->form_validation->set_rules('id','数据标识','required');
-			$this->form_validation->set_rules('fieldname','字段','in_list[show_name,displayorder]');
+			$this->form_validation->set_rules('fieldname','字段','in_list[show_name,displayorder,enable]');
 			
 			switch($fieldName){
 				case 'show_name':
@@ -256,6 +262,9 @@ class Basic_Data extends Ydzj_Admin_Controller {
 					break;
 				case 'displayorder';
 					$this->form_validation->set_rules('displayorder','排序',"is_natural|less_than[256]");
+					break;
+				case 'enable':
+					$this->form_validation->set_rules('enable','开启状态','required|in_list[0,1]');
 					break;
 				default:
 					break;

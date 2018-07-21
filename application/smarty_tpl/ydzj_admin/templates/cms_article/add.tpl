@@ -1,24 +1,12 @@
-{include file="common/main_header.tpl"}
+{include file="common/main_header_navs.tpl"}
 {config_load file="article.conf"}
-  <div class="fixed-bar">
-    <div class="item-title">
-      <h3>CMS文章</h3>
-      <ul class="tab-base">
-        <li><a href="{admin_site_url('cms_article/index')}"><span>列表</span></a></li>
-        <li><a {if empty($info['id'])}class="current"{/if} href="{admin_site_url('cms_article/add')}"><span>新增</span></a></li>
-      	{if $info['id']}<li><a class="current" href="{admin_site_url('cms_article/edit?id=')}{$info['id']}"><span>编辑</span></a></li>{/if}
-      </ul>
-    </div>
-  </div>
-  <div class="fixed-empty"></div>
-  <div class="feedback">{$feedback}</div>
   {if $info['id']}
-  {form_open_multipart(admin_site_url('cms_article/edit'),'id="article_form"')}
+  {form_open_multipart(site_url($uri_string|cat:'?id='|cat:$info['id']),'id="article_form"')}
+  <input type="hidden" name="id" value="{$info['id']}"/>
   {else}
-  {form_open_multipart(admin_site_url('cms_article/add'),'id="article_form"')}
+  {form_open_multipart(site_url($uri_string),'id="article_form"')}
   {/if}
-  	<input type="hidden" name="id" value="{$info['id']}"/>
-  	<table class="table tb-type2 nobdb">
+  	<table class="table tb-type2 nobdb mgbottom">
       <tbody>
         <tr class="noborder">
           <td colspan="2" class="required"><label class="validation">标题:</label></td>
@@ -35,7 +23,7 @@
           	<select name="ac_id" id="articleClassId">
 	          <option value="">请选择...</option>
 	          {foreach from=$articleClassList item=item}
-	          <option {if $info['ac_id'] == $item['id']}selected{/if} value="{$item['id']}">{str_repeat('......',$item['level'])}{$item['name_cn']}</option>
+	          <option {if $info['ac_id'] == $item['id']}selected{/if} value="{$item['id']}">{str_repeat('......',$item['level'])}{$item['name']}</option>
 	          {/foreach}
 	        </select>
           </td>
@@ -209,21 +197,17 @@
           <td class="vatop rowform">{if $info['article_state'] == 3}<label>{$info['publish_username']|escape}/{$info['publish_time']|date_format:"%Y-%m-%d %H:%M:%S"}</label>{/if}</td>
           <td class="vatop tips"></td>
         </tr>
+        
         {/if}
-        <tr>
-          <td colspan="2" class="required"><label>审核意见:</label></td>
-        </tr>
-        <tr class="noborder">
-          <td class="vatop rowform"><textarea name="verify_reason" style="width:300px;height:80px;"></textarea></td>
-          <td class="vatop tips">{form_error('verify_reason')} {$info['verify_reason']|escape}</td>
-        </tr>
       </tbody>
-      <tfoot>
-        <tr>
-          <td colspan="2"><input type="submit" name="submit" value="保存" class="msbtn"/></td>
-        </tr>
-      </tfoot>
     </table>
+    
+    <div class="fixedOpBar">
+    	<input type="submit" name="tijiao" value="保存" class="msbtn"/>
+    	{if $gobackUrl}
+    	<a href="{$gobackUrl}" class="salvebtn">返回</a>
+    	{/if}
+    </div>
    </form>
   <script type="text/javascript">
 	KindEditor.ready(function(K) {

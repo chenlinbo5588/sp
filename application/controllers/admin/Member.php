@@ -5,10 +5,30 @@ class Member extends Ydzj_Admin_Controller {
 	
 	public function __construct(){
 		parent::__construct();
+		
+		$this->load->library(array('Member_service','Common_district_service'));
+		
+		
+		
+		$this->_moduleTitle = '会员';
+		$this->_className = strtolower(get_class());
+		
+		
+		$this->assign(array(
+			'moduleTitle' => $this->_moduleTitle,
+			'moduleClassName' => $this->_className
+		));
+		
+		$this->_subNavs = array(
+			array('url' => $this->_className.'/index','title' => '管理'),
+			array('url' => $this->_className.'/add','title' => '新增'),
+		);
+		
 	}
 	
+	
 	public function index(){
-		$this->load->library(array('Member_service','Common_District_service'));
+		
 		
 		$currentPage = $this->input->get_post('page') ? $this->input->get_post('page') : 1;
 		$condition = array(

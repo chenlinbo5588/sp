@@ -1,40 +1,20 @@
-{include file="common/main_header.tpl"}
+{include file="common/main_header_navs.tpl"}
 {config_load file="article.conf"}
-  <div class="fixed-bar">
-		<div class="item-title">
-		  <h3>CMS文章分类</h3>
-		  <ul class="tab-base">
-            <li><a href="{admin_site_url('cms_article_class/category')}"><span>列表</span></a></li>
-            <li><a {if empty($info['id'])}class="current"{/if} href="{admin_site_url('cms_article_class/add')}"><span>新增</span></a></li>
-      		{if $info['id']}<li><a class="current" href="{admin_site_url('cms_article_class/edit?id='|cat:$info['id'])}"  ><span>编辑</span></a></li>{/if}
-          </ul>
-		</div>
-	</div>
-   <div class="fixed-empty"></div>
-   <div class="feedback">{$feedback}</div>
   {if $info['id']}
-  {form_open(admin_site_url('cms_article_class/edit'),'id="add_form"')}
+  {form_open(site_url($uri_string),'id="add_form"')}
+  <input type="hidden" name="id" value="{$info['id']}"/>
   {else}
-  {form_open(admin_site_url('cms_article_class/add'),'id="add_form"')}
+  {form_open(site_url($uri_string),'id="add_form"')}
   {/if}
-  	<input type="hidden" name="id" value="{$info['id']}"/>
     <table class="table tb-type2">
       <tbody>
         <tr class="noborder">
-          <td colspan="2" class="required"><label class="validation" for="name_cn">{#cms_title_class#}中文名称:</label></td>
+          <td colspan="2" class="required"><label class="validation" for="name">{#cms_title_class#}名称:</label></td>
         </tr>
         <tr class="noborder">
-          <td class="vatop rowform"><input type="text" value="{$info['name_cn']|escape}" name="name_cn" id="name_cn" class="txt"></td>
-          <td class="vatop tips">{form_error('name_cn')}</td>
+          <td class="vatop rowform"><input type="text" value="{$info['name']|escape}" name="name" id="name" class="txt"></td>
+          <td class="vatop tips">{form_error('name')}</td>
         </tr>
-        <tr class="noborder">
-          <td colspan="2" class="required"><label class="validation" for="name_cn">{#cms_title_class#}英文名称:</label></td>
-        </tr>
-        <tr class="noborder">
-          <td class="vatop rowform"><input type="text" value="{$info['name_en']|escape}" name="name_en" id="name_en" class="txt"></td>
-          <td class="vatop tips">{form_error('name_en')}</td>
-        </tr>
-        <tr>
           <td colspan="2" class="required"><label for="pid">上级分类:</label></td>
         </tr>
         <tr class="noborder">
@@ -42,7 +22,7 @@
             <select name="pid">
               <option value="">请选择...</option>
               {foreach from=$list item=item}
-              <option {if $info['pid'] == $item['id']}selected{/if} value="{$item['id']}">{str_repeat('......',$item['level'])}{$item['level']+1} {$item['name_cn']}</option>
+              <option {if $info['pid'] == $item['id']}selected{/if} value="{$item['id']}">{str_repeat('......',$item['level'])}{$item['level']+1} {$item['name']}</option>
               {/foreach}
             </select>
           </td>
@@ -92,8 +72,12 @@
     </table>
   </form>
   <script type="text/javascript">
+	{if $redirectUrl}
 	$(function(){
-		
-	})
+		setTimeout(function(){
+			location.href="{$redirectUrl}";
+		},2000);
+	});
+	{/if}
  </script>
 {include file="common/main_footer.tpl"}

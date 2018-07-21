@@ -1,6 +1,36 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+
+
+class StaffStatus
+{
+	//草稿
+	public static $draft = 1;
+	
+	//待审核
+	public static $unverify = 2;
+	
+	//已审核
+	public static $verify = 3;
+	
+	//已发布
+	public static $published = 4;
+	
+	//回收站
+	public static $recylebin = 5;
+	
+	
+	public static $statusName = array(
+		1 => '草稿',
+		2 => '待审核',
+		3 => '已审核',
+		4 => '已发布',
+		5 => '回收站',
+	);
+}
+
+
 class Staff_service extends Base_service {
 	
 	
@@ -219,23 +249,23 @@ class Staff_service extends Base_service {
 	}
 	
 	
+	
 	/**
-	 * 提交审核
+	 * 更改状态
 	 */
-	public function handleStaffVerify($pIds){
-		
-		return $this->_staffModel->updateByCondition(array(
-			'status' => 1
-		),array(
+	public function changeStaffStatus($pIds,$statusDest,$statusCurrent,$extraData = array()){
+		return $this->_staffModel->updateByCondition(array_merge(array(
+			'status' => $statusDest
+		),$extraData),array(
 			'where' => array(
-				'status' => 0
+				'status' => $statusCurrent
 			),
 			'where_in' => array(
 				array('key' => 'id', 'value' => $pIds)
 			)
 		));
-		
 	}
+	
 	
 	
 	/**
@@ -250,12 +280,12 @@ class Staff_service extends Base_service {
 		
 		switch($param['op']){
 			case '审核通过':
-				$updateData['status'] = 2;
+				$updateData['status'] = StaffStatus::$verify;
 				$updateData = array_merge($updateData,$who);
 				$updateData['verify_time'] = $when;
 				break;
 			case '退回':
-				$updateData['status'] = 0;
+				$updateData['status'] = StaffStatus::$draft;
 				break;
 			default:
 				break;
@@ -359,7 +389,7 @@ class Staff_service extends Base_service {
 	public function deleteWorker($pWorkerIds,$who,&$returnMessage){
 		$deleteRows = $this->_workerModel->updateByCondition(
 			array_merge(array(
-				'status' => 0
+				'status' => StaffStatus::$recylebin
 			),$who),
 			array(
 				'where_in' => array(

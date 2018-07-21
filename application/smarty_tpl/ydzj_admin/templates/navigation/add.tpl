@@ -37,7 +37,7 @@
                       <option value="">请选择</option>
                       <option value="0">全部分类</option>
 		              {foreach from=$goodsClass item=item}
-		              <option {if $info['item_id'] == $item['gc_id']}selected{/if} value="{$item['gc_id']}">{str_repeat('&nbsp;&nbsp;',$item['level'])}{$item['level']+1} {$item['name_cn']}</option>
+		              <option {if $info['item_id'] == $item['gc_id']}selected{/if} value="{$item['gc_id']}">{str_repeat('&nbsp;&nbsp;',$item['level'])}{$item['level']+1} {$item['name']}</option>
 		              {/foreach}
                  </select>
               </li>
@@ -49,7 +49,7 @@
                     <option value="">请选择</option>
                     <option value="0">全部分类</option>
                     {foreach from=$articleClass item=item}
-                    <option {if $info['item_id'] == $item['ac_id']}selected{/if} value="{$item['ac_id']}">{str_repeat('&nbsp;&nbsp;',$item['level'])}{$item['level']+1} {$item['name_cn']}</option>
+                    <option {if $info['item_id'] == $item['ac_id']}selected{/if} value="{$item['ac_id']}">{str_repeat('&nbsp;&nbsp;',$item['level'])}{$item['level']+1} {$item['name']}</option>
                     {/foreach}
                 </select>
               </li>
@@ -67,7 +67,7 @@
                     <option value="">请选择</option>
                     <option value="0">全部分类</option>
                     {foreach from=$cmsArticleClass item=item}
-                    <option {if $info['item_id'] == $item['id']}selected{/if} value="{$item['id']}">{str_repeat('&nbsp;&nbsp;',$item['level'])}{$item['level']+1} {$item['name_cn']}</option>
+                    <option {if $info['item_id'] == $item['id']}selected{/if} value="{$item['id']}">{str_repeat('&nbsp;&nbsp;',$item['level'])}{$item['level']+1} {$item['name']}</option>
                     {/foreach}
                 </select>
               </li>
@@ -91,18 +91,11 @@
            <td class="vatop tips"></td>
         </tr>
         <tr class="noborder">
-          <td colspan="2" class="required"><label class="validation" for="name_cn">导航中文名称:</label></td>
+          <td colspan="2" class="required"><label class="validation" for="name">导航名称:</label></td>
         </tr>
         <tr class="noborder">
-          <td class="vatop rowform"><input type="text" value="{$info['name_cn']|escape}" name="name_cn" id="name_cn" class="txt"></td>
-          <td class="vatop tips">{form_error('name_cn')}</td>
-        </tr>
-        <tr class="noborder">
-          <td colspan="2" class="required"><label class="validation" for="name_en">导航英文名称:</label></td>
-        </tr>
-        <tr class="noborder">
-          <td class="vatop rowform"><input type="text" value="{$info['name_en']|escape}" name="name_en" id="name_en" class="txt"></td>
-          <td class="vatop tips">{form_error('name_en')}</td>
+          <td class="vatop rowform"><input type="text" value="{$info['name']|escape}" name="name" id="name" class="txt"></td>
+          <td class="vatop tips">{form_error('name')}</td>
         </tr>
         <tr>
           <td colspan="2" class="required"><label for="pid">上级导航:</label></td>
@@ -112,25 +105,18 @@
           	<select name="pid">
 	          <option value="">请选择...</option>
 	          {foreach from=$list item=item}
-	          <option {if $info['pid'] == $item['id']}selected{/if} value="{$item['id']}">{str_repeat('......',$item['level'])}{$item['level']+1} {$item['name_cn']}</option>
+	          <option {if $info['pid'] == $item['id']}selected{/if} value="{$item['id']}">{str_repeat('......',$item['level'])}{$item['level']+1} {$item['name']}</option>
 	          {/foreach}
 	        </select>
           </td>
           <td class="vatop tips">{form_error('pid')}如果选择父级导航，那么新增的分类则为被选择上级导航的子导航</td>
         </tr>
         <tr class="noborder">
-          <td colspan="2" class="required"><label class="validation" for="url_cn">导航链接(中文版):</label></td>
+          <td colspan="2" class="required"><label class="validation" for="url">导航链接:</label></td>
         </tr>
         <tr class="noborder">
-          <td class="vatop rowform"><input type="text" value="{$info['url_cn']|escape}" name="url_cn" id="url_cn" class="txt url"></td>
-          <td class="vatop tips">{form_error('url_cn')}<span class="tips">{literal}{ID}{/literal} 表示当即记录的ID 对于某些需要在显示页面中自动展示当前导航子导航的页面需要插入该值</span></td>
-        </tr>
-        <tr class="noborder">
-          <td colspan="2" class="required"><label class="validation" for="url_en">导航链接(英文版):</label></td>
-        </tr>
-        <tr class="noborder">
-          <td class="vatop rowform"><input type="text" value="{$info['url_en']|escape}" name="url_en" id="url_en" class="txt url">{*<input type="button" name="thesame" value="和中文版链接一致"/>*}</td>
-          <td class="vatop tips">{form_error('url_en')}</td>
+          <td class="vatop rowform"><input type="text" value="{$info['url']|escape}" name="url" id="url" class="txt url"></td>
+          <td class="vatop tips">{form_error('url')}<span class="tips">{literal}{ID}{/literal} 表示当即记录的ID 对于某些需要在显示页面中自动展示当前导航子导航的页面需要插入该值</span></td>
         </tr>
         <tr>
           <td colspan="2" class="required"><label>
@@ -196,10 +182,8 @@
 	
 	$(function(){
 	   var setInfo = function(json){
-           $("#name_cn").val(json.data.name_cn);
-           $("#name_en").val(json.data.name_en);
-           $("#url_cn").val(json.data.url_cn);
-           $("#url_en").val(json.data.url_en);
+           $("#name").val(json.data.name);
+           $("#url").val(json.data.url);
        }
 	   
 	   $("#goods_class_id").bind("change",function(){

@@ -4,6 +4,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 require_once(WEIXIN_PAY_PATH.'WxPay.Api.php');
 
 
+/**
+ * 订单状态
+ */
 class OrderStatus
 {
 	//未支付
@@ -31,7 +34,6 @@ class OrderStatus
 }
 
 
-
 class Order_service extends Base_service {
 
 	
@@ -42,7 +44,9 @@ class Order_service extends Base_service {
 	private $_appConfig;
 	private $_paymentConfig;
 	
-	private $_orderType;
+	private $_feeTypeModel;
+	
+	public static $orderType;
 	
 	
 	public function __construct(){
@@ -52,7 +56,7 @@ class Order_service extends Base_service {
 		
 		
 		self::$CI->load->model(array(
-			'Order_Model','Basic_Data_Model'
+			'Order_Model','Basic_Data_Model','Feetype_Model'
 		));
 		
 		$this->_orderModel = self::$CI->Order_Model;
@@ -63,6 +67,12 @@ class Order_service extends Base_service {
 		$this->_paymentConfig = config_item('payment');
 		
 		
+		$this->_feeTypeModel = self::$CI->Feetype_Model;
+		
+		self::$orderType = array(
+			'idKey' => $this->_feeTypeModel->getList(array(),'id'),
+			'nameKey' => $this->_feeTypeModel->getList(array(),'name'),
+		);
 	}
 	
 	
@@ -106,6 +116,7 @@ class Order_service extends Base_service {
 			$order['goods_tag'] = $param['goods_tag'];
 		}
 		
+		$order['order_type'] = $param['order_type'];
 		$order['order_typename'] = $param['order_typename'];
 		
 		$order['time_start'] = date("YmdHis");
@@ -147,12 +158,12 @@ class Order_service extends Base_service {
 		$oldOrderInfo = $this->getOrderDetailByOrderId($pOrderParam['order_id']);
 		
 		$tuiOrder = array(
+			'order_type' => $oldOrderInfo['order_type'],
 			'order_typename' => $oldOrderInfo['order_typename'],
 			'extra_info' => $oldOrderInfo['extra_info'],
 			'amount' => $pOrderParam['amount'],
 			'uid' => $pOrderParam['uid'],
 			'order_old' => $pOrderParam['order_id'],
-			
 		);
 		
 		/*$reurnVal = array(
@@ -173,14 +184,18 @@ class Order_service extends Base_service {
 			$wxPayRefund->SetOut_refund_no($newOrderInfo['order_id']);
 			$wxPayRefund->SetTotal_fee($oldOrderInfo['amount']);
 			$wxPayRefund->SetRefund_fee($pOrderParam['amount']);
-			$wxPayRefund->SetNotify_url($pOrderParam['notify_url']);
+			
+			if($pOrderParam['notify_url']){
+				$wxPayRefund->SetNotify_url($pOrderParam['notify_url']);
+			}
 			
 			$refundResp = WxPayApi::refund($wxPayRefund);
-			
 			if(!$this->checkWeixinRespSuccess($refundResp)){
 				return false;
 			}
 			
+			
+			/*
 			$this->_orderModel->beginTrans();
 			
 			$this->_orderModel->updateByWhere(array(
@@ -210,10 +225,10 @@ class Order_service extends Base_service {
 				$this->_orderModel->commitTrans();
 				return true;
 			}
+			*/
 			
 		}catch(WxPayException $payException){
-			
-			
+			log_message('error',"code=".$payException->getCode().",message=".$payException->errorMessage());
 			
 		}catch(Exption $e){
 			

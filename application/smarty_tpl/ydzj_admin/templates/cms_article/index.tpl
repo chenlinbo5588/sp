@@ -1,16 +1,6 @@
-{include file="common/main_header.tpl"}
+{include file="common/main_header_navs.tpl"}
 {config_load file="article.conf"}
-  <div class="fixed-bar">
-    <div class="item-title">
-      <h3>CMS文章</h3>
-      <ul class="tab-base">
-        <li><a href="{admin_site_url('cms_article/index')}" class="current"><span>列表</span></a></li>
-        <li><a href="{admin_site_url('cms_article/add')}"><span>新增</span></a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="fixed-empty"></div>
-  {form_open(admin_site_url('cms_article/index'),'id="formSearch"')}
+  {form_open(site_url($uri_string),'id="formSearch"')}
   <input type="hidden" name="page" value=""/>
     <table class="tb-type1 noborder search">
       <tbody>
@@ -22,7 +12,7 @@
         	<select name="id" id="articleClassId">
 	          <option value="">请选择...</option>
 	          {foreach from=$articleClassList item=item}
-	          <option {if $smarty.post['id'] == $item['id']}selected{/if} value="{$item['id']}">{str_repeat('......',$item['level'])}{$item['name_cn']}</option>
+	          <option {if $smarty.post['id'] == $item['id']}selected{/if} value="{$item['id']}">{str_repeat('......',$item['level'])}{$item['name']}</option>
 	          {/foreach}
 	        </select>
           </td>
@@ -39,21 +29,6 @@
         </tr>
       </tbody>
    </table>
-  <table class="table tb-type2" id="prompt">
-    <tbody>
-      <tr class="space odd">
-        <th colspan="12"><div class="title"><h5>操作提示</h5><span class="arrow"></span></div>
-        </th>
-      </tr>
-      <tr>
-        <td>
-        	<ul>
-              <li>上架，当商品处于非上架状态时，前台将不能浏览该商品，管理员可控制商品上架状态</li>
-            </ul>
-        </td>
-      </tr>
-    </tbody>
-  </table>
     <table class="table tb-type2">
       <thead>
         <tr class="thead">
@@ -80,7 +55,7 @@
           <td><input type="checkbox" name="id[]" group="chkVal" value="{$item['id']}" class="checkitem"></td>
           <td>{$item['id']}</td>
           <td>{$item['article_title']|escape}</td>
-          <td>{$articleClassList[$item['ac_id']]['name_cn']}</td>
+          <td>{$articleClassList[$item['ac_id']]['name']}</td>
           <td>{$item['article_origin']|escape}</td>
           <td>{$item['origin_address']|escape}</td>
           <td>{$item['author']|escape}</td>
@@ -92,26 +67,26 @@
           <td>{if $item['comment_flag'] == 1}允许{else}禁止{/if}评论</td>
           <td>{$item['comment_count']}/{$item['share_count']}/{$item['article_click']}</td>
           <td>
-          	<p><a href="{admin_site_url('cms_article/edit')}?id={$item['id']}">编辑</a></p>
+          	<p>
+          		<a href="{admin_site_url('cms_article/edit')}?id={$item['id']}">编辑</a>
+          		{if $article_state[$item['article_state']] == '待审核'}<a href="{admin_site_url($moduleClassName|cat:'/single_verify')}?id={$item['id']}">审核</a>{/if}
+          	
+          	</p>
           </td>
         </tr>
       	{/foreach}
       </tbody>
-      <tfoot>
-      	<tr class="tfoot">
-          <td colspan="15">
-          	<label><input type="checkbox" class="checkall" id="checkallBottom" name="chkVal">全选</label>&nbsp;
-          	<a href="javascript:void(0);" class="btn deleteBtn" data-checkbox="id[]" data-url="{admin_site_url('cms_article/delete')}"><span>删除</span></a>
-          	{include file="common/pagination.tpl"}
-           </td>
-        </tr>
-      </tfoot>
     </table>
+    <div class="fixedOpBar">
+    	<label><input type="checkbox" class="checkall" id="checkallBottom" name="chkVal">全选</label>&nbsp;
+    	<a href="javascript:void(0);" class="btn opBtn handleVerifyBtn" data-title="确定提交审核吗?" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/handle_verify')}"><span>提交审核</span></a>
+    	<a href="javascript:void(0);" class="btn verifyBtn" data-title="审核" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/batch_verify')}" data-ajaxformid="#verifyForm"><span>审核</span></a>
+    	<a href="javascript:void(0);" class="btn opBtn publishBtn" data-title="确定发布吗?" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/batch_published')}"><span>发布</span></a>
+        <a href="javascript:void(0);" class="btn deleteBtn" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/delete')}"><span>删除</span></a>
+        {include file="common/pagination.tpl"}
+    </div>
+    
   </form>
-  
-<script>
-$(function(){
-    bindDeleteEvent();
-});
-</script>
+  <div id="verifyDlg"></div>
+    <script type="text/javascript" src="{resource_url('js/service/staff_index.js',true)}"></script>
 {include file="common/main_footer.tpl"}

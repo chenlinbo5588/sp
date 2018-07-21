@@ -1,4 +1,4 @@
-{include file="common/main_header.tpl"}
+{include file="common/main_header_navs.tpl"}
 {config_load file="article.conf"}
   {form_open(admin_site_url('cms_article_class/index'),'id="formSearch"')}
   <input type="hidden" name="page" value=""/>

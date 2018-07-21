@@ -1,6 +1,5 @@
-{include file="common/main_header.tpl"}
+{include file="common/main_header_navs.tpl"}
   {config_load file="worker.conf"}
-  {include file="common/sub_nav.tpl"}
   {form_open(site_url($uri_string),'id="formSearch" method="get"')}
   <input type="hidden" name="page" value="{$currentPage}"/>
     <table class="tb-type1 noborder search">

@@ -2,6 +2,9 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 
+
+
+
 class Order extends Wx_Controller {
 	
 	public function __construct(){
@@ -11,6 +14,9 @@ class Order extends Wx_Controller {
         $this->order_service->setWeixinAppConfig(config_item('mp_xcxCswy'));
 		
     	$this->form_validation->set_error_delimiters('','');
+    	
+    	//print_r(Order_service::$orderType);
+    	
 	}
 	
 	
@@ -38,9 +44,6 @@ class Order extends Wx_Controller {
 		
 			for($i = 0; $i < 1; $i++){
 				
-				
-				
-				
 				if($this->postJson['order_id']){
 					
 					$this->postJson['uid'] = $this->memberInfo['uid'];
@@ -59,6 +62,8 @@ class Order extends Wx_Controller {
 					
 					//新创订单
 					$this->form_validation->set_rules('house_id','物业标识','required');
+					
+					
 					$this->form_validation->set_rules('order_typename','in_db_list['.$this->Feetype_Model->getTableRealName().'.name]');
 					$this->form_validation->set_rules('year','缴费年份','required|is_natural_no_zero|greater_than_equal_to['.date('Y').']');
 					
@@ -73,6 +78,8 @@ class Order extends Wx_Controller {
 						break;
 					}
 					
+					
+					$this->postJson['order_type'] = self::$orderType['nameKey'][$this->postJson['order_typename']]['id'];
 					
 					$this->postJson['pay_channel'] = '微信支付';
 					$this->postJson['pay_method'] = '小程序支付';
@@ -106,6 +113,7 @@ class Order extends Wx_Controller {
 				file_put_contents('wuye.txt',print_r($this->postJson,true),FILE_APPEND);
 				
 				try {
+					
 					$callPayJson = $this->order_service->createWeixinOrder($this->postJson,$this->sessionInfo);
 					file_put_contents('wuye.txt',print_r($callPayJson,true),FILE_APPEND);
 					
@@ -295,6 +303,10 @@ class Order extends Wx_Controller {
 				}
 				
 				//$param['notify_url'] = site_url('api/order_wuye_refund/notify');
+				
+				$orderInfo = $this->Order_Model->getFirstByKey($this->postJson['order_id'],'order_id');
+				
+				
 				
 				$isOk = $this->order_service->createRefundOrder($param);
 				

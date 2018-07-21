@@ -24,18 +24,11 @@
     <table class="table tb-type2">
       <tbody>
         <tr class="noborder">
-          <td colspan="2" class="required"><label class="validation" for="name_cn">分类中文名称:</label></td>
+          <td colspan="2" class="required"><label class="validation" for="name">分类名称:</label></td>
         </tr>
         <tr class="noborder">
-          <td class="vatop rowform"><input type="text" value="{$info['name_cn']|escape}" name="name_cn" id="name_cn" class="txt"></td>
-          <td class="vatop tips">{form_error('name_cn')}</td>
-        </tr>
-        <tr class="noborder">
-          <td colspan="2" class="required"><label class="validation" for="name_en">分类英文名称:</label></td>
-        </tr>
-        <tr class="noborder">
-          <td class="vatop rowform"><input type="text" value="{$info['name_en']|escape}" name="name_en" id="name_en" class="txt"></td>
-          <td class="vatop tips">{form_error('name_en')}</td>
+          <td class="vatop rowform"><input type="text" value="{$info['name']|escape}" name="name" id="name" class="txt"></td>
+          <td class="vatop tips">{form_error('name')}</td>
         </tr>
         <tr>
           <td colspan="2" class="required"><label for="gc_parent_id">上级分类:</label></td>
@@ -45,7 +38,7 @@
           	<select name="gc_parent_id" id="category">
 	          <option value="">请选择...</option>
 	          {foreach from=$list item=item}
-	          <option {if $info['gc_parent_id'] == $item['gc_id']}selected{/if} value="{$item['gc_id']}">{str_repeat('......',$item['level'])}{$item['level']+1} {$item['name_cn']}</option>
+	          <option {if $info['gc_parent_id'] == $item['gc_id']}selected{/if} value="{$item['gc_id']}">{str_repeat('......',$item['level'])}{$item['level']+1} {$item['name']}</option>
 	          {/foreach}
 	        </select>
           </td>

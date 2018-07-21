@@ -1,17 +1,6 @@
-{include file="common/main_header.tpl"}
-{config_load file="member.conf"}
-  <div class="fixed-bar">
-    <div class="item-title">
-      <h3>{#title#}</h3>
-      <ul class="tab-base">
-        <li><a href="{admin_site_url('member')}" ><span>{#manage#}</span></a></li>
-        <li><a href="JavaScript:void(0);" class="current"><span>{#add#}</span></a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="fixed-empty"></div>
-  {$feedback}
-  {form_open_multipart(admin_site_url('member/add'),'id="user_form"')}
+{include file="common/main_header_navs.tpl"}
+  {config_load file="member.conf"}
+  {form_open_multipart(site_url($uri_string),'id="user_form"')}
     <input type="hidden" name="form_submit" value="ok" />
     <table class="table tb-type2">
       <tbody>

@@ -49,17 +49,13 @@ class Goods_Class extends Ydzj_Admin_Controller {
 		
 		if(empty($info)){
 			$this->jsonOutput('',array(
-				'name_cn' => '产品中心',
-				'name_en' => 'Products',
-				'url_cn' => base_url('product/plist.html'),
-				'url_en' => base_url('product/plist.html'),
+				'name' => '产品中心',
+				'url' => base_url('product/plist.html'),
 			));
 		}else{
 			$this->jsonOutput('',array(
-				'name_cn' => $info['name_cn'],
-				'name_en' => $info['name_en'],
-				'url_cn' => base_url('product/plist/'.$info['gc_id'].'.html'),
-				'url_en' => base_url('product/plist/'.$info['gc_id'].'.html'),
+				'name' => $info['name_cn'],
+				'url' => base_url('product/plist/'.$info['gc_id'].'.html'),
 			));
 		}
 	}

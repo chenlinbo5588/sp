@@ -48,17 +48,13 @@ class Article_Class extends Ydzj_Admin_Controller {
 		
 		if(empty($info)){
 			$this->jsonOutput('',array(
-				'name_cn' => '文章列表',
-				'name_en' => 'Article',
-				'url_cn' => base_url('article/plist.html'),
-				'url_en' => base_url('article/plist.html'),
+				'name' => '文章列表',
+				'url' => base_url('article/plist.html'),
 			));
 		}else{
 			$this->jsonOutput('',array(
-				'name_cn' => $info['name_cn'],
-				'name_en' => $info['name_en'],
-				'url_cn' => base_url('article/plist/'.$info['ac_id'].'.html'),
-				'url_en' => base_url('article/plist/'.$info['ac_id'].'.html'),
+				'name' => $info['name'],
+				'url' => base_url('article/plist/'.$info['ac_id'].'.html'),
 			));
 		}
 	}

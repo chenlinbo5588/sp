@@ -55,7 +55,7 @@ $(function(){
     bindDeleteEvent();
     
     //提交审核
-    bindOpEvent({ selector : ".handleVerifyBtn" }, { } , successFn);
+    bindOpEvent({ selector : ".opBtn" }, { } , successFn);
     
     $(".verifyBtn").bind('click',function(){
     	var ids = getIDS($(this));

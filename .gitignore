@@ -18,6 +18,7 @@ readme.rst
 !/application/cache/.htaccess
 application/controllers/test/
 
+*/test*.php
 
 /temp/*
 !/temp/index.html

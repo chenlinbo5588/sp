@@ -875,15 +875,15 @@ function bindAjaxSubmit(classname){
 							first = f;
 						}
 						
-						$("#error_" + f).html(errors[f]).addClass("error").show();
+						$("#error_" + f.replace('[]','')).html(errors[f]).addClass("error").show();
 					}
 					
-					if($("input[name=" + first + "]").size()){
-						$("input[name=" + first + "]").addClass('error').focus();
-					}else if($("select[name=" + first + "]").size()){
-						$("select[name=" + first + "]").focus();
-					}else if($("textarea[name=" + first + "]").size()){
-						$("textarea[name=" + first + "]").addClass('error').focus();
+					if($("input[name='" + first + "']").size()){
+						$("input[name='" + first + "']").addClass('error').focus();
+					}else if($("select[name='" + first + "']").size()){
+						$("select[name='" + first + "']").focus();
+					}else if($("textarea[name='" + first + "']").size()){
+						$("textarea[name='" + first + "']").addClass('error').focus();
 					}
 					
 				}else{

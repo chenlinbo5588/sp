@@ -1,11 +1,25 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+
 class Cms_Article_Class extends Ydzj_Admin_Controller {
 	
 	public function __construct(){
 		parent::__construct();
 		$this->load->library(array('Cms_service'));
+		
+		$this->_moduleTitle = 'CMS文章分类';
+		$this->_className = strtolower(get_class());
+		
+		$this->assign(array(
+			'moduleTitle' => $this->_moduleTitle,
+			'moduleClassName' => $this->_className
+		));
+		
+		$this->_subNavs = array(
+			array('url' => $this->_className.'/category','title' => '管理'),
+			array('url' => $this->_className.'/add','title' => '新增'),
+		);
 	}
 	
 	
@@ -28,118 +42,50 @@ class Cms_Article_Class extends Ydzj_Admin_Controller {
 		}
 		
 		$list = $this->cms_service->getArticleClassByParentId($id);
-		$this->assign('list',$list);
-		$this->assign('parentId',$parentId);
-		$this->assign('deep',$deep + 1);
-		$this->assign('id',$id);
+		
+		$this->assign(array(
+			'list' => $list,
+			'parentId' => $parentId,
+			'deep' => $deep + 1,
+			'id' => $id
+		));
 		
 		$this->display();
 	}
 	
 	
-	public function getNavUrl(){
-		$id = $this->input->get_post('id');
-		$info = $this->Cms_Article_Class_Model->getById(array(
-			'where' => array(
-				'id' => intval($id)
-			
-			)
-		));
-		
-		if(empty($info)){
-			$this->jsonOutput('',array(
-				'name_cn' => 'CMS文章列表',
-				'name_en' => 'Cms Article',
-				'url_cn' => base_url('cms/plist.html'),
-				'url_en' => base_url('cms/plist.html'),
-			));
-		}else{
-			$this->jsonOutput('',array(
-				'name_cn' => $info['name_cn'],
-				'name_en' => $info['name_en'],
-				'url_cn' => base_url('cms/plist/'.$info['id'].'.html'),
-				'url_en' => base_url('cms/plist/'.$info['id'].'.html'),
-			));
-		}
-	}
-	
-	
 	private function _getRules($action = 'add'){
 		
-		$this->form_validation->set_rules('name_cn','中文名称','required|min_length[1]|max_length[30]');
-		$this->form_validation->set_rules('name_en','英文名称','required|min_length[1]|max_length[30]');
+		$this->form_validation->set_rules('name','中文名称','required|min_length[1]|max_length[30]');
 		$this->form_validation->set_rules('list_tplname','文章列表模版名称','required|min_length[1]|max_length[30]');
 		$this->form_validation->set_rules('detail_tplname','文章详情页模版名称','required|min_length[1]|max_length[30]');
 		
 		$this->form_validation->set_rules('status','开启状态','required|in_list[0,1]');
 		
+		$pid = $this->input->post('pid');
 		
-		if($this->input->post('pid')){
-			$this->form_validation->set_rules('pid','上级分类', 'in_db_list['.$this->Cms_Article_Class_Model->getTableRealName().".id]|callback_checkpid[{$action}]");
+		if($pid){
+			$this->form_validation->set_rules('pid','父级分类', array(
+					'in_db_list['.$this->Cms_Article_Class_Model->getTableRealName().".id]",
+					array(
+						'checkpid_callable['.$action.']',
+						array(
+							$this->cms_service,'checkpid'
+						)
+					)
+				)
+			);
 		}
 		
-		
-		if($this->input->post('ac_sort')){
+		$sort = $this->input->post('ac_sort');
+		if($sort){
 			$this->form_validation->set_rules('ac_sort','排序',"is_natural|less_than[256]");
 		}
 		
-		
 	}
 	
 	
-	public function checkpid($pid, $extra = ''){
-		//不能是自己，也不能是其下级分类
-		$currentId = $this->input->post('id');
-		
-		$deep = $this->cms_service->getArticleClassDeepById($pid);
-		
-		if($deep >=3){
-			$this->form_validation->set_message('checkpid','父级只能是一级分类或者二级分类');
-			return false;
-		}
-		
-		if($extra == 'add'){
-			//如果是增加的不需要再网后面继续执行了
-			return true;
-		}
-		
-		
-		$list = $this->Cms_Article_Class_Model->getList(array(
-			'where' => array('pid' => $currentId)
-		));
-		
-		$subIds = array($currentId);
-		$hasData = true;
-		
-		while($list && $hasData){
-			
-			$ids = array();
-			foreach($list as $item){
-				$subIds[] = $item['id'];
-				$ids[] = $item['id'];
-			}
-			
-			if($ids){
-				$hasData = false;
-			}else{
-				$list = $this->Article_Class_Model->getList(array(
-					'where_in' => array(
-						array('key' => 'pid', 'value' => $ids)
-					)
-				));
-			}
-		}
-		
-		//print_r($subIds);
-		if(in_array($pid,$subIds)){
-			$this->form_validation->set_message('checkpid','父级不能选择自己和自己的下级分类');
-			return false;
-		}else{
-			
-			return true;
-		}
-		
-	}
+	
 	
 	
 	public function delete(){
@@ -162,17 +108,16 @@ class Cms_Article_Class extends Ydzj_Admin_Controller {
 	}
 	
 	
+	/**
+	 * 
+	 */
 	private function _prepareData($action = 'add'){
 		$info = array(
-			'name_cn' => $this->input->post('name_cn'),
-			'name_en' => $this->input->post('name_en'),
 			'pid' => $this->input->post('pid') ? $this->input->post('pid') : 0,
-			'list_tplname' => $this->input->post('list_tplname'),
-			'detail_tplname' => $this->input->post('detail_tplname'),
-			'status' => $this->input->post('status') ? $this->input->post('status') : 0,
+			'list_tplname' => $this->input->post('list_tplname') ? $this->input->post('list_tplname') : '',
+			'detail_tplname' => $this->input->post('detail_tplname') ? $this->input->post('detail_tplname') : '',
 			'ac_sort' => $this->input->post('ac_sort') ? $this->input->post('ac_sort') : 255,
 		);
-		
 		
 		return $info;
 	}
@@ -194,21 +139,29 @@ class Cms_Article_Class extends Ydzj_Admin_Controller {
 			$this->_getRules('add');
 			
 			for($i = 0; $i < 1; $i++){
-				$info = $this->_prepareData('add');
+				$info = array_merge($_POST,$this->_prepareData('add'));
 				
 				if(!$this->form_validation->run()){
-					$feedback = $this->form_validation->error_string();
+					$feedback = getErrorTip($this->form_validation->error_string());
 					break;
 				}
 				
 				$info = array_merge($info,$this->addWhoHasOperated('add'));
+				$newid = $this->Cms_Article_Class_Model->_add($info);
 				
-				if(($newid = $this->Cms_Article_Class_Model->_add($info)) < 0){
-					$feedback = getErrorTip('保存失败');
+				unset($info['id']);
+				
+				$error = $this->Cms_Article_Class_Model->getError();
+				
+				if(QUERY_OK != $error['code']){
+					$feedback = getErrorTip('保存失败,'.$error['message']);
 					break;
 				}
-				$feedback = getSuccessTip('保存成功');
+				
+				$feedback = getSuccessTip('保存成功,页面将自动刷新');
 				$info = $this->Cms_Article_Class_Model->getFirstByKey($newid);
+				
+				$redirectUrl = admin_site_url($this->_className.'/edit?id='.$newid);
 			}
 		}else{
 			$info['status'] = 1; 
@@ -216,10 +169,13 @@ class Cms_Article_Class extends Ydzj_Admin_Controller {
 			$info['detail_tplname'] = 'article'; 
 		}
 		
+		$this->assign(array(
+			'list' => $treelist,
+			'info' => $info,
+			'feedback' => $feedback,
+			'redirectUrl' => $redirectUrl
+		));
 		
-		$this->assign('list',$treelist);
-		$this->assign('info',$info);
-		$this->assign('feedback',$feedback);
 		$this->display();
 	}
 	
@@ -233,25 +189,32 @@ class Cms_Article_Class extends Ydzj_Admin_Controller {
 		$info = $this->Cms_Article_Class_Model->getFirstByKey($id);
 		$treelist = $this->cms_service->getArticleClassTreeHTML();
 		
+		$this->_subNavs[] = array('url' => $this->_className.'/edit?id='.$id, 'title' => '编辑');
+		
 		
 		if($this->isPostRequest()){
 			
 			$this->_getRules('edit');
 			
 			for($i = 0; $i < 1; $i++){
-				$infoPost = $this->_prepareData('edit');
+				$infoPost = array_merge($_POST,$this->_prepareData('edit'));
+				
 				$infoPost['id'] = $id;
 				
 				if(!$this->form_validation->run()){
-					$feedback = $this->form_validation->error_string();
+					$feedback = getErrorTip($this->form_validation->error_string());
 					$info = $infoPost;
 					break;
 				}
 				
 				$info = array_merge($infoPost,$this->addWhoHasOperated('edit'));
 				
-				if($this->Cms_Article_Class_Model->update($info,array('id' => $id)) < 0){
-					$feedback = getErrorTip('保存失败');
+				$this->Cms_Article_Class_Model->update($info,array('id' => $id));
+				
+				$error = $this->Cms_Article_Class_Model->getError();
+				
+				if(QUERY_OK != $error['code']){
+					$feedback = getErrorTip('保存失败,'.$error['message']);
 					break;
 				}
 				
@@ -259,34 +222,71 @@ class Cms_Article_Class extends Ydzj_Admin_Controller {
 			}
 		}
 		
-		$this->assign('info',$info);
-		$this->assign('feedback',$feedback);
-		$this->assign('list',$treelist);
-		$this->display('cms_article_class/add');
+		$this->assign(array(
+			'info' => $info,
+			'feedback' => $feedback,
+			'list' => $treelist
+		));
+		
+		$this->display($this->_className.'/add');
 	}
 	
 	
+	
 	/**
-	 * 
+	 * 快速编辑
 	 */
-	public function onoff(){
-		if($this->input->is_ajax_request() && $this->isPostRequest()){
+	public function inline_edit(){
+		$fieldName = $this->input->get_post('fieldname');
+		$id = $this->input->get_post('id');
+		$newValue = $this->input->get_post('value');
+		
+		$this->form_validation->set_error_delimiters('','');
+		
+		for($i = 0 ; $i < 1; $i++){
 			
-			$this->form_validation->set_rules('fieldname','状态字段','required|in_list[status]');
-			$this->form_validation->set_rules('enabled','状态','required|in_list[0,1]');
+			$data = array(
+				'id' => $id,
+				'fieldname' => $fieldName,
+				$fieldName => $newValue
+			);
 			
-			if($this->form_validation->run()){
-				
-				$upInfo[$this->input->post('fieldname')] = $this->input->post('enabled');
-				
-				$this->Cms_Article_Class_Model->update($upInfo,array('id' => $this->input->post('id')));
-				
-				$this->jsonOutput('保存成功');
-				
-			}else{
-				$this->jsonOutput('保存失败 '.$this->form_validation->error_string());
+			$this->form_validation->set_data($data);
+			
+			$this->form_validation->set_rules('id','数据标识','required');
+			$this->form_validation->set_rules('fieldname','字段','in_list[name,ac_sort,status]');
+			
+			switch($fieldName){
+				case 'name':
+					$this->form_validation->set_rules('name','名称','trim|required|min_length[1]|max_length[50]');
+					break;
+				case 'ac_sort';
+					$this->form_validation->set_rules('ac_sort','排序',"is_natural|less_than[256]");
+					break;
+				case 'status':
+					$this->form_validation->set_rules('status','开启状态','required|in_list[0,1]');
+					break;
+				default:
+					break;
 			}
+		
+			$message = '修改失败';
+			
+			if(!$this->form_validation->run()){
+				$message = $this->form_validation->error_html();
+			}else{
+				
+				if($this->Cms_Article_Class_Model->update(array($fieldName => $newValue),array('id' => $id)) < 0){
+					$message = '数据修改失败';
+				}else{
+					$message = '修改成功';
+				}
+			}
+			
+			$this->jsonOutput($message);
 		}
+		
+		
 	}
 	
 }

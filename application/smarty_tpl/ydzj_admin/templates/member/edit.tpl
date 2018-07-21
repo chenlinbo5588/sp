@@ -1,17 +1,5 @@
-{include file="common/main_header.tpl"}
-  <div class="fixed-bar">
-    <div class="item-title">
-      <h3>会员管理</h3>
-      <ul class="tab-base">
-        <li><a href="{admin_site_url('member')}" ><span>管理</span></a></li>
-        <li><a href="{admin_site_url('member/add')}" ><span>新增</span></a></li>
-        <li><a href="JavaScript:void(0);" class="current"><span>编辑</span></a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="fixed-empty"></div>
-  {$feedback}
-  {form_open_multipart(admin_site_url('member/edit/'|cat:$id),'id="user_form"')}
+{include file="common/main_header_navs.tpl"}
+  {form_open_multipart(site_url($uri_string|cat:'?id='|cat:$id),'id="user_form"')}
     <table class="table tb-type2">
       <tbody>
         <tr class="noborder">
@@ -19,7 +7,6 @@
         </tr>
         <tr class="noborder">
           <td class="vatop rowform">
-            
             <p>{$info['mobile']}</p>
             <p><img src="{base_url($info['avatar_middle'])}"/></p>
           </td>

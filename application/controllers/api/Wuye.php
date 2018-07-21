@@ -29,27 +29,6 @@ class Wuye extends Wx_Controller {
 			$this->jsonOutput2(UNBINDED,$this->unBind);
 		}
 	}
-	public function test(){  
-		
-		
-		echo $this->wuye_service->getYezhuHouseListByYezhu(111);
-		print_r($this->wuye_service->getYezhuHouseListByYezhu(111));
-		
-		
-	  	if($this->yezhuInfo){
-			
-			$d = $this->wuye_service->getYezhuHouseListByYezhu($this->yezhuInfo);
-			
-			if($d){
-				$this->jsonOutput2(RESP_SUCCESS,$d);
-			}else{
-				$this->jsonOutput2(RESP_ERROR);
-			}
-			
-		}else{
-			$this->jsonOutput2(RESP_ERROR);
-		}
-	}
 	
 	/**
 	 * 获得房屋详情

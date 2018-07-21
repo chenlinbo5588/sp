@@ -12,6 +12,8 @@ abstract class Staff extends Ydzj_Admin_Controller {
 	
 	public $staffClass = '';
 	
+	private $_basicTreeData;
+	
 	
 	public function __construct(){
 		parent::__construct();
@@ -28,16 +30,18 @@ abstract class Staff extends Ydzj_Admin_Controller {
 		
 		$this->_subNavs = array(
 			array('url' => $this->_className.'/index','title' => '管理'),
+			array('url' => $this->_className.'/draft','title' => '草稿'),
 			array('url' => $this->_className.'/unverify','title' => '待审核'),
 			array('url' => $this->_className.'/verify','title' => '已审核'),
+			array('url' => $this->_className.'/published','title' => '已发布'),
+			array('url' => $this->_className.'/recylebin','title' => '回收站'),
 		);
 		
 		
-		$this->statusConfig = array(
-			'未提交',
-			'待审核',
-			'已审核'
-		);
+		$this->statusConfig = StaffStatus::$statusName;
+		
+		
+		$this->_basicTreeData = $this->basic_data_service->getAssocBasicDataTree();
 		
 		$this->assign(array(
 			'statusConfig' => $this->statusConfig,
@@ -55,15 +59,23 @@ abstract class Staff extends Ydzj_Admin_Controller {
 		$search['name'] = $this->input->get_post('name') ? $this->input->get_post('name') : '';
 		$search['age_s'] = $this->input->get_post('age_s') ? $this->input->get_post('age_s') : '';
 		$search['age_e'] = $this->input->get_post('age_e') ? $this->input->get_post('age_e') : '';
-		$search['status'] = $this->input->get_post('status') ? $this->input->get_post('status') : '';
 		$search['mobile'] = $this->input->get_post('mobile') ? $this->input->get_post('mobile') : '';
 	
-	
+		$search['status'] = $this->input->get_post('status') ? $this->input->get_post('status') : '';
+		
+		if(empty($search['status'])){
+			unset($search['status']);
+		}
+		
+		$staffServiceId = $this->_basicTreeData['业务类型']['children'][$this->_moduleTitle]['id'];
 		$search = array_merge($search,$moreSearchVal);
+		
 		
 		$condition = array(
 			'select' => 'id,name,show_name,id_type,id_no,mobile,address,jiguan,age,avatar_m,avatar_s,status,work_month,service_cnt,salary_amount,salary_detail',
-			'where' => array_merge(array(),$moreSearchVal),
+			'where' => array_merge(array(
+					'service_type' => $staffServiceId
+				),$moreSearchVal),
 			'order' => 'id DESC',
 			'pager' => array(
 				'page_size' => config_item('page_size'),
@@ -87,19 +99,15 @@ abstract class Staff extends Ydzj_Admin_Controller {
 			$condition['where']['age <='] = $search['age_e'];
 		}
 		
-		switch($search['status']){
-			case '待审核':
-				$condition['where']['status'] = 1;
-				break;
-			case '已审核':
-				$condition['where']['status'] = 2;
-				break;
-			default:
-				break;
-		}
 		
 		if($search['mobile']){
 			$condition['where']['mobile'] = $search['mobile'];
+		}
+		
+		
+		if($search['status']){
+			$condition['where']['status'] = $search['status'];
+			
 		}
 	
 		//print_r($condition);
@@ -125,13 +133,27 @@ abstract class Staff extends Ydzj_Admin_Controller {
 	}
 	
 	
+	
+	/**
+	 * 未审核 列表
+	 */
+	public function draft(){
+		
+		$this->_searchCondition(array(
+			'status' => StaffStatus::$draft
+		));
+		$this->display($this->staffClass.'/index');
+		
+	}
+	
+	
 	/**
 	 * 未审核 列表
 	 */
 	public function unverify(){
 		
 		$this->_searchCondition(array(
-			'status' => '待审核'
+			'status' => StaffStatus::$unverify
 		));
 		$this->display($this->staffClass.'/index');
 		
@@ -144,12 +166,38 @@ abstract class Staff extends Ydzj_Admin_Controller {
 	public function verify(){
 		
 		$this->_searchCondition(array(
-			'status' => '已审核'
+			'status' => StaffStatus::$verify
 		));
 		
 		
 		$this->display($this->staffClass.'/index');
 	}
+	
+	
+	/**
+	 * 已发布
+	 */
+	public function published(){
+		$this->_searchCondition(array(
+			'status' => StaffStatus::$published
+		));
+		
+		$this->display($this->staffClass.'/index');
+		
+	}
+	
+	/**
+	 * 回收站
+	 */
+	public function recylebin(){
+		$this->_searchCondition(array(
+			'status' => StaffStatus::$recylebin
+		));
+		
+		$this->display($this->staffClass.'/index');
+		
+	}
+	
 	
 	
 	/**
@@ -165,12 +213,42 @@ abstract class Staff extends Ydzj_Admin_Controller {
 				$ids = (array)$ids;
 			}
 			
-			$returnVal = $this->staff_service->handleStaffVerify($ids);
+			$returnVal = $this->staff_service->changeStaffStatus($ids,StaffStatus::$unverify,StaffStatus::$draft);
 			
 			if($returnVal >= 0){
 				$this->jsonOutput('提交审核成功',$this->getFormHash());
 			}else{
 				$this->jsonOutput('提交审核失败',$this->getFormHash());
+			}
+			
+		}else{
+			$this->jsonOutput('请求非法',$this->getFormHash());
+		}
+		
+	}
+	
+	
+	/**
+	 * 批量发布
+	 */
+	public function batch_published(){
+		
+		$ids = $this->input->post('id');
+		
+		if($this->isPostRequest() && !empty($ids)){
+			
+			if(!is_array($ids)){
+				$ids = (array)$ids;
+			}
+			
+			$returnVal = $this->staff_service->changeStaffStatus($ids,StaffStatus::$published,StaffStatus::$verify,array_merge(array(
+				'publish_time' => $this->_reqtime,
+			),$this->addWhoHasOperated('publish')));
+			
+			if($returnVal > 0){
+				$this->jsonOutput('发布成功',$this->getFormHash());
+			}else{
+				$this->jsonOutput('发布失败,没有记录被发布',$this->getFormHash());
 			}
 			
 		}else{

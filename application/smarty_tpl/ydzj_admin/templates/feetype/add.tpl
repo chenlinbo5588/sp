@@ -1,5 +1,4 @@
-{include file="common/main_header.tpl"}
-  {include file="common/sub_nav.tpl"}
+{include file="common/main_header_navs.tpl"}
   {if $info['id']}
   {form_open(site_url($uri_string|cat:'?id='|cat:$info['id']),'id="infoform"')}
   <input type="hidden" name="id" value="{$info['id']}"/>

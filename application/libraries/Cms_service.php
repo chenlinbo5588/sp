@@ -2,12 +2,55 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 
+
+class CmsArticleStatus
+{
+	//草稿
+	public static $draft = 1;
+	
+	//待审核
+	public static $unverify = 2;
+	
+	//已审核
+	public static $verify = 3;
+	
+	//已发布
+	public static $published = 4;
+	
+	//回收站
+	public static $recylebin = 5;
+	
+	
+	public static $statusName = array(
+		1 => '草稿',
+		2 => '待审核',
+		3 => '已审核',
+		4 => '已发布',
+		5 => '回收站',
+	);
+}
+
+
+
 class Cms_service extends Base_service {
 	
 	private $_cmsArticleModel = null;
 	private $_cmsArticleClassModel = null;
 	
 	private $_parentList = array();
+	
+	
+	
+	//列表
+	public static $classData = array();
+	
+	//原始树
+	public static $classDataTree = array();
+	
+	//键树
+	public static $classAssocDataTree = array();
+	
+	
 
 	public function __construct(){
 		parent::__construct();
@@ -16,7 +59,51 @@ class Cms_service extends Base_service {
 		
 		$this->_cmsArticleModel = self::$CI->Cms_Article_Model;
 		$this->_cmsArticleClassModel = self::$CI->Cms_Article_Class_Model;
+		
+		
+		
+		self::$classData = $this->_cmsArticleClassModel->getList(array(),'id');
+		self::$CI->phptree->resetData();
+		
+		
+		self::$classDataTree = self::$CI->phptree->makeTree(self::$classData,array(
+				'primary_key' => 'id',
+				'parent_key' => 'pid',
+				'expanded' => true
+			));
+			
+		$this->makeAssocData(self::$classDataTree,self::$classAssocDataTree);
 	}
+	
+	
+	
+	/**
+	 * 转换成键值的数组
+	 */
+	public function makeAssocData($tempAllData,&$destData){
+		foreach($tempAllData as $basicDataItem){
+			$destData[$basicDataItem['name']] = array(
+				'id' => $basicDataItem['id'],
+				'name' => $basicDataItem['name'],
+				'ac_sort' => $basicDataItem['ac_sort'],
+				'pid' => $basicDataItem['pid'],
+			);
+			
+			if($basicDataItem['children']){
+				$destData[$basicDataItem['name']]['children'] = array();
+				$this->makeAssocData($basicDataItem['children'],$destData[$basicDataItem['name']]['children']);
+			}
+		}
+	}
+	
+	/**
+	 * 返回键树
+	 */
+	public static function getAssocDataTree(){
+		return self::$classAssocDataTree;
+	}
+	
+	
 	
 	public function getArticleClassTreeHTML(){
 		$list = $this->_cmsArticleClassModel->getList();
@@ -132,7 +219,9 @@ class Cms_service extends Base_service {
 		
 	}
 	
-	
+	/**
+	 * 删除 cms 数据
+	 */
 	public function deleteArticleClass($delId){
 		
 		$list = $this->_cmsArticleClassModel->getList(array(
@@ -235,4 +324,115 @@ class Cms_service extends Base_service {
 		
 		return $this->_cmsArticleModel->getList($condition);
 	}
+	
+	
+	
+	/**
+	 * 检查
+	 */
+	public function checkpid($pid, $extra = ''){
+		
+		
+		//不能是自己，也不能是其下级分类
+		$currentId = self::$CI->input->post('id');
+		
+		$deep = $this->getArticleClassDeepById($pid);
+		
+		if($deep >=3){
+			self::$CI->form_validation->set_message('checkpid_callable','父级只能是一级分类或者二级分类');
+			return false;
+		}
+		
+		if($extra == 'add'){
+			//如果是增加的不需要再网后面继续执行了
+			return true;
+		}
+		
+		
+		$list = $this->_cmsArticleClassModel->getList(array(
+			'where' => array('pid' => $currentId)
+		));
+		
+		$subIds = array($currentId);
+		$hasData = true;
+		
+		while($list && $hasData){
+			
+			$ids = array();
+			foreach($list as $item){
+				$subIds[] = $item['id'];
+				$ids[] = $item['id'];
+			}
+			
+			if($ids){
+				$hasData = false;
+			}else{
+				$list = $this->_cmsArticleClassModel->getList(array(
+					'where_in' => array(
+						array('key' => 'pid', 'value' => $ids)
+					)
+				));
+			}
+		}
+		
+		//print_r($subIds);
+		if(in_array($pid,$subIds)){
+			self::$CI->form_validation->set_message('checkpid_callable','父级不能选择自己和自己的下级分类');
+			return false;
+		}else{
+			return true;
+		}
+		
+	}
+	
+	
+	
+	
+	/**
+	 * 更改状态
+	 */
+	public function changeArticleStatus($pIds,$statusDest,$statusCurrent,$extraData = array()){
+		return $this->_cmsArticleModel->updateByCondition(array_merge(array(
+			'article_state' => $statusDest
+		),$extraData),array(
+			'where' => array(
+				'article_state' => $statusCurrent
+			),
+			'where_in' => array(
+				array('key' => 'id', 'value' => $pIds)
+			)
+		));
+	}
+	
+	
+	
+	
+	/**
+	 * 审核
+	 */
+	public function articleVerify($param ,$when, $who){
+		$updateData = array(
+			'verify_reason' => $param['reason']
+		);
+		
+		switch($param['op']){
+			case '审核通过':
+				$updateData['article_state'] = CmsArticleStatus::$verify;
+				$updateData = array_merge($updateData,$who);
+				$updateData['verify_time'] = $when;
+				break;
+			case '退回':
+				$updateData['article_state'] = CmsArticleStatus::$draft;
+				break;
+			default:
+				break;
+		}
+		
+		return $this->_cmsArticleModel->updateByCondition($updateData,array(
+			'where_in' => array(
+				array('key' => 'id', 'value' => $param['id'])
+			)
+		));
+	}
+	
 }

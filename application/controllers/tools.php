@@ -381,7 +381,34 @@ EOT;
 		$tables = $this->db->list_tables();
 
         
+        $tables = $this->db->list_tables();
+
+        
         foreach($tables as $table){
+        	if(preg_match('/^sp_push_chat\d+$/i',$table,$match)){
+        		continue;
+        	}
+        	
+        	if(preg_match('/^sp_email\d+$/i',$table,$match)){
+        		continue;
+        	}
+        	
+        	if(preg_match('/^sp_pm_message\d+$/i',$table,$match)){
+        		continue;
+        	}
+        	
+        	if(preg_match('/^sp_hp_pub\d+$/i',$table,$match)){
+        		continue;
+        	}
+        	
+        	if(preg_match('/^sp_hp_batch\d+$/i',$table,$match)){
+        		continue;
+        	}
+        	
+        	if(preg_match('/^sp_member_color\d+$/i',$table,$match)){
+        		continue;
+        	}
+        	
             $fields = $this->db->field_data($table);
             
             $str = array();
@@ -407,6 +434,77 @@ EOT;
         }
 	}
 	
+	
+	
+	/**
+	 * 
+	 */
+	public function splitTablePm(){
+		
+		$config = $this->load->get_config('split_pm');
+		
+		foreach($config as $tableIndex) {
+			
+			$table = <<< EOF
+	CREATE TABLE `sp_pm_message{$tableIndex}` (
+	  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+	  `uid` int(8) unsigned NOT NULL DEFAULT '0',
+	  `from_uid` int(8) unsigned NOT NULL DEFAULT '0',
+	  `site_msgid` int(8) unsigned NOT NULL DEFAULT '0' COMMENT '系统消息id',
+	  `msg_type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0 = 用户消息  -1=系统消息 1=站内信',
+	  `readed` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '1=已读',
+	  `msg_direction` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '0=接收 1=发送',
+	  `title` varchar(200) NOT NULL DEFAULT '',
+	  `content` text,
+	  `gmt_create` int(10) unsigned NOT NULL DEFAULT '0',
+	  `gmt_modify` int(10) unsigned NOT NULL DEFAULT '0',
+	  PRIMARY KEY (`id`),
+	  KEY `idx_uid` (`uid`,`msg_type`),
+	  KEY `idx_ctime` (`gmt_create`),
+	  KEY `idx_read` (`uid`,`readed`),
+	  KEY `idx_dir` (`msg_direction`)
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+EOF;
+			
+			echo $table.'<br/>';
+		}
+		
+	}
+	
+	
+	/**
+	 * 
+	 */
+	public function splitTableEmail(){
+		
+		$config = $this->load->get_config('split_email');
+		
+		foreach($config as $tableIndex) {
+			
+			$table = <<< EOF
+CREATE TABLE `sp_email{$tableIndex}` (
+  `id` int(8) unsigned NOT NULL AUTO_INCREMENT,
+  `msg_type` tinyint(3) NOT NULL DEFAULT '1' COMMENT '-1 后台系统消息 0=用户消息 1=货品匹配信息',
+  `uid` int(9) unsigned NOT NULL DEFAULT '0',
+  `username` varchar(30) NOT NULL DEFAULT '',
+  `email` varchar(30) NOT NULL DEFAULT '',
+  `title` varchar(200) NOT NULL DEFAULT '',
+  `content` text NOT NULL,
+  `retry` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `is_send` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `gmt_create` int(10) unsigned NOT NULL DEFAULT '0',
+  `gmt_modify` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `idx_send` (`is_send`),
+  KEY `idx_uid` (`msg_type`,`uid`),
+  KEY `idx_retry` (`retry`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+EOF;
+			
+			echo $table.'<br/>';
+		}
+		
+	}
 	
 	
 

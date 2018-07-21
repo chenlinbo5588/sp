@@ -12,7 +12,10 @@ class MY_Loader extends CI_Loader {
         
         return $entity;
     }
+    
  
-    
-    
+    public function get_config($configFileName){
+    	include(APPPATH.'config/'.$configFileName.'.php');
+    	return $config;
+    }
 }

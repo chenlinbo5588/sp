@@ -204,7 +204,7 @@ $(function(){
 	    <dl>    
             <dt>会员</dt>
             <dd><a href="javascript:void(0)" onclick="openItem('index,member,member')">会员管理</a></dd>
-            <dd><a href="javascript:void(0)" onclick="openItem('notify,member,member')">会员通知</a></dd>
+            <dd><a href="javascript:void(0)" onclick="openItem('index,notify,member')">会员通知</a></dd>
             <dd><a href="javascript:void(0)" onclick="openItem('credits,member,member')">积分管理</a></dd>
             <dd><a href="javascript:void(0)" onclick="openItem('album,member,member')">会员相册</a></dd>
             <dd><a href="javascript:void(0)" onclick="openItem('tag,member,member')">会员标签</a></dd>
@@ -284,9 +284,9 @@ $(function(){
 	    </dl>*}
 	    <dl>    
 	        <dt>CMS</dt>
-	        <dd><a href="javascript:void(0)" onclick="openItem('setting,cms,cms')">CMS管理</a></dd>
 	        <dd><a href="javascript:void(0)" onclick="openItem('index,cms_article,cms')">文章管理</a></dd>
 	        <dd><a href="javascript:void(0)" onclick="openItem('category,cms_article,cms')">文章分类</a></dd>
+	        <dd><a href="javascript:void(0)" onclick="openItem('setting,cms,cms')">CMS设置</a></dd>
 	        {*<dd><a href="javascript:void(0)" onclick="openItem('index,magazine,cms')">画报管理</a></dd>
 	        <dd><a href="javascript:void(0)" onclick="openItem('category,magazine,cms')">画报分类</a></dd>
 	        <dd><a href="javascript:void(0)" onclick="openItem('index,special,cms')">专题管理</a></dd>
@@ -296,8 +296,8 @@ $(function(){
 	    
 	    <dl>    
 	        <dt>权限</dt>
-	        <dd><a href="javascript:void(0)" onclick="openItem('user,authority,authority')">管理员管理</a></dd>
-	        <dd><a href="javascript:void(0)" onclick="openItem('role,authority,authority')">角色管理</a></dd>
+	        <dd><a href="javascript:void(0)" onclick="openItem('index,user,authority')">管理员</a></dd>
+	        <dd><a href="javascript:void(0)" onclick="openItem('index,role,authority')">角色</a></dd>
 	    </dl>
     </div>
     
@@ -397,10 +397,12 @@ $(function(){
                 <dd>
                   <ol>
                     <li><a href="javascript:void(0);" id="index_member" onclick="openItem('index,member,member');">会员管理</a></li>
-                    <li><a href="javascript:void(0);" id="notice_member" onclick="openItem('notice,member,member');">会员通知</a></li>
+                    <li><a href="javascript:void(0);" id="index_notify" onclick="openItem('index,notify,member');">会员通知</a></li>
                     <li><a href="javascript:void(0);" id="credits_member" onclick="openItem('credits,member,member');">积分管理</a></li>
+                    {*
                     <li><a href="javascript:void(0);" id="album_member" onclick="openItem('album,member,member');">会员相册</a></li>
                     <li><a href="javascript:void(0);" id="tag_member" onclick="openItem('tag,member,member');">会员标签</a></li>
+                    *}
                   </ol>
                 </dd>
               </dl>
@@ -585,9 +587,9 @@ $(function(){
               <dl>
                 <dd>
                   <ol>
-                    <li><a href="JavaScript:void(0);" id="index_cms" onclick="openItem('index,cms,cms');">CMS设置</a></li>
                     <li><a href="JavaScript:void(0);" id="index_cms_article" onclick="openItem('index,cms_article,cms');">CMS文章管理</a></li>
                     <li><a href="JavaScript:void(0);" id="category_cms_article_class" onclick="openItem('category,cms_article_class,cms');">CMS文章分类</a></li>
+                    <li><a href="JavaScript:void(0);" id="index_cms" onclick="openItem('index,cms,cms');">CMS设置</a></li>
                     {*<li><a href="JavaScript:void(0);" id="index_magazine" onclick="openItem('index,magazine,cms');">画报管理</a></li>
                     <li><a href="JavaScript:void(0);" id="category_magazine" onclick="openItem('category,magazine,cms');">画报分类</a></li>
                     <li><a href="JavaScript:void(0);" id="index_special" onclick="openItem('index,special,cms');">专题管理</a></li>*}
@@ -602,9 +604,9 @@ $(function(){
               <dl>
                 <dd>
                   <ol>
-                    <li><a href="JavaScript:void(0);" id="user_authority" onclick="openItem('user,authority,authority');">管理员管理</a></li>
-                    <li><a href="JavaScript:void(0);" id="role_authority" onclick="openItem('role,authority,authority');">角色管理</a></li>
-                    {*<li><a href="JavaScript:void(0);" id="menu_authority" onclick="openItem('menu,authority,authority');">菜单管理</a></li>*}
+                    <li><a href="JavaScript:void(0);" id="index_user" onclick="openItem('index,user,authority');">管理员</a></li>
+                    <li><a href="JavaScript:void(0);" id="index_role" onclick="openItem('index,role,authority');">角色</a></li>
+                    {*<li><a href="JavaScript:void(0);" id="menu_authority" onclick="openItem('menu,authority,authority');">菜单</a></li>*}
                   </ol>
                 </dd>
               </dl>

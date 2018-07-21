@@ -51,7 +51,7 @@
 	        	<select name="gc_id" id="goodsClassId">
 		          <option value="">请选择...</option>
 		          {foreach from=$goodsClassList item=item}
-		          <option {if $smarty.post['gc_id'] == $item['gc_id']}selected{/if} value="{$item['gc_id']}">{str_repeat('......',$item['level'])}{$item['level']+1} {$item['name_cn']}</option>
+		          <option {if $smarty.post['gc_id'] == $item['gc_id']}selected{/if} value="{$item['gc_id']}">{str_repeat('......',$item['level'])}{$item['level']+1} {$item['name']}</option>
 		          {/foreach}
 		        </select>
 	        </td>
@@ -108,7 +108,7 @@
          <td>{$item['goods_code']|escape}</td>
          <td>
           	<p>{$brandList[$item['brand_id']]['brand_name']}</p>
-            <p>{$goodsClassList[$item['gc_id']]['name_cn']}</p>
+            <p>{$goodsClassList[$item['gc_id']]['name']}</p>
           </td>
           <td class="align-center">{if $item['goods_state'] == 1}已发布{else}未发布{/if}</td>
           <td class="align-center">{if $item['goods_commend'] == 1}已{else}未{/if}推荐</td>

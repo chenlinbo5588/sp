@@ -64,10 +64,8 @@ class Article extends Ydzj_Admin_Controller {
 		
 		if(empty($info)){
 			$this->jsonOutput('',array(
-				'name_cn' => '',
-				'name_en' => '',
-				'url_cn' => '',
-				'url_en' => '',
+				'name' => '',
+				'url' => '',
 			));
 		}else{
 			
@@ -82,10 +80,8 @@ class Article extends Ydzj_Admin_Controller {
 			);
 			
 			$this->jsonOutput('',array(
-				'name_cn' => $info['article_title'],
-				'name_en' => $info['article_title'],
-				'url_cn' => base_url($articleClassInfo['ac_code'].'/{ID}_'.$info['article_id'].'.html'),
-				'url_en' => base_url($articleClassInfo['ac_code'].'/{ID}_'.$info['article_id'].'.html'),
+				'name' => $info['article_title'],
+				'url' => base_url($articleClassInfo['ac_code'].'/{ID}_'.$info['article_id'].'.html'),
 			));
 		}
 	}

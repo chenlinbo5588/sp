@@ -1,5 +1,4 @@
-{include file="common/main_header.tpl"}
-  {include file="common/sub_nav.tpl"}
+{include file="common/main_header_navs.tpl"}
   {form_open(site_url($uri_string),'id="formSearch"')}
   	 <input type="hidden" name="page" value="{$currentPage}"/>
 	 <table class="tb-type1 noborder search">
@@ -11,7 +10,6 @@
 	        </tr>
 	    </tbody>
 	  </table>
-	  
     <table class="table tb-type2">
       <thead>
         <tr class="thead">

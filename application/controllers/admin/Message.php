@@ -10,7 +10,7 @@ class Message extends Ydzj_Admin_Controller {
 	public function __construct(){
 		parent::__construct();
 		
-		$this->load->library(array('Admin_service','Message_service'));
+		$this->load->library(array('Admin_service','Email_service'));
 		
 		$this->settingKey = array(
 			'email_enabled',
@@ -143,7 +143,7 @@ class Message extends Ydzj_Admin_Controller {
 		
 		if($this->isPostRequest()){
 			if($ids){
-				$row = $this->message_service->switchMsgTemplateStatus($switchValue,$ids);
+				$row = $this->email_service->switchMsgTemplateStatus($switchValue,$ids);
 			}
 		}
 		
@@ -212,7 +212,7 @@ class Message extends Ydzj_Admin_Controller {
 					break;
 				}
 				
-				$rows = $this->message_service->updateMsgTemplate($_POST);
+				$rows = $this->email_service->updateMsgTemplate($_POST);
 				
 				if($rows < 0){
 					$feedback = getErrorTip('保存失败');
@@ -225,7 +225,7 @@ class Message extends Ydzj_Admin_Controller {
 			
 		}
 		
-		$tplInfo = $this->message_service->getMsgTemplateByCode($code);
+		$tplInfo = $this->email_service->getMsgTemplateByCode($code);
 		$this->assign('feedback',$feedback);
 		$this->assign('info',$tplInfo);
 		$this->display();

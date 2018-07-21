@@ -1,5 +1,4 @@
-{include file="common/main_header.tpl"}
-  {include file="common/sub_nav.tpl"}
+{include file="common/main_header_navs.tpl"}
   {form_open(site_url($uri_string),'id="formSearch"')}
   	 <input type="hidden" name="page" value="{$currentPage}"/>
 	 <table class="tb-type1 noborder search">
@@ -48,7 +47,7 @@
           <td>{$item['brand_class']}</td>
           <td class="picture"><div class="brand-picture">{if $item['brand_pic']}<img src="{resource_url($item['brand_pic'])}"/>{/if}</div></td>
           <td class="align-center yes-onoff">
-          	<a href="JavaScript:void(0);" {if $item['brand_recommend']}class="enabled"{else}class="disabled"{/if} data-id="{$item['brand_id']}" data-fieldname="brand_recommend"><img src="{resource_url('img/transparent.gif')}"></a>
+          	<a href="javascript:void(0);" {if $item['brand_recommend']}class="enabled"{else}class="disabled"{/if} data-id="{$item['brand_id']}" data-fieldname="brand_recommend"><img src="{resource_url('img/transparent.gif')}"></a>
           </td>
           <td class="align-center"><a href="{admin_site_url('brand/edit')}?brand_id={$item['brand_id']}">编辑</a>&nbsp;|&nbsp;<a href="javascript:void(0)" class="delete" data-url="{admin_site_url('brand/delete')}" data-id="{$item['brand_id']}">删除</a></td>
         </tr>

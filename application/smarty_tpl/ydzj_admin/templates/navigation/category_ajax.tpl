@@ -14,10 +14,10 @@
 		{else}
 		<img fieldid="{$item['id']}" status="open" nc_type="flex" src="{resource_url('img/tv-item1.gif')}">
 		{/if}
-		<span title="可编辑下级分类名称" class="editable tooltip">{$item['name_cn']|escape}</span>
+		<span title="可编辑下级分类名称" class="editable tooltip">{$item['name']|escape}</span>
 		{if $deep == 1}<a class="btn-add-nofloat marginleft" href="{admin_site_url('navigation/add')}?pid={$item['id']}"><span>新增下级</span></a>{/if}
 	</td>
-	<td>{str_replace($idReplacement,$item['id'],$item['url_cn'])}</td>
+	<td>{str_replace($idReplacement,$item['id'],$item['url'])}</td>
 	<td>{if $item['nav_location'] == 1}主导航{else if $item['nav_location'] == 2}底部{/if}</td>
           <td>{if $item['jump_type'] == 0}否{else if $item['jump_type'] == 1}是{/if}</td>
 	<td class="w84">

@@ -4,10 +4,10 @@
 					<ul class="sideItemWrap">
 						{foreach from=$sideNavs item=item key=key}
 						<li class="oneItem{if $item == $currentSideUrl} current{/if}">
-							<a class="level0" href="{base_url('product/plist/'|cat:$item['gc_id']|cat:'.html')}">{if $currentLang == 'english'}{$item['name_en']|escape}{else}{$item['name_cn']|escape}{/if}</a>
+							<a class="level0" href="{base_url('product/plist/'|cat:$item['gc_id']|cat:'.html')}">{$item['name']|escape}</a>
 							{if $item['children']}
 							{foreach from=$item['children'] item=subItem key=subKey}
-							<a class="level1" href="{base_url('product/plist/'|cat:$subItem['gc_id']|cat:'.html')}">{if $currentLang == 'english'}{$subItem['name_en']|escape}{else}{$subItem['name_cn']|escape}{/if}</a>
+							<a class="level1" href="{base_url('product/plist/'|cat:$subItem['gc_id']|cat:'.html')}">{$subItem['name']|escape}</a>
 							{/foreach}
 							{/if}
 						</li>

@@ -48,7 +48,7 @@
           </td>
           <td class="w48 sort"><span class="editable ">{$item['gc_sort']}</span></td>
           <td class="w50pre name">
-          	<span title="可编辑" class="editable ">{$item['name_cn']|escape}</span>
+          	<span title="可编辑" class="editable ">{$item['name']|escape}</span>
           	<a class="btn-add-nofloat marginleft" href="{admin_site_url('goods_class/add')}?gc_parent_id={$item['gc_id']}"><span>新增下级</span></a>
           </td>
           <td></td>

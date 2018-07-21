@@ -1,5 +1,4 @@
-{include file="common/main_header.tpl"}
-  {include file="common/sub_nav.tpl"}
+{include file="common/main_header_navs.tpl"}
   {config_load file="wuye.conf"}
   {form_open_multipart(site_url($uri_string),'name="form1"')}
     <table class="table tb-type2">

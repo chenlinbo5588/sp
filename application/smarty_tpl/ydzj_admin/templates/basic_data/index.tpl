@@ -1,5 +1,4 @@
-{include file="common/main_header.tpl"}
-  {include file="common/sub_nav.tpl"}
+{include file="common/main_header_navs.tpl"}
   {form_open(admin_site_url($moduleClassName|cat:'/index'),'id="formSearch" method="get"')}
   	 <input type="hidden" name="page" value="{$currentPage}"/>
 	 <table class="tb-type1 noborder search">

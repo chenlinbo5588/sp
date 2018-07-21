@@ -90,13 +90,16 @@ function bindOnOffEvent(){
 			enabled = 1;
 		}
 		
-		$.post(url ,{ formhash : formhash , fieldname : fieldname, enabled : enabled , id : expressId } , function(json){
-			if(json.message = '保存成功'){
+		$.post(url ,{ formhash : formhash , fieldname : fieldname, value : enabled , id : expressId } , function(json){
+			if(/成功/.test(json.message)){
 				if(that.hasClass("enabled")){
 					that.removeClass("enabled").addClass("disabled");
 				}else{
 					that.removeClass("disabled").addClass("enabled");
 				}
+			}else{
+				
+				showToast('error',json.message);
 			}
 			
 			refreshFormHash(json.data);

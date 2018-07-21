@@ -1,5 +1,4 @@
-{include file="common/main_header.tpl"}
-  {include file="common/sub_nav.tpl"}
+{include file="common/main_header_navs.tpl"}
   {if $info['brand_id']}
   {form_open_multipart(site_url($uri_string|cat:'?id='|cat:$info['brand_id']),'id="infoform"')}
   {else}
