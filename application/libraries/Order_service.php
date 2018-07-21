@@ -96,6 +96,10 @@ class Order_service extends Base_service {
 		
 		$order['order_id'] = $this->_appConfig['mch_id'].date("YmdHis").mt_rand(100,999);
 		
+		$order['pay_channel'] = $param['pay_channel'];
+		$order['pay_method'] = $param['pay_method'];
+		
+		/*
 		if($this->_paymentConfig['channel'][$param['pay_channel']]){
 			$order['pay_channel'] = $this->_paymentConfig['channel'][$param['pay_channel']];
 			
@@ -103,6 +107,8 @@ class Order_service extends Base_service {
 				$order['pay_method'] = $this->_paymentConfig['method'][$param['pay_channel']][$param['pay_method']];
 			}
 		}
+		*/
+		
 		
 		if($param['goods_id']){
 			$order['goods_id'] = $param['goods_id'];
@@ -124,12 +130,20 @@ class Order_service extends Base_service {
 		
 		$order['amount'] = $param['amount'];
 		
+		if($param['refund_amount']){
+			$order['refund_amount'] = $param['refund_amount'];
+		}
+		
+		if($param['status']){
+			$order['status'] = $param['status'];
+		}
+		
 		if($param['order_old']){
 			$order['order_old'] = $param['order_old'];
 		}
 		
 		if($param['extra_info']){
-			$order['extra_info'] = $param['extra_info'];
+			$order['extra_info'] = is_array($param['extra_info']) ? json_encode($param['extra_info']) : $param['extra_info'];
 		}else{
 			$param['extra_info'] = json_encode(array());
 		}
@@ -154,70 +168,113 @@ class Order_service extends Base_service {
 	
 	
 	/**
-	 * 创建退订单
+	 * 请求微信退款
 	 */
-	public function createRefundOrder($pOrderParam){
-		$oldOrderInfo = $this->getOrderDetailByOrderId($pOrderParam['order_id']);
-		
-		$tuiOrder = array(
-			'order_type' => $oldOrderInfo['order_type'],
-			'order_typename' => $oldOrderInfo['order_typename'],
-			'amount' => $pOrderParam['amount'],
-			'uid' => $pOrderParam['uid'],
-			'status' => OrderStatus::$refounding,
-			'order_old' => $pOrderParam['order_id'],
-		);
-		
-		if($pOrderParam['extra_info']){
-			$tuiOrder['extra_info'] = $pOrderParam['extra_info'];
-		}
-		
-		$newOrderInfo = $this->createBussOrder($tuiOrder);
-		
-		if(empty($newOrderInfo)){
-			return false;
-		}
+	public function requestWeixinRefund($pRefundOrder,$refundObj){
 		
 		try {
 			
 			$wxPayRefund = new WxPayRefund();
 			
 			//原交易订单号
-			$wxPayRefund->SetOut_trade_no($pOrderParam['order_id']);
+			$wxPayRefund->SetOut_trade_no($pRefundOrder['order_old']);
 			
 			//退款订单号
-			$wxPayRefund->SetOut_refund_no($newOrderInfo['order_id']);
+			$wxPayRefund->SetOut_refund_no($pRefundOrder['order_id']);
 			
 			//原订单总金额
-			$wxPayRefund->SetTotal_fee($oldOrderInfo['amount']);
+			$wxPayRefund->SetTotal_fee($pRefundOrder['amount']);
 			
 			//退款金额
-			$wxPayRefund->SetRefund_fee($pOrderParam['amount']);
+			$wxPayRefund->SetRefund_fee($pRefundOrder['refund_amount']);
 			
+			
+			$wxPayRefund->SetOp_user_id($pRefundOrder['mch_id']);
+			
+			
+			/*
 			if($pOrderParam['notify_url']){
 				$wxPayRefund->SetNotify_url($pOrderParam['notify_url']);
 			}
+			*/
 			
 			$refundResp = WxPayApi::refund($wxPayRefund);
 			
-			file_put_contents('wuye_callback_refund.txt',print_r($tuiOrder,true));
+			file_put_contents('wuye_callback_refund.txt',print_r($pRefundOrder,true));
 			file_put_contents('wuye_callback_refund.txt',print_r($refundResp,true),FILE_APPEND);
+			
 			
 			if(!$this->checkWeixinRespSuccess($refundResp)){
 				return false;
 			}
 			
-			return true;
+			return $refundObj->process($pRefundOrder,$refundResp);
 			
 		}catch(WxPayException $payException){
 			log_message('error',"code=".$payException->getCode().",message=".$payException->errorMessage());
 			
 		}catch(Exption $e){
-			
 			//error
+			log_message('error',"code=".$e->getCode().",message=".$e->errorMessage());
 		}
 		
-		return false;
+	}
+	
+	
+	
+	/**
+	 * 创建退订单
+	 */
+	public function createRefundOrder($pOrderParam,$foreceNew = false){
+		
+		$tuiOrder = array();
+		
+		if($pOrderParam['refund_id']){
+			//退款中订单 继续退款
+			$tuiOrder = $this->getOrderDetailByOrderId($pOrderParam['refund_id']);
+			
+		}else if($pOrderParam['order_id']){
+			//正常订单退款
+			$oldOrderInfo = $this->getOrderDetailByOrderId($pOrderParam['order_id']);
+			
+			//检查一下是否有退款中的退款订单
+			$tempOrder = $this->_orderModel->getList(array(
+				'where' => array(
+					'order_old' => $oldOrderInfo['order_id'],
+					'status' => OrderStatus::$refounding
+				),
+				'limit' => 1
+			));
+			
+			if($tempOrder[0]){
+				$tuiOrder = $tempOrder[0];
+			}
+		}
+		
+		if(!empty($tuiOrder)){
+			return $tuiOrder;
+		}else{
+			//创建一个退订单
+			$tuiOrder = array(
+				'order_type' => $oldOrderInfo['order_type'],
+				'order_typename' => $oldOrderInfo['order_typename'],
+				'pay_channel' => $oldOrderInfo['pay_channel'],
+				'pay_method' => $oldOrderInfo['pay_method'],
+				'amount' => $oldOrderInfo['amount'],//原订单金额
+				'refund_amount' => $pOrderParam['amount'],//退款金额
+				'uid' => $pOrderParam['uid'],
+				'status' => OrderStatus::$refounding,
+				'order_old' => $pOrderParam['order_id'],
+			);
+			
+			if($pOrderParam['extra_info']){
+				$tuiOrder['extra_info'] = $pOrderParam['extra_info'];
+			}
+			
+			return $this->createBussOrder($tuiOrder);
+			
+		}
+		
 	}
 	
 	
@@ -233,13 +290,33 @@ class Order_service extends Base_service {
 		return false;
 	}
 	
+	
+	
+	/**
+	 * 支付方式 名称转代码
+	 */
+	private function _payChannelInfo($pOrderParam){
+		
+		$order = array();
+		if($this->_paymentConfig['channel'][$pOrderParam['pay_channel']]){
+			$order['pay_channel'] = $this->_paymentConfig['channel'][$pOrderParam['pay_channel']];
+			
+			if($this->_paymentConfig['method'][$pOrderParam['pay_channel']][$pOrderParam['pay_method']]){
+				$order['pay_method'] = $this->_paymentConfig['method'][$pOrderParam['pay_channel']][$pOrderParam['pay_method']];
+			}
+		}
+		
+		return $order;
+	}
+	
+	
 	/**
 	 * 创建订单
 	 */
 	public function createWeixinOrder($param,$weixinUser){
-		
 		$param['openid'] = $weixinUser['openid'];
 		
+		$param = array_merge($param,$this->_payChannelInfo($param));
 		
 		if($param['order_id']){
 			$localOrder = $this->_orderModel->getFirstByKey($param['order_id'],'order_id');

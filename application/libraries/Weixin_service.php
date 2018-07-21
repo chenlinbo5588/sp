@@ -50,7 +50,7 @@ class Weixin_service extends Base_service {
 		//检查 code 
 		$resp = $this->_mpApi->getWeixinUserByCode($pCode);
 		
-		file_put_contents('debug.txt',print_r($resp,true));
+		//file_put_contents('debug.txt',print_r($resp,true));
 		
 		if(!empty($resp['session_key'])){
 			
@@ -61,7 +61,7 @@ class Weixin_service extends Base_service {
 			
 			$insertData = array_merge($data,$resp);
 			
-			file_put_contents('debug.txt',print_r($insertData,true),FILE_APPEND);
+			//file_put_contents('debug.txt',print_r($insertData,true),FILE_APPEND);
 			
 			$newId = $this->_weixinSessionModel->_add($insertData);
 			

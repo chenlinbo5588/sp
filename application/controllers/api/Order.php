@@ -97,11 +97,11 @@ class Order extends Wx_Controller {
 					$startTs = strtotime($this->postJson['year'].'-'.str_pad($this->postJson['start_month'],2,'0',STR_PAD_LEFT).'-01');
 					$expireTs = strtotime($this->postJson['year'].'-'.str_pad($this->postJson['end_month'],2,'0',STR_PAD_LEFT).'-01 +1 month');
 					
-					$this->postJson['extra_info'] = json_encode(array(
+					$this->postJson['extra_info'] = array(
 						'house_id' => $this->postJson['house_id'],
 						'fee_start' => $startTs,
 						'fee_expire' => $expireTs
-					));
+					);
 					
 				}
 				
@@ -284,6 +284,7 @@ class Order extends Wx_Controller {
 				$param = array(
 					'uid' => $this->memberInfo['uid'],
 					'order_id' => $this->postJson['order_id'],
+					//'refund_id' => 
 					'amount' => $this->postJson['amount'],
 					'reason' => $this->postJson['reason'],
 					'remark' => $this->postJson['remark']
@@ -292,34 +293,53 @@ class Order extends Wx_Controller {
 				$this->form_validation->set_data($param);
 				
 				$this->_setIsUserOrderRules();
-				$this->form_validation->set_ruls('reason','退款原因','required|min_length[3]|max_length[100]');
-				$this->form_validation->set_ruls('remark','备注','min_length[3]|max_length[100]');
+				$this->form_validation->set_rules('reason','退款原因','required|min_length[3]|max_length[100]');
+				$this->form_validation->set_rules('remark','备注','min_length[3]|max_length[100]');
 				
 				if(!$this->form_validation->run()){
-					$message = $this->form_validation->error_html();
+					$this->jsonOutput2($this->form_validation->error_html());
 					break;
 				}
 				
 				$orderInfo = $this->Order_Model->getFirstByKey($this->postJson['order_id'],'order_id');
 				
-				$orderInfo['extra_info'] = json_decode($orderInfo['extra_info']);
-				
-				if(empty($orderInfo['extra_info'])){
-					$param['extra_info'] = array(
-						'reason' => $this->postJson['reason'],
-						'remark' => $this->postJson['remark'],
-					);
-				}else{
+				$orderInfo['extra_info'] = json_decode($orderInfo['extra_info'],true);
+			
+				if(is_array($orderInfo['extra_info'])){
 					$param['extra_info'] = array_merge($orderInfo['extra_info'],array(
 						'reason' => $this->postJson['reason'],
 						'remark' => $this->postJson['remark'],
 					));
+				}else{
+					$param['extra_info'] = array(
+						'reason' => $this->postJson['reason'],
+						'remark' => $this->postJson['remark'],
+					);
 				}
 				
+				//$param['notify_url'] = site_url(Order_service::$orderType['nameKey'][$orderInfo['order_typename']]['refund_url']);
 				
-				$param['notify_url'] = site_url(Order_service::$orderType['nameKey'][$orderInfo['order_typename']]['refund_url']);
 				
-				$isOk = $this->order_service->createRefundOrder($param);
+				//file_put_contents('wuye_callback_refund.txt',print_r($param,true));
+				
+				
+				
+				
+				
+				
+				$refundOrder = $this->order_service->createRefundOrder($param);
+				
+				
+				//业务处理
+				$filePath = Order_service::$orderType['nameKey'][$orderInfo['order_typename']]['refund_url'];
+				$fullPath = LIB_PATH.$filePath;
+				$this->load->file($fullPath);
+				$className = basename($fullPath,'.php');
+				$refundObj = new $className;
+				$refundObj->setController($this);
+				
+				
+				$isOk = $this->order_service->requestWeixinRefund($refundOrder,$refundObj);
 				
 				if(!$isOk){
 					$this->jsonOutput2("退款失败");
@@ -327,7 +347,6 @@ class Order extends Wx_Controller {
 				}
 				
 				$this->jsonOutput2(RESP_SUCCESS);
-				
 				
 			}
 			

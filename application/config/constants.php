@@ -86,7 +86,7 @@ define('EXIT__AUTO_MIN', 9); // lowest automatically-assigned error code
 define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
 
 
-
+define('LIB_PATH',APPPATH.'libraries'.DIRECTORY_SEPARATOR);
 define('SMARTY_TPL_PATH',APPPATH.'smarty_tpl/');
 define('SphinxQL_PATH',APPPATH.'sphinxql/');
 define('EntityPATH',APPPATH.'entity/');

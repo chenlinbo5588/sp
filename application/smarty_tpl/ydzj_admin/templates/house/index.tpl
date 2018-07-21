@@ -23,6 +23,8 @@
           <th>{#yezhu_name#}</th>
           <th>{#mobile#}</th>
           <th>{#telephone#}</th>
+          <th>{#wuye_expire#}</th>
+          <th>{#nenghao_expire#}</th>
           <th class="w72 align-center">操作</th>
         </tr>
       </thead>
@@ -36,6 +38,8 @@
           <td>{if $item['yezhu_id']}{$item['yezhu_id']}{else}暂未入驻{/if}</td>
           <td>{$item['mobile']|escape}</td>
           <td>{$item['telephone']|escape}</td>
+          <td>{if $item['wuye_expire']}{$item['wuye_expire']|date_format:"%Y-%m-%d"}{else}无缴费记录{/if}</td>
+          <td>{if $item['nenghao_expire']}{$item['nenghao_expire']|date_format:"%Y-%m-%d"}{else}无缴费记录{/if}</td>
           <td class="align-center">
           	<a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}">编辑</a>&nbsp;|&nbsp;
           	<a href="javascript:void(0)" class="delete" data-url="{admin_site_url($moduleClassName|cat:'/delete')}" data-id="{$item['id']}">删除</a>
