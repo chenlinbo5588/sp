@@ -34,7 +34,11 @@ abstract class Staff extends Ydzj_Admin_Controller {
 			array('url' => $this->_className.'/unverify','title' => '待审核'),
 			array('url' => $this->_className.'/verify','title' => '已审核'),
 			array('url' => $this->_className.'/published','title' => '已发布'),
+			
+			//@todo 待完成
+			array('url' => $this->_className.'/working','title' => '工作中'),
 			array('url' => $this->_className.'/recylebin','title' => '回收站'),
+			
 		);
 		
 		

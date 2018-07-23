@@ -66,13 +66,17 @@ class Cms_service extends Base_service {
 		self::$CI->phptree->resetData();
 		
 		
-		self::$classDataTree = self::$CI->phptree->makeTree(self::$classData,array(
+		if(self::$classData){
+			
+			self::$classDataTree = self::$CI->phptree->makeTree(self::$classData,array(
 				'primary_key' => 'id',
 				'parent_key' => 'pid',
 				'expanded' => true
 			));
 			
-		$this->makeAssocData(self::$classDataTree,self::$classAssocDataTree);
+			$this->makeAssocData(self::$classDataTree,self::$classAssocDataTree);
+		}
+		
 	}
 	
 	

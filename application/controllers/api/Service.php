@@ -3,15 +3,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Service extends Wx_Controller {
 	
-	private $_version = '';
-	
 	
 	public function __construct(){
 		parent::__construct();
         
-    	$this->load->library(array('Member_service','Staff_service'));
+    	$this->load->library(array('Staff_service','Cart'));
     	$this->form_validation->set_error_delimiters('','');
-    	$this->_version = $this->input->get_post('version');
     	
 	}
 	
@@ -80,7 +77,7 @@ class Service extends Wx_Controller {
 			'order' => 'id DESC'
 		);
 		
-		file_put_contents("search.txt",print_r($this->postJson,true));
+		//file_put_contents("search.txt",print_r($this->postJson,true));
 		
 		if($this->postJson){
 			$searchKeys['page'] = intval($this->postJson['page']);
@@ -137,18 +134,13 @@ class Service extends Wx_Controller {
 			}elseif('无' == $this->postJson['select']['视频信息'][0]){
 				$searchKeys['where']['has_video'] = 0;
 			}
-			
-			
 		}
 		
-		
-		file_put_contents("search.txt",print_r($searchKeys,true),FILE_APPEND);
+		//file_put_contents("search.txt",print_r($searchKeys,true),FILE_APPEND);
 		
 		$data = $this->staff_service->getStaffListByCondition($serveTypeName,$searchKeys);
 		
-		
-		file_put_contents("search.txt",print_r($data,true),FILE_APPEND);
-		
+		//file_put_contents("search.txt",print_r($data,true),FILE_APPEND);
 		
 		$this->jsonOutput2(RESP_SUCCESS,$data);
 	}
@@ -164,6 +156,93 @@ class Service extends Wx_Controller {
 		$staffInfo = $this->staff_service->getStaffDetail($staffId,array('photos' => true));
 		
 		$this->jsonOutput2(RESP_SUCCESS,array('info' => $staffInfo));
+	}
+	
+	
+	
+	/**
+	 * 添加到购物车
+	 */
+	public function addCart(){
+		
+		if($this->isPostRequest()){
+			
+			for($i = 0 ; $i < 1; $i++){
+			
+				$this->form_validation->set_rules('staff_id','服务人员标识','required');
+			
+				if(!$this->form_validation->run()){
+					$this->jsonOutput2(RESP_ERROR,$this->form_validation->error_html());
+					break;
+				}
+				
+				//$this->postJson['staff_id'] = array(4088,4102);
+				
+				$staffList = $this->staff_service->getStaffList(array(
+					'where_in' => array(
+						array('key' => 'id','value' => $this->postJson['staff_id'])
+					)
+				));
+				
+				if(empty($staffList)){
+					$this->jsonOutput2('获取信息失败');
+					break;
+				}
+				
+				$data = array();
+				
+				foreach($staffList as $staff){
+					$data[] = array(
+				        'id'      => $staff['id'],
+				        'qty'     => 1,
+				        'price'   => 1,
+				        'name'    => $staff['show_name'],
+				        'options' => array('service_type' => $staff['service_type'])
+					);
+				}
+				
+				$return = $this->cart->insert($data);
+				$this->jsonOutput2(RESP_SUCCESS);
+			}
+			
+		}else{
+			$this->jsonOutput2(RESP_ERROR);
+		}
+		
+		
+	}
+	
+	
+	/**
+	 * 获得购物车
+	 */
+	public function getCart(){
+		$list = $this->cart->contents();
+		
+		if($list){
+			//涉及到的 id 列表
+			$staffIds = array();
+			foreach($list as $rowId => $cartItem){
+				$staffIds[] = $cartItem['id'];
+			}
+			
+			$staffList = $this->staff_service->getStaffList(array(
+				'where_in' => array(
+					array('key' => 'id','value' => $staffIds)
+				)
+			),'id');
+			
+			//再次遍历
+			foreach($list as $rowId => $cartItem){
+				$list[$rowId] = array_merge($cartItem,$staffList[$cartItem['id']]);
+			}
+			
+			$this->jsonOutput2(RESP_SUCCESS,$list);
+			
+		}else{
+			$this->jsonOutput2(RESP_SUCCESS,array());
+		}
+		
 	}
 	
 }

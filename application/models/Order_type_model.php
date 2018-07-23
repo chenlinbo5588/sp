@@ -1,9 +1,9 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Feetype_Model extends MY_Model {
+class Order_Type_Model extends MY_Model {
     
-    public $_tableName = 'feetype';
+    public $_tableName = 'order_type';
     public static $_tableMeta = null;
 
 

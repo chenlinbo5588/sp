@@ -9,9 +9,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 class Wx_Controller extends MY_Controller {
 	
-	public $postJson = array();
 	
-	public $bussId = '';
+	public $postJson = array();
 	
 	public $sessionInfo = array();
 	
@@ -24,6 +23,8 @@ class Wx_Controller extends MY_Controller {
 	
 	public $unBind = array('isBind' => false);
 	
+	//版本
+	public $version = '';
 	
 	public function __construct(){
 		parent::__construct();
@@ -32,39 +33,35 @@ class Wx_Controller extends MY_Controller {
 		$this->form_validation->set_error_delimiters('<label class="form_error">','</label>');
 		
 		
-		//从GET参数获取身份ID
-		$bussId = $this->input->get('sid');
+		$this->version = $this->input->get_post('version');
+		
 		
 		if($this->isPostRequest()){
 			$this->postJson = json_decode($GLOBALS["HTTP_RAW_POST_DATA"],true);
 		}
 		
-		if(empty($bussId)){
-			if($this->postJson && $this->postJson['sid']){
-				$bussId = $this->postJson['sid'];
-			}
-		}
+		$this->sessionInfo = $this->session->all_userdata();
 		
-		if(!empty($bussId)){
-			
-			$this->sessionInfo = $this->weixin_service->getWeixinUserInfoBySession($bussId);
-			
-			if('development' == ENVIRONMENT){
-				//开发环境 ，方面调试
-				$this->memberInfo = $this->wuye_service->initUserInfoBySession($this->sessionInfo,'mobile');
+		//微信用户
+		$weixinUser = $this->sessionInfo['weixin_user'];
+		
+		file_put_contents('session.txt',$this->session->session_id);
+		file_put_contents('session.txt',print_r($this->session->all_userdata(),true));
+		
+		if($weixinUser){
+			if($weixinUser['unionid']){
+				//开放平台 ，统一用户
+				$this->memberInfo = $this->wuye_service->initUserInfoBySession($weixinUser,'unionid');
 			}else{
-				if($this->sessionInfo['unionid']){
-					//开放平台 ，统一用户
-					$this->memberInfo = $this->wuye_service->initUserInfoBySession($this->sessionInfo,'unionid');
-				}else{
-					$this->memberInfo = $this->wuye_service->initUserInfoBySession($this->sessionInfo,'openid');
-				}
-				
+				$this->memberInfo = $this->wuye_service->initUserInfoBySession($weixinUser,'openid');
 			}
 			
 			if($this->memberInfo){
 				$this->yezhuInfo = $this->wuye_service->getYezhuInfoById($this->memberInfo['mobile'],'mobile');
 			}
+			
+			file_put_contents('session.txt',print_r($this->memberInfo,true),FILE_APPEND);
+			file_put_contents('session.txt',print_r($this->yezhuInfo,true),FILE_APPEND);
 		}
 		
 	}

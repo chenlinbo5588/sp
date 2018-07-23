@@ -26,17 +26,17 @@
       <tr>
         <td class="w12"></td>
         <td class="w96">项目经理&nbsp;:&nbsp;</td>
-        <td class="team"><a href="http://t.qq.com/104071152" target="_blank" class="tqq">陈林波</a></td>
+        <td class="team"><span>陈林波</span></td>
       </tr>
       <tr class="noborder">
         <td></td>
         <td>核心开发者&nbsp;:&nbsp;</td>
-        <td class="team"><a href="http://t.qq.com/104071152" target="_blank" class="tqq">陈林波</a></td>
+        <td class="team"><span>陈林波</span>,<span>余正博</span></td>
       </tr>
       <tr class="noborder">
         <td></td>
         <td>设计师&nbsp;:&nbsp;</td>
-        <td class="team"><a href="http://user.qzone.qq.com/78580355" target="_blank"  class="qzone">xxxx</a></td>
+        <td class="team"><span>周耀祖</span></td>
       </tr>
     </tbody>
     <tfoot>

@@ -2,14 +2,14 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 
-class Feetype extends Ydzj_Admin_Controller {
+class Order_type extends Ydzj_Admin_Controller {
 	
 	public function __construct(){
 		parent::__construct();
 		
-		$this->load->library(array('Wuye_service'));
+		$this->load->library(array('Order_service'));
 		
-		$this->_moduleTitle = '费用类型';
+		$this->_moduleTitle = '订单类型';
 		$this->_className = strtolower(get_class());
 		
 		
@@ -41,7 +41,7 @@ class Feetype extends Ydzj_Admin_Controller {
 				
 				$upInfo[$this->input->post('fieldname')] = $this->input->post('enabled');
 				
-				$this->Feetype_Model->update($upInfo,array('id' => $this->input->post('id')));
+				$this->Order_Type_Model->update($upInfo,array('id' => $this->input->post('id')));
 				
 				$this->jsonOutput('保存成功', $this->getFormHash());
 				
@@ -69,7 +69,7 @@ class Feetype extends Ydzj_Admin_Controller {
 				$condition['like']['name'] = $search['name'];
 			}
 			
-			$list = $this->Feetype_Model->getList($condition);
+			$list = $this->Order_Type_Model->getList($condition);
 			
 			$this->assign(array(
 				'list' => $list,
@@ -105,9 +105,9 @@ class Feetype extends Ydzj_Admin_Controller {
 	private function _getNameRule($id = 0){
 		
 		if($id){
-			$this->form_validation->set_rules('name',$this->_moduleTitle.'名称','required|is_unique_not_self['.$this->Feetype_Model->getTableRealName().".id.{$id}]");
+			$this->form_validation->set_rules('name',$this->_moduleTitle.'名称','required|is_unique_not_self['.$this->Order_Type_Model->getTableRealName().".id.{$id}]");
 		}else{
-			$this->form_validation->set_rules('name',$this->_moduleTitle.'名称','required|is_unique['.$this->Feetype_Model->getTableRealName().'.id]');
+			$this->form_validation->set_rules('name',$this->_moduleTitle.'名称','required|is_unique['.$this->Order_Type_Model->getTableRealName().'.id]');
 		}
 		
 	}
@@ -129,7 +129,7 @@ class Feetype extends Ydzj_Admin_Controller {
 			}
 			
 			/*
-			$this->Feetype_Model->deleteByCondition(array(
+			$this->Order_Type_Model->deleteByCondition(array(
 				'where_in' => array(
 					array('key' => 'brand_id','value' => $ids)
 				)
@@ -174,8 +174,8 @@ class Feetype extends Ydzj_Admin_Controller {
 				}
 				
 				
-				$newid =$this->Feetype_Model->_add(array_merge($info,$this->addWhoHasOperated('add')));
-				$error = $this->Feetype_Model->getError();
+				$newid =$this->Order_Type_Model->_add(array_merge($info,$this->addWhoHasOperated('add')));
+				$error = $this->Order_Type_Model->getError();
 				
 				if(QUERY_OK != $error['code']){
 					if($error['code'] == MySQL_Duplicate_CODE){
@@ -188,7 +188,7 @@ class Feetype extends Ydzj_Admin_Controller {
 				}
 				
 				$feedback = getSuccessTip('保存成功');
-				$info = $this->Feetype_Model->getFirstByKey($newid,'id');
+				$info = $this->Order_Type_Model->getFirstByKey($newid,'id');
 				
 			}
 		}else{
@@ -207,7 +207,7 @@ class Feetype extends Ydzj_Admin_Controller {
 		$feedback = '';
 		$id = $this->input->get_post('id');
 		
-		$info = $this->Feetype_Model->getFirstByKey($id,'id');
+		$info = $this->Order_Type_Model->getFirstByKey($id,'id');
 		$this->_subNavs[] = array('url' => $this->_className.'/edit?id='.$id, 'title' => '编辑');
 		
 		if($this->isPostRequest()){
@@ -223,8 +223,8 @@ class Feetype extends Ydzj_Admin_Controller {
 					break;
 				}
 				
-				$this->Feetype_Model->update($info,array('id' => $id));
-				$error = $this->Feetype_Model->getError();
+				$this->Order_Type_Model->update($info,array('id' => $id));
+				$error = $this->Order_Type_Model->getError();
 				
 				if(QUERY_OK != $error['code']){
 					if($error['code'] == MySQL_Duplicate_CODE){
@@ -291,7 +291,7 @@ class Feetype extends Ydzj_Admin_Controller {
 				$message = $this->form_validation->error_html();
 			}else{
 				
-				if($this->Feetype_Model->update(array($fieldName => $newValue),array('id' => $id)) < 0){
+				if($this->Order_Type_Model->update(array($fieldName => $newValue),array('id' => $id)) < 0){
 					$message = '数据修改失败';
 				}else{
 					$message = '修改成功';

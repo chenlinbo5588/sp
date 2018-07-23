@@ -65,6 +65,8 @@ class Member extends Ydzj_Controller {
 						'lastvisit' => $this->_reqtime
 					));
 					
+				
+					
 					$this->member_service->updateUserInfo(
 						array(
 							'sid' => $this->session->session_id,

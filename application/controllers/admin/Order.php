@@ -64,7 +64,6 @@ class Order extends Ydzj_Admin_Controller {
 		
 		$search['mobile'] = $this->input->get_post('mobile') ? $this->input->get_post('mobile') : '';
 	
-	
 		$search = array_merge($search,$moreSearchVal);
 		
 		$condition = array(
@@ -399,22 +398,12 @@ class Order extends Ydzj_Admin_Controller {
 	private function _prepareData($action = 'add'){
 		
 		$info = array();
-		
 		$remark = $this->input->post('remark');
 		
 		if($remark){
 			$info['remark'] = $remark;
 		}
 		
-		if('add' == $action){
-			// 删除老照片
-			$originalPic = $this->input->post('old_pic');
-			if($originalPic){
-				//如果上传了新文件,则删除原文件
-				$oldImgArray = getImgPathArray($originalPic,array('b','m','s'));
-				$this->attachment_service->deleteByFileUrl($oldImgArray);
-			}
-		}
 		
 		return $info;
 	}

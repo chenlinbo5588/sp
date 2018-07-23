@@ -44,7 +44,7 @@ class Order_service extends Base_service {
 	private $_appConfig;
 	private $_paymentConfig;
 	
-	private $_feeTypeModel;
+	private $_orderTypeModel;
 	
 	public static $orderType;
 	
@@ -56,7 +56,7 @@ class Order_service extends Base_service {
 		
 		
 		self::$CI->load->model(array(
-			'Order_Model','Basic_Data_Model','Feetype_Model'
+			'Order_Model','Basic_Data_Model','Order_Type_Model'
 		));
 		
 		$this->_orderModel = self::$CI->Order_Model;
@@ -67,11 +67,11 @@ class Order_service extends Base_service {
 		$this->_paymentConfig = config_item('payment');
 		
 		
-		$this->_feeTypeModel = self::$CI->Feetype_Model;
+		$this->_orderTypeModel = self::$CI->Order_Type_Model;
 		
 		self::$orderType = array(
-			'idKey' => $this->_feeTypeModel->getList(array(),'id'),
-			'nameKey' => $this->_feeTypeModel->getList(array(),'name'),
+			'idKey' => $this->_orderTypeModel->getList(array(),'id'),
+			'nameKey' => $this->_orderTypeModel->getList(array(),'name'),
 		);
 	}
 	

@@ -10,7 +10,6 @@ class Wuye_service extends Base_service {
 	private $_buildingModel;
 	private $_houseModel;
 	private $_yezhuModel;
-	private $_feeTypeModel;
 	
 	
 	
@@ -19,14 +18,12 @@ class Wuye_service extends Base_service {
 		
 		self::$CI->load->model(array(
 			'Resident_Model','Building_Model','House_Model','Yezhu_Model',
-			'Feetype_Model'
 		));
 		
 		$this->_residengtModel = self::$CI->Resident_Model;
 		$this->_buildingModel = self::$CI->Building_Model;
 		$this->_houseModel = self::$CI->House_Model;
 		$this->_yezhuModel = self::$CI->Yezhu_Model;
-		$this->_feeTypeModel = self::$CI->Feetype_Model;
 		
 	}
 	

@@ -115,8 +115,12 @@ class Register extends Wx_Controller {
 			for($i = 0; $i < 1; $i++){
 				$this->form_validation->reset_validation();
 				
+				$this->postJson['openid'] = $this->sessionInfo['weixin_user']['openid'];
 				
 				$this->form_validation->set_data($this->postJson);
+				
+				//校验重复性, 不允许 多个号码  与一个微信号码 关联
+				$this->form_validation->set_rules('openid','微信用户号','required|is_unique['.$this->Member_Model->getTableRealName().'.openid]');
 				
 				$this->form_validation->set_rules('phoneNo','手机号码',array(
 						'required',
@@ -133,8 +137,6 @@ class Register extends Wx_Controller {
 					)
 				);
 				
-				$this->form_validation->set_rules('sid','会话id','required');
-				
 				$rt = array(
 					'code' => 'failed',
 					'message' => '请求失败'
@@ -147,7 +149,8 @@ class Register extends Wx_Controller {
 				
 				
 				//$this->register_service->getIpLimit($this->input->ip_address());
-				$uid = $this->weixin_service->bindMobile($this->postJson);
+				
+				$uid = $this->weixin_service->bindMobile($this->postJson,$this->sessionInfo['weixin_user']);
 				
 				if(!$uid){
 					$rt['message'] = '绑定失败';

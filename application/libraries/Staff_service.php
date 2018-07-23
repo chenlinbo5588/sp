@@ -544,24 +544,20 @@ class Staff_service extends Base_service {
 	
 	
 	/**
-	 * 获得服务类型
+	 * 获得 staff List 
 	 */
-	public function getStaffList($pCondition){
-		
-		$currentPage = $pCondition['page'] ? $pCondition['page'] : 1;
-		
+	public function getStaffList($pCondition = array(),$assocKey = ''){
 		$condition = array(
-			'select' => 'id,name,show_name,jiguan,age,avatar_m,avatar_s,work_month,service_cnt,salary_detail,has_photo,has_photo,has_video,sbt_exp',
-			'pager' => array(
-				'page_size' => config_item('page_size'),
-				'current_page' => $currentPage,
-				'call_js' => 'search_page',
-				'form_id' => '#formSearch'
-			)
+			'select' => 'id,service_type,sub_type,name,show_name,id_type,jiguan,marriage,address,age,sex,birthday,shu,degree,grade,avatar,avatar_b,avatar_m,avatar_s,region,work_month,service_cnt,salary_amount,salary_detail,sbt_exp,zcbaby_exp',
 		);
 		
 		$condition = array_merge($condition,$pCondition);
-		return $this->_staffModel->getList($condition);
+		
+		if($assocKey){
+			return $this->_staffModel->getList($condition,$assocKey);
+		}else{
+			return $this->_staffModel->getList($condition);
+		}
 		
 	}
 	
@@ -687,11 +683,6 @@ class Staff_service extends Base_service {
 	 */
 	public function getStaffListByCondition($pServTypeName,$pCondition){
 		
-		/*
-		$condition = array(
-			'select' => 'id,service_type,worker_id,name,show_name,id_type,id_no,mobile,jiguan,address,sex,age,avatar_m,avatar_s,status,reason,salary_detail,has_photo,has_photo,has_video,sbt_exp',
-		);
-		*/
 		
 		$currentPage = $pCondition['page'] ? $pCondition['page'] : 1;
 		$condition = array(
