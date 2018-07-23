@@ -249,12 +249,22 @@ class Person extends MyYdzj_Controller {
 				$postData['family_num'] = intval($postData['family_num']) == 0 ? 1 : intval($postData['family_num']) ;
 				$postData['id_type'] = $postData['id_type'] == '居民身份证' ? 1 : 2;
 				
+				
+				$this->Person_Model->beginTrans();
 				$affectRow = $this->Person_Model->update(array_merge($postData,$this->addWhoHasOperated('edit')),array('id' => $id));
 				
-				if($affectRow < 0){
+				$this->House_Model->updateByWhere(array(
+					'id_no' => $postData['id_no'] ? $postData['id_no'] : '',
+				),array('owner_id' => $id));
+				
+				
+				if($this->Person_Model->getTransStatus() === FALSE){
+					$this->Person_Model->rollBackTrans();
 					$feedback = getErrorTip('数据库错误，请联系管理员');
 					break;
 				}
+				
+				$this->Person_Model->commitTrans();
 				
 				$info = $_POST;
 				$feedback = getSuccessTip('保存成功');

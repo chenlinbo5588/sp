@@ -299,6 +299,7 @@ class House extends MyYdzj_Controller {
 			$info = array(
 				'owner_id' => $person['id'],
 				'owner_name' => $person['qlr_name'],
+				'id_no' => $person['id_no'],
 			);
 			
 			$this->assign('mapUrlConfig',$this->_mapConfig);
