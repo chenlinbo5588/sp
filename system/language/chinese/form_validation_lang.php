@@ -72,6 +72,7 @@ $lang['form_validation_in_list']		= '{field}必须为{param}其中之一';
 $lang['form_validation_validateAuthCode']						= '{field} 输入不正确.';
 $lang['form_validation_valid_starthttp']						= '{field}必须以http:// 或 https:// 开头.';
 $lang['form_validation_valid_date']						= '{field}必须是一个有效的日期.';
+$lang['form_validation_valid_datetime']						= '{field}必须是一个有效的日期.';
 $lang['form_validation_valid_mobile']					= '{field}必须是一个有效的手机号码.';
 $lang['form_validation_valid_telephone']				= '{field}必须是一个有效的固定电话号码.';
 $lang['form_validation_valid_username']				= '{field}必须符合用户名规则 字母、数字、下划线、汉字.';

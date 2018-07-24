@@ -71,6 +71,7 @@ $lang['form_validation_in_list']		= 'The {field} field must be one of: {param}.'
 $lang['form_validation_validateAuthCode']						= 'The {field} field is not match.';
 $lang['form_validation_valid_starthttp']						= '{field} must start with http:// or  https:// .';
 $lang['form_validation_valid_date']						= 'The {field} field must contain a valid Date.';
+$lang['form_validation_valid_datetime']						= 'The {field} field must contain a valid Date.';
 $lang['form_validation_valid_mobile']					= 'The {field} field must be a valid Chinese Mobile.';
 $lang['form_validation_valid_telephone']				= 'The {field} field must be a valid Chinese Telephone No.';
 $lang['form_validation_valid_username']				= 'The {field} field must be contain a valid nickname rules.';

@@ -56,7 +56,7 @@ class Order_service extends Base_service {
 		
 		
 		self::$CI->load->model(array(
-			'Order_Model','Basic_Data_Model','Order_Type_Model'
+			'Order_Model','Order_Type_Model'
 		));
 		
 		$this->_orderModel = self::$CI->Order_Model;
@@ -91,41 +91,12 @@ class Order_service extends Base_service {
 	public function createBussOrder($param){
 		$order = array();
 		
+		$ts = date("YmdHis");
+		
 		$order['app_id'] = $this->_appConfig['appid'];
 		$order['mch_id'] = $this->_appConfig['mch_id'];
-		
-		$order['order_id'] = $this->_appConfig['mch_id'].date("YmdHis").mt_rand(100,999);
-		
-		$order['pay_channel'] = $param['pay_channel'];
-		$order['pay_method'] = $param['pay_method'];
-		
-		/*
-		if($this->_paymentConfig['channel'][$param['pay_channel']]){
-			$order['pay_channel'] = $this->_paymentConfig['channel'][$param['pay_channel']];
-			
-			if($this->_paymentConfig['method'][$param['pay_channel']][$param['pay_method']]){
-				$order['pay_method'] = $this->_paymentConfig['method'][$param['pay_channel']][$param['pay_method']];
-			}
-		}
-		*/
-		
-		
-		if($param['goods_id']){
-			$order['goods_id'] = $param['goods_id'];
-		}
-		
-		if($param['goods_name']){
-			$order['goods_name'] = $param['goods_name'];
-		}
-		
-		if($param['goods_tag']){
-			$order['goods_tag'] = $param['goods_tag'];
-		}
-		
-		$order['order_type'] = $param['order_type'];
-		$order['order_typename'] = $param['order_typename'];
-		
-		$order['time_start'] = date("YmdHis");
+		$order['order_id'] = $this->_appConfig['mch_id'].$ts.mt_rand(100,999);
+		$order['time_start'] = $ts;
 		
 		if($param['time_expire']){
 			$order['time_expire'] = date("YmdHis", $param['time_expire']);
@@ -133,38 +104,22 @@ class Order_service extends Base_service {
 			$order['time_expire'] = date("YmdHis", time() + 1800);
 		}
 		
-		$order['amount'] = $param['amount'];
-		
-		if($param['refund_amount']){
-			$order['refund_amount'] = $param['refund_amount'];
-		}
-		
-		if($param['status']){
-			$order['status'] = $param['status'];
-		}
-		
-		if($param['order_old']){
-			$order['order_old'] = $param['order_old'];
-		}
-		
-		if($param['extra_info']){
-			$order['extra_info'] = is_array($param['extra_info']) ? json_encode($param['extra_info']) : $param['extra_info'];
-		}else{
-			$param['extra_info'] = json_encode(array());
-		}
-		
-		$order['uid'] = empty($param['uid']) ? 0 : $param['uid'];
 		$order['add_uid'] = empty($param['uid']) ? 0 : $param['uid'];
-		$order['add_username'] = empty($param['add_username']) ? '' : $param['add_username'];
-		
 		$order['ip'] = self::$CI->input->ip_address();
+	
+		$order = array_merge($order,$param);
+		
+		if($order['extra_info']){
+			$order['extra_info'] = is_array($order['extra_info']) ? json_encode($order['extra_info']) : $order['extra_info'];
+		}else{
+			$order['extra_info'] = json_encode(array());
+		}
 		
 		$newid = $this->_orderModel->_add($order);
 		$error = $this->_orderModel->getError();
 		
 		if(QUERY_OK != $error['code']){
 			return false;
-			
 		}else{
 			$order['id'] = $newid;
 			return $order;
@@ -205,8 +160,8 @@ class Order_service extends Base_service {
 			
 			$refundResp = WxPayApi::refund($wxPayRefund);
 			
-			file_put_contents('wuye_callback_refund.txt',print_r($pRefundOrder,true));
-			file_put_contents('wuye_callback_refund.txt',print_r($refundResp,true),FILE_APPEND);
+			file_put_contents('weixin_refund.txt',print_r($pRefundOrder,true));
+			file_put_contents('weixin_refund.txt',print_r($refundResp,true),FILE_APPEND);
 			
 			
 			if(!$this->checkWeixinRespSuccess($refundResp)){
@@ -318,9 +273,7 @@ class Order_service extends Base_service {
 	/**
 	 * 创建订单
 	 */
-	public function createWeixinOrder($param,$weixinUser){
-		$param['openid'] = $weixinUser['openid'];
-		
+	public function createWeixinOrder($param){
 		$param = array_merge($param,$this->_payChannelInfo($param));
 		
 		if($param['order_id']){
@@ -333,7 +286,7 @@ class Order_service extends Base_service {
 			return false;
 		}
 		
-		file_put_contents('wuye.txt',print_r($localOrder,true),FILE_APPEND);
+		file_put_contents('weixinOrder.txt',print_r($localOrder,true));
 		
 		if($param['order_id']){
 			//已有订单重新签发
@@ -371,7 +324,7 @@ class Order_service extends Base_service {
 			
 			$weixinOrder = WxPayApi::unifiedOrder($input);
 			
-			file_put_contents('wuye.txt',print_r($weixinOrder,true),FILE_APPEND);
+			file_put_contents('weixinOrder.txt',print_r($weixinOrder,true),FILE_APPEND);
 			
 			if($this->checkWeixinRespSuccess($weixinOrder)){
 				

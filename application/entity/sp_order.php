@@ -28,6 +28,7 @@ $entity = array(
 'coupon_amount' => 'int',
 'refund_amount' => 'int',
 'refund_cnt' => 'int',
+'mobile' => 'varchar',
 'ip' => 'varchar',
 'time_start' => 'varchar',
 'time_expire' => 'varchar',

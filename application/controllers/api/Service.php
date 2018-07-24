@@ -170,15 +170,12 @@ class Service extends Wx_Controller {
 			for($i = 0 ; $i < 1; $i++){
 				
 				$this->form_validation->set_data($this->postJson);
-				
 				$this->form_validation->set_rules('staff_id','服务人员标识','required');
 			
 				if(!$this->form_validation->run()){
 					$this->jsonOutput2("参数错误",$this->form_validation->error_array());
 					break;
 				}
-				
-				//$this->postJson['staff_id'] = array(4088,4102);
 				
 				$staffList = $this->staff_service->getStaffList(array(
 					'where' => array(
@@ -203,12 +200,6 @@ class Service extends Wx_Controller {
 				
 				$return = $this->cart->insert($data);
 				
-				file_put_contents('cart.txt',print_r($this->session->all_userdata(),true),FILE_APPEND);
-				
-				
-				file_put_contents('cart.txt',$this->session->session_id,FILE_APPEND);
-				
-				
 				$this->jsonOutput2(RESP_SUCCESS);
 			}
 			
@@ -226,8 +217,10 @@ class Service extends Wx_Controller {
 	public function getCart(){
 		$list = $this->cart->contents();
 		
-		file_put_contents('get_cart.txt',$this->session->session_id);
-		
+		$data = array(
+			'staff' => array(),
+			'address' => $this->_getSiteSetting('company_address')
+		);
 		
 		if($list){
 			//涉及到的 id 列表
@@ -247,10 +240,35 @@ class Service extends Wx_Controller {
 				$list[$rowId] = array_merge($cartItem,$staffList[$cartItem['id']]);
 			}
 			
-			$this->jsonOutput2(RESP_SUCCESS,array('staff' => $list));
+			$this->jsonOutput2(RESP_SUCCESS,array_merge($data,array('staff' => $list)));
 			
 		}else{
-			$this->jsonOutput2(RESP_SUCCESS,array('staff' => array()));
+			$this->jsonOutput2(RESP_SUCCESS,$data);
+		}
+		
+	}
+	
+	
+	/**
+	 * 移除记录
+	 */
+	public function removeCart(){
+		
+		
+		$this->form_validation->set_data($this->postJson);
+		$this->form_validation->set_rules('rowKey','预约记录标识','required');
+	
+		if(!$this->form_validation->run()){
+			$this->jsonOutput2("参数错误",$this->form_validation->error_array());
+			break;
+		}
+		
+		$flag = $this->cart->remove($this->postJson('rowKey'));
+		
+		if($flag){
+			$this->jsonOutput2(RESP_SUCCESS);
+		}else{
+			$this->jsonOutput2("移除失败");
 		}
 		
 	}
