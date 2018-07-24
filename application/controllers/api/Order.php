@@ -24,8 +24,76 @@ class Order extends Wx_Controller {
 	 * 创建订单
 	 */
 	public function createStaffOrder(){
-		
 		if($this->memberInfo){
+			
+			$this->load->library('Cart');
+			
+			
+			for($i = 0; $i < 1; $i++){
+				
+				if($this->postJson['order_id']){
+					
+					$this->postJson['uid'] = $this->memberInfo['uid'];
+					$this->form_validation->set_data($this->postJson);
+					
+					$this->_setIsUserOrderRules();
+					
+					if(!$this->form_validation->run()){
+						$this->jsonOutput2($this->form_validation->error_html());
+						break;
+					}
+					
+				}else{
+					
+					$this->form_validation->set_data($this->postJson);
+					
+					//新创订单
+					$this->form_validation->set_rules('house_id','物业标识','required');
+					
+					
+					$this->form_validation->set_rules('order_typename','in_db_list['.$this->Order_Type_Model->getTableRealName().'.name]');
+					$this->form_validation->set_rules('year','缴费年份','required|is_natural_no_zero|greater_than_equal_to['.date('Y').']');
+					
+					$this->form_validation->set_rules('start_month','缴费起始月份','required|is_natural_no_zero|greater_than_equal_to[1]|less_than_equal_to[12]');
+					$this->form_validation->set_rules('end_month','缴费到期月份','required|is_natural_no_zero|greater_than_equal_to[1]|less_than_equal_to[12]');
+					
+					$this->form_validation->set_rules('amount','缴费金额','required');
+					
+					
+					if(!$this->form_validation->run()){
+						$this->jsonOutput2($this->form_validation->error_html());
+						break;
+					}
+					
+					$this->postJson['order_type'] = Order_service::$orderType['nameKey'][$this->postJson['order_typename']]['id'];
+					$this->postJson['pay_channel'] = '微信支付';
+					$this->postJson['pay_method'] = '小程序支付';
+					
+					$this->postJson['uid'] = $this->yezhuInfo['uid'];
+					$this->postJson['add_username'] = $this->yezhuInfo['name'];
+					
+					//@todo 修改金额
+					$this->postJson['amount'] = 1;
+					
+					//异步回调
+					$this->postJson['notify_url'] = site_url(Order_service::$orderType['nameKey'][$this->postJson['order_typename']]['order_url']);
+					
+					$message = '订单创建失败';
+					//strtotime( "2009-01-31 +1 month" )
+					
+					$startTs = strtotime($this->postJson['year'].'-'.str_pad($this->postJson['start_month'],2,'0',STR_PAD_LEFT).'-01');
+					$expireTs = strtotime($this->postJson['year'].'-'.str_pad($this->postJson['end_month'],2,'0',STR_PAD_LEFT).'-01 +1 month');
+					
+					$this->postJson['extra_info'] = array(
+						'house_id' => $this->postJson['house_id'],
+						'fee_start' => $startTs,
+						'fee_expire' => $expireTs
+					);
+					
+				}
+				
+			}
+			
 			
 			
 		}else{

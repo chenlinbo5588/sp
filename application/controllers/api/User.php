@@ -20,6 +20,7 @@ class User extends Wx_Controller {
 			$this->weixin_service->setConfig($xcxConfig);
 			$weixinUser = $this->weixin_service->getWeixinUserByCode($code);
 			
+			file_put_contents('weixin.txt',print_r($weixinUser,true));
 			if($weixinUser){
 				$this->session->set_userdata(array(
 					'weixin_user' =>  $weixinUser

@@ -46,7 +46,7 @@ class Wx_Controller extends MY_Controller {
 		$weixinUser = $this->sessionInfo['weixin_user'];
 		
 		file_put_contents('session.txt',$this->session->session_id);
-		file_put_contents('session.txt',print_r($this->session->all_userdata(),true));
+		file_put_contents('session.txt',print_r($this->session->all_userdata(),true),FILE_APPEND);
 		
 		if($weixinUser){
 			if($weixinUser['unionid']){

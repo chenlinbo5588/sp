@@ -168,40 +168,47 @@ class Service extends Wx_Controller {
 		if($this->isPostRequest()){
 			
 			for($i = 0 ; $i < 1; $i++){
-			
+				
+				$this->form_validation->set_data($this->postJson);
+				
 				$this->form_validation->set_rules('staff_id','服务人员标识','required');
 			
 				if(!$this->form_validation->run()){
-					$this->jsonOutput2(RESP_ERROR,$this->form_validation->error_html());
+					$this->jsonOutput2("参数错误",$this->form_validation->error_array());
 					break;
 				}
 				
 				//$this->postJson['staff_id'] = array(4088,4102);
 				
 				$staffList = $this->staff_service->getStaffList(array(
-					'where_in' => array(
-						array('key' => 'id','value' => $this->postJson['staff_id'])
+					'where' => array(
+						'id' => $this->postJson['staff_id']
 					)
 				));
 				
-				if(empty($staffList)){
+				file_put_contents('cart.txt',print_r($staffList,true));
+				
+				if(empty($staffList[0])){
 					$this->jsonOutput2('获取信息失败');
 					break;
 				}
 				
-				$data = array();
-				
-				foreach($staffList as $staff){
-					$data[] = array(
-				        'id'      => $staff['id'],
-				        'qty'     => 1,
-				        'price'   => 1,
-				        'name'    => $staff['show_name'],
-				        'options' => array('service_type' => $staff['service_type'])
-					);
-				}
+				$data = array(
+			        'id'      => $staffList[0]['id'],
+			        'qty'     => 1,
+			        'price'   => 1,
+			        'name'    => $staffList[0]['show_name'],
+			        'options' => array('service_type' => $staffList[0]['service_type'])
+				);
 				
 				$return = $this->cart->insert($data);
+				
+				file_put_contents('cart.txt',print_r($this->session->all_userdata(),true),FILE_APPEND);
+				
+				
+				file_put_contents('cart.txt',$this->session->session_id,FILE_APPEND);
+				
+				
 				$this->jsonOutput2(RESP_SUCCESS);
 			}
 			
@@ -218,6 +225,9 @@ class Service extends Wx_Controller {
 	 */
 	public function getCart(){
 		$list = $this->cart->contents();
+		
+		file_put_contents('get_cart.txt',$this->session->session_id);
+		
 		
 		if($list){
 			//涉及到的 id 列表
@@ -237,10 +247,10 @@ class Service extends Wx_Controller {
 				$list[$rowId] = array_merge($cartItem,$staffList[$cartItem['id']]);
 			}
 			
-			$this->jsonOutput2(RESP_SUCCESS,$list);
+			$this->jsonOutput2(RESP_SUCCESS,array('staff' => $list));
 			
 		}else{
-			$this->jsonOutput2(RESP_SUCCESS,array());
+			$this->jsonOutput2(RESP_SUCCESS,array('staff' => array()));
 		}
 		
 	}

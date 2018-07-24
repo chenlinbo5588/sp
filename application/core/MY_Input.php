@@ -12,7 +12,7 @@ class MY_Input extends CI_Input {
 		}
 	}
 	
-	public function cookie($index = NULL, $xss_clean = NULL)
+	public function get_cookie($index = NULL, $xss_clean = NULL)
 	{
 		$prefix = config_item('cookie_prefix');
 		return $this->_fetch_from_array($_COOKIE, $prefix.$index, $xss_clean);
@@ -54,7 +54,7 @@ class MY_Input extends CI_Input {
 		
 		$nowstamp = microtime(TRUE);
 		
-		$lastrequest = $this->cookie($lastVisitKey);
+		$lastrequest = $this->get_cookie($lastVisitKey);
 		$lastrequest = !empty($lastrequest) ? $encryptObject->decode($lastrequest,$securitySetting['authkey']) : '';
 		
 		if($attackevasive & 1 || $attackevasive & 4) {
@@ -82,8 +82,8 @@ class MY_Input extends CI_Input {
 		}
 		
 		if($attackevasive & 8) {
-			//echo $encryptObject->decode($this->cookie($visitCode), $securitySetting['authkey']);
-			list($visitcode, $visitcheck, $visittime) = explode('|', $encryptObject->decode($this->cookie($visitCode), $securitySetting['authkey']));
+			//echo $encryptObject->decode($this->get_cookie($visitCode), $securitySetting['authkey']);
+			list($visitcode, $visitcheck, $visittime) = explode('|', $encryptObject->decode($this->get_cookie($visitCode), $securitySetting['authkey']));
 			//var_dump($visitcode, $visitcheck, $visittime);
 			//echo $nowstamp - $visittime;
 			

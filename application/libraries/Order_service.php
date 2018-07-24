@@ -126,7 +126,12 @@ class Order_service extends Base_service {
 		$order['order_typename'] = $param['order_typename'];
 		
 		$order['time_start'] = date("YmdHis");
-		$order['time_expire'] = date("YmdHis", time() + 600);
+		
+		if($param['time_expire']){
+			$order['time_expire'] = date("YmdHis", $param['time_expire']);
+		}else{
+			$order['time_expire'] = date("YmdHis", time() + 1800);
+		}
 		
 		$order['amount'] = $param['amount'];
 		

@@ -51,7 +51,7 @@ class MY_Controller extends CI_Controller {
 	
 	public function _initLanguage(){
 		
-		$lang = $this->input->cookie('lang');
+		$lang = get_cookie('lang');
 		$lang2 = $this->input->get('lang');
 		
 		if(in_array($lang2,array('chinese','english'))){
@@ -98,7 +98,7 @@ class MY_Controller extends CI_Controller {
 	
 	protected function _checkVerify(){
 		if($this->isPostRequest()){
-			$verfiycode = $this->input->cookie($this->_verifyName);
+			$verfiycode = get_cookie($this->_verifyName);
 			if($verfiycode){
 				$string = $this->encrypt->decode($verfiycode,$this->config->item('encryption_key'));
 				$info = explode("\t",$string);
@@ -269,8 +269,8 @@ class MY_Controller extends CI_Controller {
     	$this->assign('formhash',$this->security->get_csrf_hash());
     	
     	/*
-    	if($this->input->cookie($this->_lastVisit) != ''){
-			$elapsed_time = number_format(microtime(TRUE) -  $this->input->cookie($this->_lastVisit), 2);
+    	if(get_cookie($this->_lastVisit) != ''){
+			$elapsed_time = number_format(microtime(TRUE) -  get_cookie($this->_lastVisit), 2);
 			if($elapsed_time < 0.2){
 				if($this->input->is_ajax_request() || $this->_inApp == true){
 					$this->responseJSON('请求过于频繁');
