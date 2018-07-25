@@ -44,7 +44,7 @@ class Weixin_Mp_Api extends Weixin_api {
         if(!empty($tickets)){
         	return $tickets[0]['access_token'];
         }else{
-        	log_message('error',"Ticket已失效,更新处理异常");
+        	//log_message('error',"Ticket已失效,更新处理异常");
             return '';
         }
     	

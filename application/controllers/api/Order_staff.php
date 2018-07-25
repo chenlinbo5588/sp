@@ -75,56 +75,8 @@ class PayNotifyCallBack extends WxPayNotify
 		);
 		
 		$this->_ci->Order_Model->commitTrans();
-		return true;
 		
-		/*
-		if($affectRow > 0 ){
-			$feeInfo = json_decode($orderInfo['extra_info'],true);
-			$updateKey = '';
-			switch($orderInfo['order_typename']){
-				case '物业费':
-					$updateKey = 'wuye_expire';
-					break;
-				case '能耗费':
-					$updateKey = 'nenghao_expire';
-					break;
-				default:
-					break;
-			}
-			
-			file_put_contents('staff_callback.txt',print_r($feeInfo,true),FILE_APPEND);
-			
-			$this->_ci->House_Model->updateByWhere(array(
-				$updateKey => $feeInfo['fee_expire'],
-			),array(
-				'id' => $feeInfo['house_id']
-			));
-			
-			
-			if($this->_ci->Order_Model->getTransStatus() === FALSE){
-				$this->_ci->Order_Model->rollBackTrans();
-				
-				$msg = "订单数据更新失败";
-				
-				return false;
-			}else{
-				$this->_ci->Order_Model->commitTrans();
-				return true;
-			}
-			
-		}else if($affectRow == 0){
-			
-			$this->_ci->Order_Model->rollBackTrans();
-			
-			$shortInfo = $this->_ci->Order_Model->getFirstByKey($data['out_trade_no'],'order_id','status');
-			if($shortInfo['status'] == OrderStatus::$payed){
-				return true;
-			}else{
-				$msg = "订单数据更新失败";
-				return false;
-			}
-		}
-		*/
+		return true;
 		
 	}
 }

@@ -78,8 +78,7 @@ class Order extends Wx_Controller {
 						$this->postJson['add_username'] = $this->yezhuInfo['name'];
 					}
 					
-					//@todo 修改金额
-					$this->postJson['amount'] = 1;
+					
 					$this->postJson['mobile'] = $this->yezhuInfo['mobile'];
 					
 					//异步回调
@@ -99,6 +98,10 @@ class Order extends Wx_Controller {
 						'meet_time' => $this->postJson['meet_time'],
 						'address' => $this->postJson['address'],
 					);
+					
+					
+					//@todo 修改金额
+					$this->postJson['amount'] = 1;
 				}
 				
 				
@@ -107,22 +110,18 @@ class Order extends Wx_Controller {
 				file_put_contents('staff.txt',print_r($this->yezhuInfo,true),FILE_APPEND);
 				file_put_contents('staff.txt',print_r($this->postJson,true),FILE_APPEND);
 				
-				try {
-					
-					$callPayJson = $this->order_service->createWeixinOrder($this->postJson);
-					
-					file_put_contents('staff.txt',print_r($callPayJson,true),FILE_APPEND);
-					
-				}catch(WxPayException $e1){
-					$message = $e1->getMessage();
-				}catch(Exception $e){
-					$message = $e1->getMessage();
-				}
+				$callPayJson = $this->order_service->createWeixinOrder($this->postJson);
+				
+				file_put_contents('staff.txt',print_r($callPayJson,true),FILE_APPEND);
 				
 				if($callPayJson){
 					$this->jsonOutput2(RESP_SUCCESS,$callPayJson);
+					
+					//清空购物车
+					$this->cart->destroy();
+					
 				}else{
-					$this->jsonOutput2($message);
+					$this->jsonOutput2("预约单创建失败");
 				}
 			}
 			
@@ -182,8 +181,7 @@ class Order extends Wx_Controller {
 					$this->postJson['uid'] = $this->yezhuInfo['uid'];
 					$this->postJson['add_username'] = $this->yezhuInfo['name'];
 					
-					//@todo 修改金额
-					$this->postJson['amount'] = 1;
+					
 					
 					//联系方式
 					$this->postJson['mobile'] = $this->yezhuInfo['mobile'];
@@ -197,12 +195,25 @@ class Order extends Wx_Controller {
 					$startTs = strtotime($this->postJson['year'].'-'.str_pad($this->postJson['start_month'],2,'0',STR_PAD_LEFT).'-01');
 					$expireTs = strtotime($this->postJson['year'].'-'.str_pad($this->postJson['end_month'],2,'0',STR_PAD_LEFT).'-01 +1 month');
 					
+					$this->load->model('House_Model');
+					
+					$houseInfo = $this->House_Model->getFirstByKey($this->postJson['house_id']);
+					
+					$this->postJson['goods_id'] = $this->postJson['house_id'];
+					$this->postJson['goods_name'] = $houseInfo['address'];
+					
+					
 					$this->postJson['extra_info'] = array(
 						'house_id' => $this->postJson['house_id'],
 						'fee_start' => $startTs,
 						'fee_expire' => $expireTs
 					);
 					
+					//计算金额
+					//@todo 根据小区的金额配置
+					
+					//@todo 修改金额
+					$this->postJson['amount'] = 1;
 				}
 				
 				
@@ -210,21 +221,14 @@ class Order extends Wx_Controller {
 				file_put_contents('wuye.txt',print_r($this->yezhuInfo,true),FILE_APPEND);
 				file_put_contents('wuye.txt',print_r($this->postJson,true),FILE_APPEND);
 				
-				try {
-					
-					$callPayJson = $this->order_service->createWeixinOrder($this->postJson);
-					file_put_contents('wuye.txt',print_r($callPayJson,true),FILE_APPEND);
-					
-				}catch(WxPayException $e1){
-					$message = $e1->getMessage();
-				}catch(Exception $e){
-					$message = $e1->getMessage();
-				}
+				$callPayJson = $this->order_service->createWeixinOrder($this->postJson);
+				
+				file_put_contents('wuye.txt',print_r($callPayJson,true),FILE_APPEND);
 				
 				if($callPayJson){
 					$this->jsonOutput2(RESP_SUCCESS,$callPayJson);
 				}else{
-					$this->jsonOutput2($message);
+					$this->jsonOutput2($this->postJson['order_typename']."订单创建失败");
 				}
 			}
 			

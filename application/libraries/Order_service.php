@@ -168,7 +168,7 @@ class Order_service extends Base_service {
 				return false;
 			}
 			
-			return $refundObj->process($pRefundOrder,$refundResp);
+			return $refundObj->customHandle($pRefundOrder,$refundResp);
 			
 		}catch(WxPayException $payException){
 			log_message('error',"code=".$payException->getCode().",message=".$payException->errorMessage());
@@ -304,54 +304,61 @@ class Order_service extends Base_service {
 			return $this->genPaymentParam($localOrder['prepay_id']);
 			
 		}else{
+			try {
+				
+				$input = new WxPayUnifiedOrder();
 			
-			$input = new WxPayUnifiedOrder();
-		
-			$input->SetBody($this->_appConfig['name'].'-'.$param['order_typename']);
-			//$input->SetAttach("test");
-			
-			$input->SetOut_trade_no($localOrder['order_id']);
-			
-			//测试阶段 始终用 1分
-			$input->SetTotal_fee($localOrder['amount']);
-			
-			$input->SetTime_start($localOrder['time_start']);
-			$input->SetTime_expire($localOrder['time_expire']);
-			
-			
-			if($localOrder['goods_tag']){
-				$input->SetGoods_tag($localOrder['goods_tag']);
+				$input->SetBody($this->_appConfig['name'].'-'.$param['order_typename']);
+				//$input->SetAttach("test");
+				
+				$input->SetOut_trade_no($localOrder['order_id']);
+				
+				//测试阶段 始终用 1分
+				$input->SetTotal_fee($localOrder['amount']);
+				
+				$input->SetTime_start($localOrder['time_start']);
+				$input->SetTime_expire($localOrder['time_expire']);
+				
+				
+				if($localOrder['goods_tag']){
+					$input->SetGoods_tag($localOrder['goods_tag']);
+				}
+				
+				$input->SetNotify_url($param['notify_url']);
+				
+				$input->SetTrade_type("JSAPI");
+				
+				if($localOrder['goods_id']){
+					$input->SetProduct_id($localOrder['goods_id']);
+				}
+				
+				$input->SetOpenid($param['openid']);
+				
+				$weixinOrder = WxPayApi::unifiedOrder($input);
+				
+				file_put_contents('weixinOrder.txt',print_r($weixinOrder,true),FILE_APPEND);
+				
+				if($this->checkWeixinRespSuccess($weixinOrder)){
+					
+					//将 prepay_id 保存起来, 用来在用户取消订单后，后续可以再次进行下发 换起支付的参数
+					$this->_orderModel->updateByWhere(array(
+						'prepay_id' => $weixinOrder['prepay_id']
+					),array(
+						'id' => $localOrder['id']
+					));
+					
+					return $this->genPaymentParam($weixinOrder['prepay_id']);
+				}else{
+					log_message('error',"return_code={$weixinOrder['return_code']},return_msg={$weixinOrder['return_msg']},order_id={$localOrder['order_id']}");
+				}
+			}catch(WxPayException $e1){
+				log_message('error','code='.$e1->getCode().',message='.$e1->getMessage());
+			}catch(Exception $e){
+				log_message('error','code='.$e->getCode().',message='.$e->getMessage());
 			}
 			
-			$input->SetNotify_url($param['notify_url']);
 			
-			$input->SetTrade_type("JSAPI");
-			
-			if($localOrder['goods_id']){
-				$input->SetProduct_id($localOrder['goods_id']);
-			}
-			
-			$input->SetOpenid($param['openid']);
-			
-			$weixinOrder = WxPayApi::unifiedOrder($input);
-			
-			file_put_contents('weixinOrder.txt',print_r($weixinOrder,true),FILE_APPEND);
-			
-			if($this->checkWeixinRespSuccess($weixinOrder)){
-				
-				//将 prepay_id 保存起来, 用来在用户取消订单后，后续可以再次进行下发 换起支付的参数
-				$this->_orderModel->updateByWhere(array(
-					'prepay_id' => $weixinOrder['prepay_id']
-				),array(
-					'id' => $localOrder['id']
-				));
-				
-				return $this->genPaymentParam($weixinOrder['prepay_id']);
-			}else{
-				log_message('error',"return_code={$weixinOrder['return_code']},return_msg={$weixinOrder['return_msg']},order_id={$localOrder['order_id']}");
-				
-				return false;
-			}
+			return false;
 		}
 		
 	}
