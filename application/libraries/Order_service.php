@@ -197,32 +197,43 @@ class Order_service extends Base_service {
 			//正常订单退款
 			$oldOrderInfo = $this->getOrderDetailByOrderId($pOrderParam['order_id']);
 			
-			//检查一下是否有退款中的退款订单
-			$tempOrder = $this->_orderModel->getList(array(
-				'where' => array(
-					'order_old' => $oldOrderInfo['order_id'],
-					'status' => OrderStatus::$refounding
-				),
-				'limit' => 1
-			));
-			
-			if($tempOrder[0]){
-				$tuiOrder = $tempOrder[0];
+			if(strpos($oldOrderInfo['order_typename'],'退款') === false){
+				//检查一下是否有退款中的退款订单
+				$tempOrder = $this->_orderModel->getList(array(
+					'where' => array(
+						'order_old' => $oldOrderInfo['order_id'],
+						'status' => OrderStatus::$refounding
+					),
+					'limit' => 1
+				));
+				
+				if($tempOrder[0]){
+					$tuiOrder = $tempOrder[0];
+				}
+			}else{
+				//本身就是退款单
+				$tuiOrder = $oldOrderInfo;
 			}
+			
 		}
 		
 		if(!empty($tuiOrder)){
 			return $tuiOrder;
 		}else{
 			//创建一个退订单
+			$tuiOrderType = self::$orderType['nameKey'][$oldOrderInfo['order_typename'].'退款'];
+			
 			$tuiOrder = array(
-				'order_type' => $oldOrderInfo['order_type'],
-				'order_typename' => $oldOrderInfo['order_typename'],
+				'order_type' => $tuiOrderType['id'],
+				'order_typename' => $tuiOrderType['name'],
 				'pay_channel' => $oldOrderInfo['pay_channel'],
 				'pay_method' => $oldOrderInfo['pay_method'],
 				'amount' => $oldOrderInfo['amount'],//原订单金额
 				'refund_amount' => $pOrderParam['amount'],//退款金额
 				'uid' => $pOrderParam['uid'],
+				'add_uid' => $pOrderParam['add_uid'], //@todo 需要后增加退款审核,这里人就不一样
+				'add_username' => $pOrderParam['add_username'],
+				'mobile' => $pOrderParam['mobile'],
 				'status' => OrderStatus::$refounding,
 				'order_old' => $pOrderParam['order_id'],
 			);

@@ -27,7 +27,8 @@ class Order_wuye_refund {
 		
 		try {
 			
-			file_put_contents('wuye_callback_refund.txt',"开始执行业务逻辑1",FILE_APPEND);
+			file_put_contents('wuye_callback_refund.txt',print_r($pRefundOrder,true),FILE_APPEND);
+			file_put_contents('wuye_callback_refund.txt',print_r($refundResp,true),FILE_APPEND);
 			
 			
 			$this->_ci->load->library(array('Order_service','Wuye_service'));
@@ -49,10 +50,10 @@ class Order_wuye_refund {
 			$houseWuyeInfo = json_decode($pRefundOrder['extra_info'],true);
 			
 			switch($pRefundOrder['order_typename']){
-				case '物业费':
+				case '物业费退款':
 					$updateFiled = 'wuye_expire';
 					break;
-				case '能耗费':
+				case '能耗费退款':
 					$updateFiled = 'nenghao_expire';
 					break;
 				default:

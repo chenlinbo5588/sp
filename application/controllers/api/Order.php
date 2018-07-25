@@ -418,7 +418,7 @@ class Order extends Wx_Controller {
 				}
 				
 				//$param['notify_url'] = site_url(Order_service::$orderType['nameKey'][$orderInfo['order_typename']]['refund_url']);
-				//file_put_contents('wuye_callback_refund.txt',print_r($param,true));
+				file_put_contents('wuye_callback_refund.txt',print_r($param,true));
 				$refundOrder = $this->order_service->createRefundOrder($param);
 				
 				//业务处理

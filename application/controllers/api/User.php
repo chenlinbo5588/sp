@@ -12,7 +12,7 @@ class User extends Wx_Controller {
 	 * 登陆获取 session key
 	 */
 	public function login(){
-		$code = $this->input->get_post('code');
+		$code = $this->postJson['code'];
 		
 		if($code){
 			$xcxConfig = config_item('mp_xcxCswy');
