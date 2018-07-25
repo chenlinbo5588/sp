@@ -325,8 +325,8 @@ $(function(){
 					<li><a class="link" id="nav_wuye" href="javascript:void(0);" onclick="openItem('wuye');"><span>物业</span></a></li>
 					{*<li><a class="link" id="nav_team" href="javascript:void(0);" onclick="openItem('team');"><span>队伍</span></a></li>
 					<li><a class="link" id="nav_stadium" href="javascript:void(0);" onclick="openItem('stadium');"><span>场馆</span></a></li>
-					<li><a class="link" id="nav_game" href="javascript:void(0);" onclick="openItem('game');"><span>赛事</span></a></li>
-					<li><a class="link" id="nav_goods" href="javascript:void(0);" onclick="openItem('goods');"><span>商品</span></a></li>*}
+					<li><a class="link" id="nav_game" href="javascript:void(0);" onclick="openItem('game');"><span>赛事</span></a></li>*}
+					<li><a class="link" id="nav_goods" href="javascript:void(0);" onclick="openItem('goods');"><span>商品</span></a></li>
 					<li><a class="link" id="nav_trade" href="javascript:void(0);" onclick="openItem('trade');"><span>交易</span></a></li>
 					{*<li><a class="link" id="nav_website" href="javascript:void(0);" onclick="openItem('website');"><span>网站</span></a></li>
 					<li><a class="link" id="nav_operation" href="javascript:void(0);" onclick="openItem('operation');"><span>运营</span></a></li>

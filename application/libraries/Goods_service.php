@@ -1,6 +1,44 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+class GoodsVerift
+{
+	//未通过
+	public static $draft = 1;
+	
+	//通过
+	public static $unverify = 2;		
+	public static $statusName = array(
+		1 => '未审核',
+		2 => '审核通过'
+	);
+}
+
+class GoodsStatus
+{
+	//下架
+	public static $draft = 1;
+	
+	//正常
+	public static $unverify = 2;		
+	public static $statusName = array(
+		1 => '下架',
+		2 => '正常'
+	);
+}
+class GoodsReCommend
+{
+	//未推荐
+	public static $draft = 1;
+	
+	//推荐
+	public static $unverify = 2;		
+	public static $statusName = array(
+		1 => '未推荐',
+		2 => '推荐'
+	);
+}
+
 
 class Goods_service extends Base_service {
 	
@@ -121,7 +159,26 @@ class Goods_service extends Base_service {
 		return $deep;
 		
 	}
+
+	/**
+	 * 更改状态
+	 * @param array $pIds
+	 */
+	public function changeGoodsStatus($pIds,$pNewValue,$pOldValue,$pFieldName,$extraData = array()){
+		return $this->_goodsModel->updateByCondition(array_merge(array(
+			$pFieldName => $pNewValue
+		),$extraData),array(
+			'where' => array(
+				$pFieldName => $pOldValue
+			),
+			'where_in' => array(
+				array('key' => 'goods_id', 'value' => $pIds)
+			)
+		));
+	}
 	
+
+
 	
 	public function deleteGoodsClass($delId){
 		

@@ -7,16 +7,39 @@ class Goods extends Ydzj_Admin_Controller {
 	public function __construct(){
 		parent::__construct();
 		
+		$this->_moduleTitle = '商品';
+		$this->_className = strtolower(get_class());
+		
+		
 		$this->load->library(array('Goods_service','Attachment_service'));
 		$this->attachment_service->setUid($this->_adminProfile['basic']['uid']);
+		
+		
+		$this->_subNavs = array(
+			array('url' => $this->_className.'/index','title' => '管理'),
+			array('url' => $this->_className.'/unverify','title' => '未审核'),
+			array('url' => $this->_className.'/verify','title' => '审核通过'),
+			array('url' => $this->_className.'/published','title' => '正常'),
+			array('url' => $this->_className.'/unpublished','title' => '下架'),
+			array('url' => $this->_className.'/recommend','title' => '推荐'),
+			array('url' => $this->_className.'/unrecommend','title' => '未推荐'),
+			array('url' => $this->_className.'/add','title' => '新增'),
+			
+		);
+		
+		$this->assign(array(
+			'moduleTitle' => $this->_moduleTitle,
+			'moduleClassName' => $this->_className,
+			'goodsVerify'=> GoodsVerift::$statusName,
+			'goodsCommend'=> GoodsReCommend::$statusName,
+			'goodsState'=> GoodsStatus::$statusName
+		));
 	}
-	
-	
-	
-	public function index(){
-		$searchMap['goods_commend'] = array('未推荐' => '0','已推荐' => '1');
-		$searchMap['goods_state'] = array('未发布' => '0','正常' => '1');
-		$searchMap['goods_verify'] = array('未通过' => '0','通过' => '1');
+	/**
+	 * 查询条件
+	 */
+	public function _searchCondition($moreSearchVal = array()){
+
 		
 		$brandList = $this->Brand_Model->getList();
 		$brandList = $this->goods_service->toEasyUseArray($brandList,'brand_id');
@@ -34,31 +57,31 @@ class Goods extends Ydzj_Admin_Controller {
 				'form_id' => '#formSearch'
 			)
 		);
-		
-		
 		$goodsName = $this->input->get_post('search_goods_name');
-		$goodsVerify = $this->input->get_post('goods_verify') ? $this->input->get_post('goods_verify') : '';
-		
-		$goodsCommend = $this->input->get_post('goods_commend') ? $this->input->get_post('goods_commend') : '';
-		$goodsState = $this->input->get_post('goods_state') ? $this->input->get_post('goods_state') : '';
+		$searchMap['goods_verify'] = $this->input->get_post('goods_verify') ? $this->input->get_post('goods_verify') : '';
+		$searchMap['goods_commend'] = $this->input->get_post('goods_commend') ? $this->input->get_post('goods_commend') : '';
+		$searchMap['goods_state'] = $this->input->get_post('goods_state') ? $this->input->get_post('goods_state') : '';
+		$searchMap['brand_id'] = $this->input->get_post('brand_id') ? $this->input->get_post('brand_id') : '';
 		$goodsClassId = $this->input->get_post('gc_id') ? $this->input->get_post('gc_id') : 0;
-		
+		$searchMap = array_merge($searchMap,$moreSearchVal);
 		if($goodsName){
 			$condition['like']['goods_name'] = $goodsName;
 		}
 		
-		if($searchMap[$goodsCommend]){
-			$condition['where']['goods_commend'] = $searchMap[$goodsCommend];
+		if($searchMap['goods_commend']){
+			$condition['where']['goods_commend'] = $searchMap['goods_commend'];
 		}
 		
-		if($searchMap[$goodsVerify]){
-			$condition['where']['goods_verify'] = $searchMap[$goodsVerify];
+		if($searchMap['goods_verify']){
+			$condition['where']['goods_verify'] = $searchMap['goods_verify'];
 		}
 		
-		if($searchMap[$goodsState]){
-			$condition['where']['goods_state'] = $searchMap[$goodsState];
+		if($searchMap['goods_state']){
+			$condition['where']['goods_state'] = $searchMap['goods_state'];
 		}
-		
+		if($searchMap['brand_id']){
+			$condition['where']['brand_id'] = $searchMap['brand_id'];
+		}
 		
 		
 		if($goodsClassId){
@@ -74,22 +97,166 @@ class Goods extends Ydzj_Admin_Controller {
 		
 		$list = $this->Goods_Model->getList($condition);
 		
-		$this->assign('brandList',$brandList);
-		$this->assign('goodsClassList',$treelist);
-		$this->assign('list',$list);
-		$this->assign('page',$list['pager']);
-		$this->assign('currentPage',$currentPage);
-		$this->assign('searchMap',$searchMap);
+
 		
-		$this->display();
+		$this->assign(array(
+			'goodsClassList' => $treelist,
+			'list' => $list,
+			'brandList'=>$brandList,
+			'page' => $list['pager'],
+			'searchMap' => $searchMap,
+			'currentPage' =>$currentPage
+		));
+		
+		
+	}
+	
+	public function index(){
+		$this->_searchCondition();
+		$this->display($this->_className.'/index');
+	}
+	
+	public function unverify(){
+		$this->_searchCondition(array(
+			'goods_verify' =>GoodsVerift::$draft
+		));
+		$this->display($this->_className.'/index');
+	}
+	
+	public function verify(){
+		$this->_searchCondition(array(
+			'goods_verify' =>GoodsVerift::$unverify
+		));
+		$this->display($this->_className.'/index');
+	}
+	
+	public function published(){
+		$this->_searchCondition(array(
+			'goods_state' =>GoodsStatus::$unverify
+		));
+		$this->display($this->_className.'/index');
+	}
+	
+	public function unpublished(){
+		$this->_searchCondition(array(
+			'goods_state' =>GoodsStatus::$draft
+		));
+		$this->display($this->_className.'/index');
+	}
+	
+	public function recommend(){
+		$this->_searchCondition(array(
+			'goods_commend' =>GoodsReCommend::$unverify
+		));
+		$this->display($this->_className.'/index');
+	}
+	
+	public function unrecommend(){
+		$this->_searchCondition(array(
+			'goods_commend' =>GoodsReCommend::$draft
+		));
+		$this->display($this->_className.'/index');
+	}
+	
+	/**
+	 * 提交审核
+	 */
+	
+	public function handle_verify(){
+		$ids = $this->input->post('id');
+		
+		if($this->isPostRequest() && !empty($ids)){
+			
+			if(!is_array($ids)){
+				$ids = (array)$ids;
+			}
+			
+			$returnVal = $this->goods_service->changeGoodsStatus($ids,GoodsVerift::$unverify,GoodsVerift::$draft,'goods_verify');
+			
+			if($returnVal > 0){
+				$this->jsonOutput('提交审核成功',$this->getFormHash());
+			}else{
+				$this->jsonOutput('提交审核失败',$this->getFormHash());
+			}
+			
+		}else{
+			$this->jsonOutput('请求非法',$this->getFormHash());
+		}	
 	}
 	
 	
+	public function batch_verify(){
+		$ids = $this->input->post('id');
+		
+		if($this->isPostRequest() && !empty($ids)){
+			
+			if(!is_array($ids)){
+				$ids = (array)$ids;
+			}
+			
+			$returnVal = $this->goods_service->changeGoodsStatus($ids,GoodsReCommend::$unverify,GoodsReCommend::$draft,'goods_commend');
+			
+			if($returnVal > 0){
+				$this->jsonOutput('推荐成功',$this->getFormHash());
+			}else{
+				$this->jsonOutput('推荐失败',$this->getFormHash());
+			}
+			
+		}else{
+			$this->jsonOutput('请求非法',$this->getFormHash());
+		}
+		
+	}
 	
+	public function batch_published(){
+		$ids = $this->input->post('id');
+		
+		if($this->isPostRequest() && !empty($ids)){
+			
+			if(!is_array($ids)){
+				$ids = (array)$ids;
+			}
+			
+			$returnVal = $this->goods_service->changeGoodsStatus($ids,GoodsStatus::$unverify,GoodsStatus::$draft,'goods_state');
+			
+			if($returnVal > 0){
+				$this->jsonOutput('上架成功',$this->getFormHash());
+			}else{
+				$this->jsonOutput('上架失败',$this->getFormHash());
+			}
+			
+		}else{
+			$this->jsonOutput('请求非法',$this->getFormHash());
+		}
+		
+	}
+	
+	public function lower_frame(){
+		$ids = $this->input->post('id');
+		
+		if($this->isPostRequest() && !empty($ids)){
+			
+			if(!is_array($ids)){
+				$ids = (array)$ids;
+			}
+			
+			$returnVal = $this->goods_service->changeGoodsStatus($ids,GoodsStatus::$draft,GoodsStatus::$unverify,'goods_state');
+			
+			if($returnVal > 0){
+				$this->jsonOutput('下架成功',$this->getFormHash());
+			}else{
+				$this->jsonOutput('下架失败',$this->getFormHash());
+			}
+			
+		}else{
+			$this->jsonOutput('请求非法',$this->getFormHash());
+		}
+		
+	}
 	
 	private function _getRules(){
 		$this->form_validation->set_rules('goods_name','商品中文名称','required|max_length[60]');
-		$this->form_validation->set_rules('goods_name_en','商品英文名称','required|max_length[60]');
+		//$this->form_validation->set_rules('goods_name_en','商品英文名称','required|max_length[60]');
 		$this->form_validation->set_rules('gc_id','商品分类',"required|in_db_list[".$this->Goods_Class_Model->getTableRealName().".gc_id]");
 		$this->form_validation->set_rules('goods_intro','商品中文简介','required');
 		//$this->form_validation->set_rules('goods_intro_en','商品英文简介','required');
@@ -131,11 +298,11 @@ class Goods extends Ydzj_Admin_Controller {
 		
 		$info = array(
 			'goods_name' => $this->input->post('goods_name'),
-			'goods_name_en' => $this->input->post('goods_name_en'),
+			//'goods_name_en' => $this->input->post('goods_name_en'),
 			'gc_id' => $this->input->post('gc_id') ? $this->input->post('gc_id') : 0,
 			'brand_id' => $this->input->post('brand_id') ? $this->input->post('brand_id') : 0,
 			'goods_intro' => $this->input->post('goods_intro') ? $this->input->post('goods_intro') : '',
-			'goods_intro_en' => $this->input->post('goods_intro_en') ? $this->input->post('goods_intro_en') : '',
+			//'goods_intro_en' => $this->input->post('goods_intro_en') ? $this->input->post('goods_intro_en') : '',
 			'goods_commend' => $this->input->post('goods_commend') ? $this->input->post('goods_commend') : 0,
 			'goods_verify' => $this->input->post('goods_verify'),
 			'goods_state' => $this->input->post('goods_state'),
