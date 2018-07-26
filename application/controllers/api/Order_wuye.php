@@ -131,7 +131,7 @@ class Order_wuye extends Wx_Controller {
 	public function __construct(){
 		parent::__construct();
         
-        $this->load->library('Order_service','Wuye_service');
+        $this->load->library(array('Order_service','Wuye_service'));
     	$this->form_validation->set_error_delimiters('','');
 	}
 	

@@ -90,7 +90,7 @@ class PayNotifyCallBack extends WxPayNotify
 			)
 		),'id');
 		
-		$serviceType = self::$CI->basic_data_service->getTopChildList('业务类型');
+		$serviceType = $this->_ci->basic_data_service->getTopChildList('业务类型');
 		
 		//以 id 为下标
 		$serviceTypeIdAssoc = array();
@@ -111,6 +111,7 @@ class PayNotifyCallBack extends WxPayNotify
 				'username' => $orderInfo['add_username'],
 				'staff_id' => $staffItem['id'],
 				'staff_name' => $staffItem['name'],
+				'staff_mobile' => $staffItem['mobile'],
 				'staff_sex' => $staffItem['sex'],
 				'service_type' => $staffItem['service_type'],
 				'service_name' => $serviceTypeIdAssoc[$staffItem['service_type']],
@@ -139,7 +140,7 @@ class Order_staff extends Wx_Controller {
 	public function __construct(){
 		parent::__construct();
         
-        $this->load->library('Order_service','Staff_service');
+        $this->load->library(array('Order_service','Staff_service'));
     	$this->form_validation->set_error_delimiters('','');
 	}
 	

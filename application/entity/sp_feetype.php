@@ -9,6 +9,7 @@ $entity = array(
 'resident_id' => 'int',
 'resident_name' => 'varchar',
 'price' => 'float',
+'displayorder' => 'int',
 'add_uid' => 'int',
 'edit_uid' => 'int',
 'add_username' => 'varchar',

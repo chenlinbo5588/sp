@@ -19,32 +19,53 @@ class Order_wuye_refund extends Weixin_refund {
 	/**
 	 * 业务处理
 	 */
-	public function process($pRefundOrder,$refundResp){
+	public function customHandle($pRefundOrder,$refundResp){
 		
-		$this->_ci->load->library(array('Wuye_service'));
+		file_put_contents('callback_refund.txt',print_r($pRefundOrder,true),FILE_APPEND);
+		file_put_contents('callback_refund.txt',print_r($refundResp,true),FILE_APPEND);
 		
-		
-		$updateFiled = 'wuye_expire';
-		
-		$houseWuyeInfo = json_decode($pRefundOrder['extra_info'],true);
-		switch($pRefundOrder['order_typename']){
-			case '物业费退款':
-				$updateFiled = 'wuye_expire';
-				break;
-			case '能耗费退款':
-				$updateFiled = 'nenghao_expire';
-				break;
-			default:
+		try {
+			
+			$this->commonOrderUpdate($pRefundOrder['order_id'],$refundResp);
+			
+			$this->_ci->load->library(array('Wuye_service'));
+			
+			
+			$updateFiled = 'wuye_expire';
+			$houseWuyeInfo = json_decode($pRefundOrder['extra_info'],true);
+			switch($pRefundOrder['order_typename']){
+				case '物业费退款':
+					$updateFiled = 'wuye_expire';
+					break;
+				case '能耗费退款':
+					$updateFiled = 'nenghao_expire';
+					break;
+				default:
+					return false;
+					break;
+			}
+			
+			//还原缴费时间
+			$this->_ci->House_Model->updateByWhere(array(
+				$updateFiled => $houseWuyeInfo['fee_start'],
+			),array('id' => $houseWuyeInfo['house_id']));
+			
+			//更新退款统计信息
+			$this->updateOrderRefundStat($pRefundOrder['order_old'],$refundResp['refund_fee']);
+			
+			if($this->_ci->Order_Model->getTransStatus() === FALSE){
+				$this->_ci->Order_Model->rollBackTrans();
 				return false;
-				break;
+			}else{
+				$this->_ci->Order_Model->commitTrans();
+				return true;
+			}
+			
+		}catch(Exception $e){
+			
+			return false;
 		}
 		
-		//还原缴费时间
-		$this->_ci->House_Model->updateByWhere(array(
-			$updateFiled => $houseWuyeInfo['fee_start'],
-		),array('id' => $houseWuyeInfo['house_id']));
-		
-	
 	}
 	
 

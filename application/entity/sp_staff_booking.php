@@ -17,6 +17,7 @@ $entity = array(
 'meet_result' => 'tinyint',
 'is_notify' => 'tinyint',
 'order_id' => 'varchar',
+'order_refund' => 'varchar',
 'order_status' => 'tinyint',
 'expire_key' => 'int',
 'add_uid' => 'int',
