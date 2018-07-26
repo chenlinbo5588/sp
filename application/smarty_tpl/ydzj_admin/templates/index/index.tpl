@@ -430,6 +430,7 @@ $(function(){
                     <li><a href="javascript:void(0);" id="index_house" onclick="openItem('index,house,wuye');">房屋</a></li>
                     <li><a href="javascript:void(0);" id="index_building" onclick="openItem('index,building,wuye');">建筑物</a></li>
                     <li><a href="javascript:void(0);" id="index_resident" onclick="openItem('index,resident,wuye');">小区</a></li>
+                    <li><a href="javascript:void(0);" id="index_feetype" onclick="openItem('index,feetype,wuye');">費用管理</a></li>
                     
                     <li><a href="javascript:void(0);" id="index_repair" onclick="openItem('index,repair,wuye');">报修</a></li>
                   </ol>

@@ -10,6 +10,8 @@ class Wuye_service extends Base_service {
 	private $_buildingModel;
 	private $_houseModel;
 	private $_yezhuModel;
+	private $_feeTypeModel;
+	
 	
 	
 	
@@ -18,12 +20,14 @@ class Wuye_service extends Base_service {
 		
 		self::$CI->load->model(array(
 			'Resident_Model','Building_Model','House_Model','Yezhu_Model',
+			'Feetype_Model','Basic_Data_Model'
 		));
 		
-		$this->_residengtModel = self::$CI->Resident_Model;
+		$this->_residentModel = self::$CI->Resident_Model;
 		$this->_buildingModel = self::$CI->Building_Model;
 		$this->_houseModel = self::$CI->House_Model;
 		$this->_yezhuModel = self::$CI->Yezhu_Model;
+		$this->_feeTypeModel = self::$CI->Feetype_Model;
 		
 	}
 	
@@ -39,21 +43,21 @@ class Wuye_service extends Base_service {
 		$returnVal = false;
 		if(!isset($pResidentParam['id'])){
 			//事务
-			$returnVal = $this->_residengtModel->_add(array_merge($pResidentParam,$who));
+			$returnVal = $this->_residentModel->_add(array_merge($pResidentParam,$who));
 		}else{
 			
-			$this->_residengtModel->beginTrans();
-			$returnVal = $this->_residengtModel->update(array_merge($pResidentParam,$who),array('id' => $pResidentParam['id']));
+			$this->_residentModel->beginTrans();
+			$returnVal = $this->_residentModel->update(array_merge($pResidentParam,$who),array('id' => $pResidentParam['id']));
 			
 			
 			//修改小区名称，则自动更新对象的幢以及
 			
 			
-			if($this->_residengtModel->getTransStatus() === FALSE){
-				$this->_residengtModel->rollBackTrans();
+			if($this->_residentModel->getTransStatus() === FALSE){
+				$this->_residentModel->rollBackTrans();
 				return false;
 			}else{
-				$this->_residengtModel->commitTrans();
+				$this->_residentModel->commitTrans();
 				return $returnVal;
 			}
 		}
@@ -111,6 +115,16 @@ class Wuye_service extends Base_service {
 			self::$CI->form_validation->set_rules('mobile','手机号码','required|valid_mobile|is_unique['.$this->_yezhuModel->getTableRealName().'.mobile]');
 		}
 		
+		
+	}
+	
+	
+	public function addFeeTypeRules(){
+		
+		self::$CI->form_validation->set_rules('name','费用类型名称','required|in_db_list['.self::$CI->Basic_Data_Model->getTableRealName().'.show_name]');
+		
+		self::$CI->form_validation->set_rules('price','每平方单价','required|is_numeric');
+		self::$CI->form_validation->set_rules('resident_name','小区名称','required|in_db_list['.$this->_residentModel->getTableRealName().'.name]');
 		
 	}
 	

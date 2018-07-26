@@ -500,12 +500,16 @@ class MY_Controller extends CI_Controller {
     /**
      * 不包装
      */
-    public function jsonOutput2($message = '' ,$data = array(),$formated = false){
+    public function jsonOutput2($message = '' ,$data = array(),$withMessage = true,$formated = false){
     	
     	if($formated){
     		$d = $this->_buildJsonFormat($message,$data);
     	}else{
-    		$d = array_merge($data,array('message' => $message));
+    		if($withMessage){
+    			$d = array_merge($data,array('message' => $message));
+    		}else{
+    			$d = $data;
+    		}
     	}
     	
 		$this->output
