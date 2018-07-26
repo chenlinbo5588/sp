@@ -415,6 +415,7 @@ $(function(){
                     <li><a href="javascript:void(0);" id="index_yuesao" onclick="openItem('index,yuesao,service');">月嫂</a></li>
                     <li><a href="javascript:void(0);" id="index_baomu" onclick="openItem('index,baomu,service');">保姆</a></li>
                     <li><a href="javascript:void(0);" id="index_hugong" onclick="openItem('index,hugong,service');">护工</a></li>
+                    <li><a href="javascript:void(0);" id="index_yuyue" onclick="openItem('index,yuyue,service');">预约单</a></li>
                     
                   </ol>
                 </dd>

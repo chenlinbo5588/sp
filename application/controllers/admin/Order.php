@@ -366,15 +366,7 @@ class Order extends Ydzj_Admin_Controller {
 			}
 			
 			
-			$returnVal = $this->staff_service->deleteStaff($this->_moduleTitle,$ids);
-			
-			if($returnVal){
-				$this->jsonOutput('删除成功',$this->getFormHash());
-			}else{
-				
-				$this->jsonOutput('删除失败',$this->getFormHash());
-			}
-			
+			$this->jsonOutput('删除失败，待开发完善',$this->getFormHash());
 			
 		}else{
 			$this->jsonOutput('请求非法',$this->getFormHash());
@@ -417,60 +409,16 @@ class Order extends Ydzj_Admin_Controller {
 		
 		$info = array();
 		
-		$workerId = $this->input->get_post('worker_id');
-		
-		if($workerId){
-			$info = $this->Worker_Model->getFirstByKey($workerId);
-			$info['worker_id'] = $workerId;
-			$this->assign('workerInfo',$info);
-			
-			unset($info['id'],$info['avatar'],$info['avatar_b'],$info['avatar_m'],$info['avatar_s']);
-			$workerFileList = $this->Worker_Images_Model->getImagesListByWorkerId($workerId);
-		}
-		
-		$redirectUrl = '';
-		$inPost = false;
-		
-		$this->_subNavs[] = array('url' => $this->_className.'/add?worker_id='.$workerId, 'title' => $this->_moduleTitle.'入驻');
-		
-		
 		if($this->isPostRequest()){
 			$this->_getRules();
 			
-			$inPost = true;
 			
 			for($i = 0; $i < 1; $i++){
 				
-				$info = array_merge($_POST,$this->_prepareData());
-				$fileList = $this->_getFileList();
 				
-				$this->assign('fileList',$fileList);
-				if(!$this->form_validation->run()){
-					$feedback = getErrorTip($this->form_validation->error_string());
-					
-					//校验出错时 ，记住上传的头像 避免用户重传
-					if($info['avatar']){
-						$info = array_merge($info,getImgPathArray($info['avatar'],array('b','m','s')));
-					}
-					
-					break;
-				}
-				
-				if(($newid = $this->staff_service->saveStaff($this->_moduleTitle,$info,$this->addWhoHasOperated(),$fileList)) <= 0){
-					$feedback = getErrorTip('保存失败');
-					break;
-				}
-				
-				//$feedback = getSuccessTip('保存成功,3秒后自动刷新');
-				$info = $this->staff_service->getStaffInfoById($newid);
-				
-				$this->assign('successMessage','保存成功,3秒后自动刷新');
-				
-				$redirectUrl = admin_site_url($this->_className.'/edit?id='.$info['id']);
 			}
 		}else{
 			
-			$info['serv_ablity'] = array();
 		}
 		
 		//print_r($servAblity);
@@ -479,14 +427,11 @@ class Order extends Ydzj_Admin_Controller {
 		$this->_commonPageData();
 		
 		$this->assign(array(
-			'workerFileList' => $workerFileList,
-			'inPost' => $inPost,
 			'info' => $info,
-			'redirectUrl' => $redirectUrl,
 			'feedback' => $feedback,
 		));
 		
-		$this->display($this->_className.'/add');
+		$this->display();
 	}
 	
 	
@@ -495,86 +440,32 @@ class Order extends Ydzj_Admin_Controller {
 	
 	
 	/**
-	 * 编辑服务人员
+	 * 详情
 	 */
-	public function edit(){
+	public function detail(){
 		
 		$feedback = '';
 		$inPost = false;
 		$id = $this->input->get_post('id');
-		$actioName = '编辑';
 		
 		$info = array();
 		
 		
 		$info = $this->staff_service->getStaffInfoById($id);
-		$fileList = array();
-		$workerFileList = array();
 		
-		if($info['worker_id']){
-			$workerInfo = $this->Worker_Model->getFirstByKey($info['worker_id']);
-			$this->assign('workerInfo',$workerInfo);
-			$workerFileList = $this->Worker_Images_Model->getImagesListByWorkerId($info['worker_id']);
-		}
-		
-		$oldAvatar = $info['avatar'];
-		
-		$this->_subNavs[] = array('url' => $this->_className.'/edit?id='.$id, 'title' => '编辑');
+		$this->_subNavs[] = array('url' => $this->_className.'/detail?id='.$id, 'title' => '详情');
 		
 		if($this->isPostRequest()){
-			$this->_getRules();
 			
-			$inPost = true;
-			
-			for($i = 0; $i < 1; $i++){
-				$postInfo = $this->_prepareData('edit');
-				$fileList = $this->_getFileList();
-				
-				$info = array_merge($_POST,$postInfo);
-				$info['id'] = $id;
-				
-				if(!$this->form_validation->run()){
-					$feedback = getErrorTip($this->form_validation->error_string());
-					
-					//校验出错时 ，记住上传的头像 避免用户重传
-					if($info['avatar']){
-						$info = array_merge($info,getImgPathArray($info['avatar'],array('b','m','s')));
-					}
-					
-					break;
-				}
-				
-				//print_r($info);
-				
-				if($this->staff_service->saveStaff($this->_moduleTitle,$info,$this->addWhoHasOperated('edit'),$fileList) < 0){
-					$feedback = getErrorTip('保存失败');
-					break;
-				}
-				
-				
-				$info = $this->staff_service->getStaffInfoById($id);
-				if($oldAvatar && $oldAvatar != $info['avatar']){
-					//如果上传了新文件,则删除原文件
-					$oldImgsAr = getImgPathArray($oldAvatar,array('b','m','s'));
-					$this->attachment_service->deleteByFileUrl($oldImgsAr);
-				}
-				
-				$this->assign('successMessage','保存成功');
-			}
 		}else{
+			
 			$fileList = $this->Staff_Images_Model->getImagesListByStaffId($id);
 		}
 		
-		//print_r($info);
-		
 		$this->_commonPageData();
 		$this->assign(array(
-			'fileList' => $fileList,
-			'workerFileList' => $workerFileList,
-			'inPost' => $inPost,
 			'info' => $info,
 			'feedback' => $feedback,
-			'actioName' => $actioName
 		));
 		
 		$this->display($this->_className.'/add');

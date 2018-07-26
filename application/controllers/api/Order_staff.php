@@ -74,6 +74,58 @@ class PayNotifyCallBack extends WxPayNotify
 			array('order_id' => $data['out_trade_no'],'status' => OrderStatus::$unPayed)
 		);
 		
+		
+		$extraInfo = json_decode($orderInfo['extra_info'],true);
+		$cartList = $extraInfo['cart'];
+		
+		$staffIds = array();
+		foreach($cartList as $cartItem){
+			$staffIds[] = $cartItem['id'];
+		}
+		
+		$staffList = $this->_ci->Staff_Model->getList(array(
+			'select' => 'id,service_type,sub_type,name,sex,mobile,avatar_s',
+			'where_in' => array(
+				array('key' => 'id','value' => $staffIds)
+			)
+		),'id');
+		
+		$serviceType = self::$CI->basic_data_service->getTopChildList('业务类型');
+		
+		//以 id 为下标
+		$serviceTypeIdAssoc = array();
+		foreach($serviceType as $serviceTypKey => $serviceTypeItem){
+			$serviceTypeIdAssoc[$serviceTypeItem['id']] = $serviceTypeItem['show_name'];
+		}
+		
+		$batchInsert = array();
+		$dateKey = date('Ymd');
+		
+		$meetTime = strtotime($extraInfo['meet_time']);
+		
+		foreach($staffList as $staffItem){
+			$batchInsert[] = array(
+				'meet_time' => $meetTime,
+				'address' => $extraInfo['address'],
+				'mobile' => $orderInfo['mobile'],
+				'username' => $orderInfo['add_username'],
+				'staff_id' => $staffItem['id'],
+				'staff_name' => $staffItem['name'],
+				'staff_sex' => $staffItem['sex'],
+				'service_type' => $staffItem['service_type'],
+				'service_name' => $serviceTypeIdAssoc[$staffItem['service_type']],
+				'avatar_url' => $staffItem['avatar_s'],
+				'expire_key' => date('Ymd',strtotime($extraInfo['meet_time'].' -1 day')),
+				'order_id' => $orderInfo['order_id'],
+				'order_status' => OrderStatus::$payed,
+				'add_uid' => $orderInfo['uid'],
+				'add_username' => $orderInfo['add_username'],
+			);
+		}
+		
+		//加预约记录加入到
+		$this->_ci->Staff_Booking_Model->batchInsert($batchInsert);
+		
 		$this->_ci->Order_Model->commitTrans();
 		
 		return true;

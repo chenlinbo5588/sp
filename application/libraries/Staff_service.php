@@ -53,8 +53,8 @@ class Staff_service extends Base_service {
 		parent::__construct();
 		
 		self::$CI->load->model(array(
-			'Worker_Model','Worker_Images_Model',
-			'Staff_Model','Staff_Images_Model'
+			'Worker_Model','Worker_Images_Model','Staff_Model','Staff_Images_Model',
+			'Staff_Booking_Model'
 		));
 		
 		self::$CI->load->library(array('Basic_data_service'));
@@ -64,9 +64,8 @@ class Staff_service extends Base_service {
 		$this->_workerModel = self::$CI->Worker_Model;
 		$this->_workerImagesModel = self::$CI->Worker_Images_Model;
 		$this->_staffModel = self::$CI->Staff_Model;
-		$this->_staffModel = self::$CI->Staff_Model;
 		$this->_staffImagesModel = self::$CI->Staff_Images_Model;
-		
+		$this->_staffBookingModel = self::$CI->Staff_Booking_Model;
 		
 		$this->_basicData = Basic_data_service::$basicData;
 		$this->_basicAssocDataTree = Basic_data_service::$basicAssocDataTree;

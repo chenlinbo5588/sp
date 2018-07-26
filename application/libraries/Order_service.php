@@ -194,7 +194,7 @@ class Order_service extends Base_service {
 			$tuiOrder = $this->getOrderDetailByOrderId($pOrderParam['refund_id']);
 			
 		}else if($pOrderParam['order_id']){
-			//正常订单退款
+			//原正常订单
 			$oldOrderInfo = $this->getOrderDetailByOrderId($pOrderParam['order_id']);
 			
 			if(strpos($oldOrderInfo['order_typename'],'退款') === false){
@@ -211,7 +211,7 @@ class Order_service extends Base_service {
 					$tuiOrder = $tempOrder[0];
 				}
 			}else{
-				//本身就是退款单
+				//说明本身就是退款单
 				$tuiOrder = $oldOrderInfo;
 			}
 			
@@ -230,12 +230,14 @@ class Order_service extends Base_service {
 				'pay_method' => $oldOrderInfo['pay_method'],
 				'amount' => $oldOrderInfo['amount'],//原订单金额
 				'refund_amount' => $pOrderParam['amount'],//退款金额
-				'uid' => $pOrderParam['uid'],
-				'add_uid' => $pOrderParam['add_uid'], //@todo 需要后增加退款审核,这里人就不一样
-				'add_username' => $pOrderParam['add_username'],
-				'mobile' => $pOrderParam['mobile'],
+				'uid' => $oldOrderInfo['uid'],
+				'add_uid' => $oldOrderInfo['add_uid'], //@todo 需要后增加退款审核,这里人就不一样
+				'add_username' => $oldOrderInfo['add_username'],
+				'mobile' => $oldOrderInfo['mobile'],
+				'goods_id' => $oldOrderInfo['goods_id'],
+				'goods_name' => $oldOrderInfo['goods_name'],
 				'status' => OrderStatus::$refounding,
-				'order_old' => $pOrderParam['order_id'],
+				'order_old' => $oldOrderInfo['order_id'],
 			);
 			
 			if($pOrderParam['extra_info']){
