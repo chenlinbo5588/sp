@@ -267,21 +267,30 @@ class Service extends Wx_Controller {
 	 */
 	public function removeCart(){
 		
-		
-		$this->form_validation->set_data($this->postJson);
-		$this->form_validation->set_rules('rowKey','预约记录标识','required');
-	
-		if(!$this->form_validation->run()){
-			$this->jsonOutput2("参数错误",$this->form_validation->error_array());
-			break;
-		}
-		
-		$flag = $this->cart->remove($this->postJson('rowKey'));
-		
-		if($flag){
-			$this->jsonOutput2(RESP_SUCCESS);
+		if($this->isPostRequest()){
+			
+			
+			for($i = 0 ; $i < 1; $i++){
+				
+				$this->form_validation->set_data($this->postJson);
+				$this->form_validation->set_rules('rowKey','预约记录标识','required');
+			
+				if(!$this->form_validation->run()){
+					$this->jsonOutput2("参数错误",$this->form_validation->error_array());
+					break;
+				}
+				
+				$flag = $this->cart->remove($this->postJson['rowKey']);
+				
+				if($flag){
+					$this->jsonOutput2(RESP_SUCCESS);
+				}else{
+					$this->jsonOutput2("移除失败");
+				}
+			}
+			
 		}else{
-			$this->jsonOutput2("移除失败");
+			$this->jsonOutput2("请求非法");
 		}
 		
 	}
