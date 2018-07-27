@@ -10,7 +10,23 @@ class Message extends Ydzj_Admin_Controller {
 	public function __construct(){
 		parent::__construct();
 		
-		$this->load->library(array('Admin_service','Email_service'));
+		$this->load->library(array('Email_service'));
+		
+		
+		$this->_moduleTitle = '上传设置';
+		$this->_className = strtolower(get_class());
+		
+		
+		$this->assign(array(
+			'moduleTitle' => $this->_moduleTitle,
+			'moduleClassName' => $this->_className,
+		));
+		
+		
+		$this->_subNavs = array(
+			array('url' => $this->_className.'/email','title' => '邮件设置'),
+			array('url' => $this->_className.'/tpl_email','title' => '邮件模版'),
+		);
 		
 		$this->settingKey = array(
 			'email_enabled',
@@ -31,8 +47,7 @@ class Message extends Ydzj_Admin_Controller {
 		$feedback = '';
 		
 		
-		
-		$currentSetting = $this->admin_service->getSettingList(array(
+		$currentSetting = $this->base_service->getSettingList(array(
 			'where_in' => array(
 				array('key' => 'name' , 'value' => $this->settingKey)
 			)
@@ -79,7 +94,7 @@ class Message extends Ydzj_Admin_Controller {
 					);
 				}
 				
-				if($data && $this->admin_service->updateSetting($data) < 0){
+				if($data && $this->base_service->updateSetting($data) < 0){
 					$feedback = getErrorTip('保存失败');
 					break;
 				}
@@ -87,7 +102,7 @@ class Message extends Ydzj_Admin_Controller {
 				$this->getCacheObject()->delete(CACHE_KEY_SiteSetting);
 				
 				$feedback = getSuccessTip('保存成功');
-				$currentSetting = $this->admin_service->getSettingList(array(
+				$currentSetting = $this->base_service->getSettingList(array(
 					'where_in' => array(
 						array('key' => 'name' , 'value' => $this->settingKey)
 					)
@@ -134,7 +149,7 @@ class Message extends Ydzj_Admin_Controller {
 	}
 	
 	
-	public function email_tpl(){
+	public function tpl_email(){
 		
 		
 		$ids = $this->input->post('del_id');
@@ -192,10 +207,13 @@ class Message extends Ydzj_Admin_Controller {
 	}
 	
 	
-	public function email_tpl_edit(){
+	public function tpl_edit(){
 		
 		$code = $this->input->get_post('code');
 		$feedback = '';
+		
+		$this->_subNavs[] = array('url' => $this->_className.'/tpl_edit?code='.$code,'title' => '编辑');
+		
 		
 		if($this->isPostRequest()){
 			

@@ -19,7 +19,7 @@ class Notify extends Ydzj_Admin_Controller {
 		
 		$this->_sendWays = config_item('notify_ways');
 		
-		$this->_moduleTitle = '消息通知';
+		$this->_moduleTitle = '通知';
 		$this->_className = strtolower(get_class());
 		
 		$this->assign(array(

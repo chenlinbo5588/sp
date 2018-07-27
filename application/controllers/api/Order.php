@@ -31,10 +31,31 @@ class Order extends Wx_Controller {
 		
 		if($this->memberInfo){
 			
-			$this->load->library('Cart');
-			
 			for($i = 0; $i < 1; $i++){
+				$isEnable = $this->_getSiteSetting('service_booking_status');
+				if('关闭' == $isEnable){
+					$this->jsonOutput2('该功能暂时关闭，不能预约');
+					break;
+				}
 				
+				$orderCountLimit = intval($this->_getSiteSetting('service_order_limit'));
+				
+				if($orderCountLimit){
+					$todayStart = strtotime(date('Y-m-d'));
+					$currentCount = $this->Order_Model->getCount(array(
+						'where' => array(
+							'gmt_create >=' => $todayStart,
+							'gmt_create <' => $todayStart + CACHE_ONE_DAY
+						)
+					));
+					
+					if($currentCount >= $orderCountLimit){
+						$this->jsonOutput2("今日预约单数量已经达到{$orderCountLimit}");
+						break;
+					}
+				}
+				
+				$this->load->library('Cart');
 				if($this->postJson['order_id']){
 					
 					$this->postJson['uid'] = $this->memberInfo['uid'];
@@ -49,6 +70,27 @@ class Order extends Wx_Controller {
 					
 				}else{
 					
+					$list = $this->cart->contents();
+					if(empty($list)){
+						$this->jsonOutput2("预约单记录不能为空");
+						break;
+					}
+					
+					$maxCount = intval($this->_getSiteSetting('service_staff_maxcnt'));
+					if($maxCount && count($list) > $maxCount){
+						$this->jsonOutput2("预约单预约人数一次不能超过{$maxCount}个");
+						break;
+					}
+					
+					$firstCartItem = array();
+					foreach($list as $rowKey => $cartItem){
+						$firstCartItem = $cartItem;
+						break;
+					}
+					
+					$serviceTypeInfo = $this->Basic_Data_Model->getFirstByKey($firstCartItem['options']['service_type'],'id','show_name');
+					
+					$this->postJson['order_typename'] = $serviceTypeInfo['show_name'].'预约单';
 					$this->form_validation->set_data($this->postJson);
 					
 					//新创订单
@@ -86,19 +128,12 @@ class Order extends Wx_Controller {
 					
 					$message = '订单创建失败';
 					
-					$list = $this->cart->contents();
-					if(empty($list)){
-						$this->jsonOutput2("预约单记录不能为空");
-						break;
-					}
-					
 					//附加信息
 					$this->postJson['extra_info'] = array(
 						'cart' => $list,
 						'meet_time' => $this->postJson['meet_time'],
 						'address' => $this->postJson['address'],
 					);
-					
 					
 					//@todo 修改金额
 					$this->postJson['amount'] = 1;

@@ -8,6 +8,7 @@ $entity = array(
 'dev_id' => 'varchar',
 'order_id' => 'varchar',
 'order_old' => 'varchar',
+'is_refund' => 'tinyint',
 'ref_order' => 'varchar',
 'ref_refund' => 'varchar',
 'prepay_id' => 'varchar',

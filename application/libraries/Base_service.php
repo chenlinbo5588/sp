@@ -87,9 +87,10 @@ class Base_service {
 		return self::$settingModel->batchUpdate($data, 'name');
 	}
 	
-	
+	/**
+	 * 获得设置
+	 */
 	public function getSettingList($condition = array()){
-		$list = self::$settingModel->getList($condition);
-		return $this->toEasyUseArray($list,'name');
+		return self::$settingModel->getList($condition,'name');
 	}
 }

@@ -184,11 +184,10 @@ class Navigation_service extends Base_service {
 	
 	
 	public function getClassByParentId($id = 0){
-		$list = $this->_navigationModel->getList(array(
+		return $this->_navigationModel->getList(array(
 			'where' => array('pid' => $id),
 			'order' => 'displayorder ASC'
-		));
+		),'id');
 		
-		return $this->toEasyUseArray($list,'id');
 	}
 }

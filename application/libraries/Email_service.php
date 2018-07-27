@@ -22,7 +22,7 @@ class Email_service extends Base_service {
 	 * 
 	 */
 	public function getListByCondition($condition){
-		return $this->toEasyUseArray($this->_msgTemplateModel->getList($condition),'code');
+		return $this->_msgTemplateModel->getList($condition,'code');
 	}
 	
 	

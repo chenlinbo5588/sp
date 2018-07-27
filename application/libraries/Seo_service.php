@@ -27,9 +27,7 @@ class Seo_service extends Base_service {
 	
 	
 	public function getCurrentSeoSetting(){
-		$list = $this->_seoModel->getList();
-		
-		return $this->toEasyUseArray($list, 'type');
+		return $this->_seoModel->getList(array(),'type');
 	}
 	
 	

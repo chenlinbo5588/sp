@@ -21,7 +21,7 @@ class Member extends Ydzj_Admin_Controller {
 		
 		$this->_subNavs = array(
 			array('url' => $this->_className.'/index','title' => '管理'),
-			array('url' => $this->_className.'/add','title' => '新增'),
+			//array('url' => $this->_className.'/add','title' => '新增'),
 		);
 		
 	}
@@ -215,7 +215,7 @@ class Member extends Ydzj_Admin_Controller {
 	 * 后台创建用户
 	 */
 	public function add(){
-		
+		/*
 		if($this->isPostRequest()){
 			
 			$this->_setMobileRule('member_mobile');
@@ -269,7 +269,7 @@ class Member extends Ydzj_Admin_Controller {
 		}
 		
 		$this->display();
-		
+		*/
 		
 	}
 	

@@ -1,15 +1,4 @@
-{include file="common/main_header.tpl"}
-  <div class="fixed-bar">
-    <div class="item-title">
-        <h3>上传设置</h3>
-     	<ul class="tab-base">
-	     	<li><a href="{admin_site_url('upload/param')}" ><span>上传参数</span></a></li>
-	     	<li><a class="current"><span>默认图片</span></a></li>
-     	</ul>
-     </div>
-  </div>
-  <div class="fixed-empty"></div>
-  <div class="feedback">{$feedback}</div>
+{include file="common/main_header_navs.tpl"}
   {form_open_multipart(admin_site_url('upload/default_image'),'name="form1"')}
     <table class="table tb-type2">
       <tbody>

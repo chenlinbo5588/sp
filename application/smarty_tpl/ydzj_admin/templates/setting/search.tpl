@@ -9,7 +9,7 @@
   </div>
   <div class="fixed-empty"></div>
   <div class="feedback">{$feedback}</div>
-  {form_open(admin_site_url('setting/search'),'name="form1"')}
+  {form_open(site_url($uri_string),'name="form1"')}
     <table class="table tb-type2">
       <tbody>
         <tr class="noborder">

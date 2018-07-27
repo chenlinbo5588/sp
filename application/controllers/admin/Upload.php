@@ -5,10 +5,26 @@ class Upload extends Ydzj_Admin_Controller {
 	
 	public function __construct(){
 		parent::__construct();
-		$this->load->library('Admin_service');
+		
 		$this->load->library('Attachment_service');
 		
 		$this->attachment_service->setUid($this->_adminProfile['basic']['uid']);
+		
+		$this->_moduleTitle = '上传设置';
+		$this->_className = strtolower(get_class());
+		
+		
+		$this->assign(array(
+			'moduleTitle' => $this->_moduleTitle,
+			'moduleClassName' => $this->_className,
+		));
+		
+		
+		$this->_subNavs = array(
+			array('url' => $this->_className.'/param','title' => '上传参数'),
+			array('url' => $this->_className.'/default_image','title' => '默认图片'),
+		);
+		
 		
 	}
 	
@@ -49,7 +65,7 @@ class Upload extends Ydzj_Admin_Controller {
 			'background_image_allow_ext',
 		);
 		
-		$currentSetting = $this->admin_service->getSettingList(array(
+		$currentSetting = $this->base_service->getSettingList(array(
 			'where_in' => array(
 				array('key' => 'name' , 'value' => $settingKey)
 			)
@@ -71,12 +87,12 @@ class Upload extends Ydzj_Admin_Controller {
 					);
 				}
 				
-				if($this->admin_service->updateSetting($data) >= 0){
+				if($this->base_service->updateSetting($data) >= 0){
 					$feedback = getSuccessTip('保存成功');
 					
 					
 					
-					$currentSetting = $this->admin_service->getSettingList(array(
+					$currentSetting = $this->base_service->getSettingList(array(
 						'where_in' => array(
 							array('key' => 'name' , 'value' => $settingKey)
 						)
@@ -113,7 +129,7 @@ class Upload extends Ydzj_Admin_Controller {
 			'default_group_portrait'
 		);
 		
-		$currentSetting = $this->admin_service->getSettingList(array(
+		$currentSetting = $this->base_service->getSettingList(array(
 			'where_in' => array(
 				array('key' => 'name' , 'value' => $settingKey)
 			)
@@ -131,14 +147,14 @@ class Upload extends Ydzj_Admin_Controller {
 			}
 			
 			if($data){
-				if($this->admin_service->updateSetting($data) >= 0){
+				if($this->base_service->updateSetting($data) >= 0){
 					$feedback = getSuccessTip('保存成功');
 					
 					foreach($data as $fileInfo){
 						$this->attachment_service->deleteByFileUrl($currentSetting[$fileInfo['name']]);
 					}
 					
-					$currentSetting = $this->admin_service->getSettingList(array(
+					$currentSetting = $this->base_service->getSettingList(array(
 						'where_in' => array(
 							array('key' => 'name' , 'value' => $settingKey)
 						)
@@ -151,7 +167,6 @@ class Upload extends Ydzj_Admin_Controller {
 				$feedback = getSuccessTip('保存成功');
 				
 			}
-			
 			
 		}
 		

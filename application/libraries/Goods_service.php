@@ -303,12 +303,11 @@ class Goods_service extends Base_service {
 	}
 	
 	public function getGoodsClassByParentId($id = 0){
-		$list = $this->_goodsClassModel->getList(array(
+		return $this->_goodsClassModel->getList(array(
 			'where' => array('gc_parent_id' => $id),
 			'order' => 'gc_sort ASC'
-		));
+		),'gc_id');
 		
-		return $this->toEasyUseArray($list,'gc_id');
 	}
 	
 	

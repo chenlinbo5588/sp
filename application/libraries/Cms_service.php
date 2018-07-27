@@ -263,12 +263,11 @@ class Cms_service extends Base_service {
 	}
 	
 	public function getArticleClassByParentId($id = 0){
-		$list = $this->_cmsArticleClassModel->getList(array(
+		return $this->_cmsArticleClassModel->getList(array(
 			'where' => array('pid' => $id),
 			'order' => 'ac_sort ASC'
-		));
+		),'id');
 		
-		return $this->toEasyUseArray($list,'id');
 	}
 	
 	

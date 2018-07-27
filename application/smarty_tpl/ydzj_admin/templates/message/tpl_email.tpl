@@ -1,16 +1,5 @@
-{include file="common/main_header.tpl"}
-  <div class="fixed-bar">
-    <div class="item-title">
-      <h3>消息通知</h3>
-      <ul class="tab-base">
-      	<li><a href="{admin_site_url('message/email')}" ><span>邮件设置</span></a></li>
-      	<li><a  class="current"><span>消息模板</span></a></li>
-      </ul>
-     </div>
-  </div>
-  <div class="fixed-empty"></div>
-  
-  {form_open(admin_site_url('message/email_tpl'),'id="formSearch" name="formSearch"')}
+{include file="common/main_header_navs.tpl"}
+  {form_open(site_url($uri_string),'id="formSearch" name="formSearch"')}
     <input type="hidden" name="page" value="{$currentPage}"/>
     <input type="hidden" name="submit_type" id="submit_type" value="" />
     <table class="tb-type1 noborder search">
@@ -44,7 +33,7 @@
           <td class="w50pre">{$item['name']}</td>
           <td class="align-center power-onoff">{if $item['is_off'] == 1}关闭{else}开启{/if}</td>
           <td class="align-center">{if $item['type'] == 0}邮件{else}短信{/if}</td>
-          <td class="w60 align-center"><a href="{admin_site_url('message/email_tpl_edit')}?code={$item['code']}">编辑</a></td>
+          <td class="w60 align-center"><a href="{admin_site_url('message/tpl_edit')}?code={$item['code']}">编辑</a></td>
         </tr>
        	{foreachelse}
        	<tr>

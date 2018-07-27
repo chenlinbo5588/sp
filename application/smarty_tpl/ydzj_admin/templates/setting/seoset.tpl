@@ -41,7 +41,7 @@
       </tr>
     </tbody>
   </table>
-  {form_open(admin_site_url('setting/seoset'),'name="form_index"')}
+  {form_open(site_url($uri_string),'name="form_index"')}
 	<span style="display:none" nctype="hide_tag"><a>{#sitename#}</a></span>
     <table class="table tb-type2">
       <tbody>

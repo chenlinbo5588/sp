@@ -1,16 +1,5 @@
-{include file="common/main_header.tpl"}
-  <div class="fixed-bar">
-    <div class="item-title">
-      <h3>消息通知</h3>
-      <ul class="tab-base">
-      	<li><a href="{admin_site_url('message/email')}"><span>邮件设置</span></a></li>
-      	<li><a class="current"><span>消息模版</span></a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="fixed-empty"></div>
-  {$feedback}
-  {form_open(admin_site_url('message/email_tpl_edit'),'name="form1" id="form_templates" onsubmit="return validation(this);"')}
+{include file="common/main_header_navs.tpl"}
+  {form_open(site_url($uri_string),'name="form1" id="form_templates" onsubmit="return validation(this);"')}
     <input type="hidden" name="code" value="{$info['code']}" />
     <table class="table tb-type2 nobdb">
       <tbody>

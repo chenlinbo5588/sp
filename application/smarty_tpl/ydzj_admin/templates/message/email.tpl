@@ -1,16 +1,5 @@
-{include file="common/main_header.tpl"}
-  <div class="fixed-bar">
-    <div class="item-title">
-      <h3>消息通知</h3>
-      <ul class="tab-base">
-      	<li><a  class="current"><span>邮件设置</span></a></li>
-      	<li><a href="{admin_site_url('message/email_tpl')}"><span>消息模板</span></a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="fixed-empty"></div>
-  <div class="feedback">{$feedback}</div>
-  {form_open(admin_site_url('message/email'),'name="settingForm"')}
+{include file="common/main_header_navs.tpl"}
+  {form_open(site_url($uri_string),'name="settingForm"')}
     <table class="table tb-type2">
       <tbody>
         <tr class="noborder">

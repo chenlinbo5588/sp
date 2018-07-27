@@ -203,7 +203,7 @@ $(function(){
 	    
 	    <dl>    
             <dt>会员</dt>
-            <dd><a href="javascript:void(0)" onclick="openItem('index,member,member')">会员管理</a></dd>
+            <dd><a href="javascript:void(0)" onclick="openItem('index,member,member')">会员</a></dd>
             <dd><a href="javascript:void(0)" onclick="openItem('index,notify,member')">会员通知</a></dd>
             {*<dd><a href="javascript:void(0)" onclick="openItem('credits,member,member')">积分管理</a></dd>
             <dd><a href="javascript:void(0)" onclick="openItem('album,member,member')">会员相册</a></dd>
@@ -377,6 +377,7 @@ $(function(){
                     <li><a href="javascript:void(0);" id="param_upload" onclick="openItem('param,upload,setting');">上传设置</a></li>
                     <li><a href="javascript:void(0);" id="seoset_setting" onclick="openItem('seoset,setting,setting');">SEO设置</a></li>
                     <li><a href="javascript:void(0);" id="email_message" onclick="openItem('email,message,setting');">消息通知</a></li>
+                    {*
                     <li><a href="javascript:void(0);" id="system_payment" onclick="openItem('system,payment,setting');">支付方式</a></li>
                     <li><a href="javascript:void(0);" id="express_setting" onclick="openItem('express,setting,setting');">快递公司</a></li>
                     <li><a href="javascript:void(0);" id="area_setting" onclick="openItem('area,setting,setting');">配送地区</a></li>
@@ -384,6 +385,7 @@ $(function(){
                     <li><a href="javascript:void(0);" id="perform_setting" onclick="openItem('perform,setting,setting');">性能优化</a></li>
                     <li><a href="javascript:void(0);" id="search_setting" onclick="openItem('search,setting,setting');">搜索设置</a></li>
                     <li><a href="javascript:void(0);" id="log_setting" onclick="openItem('log,setting,setting');">操作日志</a></li>
+                    *}
                   </ol>
                 </dd>
               </dl>
@@ -394,7 +396,7 @@ $(function(){
               <dl>
                 <dd>
                   <ol>
-                    <li><a href="javascript:void(0);" id="index_member" onclick="openItem('index,member,member');">会员管理</a></li>
+                    <li><a href="javascript:void(0);" id="index_member" onclick="openItem('index,member,member');">会员</a></li>
                     <li><a href="javascript:void(0);" id="index_notify" onclick="openItem('index,notify,member');">会员通知</a></li>
                     {*<li><a href="javascript:void(0);" id="credits_member" onclick="openItem('credits,member,member');">积分管理</a></li>
                     <li><a href="javascript:void(0);" id="album_member" onclick="openItem('album,member,member');">会员相册</a></li>
@@ -416,7 +418,7 @@ $(function(){
                     <li><a href="javascript:void(0);" id="index_baomu" onclick="openItem('index,baomu,service');">保姆</a></li>
                     <li><a href="javascript:void(0);" id="index_hugong" onclick="openItem('index,hugong,service');">护工</a></li>
                     <li><a href="javascript:void(0);" id="index_yuyue" onclick="openItem('index,yuyue,service');">预约单</a></li>
-                    
+                    <li><a href="javascript:void(0);" id="base_service_setting" onclick="openItem('base,service_setting,service');">服务设置</a></li>
                   </ol>
                 </dd>
               </dl>
@@ -588,8 +590,8 @@ $(function(){
                   <ol>
                     <li><a href="JavaScript:void(0);" id="index_cms_article" onclick="openItem('index,cms_article,cms');">CMS文章管理</a></li>
                     <li><a href="JavaScript:void(0);" id="category_cms_article_class" onclick="openItem('category,cms_article_class,cms');">CMS文章分类</a></li>
-                    {*<li><a href="JavaScript:void(0);" id="index_cms" onclick="openItem('index,cms,cms');">CMS设置</a></li>
-                    <li><a href="JavaScript:void(0);" id="index_magazine" onclick="openItem('index,magazine,cms');">画报管理</a></li>
+                    <li><a href="JavaScript:void(0);" id="index_cms" onclick="openItem('index,cms,cms');">CMS设置</a></li>
+                    {*<li><a href="JavaScript:void(0);" id="index_magazine" onclick="openItem('index,magazine,cms');">画报管理</a></li>
                     <li><a href="JavaScript:void(0);" id="category_magazine" onclick="openItem('category,magazine,cms');">画报分类</a></li>
                     <li><a href="JavaScript:void(0);" id="index_special" onclick="openItem('index,special,cms');">专题管理</a></li>*}
                     

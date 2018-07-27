@@ -6,8 +6,27 @@ class Setting extends Ydzj_Admin_Controller {
 	public function __construct(){
 		parent::__construct();
 		
-		$this->load->library(array('Admin_service','Attachment_service'));
+		$this->load->library(array('Attachment_service'));
 		$this->attachment_service->setUid($this->_adminProfile['basic']['uid']);
+		
+		$this->_moduleTitle = '站点设置';
+		$this->_className = strtolower(get_class());
+		
+		$this->assign(array(
+			'moduleTitle' => $this->_moduleTitle,
+			'moduleClassName' => $this->_className,
+		));
+		
+	}
+	
+	/**
+	 * 
+	 */
+	private function _baseGroup(){
+		$this->_subNavs = array(
+			array('url' => $this->_className.'/base','title' => '基本设置'),
+			array('url' => $this->_className.'/dump','title' => '防灌水设置'),
+		);
 	}
 	
 	
@@ -16,10 +35,14 @@ class Setting extends Ydzj_Admin_Controller {
 		$this->getCacheObject()->delete(CACHE_KEY_SeoSetting);
 	}
 	
+	/**
+	 * 
+	 */
 	public function base(){
 		
 		$feedback = '';
 		
+		$this->_baseGroup();
 		
 		$settingKey = array(
 			'site_name',
@@ -41,7 +64,7 @@ class Setting extends Ydzj_Admin_Controller {
 			'site_faxno',
 		);
 		
-		$currentSetting = $this->admin_service->getSettingList(array(
+		$currentSetting = $this->base_service->getSettingList(array(
 			'where_in' => array(
 				array('key' => 'name' , 'value' => $settingKey)
 			)
@@ -82,7 +105,7 @@ class Setting extends Ydzj_Admin_Controller {
 				
 				//print_r($data);
 				
-				if($this->admin_service->updateSetting($data) >= 0){
+				if($this->base_service->updateSetting($data) >= 0){
 					$feedback = getSuccessTip('保存成功');
 					
 					$this->_clearCache();
@@ -92,7 +115,7 @@ class Setting extends Ydzj_Admin_Controller {
 						$this->attachment_service->deleteByFileUrl($currentSetting['site_logo']);
 					}
 					
-					$currentSetting = $this->admin_service->getSettingList(array(
+					$currentSetting = $this->base_service->getSettingList(array(
 						'where_in' => array(
 							array('key' => 'name' , 'value' => $settingKey)
 						)
@@ -137,6 +160,8 @@ class Setting extends Ydzj_Admin_Controller {
 		
 		$feedback = '';
 		
+		$this->_baseGroup();
+		
 		$settingKey = array(
 			'guest_comment',
 			'captcha_status_login',
@@ -144,7 +169,7 @@ class Setting extends Ydzj_Admin_Controller {
 			'captcha_status_goodsqa',
 		);
 		
-		$currentSetting = $this->admin_service->getSettingList(array(
+		$currentSetting = $this->base_service->getSettingList(array(
 			'where_in' => array(
 				array('key' => 'name' , 'value' => $settingKey)
 			)
@@ -173,13 +198,13 @@ class Setting extends Ydzj_Admin_Controller {
 				
 				//print_r($data);
 				
-				if($this->admin_service->updateSetting($data) >= 0){
+				if($this->base_service->updateSetting($data) >= 0){
 					
 					$this->_clearCache();
 					
 					$feedback = getSuccessTip('保存成功');
 					
-					$currentSetting = $this->admin_service->getSettingList(array(
+					$currentSetting = $this->base_service->getSettingList(array(
 						'where_in' => array(
 							array('key' => 'name' , 'value' => $settingKey)
 						)
@@ -332,7 +357,7 @@ class Setting extends Ydzj_Admin_Controller {
 			
 			if($this->form_validation->run()){
 				
-				if($this->admin_service->updateSetting(array(
+				if($this->base_service->updateSetting(array(
 					array('name' => 'hotwords','value' => $this->input->post('hotwords')),
 					array('name' => 'hotwords_en','value' => $this->input->post('hotwords_en')),
 				)) >= 0){
@@ -346,7 +371,7 @@ class Setting extends Ydzj_Admin_Controller {
 			}
 		}
 		
-		$currentSetting = $this->admin_service->getSettingList(array(
+		$currentSetting = $this->base_service->getSettingList(array(
 			'where_in' => array(
 				array('key' => 'name','value' => array('hotwords','hotwords_en'))
 			

@@ -1,42 +1,50 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Cms extends Ydzj_Admin_Controller {
+/**
+ * 服务设置
+ */
+class Service_Setting extends Ydzj_Admin_Controller {
 	
 	public function __construct(){
 		parent::__construct();
 		
 		
-		$this->_moduleTitle = 'CMS设置';
+		$this->_moduleTitle = '服务设置';
 		$this->_className = strtolower(get_class());
+		
 		
 		$this->assign(array(
 			'moduleTitle' => $this->_moduleTitle,
 			'moduleClassName' => $this->_className,
 		));
 		
-		$this->_subNavs = array(
-			array('url' => $this->_className.'/index','title' => '基本设置'),
-		);
 		
+		$this->_subNavs = array(
+			array('url' => $this->_className.'/base','title' => '基本设置'),
+		);
 	}
 	
 	
 	private function _clearCache(){
-		$this->cache->file->delete(CACHE_KEY_SiteSetting);
+		$this->getCacheObject()->delete(CACHE_KEY_SiteSetting);
+		$this->getCacheObject()->delete(CACHE_KEY_SeoSetting);
 	}
 	
-	
-	public function index(){
+	/**
+	 * 基本设置
+	 */
+	public function base(){
+		
 		$feedback = '';
 		
+		
 		$settingKey = array(
-			'cms_isuse',
-			'cms_submit_verify_flag',
-			'cms_comment_flag',
-			'cms_seo_description',
-			'cms_seo_keywords',
-			'cms_seo_title'
+			'service_prepay_amount',
+			'service_staff_maxcnt',
+			'service_order_limit',
+			'service_booking_status',
+			'service_closed_reason'
 		);
 		
 		$currentSetting = $this->base_service->getSettingList(array(
@@ -47,16 +55,16 @@ class Cms extends Ydzj_Admin_Controller {
 		
 		
 		if($this->isPostRequest()){
-			$this->form_validation->set_rules('cms_isuse','CMS开关','required|in_list[0,1]');
-			$this->form_validation->set_rules('cms_submit_verify_flag','投稿需要审核','required|in_list[0,1]');
-			$this->form_validation->set_rules('cms_comment_flag','允许评论','required|in_list[0,1]');
 			
-			for($i = 0; $i < 1; $i++){
-				if(!$this->form_validation->run()){
-					$feedback = getErrorTip($this->form_validation->error_string());
-					break;
-				}
-				
+			$this->form_validation->set_rules('service_prepay_amount','预约单预约金','required|is_natural_no_zero');
+			$this->form_validation->set_rules('service_staff_maxcnt','单次预约单最大预约人数','required|is_natural');
+			$this->form_validation->set_rules('service_order_limit','用户当日最大可预约订单数量','required|is_natural');
+			$this->form_validation->set_rules('service_booking_status','预约功能状态','required|in_list[开启,关闭]');
+			
+			$this->form_validation->set_rules('service_closed_reason','关闭原因','required');
+			
+			
+			if($this->form_validation->run()){
 				$data = array();
 				foreach($settingKey as $oneKey){
 					$temp = array();
@@ -66,6 +74,7 @@ class Cms extends Ydzj_Admin_Controller {
 					$data[] = $temp;
 				}
 				
+				//print_r($data);
 				
 				if($this->base_service->updateSetting($data) >= 0){
 					$feedback = getSuccessTip('保存成功');
@@ -81,6 +90,8 @@ class Cms extends Ydzj_Admin_Controller {
 				}else{
 					$feedback = getErrorTip('保存失败');
 				}
+			}else{
+				$feedback = getErrorTip($this->form_validation->error_string());
 			}
 		}
 		
@@ -89,4 +100,6 @@ class Cms extends Ydzj_Admin_Controller {
 		
 		$this->display();
 	}
+	
+	
 }

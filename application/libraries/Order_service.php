@@ -228,6 +228,7 @@ class Order_service extends Base_service {
 				'order_typename' => $tuiOrderType['name'],
 				'pay_channel' => $oldOrderInfo['pay_channel'],
 				'pay_method' => $oldOrderInfo['pay_method'],
+				'is_refund' => 1,
 				'amount' => $oldOrderInfo['amount'],//原订单金额
 				'refund_amount' => $pOrderParam['amount'],//退款金额
 				'uid' => $oldOrderInfo['uid'],

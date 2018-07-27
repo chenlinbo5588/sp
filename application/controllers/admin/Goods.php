@@ -41,8 +41,8 @@ class Goods extends Ydzj_Admin_Controller {
 	public function _searchCondition($moreSearchVal = array()){
 
 		
-		$brandList = $this->Brand_Model->getList();
-		$brandList = $this->goods_service->toEasyUseArray($brandList,'brand_id');
+		$brandList = $this->Brand_Model->getList(array(),'brand_id');
+		
 		$treelist = $this->goods_service->toEasyUseArray($this->goods_service->getGoodsClassTreeHTML(),'gc_id');
 		
 		$currentPage = $this->input->get_post('page') ? $this->input->get_post('page') : 1;

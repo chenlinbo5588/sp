@@ -26,7 +26,7 @@ class MY_Input extends CI_Input {
 	{
 		parent::_sanitize_globals();
 		
-		if(!is_cli()){
+		if(!$this->is_ajax_request() && !$this->is_cli_request()){
 			$this->begin_protect();
 		}
 	}
@@ -62,7 +62,7 @@ class MY_Input extends CI_Input {
 		}
 		
 		if($attackevasive & 1) {
-			if($nowstamp - $lastrequest < 0.5) {
+			if($nowstamp - $lastrequest < 0.3) {
 				$this->securitymessage('attackevasive_1_subject', 'attackevasive_1_message');
 			}
 		}

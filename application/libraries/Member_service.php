@@ -88,7 +88,7 @@ class Member_service extends Base_service {
 	 * 
 	 */
 	public function getListByCondition($condition){
-		return $this->toEasyUseArray(self::$memberModel->getList($condition),'uid');
+		return self::$memberModel->getList($condition,'uid');
 	}
 	
 	/**

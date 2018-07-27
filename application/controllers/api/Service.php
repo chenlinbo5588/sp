@@ -177,17 +177,30 @@ class Service extends Wx_Controller {
 					break;
 				}
 				
+				
 				$staffList = $this->staff_service->getStaffList(array(
 					'where' => array(
 						'id' => $this->postJson['staff_id']
 					)
 				));
 				
-				file_put_contents('cart.txt',print_r($staffList,true));
-				
 				if(empty($staffList[0])){
 					$this->jsonOutput2('获取信息失败');
 					break;
+				}
+				
+				$list = $this->cart->contents();
+				if($list){
+					$firstCartItem = array();
+					foreach($list as $rowKey => $cartItem){
+						$firstCartItem = $cartItem;
+						break;
+					}
+					
+					if($firstCartItem['options']['service_type'] != $staffList[0]['service_type']){
+						$this->jsonOutput2('预约单中暂时只能加入同类型的的服务人员。');
+						break;
+					}
 				}
 				
 				$data = array(
@@ -207,7 +220,6 @@ class Service extends Wx_Controller {
 			$this->jsonOutput2(RESP_ERROR);
 		}
 		
-		
 	}
 	
 	
@@ -215,10 +227,11 @@ class Service extends Wx_Controller {
 	 * 获得购物车
 	 */
 	public function getCart(){
-		$list = $this->cart->contents();
+		$list = $this->cart->contents(true);
 		
 		$data = array(
 			'staff' => array(),
+			'amount' => intval($this->_getSiteSetting('service_prepay_amount')),
 			'address' => $this->_getSiteSetting('company_address')
 		);
 		
