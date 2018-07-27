@@ -8,7 +8,7 @@
         <tr>
           <th><label for="search_goods_name">{#goods_name#}</label></th>
           <td><input type="text" value="{$searchMap['search_goods_name']|escape}" name="search_goods_name" id="search_goods_name" class="txt"></td>
-          <th><label>审核</label></th>
+          <th><label>{#goods_verify#}</label></th>
           <td>
           	<select name="goods_verify">
               <option value="">请选择...</option>
@@ -17,7 +17,7 @@
               {/foreach}
             </select>
           </td>
-          <th><label>商品发布状态</label></th>
+          <th><label>{#goods_state#}</label></th>
           <td>
           	<select name="goods_state">
               <option value="">请选择...</option>
@@ -29,7 +29,7 @@
           <td><input type="submit" class="msbtn" name="tijiao" value="查询"/></td>
         </tr>
         <tr>
-        	<td>品牌:</td>
+        	<td>{#brand_id#}:</td>
         	<td>
         		<select name="brand_id" id="brandId">
 		          <option value="">请选择...</option>
@@ -38,7 +38,7 @@
 		          {/foreach}
 		        </select>
 	        </td>
-	        <td>商品分类:</td>
+	        <td>{#gc_id#}:</td>
 	        <td colspan="3">
 	        	<select name="gc_id" id="goodsClassId">
 		          <option value="">请选择...</option>
@@ -47,7 +47,7 @@
 		          {/foreach}
 		        </select>
 	        </td>
-	        <th><label>商品推荐状态</label></th>
+	        <th><label>{#goods_commend#}</label></th>
           <td>
           	<select name="goods_commend">
               <option value="">请选择...</option>
@@ -102,9 +102,9 @@
           	<p>{$brandList[$item['brand_id']]['brand_name']}</p>
             <p>{$goodsClassList[$item['gc_id']]['name']}</p>
           </td>
-          <td class="align-center">{if $item['goods_state'] == 1}正常{else}下架{/if}</td>
-          <td class="align-center">{if $item['goods_commend'] == 1}已{else}未{/if}推荐</td>
-          <td class="align-center">{if $item['goods_verify'] == 1}审核通过{else}未审核{/if}</td>
+          <td class="align-center">{if $item['goods_state'] == 2}正常{else}下架{/if}</td>
+          <td class="align-center">{if $item['goods_commend'] == 2}已{else}未{/if}推荐</td>
+          <td class="align-center">{if $item['goods_verify'] == 2}审核通过{else}未审核{/if}</td>
           <td class="align-center">
           	<p><a href="{site_url('product/detail')}?gc_id={$item['gc_id']}&id={$item['goods_id']}" target="_blank">查看</a> | <a href="{admin_site_url('goods/edit')}?goods_id={$item['goods_id']}">编辑</a></p>
           </td>
@@ -114,10 +114,10 @@
     </table>
     <div class="fixedOpBar">
     	<label><input type="checkbox" class="checkall" id="checkallBottom" name="chkVal">全选</label>&nbsp;
-    	<a href="javascript:void(0);" class="btn opBtn handleVerifyBtn" data-title="确定提交审核吗?" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/handle_verify')}"><span>提交审核</span></a>
-    	<a href="javascript:void(0);" class="btn opBtn handleVerifyBtn" data-title="确定推荐吗" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/batch_verify')}" data-ajaxformid="#verifyForm"><span>推荐</span></a>
-    	<a href="javascript:void(0);" class="btn opBtn publishBtn" data-title="确定上架吗?" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/batch_published')}"><span>上架</span></a>
-    	<a href="javascript:void(0);" class="btn opBtn publishBtn" data-title="确定下架吗?" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/lower_frame')}"><span>下架</span></a>
+    	<a href="javascript:void(0);" class="btn opBtn" data-title="确定提交审核吗?" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/handle_verify')}"><span>提交审核</span></a>
+    	<a href="javascript:void(0);" class="btn opBtn" data-title="确定推荐吗" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/batch_verify')}" data-ajaxformid="#verifyForm"><span>推荐</span></a>
+    	<a href="javascript:void(0);" class="btn opBtn" data-title="确定上架吗?" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/batch_published')}"><span>上架</span></a>
+    	<a href="javascript:void(0);" class="btn opBtn" data-title="确定下架吗?" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/batch_offline')}"><span>下架</span></a>
         <a href="javascript:void(0);" class="btn deleteBtn" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/delete')}"><span>删除</span></a>
         {include file="common/pagination.tpl"}
     </div>

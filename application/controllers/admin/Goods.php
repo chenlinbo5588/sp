@@ -231,7 +231,7 @@ class Goods extends Ydzj_Admin_Controller {
 		
 	}
 	
-	public function lower_frame(){
+	public function batch_offline(){
 		$ids = $this->input->post('id');
 		
 		if($this->isPostRequest() && !empty($ids)){
@@ -443,7 +443,6 @@ class Goods extends Ydzj_Admin_Controller {
 				'goods_image_m' => !empty($fileData['img_m']) ? $fileData['img_m'] : '',
 				'uid' => $this->_adminProfile['basic']['uid']
 			);
-			
 			if($info['goods_id']){
 				$imageId = $this->Goods_Images_Model->_add($info);
 				if($imageId){

@@ -1,6 +1,32 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+class RepairType{
+	//管道报修
+	public static $pipeline  = 1;
+	
+	//电路报修
+	public static $circuit = 2;
+	
+	//电器报修
+	public static $wiring = 3;
+	
+	//网络报修
+	public static $network = 4;
+	
+	//其他报修
+	public static $others = 5;	
+		
+	public static $statusName = array(
+		1 => '管道维修',
+		2 => '电路报修',
+		3 => '电器报修',
+		4 => '网络报修',
+		5 => '其他报修'
+	);
+}
+
+
 /**
  * 物业核心服务
  */
@@ -20,7 +46,8 @@ class Wuye_service extends Base_service {
 		
 		self::$CI->load->model(array(
 			'Resident_Model','Building_Model','House_Model','Yezhu_Model',
-			'Feetype_Model','Basic_Data_Model'
+			'Feetype_Model','Basic_Data_Model','Repair_Model'
+
 		));
 		
 		$this->_residentModel = self::$CI->Resident_Model;
@@ -28,6 +55,8 @@ class Wuye_service extends Base_service {
 		$this->_houseModel = self::$CI->House_Model;
 		$this->_yezhuModel = self::$CI->Yezhu_Model;
 		$this->_feeTypeModel = self::$CI->Feetype_Model;
+		$this->_repairModel = self::$CI->Repair_Model; 
+
 		
 	}
 	

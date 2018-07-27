@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Fn_Model extends MY_Model {
+class Repair_Model extends MY_Model {
     
     public $_tableName = 'repair';
     public static $_tableMeta = null;
