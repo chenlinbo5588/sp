@@ -88,5 +88,5 @@
 	})
 
   </script>
-  <script type="text/javascript" src="{resource_url('js/service/repair.js',true)}"></script>
+  <script type="text/javascript" src="{resource_url('js/wuye/repair.js',true)}"></script>
 {include file="common/main_footer.tpl"}
