@@ -926,7 +926,30 @@ function bindAjaxSubmit(classname){
 	
 }
 
-
+function popWindowFn(btnObj,options,data){
+	var actionUrl = btnObj.attr('data-url');
+	
+	var tempDlg = $(options.selector ).dialog({
+        autoOpen: false,
+        width: options.width,
+        height: options.height,
+        modal: true,
+        title:options.title,
+        open:function(){
+        	
+        }
+    });
+	
+	//增加随机值
+	data['rand'] = Math.random();
+	
+	$.get(actionUrl, data, function(resp){
+		
+		tempDlg.html(resp).dialog({ position:btnObj ? { my : "center", at:"center", of: btnObj} : null }).dialog('open');
+		//$.loadingbar({ urls: options.urls ,text:"操作中,请稍后..." ,container : '#sendorDlg' });
+		bindAjaxSubmit(options.formid);
+	});
+}
 
 /*
  * 弹出窗口

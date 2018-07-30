@@ -9,22 +9,25 @@ require_once(WEIXIN_PAY_PATH.'WxPay.Api.php');
  */
 class OrderStatus
 {
+	public static $deleted = 0;
+	
 	//未支付
-	public static $unPayed = 0;
+	public static $unPayed = 1;
 	
 	//已支付
-	public static $payed = 1;
+	public static $payed = 2;
 	
 	//退款中
-	public static $refounding = 2;
+	public static $refounding = 3;
 	
 	//退款完成
-	public static $refounded = 3;
+	public static $refounded = 4;
 	
 	//关闭
-	public static $closed = 4;
+	public static $closed = 5;
 	
 	public static $statusName = array(
+		'已删除',
 		'未支付',
 		'已支付',
 		'退款中',

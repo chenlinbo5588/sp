@@ -19,6 +19,7 @@ class Order extends Ydzj_Admin_Controller {
 		$this->attachment_service->setUid($this->_adminProfile['basic']['uid']);
 		
 		
+		$this->_moduleTitle = '订单';
 		$this->_className = strtolower(get_class());
 		
 		$this->assign(array(
@@ -32,6 +33,7 @@ class Order extends Ydzj_Admin_Controller {
 			array('url' => $this->_className.'/unpay','title' => '未支付'),
 			array('url' => $this->_className.'/payed','title' => '已支付'),
 			array('url' => $this->_className.'/cancel','title' => '已取消'),
+			array('url' => $this->_className.'/deleted','title' => '已删除'),
 		);
 		
 		
