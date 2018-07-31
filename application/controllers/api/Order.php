@@ -102,7 +102,7 @@ class Order extends Wx_Controller {
 					//面谈地点
 					$this->form_validation->set_rules('address','required');
 					
-					$this->form_validation->set_rules('amount','缴费金额','required');
+					$this->form_validation->set_rules('amount','缴费金额','required|is_numeric|greater_than_equal_to[0]');
 					
 					if(!$this->form_validation->run()){
 						$this->jsonOutput2($this->form_validation->error_html());
@@ -135,8 +135,13 @@ class Order extends Wx_Controller {
 						'address' => $this->postJson['address'],
 					);
 					
-					//@todo 修改金额
-					$this->postJson['amount'] = 1;
+					
+					if(ENVIRONMENT == 'development'){
+						//@todo 修改金额
+						$this->postJson['amount'] = 1;
+					}else{
+						$this->postJson['amount'] = intval($this->_getSiteSetting('service_prepay_amount')) * 100;
+					}
 				}
 				
 				
@@ -167,6 +172,7 @@ class Order extends Wx_Controller {
 	
 	
 	
+	
 	/**
 	 * 创建物业费、能耗费 订单
 	 */
@@ -190,20 +196,29 @@ class Order extends Wx_Controller {
 					
 				}else{
 					
+					$this->load->library('Wuye_service');
 					$this->form_validation->set_data($this->postJson);
 					
-					//新创订单
-					$this->form_validation->set_rules('house_id','物业标识','required');
-					
+					$this->form_validation->set_rules('house_id','物业标识',array(
+							'required',
+							array(
+								'feetype_callable['.$this->postJson['year'].','.$this->postJson['order_typename'].']',
+								array(
+									$this->wuye_service,'checkFeetype'
+								)
+							)
+						),
+						array(
+							'feetype_callable' => '该%s尚未配置小区费用信息'
+						)
+					);
 					
 					$this->form_validation->set_rules('order_typename','in_db_list['.$this->Order_Type_Model->getTableRealName().'.name]');
-					$this->form_validation->set_rules('year','缴费年份','required|is_natural_no_zero|greater_than_equal_to['.date('Y').']');
 					
-					$this->form_validation->set_rules('start_month','缴费起始月份','required|is_natural_no_zero|greater_than_equal_to[1]|less_than_equal_to[12]');
-					$this->form_validation->set_rules('end_month','缴费到期月份','required|is_natural_no_zero|greater_than_equal_to[1]|less_than_equal_to[12]');
+					$currentHouseFeeExpire = $this->wuye_service->getCurrentHouseFeeInfo($this->postJson['house_id'],$this->postJson['order_typename'],$this->postJson['end_month']);
+					$this->wuye_service->setFeeTimeRules($currentHouseFeeExpire['year']);
 					
-					$this->form_validation->set_rules('amount','缴费金额','required');
-					
+					//$this->form_validation->set_rules('amount','缴费金额','required|is_numeric|greater_than_equal_to[0]');
 					
 					if(!$this->form_validation->run()){
 						$this->jsonOutput2($this->form_validation->error_html());
@@ -211,11 +226,19 @@ class Order extends Wx_Controller {
 					}
 					
 					
+					//在校验  缴费的时间一定要大于已缴费的时间
+					if($currentHouseFeeExpire['expireTimeStamp'] >= $currentHouseFeeExpire['newEndTimeStamp']){
+						$this->jsonOutput2("请选择合理的缴费时间");
+						break;
+					}
+					
+					
+					//开始创建订单
+					
 					$this->postJson['order_type'] = Order_service::$orderType['nameKey'][$this->postJson['order_typename']]['id'];
 					
 					$this->postJson['uid'] = $this->yezhuInfo['uid'];
 					$this->postJson['add_username'] = $this->yezhuInfo['name'];
-					
 					
 					
 					//联系方式
@@ -224,12 +247,8 @@ class Order extends Wx_Controller {
 					//异步回调
 					$this->postJson['notify_url'] = site_url(Order_service::$orderType['nameKey'][$this->postJson['order_typename']]['order_url']);
 					
+					
 					$message = '订单创建失败';
-					//strtotime( "2009-01-31 +1 month" )
-					
-					$startTs = strtotime($this->postJson['year'].'-'.str_pad($this->postJson['start_month'],2,'0',STR_PAD_LEFT).'-01');
-					$expireTs = strtotime($this->postJson['year'].'-'.str_pad($this->postJson['end_month'],2,'0',STR_PAD_LEFT).'-01 +1 month');
-					
 					$this->load->model('House_Model');
 					
 					$houseInfo = $this->House_Model->getFirstByKey($this->postJson['house_id']);
@@ -240,15 +259,17 @@ class Order extends Wx_Controller {
 					
 					$this->postJson['extra_info'] = array(
 						'house_id' => $this->postJson['house_id'],
-						'fee_start' => $startTs,
-						'fee_expire' => $expireTs
+						'fee_start' => $currentHouseFeeExpire['expireTimeStamp'],
+						'fee_expire' => $currentHouseFeeExpire['newEndTimeStamp'],
 					);
 					
-					//计算金额
-					//@todo 根据小区的金额配置
-					
-					//@todo 修改金额
-					$this->postJson['amount'] = 1;
+					if(ENVIRONMENT == 'development'){
+						//@todo 修改金额
+						$this->postJson['amount'] = 1;
+					}else{
+						//计算金额
+						$this->postJson['amount'] = intval(100 * $this->wuye_service->computeHouseFee($currentHouseFeeExpire));
+					}
 				}
 				
 				
@@ -458,10 +479,12 @@ class Order extends Wx_Controller {
 				
 				//$param['notify_url'] = site_url(Order_service::$orderType['nameKey'][$orderInfo['order_typename']]['refund_url']);
 				file_put_contents('callback_refund.txt',print_r($param,true));
+				file_put_contents('callback_refund.txt',print_r($orderInfo,true),FILE_APPEND);
+				
 				$refundOrder = $this->order_service->createRefundOrder($param);
 				
 				//业务处理
-				$filePath = Order_service::$orderType['nameKey'][$orderInfo['order_typename']]['refund_url'];
+				$filePath = Order_service::$orderType['nameKey'][$refundOrder['order_typename']]['refund_url'];
 				$fullPath = LIB_PATH.$filePath;
 				$this->load->file($fullPath);
 				$className = basename($fullPath,'.php');

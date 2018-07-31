@@ -28,7 +28,7 @@
       	{foreach from=$list['data'] item=item}
       	<tr class="hover edit" id="row{$item['id']}">
           <td><input value="{$item['id']}" class="checkitem" group="chkVal" type="checkbox" name="id[]"></td>
-          <td class="sort"><span class="editable" data-id="{$item['id']}" data-fieldname="displayorder">{$item['id']}</span></td>
+          <td class="sort"><span class="editable" data-id="{$item['id']}" data-fieldname="displayorder">{$item['displayorder']}</span></td>
           <td class="name"><span class="editable" data-id="{$item['id']}" data-fieldname="name">{$item['name']|escape}</span></td>
           <td>{$item['year']|escape}</span></td>
           <td>{$item['resident_name']|escape}</span></td>

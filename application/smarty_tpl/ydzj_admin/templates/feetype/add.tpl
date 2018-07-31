@@ -23,6 +23,15 @@
           </td>
           <td class="vatop tips"><label id="error_fee_id"></label>{form_error('name')}</td>
         </tr>
+        <tr class="noborder">
+          <td colspan="2"><label class="validation" for="address">{#resident_name#}: </label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform">
+          	<input type="text" value="{$info['resident_name']|escape}" name="resident_name" id="resident_name" class="txt">
+          </td>
+          <td class="vatop tips"><label id="error_resident_name"></label>{form_error('resident_name')}</td>
+        </tr>
     	<tr class="noborder">
           <td colspan="2"><label class="validation" for="address">{#year#}: </label></td>
         </tr>
@@ -40,15 +49,6 @@
           	<input type="text" value="{$info['price']|escape}" name="price" id="price" class="txt">
           </td>
           <td class="vatop tips"><label id="error_price"></label>{form_error('price')}</td>
-        </tr>
-        <tr class="noborder">
-          <td colspan="2"><label class="validation" for="address">{#resident_name#}: </label></td>
-        </tr>
-        <tr class="noborder">
-          <td class="vatop rowform">
-          	<input type="text" value="{$info['resident_name']|escape}" name="resident_name" id="resident_name" class="txt">
-          </td>
-          <td class="vatop tips"><label id="error_resident_name"></label>{form_error('resident_name')}</td>
         </tr>
         <tr>
           <td colspan="2" class="required"><label>排序:</label></td>

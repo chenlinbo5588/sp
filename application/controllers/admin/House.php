@@ -636,8 +636,7 @@ class House extends Ydzj_Admin_Controller {
 							continue;
 						}
 						
-						
-						$yezhuInfo = $this->Yezhu_Model->getFirstByKey($tmpRow['id_no'],'id_no','id,mobile');
+						$yezhuInfo = $this->Yezhu_Model->getFirstByKey($tmpRow['id_no'],'id_no','id,name,mobile');
 						if(empty($yezhuInfo)){
 							$tmpRow['message'] = '无此证件对应的业主';
 							$result[] = $tmpRow;
@@ -646,6 +645,7 @@ class House extends Ydzj_Admin_Controller {
 						
 						$updateData = array_merge(array(
 							'yezhu_id' => $yezhuInfo['id'],
+							'yezhu_name' => $yezhuInfo['name'],
 							'mobile' => $tmpRow['mobile'],
 							'telephone' => $tmpRow['telephone']
 						),$this->addWhoHasOperated('edit'));

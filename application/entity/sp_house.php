@@ -11,6 +11,7 @@ $entity = array(
 'lat' => 'varchar',
 'displayorder' => 'int',
 'yezhu_id' => 'int',
+'yezhu_name' => 'varchar',
 'mobile' => 'varchar',
 'telephone' => 'varchar',
 'wuye_expire' => 'int',

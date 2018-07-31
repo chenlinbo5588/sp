@@ -320,7 +320,7 @@ class Order_service extends Base_service {
 				$input->SetOut_trade_no($localOrder['order_id']);
 				
 				//测试阶段 始终用 1分
-				$input->SetTotal_fee($localOrder['amount']);
+				$input->SetTotal_fee(intval($localOrder['amount']));
 				
 				$input->SetTime_start($localOrder['time_start']);
 				$input->SetTime_expire($localOrder['time_expire']);

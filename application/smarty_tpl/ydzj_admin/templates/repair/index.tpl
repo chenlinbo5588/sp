@@ -27,7 +27,6 @@
         <tr class="thead">
           <th class="w24"></th>
           <th>{#repair_type#}</th>
-          <th>{#resident_id#}</th>
           <th>{#yezhu_name#}</th>
           <th>{#mobile#}</th>
           <th>{#address#}</th>
@@ -40,7 +39,6 @@
       	<tr class="hover edit" id="row{$item['id']}">
           <td><input value="{$item['id']}" class="checkitem" group="chkVal" type="checkbox" name="id[]"></td>
           <td>{if $item['repair_type'] == 1}管道报修{elseif $item['repair_type'] == 2}电路报修{elseif $item['repair_type'] == 3}电器报修{elseif $item['repair_type'] == 4}网络报修{elseif $item['repair_type'] == 5}其他报修{/if|escape}</span></td>
-          <td>{$item['resident_id']|escape}</span></td>
           <td>{$item['yezhu_name']|escape}</span></td>
           <td><span class="editable" data-id="{$item['id']}" data-fieldname="mobile">{$item['mobile']|escape}</span></td>
 		  <td><span class="editable" data-id="{$item['id']}" data-fieldname="address">{$item['address']|escape}</span></td>

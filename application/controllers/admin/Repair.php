@@ -6,7 +6,7 @@ class Repair extends Ydzj_Admin_Controller{
 		parent::__construct();
 		$this->load->library(array('Wuye_service','Basic_data_service','Attachment_service'));
 		
-		$this->_moduleTitle = '维修';
+		$this->_moduleTitle = '报修';
 		$this->_className = strtolower(get_class());
 		
 		

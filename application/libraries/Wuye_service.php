@@ -158,6 +158,147 @@ class Wuye_service extends Base_service {
 	}
 	
 	
+	/**
+	 * 检查费用类型 是否存储
+	 */
+	public function checkFeetype($pHouseId,$extraStr = ''){
+		$extraInfo = explode(',',$extraStr);
+		
+		$flag = false;
+		
+		if(!empty($extraInfo[0]) && !empty($extraInfo[1])){
+			$houseInfo = $this->_houseModel->getFirstByKey($pHouseId);
+			if($houseInfo['resident_id']){
+				
+				$cnt = $this->_feeTypeModel->getCount(array(
+					'where' => array(
+						'name' => $extraInfo[1],
+						'year' => $extraInfo[0],
+						'resident_id' => $houseInfo['resident_id']
+					)
+				));
+				
+				
+				if($cnt){
+					$flag = true;
+				}
+			}
+		}
+		
+		if(!$flag){
+			self::$CI->form_validation->set_message('feetype_callable','该物业所在小区没有配置费用信息');
+			return false;
+		}
+		
+		return $flag;
+	}
+	
+	
+	/**
+	 * 获得小区 费用设置
+	 */
+	public function getResidentFeeSetting($pResidentId,$year,$pOrderTypename){
+		$residentFee = array();
+		
+		$feeInfo = $this->_feeTypeModel->getList(array(
+			'select' => 'year,name,price',
+			'where' => array(
+				'year' => $year,
+				'name' => $pOrderTypename,
+				'resident_id' => $pResidentId
+			),
+			'limit' => 1
+		));
+		
+		
+		if($feeInfo[0]){
+			$residentFee = $feeInfo[0];
+		}
+		
+		return $residentFee;
+	}
+	
+	
+	/**
+	 * @param int $year
+	 * @return void
+	 */
+	public function setFeeTimeRules($year){
+		self::$CI->form_validation->set_rules('year','缴费年份','required|is_natural_no_zero|greater_than_equal_to['.$year.']');
+		//self::$CI->form_validation->set_rules('start_month','缴费起始月份','required|is_natural_no_zero|greater_than_equal_to[1]|less_than_equal_to[12]');
+		self::$CI->form_validation->set_rules('end_month','缴费到期月份','required|is_natural_no_zero|greater_than_equal_to[1]|less_than_equal_to[12]');
+	}
+	
+	/**
+	 * 计算 费用
+	 * 
+	 * @return float   
+	 */
+	public function computeHouseFee($pComputeParam){
+		
+		$houseInfo = $this->_houseModel->getFirstByKey($pComputeParam['id']);
+		//获得费用设置
+		$tempFeeSetting = $this->getResidentFeeSetting($houseInfo['resident_id'],$pComputeParam['year'],$pComputeParam['orderTypeName']);
+		
+		//基于按年缴费的方式
+		$monthCnt = intval(date('m',$pComputeParam['newEndTimeStamp'])) - intval(date('m',$pComputeParam['newStartTimeStamp'])) + 1;
+		
+		return number_format($monthCnt * $tempFeeSetting['price'] * $houseInfo['jz_area'],2,'.',"");
+	}
+	
+	
+	/**
+	 * 获得缴费情况
+	 * 
+	 */
+	public function getCurrentHouseFeeInfo($pHouseId,$pOrderTypename,$endMonth = 0){
+		
+		$houseInfo = $this->_houseModel->getFirstByKey($pHouseId);
+		
+		$temp = array(
+			'id' => $pHouseId,
+			'year' => date('Y'),
+			'expireTimeStamp' => 0,//原到期时间戳
+			'newStartTimeStamp' => 0,//新开始时间戳
+			'newEndTimeStamp' => 0,	//新的结束时间戳,
+			'orderTypeName' => $pOrderTypename,
+		);
+		
+		switch($pOrderTypename){
+			case '物业费':
+				$temp['expireTimeStamp'] = $houseInfo['wuye_expire'];
+				break;
+			case '能耗费':
+				$temp['expireTimeStamp'] = $houseInfo['nenghao_expire'];
+				break;
+			default:
+				break;
+		}
+		
+		if($temp['expireTimeStamp']){
+			if(12 != date('m',$temp['expireTimeStamp'])){
+				//如果上一个年度还没有缴费到年底 完成，则继续缴费
+				$temp['year'] = date('Y',$temp['expireTimeStamp']);
+				
+				//上次缴费结束日期所在月的下个月的月初
+				$temp['newStartTimeStamp'] = mktime(0,0,0,date('m',$temp['expireTimeStamp']) + 1,1,$temp['year']);
+			}else{
+				//如果上一年以及缴清至的12月份,则从当前的 1月1日开始
+				$temp['newStartTimeStamp'] = mktime(0,0,0,1,1,$temp['year']);
+			}
+		}else{
+			//从1月份开始
+			$temp['newStartTimeStamp'] = mktime(0,0,0,1,1,$temp['year']);
+		}
+		
+		
+		if($endMonth){
+			$temp['newEndTimeStamp'] = strtotime($temp['year'].'-'.str_pad($endMonth,2,'0',STR_PAD_LEFT).'  last day of this month');
+		}
+		
+		return $temp;
+	}
+	
 	
 	/**
 	 * 根据会话 初始话 相关数据
@@ -229,16 +370,20 @@ class Wuye_service extends Base_service {
 	/**
 	 * 根据业主 获得物业
 	 */
-	public function getYezhuHouseDetail($houseId,$pYezhu){
+	public function getYezhuHouseDetail($houseId,$pYezhu = array()){
 		
-		$houseInfo = $this->_houseModel->getById(array(
-			'select' => 'id,address,jz_area,lng,lat,wuye_expire,nenghao_expire',
+		$condition = array(
+			'select' => 'id,resident_id,address,jz_area,lng,lat,wuye_expire,nenghao_expire',
 			'where' => array(
 				'id' => $houseId,
-				'yezhu_id' => $pYezhu['id']
 			)
-		));
+		);
 		
+		if($pYezhu){
+			$condition['where']['yezhu_id'] = $pYezhu['id'];
+		}
+		
+		$houseInfo = $this->_houseModel->getById($condition);
 		
 		if($houseInfo){
 			if($houseInfo['wuye_expire']){
