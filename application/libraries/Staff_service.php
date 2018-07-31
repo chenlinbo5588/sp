@@ -30,6 +30,43 @@ class StaffStatus
 	);
 }
 
+class BookingMeet
+{
+	//未碰面
+	public static $onmeet = 1;
+	
+	//预约成功
+	public static $meetsuccess = 2;
+	
+	//预约失败
+	public static $meetfail = 3;
+		
+	public static $statusName = array(
+		1 => '未碰面',
+		2 => '预约成功',
+		3 => '预约失败',
+	);
+}
+
+class BookingStatus
+{
+	//预约单未完成
+	public static $orderonfinish = 1;
+	
+	//预约单完成
+	public static $orderfinish = 2;
+	
+	//预约单取消
+	public static $ordercancel = 3;
+		
+	public static $statusName = array(
+		1 => '预约单未完成',
+		2 => '预约单完成',
+		3 => '预约单取消',
+	);
+}
+
+
 
 class Staff_service extends Base_service {
 	
@@ -715,6 +752,8 @@ class Staff_service extends Base_service {
 		
 		return $data;
 	}
+	
+	
 	
 	
 }
