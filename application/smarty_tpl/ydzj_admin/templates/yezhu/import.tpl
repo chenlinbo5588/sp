@@ -1,6 +1,6 @@
 {include file="common/main_header_navs.tpl"}
   {config_load file="wuye.conf"}
-  {form_open_multipart(site_url($uri_string),'name="form1"')}
+  {form_open_multipart(site_url($uri_string),'name="form1" target="importFrame"')}
     <table class="table tb-type2">
       <tbody>
       	<tr class="noborder">
@@ -11,8 +11,8 @@
         <tr class="noborder">
         	<td colspan="2" >
         		<ol class="tip-yellowsimple">
-        			<li>1、最多一次处理 1000条记录，如果导入速度较慢，建议您把文件拆分为几个小文件，然后分别导入</li>
-        			<li>2、如果Excel表格中房屋已经存在，则将进行忽略处理</li>
+        			<li>1、最多一次处理{config_item('excel_import_limit')}条记录，如果导入速度较慢，建议您把文件拆分为几个小文件，然后分别导入</li>
+        			<li>2、如果Excel表格中{$moduleTitle}已经存在，则将进行忽略处理</li>
         		</ol>
         	</td
         </tr>
@@ -25,40 +25,19 @@
         </tr>
       <tbody>
       <tfoot>
-        <tr class="tfoot">
-          <td colspan="2"><input type="submit" name="submit" value="开始导入" class="msbtn"/></td>
+        <tr class="tfoot noborder">
+          <td colspan="2"><input type="submit" id="importBtn" name="submit" value="开始导入" class="msbtn"/></td>
         </tr>
       </tfoot>
     </table>
   </form>
-  
-	{if $result}
-	<div id="result" style="height:600px;overflow: auto;">
-	<table class="table" style="width:50%">
-		<thead>
-			<tr>
-				<th>{#yezhu_name#}</th>
-				<th>{#id_type#}</th>
-				<th>{#id_no#}</th>
-				<th>{#mobile#}</th>
-				<th>结果</th>
-			</tr>
-		<thead>
-		<tbody>
-	{foreach from=$result item=item}
-			<tr>
-				<td>{$item['name']|escape}</td>
-				<td>{$item['id_type']|escape}</td>
-				<td>{$item['id_no']|escape}</td>
-				<td>{$item['mobile']|escape}</td>
-				<td>{$item['message']|escape}</td>
-			</tr>
-	{/foreach}
-		</tbody>
-	</table>
-	
-	</div>
-	{/if}
-	
-  
+  <script>
+  	$(function(){
+  		$("form[name=form1]").bind('submit',function(){
+			$("#importBtn").addClass("disabled").val('正在导入,请稍后').attr('disabled',true);
+			return true;
+		});
+  	});
+  </script>
+  <iframe name="importFrame"  frameborder="0" style="border:1px solid #d0d0d0;" height="500" width="100%"></iframe>
 {include file="common/main_footer.tpl"}

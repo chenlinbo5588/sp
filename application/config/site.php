@@ -164,3 +164,7 @@ $config['payment'] = array(
 		)
 	)
 );
+
+//
+$config['excel_export_limit'] = 5000;
+$config['excel_import_limit'] = 5000;

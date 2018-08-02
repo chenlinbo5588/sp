@@ -35,13 +35,13 @@
           <td><input value="{$item['id']}" class="checkitem" group="chkVal" type="checkbox" name="id[]"></td>
           <td class="sort"><span class="editable" data-id="{$item['id']}" data-fieldname="displayorder">{$item['displayorder']}</span></td>
           <td class="name"><span class="editable" data-id="{$item['id']}" data-fieldname="name">{$item['name']|escape}</span></td>
-          <td>{$item['id_type']|escape}</span></td>
-          <td>{$item['id_no']|escape}</span></td>
+          <td>{$basicData[$item['id_type']]['show_name']|escape}</span></td>
+          <td>{mask_string($item['id_no'])|escape}</span></td>
           <td>{if $item['sex'] == 1}男{else}女{/if}</td>
          <td>{$item['age']}</td>
-         <td>{$basicData[$item['jiguan']]['show_name']}</td>
+         <td>{$basicData[$item['jiguan']]['show_name']|escape}</td>
          <td>{$item['mobile']}</td>
-         <td>{if $item['uid']}已绑定用户{$item['uid']}{else}未绑定{/if}</td>
+         <td>{if $item['uid']}微信已绑定用户{$item['uid']}{else}微信未绑定{/if}</td>
           <td class="align-center">
           	<a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}">编辑</a>&nbsp;|&nbsp;
           	<a href="javascript:void(0)" class="delete" data-url="{admin_site_url($moduleClassName|cat:'/delete')}" data-id="{$item['id']}">删除</a>

@@ -881,7 +881,7 @@ function pageArrayGenerator($pagerParam,$total){
             'pageBeginNum'=> ($currPage-1)*$pageSize+1,
             'perPage' => $pageSize,
             'pageEndNum'=> $pageEndNum,
-            'pageSum'=> $total,
+            'total'=> $total,
             'pageNow'=> $currPage,
             'pagePrevNum'=> $pagePrevNum,
             'pageNextNum'=> $pageNextNum,

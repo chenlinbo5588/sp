@@ -1,5 +1,11 @@
 $(function(){
 	
+	$( ".datepicker" ).datepicker();
+	
+	$.loadingbar({ text: "正在提交..." , urls: submitUrl , container : "#infoform" });
+	bindAjaxSubmit("#infoform");
+	
+	
 	$("#id_no").bind("focusout",function(){
 		var idNo = $.trim($(this).val());
 		var idType = $("#id_type option:selected").html();

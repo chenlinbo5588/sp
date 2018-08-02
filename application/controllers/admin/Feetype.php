@@ -142,12 +142,11 @@ class Feetype extends Ydzj_Admin_Controller {
 	
 				$info = array_merge((array)$info,(array)$_POST,$this->_prepareData(),$this->addWhoHasOperated('add'));
 				
-				$infoim = $this->Resident_Model->getFirstByKey($info['resident_name'],"name","id");
-				$info['resident_id']=$infoim["id"];
+				$residentInfo = $this->Resident_Model->getFirstByKey($info['resident_name'],'name','id');
+				$info['resident_id']= $residentInfo["id"];
 				
-				$infoim = $this->Basic_Data_Model->getFirstByKey($info['name'],"show_name","id");
-				$info['fee_id']=$infoim["id"];
-				
+				$feeTypeList = $this->basic_data_service->getTopChildList('费用类型');
+				$info['fee_id'] = $feeTypeList[$info['name']]['id'];
 				
 				$newid =$this->Feetype_Model->_add(array_merge($info,$_POST,$this->_prepareData(),$this->addWhoHasOperated('add')));
 				$error = $this->Feetype_Model->getError();
@@ -175,7 +174,7 @@ class Feetype extends Ydzj_Admin_Controller {
 	
 	
 	private function _addYearRule(){
-		$this->form_validation->set_rules('year','缴费年份','required|greater_than_equal_to['.date('Y').']');
+		$this->form_validation->set_rules('year','缴费年份','required|is_natural_no_zero');
 	}
 	
 	
@@ -198,17 +197,16 @@ class Feetype extends Ydzj_Admin_Controller {
 			for($i = 0; $i < 1; $i++){
 				$info = array_merge($info,$_POST,$this->_prepareData(),$this->addWhoHasOperated('edit'));
 				
-				$infoim = $this->Resident_Model->getFirstByKey($info['resident_name'],"name","id");
-				$info['resident_id']=$infoim["id"];
-				
-				$infoim = $this->Basic_Data_Model->getFirstByKey($info['name'],"show_name","id");
-				$info['fee_id']=$infoim["id"];
-				
-				
 				if(!$this->form_validation->run()){
 					$this->jsonOutput('数据校验失败,'.$this->form_validation->error_string(),array('errors' => $this->form_validation->error_array()));
 					break;
 				}
+				
+				$residentInfo = $this->Resident_Model->getFirstByKey($info['resident_name'],'name','id');
+				$info['resident_id']= $residentInfo["id"];
+				
+				$feeTypeList = $this->basic_data_service->getTopChildList('费用类型');
+				$info['fee_id'] = $feeTypeList[$info['name']]['id'];
 				
 				$this->Feetype_Model->update(array_merge($info,$_POST,$this->addWhoHasOperated('edit')),array('id' => $id));
 				$error = $this->Feetype_Model->getError();
@@ -320,6 +318,20 @@ class Feetype extends Ydzj_Admin_Controller {
 	
 	
 	/**
+	 * 导入输出
+	 */
+	private function _importOutput($result){
+		
+		$str = array();
+		foreach($result as $key => $line){
+			$str[] = "<tr class=\"{$line['classname']}\"><td>{$line['name']}</td><td>{$line['year']}</td><td>{$line['price']}</td><td>{$line['message']}</td></tr>";
+		}
+		
+		return implode('',$str);
+	}
+	
+	
+	/**
      * 导入excel
      */
     public function import(){
@@ -340,13 +352,7 @@ class Feetype extends Ydzj_Admin_Controller {
 	    			break;
 	    		}
 	    		
-	    		require_once PHPExcel_PATH.'PHPExcel.php';
-	    		
-	    		$cacheMethod = PHPExcel_CachedObjectStorageFactory::cache_to_discISAM; 
-		        $cacheSettings = array( 'dir'  => ROOTPATH.'/temp' );
-		        PHPExcel_Settings::setLocale('zh_CN');
-		        PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
-		        
+	    		$this->_initPHPExcel();
 		        
 	    		try {
 	    			
@@ -355,23 +361,23 @@ class Feetype extends Ydzj_Admin_Controller {
 					$objWorksheet = $objPHPexcel->getActiveSheet(0); 
 					
 					$startRow = 2;
-					
 					$highestRow = $objWorksheet->getHighestRow();
 					
-					if($highestRow > 1000){
-						$highestRow = 1000;
-					}
+					$importMaxLimit = config_item('excel_import_limit');
 					
+					if(($highestRow + 1) > $importMaxLimit){
+						$highestRow = $importMaxLimit + 1;
+					}
 					
 					$result = array();
 					$successCnt = 0;
 					
 					
 					$feeTypeList = $this->basic_data_service->getTopChildList('费用类型');
-
-					
 					$provinceIdcard = config_item('province_idcard');
 					
+					//$this->basic_data_service->getTopChildList('费用类型'),
+					$residentList = $this->Resident_Model->getList(array(),'name');
 					
 					$currentYear = date('Y');
 					
@@ -379,18 +385,13 @@ class Feetype extends Ydzj_Admin_Controller {
 					for($rowIndex = $startRow; $rowIndex <= $highestRow; $rowIndex++){
 						$tmpRow = array();
 						
+						$tmpRow['classname'] = 'failed';
 						$tmpRow['name'] = getCleanValue($objWorksheet->getCell('A'.$rowIndex)->getValue());
 						$tmpRow['year'] = getCleanValue($objWorksheet->getCell('B'.$rowIndex)->getValue());
 						$tmpRow['resident_name'] = getCleanValue($objWorksheet->getCell('C'.$rowIndex)->getValue());
 						$tmpRow['price'] = getCleanValue($objWorksheet->getCell('D'.$rowIndex)->getValue());
 						
 						$this->form_validation->reset_validation();
-						
-						$infoim = $this->Resident_Model->getFirstByKey($tmpRow['resident_name'],"name","id");
-						$tmpRow['resident_id']=$infoim["id"];
-						$infoim = $this->Basic_Data_Model->getFirstByKey($tmpRow['name'],"show_name","id");
-						$tmpRow['fee_id']=$infoim["id"];
-						
 						
 						$this->form_validation->set_data($tmpRow);
 						
@@ -399,13 +400,7 @@ class Feetype extends Ydzj_Admin_Controller {
 						$this->wuye_service->addFeeTypeRules();
 						
 						if(!$this->form_validation->run()){
-							//print_r($this->form_validation->error_array());
-							if('development' == ENVIRONMENT){
-								$tmpRow['message'] = $this->form_validation->error_html();
-							}else{
-								$tmpRow['message'] = '数据校验失败';
-							}
-							
+							$tmpRow['message'] = $this->form_validation->error_first_html();
 							$result[] = $tmpRow;
 							continue;
 						}
@@ -413,10 +408,10 @@ class Feetype extends Ydzj_Admin_Controller {
 						$insertData = array_merge(array(
 							'name' => $tmpRow['name'],
 							'year' => $tmpRow['year'],
-							'resident_id' => $tmpRow['resident_id'],
+							'resident_id' => $residentList[$tmpRow['resident_name']]['id'],
 							'resident_name' => $tmpRow['resident_name'],
 							'price' => $tmpRow['price'],
-							'fee_id' => $tmpRow['fee_id'],					
+							'fee_id' => $feeTypeList[$tmpRow['name']]['id'],					
 						),$this->addWhoHasOperated('add'));
 						
 						$this->Feetype_Model->_add($insertData);
@@ -430,34 +425,37 @@ class Feetype extends Ydzj_Admin_Controller {
 							}
 						}else{
 							$tmpRow['message'] = '导入成功';
-							$tmpRow['classname'] = 'successText';
+							$tmpRow['classname'] = 'ok';
 							$successCnt++;
 						}
 						
 						$result[] = $tmpRow;
 					}
 					
-					$feedback = getSuccessTip('导入完成');
 					
-					//print_r($result);
-	    			$this->assign(array(
-						'result' => $result,
+					$feedback = getSuccessTip('导入完成,导入'.$successCnt.'条,失败'.(count($result) - $successCnt).'条');
+					
+					$this->assign(array(
+						'output' => '<table class="table">'.$this->_importOutput($result).'</table>',
 						'successCnt' => $successCnt,
-						
 					));
+					
 					
 	    			@unlink($excelFile);
 	    		}catch(Exception $e){
 	    			$feedback = '导入错误,请检查文件格式是否正确';
 	    		}
     		}
+    		
+    		$this->assign(array(
+    			'feedback' => $feedback,
+    		));
+    		
+    		$this->display('common/import_resp');
+    		
+    	}else{
+    		$this->display();
     	}
-    	
-    	$this->assign(array(
-    		'feedback' => $feedback,
-    	));
-    	
-    	$this->display();
     	
     }
 }

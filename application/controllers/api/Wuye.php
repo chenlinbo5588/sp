@@ -47,7 +47,7 @@ class Wuye extends Wx_Controller {
 				$this->form_validation->set_rules('id','物业ID','required|in_db_list['.$this->House_Model->getTableRealName().'.id]');
 				
 				if(!$this->form_validation->run()){
-					$this->jsonOutput2($this->form_validation->error_html());
+					$this->jsonOutput2($this->form_validation->error_first_html());
 					break;
 				}
 				
@@ -87,7 +87,7 @@ class Wuye extends Wx_Controller {
 				$this->_setCommonHouseFeeRules();
 				
 				if(!$this->form_validation->run()){
-					$this->jsonOutput2($this->form_validation->error_html());
+					$this->jsonOutput2($this->form_validation->error_first_html());
 					break;
 				}
 				
@@ -140,7 +140,7 @@ class Wuye extends Wx_Controller {
 				$this->form_validation->set_data($this->postJson);
 				$this->_setCommonHouseFeeRules();
 				if(!$this->form_validation->run()){
-					$this->jsonOutput2($this->form_validation->error_html());
+					$this->jsonOutput2($this->form_validation->error_first_html());
 					break;
 				}
 				
@@ -161,7 +161,7 @@ class Wuye extends Wx_Controller {
 				$this->wuye_service->setFeeTimeRules($currentHouseFeeExpire['year']);
 				
 				if(!$this->form_validation->run()){
-					$this->jsonOutput2($this->form_validation->error_html());
+					$this->jsonOutput2($this->form_validation->error_first_html());
 					break;
 				}
 				

@@ -12,7 +12,7 @@
     <table class="table tb-type2">
       <tbody>
       	<tr class="noborder">
-          <td colspan="2"><label class="validation">所在{#resident_name#}:</label></td>
+          <td colspan="2"><label class="validation">所在{#resident_name#}:</label><label class="errtip" id="error_resident_id"></label>{form_error('resident_id')}</td>
         </tr>
         <tr class="noborder">
         	<td colspan="2">
@@ -24,15 +24,16 @@
 	         </td>
         </tr>
         <tr class="noborder">
-          <td colspan="2"><label class="validation">所在{#building_name#}:</label></td>
+          <td colspan="2"><label class="validation">所在{#building_name#}:</label><label class="errtip" id="error_building_id"></label>{form_error('building_id')}</td>
         </tr>
         <tr class="noborder">
         	<td colspan="2">
-	          	<ul class="ulListStyle1 clearfix">
-	          	{foreach from=$buildingList item=item}
-	          		<li {if $info['building_id'] == $item['id']}class="selected"{/if}><label><input type="radio" name="building_id" {if $info['building_id'] == $item['id']}checked="checked"{/if} value="{$item['id']}"/><span>{$item['name']|escape}</span></label></li>
-	          	{/foreach}
-	          	</ul>
+        		<select name="building_id">
+        			<option value="">请选择</option>
+        			{foreach from=$buildingList item=item}
+        			<option value="{$item['id']}" {if $info['building_id'] == $item['id']}selected{/if}>{$item['name']|escape}</option>
+        			{/foreach}
+        		</select>
 	         </td>
         </tr>
         <tr class="noborder">
@@ -42,7 +43,16 @@
           <td class="vatop rowform">
           	<input type="text" value="{$info['address']|escape}" name="address" id="address" class="txt">
           </td>
-          <td class="vatop tips"><label id="error_address"></label>{form_error('address')}</td>
+          <td class="vatop tips"><label class="errtip" id="error_address"></label>{form_error('address')}</td>
+        </tr>
+        <tr class="noborder">
+          <td colspan="2"><label class="validation" for="jz_area">{#jz_area#}: </label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform">
+          	<input type="text" value="{$info['jz_area']|escape}" name="jz_area" id="jz_area" class="txt">
+          </td>
+          <td class="vatop tips"><label class="errtip"  id="error_jz_area"></label>{form_error('jz_area')}</td>
         </tr>
         <tr>
           <td colspan="2" class="required"><label>排序:</label></td>
@@ -81,17 +91,35 @@
 	        var checked = $(this).prop('checked');
 	        var id = $(this).val();
 	        if(checked){
-	        
+	        	$.getJSON("{admin_site_url('building/getBuildingList')}?t=" + Math.random(),{ resident_id : id }, function(resp){
+	        		
+	        		
+	        		$("select[name=building_id]").html('');
+	        		var data = resp.data;
 	        	
-	        
-	        	$("input[name=name]").val($(this).parent().find('span').html());
-	        	
+	        		if(data.length == 0){
+	        			showToast('error',"该小区尚未配置建筑物信息");
+	        		}else{
+	        			$("select[name=building_id]").append('<option value="">请选择</option>');
+	        			for(var i = 0 ; i < data.length; i++){
+		        			$("select[name=building_id]").append('<option value="' + data[i]['id'] + '">' + data[i]['name'] + '</option>');
+		        		}
+	        		}
+	        		
+				});
+				
 	        	mapPanTo(id);
 	        }
 	    });
 	    
 	    
-	    
+	    {if empty($info['id'])}
+	    $("select[name=building_id]").bind("change",function(){
+	    	var addresVal = $("#address").val();
+	    	
+	    	$("#address").val($(this).find("option:selected").html());
+	    });
+	    {/if}
 	});
   </script>
   <script type="text/javascript" src="{resource_url('js/service/wuye.js',true)}"></script>

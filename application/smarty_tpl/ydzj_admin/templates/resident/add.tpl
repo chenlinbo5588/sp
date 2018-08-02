@@ -16,7 +16,7 @@
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input type="text" value="{$info['name']|escape}" name="name" id="name" class="txt"></td>
-          <td class="vatop tips"><label id="error_name"></label>{form_error('name')}</td>
+          <td class="vatop tips"><label class="errtip" id="error_name"></label>{form_error('name')}</td>
         </tr>
         <tr class="noborder">
           <td colspan="2"><label class="validation" for="address">{#address#}: </label>{form_error('address')}</td>
@@ -26,21 +26,21 @@
           	<input type="text" value="{$info['address']|escape}" name="address" id="address" class="txt">
           	<input type="button" name="autoFillAddress" value="自动填入"/>
           </td>
-          <td class="vatop tips"><label id="error_address"></label>{form_error('address')} 请通过地图选取位置</td>
+          <td class="vatop tips"><label class="errtip" id="error_address"></label>{form_error('address')} 请通过地图选取位置</td>
         </tr>
         <tr class="noborder">
           <td colspan="2"><label class="validation" for="yezhu_cnt">{#yezhu_num#}: </label>{form_error('yezhu_num')}</td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input type="text" value="{$info['yezhu_num']}" name="yezhu_num" id="yezhu_num" class="txt"></td>
-          <td class="vatop tips"><label id="error_yezhu_num"></label>{form_error('yezhu_num')}</td>
+          <td class="vatop tips"><label class="errtip" id="error_yezhu_num"></label>{form_error('yezhu_num')}</td>
         </tr>
         <tr class="noborder">
           <td colspan="2"><label class="validation" for="total_num">{#total_num#}: </label>{form_error('total_num')}</td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input type="text" value="{$info['total_num']}" name="total_num" id="total_num" class="txt"></td>
-          <td class="vatop tips"><label id="error_total_num"></label>{form_error('total_num')}</td>
+          <td class="vatop tips"><label class="errtip" id="error_total_num"></label>{form_error('total_num')}</td>
         </tr>
         <tr>
           <td colspan="2"><label>排序:</label></td>

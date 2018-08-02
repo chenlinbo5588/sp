@@ -40,7 +40,7 @@ class Register extends Wx_Controller {
 				
 				
 				if(!$this->form_validation->run()){
-					$rt['message'] = $this->form_validation->error_html('','');
+					$rt['message'] = $this->form_validation->error_first_html();
 					break;
 				}
 				
@@ -143,7 +143,7 @@ class Register extends Wx_Controller {
 				);
 				
 				if(!$this->form_validation->run()){
-					$rt['message'] = $this->form_validation->error_html('','');
+					$rt['message'] = $this->form_validation->error_first_html();
 					break;
 				}
 				

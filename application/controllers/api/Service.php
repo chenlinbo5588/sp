@@ -38,7 +38,7 @@ class Service extends Wx_Controller {
 			$this->jsonOutput2(RESP_SUCCESS,array('conditionList' => $searchCondition));
 			
 		}else{
-			$this->jsonOutput2(RESP_ERROR,array('detail' => $this->form_validation->error_string()));
+			$this->jsonOutput2(RESP_ERROR,array('detail' => $this->form_validation->error_first_html()));
 		}
 		
 	}
@@ -173,7 +173,7 @@ class Service extends Wx_Controller {
 				$this->form_validation->set_rules('staff_id','服务人员标识','required');
 			
 				if(!$this->form_validation->run()){
-					$this->jsonOutput2("参数错误",$this->form_validation->error_array());
+					$this->jsonOutput2("参数错误,".$this->form_validation->error_first_html());
 					break;
 				}
 				
@@ -276,7 +276,7 @@ class Service extends Wx_Controller {
 				$this->form_validation->set_rules('rowKey','预约记录标识','required');
 			
 				if(!$this->form_validation->run()){
-					$this->jsonOutput2("参数错误",$this->form_validation->error_array());
+					$this->jsonOutput2("参数错误,".$this->form_validation->error_first_html());
 					break;
 				}
 				

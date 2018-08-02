@@ -49,12 +49,17 @@ class Wx_Controller extends MY_Controller {
 		//file_put_contents('session.txt',print_r($this->session->all_userdata(),true),FILE_APPEND);
 		
 		if($weixinUser){
+			
+			/*
 			if($weixinUser['unionid']){
 				//开放平台 ，统一用户
 				$this->memberInfo = $this->wuye_service->initUserInfoBySession($weixinUser,'unionid');
 			}else{
 				$this->memberInfo = $this->wuye_service->initUserInfoBySession($weixinUser,'openid');
 			}
+			*/
+			
+			$this->memberInfo = $this->wuye_service->initUserInfoBySession($weixinUser,'openid');
 			
 			if($this->memberInfo){
 				$this->yezhuInfo = $this->wuye_service->getYezhuInfoById($this->memberInfo['mobile'],'mobile');

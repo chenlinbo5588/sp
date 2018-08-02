@@ -287,27 +287,24 @@ input[type=checkbox],input[type=radio] {
 /*内容页面样式
 ------------------------------------------------------------------- */
 .page { padding: 9px 20px 20px; text-align: left;}
-.fixed-bar {1background: #FFF url(../img/sky/fixed_bg.png) repeat-x scroll center bottom; background:#fff; width: 98%; padding: 5px 0px; margin-left: 20px; position: fixed; top: 0; left: 0; z-index: 2;border-bottom: 1px solid #71cbef;}
+.fixed-bar {background:#fff; width: 98%; margin-left: 20px; position: fixed; top: 0; left: 0; z-index: 2;border-bottom: 1px solid #71cbef;}
 * html .fixedbar { width: 100%; margin-top: -10px; position: relative; left: -20px;}
 .fixed-bar h1 {margin-top:18px;}
 
-.fixed-empty { height: 50px !important;}
-.item-title { line-height: 20px; margin-bottom: 0 !important; clear: both; overflow: hidden; _padding-bottom: 10px; +padding-bottom: 10px;}
+.fixed-empty { height: 40px !important;}
+.item-title { }
     .item-title h3 { float: left; margin-right:20px; margin-top: 16px;}
-.tab-base {float: left; overflow: hidden; padding-top:16px; }
+.tab-base {padding-top:18px; }
     .tab-base li { float: left;}
-        .tab-base a { font-weight: 700; line-height: 20px; background: #FFF url(../img/sky/bg_position.gif) no-repeat 0px -200px; height: 20px; float: left; padding-left: 9px; margin-right:2px;  cursor: pointer;}
-        .tab-base a:hover { color: #09C; background-position: 0 -220px; }
-            .tab-base a span { color: #555; background: url(../img/sky/bg_position.gif) no-repeat 9999px 9999px; float: left; padding-right: 9px; }
-                .tab-base a:hover span {  background-position: 100% -220px;}
-        .tab-base a.current, .tab-base a:hover.current { background-position: 0 -240px; }
-            .tab-base a.current span, .tab-base a:hover.current span{ color: #FFF; background-position: 100% -240px;}
+        .tab-base a { font-weight: 700; padding-left: 9px; margin-right:2px;  cursor: pointer;}
+        .tab-base a:hover { color: #09C;  }
+        .tab-base a.current, .tab-base a:hover.current { color:#333; }
+
 
 
 /* table
 ------------------------------------------------------------------- */
 .table { clear:both; width:100%; }
-    .table th, .table td{ padding:6px !important; }
     .nohover td { background:#FFF !important;}
 
 
@@ -333,7 +330,8 @@ input[type=checkbox],input[type=radio] {
 .tb-type2{}
     .tb-type2 tr.hover:hover .tips2{ color:#333; }
     .tb-type2 th {font-weight:bold;}
-    .tb-type2 td, tb-type2 th.td{ padding:5px 5px 3px 0; border-top: 1px dotted #CBE9F3; }
+    .tb-type2 td, tb-type2 th.td{padding: 5px;border: 1px solid #CBE9F3;border-width: 1px 0 1px 0;}
+
     .tb-type2 .tfoot td {padding:5px 5px 3px 0; border-top: 1px solid #CBE9F3;}
     .tb-type2 th{ padding:5px 5px 3px 0; line-height:21px; font-size: 12px; }
     .tb-type2 .txt, .tb-type2 .txtnobd{ width:100px; margin-right:10px; }
@@ -424,7 +422,7 @@ td.team a.weibo { background-position: 100% -40px;}
 
 .red_common {font-weight: bold; color: #ff5400;}
 .red_big {font-weight: bold; color: #ff5400; font-size: 16px;}
-form label.error { font-style:normal; font-weight: normal; color:#F00; background: url(../img/sky/bg_position.gif) no-repeat -625px -730px; padding-left: 20px; margin-left:5px;}
+form label.error { font-style:normal; font-weight: normal; color:#F00; background: url(../img/error.gif) no-repeat ; padding-left: 20px; margin-left:5px;}
 form input.error , form textarea.error { background-color: #FFF0F0; background-repeat: repeat border: 1px dotted #FF3300;}
 form label.valid { font-weight: normal; color:#390; background: transparent url(../img/sky/bg_position.gif) no-repeat -625px -690px; float:none; padding-left:18px; margin-left:5px;}
 .help { line-height: 24px; color: #666; background-color: #F6F6F6; padding: 6px; border: 1px dashed #CCC;}
@@ -655,6 +653,9 @@ table.search { margin: 12px 0 6px 4px;}
 	background:gray;
 }
 
+.disabled {
+	background-color:#7d7676;
+}
 
 
 a.btn { font-size: 14px; color: #555; font-weight: 700; line-height:18px; background: transparent url(../img/sky/bg_position.gif) no-repeat scroll 0 -280px; display: inline-block; height: 38px; padding-left: 15px; cursor: pointer;}

@@ -63,6 +63,15 @@ class Basic_data_service extends Base_service {
 		}
 	}
 	
+	
+	/**
+	 * 获得基础数据列表
+	 */
+	public static function getBasicData(){
+		return self::$basicData;
+	}
+	
+	
 	/**
 	 * 返回键树
 	 */

@@ -95,14 +95,7 @@ class Wuye_service extends Base_service {
 	
 	
 	
-	
-	/**
-	 * 
-	 */
-	public function addYezhuRules($idTypeList,$pIdType,$id = 0){
-		
-		self::$CI->form_validation->set_rules('name','姓名','required|max_length[50]');
-		
+	public function addIDRules($idTypeList,$pIdType,$id = 0,$dbCheck = true){
 		$idRules = array('required');
 		
 		if(ENVIRONMENT == 'production'){
@@ -123,13 +116,26 @@ class Wuye_service extends Base_service {
 			$idRules[] = 'max_length[50]';
 		}
 		
-		if($id){
-			$idRules[] = 'is_unique_not_self['.$this->_yezhuModel->getTableRealName().".id_no.id.{$id}]";
-		}else{
-			$idRules[] = 'is_unique['.$this->_yezhuModel->getTableRealName().".id_no]";
+		//数据库校验
+		if($dbCheck){
+			if($id){
+				$idRules[] = 'is_unique_not_self['.$this->_yezhuModel->getTableRealName().".id_no.id.{$id}]";
+			}else{
+				$idRules[] = 'is_unique['.$this->_yezhuModel->getTableRealName().".id_no]";
+			}
 		}
 		
 		self::$CI->form_validation->set_rules('id_no','证件号码',implode('|',$idRules));
+	}
+	
+	/**
+	 * 
+	 */
+	public function addYezhuRules($idTypeList,$pIdType,$id = 0){
+		
+		self::$CI->form_validation->set_rules('name','姓名','required|max_length[50]');
+		
+		$this->addIDRules($idTypeList,$pIdType,$id);
 		
 		self::$CI->form_validation->set_rules('birthday','出生年月','required|valid_date');
 		self::$CI->form_validation->set_rules('age','年龄','required|is_natural_no_zero');

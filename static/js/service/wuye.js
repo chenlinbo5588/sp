@@ -6,6 +6,18 @@ $(function(){
 	
 	$("input[name=autoFillAddress]").bind('click',function(){
 		$("#address").val($("#show_address").html());
+		
+		/*
+		var str = $.trim($("#lnglat").html());
+		
+		if(str){
+			
+			var lngLat = str.split(',');
+			$("input[name=lng]").val(lngLat[0]);
+	    	$("input[name=lat]").val(lngLat[1]);
+		}
+		*/
+		
 	});
 	
 	

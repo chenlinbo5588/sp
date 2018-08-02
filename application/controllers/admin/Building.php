@@ -171,8 +171,10 @@ class Building extends Ydzj_Admin_Controller {
 		
 		if($this->isPostRequest()){
 			
-			$this->_getNameRule();
+			//注意添加规则的顺序
 			$this->_getRules();
+			$this->_getNameRule();
+			
 			
 			for($i = 0; $i < 1; $i++){
 				if(!$this->form_validation->run()){
@@ -229,6 +231,18 @@ class Building extends Ydzj_Admin_Controller {
 	}
 	
 	
+	/**
+	 * 导入校验规则
+	 */
+	public function checkName2($name,$residentName){
+		if(!preg_match("/^{$residentName}/is",$name)){
+			$this->form_validation->set_message('checkName2',$this->_moduleTitle.'名称必须包含小区名称并且以小区名称开始');
+			return false;
+		}
+		
+		return true;
+	}
+	
 	
 	
 	/**
@@ -261,8 +275,9 @@ class Building extends Ydzj_Admin_Controller {
 		
 		if($this->isPostRequest()){
 			
-			$this->_getNameRule($id);
 			$this->_getRules();
+			$this->_getNameRule($id);
+			
 			for($i = 0; $i < 1; $i++){
 				$info = array_merge($info,$_POST,$this->_prepareData(),$this->addWhoHasOperated('edit'));
 				$info['id'] = $id;
@@ -356,6 +371,40 @@ class Building extends Ydzj_Admin_Controller {
 	
 	
 	/**
+	 * 获得小区的建筑物列表
+	 */
+	public function getBuildingList(){
+		
+		
+		$residentId = $this->input->get_post('resident_id');
+		$buildingList = $this->Building_Model->getList(array(
+			'select' => 'id,name,nickname',
+			'where' => array(
+				'resident_id' => $residentId
+			)
+		));
+		
+		$this->jsonOutput('响应成功',$buildingList);
+		
+		
+	}
+	
+	
+	/**
+	 * 导入业主输出
+	 */
+	private function _importOutput($result){
+		
+		$str = array();
+		foreach($result as $key => $line){
+			$str[] = "<tr class=\"{$line['classname']}\"><td>{$line['name']}</td><td>{$line['address']}</td><td>{$line['nickname']}</td><td>{$line['message']}</td></tr>";
+		}
+		
+		return implode('',$str);
+	}
+	
+	
+	/**
      * 导入excel
      */
     public function import(){
@@ -384,12 +433,7 @@ class Building extends Ydzj_Admin_Controller {
 	    			break;
 	    		}
 	    		
-	    		require_once PHPExcel_PATH.'PHPExcel.php';
-	    		
-	    		$cacheMethod = PHPExcel_CachedObjectStorageFactory::cache_to_discISAM; 
-		        $cacheSettings = array( 'dir'  => ROOTPATH.'/temp' );
-		        PHPExcel_Settings::setLocale('zh_CN');
-		        PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
+	    		$this->_initPHPExcel();
 		        
 		        
 	    		try {
@@ -399,11 +443,12 @@ class Building extends Ydzj_Admin_Controller {
 					$objWorksheet = $objPHPexcel->getActiveSheet(0); 
 					
 					$startRow = 2;
-					
 					$highestRow = $objWorksheet->getHighestRow();
 					
-					if($highestRow > 1000){
-						$highestRow = 1000;
+					$importMaxLimit = config_item('excel_import_limit');
+					
+					if(($highestRow + 1) > $importMaxLimit){
+						$highestRow = $importMaxLimit + 1;
 					}
 					
 					//选中的小区ID
@@ -417,6 +462,7 @@ class Building extends Ydzj_Admin_Controller {
 					for($rowIndex = $startRow; $rowIndex <= $highestRow; $rowIndex++){
 						$tmpRow = array();
 						
+						$tmpRow['classname'] = 'failed';
 						$tmpRow['name'] = getCleanValue($objWorksheet->getCell('A'.$rowIndex)->getValue());
 						$tmpRow['address'] = getCleanValue($objWorksheet->getCell('B'.$rowIndex)->getValue());
 						$tmpRow['nickname'] = getCleanValue($objWorksheet->getCell('C'.$rowIndex)->getValue());
@@ -430,7 +476,7 @@ class Building extends Ydzj_Admin_Controller {
 						$this->form_validation->reset_validation();
 						$this->form_validation->set_data($tmpRow);
 						
-						$this->form_validation->set_rules('name','建筑物名称','required|min_length[2]|max_length[200]|callback_checkName['.$residentId.']');
+						$this->form_validation->set_rules('name','建筑物名称','required|min_length[2]|max_length[200]|callback_checkName2['.$residentInfo['name'].']');
 						$this->form_validation->set_rules('address','地址','required');
 						$this->form_validation->set_rules('nickname','建筑物别名','min_length[1]|max_length[200]');
 						$this->form_validation->set_rules('unit_num','建筑物单元数量','is_natural');
@@ -440,17 +486,7 @@ class Building extends Ydzj_Admin_Controller {
 						$this->form_validation->set_rules('yezhu_num','地下层数','is_natural');
 						
 						if(!$this->form_validation->run()){
-							//print_r($this->form_validation->error_array());
-							$tmpRow['message'] = $this->form_validation->error_html();
-							
-							/*
-							if('development' == ENVIRONMENT){
-								$tmpRow['message'] = $this->form_validation->error_html();
-							}else{
-								$tmpRow['message'] = '数据校验失败';
-							}
-							*/
-							
+							$tmpRow['message'] = $this->form_validation->error_first_html();
 							$result[] = $tmpRow;
 							continue;
 						}
@@ -483,35 +519,44 @@ class Building extends Ydzj_Admin_Controller {
 							}
 						}else{
 							$tmpRow['message'] = '导入成功';
-							$tmpRow['classname'] = 'successText';
+							$tmpRow['classname'] = 'ok';
 							$successCnt++;
 						}
 						
 						$result[] = $tmpRow;
 					}
 					
-					$feedback = getSuccessTip('导入完成');
 					
-					//print_r($result);
-	    			$this->assign(array(
-						'result' => $result,
+					
+					$feedback = getSuccessTip('导入完成,导入'.$successCnt.'条,失败'.(count($result) - $successCnt).'条');
+					
+					$this->assign(array(
+						'output' => '<table class="table">'.$this->_importOutput($result).'</table>',
 						'successCnt' => $successCnt,
-						
 					));
+					
 					
 	    			@unlink($excelFile);
 	    		}catch(Exception $e){
 	    			$feedback = '导入错误,请检查文件格式是否正确';
 	    		}
     		}
+    		
+    		
+    		$this->assign(array(
+    			'feedback' => $feedback,
+    		));
+    		
+    		$this->display('common/import_resp');
+    		
+    	}else{
+    		
+    		$this->assign(array(
+	    		'residentList' => $residentList
+	    	));
+	    	
+	    	$this->display();
     	}
-    	
-    	$this->assign(array(
-    		'feedback' => $feedback,
-    		'residentList' => $residentList
-    	));
-    	
-    	$this->display();
     	
     }
 }

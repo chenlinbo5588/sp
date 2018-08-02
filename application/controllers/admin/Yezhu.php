@@ -62,11 +62,14 @@ class Yezhu extends Ydzj_Admin_Controller {
 		$list = $this->Yezhu_Model->getList($condition);
 		
 		
-		$this->_commonPageData();
-		$this->assign('list',$list);
-		$this->assign('page',$list['pager']);
-		$this->assign('currentPage',$currentPage);
 		
+		$this->assign(array(
+			'basicData' => $this->basic_data_service->getBasicData(),
+			'list' => $list,
+			'page' => $list['pager'],
+			'currentPage' => $currentPage
+			
+		));
 		
 		
 		$this->display();
@@ -138,7 +141,7 @@ class Yezhu extends Ydzj_Admin_Controller {
 			
 			for($i = 0; $i < 1; $i++){
 				if(!$this->form_validation->run()){
-					$this->jsonOutput('数据校验失败,'.$this->form_validation->error_string(),array('errors' => $this->form_validation->error_array()));
+					$this->jsonOutput($this->form_validation->error_html(),array('errors' => $this->form_validation->error_array()));
 					break;
 				}
 				
@@ -188,7 +191,7 @@ class Yezhu extends Ydzj_Admin_Controller {
 				$info['id'] = $id;
 				
 				if(!$this->form_validation->run()){
-					$this->jsonOutput('数据校验失败,'.$this->form_validation->error_string(),array('errors' => $this->form_validation->error_array()));
+					$this->jsonOutput($this->form_validation->error_html(),array('errors' => $this->form_validation->error_array()));
 					break;
 				}
 				
@@ -273,35 +276,39 @@ class Yezhu extends Ydzj_Admin_Controller {
 	}
 	
 	
+	/**
+	 * 导入输出
+	 */
+	private function _importOutput($result){
+		
+		$str = array();
+		foreach($result as $key => $line){
+			$str[] = "<tr class=\"{$line['classname']}\"><td>{$line['name']}</td><td>{$line['id_type']}</td><td>{$line['id_no']}</td><td>{$line['mobile']}</td><td>{$line['message']}</td></tr>";
+		}
+		
+		return implode('',$str);
+		
+	}
+	
 	
 	/**
      * 导入excel
      */
     public function import(){
     	$feedback = '';
-    	$messageType = 'error';
-    	
     	
     	$this->form_validation->set_error_delimiters('','');
     	
-    
-    
     	if($this->isPostRequest()){
+       		header('Content-Type: text/html;charset='.config_item('charset'));
        		
     		for($i = 0; $i < 1; $i++){
-    			
     			if(0 != $_FILES['excelFile']['error']){
     				$feedback = getErrorTip('请上传文件');
 	    			break;
 	    		}
 	    		
-	    		require_once PHPExcel_PATH.'PHPExcel.php';
-	    		
-	    		$cacheMethod = PHPExcel_CachedObjectStorageFactory::cache_to_discISAM; 
-		        $cacheSettings = array( 'dir'  => ROOTPATH.'/temp' );
-		        PHPExcel_Settings::setLocale('zh_CN');
-		        PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
-		        
+	    		$this->_initPHPExcel();
 		        
 	    		try {
 	    			
@@ -310,13 +317,13 @@ class Yezhu extends Ydzj_Admin_Controller {
 					$objWorksheet = $objPHPexcel->getActiveSheet(0); 
 					
 					$startRow = 2;
-					
 					$highestRow = $objWorksheet->getHighestRow();
 					
-					if($highestRow > 1000){
-						$highestRow = 1000;
-					}
+					$importMaxLimit = config_item('excel_import_limit');
 					
+					if(($highestRow + 1) > $importMaxLimit){
+						$highestRow = $importMaxLimit + 1;
+					}
 					
 					$result = array();
 					$successCnt = 0;
@@ -326,14 +333,13 @@ class Yezhu extends Ydzj_Admin_Controller {
 					$jiguanList = $this->basic_data_service->getTopChildList('籍贯');
 					
 					$provinceIdcard = config_item('province_idcard');
-					
-					
 					$currentYear = date('Y');
 					
 					// 列从 0 开始  行从1 开始
 					for($rowIndex = $startRow; $rowIndex <= $highestRow; $rowIndex++){
 						$tmpRow = array();
 						
+						$tmpRow['classname'] = 'failed';
 						$tmpRow['name'] = getCleanValue($objWorksheet->getCell('A'.$rowIndex)->getValue());
 						$tmpRow['id_type'] = getCleanValue($objWorksheet->getCell('B'.$rowIndex)->getValue());
 						$tmpRow['id_no'] = getCleanValue($objWorksheet->getCell('C'.$rowIndex)->getValue());
@@ -350,29 +356,26 @@ class Yezhu extends Ydzj_Admin_Controller {
 							$tmpRow['birthday'] = substr($birthday,0,4). '-'.substr($birthday,4,2).'-' .substr($birthday,6,2);
 							
 							$tmpRow['age'] = $currentYear - intval(substr($birthday,0,4));
-							
 							$provinceName = $provinceIdcard[substr($tmpRow['id_no'],0,3)."000"];
-							//$tmpRow['jiguan'] = $jiguanList[$provinceName]['id'];
 							
 							$tmpRow['jiguan'] = $provinceName;
 						}
 						
 						$this->form_validation->set_data($tmpRow);
-						$this->wuye_service->addYezhuRules($idTypeList,$tmpRow['id_type'],0);
 						
+						$this->wuye_service->addIDRules($idTypeList,$tmpRow['id_type'],0,false);
 						
-						//重新设置籍贯
+						$this->form_validation->set_rules('name','姓名','required|max_length[50]');
+						$this->form_validation->set_rules('birthday','出生年月','required|valid_date');
+						$this->form_validation->set_rules('age','年龄','required|is_natural_no_zero');
+						$this->form_validation->set_rules('sex','性别','required|in_list[1,2]');
+						$this->form_validation->set_rules('mobile','手机号码','required|valid_mobile');
+						//设置籍贯
 						$this->form_validation->set_rules('jiguan','籍贯','required|in_list['.implode(',',array_values($provinceIdcard)).']');
 						
+						
 						if(!$this->form_validation->run()){
-							//print_r($this->form_validation->error_array());
-							
-							if('development' == ENVIRONMENT){
-								$tmpRow['message'] = $this->form_validation->error_html();
-							}else{
-								$tmpRow['message'] = '数据校验失败';
-							}
-							
+							$tmpRow['message'] = $this->form_validation->error_first_html();
 							$result[] = $tmpRow;
 							continue;
 						}
@@ -400,20 +403,19 @@ class Yezhu extends Ydzj_Admin_Controller {
 							}
 						}else{
 							$tmpRow['message'] = '导入成功';
-							$tmpRow['classname'] = 'successText';
+							$tmpRow['classname'] = 'ok';
 							$successCnt++;
 						}
 						
 						$result[] = $tmpRow;
+						
 					}
 					
-					$feedback = getSuccessTip('导入完成');
+					$feedback = getSuccessTip('导入完成,导入'.$successCnt.'条,失败'.(count($result) - $successCnt).'条');
 					
-					//print_r($result);
 	    			$this->assign(array(
-						'result' => $result,
+						'output' => '<table class="table">'.$this->_importOutput($result).'</table>',
 						'successCnt' => $successCnt,
-						
 					));
 					
 	    			@unlink($excelFile);
@@ -421,13 +423,204 @@ class Yezhu extends Ydzj_Admin_Controller {
 	    			$feedback = '导入错误,请检查文件格式是否正确';
 	    		}
     		}
+    		
+    		
+    		$this->assign(array(
+    			'feedback' => $feedback,
+    		));
+    		
+    		$this->display('common/import_resp');
+    	}else{
+    		
+	    	$this->display();
     	}
     	
-    	$this->assign(array(
-    		'feedback' => $feedback,
-    	));
     	
-    	$this->display();
+    }
+    
+    
+    /**
+     * 业主数据导出
+     */
+    public function export(){
     	
+    	$message = '';
+    	
+    	if($this->isPostRequest()){
+    		
+    		try {
+    			
+    			$search = $this->input->post(array('name','mobile','age_s','age_e','page'));
+    			
+    			$condition = array();
+    			
+    			if($search['name']){
+    				$condition['where']['name'] = $search['name'];
+    			}
+    			
+    			if($search['mobile']){
+    				$condition['where']['mobile'] = $search['mobile'];
+    			}
+    			
+    			if($search['age_s']){
+    				$condition['where']['age >='] = intval($search['age_s']);
+    			}
+    			
+    			if($search['age_e']){
+    				$condition['where']['age <='] = intval($search['age_e']);
+    			}
+    			
+    			
+    			$search['page'] = intval($search['page']) == 0 ? 1 : intval($search['page']);
+    			
+    			$dataCnt = $this->Yezhu_Model->getCount($condition);
+    			
+    			
+    			$perPageSize = config_item('excel_export_limit');
+    			
+    			if($dataCnt > $perPageSize){
+    				$condition['pager'] = array(
+						'page_size' => $perPageSize,
+						'current_page' => $search['page'],
+						'form_id' => '#formSearch'
+	    			);
+    			}
+    			
+    			$this->_doExport($condition);
+    		}catch(Exception $e){
+    			//出错信息
+    			$message = $e->getMessage();
+    		}
+    		
+    	}else{
+    		
+    		$this->display();
+    	}
+    	
+    }
+    
+    
+    /**
+     * 导出数据列
+     */
+    private function _getExportConfig(){
+    	return array(
+    		'A' => array('db_key' => 'name','width' => 15 ,'title' => '姓名'),
+    		'B' => array('db_key' => 'id_type','width' => 12 ,'title' => '证件类型'),
+    		'C' => array('db_key' => 'id_no','width' => 25 ,'title' => '证件号码'),
+    		'D' => array('db_key' => 'mobile','width' => 15 ,'title' => '手机号码'),
+    		'E' => array('db_key' => 'sex','width' => 8 ,'title' => '性别'),
+    		'F' => array('db_key' => 'age','width' => 8 ,'title' => '年龄'),
+    		'G' => array('db_key' => 'birthday','width' => 15 ,'title' => '出生日期'),
+    		'H' => array('db_key' => 'jiguan','width' => 20 ,'title' => '籍贯'),
+    		'I' => array('db_key' => 'wuye_cnt','width' => 15 ,'title' => '物业数量'),
+    	);
+    	
+    }
+    
+    /**
+     * 执行导出动作
+     */
+    private function _doExport($condition = array()){
+    	
+    	$this->_initPHPExcel();
+    	
+        $objPHPExcel = new PHPExcel();
+        
+        
+        $data = $this->Yezhu_Model->getList($condition);
+    	
+    	$colConfig = $this->_getExportConfig();
+    	
+    	foreach($colConfig as $colKey => $colItemConfig){
+    		$objPHPExcel->getActiveSheet()->getCell($colKey.'1')->setValueExplicit($colItemConfig['title'], PHPExcel_Cell_DataType::TYPE_STRING2);
+    		$objPHPExcel->getActiveSheet()->getColumnDimension($colKey)->setWidth($colItemConfig['width']);
+    	}
+    	
+    	
+    	$colKeys = array_keys($colConfig);
+    	
+    	$objPHPExcel->getActiveSheet()->getStyle($colKeys[0].'1:'.$colKeys[count($colKeys) - 1].'1')->applyFromArray(
+    		array(
+                'font'    => array(
+                    'bold'      => true,
+                    'size'     => 12
+                ),
+
+                'fill' => array(
+                    'type'       => PHPExcel_Style_Fill::FILL_PATTERN_LIGHTGRAY,
+                    'startcolor' => array(
+                        'argb' => 'FFC0C0C0'
+                    ),
+                    'endcolor'   => array(
+                        'argb' => 'FFC0C0C0'
+                    )
+                )
+             )
+	    );
+        
+        if($condition['pager']){
+        	$list = $data['data'];
+        	$objPHPExcel->getActiveSheet()->setTitle('第'.$data['pager']['pageNow'].'页之共'.$data['pager']['pageLastNum'].'页');
+        }else{
+        	$list = $data;
+        }
+        
+        
+        $basicData = $this->basic_data_service->getBasicData();
+        
+    	foreach($list as $rowId => $yezhu){
+    		foreach($colConfig as $colKey => $colItemConfig){
+    			
+    			$val = $yezhu[$colItemConfig['db_key']];
+    			
+    			
+    			switch($colItemConfig['title']){
+    				case '性别':
+    					$val = $val == 1 ? '男':'女';
+    					break;
+    				case '籍贯':
+    				case '证件类型':
+    					$val = $basicData[$val]['show_name'];
+    					break;
+    				default:
+    					break;
+    			}
+    			
+    			
+    			$objPHPExcel->getActiveSheet()->getCell($colKey.($rowId + 2))->setValueExplicit($val, PHPExcel_Cell_DataType::TYPE_STRING2);
+    		}
+    	}
+    	
+    	
+    	$objPHPExcel->getActiveSheet()->getStyle($colKeys[0].'1:'.$colKeys[count($colKeys) - 1].(count($list) + 1))->applyFromArray(
+            array(
+                'alignment' => array(
+                    'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
+                    'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                ),
+                'borders' => array(
+                    'allborders' => array(
+                        'style' => PHPExcel_Style_Border::BORDER_THIN,
+                        'color' => array('argb' => 'FF000000')
+                    )
+                )
+            )
+        );
+        
+    	
+    	$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+        $downloadName = '业主.xlsx';
+        $fileRealName = md5(uniqid());
+        
+        $filePath = ROOTPATH.'/temp/'.$fileRealName.'.xlsx';
+        
+        $objWriter->save($filePath);
+        $objPHPExcel->disconnectWorksheets(); 
+        
+        unset($objPHPExcel,$objWriter);
+        
+        force_download($downloadName,  file_get_contents($filePath));
+        
     }
 }

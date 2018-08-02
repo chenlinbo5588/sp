@@ -159,6 +159,31 @@ class MY_Form_validation extends CI_Form_validation {
 	public function error_html($prefix = '', $suffix = ''){
 		return str_replace("\n",'',$this->error_string($prefix,$suffix));
 	}
+	
+	
+	/**
+	 * 得到第一个错误
+	 */
+	public function error_first(){
+		$errorList = $this->error_array();
+		$keyArray = array_keys($errorList);
+		
+		if($keyArray){
+			return array('key' => $keyArray[0],'message' => $errorList[$keyArray[0]]);
+		}else{
+			return false;
+		}
+	}
+	
+	/**
+	 * 获得第一个错误
+	 */
+	public function error_first_html($prefix = '', $suffix = ''){
+		$errorFirst = $this->error_first();
+		
+		return $this->error($errorFirst['key'],$prefix,$suffix);
+	}
+	
 }
 // END Form Validation Class
 

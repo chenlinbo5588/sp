@@ -64,7 +64,7 @@ class Order extends Wx_Controller {
 					$this->_setIsUserOrderRules();
 					
 					if(!$this->form_validation->run()){
-						$this->jsonOutput2($this->form_validation->error_html());
+						$this->jsonOutput2($this->form_validation->error_first_html());
 						break;
 					}
 					
@@ -105,7 +105,7 @@ class Order extends Wx_Controller {
 					$this->form_validation->set_rules('amount','缴费金额','required|is_numeric|greater_than_equal_to[0]');
 					
 					if(!$this->form_validation->run()){
-						$this->jsonOutput2($this->form_validation->error_html());
+						$this->jsonOutput2($this->form_validation->error_first_html());
 						break;
 					}
 					
@@ -127,6 +127,16 @@ class Order extends Wx_Controller {
 					$this->postJson['notify_url'] = site_url(Order_service::$orderType['nameKey'][$this->postJson['order_typename']]['order_url']);
 					
 					$message = '订单创建失败';
+					
+					
+					$this->postJson['goods_id'] = $firstCartItem['id'];
+					
+					$nameStr = array();
+					foreach($list as $rowKey => $cartItem){
+						$nameStr[] = $cartItem['name'];
+					}
+					
+					$this->postJson['goods_name'] = implode(',',$nameStr);
 					
 					//附加信息
 					$this->postJson['extra_info'] = array(
@@ -190,7 +200,7 @@ class Order extends Wx_Controller {
 					$this->_setIsUserOrderRules();
 					
 					if(!$this->form_validation->run()){
-						$this->jsonOutput2($this->form_validation->error_html());
+						$this->jsonOutput2($this->form_validation->error_first_html());
 						break;
 					}
 					
@@ -221,7 +231,7 @@ class Order extends Wx_Controller {
 					//$this->form_validation->set_rules('amount','缴费金额','required|is_numeric|greater_than_equal_to[0]');
 					
 					if(!$this->form_validation->run()){
-						$this->jsonOutput2($this->form_validation->error_html());
+						$this->jsonOutput2($this->form_validation->error_first_html());
 						break;
 					}
 					
@@ -376,7 +386,7 @@ class Order extends Wx_Controller {
 				$this->order_service->setOrderIdRules();
 				
 				if(!$this->form_validation->run()){
-					$message = $this->form_validation->error_html();
+					$message = $this->form_validation->error_first_html();
 					break;
 				}
 				
@@ -410,7 +420,7 @@ class Order extends Wx_Controller {
 				$this->_setIsUserOrderRules();
 		
 				if(!$this->form_validation->run()){
-					$this->jsonOutput2($this->form_validation->error_html());
+					$this->jsonOutput2($this->form_validation->error_first_html());
 					break;
 				}
 				
@@ -457,7 +467,7 @@ class Order extends Wx_Controller {
 				$this->form_validation->set_rules('remark','备注','min_length[3]|max_length[100]');
 				
 				if(!$this->form_validation->run()){
-					$this->jsonOutput2($this->form_validation->error_html());
+					$this->jsonOutput2($this->form_validation->error_first_html());
 					break;
 				}
 				

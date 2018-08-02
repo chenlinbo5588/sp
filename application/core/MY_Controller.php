@@ -261,7 +261,7 @@ class MY_Controller extends CI_Controller {
     
     
     protected function _initLibrary(){
-		$this->load->helper(array('form','directory','file', 'url','string'));
+		$this->load->helper(array('form','directory','file', 'url','string','download'));
 		$this->load->driver('cache');
 		$this->load->model(array('Member_Model','Setting_Model','Seo_Model'));
 		$this->load->library(array('user_agent','Form_validation','encrypt','PHPTree','Base_service'));
@@ -522,6 +522,21 @@ class MY_Controller extends CI_Controller {
 	    	->set_status_header(200)
 	    	->set_content_type('application/json')
 	    	->set_output(json_encode($d));
+    }
+    
+    
+    
+    /**
+     * 初始化Excel
+     */
+    protected function _initPHPExcel(){
+    	
+    	require_once PHPExcel_PATH.'PHPExcel.php';
+	    		
+		$cacheMethod = PHPExcel_CachedObjectStorageFactory::cache_to_discISAM; 
+        $cacheSettings = array( 'dir'  => ROOTPATH.'/temp' );
+        PHPExcel_Settings::setLocale('zh_CN');
+        PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
     }
 }
 
