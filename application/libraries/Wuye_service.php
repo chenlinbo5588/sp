@@ -46,7 +46,7 @@ class Wuye_service extends Base_service {
 		
 		self::$CI->load->model(array(
 			'Resident_Model','Building_Model','House_Model','Yezhu_Model',
-			'Feetype_Model','Basic_Data_Model','Repair_Model'
+			'Feetype_Model','Basic_Data_Model','Repair_Model','Repair_Images_Model'
 
 		));
 		

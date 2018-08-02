@@ -178,6 +178,7 @@ class House extends Ydzj_Admin_Controller {
 		
 		if($searchKey){
 			$houseList = $this->House_Model->getList(array(
+				
 				'like' => array(
 					'address' => $searchKey
 				),
@@ -185,57 +186,16 @@ class House extends Ydzj_Admin_Controller {
 			));
 
 			
-			$yezhuIds = array();
-			$houseAssocList = array();
-			
 			foreach($houseList as $houseItem ){
 				
-				if($houseItem['yezhu_id']){
-					$yezhuIds[] = $houseItem['yezhu_id'];
-				}
-
-				if(isset($houseAssocList[$houseItem['yezhu_id']])){
-					$houseAssocList[$houseItem['yezhu_id']][] = $houseItem;
-				}else{
-					$houseAssocList[$houseItem['yezhu_id']] = array();
-					$houseAssocList[$houseItem['yezhu_id']][] = $houseItem;
-				}
-				
-				/*
 				$return[] = array(
 					'id' => $houseItem['id'],
 					'label' => $houseItem['address'],
 					'value' => $houseItem['address'],
-					'name'=>$yezhu['name'],
-					'mobile'=>$yezhu['mobile']
+					'name'=> $houseItem['yezhu_name'],
+					'mobile'=> $houseItem['mobile'],
 				);
-				*/
 			}
-			
-			
-			
-			if($yezhuIds){
-				$yezhuList = $this->Yezhu_Model->getList(array(
-					'select' => 'id,name,mobile',
-					'where_in' => array(
-						array('key' => 'id','value' => $yezhuIds)
-					)
-				),'id');
-			}
-			
-			foreach($houseAssocList as $yezhuKey => $houseSubItems){
-				foreach($houseSubItems as $subItem){
-					$tempYezhuInfo = $yezhuList[$yezhuKey];
-					$return[] = array(
-						'id' => $houseItem['id'],
-						'label' => $houseItem['address'],
-						'value' => $houseItem['address'],
-						'name'=> empty($tempYezhuInfo) == true ? '' : $yezhuList[$yezhuKey]['name'],
-						'mobile'=> empty($tempYezhuInfo) == true ? '' : $yezhuList[$yezhuKey]['mobile'],
-					);
-				}
-			}
-			
 		}
 		
 		$this->jsonOutput2('',$return,false);

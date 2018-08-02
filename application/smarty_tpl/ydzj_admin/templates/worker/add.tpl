@@ -38,7 +38,19 @@
        		<td colspan="2">
        			<ul id="thumbnails" class="thumblists">
        			{foreach from=$fileList item=item}
-       			<li id="{$item['image_aid']}" class="picture"><input type="hidden" name="file_id[]" value="{$item['image_aid']}" /><div class="size-64x64"><span class="thumb"><i></i><a class="fancybox" href="{resource_url($item['image_b'])}" data-fancybox-group="gallery"><img src="{resource_url($item['image_m'])}" alt="" width="64px" height="64px"/></a></span></div><p><span><a href="javascript:del_file_upload('{$item['image_aid']}');">删除</a></span></p></li>
+       			<li id="{$item['image_aid']}" class="picture">
+       				<input type="hidden" name="file_id[]" value="{$item['image_aid']}" />
+       				<div class="size-64x64">
+       					<span class="thumb"><i></i>
+       						<a class="fancybox" href="{resource_url($item['image_b'])}" data-fancybox-group="gallery">
+       							<img src="{resource_url($item['image_m'])}" alt="" width="64px" height="64px"/>
+   							</a>
+   						</span>
+					</div>
+					<p>
+						<span><a href="javascript:del_file_upload('{$item['image_aid']}');">删除</a></span>
+					</p>
+				</li>
        			{/foreach}
        			</ul>
        		</td>

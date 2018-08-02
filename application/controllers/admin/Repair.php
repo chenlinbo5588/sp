@@ -73,6 +73,14 @@ class Repair extends Ydzj_Admin_Controller{
 		
 	}
 	
+	private function _getRules(){
+		$this->form_validation->set_rules('repair_type','报修类型','required');
+		$this->form_validation->set_rules('address','地址','required|in_db_list['.$this->House_Model->getTableRealName().'.address]');
+		$this->form_validation->set_rules('mobile','手机号码','required|valid_mobile');
+		$this->form_validation->set_rules('remark','备注','required');	
+		
+	}
+	
 	/**
 	 * 
 	 */
@@ -80,11 +88,12 @@ class Repair extends Ydzj_Admin_Controller{
 		$feedback = '';
 		
 		if($this->isPostRequest()){
-			$this->form_validation->set_rules('address','地址','required|in_db_list['.$this->House_Model->getTableRealName().'.address]');
-			$this->form_validation->set_rules('mobile','手机号码','required|valid_mobile');
-			$this->form_validation->set_rules('remark','备注','required');	
 			
 			for($i = 0; $i < 1; $i++){
+				
+				$this->_getRules();
+				
+				
 				$info = $this->_prepareData();
 				if(!$this->form_validation->run()){
 					$this->jsonOutput('数据校验失败,'.$this->form_validation->error_string(),array('errors' => $this->form_validation->error_array()));
@@ -94,7 +103,7 @@ class Repair extends Ydzj_Admin_Controller{
 				if(!empty($_POST['address']))
 				{
 					$houseInfo = $this->House_Model->getById(array(
-							'where' => array(
+						'where' => array(
 							'address' => $_POST['address']
 						)
 					));
@@ -115,9 +124,8 @@ class Repair extends Ydzj_Admin_Controller{
 					}
 				}
 				
-				$newid =$this->Repair_Model->_add(array_merge($_POST,$this->_prepareData(),$this->addWhoHasOperated('add')));
+				$newId = $this->Repair_Model->_add(array_merge($_POST,$this->_prepareData(),$this->addWhoHasOperated('add')));
 				$error = $this->Repair_Model->getError();
-				
 				if(QUERY_OK != $error['code']){
 					if($error['code'] == MySQL_Duplicate_CODE){
 						$this->jsonOutput('已被占用');
@@ -127,10 +135,20 @@ class Repair extends Ydzj_Admin_Controller{
 					break;
 				}
 				
-				$this->jsonOutput('保存成功,页面即将刷新',array('redirectUrl' => admin_site_url($this->_className.'/index')));
+				if($_POST['file_id']){
+					$this->Repair_Images_Model->updateByCondition(array(
+						'repair_id' => $newId
+					),array(
+						'where_in' => array(
+							array('key' => 'image_aid','value' => $_POST['file_id'])
+						)
+					));
+				}
+				
+				$this->jsonOutput('保存成功,页面即将刷新',array('redirectUrl' => admin_site_url($this->_className.'/index')));	
+
 			}
 		}else{
-			
 			$this->display();
 		}
 
@@ -178,10 +196,7 @@ class Repair extends Ydzj_Admin_Controller{
 		
 		if($this->isPostRequest()){
 			
-			$this->form_validation->set_rules('address','地址','required|in_db_list['.$this->House_Model->getTableRealName().'.address]');
-			$this->form_validation->set_rules('mobile','手机号码','required|valid_mobile');
-			$this->form_validation->set_rules('remark','备注','required');
-
+			$this->_getRules();
 			
 			for($i = 0; $i < 1; $i++){
 				$info = array_merge($info,$_POST,$this->_prepareData(),$this->addWhoHasOperated('edit'));
@@ -207,7 +222,10 @@ class Repair extends Ydzj_Admin_Controller{
 				$this->jsonOutput('保存成功,页面即将刷新',array('redirectUrl' => admin_site_url($this->_className.'/index')));
 			}
 		}else{
-			
+			$fileList = $this->Repair_Images_Model->getlist(array(
+				'where' => array('repair_id' => $id)
+			));
+			$this->assign('fileList',$fileList);
 			$this->assign('info',$info);
 			$this->display($this->_className.'/add');
 			
@@ -275,35 +293,87 @@ class Repair extends Ydzj_Admin_Controller{
 		
 	public function addimg(){
 		
-		$json = array('error' => 1, 'formhash'=>$this->security->get_csrf_hash(),'id' => 0,'msg' => '上次失败');
+		$json = array('error' => 1, 'formhash'=>$this->security->get_csrf_hash(),'id' => 0,'msg' => '上传失败');
 		
-		$fileData = $this->attachment_service->addImageAttachment('fileupload',array(),FROM_BACKGROUND,'repair');
-
+		$fileData = $this->attachment_service->addImageAttachment('Filedata',array(),FROM_BACKGROUND,'repair');
 		if($fileData){
+			
 			$fileData = $this->attachment_service->resize($fileData);
+			
 			$info = array(
-				'id' => $fileData['id'],
-				'photos' => $fileData['file_url'],
-			);					
+				'repair_id' => $this->input->get_post('id') ? $this->input->get_post('id') : 0,
+				'image_aid' => $fileData['id'],
+				'image' => $fileData['file_url'],
+				'image_b' => !empty($fileData['img_b']) ? $fileData['img_b'] : '',
+				'image_m' => !empty($fileData['img_m']) ? $fileData['img_m'] : '',
+				'uid' => $this->_adminProfile['basic']['uid']
+			);
+			$imageId = $this->Repair_Images_Model->_add($info);
+			if($imageId){
+				$json['error'] = 0;
+				$json['id'] = $fileData['id'];
+				$json['image_id'] = $imageId;
+				$json['url'] = base_url($fileData['file_url']);
+				$json['msg'] = '上传成功';
+				//尽量选择小图
+				if($fileData['img_b']){
+					$json['img_b'] = base_url($fileData['img_b']);
+				}
+				
+				if($fileData['img_m']){
+					$json['img_m'] = base_url($fileData['img_m']);
+				}
+				
+			}else{
+				$json['error'] = 0;
+				$json['msg'] = '系统异常';
+				$this->attachment_service->deleteByFileUrl(array(
+					$fileData['file_url'],
+					$fileData['img_b'],
+					$fileData['img_m'],
+				));
+			}
 			
 		}else{
-		
-			//maybe run here
-			
-			$json['error'] = 0;
-			$json['id'] = $fileData['id'];
-			$json['url'] = base_url($fileData['file_url']);
-			
-			//尽量选择小图
-			if($fileData['img_b']){
-				$json['url'] = base_url($fileData['img_b']);
-			}
+			$json['msg'] = $this->attachment_service->getErrorMsg('','');
 		}
 		
 		exit(json_encode($json));
 		
 	}
-	
+
+
+	public function delimg(){
+		$file_id = intval($this->input->get_post('file_id'));
+		$repair_id = intval($this->input->get_post('id'));
+		
+		
+		if($repair_id){
+			//如果在编辑页面
+			$aaa=$this->Repair_Images_Model->deleteByCondition(array(
+				'where' => array(
+					'image_aid' => $file_id,
+					'repair_id' => $repair_id,
+					'uid' => $this->_adminProfile['basic']['uid']
+				)
+			));
+		}else{
+			//在新增界面，还没有worker id
+			$this->Repair_Images_Model->deleteByCondition(array(
+				'where' => array(
+					'image_aid' => $file_id,
+					'uid' => $this->_adminProfile['basic']['uid']
+				)
+			));
+		}
+		
+		if($file_id){
+			//文件删除，数据库记录不删除
+			$this->attachment_service->deleteFiles($file_id,'all',FROM_BACKGROUND);
+		}
+		
+		$this->jsonOutput('成功',$this->getFormHash());
+	}
 	
 	
 
@@ -313,4 +383,3 @@ class Repair extends Ydzj_Admin_Controller{
 
 
 
-?>
