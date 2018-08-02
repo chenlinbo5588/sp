@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Order extends Ydzj_Admin_Controller {
+class Refund extends Ydzj_Admin_Controller {
 	
 	public $_moduleTitle;
 	public $_className;
@@ -9,9 +9,9 @@ class Order extends Ydzj_Admin_Controller {
 	public function __construct(){
 		parent::__construct();
 		
-		$this->load->library(array('Order_service'));
+		$this->load->library(array('Order_service','Basic_data_service'));
 		
-		$this->_moduleTitle = '订单';
+		$this->_moduleTitle = '退款订单';
 		$this->_className = strtolower(get_class());
 		
 		$this->assign(array(
@@ -23,12 +23,8 @@ class Order extends Ydzj_Admin_Controller {
 		
 		$this->_subNavs = array(
 			array('url' => $this->_className.'/index','title' => '管理'),
-			array('url' => $this->_className.'/unpay','title' => '未支付'),
-			array('url' => $this->_className.'/payed','title' => '已支付'),
-			array('url' => $this->_className.'/cancel','title' => '已关闭'),
-			array('url' => $this->_className.'/deleted','title' => '已删除'),
 		);
-		
+
 	}
 	
 	
@@ -89,69 +85,19 @@ class Order extends Ydzj_Admin_Controller {
 		
 	}
 	
-	
 	/**
 	 * 获得列表
 	 */
 	public function index(){
 		
-		$this->_searchCondition();
-		$this->display($this->_className.'/index');
-	}
-	
-	
-	
-	/**
-	 * 未支付
-	 */
-	public function unpay(){
 		$this->_searchCondition(array(
-			'status' => OrderStatus::$unPayed
+			'status' => OrderStatus::$refounding
 		));
-		
-		$this->display($this->_className.'/index');
-	}
-	
-	
-	/**
-	 * 已支付
-	 */
-	public function payed(){
-		$this->_searchCondition(array(
-			'status' => OrderStatus::$payed
-		));
-		
-		$this->display($this->_className.'/index');
-	}
-	
-	
-	
-	/**
-	 * 已取消
-	 */
-	public function cancel(){
-		$this->_searchCondition(array(
-			'status' => OrderStatus::$closed
-		));
-		
 		$this->display($this->_className.'/index');
 	}
 	
 	/**
-	 * 已删除
-	 */
-	public function deleted(){
-		$this->_searchCondition(array(
-			'status' => OrderStatus::$deleted
-		));
-		
-		$this->display($this->_className.'/index');
-	}
-	
-	
-	
-	/**
-	 * 校验退款数据
+	 *设置规则
 	 */
 	private function _getVerifyRules(){
 		
@@ -161,108 +107,48 @@ class Order extends Ydzj_Admin_Controller {
 	}
 	
 	/**
-	 * 批量删除
+	 * 批量审核
 	 */
-	public function batch_delete(){
+	public function batch_verify(){
 		
-		$ids = $this->input->post('id');
-		
-		
+		if($this->isPostRequest()){
+				
+			$this->_getVerifyRules();
+			
+			for($i = 0; $i < 1 ; $i++){
+			
+				if(!$this->form_validation->run()){
+					$this->jsonOutput('数据校验失败,'.$this->form_validation->error_html('<div>','<div>'),array('errors' => $this->form_validation->error_array()));
+					break;
+				}
+				$id = $this->input->post('id');
+				$idAr = explode(',',$id);
+				$op = $this->input->get_post('op');
 	
-		if($this->isPostRequest() && !empty($ids)){
-		
-			if(!is_array($ids)){
-				$ids = (array)$ids;
+				$returnVal = $this->order_service->orderVerify(array(
+					'op' => $op,
+					'id' => $idAr,
+					'reason' => $this->input->post('reason'),
+					'remark' => $this->input->post('remark')
+				),$this->_reqtime, $this->addWhoHasOperated('verify'));
+				
+			
+				if($returnVal < 0){
+					$this->jsonOutput('服务器发生错误,'.$op.'操作失败');
+					break;
+				}
+				
+				$this->jsonOutput($op.'操作成功',array('redirectUrl' => $this->lastUrl));
 			}
-			
-			$this->order_service->updateOrderStatusByIds($ids,OrderStatus::$deleted);
-			
-			$this->jsonOutput('删除成功',array('jsReload' => true));
-			
 		}else{
-			$this->jsonOutput('请求非法',$this->getFormHash());
+			$this->assign('id',implode(',',$this->input->get_post('id')));
 			
+			$this->assign(array(
+				'reasonList' => $this->basic_data_service->getTopChildList('退款原因'),
+			));
+			$this->display();
 		}
 	}
-	
-	
-	/**
-	 * 删除
-	 */
-	public function single_delete(){
-		
-		$ids = $this->input->get_post('id');
-		
-		if($this->isPostRequest() && !empty($ids)){
-		
-			if(!is_array($ids)){
-				$ids = (array)$ids;
-			}
-			
-			$this->order_service->updateOrderStatusByIds($ids,OrderStatus::$deleted);
-  			
-			$this->jsonOutput('删除成功',array('redirectUrl' => $this->lastUrl));
-			
-		}else{
-			$this->jsonOutput('请求非法',$this->getFormHash());
-			
-		}
-	}
-	
-	/**
-	 * 批量关闭
-	 */
-	public function batch_close(){
-		
-		$ids = $this->input->post('id');
-	
-		if($this->isPostRequest() && !empty($ids)){
-		
-			if(!is_array($ids)){
-				$ids = (array)$ids;
-			}
-			
-			$this->order_service->updateOrderStatusByIds($ids,OrderStatus::$closed);
-			
-			$this->jsonOutput('关闭成功',array('jsReload' => true));
-			
-		}else{
-			
-			$this->jsonOutput('请求非法',$this->getFormHash());
-		}
-		
-	}
-	
-	/**
-	 * 关闭
-	 */
-	public function single_close(){
-		
-		$ids = $this->input->get_post('id');
-		
-		if($this->isPostRequest() && !empty($ids)){
-			
-			if(!is_array($ids)){
-				$ids = (array)$ids;
-			}
-			
-			
-			$this->order_service->updateOrderStatusByIds($ids,OrderStatus::$closed);
-			
-			$this->jsonOutput('删除成功',array('redirectUrl' => $this->lastUrl));
-			
-  			$jumpUrl = $this->session->userdata('jumpUrl');
-  			$this->session->unset_userdata('jumpUrl');
-  			
-			$this->jsonOutput('关闭成功',array('redirectUrl' => $jumpUrl));
-
-		}else{
-			$this->jsonOutput('请求非法',$this->getFormHash());
-		}
-		
-		
-	}
-	
 	
 	/**
 	 * 解析自定义额外信息
@@ -282,7 +168,7 @@ class Order extends Ydzj_Admin_Controller {
 				$item['extra_info']=$item['extra_info']."面试时间: ".$value." ";
 			}else if('address' == $key){
 				$item['extra_info']=$item['extra_info']."面试地址: ".$value." ";
-			}else if('remark' == $key){
+			}else if('reason' == $key){
 				$item['extra_info']=$item['extra_info']."退款原因: ".$value." ";
 			}else if('remark' == $key){
 				$item['extra_info']=$item['extra_info']."备注: ".$value." ";
@@ -317,19 +203,19 @@ class Order extends Ydzj_Admin_Controller {
 	 	return $item;
 	}
 	
-	
 	/**
 	 * 转译
 	 */
+	
 	private function _valueChange($info){
 		
-		$item = $info;
+		$item= $info;
 		
 		switch($info['pay_channel']){
 			case 1:
 				$item['pay_channel']="微信支付";
 				break;
-			case 1:
+			case 2:
 				break;
 			default:
 				break;
@@ -344,7 +230,7 @@ class Order extends Ydzj_Admin_Controller {
 				break;
 		}
 		
-		
+	
 		if(!empty($info['extra_info'])){
 			
 			$item['extra_info'] ="";
@@ -358,19 +244,13 @@ class Order extends Ydzj_Admin_Controller {
 			}else{
 				$item = $this->_wuyeOrderExtra($arr);
 			}
-			
 		}
-		
 		return $item;
-	}
-	
-	
-	/**
-	 * 详情
-	 */
-	public function detail(){
 		
-		$this->session->set_userdata('jumpUrl',$this->lastUrl);
+	}	
+	
+	
+	public function detail(){
 		
 		$id = $this->input->get_post('id');
 		$info = $this->Order_Model->getFirstByKey($id);
@@ -383,10 +263,57 @@ class Order extends Ydzj_Admin_Controller {
   		$this->assign('info',$info);
 		$this->assign('item',$item);
 		
+		$this->assign(array(
+			'reasonList' => $this->basic_data_service->getTopChildList('退款原因'),
+		));
 		
 		$this->display();
+	}
+	/**
+	 * 退款
+	 * 
+	 */
+	public function refund(){
+		
+		$id = $this->input->get_post('id');
+		$info = $this->Order_Model->getFirstByKey($id);
+		$this->_subNavs[] = array('url' => $this->_className.'/refund?id='.$id, 'title' => '审核');
+		
+		if($this->isPostRequest()){
+			
+			$this->_getVerifyRules();
+			for($i = 0; $i < 1; $i++){
+				if(!$this->form_validation->run()){
+					$this->jsonOutput('数据校验失败,'.$this->form_validation->error_html('<div>','<div>'),array('errors' => $this->form_validation->error_array()));
+					break;
+				}
+				$op =$this->input->get_post('op');
+				
+				$this->order_service->setWeixinAppConfig(config_item('mp_xcxCswy'));
+				
+				$returnVal = $this->order_service->createRefundOrder($info);
+
+				if(empty($returnVal)){
+					$this->jsonOutput('服务器发生错误,'.$op.'操作失败');
+					break;
+				}
+				$this->jsonOutput($op.'操作成功',array('jsReload' => true));
+			}
+		}else{
+			
+			$info = $this->Order_Model->getFirstByKey($id);	
+			$this->assign(array(
+				'info' => $info,		
+			));		
+			$this->assign(array(
+				'reasonList' => $this->basic_data_service->getTopChildList('退款原因'),
+			));
+			$this->display();
+		}
 		
 	}
-
+	
+	
+	
 	
 }

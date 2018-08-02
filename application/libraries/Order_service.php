@@ -512,10 +512,57 @@ class Order_service extends Base_service {
 		}
 		
 	}
+	
+	/**
+	 * 更新订单状态
+	 */
+	public function updateOrderStatusByIds($pIds,$newStatus){
+		
+		if(empty($pIds)){
+			return false;
+		}
+		
+		if(!in_array(array_keys(OrderStatus::$statusName),$newStatus)){
+			return false;
+		}
+		
+		return $this->Order_Model->updateByCondition(array(
+			'status' => $newStatus
+		),array(
+			'where_in' => array(
+				array('key'=> 'id', 'value' => $pIds )
+			)
+		));
+		
+	}
+	
+	
+	public function orderVerify($param ,$when, $who){
+		$updateData = array(
+			'reason' => $param['reason'],
+			'remark' =>	empty($param['remark']) == true ? '' : trim($param['remark']) 
+		);
+		
+		switch($param['op']){
+			case '审核通过':
+				$updateData['status'] = OrderStatus::$refounded;
+				$updateData = array_merge($updateData,$who);
+				$updateData['verify_time'] = $when;
+				break;
+			case '退回':
+				$updateData['status'] = OrderStatus::$closed;
+				break;
+			default:
+				break;
+		}
+		
+		return $this->_orderModel->updateByCondition($updateData,array(
+			'where_in' => array(
+				array('key' => 'id', 'value' => $param['id'])
+			)
+		));
+	}
 
-	
-	
-	
 	
 	////////////验证规则/////////////////
 	

@@ -15,6 +15,7 @@ class MY_Controller extends CI_Controller {
 	public $_siteSetting = array();
 	public $_seoSetting = array();
 	
+	public $lastUrl = '';
 	
 	public $_seo = array(
 		'SEO_title' => '',
@@ -199,6 +200,15 @@ class MY_Controller extends CI_Controller {
     	$this->config->set_item('background_image_allow_ext',$this->_siteSetting['background_image_allow_ext']);
     	$this->config->set_item('forground_image_allow_ext',$this->_siteSetting['forground_image_allow_ext']);
     	
+    	
+    	$gobackUrl = $this->input->get_post('gobackUrl');
+		if(empty($gobackUrl)){
+			$gobackUrl = $this->input->server('HTTP_REFERER');
+		}
+		
+		$this->lastUrl = $gobackUrl;
+		
+    	
     }
     
     
@@ -336,11 +346,7 @@ class MY_Controller extends CI_Controller {
     	$this->loadPageLang();
     	
     	
-    	$gobackUrl = $this->input->get_post('gobackUrl');
-		if(empty($gobackUrl)){
-			$gobackUrl = $this->input->server('HTTP_REFERER');
-		}
-		
+    	
 		
 		foreach($tplDir as $tplDirItem){
 			
@@ -372,7 +378,7 @@ class MY_Controller extends CI_Controller {
 			'subNavs' => $this->_subNavs,
             'uri_string' => $this->uri->uri_string,
             'PHPSESSID' => $this->session->session_id,
-            'gobackUrl' => $gobackUrl
+            'gobackUrl' => $this->lastUrl
         ));
     	
     	

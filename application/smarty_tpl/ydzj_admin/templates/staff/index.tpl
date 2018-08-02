@@ -67,6 +67,7 @@
          	<div>{$statusConfig[$item['status']]}</div>
          	<div>{$item['reason']|escape}</div>
          </td>
+         
          <td>{$item['mobile']}</td>
          <td>{$item['address']|escape}</td>
          <td>

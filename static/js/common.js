@@ -807,7 +807,10 @@ function bindDeleteEvent(pSetting, customSuccessFn,customErrorFn){
  * ajax 提交
  * @param classname
  */
-function bindAjaxSubmit(classname){
+function bindAjaxSubmit(classname,setting){
+	var defaultSetting = { showComfirm : false };
+	setting  = setting ? setting :  {};
+	setting = $.extend(defaultSetting,setting );
 	
 	var lockFn = function(btn,name,lock){
 		btn.attr('disabled',lock);
@@ -820,7 +823,7 @@ function bindAjaxSubmit(classname){
 		}
 	}
 	
-	var ajaxSubmitFn = function(submitBtn){
+	var ajaxSubmitFn = function(submitBtn,url){
 		
 		var opName = submitBtn.prop('value');
 		var formObj = $(submitBtn).parents('form');
@@ -847,7 +850,10 @@ function bindAjaxSubmit(classname){
 		}else{
 			formActionUrl = formActionUrl + '&op=' + encodeURIComponent(opName);
 		}
-
+		
+		if(url){
+			formActionUrl = url;
+		}
 		
 		$.ajax({
 			type:'POST',
@@ -920,7 +926,35 @@ function bindAjaxSubmit(classname){
 	
 	$(classname + " input[type=submit]").bind('click',function(){
 		//console.log($(this));
-		ajaxSubmitFn($(this));
+		var that = $(this);
+		var url = that.attr('data-url');
+		
+		if(setting.showComfirm){
+			
+			commonDialog = $("#showDlg" ).dialog({
+				title: "提示",
+				autoOpen: false,
+				width: 280,
+				position: that ? { my: "center", at: "center", of: that } : null,
+				modal: true,
+			      buttons: {
+			        "确定": function(){
+			        	
+			        	ajaxSubmitFn(that,url);
+			        },
+			        "关闭": function() {
+			        	commonDialog.dialog( "close" );
+			        }
+			   },
+			   open:function(){
+				  
+			   }
+			}).html('<span class="ui-icon ui-icon-alert fl"></span><strong>' + that.attr('data-title') + '</strong>').dialog("open");
+		}else{
+			ajaxSubmitFn(that,url);
+		}
+		
+		
 		return false;
 	});
 	

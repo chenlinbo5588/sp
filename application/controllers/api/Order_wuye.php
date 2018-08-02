@@ -111,12 +111,20 @@ class PayNotifyCallBack extends WxPayNotify
 			
 		}else if($affectRow == 0){
 			
-			$this->_ci->Order_Model->rollBackTrans();
-			
 			$shortInfo = $this->_ci->Order_Model->getFirstByKey($data['out_trade_no'],'order_id','status');
 			if($shortInfo['status'] == OrderStatus::$payed){
+				
+				if($this->_ci->Order_Model->getTransStatus() === FALSE){
+					return false;
+				}
+				
+				$this->_ci->Order_Model->commitTrans();
+				
 				return true;
 			}else{
+				
+				$this->_ci->Order_Model->rollBackTrans();
+				
 				$msg = "订单数据更新失败";
 				return false;
 			}

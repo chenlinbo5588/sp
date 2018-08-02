@@ -332,6 +332,7 @@ input[type=checkbox],input[type=radio] {
 /* tb */
 .tb-type2{}
     .tb-type2 tr.hover:hover .tips2{ color:#333; }
+    .tb-type2 th {font-weight:bold;}
     .tb-type2 td, tb-type2 th.td{ padding:5px 5px 3px 0; border-top: 1px dotted #CBE9F3; }
     .tb-type2 .tfoot td {padding:5px 5px 3px 0; border-top: 1px solid #CBE9F3;}
     .tb-type2 th{ padding:5px 5px 3px 0; line-height:21px; font-size: 12px; }

@@ -498,7 +498,7 @@ $(function(){
                 <dd>
                   <ol>
                     <li><a href="javascript:void(0);" id="index_order" onclick="openItem('index,order,trade');">订单管理</a></li>
-                    <li><a href="javascript:void(0);" id="refund_order" onclick="openItem('refund,order,trade');">退款管理</a></li>
+                    <li><a href="javascript:void(0);" id="index_refund" onclick="openItem('index,refund,trade');">退款管理</a></li>
                     <li><a href="javascript:void(0);" id="returned_order" onclick="openItem('returned,order,trade');">退货管理</a></li>
                     <li><a href="javascript:void(0);" id="index_order_type" onclick="openItem('index,order_type,trade');">订单类型</a></li>
                   </ol>
