@@ -439,6 +439,7 @@ class MY_Model extends CI_Model {
         	$totalPage = ceil($total_rows/$condition['pager']['page_size']);
             if($condition['pager']['current_page'] > $totalPage){
             	//不能大于最大页数
+            	$condition['where'][' 1 = 0 '] = null;
             	$condition['pager']['current_page'] = $totalPage == 0 ? 1 : $totalPage;
             }
             

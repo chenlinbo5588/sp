@@ -72,9 +72,10 @@ class Order_service extends Base_service {
 		
 		$this->_orderTypeModel = self::$CI->Order_Type_Model;
 		
+		$tempType =  $this->_orderTypeModel->getList();
 		self::$orderType = array(
-			'idKey' => $this->_orderTypeModel->getList(array(),'id'),
-			'nameKey' => $this->_orderTypeModel->getList(array(),'name'),
+			'idKey' => $this->toEasyUseArray($tempType,'id'),
+			'nameKey' => $this->toEasyUseArray($tempType,'name'),
 		);
 	}
 	
