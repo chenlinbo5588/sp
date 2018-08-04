@@ -40,6 +40,10 @@ class Wx_Controller extends MY_Controller {
 			$this->postJson = json_decode($GLOBALS["HTTP_RAW_POST_DATA"],true);
 		}
 		
+		if(empty($this->postJson)){
+			$this->postJson = array();
+		}
+		
 		$this->sessionInfo = $this->session->all_userdata();
 		
 		//微信用户

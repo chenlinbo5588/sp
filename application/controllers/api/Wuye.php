@@ -66,6 +66,134 @@ class Wuye extends Wx_Controller {
 	
 	}
 	
+
+	 /**
+	  *  发起维修请求
+	 */
+	public function createRepair(){
+		
+		if($this->yezhuInfo){
+		
+			for($i = 0; $i < 1; $i++){
+				
+				$condition = array(
+					'where' => array(
+						'yezhu_id' => $this->yezhuInfo['id']
+					),
+					'order' => 'id DESC',
+					'limit' => 1,
+					'status' => 4 //@todo modify
+				);
+				
+      			
+      			$lastRepair = $this->Repair_Model->getList($condition);
+      			if($lastRepair){
+      				if(($this->_reqtime - $lastRepair[0]['gmt_create']) < 300 ){
+	      				$this->jsonOutput2("维修订单5分钟只能创建一次，请先等待原报修处理完成");
+	      				break;
+	      			}
+      			}
+      			
+      			
+      			$repairTypeList = RepairType::$statusName;
+      			
+      			$repair_type = $this->postJson['repairType'];  			
+      			$address = $this->postJson['address'];
+				$remark = $this->postJson['remark']; 
+				$filePaths = $this->postJson['FilePaths']; 
+		
+      			$this->form_validation->set_data($this->postJson);
+      			
+      			$this->form_validation->set_rules('repairType','报修类型','required|in_list['.implode(',',array_keys($repairTypeList)).']');
+      			
+      			$this->form_validation->set_rules('remark','报修描述','required|min_length[2]|max_length[100]');	
+      			$this->form_validation->set_rules('address','地址','required|min_length[2]|max_length[100]');
+      			
+      			
+      			if(!$this->form_validation->run()){
+					$this->jsonOutput2("参数错误",$this->form_validation->error_array());
+					break;
+				}
+				
+      			$repairOrder =	array (
+      				'repair_type' => $repair_type,
+      				'remark'  => $remark,	
+      				'address' => $address,
+      				'yezhu_id'	=> $this->yezhuInfo['id'],  				
+					'yezhu_name'	=> $this->yezhuInfo['name'],
+					'mobile'	=> $this->yezhuInfo['mobile'],
+					'add_uid'	=>  $this->yezhuInfo['id'],
+					'add_username'	=>  $this->yezhuInfo['name'],
+      			);
+   		
+      			$newRepairId = $this->Repair_Model->_add($repairOrder);
+      			
+      			$batchInsert = array();
+      			foreach($filePaths as $key => $imgUrl){
+      				$imgArray = getImgPathArray($imgUrl,array('m','b'),'image');
+      				$batchInsert[] = array_merge(array('repair_id' => $newRepairId,'uid' => $this->yezhuInfo['id']),$imgArray);
+      			}
+      			
+      			$insertRows = $this->Repair_Images_Model->batchInsert($batchInsert);
+				$this->jsonOutput2(RESP_SUCCESS);
+			
+			}
+			
+		}else{
+			$this->jsonOutput2(UNBINDED,$this->unBind);
+		}
+	
+	}
+
+	/**
+	 * 文件上传
+	 */
+	public function repairImgUpload(){
+		
+		$uploadname = 'image';
+		
+		if($this->yezhuInfo){
+			
+			$this->load->library('Attachment_service');
+			$json = $this->attachment_service->pic_upload($this->yezhuInfo['uid'],$uploadname,1,'repair');
+			$json['message'] = $json['msg'];
+			
+			@unlink($_FILES[$uploadname]['tmp_name']);
+			
+			$this->jsonOutput2(RESP_SUCCESS,$json);
+			
+			
+		}else{
+			$this->jsonOutput2(UNBINDED,$this->unBind);
+		}
+		
+	}
+	/**
+	 * 获取业主信息
+	 */
+	public function getYezhuDetail(){
+		
+		if($this->yezhuInfo){
+			
+			$detail =array(
+				'mobile'=>$this->yezhuInfo['mobile'],
+				'name' =>$this->yezhuInfo['name'],
+				'repairTypeList' => RepairType::$statusName
+			);
+			
+			if($detail){
+				$this->jsonOutput2(RESP_SUCCESS,$detail);
+			}else{
+				$this->jsonOutput2(RESP_ERROR);
+			}
+			
+		}else{
+			$this->jsonOutput2(UNBINDED,$this->unBind);
+		}
+		
+		
+	}
+	
 	
 	/**
 	 * 缴费,物业参数 以及缴费参数
