@@ -100,8 +100,7 @@ class Article_Class extends Ydzj_Admin_Controller {
 			for($i = 0; $i < 1; $i++){
 				
 				$info = array(
-					'name_cn' => $this->input->post('name_cn'),
-					'name_en' => $this->input->post('name_en'),
+					'name' => $this->input->post('name'),
 					'ac_code' => strtolower(trim($this->input->post('ac_code'))),
 					'ac_parent_id' => $this->input->post('ac_parent_id') ? $this->input->post('ac_parent_id') : 0,
 					'ac_sort' => $this->input->post('ac_sort') ? $this->input->post('ac_sort') : 255
@@ -236,8 +235,7 @@ class Article_Class extends Ydzj_Admin_Controller {
 	
 	private function _getRules($action = 'add'){
 		
-		$this->form_validation->set_rules('name_cn','文章分类中文名称',"required");
-		$this->form_validation->set_rules('name_en','文章分类英文名称',"required");
+		$this->form_validation->set_rules('name','文章分类名称',"required");
 		$this->form_validation->set_rules('ac_code','文章分类目录代码',"required|alpha_numeric");
 		
 		
@@ -269,8 +267,7 @@ class Article_Class extends Ydzj_Admin_Controller {
 				
 				$info = array(
 					'ac_id' => $ac_id,
-					'name_cn' => $this->input->post('name_cn'),
-					'name_en' => $this->input->post('name_en'),
+					'name' => $this->input->post('name'),
 					'ac_code' => strtolower(trim($this->input->post('ac_code'))),
 					'ac_parent_id' => $this->input->post('ac_parent_id') ? $this->input->post('ac_parent_id') : 0,
 					'ac_sort' => $this->input->post('ac_sort') ? $this->input->post('ac_sort') : 255

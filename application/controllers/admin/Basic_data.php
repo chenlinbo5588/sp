@@ -32,13 +32,29 @@ class Basic_Data extends Ydzj_Admin_Controller {
 	
 	
 	/**
+	 * 
+	 */
+	private function _getValidTree(){
+		
+		return $this->basic_data_service->getBasicDataTreeHTML(array(
+			'where' => array(
+				'status' => 1
+			)
+		));
+		
+	}
+	
+	
+	/**
 	 * 树形显示
 	 */
 	public function category(){
 		
 		$id = $this->input->get_post('pid') ? $this->input->get_post('pid') : 0;
 		
-		$treelist = $this->basic_data_service->getBasicDataTreeHTML();
+		$treelist = $this->_getValidTree();
+		
+		
 		$deep = 0;
 		
 		
@@ -51,7 +67,12 @@ class Basic_Data extends Ydzj_Admin_Controller {
 			}
 		}
 		
-		$list = $this->Basic_Data_Model->getByParentId($id);
+		
+		$list = $this->Basic_Data_Model->getList(array(
+			'where' => array('pid' => $id,'status' => 1),
+			'order' => 'displayorder ASC'
+		),'id');
+		
 		
 		$this->assign(array(
 			'list' => $list,
@@ -70,52 +91,32 @@ class Basic_Data extends Ydzj_Admin_Controller {
 	 */
 	public function index(){
 		
-		if($this->input->is_ajax_request() && $this->isPostRequest()){
-			
-			$this->form_validation->set_rules('fieldname','状态字段','required|in_list[enable]');
-			$this->form_validation->set_rules('enabled','状态','required|in_list[0,1]');
-			
-			if($this->form_validation->run()){
-				
-				$upInfo[$this->input->post('fieldname')] = $this->input->post('enabled');
-				
-				$this->Basic_Data_Model->update($upInfo,array('id' => $this->input->post('id')));
-				
-				$this->jsonOutput('保存成功', $this->getFormHash());
-				
-			}else{
-				$this->jsonOutput('保存失败 '.$this->form_validation->error_string(),$this->getFormHash());
-			}
-			
-		}else{
-			
-			$currentPage = $this->input->get_post('page') ? $this->input->get_post('page') : 1;
+		$currentPage = $this->input->get_post('page') ? $this->input->get_post('page') : 1;
+	
+		$condition = array(
+			'order' => 'displayorder ASC',
+			'pager' => array(
+				'page_size' => config_item('page_size'),
+				'current_page' => $currentPage,
+				'call_js' => 'search_page',
+				'form_id' => '#formSearch'
+			)
+		);
 		
-			$condition = array(
-				'order' => 'displayorder ASC',
-				'pager' => array(
-					'page_size' => config_item('page_size'),
-					'current_page' => $currentPage,
-					'call_js' => 'search_page',
-					'form_id' => '#formSearch'
-				)
-			);
-			
-			
-			$name = $this->input->get_post('search_name');
-			if($name){
-				$condition['like']['show_name'] = $name;
-			}
-			
-			$list = $this->Basic_Data_Model->getList($condition);
-			
-			
-			$this->assign('list',$list);
-			$this->assign('page',$list['pager']);
-			$this->assign('currentPage',$currentPage);
-			
-			$this->display();
+		
+		$name = $this->input->get_post('search_name');
+		if($name){
+			$condition['like']['show_name'] = $name;
 		}
+		
+		$list = $this->Basic_Data_Model->getList($condition);
+		
+		
+		$this->assign('list',$list);
+		$this->assign('page',$list['pager']);
+		$this->assign('currentPage',$currentPage);
+		
+		$this->display();
 		
 	}
 	
@@ -185,7 +186,8 @@ class Basic_Data extends Ydzj_Admin_Controller {
 		$feedback = '';
 		$info = array();
 		
-		$treelist = $this->basic_data_service->getBasicDataTreeHTML();
+		$treelist = $this->_getValidTree();
+		
 		
 		$pid = $this->input->get_post('pid');
 		if($pid){
@@ -211,7 +213,7 @@ class Basic_Data extends Ydzj_Admin_Controller {
 					break;
 				}
 				
-				$treelist = $this->basic_data_service->getBasicDataTreeHTML();
+				$treelist = $this->_getValidTree();
 				
 				$feedback = getSuccessTip('保存成功,页面将再3秒内自动刷新');
 				$info = $this->Basic_Data_Model->getFirstByKey($newid);
@@ -299,7 +301,8 @@ class Basic_Data extends Ydzj_Admin_Controller {
 		
 		$this->_subNavs[] = array('url' => $this->_className.'/edit?id='.$id, 'title' => '编辑');
 		
-		$treelist = $this->basic_data_service->getBasicDataTreeHTML();
+		$treelist = $this->_getValidTree();
+		
 		$info = $this->Basic_Data_Model->getFirstByKey($id);
 		
 		if($this->isPostRequest()){
@@ -320,7 +323,7 @@ class Basic_Data extends Ydzj_Admin_Controller {
 					break;
 				}
 				
-				$treelist = $this->basic_data_service->getBasicDataTreeHTML();
+				$treelist = $this->_getValidTree();
 				
 				$feedback = getSuccessTip('保存成功');
 			}

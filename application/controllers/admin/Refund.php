@@ -17,12 +17,15 @@ class Refund extends Ydzj_Admin_Controller {
 		$this->assign(array(
 			'moduleTitle' => $this->_moduleTitle,
 			'moduleClassName' => $this->_className,
-			'OrderStatus' => OrderStatus::$statusName
+			'OrderStatus' => OrderStatus::$statusName,
+			'OrderVerify' => OrderVerify::$statusName,
 		));
-		
 		
 		$this->_subNavs = array(
 			array('url' => $this->_className.'/index','title' => '管理'),
+			array('url' => $this->_className.'/unverify','title' => '未审核'),
+			array('url' => $this->_className.'/verifyok','title' => '已审核'),
+			array('url' => $this->_className.'/sendback','title' => '已退回'),
 		);
 
 	}
@@ -43,7 +46,7 @@ class Refund extends Ydzj_Admin_Controller {
 		$search = array_merge($search,$moreSearchVal);
 		
 		$condition = array(
-			'where' => array_merge(array(),$moreSearchVal),
+			'where' => array_merge(array('is_refund' => 1),$moreSearchVal),
 			'order' => 'id DESC',
 			'pager' => array(
 				'page_size' => config_item('page_size'),
@@ -90,11 +93,48 @@ class Refund extends Ydzj_Admin_Controller {
 	 */
 	public function index(){
 		
-		$this->_searchCondition(array(
-			'status' => OrderStatus::$refounding
-		));
+		$this->_searchCondition();
 		$this->display($this->_className.'/index');
 	}
+	
+	
+	/**
+	 * 未审核
+	 */
+	public function unverify(){
+		
+		$this->_searchCondition(array(
+			'verify_status' => OrderVerify::$unVerify
+		));
+		
+		$this->display($this->_className.'/index');
+	}
+	
+	/**
+	 * 已审核
+	 */
+	public function verifyok(){
+		
+		$this->_searchCondition(array(
+			'verify_status' => OrderVerify::$verifyOK
+		));
+		
+		$this->display($this->_className.'/index');
+	}
+	
+	/**
+	 * 已退回
+	 */
+	public function sendback(){
+		
+		$this->_searchCondition(array(
+			'verify_status' => OrderVerify::$sendBack
+		));
+		
+		$this->display($this->_className.'/index');
+	}
+	
+	
 	
 	/**
 	 *设置规则
@@ -107,207 +147,185 @@ class Refund extends Ydzj_Admin_Controller {
 	}
 	
 	/**
-	 * 批量审核
+	 * 审核
 	 */
-	public function batch_verify(){
+	public function verify(){
+		
 		
 		if($this->isPostRequest()){
 				
-			$this->_getVerifyRules();
+			$this->form_validation->set_rules('id','记录ID必填','required');
+			$this->form_validation->set_rules('remark','备注','required|min_length[2]|max_length[100]');
 			
 			for($i = 0; $i < 1 ; $i++){
 			
 				if(!$this->form_validation->run()){
-					$this->jsonOutput('数据校验失败,'.$this->form_validation->error_html('<div>','<div>'),array('errors' => $this->form_validation->error_array()));
+					$this->jsonOutput('数据校验失败',array('errors' => $this->form_validation->error_array()));
 					break;
 				}
-				$id = $this->input->post('id');
-				$idAr = explode(',',$id);
-				$op = $this->input->get_post('op');
-	
-				$returnVal = $this->order_service->orderVerify(array(
-					'op' => $op,
-					'id' => $idAr,
-					'reason' => $this->input->post('reason'),
-					'remark' => $this->input->post('remark')
-				),$this->_reqtime, $this->addWhoHasOperated('verify'));
 				
-			
-				if($returnVal < 0){
+				//目前只能单条
+				$id = $this->input->post('id');
+				//$idAr = explode(',',$id);
+				$op = $this->input->get_post('op');
+				
+				$refundOrder = $this->order_service->getOrderInfoById($id);
+				$updateData = array(
+					'verify_time' => $this->_reqtime,
+				);
+				
+				
+				switch($op){
+					case '审核通过':
+						$updateData['verify_status'] = OrderVerify::$verifyOK;
+						break;
+					case '退回':
+						$updateData['status'] = OrderStatus::$closed;
+						$updateData['verify_status'] = OrderVerify::$sendBack;
+						break;
+					default:
+						break;
+				}
+				
+				
+				$updateData['extra_info'] = json_encode(array_merge($refundOrder['extra_info'],array('verify_remark' => $this->input->post('remark'))));
+				$updateData = array_merge($updateData,$this->addWhoHasOperated('verify'));
+				
+				$affectRow = $this->Order_Model->updateByCondition($updateData,array(
+					'where' => array(
+						'id' => $id,
+						'status' => OrderStatus::$refounding
+					)
+				));
+				
+				if($affectRow <= 0){
 					$this->jsonOutput('服务器发生错误,'.$op.'操作失败');
 					break;
 				}
 				
-				$this->jsonOutput($op.'操作成功',array('redirectUrl' => $this->lastUrl));
+				$this->jsonOutput($op.'操作成功',array('jsReload' => true));
 			}
 		}else{
-			$this->assign('id',implode(',',$this->input->get_post('id')));
-			
 			$this->assign(array(
-				'reasonList' => $this->basic_data_service->getTopChildList('退款原因'),
+				'id' => $this->input->get_post('id'),
 			));
+			
 			$this->display();
 		}
 	}
 	
-	/**
-	 * 解析自定义额外信息
-	 */
-	private function _staffOrderExtra($extraJson){
-		
-		$item = array();
-		
-		foreach ($extraJson as $key => $value) {
-			
-			if('cart' == $key){
-				$item['extra_info']=$item['extra_info']."预约人姓名: ";
-				foreach ($value as $key2 => $value2) {
-					$item['extra_info'] = $item['extra_info'].$value2['name']." ";
-		 		}
-			}else if('meet_time' == $key){
-				$item['extra_info']=$item['extra_info']."面试时间: ".$value." ";
-			}else if('address' == $key){
-				$item['extra_info']=$item['extra_info']."面试地址: ".$value." ";
-			}else if('reason' == $key){
-				$item['extra_info']=$item['extra_info']."退款原因: ".$value." ";
-			}else if('remark' == $key){
-				$item['extra_info']=$item['extra_info']."备注: ".$value." ";
-			}		
-	 	}
-		
-		return $item;
-	}
 	
 	
 	/**
-	 * 解析物业能耗费自定义数据
+	 * 订单详情
 	 */
-	private function _wuyeOrderExtra($extraJson){
-		
-		$item = array();
-		
-		foreach( $extraJson as $key => $value ){
-			if('fee_start'  == $key){
-				$value =date('Y-m-d', $value);
-				$item['extra_info']=$item['extra_info']."上次缴费到期时间: ".$value." ";
-			}else if('fee_expire'  == $key){
-				$value =date('Y-m-d', $value);
-				$item['extra_info']=$item['extra_info']."本次缴费到期时间: ".$value." ";
-			}else if('reason' == $key){
-	 		 	$item['extra_info']=$item['extra_info']."退款原因: ".$value." ";
-	 		}else  if('remark' ==$key){
-	 		 	$item['extra_info']=$item['extra_info']."备注: ".$value." ";
-	 		}
-	 	}
-	 	
-	 	return $item;
-	}
-	
-	/**
-	 * 转译
-	 */
-	
-	private function _valueChange($info){
-		
-		$item= $info;
-		
-		switch($info['pay_channel']){
-			case 1:
-				$item['pay_channel']="微信支付";
-				break;
-			case 2:
-				break;
-			default:
-				break;
-		}
-		switch($info['pay_method']){
-			case 1001:
-				$item['pay_method']="小程序支付";
-				break;
-			case 1:
-				break;
-			default:
-				break;
-		}
-		
-	
-		if(!empty($info['extra_info'])){
-			
-			$item['extra_info'] ="";
-			$arr = json_decode($info['extra_info'],true);
-			
-			
-			if(strpos($info['order_typename'],'预约单') !== false){
-				$item = $this->_staffOrderExtra($arr);
-			}else if(strpos($info['order_typename'],'报修') !== false){
-				//@TODO 待完成
-			}else{
-				$item = $this->_wuyeOrderExtra($arr);
-			}
-		}
-		return $item;
-		
-	}	
-	
-	
 	public function detail(){
 		
+		
+		$this->session->set_userdata('jumpUrl',$this->lastUrl);
+		
 		$id = $this->input->get_post('id');
-		$info = $this->Order_Model->getFirstByKey($id);
+		$info = $this->order_service->getOrderInfoById($id);
 		
 		$this->_subNavs[] = array('url' => $this->_className.'/detail?id='.$id,'title' => $this->_moduleTitle.'详情');
 		
-		$item = array();	
-		$item = $this->_valueChange($info);
-  			
-  		$this->assign('info',$info);
-		$this->assign('item',$item);
+		$showSubmit = false;
+		
+		if($info['verify_status'] == OrderVerify::$unVerify && $info['status'] == OrderStatus::$refounding){
+			$showSubmit = true;
+		}
 		
 		$this->assign(array(
+			'info' => $info,
+			'extraItem' => $this->order_service->extraInfoToArray($info),
+			'showSubmit' => $showSubmit,
+			'lastUrl' => $this->session->userdata('jumpUrl'),
 			'reasonList' => $this->basic_data_service->getTopChildList('退款原因'),
 		));
 		
 		$this->display();
 	}
+	
+	
+	
+	
 	/**
-	 * 退款
-	 * 
+	 * 真正退款
 	 */
 	public function refund(){
 		
+		
 		$id = $this->input->get_post('id');
-		$info = $this->Order_Model->getFirstByKey($id);
-		$this->_subNavs[] = array('url' => $this->_className.'/refund?id='.$id, 'title' => '审核');
+		
+		$info = $this->order_service->getOrderInfoById($id);
+		$this->_subNavs[] = array('url' => $this->_className.'/refund?id='.$id, 'title' => '退款');
 		
 		if($this->isPostRequest()){
 			
-			$this->_getVerifyRules();
+			$this->form_validation->set_rules('auth_code','验证码','required|callback_validateAuthCode');
+			
 			for($i = 0; $i < 1; $i++){
 				if(!$this->form_validation->run()){
 					$this->jsonOutput('数据校验失败,'.$this->form_validation->error_html('<div>','<div>'),array('errors' => $this->form_validation->error_array()));
 					break;
 				}
-				$op =$this->input->get_post('op');
 				
+				$op =$this->input->get_post('op');
 				$this->order_service->setWeixinAppConfig(config_item('mp_xcxCswy'));
 				
-				$returnVal = $this->order_service->createRefundOrder($info);
-
-				if(empty($returnVal)){
-					$this->jsonOutput('服务器发生错误,'.$op.'操作失败');
+				$refundOrder = $this->order_service->getOrderInfoById($id);
+				
+				/*
+				if($refundOrder['verify_status'] != OrderVerify::$verifyOK){
+					$this->jsonOutput('订单未审核');
 					break;
 				}
+				*/
+				
+				
+				if($refundOrder['status'] != OrderStatus::$refounding){
+					$this->jsonOutput('订单状态错误');
+					break;
+				}
+				
+				if($refundOrder['status'] == OrderStatus::$refounded){
+					$this->jsonOutput('订单已退款完成');
+					break;
+				}
+				
+				
+				//业务处理
+				$filePath = Order_service::$orderType['nameKey'][$refundOrder['order_typename']]['refund_url'];
+				
+				if($filePath){
+					$fullPath = LIB_PATH.$filePath;
+					$this->load->file($fullPath);
+					$className = basename($fullPath,'.php');
+					$refundObj = new $className;
+					$refundObj->setController($this);
+					
+					$isOk = $this->order_service->requestWeixinRefund($refundOrder,$refundObj);
+					
+					if(!$isOk){
+						$this->jsonOutput("退款失败");
+						break;
+					}
+				}
+				
+				
+				//@TODO 微信通知用户
+				
+				
 				$this->jsonOutput($op.'操作成功',array('jsReload' => true));
 			}
 		}else{
 			
-			$info = $this->Order_Model->getFirstByKey($id);	
 			$this->assign(array(
-				'info' => $info,		
-			));		
-			$this->assign(array(
-				'reasonList' => $this->basic_data_service->getTopChildList('退款原因'),
-			));
+				'info' => $info,
+				'extraItem' => $this->order_service->extraInfoToArray($info),
+				'showSubmit' => ($info['verify_status'] == OrderVerify::$verifyOK && $info['status'] == OrderStatus::$refounding)
+			));	
+			
 			$this->display();
 		}
 		
@@ -315,5 +333,71 @@ class Refund extends Ydzj_Admin_Controller {
 	
 	
 	
+	/**
+	 * 申请退款
+	 * 
+	 */
+	public function apply_refund(){
+		
+		$id = $this->input->get_post('id');
+		
+		$info = $this->order_service->getOrderInfoById($id);
+		
+		$this->_subNavs[] = array('url' => $this->_className.'/apply_refund?id='.$id, 'title' => '审核');
+		
+		if($this->isPostRequest()){
+			
+			$this->_getVerifyRules();
+			
+			$this->form_validation->set_rules('refund_amount','退款金额','required|is_numeric|greater_than[0]|less_than_equal_to['.(($info['amount'] - $info['refund_amount'])/100).']');
+			$this->form_validation->set_rules('auth_code','验证码','required|callback_validateAuthCode');
+			
+			
+			for($i = 0; $i < 1; $i++){
+				if(!$this->form_validation->run()){
+					$this->jsonOutput('数据校验失败,'.$this->form_validation->error_html('<div>','<div>'),array('errors' => $this->form_validation->error_array()));
+					break;
+				}
+				
+				$op =$this->input->get_post('op');
+				
+				$this->order_service->setWeixinAppConfig(config_item('mp_xcxCswy'));
+				
+				//更新相关信息
+				$info = array_merge($info,$this->addWhoHasOperated('add'));
+				$info['amount'] = intval(100 * $this->input->post('refund_amount')); 
+				
+				
+				$info['extra_info'] = array_merge($info['extra_info'],array(
+					'reason' => $this->input->post('reason'),
+					'remark' => $this->input->post('remark'),
+				));
+				
+				$isNewRefund = true;
+				
+				$refundOrderInfo = $this->order_service->createRefundOrder($info,$isNewRefund);
+				if(empty($refundOrderInfo)){
+					$this->jsonOutput('服务器发生错误,'.$op.'操作失败');
+					break;
+				}
+				
+				if(!$isNewRefund){
+					$this->jsonOutput('退款申请失败,您已经有一笔该退款订单号:'.$refundOrderInfo['order_id'].'为的退款订单');
+					break;
+				}
+				
+				$this->jsonOutput($op.'操作成功',array('jsReload' => true));
+			}
+		}else{
+			
+			$this->assign(array(
+				'info' => $info,
+				'reasonList' => $this->basic_data_service->getTopChildList('退款原因'),
+			));		
+			
+			$this->display();
+		}
+		
+	}
 	
 }

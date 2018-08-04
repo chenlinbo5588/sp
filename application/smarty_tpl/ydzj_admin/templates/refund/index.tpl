@@ -24,19 +24,19 @@
     <table class="table tb-type2 mgbottom">
       <thead>
         <tr class="thead">
-          <th class="w24">选择</th>
+          {*<th class="w24">选择</th>*}
           <th class="">{#refund_order_id#}</th>
           <th>{#order_old#}</th>
-          <th>{#name#}</th>
+          <th>{#customer_name#}</th>
           <th>{#mobile#}</th>
           <th>{#order_typename#}</th>
           <th>{#pay_channel#}</th>
           <th>{#pay_method#}</th>
-          <th>{#amount#}(元)</th>
           <th>{#goods_name#}</th>
+          <th>{#old_amount#}(元)</th>
           <th>{#status#}</th>
           <th>{#refund_amount#}</th>
-          <th>{#refund_cnt#}</th>
+          <th>{#verify_status#}</th>
           <th>{#ip#}</th>
           <th>操作</th>
         </tr>
@@ -44,32 +44,34 @@
       <tbody>
       	{foreach from=$list['data'] item=item}
       	<tr class="hover edit" id="row{$item['id']}">
-          <td><input type="checkbox" name="id[]" group="chkVal" value="{$item['id']}" class="checkitem"></td>
+          {*<td><input type="checkbox" name="id[]" group="chkVal" value="{$item['id']}" class="checkitem"></td>*}
           <td><a href="{admin_site_url($moduleClassName|cat:'/detail')}?id={$item['id']}">{$item['order_id']}</a></td>
-          <td>{$item['order_old']}</td>
+          <td><a href="{admin_site_url('order/index')}?order_id={$item['order_old']}">{$item['order_old']}</a></td>
           <td>{$item['add_username']}</td>
           <td>{$item['mobile']}</td>
           <td>{$item['order_typename']}</td>
           <td>{$item['pay_channel']}</td>
           <td>{$item['pay_method']}</td> 
-          <td>{{$item['amount']}/100}</td>
           <td>{$item['goods_name']}</td>
+          <td>{{$item['amount']}/100}</td>
           <td>{$OrderStatus[$item['status']]}</td>      
-          <td>{$item['refund_amount']}</td>
-          <td>{$item['refund_cnt']}</td>
+          <td>{$item['refund_amount']/100}</td>
+          <td>{$OrderVerify[$item['verify_status']]}</td>
           <td>{$item['ip']}</td>
           <td>
-          	<p>
-          		<a href="{admin_site_url($moduleClassName|cat:'/detail')}?id={$item['id']}">详情</a>
-          	</p>
+          	{if '审核通过' == $OrderVerify[$item['verify_status']] && '退款中' == $OrderStatus[$item['status']]}
+          	<a href="{admin_site_url($moduleClassName|cat:'/refund')}?id={$item['id']}">退款</a>
+          	{/if}
           </td>
         </tr>
         {/foreach}
       </tbody>
     </table>
     <div class="fixedOpBar">
+    	{*
     	<label><input type="checkbox" class="checkall" id="checkallBottom" name="chkVal">全选</label>&nbsp;
-    	<a href="javascript:void(0);" class="btn verifyBtn" data-title="审核" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/batch_verify')}" data-ajaxformid="#verifyForm"><span>审核</span></a>
+    	<a href="javascript:void(0);" class="btn verifyBtn" data-title="审核" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/verify')}" data-ajaxformid="#verifyForm"><span>审核</span></a>
+    	*}
         {include file="common/pagination.tpl"}
     </div>
   </form>

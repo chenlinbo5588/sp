@@ -1,4 +1,5 @@
 {include file="common/main_header_navs.tpl"}
+  {config_load file="order.conf"}
   {if $info['id']}
   {form_open(site_url($uri_string|cat:'?id='|cat:$info['id']),'id="infoform"')}
   <input type="hidden" name="id" value="{$info['id']}"/>
@@ -8,14 +9,14 @@
     <table class="table tb-type2">
       <tbody>
         <tr class="noborder">
-          <td colspan="2"><label class="validation" for="brand_name">名称:</label></td>
+          <td colspan="2"><label class="validation" for="brand_name">{#order_typename#}:</label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input type="text" value="{$info['name']|escape}" name="name" id="name" class="txt"></td>
           <td class="vatop tips">{form_error('name')}</td>
         </tr>
         <tr>
-          <td colspan="2" class="required"><label class="validation">开启状态: </label></td>
+          <td colspan="2" class="required"><label class="validation">{#enable#}: </label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform onoff"><label for="enable1" {if $info['enable'] == 1}class="cb-enable selected"{else}class="cb-enable"{/if}><span>是</span></label>
@@ -24,6 +25,18 @@
             <input id="enable0" name="enable" {if $info['enable'] == 0}checked{/if} value="0" type="radio"></td>
           <td class="vatop tips">{form_error('enable')}</td>
         </tr>
+        
+        <tr>
+          <td colspan="2" class="required"><label class="validation">{#refund_verify#}: </label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform onoff"><label for="refund_verify1" {if $info['refund_verify'] == 1}class="cb-enable selected"{else}class="cb-enable"{/if}><span>是</span></label>
+            <label for="refund_verify0" {if $info['refund_verify'] == 1}class="cb-disable"{else}class="cb-disable selected"{/if}><span>否</span></label>
+            <input id="refund_verify1" name="refund_verify" {if $info['refund_verify'] == 1}checked{/if} value="1" type="radio">
+            <input id="refund_verify0" name="refund_verify" {if $info['refund_verify'] == 0}checked{/if} value="0" type="radio"></td>
+          <td class="vatop tips">{form_error('refund_verify')}</td>
+        </tr>
+        
         <tr>
           <td colspan="2"><label>排序:</label></td>
         </tr>

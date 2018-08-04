@@ -38,10 +38,10 @@
           </td>
           <td class="vatop tips"><label class="errtip" id="error_send_ways"></label>{form_error('send_ways[]')}。</td>
         </tr>
-        <tr class="userlist" style="display:none;">
+        <tr class="userlist">
           <td colspan="2" class="required"><label class="validation" for="username_list">会员列表: </label></td>
         </tr>
-        <tr class="noborder userlist" style="display:none;">
+        <tr class="noborder userlist">
           <td class="vatop rowform"><textarea id="username_list" name="users" rows="6" class="tarea">{$info['users']}</textarea></td>
           <td class="vatop tips"><label class="errtip" id="error_users"></label>{form_error('users')} 每行填写一个会员登陆名，表示选择这个组中只有这些会员将接受到消息</td>
         </tr>

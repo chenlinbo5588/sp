@@ -9,11 +9,26 @@ class Goods_Class extends Ydzj_Admin_Controller {
 		$this->load->library(array('Goods_service'));
 	}
 	
+	
+	/**
+	 * 
+	 */
+	private function _getValidTree(){
+		
+		return $this->goods_service->getGoodsClassTreeHTML(array(
+			'where' => array(
+				'status' => 1
+			)
+		));
+		
+	}
+	
+	
 	public function category(){
 		
 		$id = $this->input->get_post('gc_parent_id') ? $this->input->get_post('gc_parent_id') : 0;
 		
-		$treelist = $this->goods_service->getGoodsClassTreeHTML();
+		$treelist = $this->_getValidTree();
 		$deep = 0;
 		
 		
@@ -24,10 +39,14 @@ class Goods_Class extends Ydzj_Admin_Controller {
 				$deep = $item['level'];
 				$parentId = $item['gc_parent_id'];
 			}
-			
 		}
 		
-		$list = $this->goods_service->getGoodsClassByParentId($id);
+		$list = $this->Goods_Class_Model->getList(array(
+			'where' => array('gc_parent_id' => $id,'status'  => 1),
+			'order' => 'gc_sort ASC'
+		),'gc_id');
+		
+		
 		$this->assign('list',$list);
 		$this->assign('parentId',$parentId);
 		$this->assign('deep',$deep + 1);
@@ -72,7 +91,8 @@ class Goods_Class extends Ydzj_Admin_Controller {
 				$delId = $delId[0];
 			}
 			
-			$this->goods_service->deleteGoodsClass($delId);
+			$this->Goods_Class_Model->deleteGoodsClass($delId);
+			
 			$this->jsonOutput('删除成功',$this->getFormHash());
 		}else{
 			$this->jsonOutput('请求非法',$this->getFormHash());
@@ -83,7 +103,7 @@ class Goods_Class extends Ydzj_Admin_Controller {
 	public function add(){
 		
 		$feedback = '';
-		$treelist = $this->goods_service->getGoodsClassTreeHTML();
+		$treelist = $this->_getValidTree();
 		
 		$gc_parent_id = $this->input->get_post('gc_parent_id');
 		
@@ -130,7 +150,7 @@ class Goods_Class extends Ydzj_Admin_Controller {
 		
 		$currentGcId = $this->input->post('gc_id');
 		
-		$deep = $this->goods_service->getGoodsClassDeepById($pid);
+		$deep = $this->Goods_Class_Model->getGoodsClassDeepById($pid);
 		
 		
 		if($deep >=3){
@@ -185,8 +205,7 @@ class Goods_Class extends Ydzj_Admin_Controller {
 	
 	private function _getRules($action = 'add'){
 		
-		$this->form_validation->set_rules('name_cn','分类中文名称',"required|min_length[1]|max_length[100]");
-		$this->form_validation->set_rules('name_en','分类英文名称',"required|min_length[1]|max_length[100]");
+		$this->form_validation->set_rules('name','分类中文名称',"required|min_length[1]|max_length[100]");
 		
 		if($this->input->post('gc_parent_id')){
 			$this->form_validation->set_rules('gc_parent_id','上级分类', "in_db_list[".$this->Goods_Class_Model->getTableRealName().".gc_id]|callback_checkpid[{$action}]");
@@ -208,8 +227,7 @@ class Goods_Class extends Ydzj_Admin_Controller {
 	private function _prepareGoodClassData(){
 		
 		$info = array(
-			'name_cn' => $this->input->post('name_cn'),
-			'name_en' => $this->input->post('name_en'),
+			'name' => $this->input->post('name'),
 			'gc_parent_id' => $this->input->post('gc_parent_id') ? $this->input->post('gc_parent_id') : 0,
 			'gc_pic_id' => $this->input->post('gc_pic_id') ? $this->input->post('gc_pic_id') : 0,
 			'gc_pic' => $this->input->post('gc_pic') ? $this->input->post('gc_pic') : '',
@@ -225,7 +243,7 @@ class Goods_Class extends Ydzj_Admin_Controller {
 	public function edit(){
 		
 		$feedback = '';
-		$treelist = $this->goods_service->getGoodsClassTreeHTML();
+		$treelist = $this->_getValidTree();
 		
 		$gc_id = $this->input->get_post('gc_id');
 		
@@ -268,7 +286,8 @@ class Goods_Class extends Ydzj_Admin_Controller {
 	
 	public function export(){
 		
-		$class_list = $this->goods_service->getGoodsClassTreeHTML();
+		$class_list = $this->_getValidTree();
+		
 		
 		
 		if($this->isPostRequest()){

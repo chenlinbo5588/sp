@@ -17,7 +17,7 @@ class Index extends Ydzj_Controller {
 		//echo getShuXiang('19840414');
 		/*
 		$this->load->library(array('Goods_service','Cms_service'));
-		$goodsList = $this->goods_service->getCommandGoodsList();
+		
 		$this->assign('goodsList',$goodsList);
 		
 		$this->assign('homeSliderImg',range(1,3));

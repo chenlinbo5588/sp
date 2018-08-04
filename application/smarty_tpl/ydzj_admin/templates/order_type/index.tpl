@@ -1,4 +1,5 @@
 {include file="common/main_header_navs.tpl"}
+  {config_load file="order.conf"}
   {form_open(site_url($uri_string),'id="formSearch"')}
   	 <input type="hidden" name="page" value="{$currentPage}"/>
 	 <table class="tb-type1 noborder search">
@@ -15,8 +16,9 @@
         <tr class="thead">
           <th class="w24"></th>
           <th class="w48">排序</th>
-          <th class="w270">名称</th>
-          <th class="align-center">启用状态</th>
+          <th class="w270">{#order_typename#}</th>
+          <th class="align-center">{#enable#}</th>
+          <th class="align-center">{#refund_verify#}</th>
           <th class="w72 align-center">操作</th>
         </tr>
       </thead>
@@ -27,9 +29,14 @@
           <td class="sort"><span class="editable" data-id="{$item['id']}" data-fieldname="displayorder">{$item['displayorder']}</span></td>
           <td class="name"><span class="editable" data-id="{$item['id']}" data-fieldname="name">{$item['name']}</span></td>
           <td class="align-center yes-onoff">
-          	<a href="javascript:void(0);" {if $item['enable']}class="enabled"{else}class="disabled"{/if} data-id="{$item['id']}" data-fieldname="enable"><img src="{resource_url('img/transparent.gif')}"></a>
+          	<a href="javascript:void(0);" data-url="{admin_site_url($moduleClassName|cat:'/inline_edit')}" {if $item['enable']}class="enabled"{else}class="disabled"{/if} data-id="{$item['id']}" data-fieldname="enable"><img src="{resource_url('img/transparent.gif')}"></a>
           </td>
-          <td class="align-center"><a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}">编辑</a>&nbsp;|&nbsp;<a href="javascript:void(0)" class="delete" data-url="{admin_site_url($moduleClassName|cat:'/delete')}" data-id="{$item['id']}">删除</a></td>
+          <td class="align-center yes-onoff">
+          	<a href="javascript:void(0);" data-url="{admin_site_url($moduleClassName|cat:'/inline_edit')}" {if $item['refund_verify']}class="enabled"{else}class="disabled"{/if} data-id="{$item['id']}" data-fieldname="refund_verify"><img src="{resource_url('img/transparent.gif')}"></a>
+          </td>
+          <td class="align-center">
+          	<a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}">编辑</a>&nbsp;|&nbsp;<a href="javascript:void(0)" class="delete" data-url="{admin_site_url($moduleClassName|cat:'/delete')}" data-id="{$item['id']}">删除</a>
+          </td>
         </tr>
         {/foreach}
       </tbody>

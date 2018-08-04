@@ -81,7 +81,7 @@
        		</td>
        	</tr>
         <tr>
-          <td colspan="2" class="required"><label class="validation">商品中文版描述: </label>{form_error('goods_intro')}</td>
+          <td colspan="2" class="required"><label class="validation">商品描述: </label>{form_error('goods_intro')}</td>
         </tr>
         <tr>
         	<td colspan="2" ><textarea id="goods_intro" name="goods_intro" style="width:100%;height:480px;visibility:hidden;">{$info['goods_intro']}</textarea></td>
@@ -112,8 +112,6 @@
 	            });
 	        </script>
         </tr>
-        <tr>
-          <td colspan="2"><label">商品英文版描述: </label>{form_error('goods_intro_en')}</td>
         <tr>
           <td colspan="2" class="required">是否推荐: </td>
         </tr>

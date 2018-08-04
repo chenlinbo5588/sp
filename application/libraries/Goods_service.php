@@ -62,25 +62,10 @@ class Goods_service extends Base_service {
 		$this->_goodsImagesModel = self::$CI->Goods_Images_Model;
 	}
 	
-	public function getParentsById($id = 0,$field = '*'){
-
-        $condition['select'] = $field;
-        $condition['where'] = array(
-            'gc_id' => $id
-        );
-        
-        $result = $this->_goodsClassModel->getById($condition);
-        if($result){
-            $this->_parentList[] = $result;
-            $this->getParentsById($result['gc_parent_id']);
-        }
-        
-        return $this->_parentList;
-    }
 	
 	
-	public function getGoodsClassTreeHTML(){
-		$list = $this->_goodsClassModel->getList();
+	public function getGoodsClassTreeHTML($condition = array()){
+		$list = $this->_goodsClassModel->getList($condition);
 		
 		if($list){
 			self::$CI->phptree->resetData();
@@ -95,70 +80,6 @@ class Goods_service extends Base_service {
 		
 	}
 	
-	
-	/**
-	 * 获得所所有的子孙
-	 */
-	public function getAllChildGoodsClassByPid($id,$field = 'gc_id',$maxDeep = 3){
-		
-		$list = $this->_goodsClassModel->getList(array(
-			'select' => $field,
-			'where' => array('gc_parent_id' => $id)
-		));
-		
-		$deep = 0;
-		
-		$allIds = array();
-		
-		while($list){
-			$ids = array();
-			foreach($list as $item){
-				$ids[] = $item['gc_id'];
-				$allIds[] = $item['gc_id'];
-			}
-			
-			if($ids){
-				$list = $this->_goodsClassModel->getList(array(
-					'select' => $field,
-					'where_in' => array(
-						array('key' => 'gc_parent_id', 'value' => $ids)
-					)
-				));
-			}else{
-				$canQuit = true;
-			}
-			
-			$deep++;
-			
-			if($deep >= $maxDeep){
-				break;
-			}
-		}
-		
-		return $allIds;
-	}
-	
-	
-	
-	public function getGoodsClassDeepById($id,$maxDeep = 5){
-		$info = $this->_goodsClassModel->getFirstByKey($id,'gc_id');
-		
-		//默认一级
-		$deep = 1;
-		
-		while($info['gc_parent_id']){
-			$deep++;
-			$info = $this->_goodsClassModel->getFirstByKey($info['gc_parent_id'],'gc_id');
-			
-			//防止无限循环,最多5级
-			if($deep >= $maxDeep){
-				break;
-			}
-		}
-		
-		return $deep;
-		
-	}
 
 	/**
 	 * 更改状态
@@ -178,48 +99,8 @@ class Goods_service extends Base_service {
 	}
 	
 
-
-	
-	public function deleteGoodsClass($delId){
-		
-		$list = $this->_goodsClassModel->getList(array(
-			'where' => array('gc_parent_id' => $delId)
-		));
-		
-		$hasData = true;
-		
-		while($list && $hasData){
-			$ids = array();
-			foreach($list as $item){
-				$ids[] = $item['gc_id'];
-			}
-			
-			if(empty($ids)){
-				$hasData = false;
-			}else{
-				
-				$this->_goodsClassModel->deleteByCondition(array(
-					'where_in' => array(
-						array('key' => 'gc_id', 'value' => $ids)
-					)
-				));
-				
-				$list = $this->_goodsClassModel->getList(array(
-					'where_in' => array(
-						array('key' => 'gc_parent_id', 'value' => $ids)
-					)
-				));
-			}
-		}
-		
-		$this->_goodsClassModel->deleteByWhere(array('gc_id' => $delId));
-		
-	}
-	
-	
-	
-	public function getGoodClassTree(){
-		$list = $this->_goodsClassModel->getList();
+	public function getGoodClassTree($condition = array()){
+		$list = $this->_goodsClassModel->getList($condition);
 		
 		if($list){
 			self::$CI->phptree->resetData();
@@ -298,20 +179,6 @@ class Goods_service extends Base_service {
 	}
 	
 	
-	public function getGoodsClassModel(){
-		return $this->_goodsClassModel;
-	}
-	
-	public function getGoodsClassByParentId($id = 0){
-		return $this->_goodsClassModel->getList(array(
-			'where' => array('gc_parent_id' => $id),
-			'order' => 'gc_sort ASC'
-		),'gc_id');
-		
-	}
-	
-	
-	
 	public function deleteGoodsClassTag($ids){
 		return $this->_goodsClassTagModel->deleteByCondition(array(
 			'where_in' => array(
@@ -320,66 +187,5 @@ class Goods_service extends Base_service {
 		));
 		
 	}
-	
-	public function getNextByProduct($info){
-		$product = $this->_goodsModel->getList(array(
-			'where' => array('gc_id' => $info['gc_id'], 'goods_id >' => $info['goods_id'] , 'goods_verify' => 1, 'goods_state' => 1),
-			'order' => 'goods_id ASC',
-			'limit' => 1
-		));
-		
-		if($product[0]){
-			return $product[0];
-		}else{
-			return false;
-		}
-	}
-	
-	public function getPreByProduct($info){
-		$product = $this->_goodsModel->getList(array(
-			'where' => array('gc_id' => $info['gc_id'], 'goods_id <' => $info['goods_id'] , 'goods_verify' => 1, 'goods_state' => 1),
-			'order' => 'goods_id DESC',
-			'limit' => 1
-		));
-		
-		
-		if($product[0]){
-			return $product[0];
-		}else{
-			return false;
-		}
-	}
-	
-	/**
-	 * 获得推荐的商品列表
-	 */
-	public function getCommandGoodsList($goodsCate = '产品中心',$moreCondition = array('limit' => 20)){
-		
-		$goodsClassIds = $this->getAllChildGoodsClassByPid(0);
-		
-		//print_r($goodsClassIds);
-		
-		if(empty($goodsClassIds)){
-			return;
-		}
-		
-		$condition = array(
-			'where' => array(
-				'goods_commend' => 1,
-				'goods_verify' => 1,
-				'goods_state' => 1
-			),
-			'where_in' => array(
-				array('key' => 'gc_id' , 'value' => $goodsClassIds )
-			),
-			'order' => 'goods_sort ASC',
-			'limit' => 20
-		);
-		
-		$condition = array_merge($condition,$moreCondition);
-		return $this->_goodsModel->getList($condition);
-	}
-	
-	
 	
 }

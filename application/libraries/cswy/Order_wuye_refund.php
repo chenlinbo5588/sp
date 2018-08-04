@@ -32,7 +32,8 @@ class Order_wuye_refund extends Weixin_refund {
 			
 			
 			$updateFiled = 'wuye_expire';
-			$houseWuyeInfo = json_decode($pRefundOrder['extra_info'],true);
+			$houseWuyeInfo = $pRefundOrder['extra_info'];
+			
 			switch($pRefundOrder['order_typename']){
 				case '物业费退款':
 					$updateFiled = 'wuye_expire';

@@ -31,54 +31,33 @@ class Order_type extends Ydzj_Admin_Controller {
 	
 	
 	public function index(){
+		$currentPage = $this->input->get_post('page') ? $this->input->get_post('page') : 1;
+	
+		$condition = array(
+			'order' => 'id DESC',
+			'pager' => array(
+				'page_size' => config_item('page_size'),
+				'current_page' => $currentPage,
+				'call_js' => 'search_page',
+				'form_id' => '#formSearch'
+			)
+		);
 		
-		if($this->input->is_ajax_request() && $this->isPostRequest()){
-			
-			$this->form_validation->set_rules('fieldname','状态字段','required|in_list[enable]');
-			$this->form_validation->set_rules('enabled','状态','required|in_list[0,1]');
-			
-			if($this->form_validation->run()){
-				
-				$upInfo[$this->input->post('fieldname')] = $this->input->post('enabled');
-				
-				$this->Order_Type_Model->update($upInfo,array('id' => $this->input->post('id')));
-				
-				$this->jsonOutput('保存成功', $this->getFormHash());
-				
-			}else{
-				$this->jsonOutput('保存失败 '.$this->form_validation->error_string(),$this->getFormHash());
-			}
-			
-		}else{
-			
-			$currentPage = $this->input->get_post('page') ? $this->input->get_post('page') : 1;
 		
-			$condition = array(
-				'order' => 'id DESC',
-				'pager' => array(
-					'page_size' => config_item('page_size'),
-					'current_page' => $currentPage,
-					'call_js' => 'search_page',
-					'form_id' => '#formSearch'
-				)
-			);
-			
-			
-			$search['name'] = $this->input->get_post('name');
-			if($search['name']){
-				$condition['like']['name'] = $search['name'];
-			}
-			
-			$list = $this->Order_Type_Model->getList($condition);
-			
-			$this->assign(array(
-				'list' => $list,
-				'page' => $list['pager'],
-				'currentPage' => $currentPage
-			));
-			
-			$this->display();
+		$search['name'] = $this->input->get_post('name');
+		if($search['name']){
+			$condition['like']['name'] = $search['name'];
 		}
+		
+		$list = $this->Order_Type_Model->getList($condition);
+		
+		$this->assign(array(
+			'list' => $list,
+			'page' => $list['pager'],
+			'currentPage' => $currentPage
+		));
+		
+		$this->display();
 		
 	}
 	
@@ -90,6 +69,7 @@ class Order_type extends Ydzj_Admin_Controller {
 		$this->_getNameRule($id);
 		
 		$this->form_validation->set_rules('enable','启用状态','required|in_list[0,1]');
+		$this->form_validation->set_rules('refund_verify','退款是否需要审核','required|in_list[0,1]');
 		
 		if($this->input->post('displayorder')){
 			$this->form_validation->set_rules('displayorder','排序',"is_natural|less_than[256]");
@@ -128,15 +108,8 @@ class Order_type extends Ydzj_Admin_Controller {
 				$ids = (array)$ids;
 			}
 			
-			/*
-			$this->Order_Type_Model->deleteByCondition(array(
-				'where_in' => array(
-					array('key' => 'brand_id','value' => $ids)
-				)
-			));
-			*/
 			//@todo 
-			$this->jsonOutput('删除失败，待开发完善',$this->getFormHash());
+			$this->jsonOutput('基础数据,删除操作手工维护');
 			
 		}else{
 			$this->jsonOutput('请求非法',$this->getFormHash());
@@ -173,7 +146,6 @@ class Order_type extends Ydzj_Admin_Controller {
 					break;
 				}
 				
-				
 				$newid =$this->Order_Type_Model->_add(array_merge($info,$this->addWhoHasOperated('add')));
 				$error = $this->Order_Type_Model->getError();
 				
@@ -193,8 +165,8 @@ class Order_type extends Ydzj_Admin_Controller {
 			}
 		}else{
 			$info['enable'] = 1;
+			$info['refund_verify'] = 1;
 		}
-		
 		
 		$this->assign('info',$info);
 		$this->assign('feedback',$feedback);
@@ -270,7 +242,7 @@ class Order_type extends Ydzj_Admin_Controller {
 			$this->form_validation->set_data($data);
 			
 			$this->form_validation->set_rules('id','数据标识','required');
-			$this->form_validation->set_rules('fieldname','字段','in_list[name,displayorder]');
+			$this->form_validation->set_rules('fieldname','字段','in_list[refund_verify,enable,name,displayorder]');
 			
 			
 			switch($fieldName){
@@ -278,7 +250,13 @@ class Order_type extends Ydzj_Admin_Controller {
 					$this->_getNameRule($id);
 					break;
 				case 'displayorder';
-					$this->form_validation->set_rules('displayorder','排序',"required|is_natural|less_than[256]");
+					$this->form_validation->set_rules($fieldName,'排序',"required|is_natural|less_than[256]");
+					break;
+				case 'enable':
+					$this->form_validation->set_rules($fieldName,'开启状态','required|in_list[0,1]');
+					break;
+				case 'refund_verify':
+					$this->form_validation->set_rules($fieldName,'退款是否需要审核','required|in_list[0,1]');
 					break;
 				default:
 					break;

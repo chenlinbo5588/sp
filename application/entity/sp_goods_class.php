@@ -8,6 +8,7 @@ $entity = array(
 'gc_pic_id' => 'int',
 'type_id' => 'int',
 'type_name' => 'varchar',
+'status' => 'tinyint',
 'gc_parent_id' => 'int',
 'gc_sort' => 'tinyint',
 'gc_title' => 'varchar',

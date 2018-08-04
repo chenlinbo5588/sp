@@ -296,9 +296,9 @@ input[type=checkbox],input[type=radio] {
     .item-title h3 { float: left; margin-right:20px; margin-top: 16px;}
 .tab-base {padding-top:18px; }
     .tab-base li { float: left;}
-        .tab-base a { font-weight: 700; padding-left: 9px; margin-right:2px;  cursor: pointer;}
+        .tab-base a { font-weight: 700; padding: 5px; cursor: pointer;}
         .tab-base a:hover { color: #09C;  }
-        .tab-base a.current, .tab-base a:hover.current { color:#333; }
+        .tab-base a.current, .tab-base a:hover.current {border:1px solid #aeb0a7 ; border-radius: 4px; -moz-border-radius: 4px; -webkit-border-radius: 4px; color:#333; }
 
 
 
@@ -658,12 +658,12 @@ table.search { margin: 12px 0 6px 4px;}
 }
 
 
-a.btn { font-size: 14px; color: #555; font-weight: 700; line-height:18px; background: transparent url(../img/sky/bg_position.gif) no-repeat scroll 0 -280px; display: inline-block; height: 38px; padding-left: 15px; cursor: pointer;}
+a.btn { font-size: 14px; color: #555; font-weight: 700; line-height:18px; border: 1px solid #71cbef; -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px; display: inline-block; cursor: pointer;}
 a.btn:hover { background-position: 0 -318px;}
 a.btn:active { background-position: 0 -356px;}
-a.btn span { background: #FFF url(../img/sky/bg_position.gif) no-repeat scroll 100% -280px; display: inline-block; height: 18px; padding: 10px 15px 10px 0;}
-a:hover.btn span { color: #1AA3D1; background-position: 100% -318px;}
-a:active.btn span { color: #63C7ED; background-position: 100% -356px;}
+a.btn span { display: inline-block; height: 18px; padding: 5px 10px;}
+a:hover.btn span { color: #1AA3D1; background-color:#71cbef;color:#fff;}
+a:active.btn span { color: #63C7ED; background-color:#71cbef;color:#fff;}
 
 a.btn-search { color: #555; line-height:28px; background: transparent url(../img/sky/bg_position.gif) no-repeat scroll -130px -450px; vertical-align:middle; display: inline-block; width: 28px; height: 28px; cursor: pointer;}
 a.btn-search:hover { background-position: -160px -450px;}

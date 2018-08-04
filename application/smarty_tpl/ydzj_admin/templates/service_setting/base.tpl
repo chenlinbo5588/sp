@@ -1,5 +1,5 @@
 {include file="common/main_header_navs.tpl"}
-  {form_open_multipart(site_url($uri_string),'name="form1"')}
+  {form_open(site_url($uri_string),'name="form1"')}
     <table class="table tb-type2">
       <tbody>
         <tr class="noborder">
@@ -14,7 +14,7 @@
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input id="service_prepay_amount" name="service_prepay_amount" value="{$currentSetting['service_prepay_amount']['value']|escape}" class="txt" type="text" /></td>
-          <td class="vatop tips">{form_error('service_prepay_amount')}<span class="vatop rowform">用于至于预约单的预约金额</span></td>
+          <td class="vatop tips">{form_error('service_prepay_amount')}<span class="vatop rowform">用于支付预约单的预约金额</span></td>
         </tr>
         <tr class="noborder">
           <td colspan="2" class="required"><label for="site_name_en">用户当日最大可预约订单数量:</label></td>

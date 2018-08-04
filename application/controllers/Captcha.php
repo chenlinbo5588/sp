@@ -20,15 +20,15 @@ class Captcha extends Ydzj_Controller {
 
 
         $vals = array(
-                'word' => $word,
-        'img_path'      => ROOTPATH.'/static/img/captcha/',
-        'img_url'       => base_url('/static/img/captcha/'),
-        'img_width'     => 120,
-        'img_height'    => 40,
-        'expiration'    => 180,
-        'word_length'   => 4,
-        'font_size'     => 16,
-        'font_path'     => SYSDIR.'/fonts/comicbd.ttf',
+            'word' => $word,
+	        'img_path'      => ROOTPATH.'/static/img/captcha/',
+	        'img_url'       => base_url('/static/img/captcha/'),
+	        'img_width'     => 120,
+	        'img_height'    => 40,
+	        'expiration'    => 180,
+	        'word_length'   => 4,
+	        'font_size'     => 16,
+	        'font_path'     => SYSDIR.'/fonts/comicbd.ttf',
         );
 
         $cap = create_captcha($vals);

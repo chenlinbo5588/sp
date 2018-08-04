@@ -112,15 +112,13 @@ class Order extends Wx_Controller {
 					
 					$this->postJson['order_type'] = Order_service::$orderType['nameKey'][$this->postJson['order_typename']]['id'];
 					$this->postJson['uid'] = $this->memberInfo['uid'];
-					
-					//
-					$this->postJson['add_username'] = $this->memberInfo['nickname'];
+					$this->postJson['add_username'] = $this->memberInfo['username'];
 					
 					if($this->yezhuInfo){
 						$this->postJson['add_username'] = $this->yezhuInfo['name'];
 					}
 					
-					
+					$this->postJson['username'] = $this->postJson['add_username'];
 					$this->postJson['mobile'] = $this->yezhuInfo['mobile'];
 					
 					//异步回调
@@ -148,7 +146,7 @@ class Order extends Wx_Controller {
 					
 					if(ENVIRONMENT == 'development'){
 						//@todo 修改金额
-						$this->postJson['amount'] = 1;
+						$this->postJson['amount'] = mt_rand(1,3);
 					}else{
 						$this->postJson['amount'] = intval($this->_getSiteSetting('service_prepay_amount')) * 100;
 					}
@@ -209,6 +207,8 @@ class Order extends Wx_Controller {
 					$this->load->library('Wuye_service');
 					$this->form_validation->set_data($this->postJson);
 					
+					
+					$this->form_validation->set_rules('order_typename','in_db_list['.$this->Order_Type_Model->getTableRealName().'.name]');
 					$this->form_validation->set_rules('house_id','物业标识',array(
 							'required',
 							array(
@@ -249,7 +249,7 @@ class Order extends Wx_Controller {
 					
 					$this->postJson['uid'] = $this->yezhuInfo['uid'];
 					$this->postJson['add_username'] = $this->yezhuInfo['name'];
-					
+					$this->postJson['username'] = $this->postJson['add_username'];
 					
 					//联系方式
 					$this->postJson['mobile'] = $this->yezhuInfo['mobile'];
@@ -275,7 +275,7 @@ class Order extends Wx_Controller {
 					
 					if(ENVIRONMENT == 'development'){
 						//@todo 修改金额
-						$this->postJson['amount'] = 1;
+						$this->postJson['amount'] = mt_rand(1,3);
 					}else{
 						//计算金额
 						$this->postJson['amount'] = intval(100 * $this->wuye_service->computeHouseFee($currentHouseFeeExpire));
@@ -461,8 +461,10 @@ class Order extends Wx_Controller {
 				);
 				
 				$this->form_validation->set_data($param);
-				
 				$this->_setIsUserOrderRules();
+				
+				//目前不提交退款金额、 进行全额退款
+				
 				$this->form_validation->set_rules('reason','退款原因','required|min_length[3]|max_length[100]');
 				$this->form_validation->set_rules('remark','备注','min_length[3]|max_length[100]');
 				
@@ -471,9 +473,7 @@ class Order extends Wx_Controller {
 					break;
 				}
 				
-				$orderInfo = $this->Order_Model->getFirstByKey($this->postJson['order_id'],'order_id');
-				
-				$orderInfo['extra_info'] = json_decode($orderInfo['extra_info'],true);
+				$orderInfo = $this->order_service->getOrderInfoById($this->postJson['order_id'],'order_id');
 			
 				if(is_array($orderInfo['extra_info'])){
 					$param['extra_info'] = array_merge($orderInfo['extra_info'],array(
@@ -491,26 +491,49 @@ class Order extends Wx_Controller {
 				file_put_contents('callback_refund.txt',print_r($param,true));
 				file_put_contents('callback_refund.txt',print_r($orderInfo,true),FILE_APPEND);
 				
-				$refundOrder = $this->order_service->createRefundOrder($param);
+				$isNewRefund = true;
 				
-				//业务处理
-				$filePath = Order_service::$orderType['nameKey'][$refundOrder['order_typename']]['refund_url'];
-				$fullPath = LIB_PATH.$filePath;
-				$this->load->file($fullPath);
-				$className = basename($fullPath,'.php');
-				$refundObj = new $className;
-				$refundObj->setController($this);
+				$refundOrder = $this->order_service->createRefundOrder($param,$isNewRefund);
 				
-				
-				$isOk = $this->order_service->requestWeixinRefund($refundOrder,$refundObj);
-				
-				if(!$isOk){
-					$this->jsonOutput2("退款失败");
+				if(empty($refundOrder)){
+					$this->jsonOutput('服务器发生错误,请稍后重新尝试');
 					break;
 				}
 				
-				$this->jsonOutput2(RESP_SUCCESS);
+				if(!$isNewRefund){
+					$this->jsonOutput('退款申请已经提交,不能重复申请');
+					break;
+				}
 				
+				//退款是否需要审核
+				$isNeedVerify = Order_service::$orderType['nameKey'][$refundOrder['order_typename']]['refund_verify'];
+				
+				
+				//订单是否需要审核
+				if($isNeedVerify){
+					$this->jsonOutput2("退款申请提交成功");
+					break;
+				}
+				
+				//业务处理
+				$filePath = Order_service::$orderType['nameKey'][$refundOrder['order_typename']]['refund_url'];
+				
+				if($filePath){
+					$fullPath = LIB_PATH.$filePath;
+					$this->load->file($fullPath);
+					$className = basename($fullPath,'.php');
+					$refundObj = new $className;
+					$refundObj->setController($this);
+					
+					$isOk = $this->order_service->requestWeixinRefund($refundOrder,$refundObj);
+					
+					if(!$isOk){
+						$this->jsonOutput2("退款失败");
+						break;
+					}
+				}
+				
+				$this->jsonOutput2(RESP_SUCCESS);
 			}
 			
 		}else{

@@ -26,11 +26,6 @@ class Service_Setting extends Ydzj_Admin_Controller {
 	}
 	
 	
-	private function _clearCache(){
-		$this->getCacheObject()->delete(CACHE_KEY_SiteSetting);
-		$this->getCacheObject()->delete(CACHE_KEY_SeoSetting);
-	}
-	
 	/**
 	 * 基本设置
 	 */
@@ -44,7 +39,8 @@ class Service_Setting extends Ydzj_Admin_Controller {
 			'service_staff_maxcnt',
 			'service_order_limit',
 			'service_booking_status',
-			'service_closed_reason'
+			'service_refund_verify',
+			'service_closed_reason',
 		);
 		
 		$currentSetting = $this->base_service->getSettingList(array(
@@ -78,8 +74,6 @@ class Service_Setting extends Ydzj_Admin_Controller {
 				
 				if($this->base_service->updateSetting($data) >= 0){
 					$feedback = getSuccessTip('保存成功');
-					
-					$this->_clearCache();
 					
 					$currentSetting = $this->base_service->getSettingList(array(
 						'where_in' => array(

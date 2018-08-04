@@ -26,7 +26,7 @@
         <tr class="thead">
           <th class="w24">选择</th>
           <th class="">{#order_id#}</th>
-          <th>{#name#}</th>
+          <th>{#customer_name#}</th>
           <th>{#mobile#}</th>
           <th>{#order_typename#}</th>
           <th>{#pay_channel#}</th>
@@ -34,12 +34,12 @@
           <th>{#amount#}(元)</th>
           <th>{#refund_amount#}</th>
           <th>{#refund_cnt#}</th>
+          <th>{#verify_status#}</th>
           <th>{#goods_name#}</th>
           <th>{#status#}</th>
           <th>{#order_time#}</th>
           <th>{#time_expire#}</th>        
           <th>{#pay_time_end#}</th>
-          
           <th>{#ip#}</th>
           <th>操作</th>
         </tr>
@@ -57,6 +57,7 @@
           <td>{$item['amount']/100}</td>
           <td>{$item['refund_amount']/100}</td>
           <td>{$item['refund_cnt']}</td>
+          <td>{$OrderVerify[$item['verify_status']]}</td>
           <td>{$item['goods_name']}</td>
           <td>{$OrderStatus[$item['status']]}</td>      
           <td>{$item['gmt_create']|date_format:"%Y-%m-%d %H:%M:%S"}</td>
@@ -66,12 +67,9 @@
           <td>
           	<p>
           		<a href="{admin_site_url($moduleClassName|cat:'/detail')}?id={$item['id']}">详情</a>
-          		
-          		{if $item['status'] eq '2'}
-	          		<a>|</a> 
-	          		<a href="javascript:void(0);"  class="refundLink" data-ajaxformid="#refundForm" data-url="{admin_site_url('refund/refund')}?id={$item['id']}" ><span>退款</span></a>
+          		{if '已支付' == $OrderStatus[$item['status']] && $item['refund_amount'] < $item['amount']}
+          		<a href="javascript:void(0);"  class="refundLink" data-title="申请退款" data-ajaxformid="#refundForm" data-url="{admin_site_url('refund/apply_refund')}?id={$item['id']}" ><span>申请退款</span></a>
           		{/if}
-          		
           	</p>
           </td>
         </tr>
@@ -80,7 +78,7 @@
     </table>
     <div class="fixedOpBar">
     	<label><input type="checkbox" class="checkall" id="checkallBottom" name="chkVal">全选</label>&nbsp;
-        <a href="javascript:void(0);" class="btn opBtn" data-checkbox="id[]" data-title="确认关闭吗" data-url="{admin_site_url($moduleClassName|cat:'/batch_close')}" ><span>关闭</span></a>
+        <a href="javascript:void(0);" class="btn opBtn" data-checkbox="id[]" data-title="确认关闭未支付的订单吗?" data-url="{admin_site_url($moduleClassName|cat:'/batch_close')}" ><span>关闭</span></a>
         <a href="javascript:void(0);" class="btn deleteBtn" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/batch_delete')}"><span>删除</span></a>
         {include file="common/pagination.tpl"}
     </div>

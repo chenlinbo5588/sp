@@ -14,6 +14,11 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 		$this->form_validation->set_error_delimiters('<label class="error">','</label>');
 		$this->_initAdminLogin();
 		//$this->_checkPermission();
+		
+		$seo = $this->_seoSetting['index'];
+		
+		$this->seo($seo['title'],$seo['keywords'],$seo['description']);
+		
 	}
 	
 	

@@ -62,7 +62,7 @@ class Member extends Ydzj_Admin_Controller {
 			$this->assign('ds',$this->common_district_service->prepareCityData($ds));
 		}
 		
-		$search_map['search_field'] = array('mobile' => '账号','email' => '电子邮箱','username' => '真实姓名');
+		$search_map['search_field'] = array('mobile' => '手机号码','email' => '电子邮箱','username' => '真实姓名');
 		
 		/*
 		$search_map['activity_sort'] = array(
@@ -314,7 +314,7 @@ class Member extends Ydzj_Admin_Controller {
 					'weixin' => $this->input->post('member_weixin'),
 					'email' => $this->input->post('member_email'),
 					'username' => $this->input->post('member_username'),
-					'sex' => $this->input->post('member_sex'),
+					'sex' => $this->input->post('member_sex') ? $this->input->post('member_sex') : 0,
 					'allowtalk' => $this->input->post('allowtalk'),
 					'freeze' => $this->input->post('memberstate'),
 				);

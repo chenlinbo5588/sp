@@ -30,10 +30,6 @@ class Setting extends Ydzj_Admin_Controller {
 	}
 	
 	
-	private function _clearCache(){
-		$this->getCacheObject()->delete(CACHE_KEY_SiteSetting);
-		$this->getCacheObject()->delete(CACHE_KEY_SeoSetting);
-	}
 	
 	/**
 	 * 
@@ -47,8 +43,6 @@ class Setting extends Ydzj_Admin_Controller {
 		$settingKey = array(
 			'site_name',
 			'site_shortname',
-			'site_name_en',
-			'site_shorten',
 			'site_logo',
 			'icp_number',
 			'site_tel', //客服电话
@@ -107,8 +101,6 @@ class Setting extends Ydzj_Admin_Controller {
 				
 				if($this->base_service->updateSetting($data) >= 0){
 					$feedback = getSuccessTip('保存成功');
-					
-					$this->_clearCache();
 					
 					if($fileData){
 						//更新成功了，则删除原先的图片
@@ -200,7 +192,6 @@ class Setting extends Ydzj_Admin_Controller {
 				
 				if($this->base_service->updateSetting($data) >= 0){
 					
-					$this->_clearCache();
 					
 					$feedback = getSuccessTip('保存成功');
 					
@@ -251,7 +242,7 @@ class Setting extends Ydzj_Admin_Controller {
 				if($this->input->post('category') != '' && $this->input->post('form_name') == 'category'){
 					$selectedGroup = $this->input->post('form_name');
 					
-					$rows = $this->goods_service->getGoodsClassModel()->updateGoodsClassSeoById($this->input->post('category'),array(
+					$rows = $this->Goods_Class_Model->updateGoodsClassSeoById($this->input->post('category'),array(
 						'gc_title' => $this->input->post('cate_title'),
 						'gc_keywords' => $this->input->post('cate_keywords'),
 						'gc_description' => $this->input->post('cate_description'),
@@ -259,13 +250,15 @@ class Setting extends Ydzj_Admin_Controller {
 				}
 			}
 			
+			
+			$this->getCacheObject()->delete(CACHE_KEY_SeoSetting);
+			
+			
 			if($rows >= 0){
 				$feedback = getSuccessTip('保存成功');
 			}else{
 				$feedback = getErrorTip('保存失败');
 			}
-			
-			$this->_clearCache();
 		}
 		
 		
@@ -284,7 +277,7 @@ class Setting extends Ydzj_Admin_Controller {
 	
 	public function ajax_category(){
 		$this->load->library('Goods_service');
-		$goodsClassInfo = $this->goods_service->getGoodsClassModel()->getGoodsClassById($this->input->get('id'));
+		$goodsClassInfo = $this->Goods_Class_Model->getGoodsClassById($this->input->get('id'));
 		$this->jsonOutput('获取成功',$goodsClassInfo);
 	}
 	
@@ -353,17 +346,14 @@ class Setting extends Ydzj_Admin_Controller {
 		
 		if($this->isPostRequest()){
 			$this->form_validation->set_rules('hotwords','热门搜索中文关键词','required');
-			$this->form_validation->set_rules('hotwords_en','热门搜索英文关键词','required');
 			
 			if($this->form_validation->run()){
 				
 				if($this->base_service->updateSetting(array(
 					array('name' => 'hotwords','value' => $this->input->post('hotwords')),
-					array('name' => 'hotwords_en','value' => $this->input->post('hotwords_en')),
 				)) >= 0){
 				
 					$feedback = getSuccessTip('保存成功');
-					$this->_clearCache();
 							
 				}else{
 					$feedback = getErrorTip('保存失败');
@@ -373,7 +363,7 @@ class Setting extends Ydzj_Admin_Controller {
 		
 		$currentSetting = $this->base_service->getSettingList(array(
 			'where_in' => array(
-				array('key' => 'name','value' => array('hotwords','hotwords_en'))
+				array('key' => 'name','value' => array('hotwords'))
 			
 			)
 		));

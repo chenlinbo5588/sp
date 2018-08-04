@@ -52,7 +52,8 @@ class PayNotifyCallBack extends WxPayNotify
 			return false;
 		}
 		
-		$orderInfo = $this->_ci->Order_Model->getFirstByKey($data['out_trade_no'],'order_id');
+		$orderInfo = $this->_ci->order_service->getOrderInfoById($data['out_trade_no'],'order_id');
+		
 		if($orderInfo['amount'] != $data['total_fee']){
 			$msg = "订单金额错误";
 			return false;
@@ -75,7 +76,7 @@ class PayNotifyCallBack extends WxPayNotify
 		);
 		
 		
-		$extraInfo = json_decode($orderInfo['extra_info'],true);
+		$extraInfo = $orderInfo['extra_info'];
 		$cartList = $extraInfo['cart'];
 		
 		$staffIds = array();

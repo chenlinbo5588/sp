@@ -2,19 +2,8 @@
 	<input type="hidden" name="id" value="{$id}"/>
 	<table class="table">
 		<tbody>
-		  <tr class="noborder">
-        	<td>退款原因</td>
-		    <td>
-		    	<select name="reason">
-			    	<option value="">请选择...</option>
-			    	{foreach from=$reasonList item=info}
-			         	<option  value="{$info['show_name']}">{$info['show_name']}</option>
-			         {/foreach}
-			     </select>
-		    </td>
-        	</tr>
 			<tr>
-				<td colspan="2">备注</td>
+				<td colspan="2"><label class="validation">备注:</label><label class="errtip" id="error_remark"></label></td>
 			</tr>
 			<tr>
 				<td colspan="2" >

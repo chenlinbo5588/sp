@@ -236,6 +236,7 @@ $(function(){
 	        <dd><a href="javascript:void(0)" onclick="openItem('spec,goods,goods')">规格管理</a></dd>
 	        <dd><a href="javascript:void(0)" onclick="openItem('album,goods,goods')">图片空间</a></dd>
 	    </dl>
+	    
 	    <dl>    
 	        <dt>交易</dt>
 	        <dd><a href="javascript:void(0)" onclick="openItem('index,order,trade')">订单管理</a></dd>
@@ -325,8 +326,8 @@ $(function(){
 					<li><a class="link" id="nav_wuye" href="javascript:void(0);" onclick="openItem('wuye');"><span>物业</span></a></li>
 					{*<li><a class="link" id="nav_team" href="javascript:void(0);" onclick="openItem('team');"><span>队伍</span></a></li>
 					<li><a class="link" id="nav_stadium" href="javascript:void(0);" onclick="openItem('stadium');"><span>场馆</span></a></li>
-					<li><a class="link" id="nav_game" href="javascript:void(0);" onclick="openItem('game');"><span>赛事</span></a></li>*}
-					<li><a class="link" id="nav_goods" href="javascript:void(0);" onclick="openItem('goods');"><span>商品</span></a></li>
+					<li><a class="link" id="nav_game" href="javascript:void(0);" onclick="openItem('game');"><span>赛事</span></a></li>
+					<li><a class="link" id="nav_goods" href="javascript:void(0);" onclick="openItem('goods');"><span>商品</span></a></li>*}
 					<li><a class="link" id="nav_trade" href="javascript:void(0);" onclick="openItem('trade');"><span>交易</span></a></li>
 					{*<li><a class="link" id="nav_website" href="javascript:void(0);" onclick="openItem('website');"><span>网站</span></a></li>
 					<li><a class="link" id="nav_operation" href="javascript:void(0);" onclick="openItem('operation');"><span>运营</span></a></li>
@@ -474,7 +475,7 @@ $(function(){
               </dl>
             </li>
           </ul>
-          *}
+          
           <ul id="sort_goods">
             <li>
               <dl>
@@ -491,7 +492,7 @@ $(function(){
               </dl>
             </li>
           </ul>
-          
+          *}
           <ul id="sort_trade">
             <li>
               <dl>
@@ -499,7 +500,6 @@ $(function(){
                   <ol>
                     <li><a href="javascript:void(0);" id="index_order" onclick="openItem('index,order,trade');">订单管理</a></li>
                     <li><a href="javascript:void(0);" id="index_refund" onclick="openItem('index,refund,trade');">退款管理</a></li>
-                    <li><a href="javascript:void(0);" id="returned_order" onclick="openItem('returned,order,trade');">退货管理</a></li>
                     <li><a href="javascript:void(0);" id="index_order_type" onclick="openItem('index,order_type,trade');">订单类型</a></li>
                   </ol>
                 </dd>

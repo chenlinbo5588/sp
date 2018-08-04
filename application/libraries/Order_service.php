@@ -26,14 +26,30 @@ class OrderStatus
 	//关闭
 	public static $closed = 5;
 	
+	
 	public static $statusName = array(
 		'已删除',
 		'未支付',
 		'已支付',
 		'退款中',
 		'退款完成',
-		'关闭',
+		'已关闭',
 	);
+}
+
+
+class OrderVerify {
+	
+	public static $unVerify = 0;
+	public static $verifyOK = 1;
+	public static $sendBack = 2;
+	
+	public static $statusName = array(
+		'未审核',
+		'审核通过',
+		'已退回',
+	);
+	
 }
 
 
@@ -132,6 +148,20 @@ class Order_service extends Base_service {
 	
 	
 	/**
+	 * 获得订单详情
+	 */
+	public function getOrderInfoById($pId,$key = 'id'){
+		
+		$orderInfo = $this->_orderModel->getFirstByKey($pId,$key);
+		
+		if($orderInfo){
+			$orderInfo['extra_info'] = json_decode($orderInfo['extra_info'],true);
+		}
+		
+		return $orderInfo;
+	}
+	
+	/**
 	 * 请求微信退款
 	 */
 	public function requestWeixinRefund($pRefundOrder,$refundObj){
@@ -188,10 +218,17 @@ class Order_service extends Base_service {
 	
 	/**
 	 * 创建退订单
+	 * 
+	 * @param array $pOrderParam 原订单参数
+	 * @param bool  &$isNewCreate 是否新的订单
+	 * 
+	 * 
 	 */
-	public function createRefundOrder($pOrderParam,$foreceNew = false){
+	public function createRefundOrder($pOrderParam,&$isNewCreate){
 		
 		$tuiOrder = array();
+		
+		$isNewCreate = false;
 		
 		if($pOrderParam['refund_id']){
 			//退款中订单 继续退款
@@ -236,8 +273,9 @@ class Order_service extends Base_service {
 				'amount' => $oldOrderInfo['amount'],//原订单金额
 				'refund_amount' => $pOrderParam['amount'],//退款金额
 				'uid' => $oldOrderInfo['uid'],
-				'add_uid' => $oldOrderInfo['add_uid'], //@todo 需要后增加退款审核,这里人就不一样
-				'add_username' => $oldOrderInfo['add_username'],
+				'username' => $oldOrderInfo['username'],
+				'add_uid' => empty($pOrderParam['add_uid']) == true ? $oldOrderInfo['add_uid'] : $pOrderParam['add_uid'],
+				'add_username' => empty($pOrderParam['add_username']) == true ? $oldOrderInfo['add_username'] : $pOrderParam['add_username'],
 				'mobile' => $oldOrderInfo['mobile'],
 				'goods_id' => $oldOrderInfo['goods_id'],
 				'goods_name' => $oldOrderInfo['goods_name'],
@@ -248,6 +286,8 @@ class Order_service extends Base_service {
 			if($pOrderParam['extra_info']){
 				$tuiOrder['extra_info'] = $pOrderParam['extra_info'];
 			}
+			
+			$isNewCreate = true;
 			
 			return $this->createBussOrder($tuiOrder);
 			
@@ -517,19 +557,22 @@ class Order_service extends Base_service {
 	/**
 	 * 更新订单状态
 	 */
-	public function updateOrderStatusByIds($pIds,$newStatus){
+	public function updateOrderStatusByIds($pIds,$newStatus,$oldStatus = -1){
 		
 		if(empty($pIds)){
 			return false;
 		}
 		
-		if(!in_array(array_keys(OrderStatus::$statusName),$newStatus)){
+		if(!in_array($newStatus,array_keys(OrderStatus::$statusName))){
 			return false;
 		}
 		
-		return $this->Order_Model->updateByCondition(array(
+		return $this->_orderModel->updateByCondition(array(
 			'status' => $newStatus
 		),array(
+			'where' => array( 
+				'status' => $oldStatus,
+			),
 			'where_in' => array(
 				array('key'=> 'id', 'value' => $pIds )
 			)
@@ -538,32 +581,118 @@ class Order_service extends Base_service {
 	}
 	
 	
-	public function orderVerify($param ,$when, $who){
-		$updateData = array(
-			'reason' => $param['reason'],
-			'remark' =>	empty($param['remark']) == true ? '' : trim($param['remark']) 
-		);
+	/**
+	 * 获得预约单 额外信息
+	 */
+	public function getStaffExtraInfo($extraArray){
 		
-		switch($param['op']){
-			case '审核通过':
-				$updateData['status'] = OrderStatus::$refounded;
-				$updateData = array_merge($updateData,$who);
-				$updateData['verify_time'] = $when;
-				break;
-			case '退回':
-				$updateData['status'] = OrderStatus::$closed;
-				break;
-			default:
-				break;
+		$list = '';
+		
+		foreach ($extraArray as $key => $value) {
+			$temp = array();
+			$tempStr = '';
+			
+			if('cart' == $key){
+				$temp[] = '预约人姓名';
+				
+				foreach ($value as $key2 => $value2) {
+					$tempStr .= $value2['name']." ";
+		 		}
+		 		$temp[] = $tempStr;
+		 		
+			}else if('meet_time' == $key){
+				
+				$temp[] = '碰面时间';
+				$temp[] = $value;
+				
+			}else if('address' == $key){
+				
+				$temp[] = '碰面地址';
+				$temp[] = $value;
+				
+			}else if('reason' == $key){
+				$temp[] = '退款原因';
+				$temp[] = $value;
+				
+			}else if('remark' == $key){
+				
+				$temp[] = '备注';
+				$temp[] = $value;
+			}
+			
+			
+			if($temp){
+	 			$list[] = $temp;
+	 		}
+	 		
+	 	}
+		
+		return $list;
+	}
+	
+	
+	/**
+	 * 解析物业能耗费自定义数据
+	 */
+	public function getWuyeOrderExtraInfo($extraArray){
+		
+		$list = array();
+		
+		foreach($extraArray as $key => $value ){
+			$temp = array();
+			
+			if('fee_start'  == $key){
+				$temp[] ="上次缴费到期时间";
+				$temp[] = date('Y-m-d', $value);
+				
+			}else if('fee_expire'  == $key){
+				
+				$temp[] ="本次缴费到期时间";
+				$temp[] = date('Y-m-d', $value);
+				
+			}else if('reason' == $key){
+				
+				$temp[] ="退款原因";
+				$temp[] = $value;
+				
+	 		 	$item .= "<div>退款原因: {$value}</div>";
+	 		 	
+	 		}else  if('remark' ==$key){
+	 			$temp[] ="备注";
+				$temp[] = $value;
+	 		}
+	 		
+	 		if($temp){
+	 			$list[] = $temp;
+	 		}
+	 		
+	 	}
+	 	
+	 	return $list;
+	}
+	
+	
+	/**
+	 * 解析额外信息
+	 */
+	public function extraInfoToArray($pOrderInfo){
+		
+		$item = array();
+		
+		if(strpos($pOrderInfo['order_typename'],'预约单') !== false){
+			$item = $this->getStaffExtraInfo($pOrderInfo['extra_info']);
+		
+  		}elseif(strpos($pOrderInfo['order_typename'],'物业费') !== false || strpos($pOrderInfo['order_typename'],'能耗费') !== false){
+			$item = $this->getWuyeOrderExtraInfo($pOrderInfo['extra_info']);
+		}else{
+			//@TODO more here
+			
 		}
 		
-		return $this->_orderModel->updateByCondition($updateData,array(
-			'where_in' => array(
-				array('key' => 'id', 'value' => $param['id'])
-			)
-		));
+		return $item;
+		
 	}
-
+	
 	
 	////////////验证规则/////////////////
 	
@@ -571,6 +700,10 @@ class Order_service extends Base_service {
 		self::$CI->form_validation->set_rules('order_id','订单ID','required|in_db_list['.$this->_orderModel->getTableRealName().'.order_id]');
 	}
 	
+	
+	/**
+	 * 检查是否用户订单
+	 */
 	public function checkIsUserOrder($uid,$orderId = ''){
 		
 		$cnt = $this->_orderModel->getCount(array(

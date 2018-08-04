@@ -8,6 +8,7 @@ $entity = array(
 'pid' => 'int',
 'displayorder' => 'int',
 'enable' => 'tinyint',
+'status' => 'tinyint',
 'add_uid' => 'int',
 'add_username' => 'varchar',
 'edit_uid' => 'int',

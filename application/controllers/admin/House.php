@@ -379,9 +379,11 @@ class House extends Ydzj_Admin_Controller {
 			$this->form_validation->set_rules('fieldname','字段','in_list[address,displayorder]');
 			
 			
+			$houseInfo = $this->House_Model->getFirstByKey($id);
+			
 			switch($fieldName){
 				case 'address':
-					$this->_getAddressRule($id);
+					$this->_getAddressRule($id,$houseInfo['building_id']);
 					break;
 				case 'displayorder';
 					$this->form_validation->set_rules('displayorder','排序',"required|is_natural|less_than[256]");

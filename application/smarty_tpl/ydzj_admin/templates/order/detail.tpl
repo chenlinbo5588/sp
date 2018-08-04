@@ -8,71 +8,7 @@
    		  <td class="required">{#order_id#}: </td>
           <td class="vatop rowform">{$info['order_id']|escape}</td>      
        	</tr>
-       	<tr>
-   		  <td class="required">{#name#}: </td>
-          <td class="vatop rowform">{$info['add_username']|escape}</td>      
-       	</tr>
-       	<tr>
-   		  <td class="required">{#mobile#}: </td>
-          <td class="vatop rowform">{$info['mobile']|escape}</td>      
-       	</tr>
-       	<tr>
-   		  <td class="required">{#ref_order#}: </td>
-          <td class="vatop rowform">{$info['ref_order']}</td>      
-       	</tr>
-       	<tr>
-   		  <td class="required">{#order_typename#}: </td>
-          <td class="vatop rowform">{$info['order_typename']|escape}</td>      
-       	</tr>
-       	<tr>
-   		  <td class="required">{#pay_channel#}: </td>
-          <td class="vatop rowform">{$info['pay_channel']|escape}</td>      
-       	</tr>
-       	<tr>
-   		  <td class="required">{#pay_method#}: </td>
-          <td class="vatop rowform">{$info['pay_method']|escape}</td>      
-       	</tr>
-      	<tr>
-   		  <td class="required">{#goods_name#}: </td>
-          <td class="vatop rowform">{$info['goods_name']|escape}</td>      
-       	</tr>
-       	<tr>
-   		  <td class="required">{#amount#}: </td>
-          <td class="vatop rowform">{$info['amount']/100|escape}</td>      
-       	</tr>
-       	<tr>
-   		  <td class="required">{#refund_amount#}: </td>
-          <td class="vatop rowform">{$info['refund_amount']/100|escape}</td>      
-       	</tr>
-       	<tr>
-   		  <td class="required">{#refund_cnt#}: </td>
-          <td class="vatop rowform">{$info['refund_cnt']/100|escape}</td>      
-       	</tr>
-       	<tr>
-   		  <td class="required">{#status#}: </td>
-          <td class="vatop rowform">{$OrderStatus[$info['status']]|escape}</td>      
-       	</tr>
-       	<tr>
-   		  <td class="required">{#order_time#}: </td>
-          <td class="vatop rowform">{$info['gmt_create']|escape|date_format:"%Y-%m-%d %H:%M:%S"}</td>      
-       	</tr>
-       	<tr>
-   		  <td class="required">{#time_expire#}: </td>
-          <td class="vatop rowform">{$info['time_expire']|escape|date_format:"%Y-%m-%d %H:%M:%S"}</td>      
-       	</tr>
-       	<tr>
-   		  <td class="required">{#pay_time_end#}: </td>
-          <td class="vatop rowform">{$info['pay_time_end']|escape|date_format:"%Y-%m-%d %H:%M:%S"}</td>      
-       	</tr>
-       	<tr>
-   		  <td class="required">{#ip#}: </td>
-          <td class="vatop rowform">{$info['ip']|escape}</td>      
-       	</tr>
-       	<tr>
-   		  <td class="required">{#extra_info#}: </td>
-          <td class="vatop rowform">{$item['extra_info']|escape}</td>      
-       	</tr>
-       
+       	{include file="order/detail_common.tpl"}
     </table>
     <div class="fixedOpBar">
     	<input type="submit" name="tijiao" data-url="{admin_site_url($moduleClassName|cat:'/single_close')}" value="关闭" data-title="确定要关闭吗?" class="msbtn"/>

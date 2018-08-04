@@ -77,55 +77,6 @@
       </tfoot>
     </table>
   </form>
-  {include file="common/ajaxfileupload.tpl"}
-  <script type="text/javascript">
-	$(function(){
-		$('input[class="type-file-file"]').change(uploadChange);
-	    function uploadChange(){
-	        var filepatd=$(this).val();
-	        var extStart=filepatd.lastIndexOf(".");
-	        var ext=filepatd.substring(extStart,filepatd.lengtd).toUpperCase();     
-	        if(ext!=".JPG"&&ext!=".JPEG"){
-	            alert("file type error");
-	            $(this).attr('value','');
-	            return false;
-	        }
-	        if ($(this).val() == '') return false;
-	        ajaxFileUpload();
-	    }
-	    
-	    function ajaxFileUpload()
-	    {
-	        $.ajaxFileUpload
-	        (
-	            {
-	                url:'{admin_site_url("common/pic_upload")}?mod=goods_class',
-	                secureuri:false,
-	                fileElementId:'_pic',
-	                dataType: 'json',
-	                data: { formhash : formhash , id : $("input[name=gc_pic_id]").val() },
-	                success: function (resp, status)
-	                {
-	                	refreshFormHash(resp);
-	                	
-	                    if (resp.error == 0){
-	                        $("input[name=gc_pic_id]").val(resp.id);
-	                        $("input[name=gc_pic]").val(resp.url);
-	                        $("#previewPic img").attr("src",resp.url);
-	                    }else
-	                    {
-	                        alert(resp.msg);
-	                    }
-	                    $('input[class="type-file-file"]').bind('change',uploadChange);
-	                },
-	                error: function (resp, status, e)
-	                {
-	                    alert('upload failed');
-	                    $('input[class="type-file-file"]').bind('change',uploadChange);
-	                }
-	            }
-	        )
-	    }
-	})
- </script>
+  
+	
 {include file="common/main_footer.tpl"}

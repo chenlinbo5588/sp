@@ -51,10 +51,16 @@ class Feetype extends Ydzj_Admin_Controller {
 		
 		
 		$search['name'] = $this->input->get_post('name');
+		$search['year'] = $this->input->get_post('year');
 	
 		if($search['name']){
 			$condition['like']['resident_name'] = $search['name'];
 		}
+		
+		if($search['year']){
+			$condition['where']['year'] = $search['year'];
+		}
+		
 		
 		$list = $this->Feetype_Model->getList($condition);
 		
@@ -82,10 +88,13 @@ class Feetype extends Ydzj_Admin_Controller {
 				$ids = (array)$ids;
 			}
 			
-			//@todo 
+			$this->Feetype_Model->deleteByCondition(array(
+				'where_in' => array(
+					array('key' => 'id','value' => $ids)
+				)
+			));
 			
-			
-			$this->jsonOutput('删除失败，待开发完善',$this->getFormHash());
+			$this->jsonOutput('删除成功');
 		}else{
 			$this->jsonOutput('请求非法',$this->getFormHash());
 			

@@ -97,8 +97,7 @@ class Basic_data_service extends Base_service {
 	 */
 	private function _getDefaultCondition(){
 		return array(
-			'select' => 'id,show_name,real_val,pid,displayorder,enable', 
-			'where' => array('enable' => 1),
+			'select' => 'id,show_name,real_val,pid,displayorder,enable,status', 
 			'order' => 'displayorder ASC,id DESC'
 		);
 	}
@@ -110,9 +109,8 @@ class Basic_data_service extends Base_service {
 	public function getBasicDataTreeHTML($condition = array()){
 		
 		$condition = array_merge($this->_getDefaultCondition(),$condition);
-		
 		$list = $this->_basicDataModel->getList($condition);
-		
+
 		if($list){
 			self::$CI->phptree->resetData();
 			return self::$CI->phptree->makeTreeForHtml($list,array(

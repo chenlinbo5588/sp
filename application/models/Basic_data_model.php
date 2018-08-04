@@ -110,53 +110,35 @@ class Basic_Data_Model extends MY_Model {
 	
 	/**
 	 * 删除基础数据,根据ID
+	 * 
+	 * @param int $delId
+	 * @param bool $realDelete
+	 * 
+	 * return bool
 	 */
-	public function deleteById($delId){
+	public function deleteById($delId,$realDelete = false){
 		
-		$list = $this->getList(array(
-			'where' => array('pid' => $delId)
-		));
-		
-		$hasData = true;
-		
-		while($list && $hasData){
-			$ids = array();
-			foreach($list as $item){
-				$ids[] = $item['id'];
-			}
+		if($realDelete){
+			$list = $this->getList(array(
+				'where' => array('pid' => $delId)
+			));
 			
-			if(empty($ids)){
-				$hasData = false;
-			}else{
-				
-				$this->deleteByCondition(array(
-					'where_in' => array(
-						array('key' => 'id', 'value' => $ids)
-					)
-				));
-				
-				$list = $this->getList(array(
-					'where_in' => array(
-						array('key' => 'id', 'value' => $ids)
-					)
-				));
-			}
+			$this->deleteByWhere(array('id' => $delId));
+			
+		}else{
+			
+			$this->updateByWhere(array('status' => 0),array('id' => $delId));
+			
+			//再去找子项目
+			$list = $this->getList(array(
+				'where' => array('pid' => $delId,'status' => 1)
+			));
 		}
 		
-		return $this->deleteByWhere(array('id' => $delId));
+		foreach($list as $subItem){
+			$this->deleteById($subItem['id'],$realDelete);
+		}
 		
 	}
 	
-	/**
-	 * 根据父级ID 获取全部
-	 */
-	public function getByParentId($id = 0){
-		return $this->getList(array(
-			'where' => array('pid' => $id),
-			'order' => 'displayorder ASC'
-		),'id');
-		
-	}
-    
-    
 }

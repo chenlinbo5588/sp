@@ -53,13 +53,13 @@
         <tr class="noborder">
           <td class="vatop rowform"><ul>
               <li>
-                <label><input type="radio" value="S" {if $inpost}{set_radio('member_sex','S')}{else}{if $info['sex'] == 'S'}checked{/if}{/if} name="member_sex">保密</label>
+                <label><input type="radio" value="0" {if $inpost}{set_radio('member_sex','0')}{else}{if $info['sex'] == '0'}checked{/if}{/if} name="member_sex">保密</label>
               </li>
               <li>
-                <label><input type="radio" value="M" {if $inpost}{set_radio('member_sex','M')}{else}{if $info['sex'] == 'M'}checked{/if}{/if} name="member_sex">男</label>
+                <label><input type="radio" value="1" {if $inpost}{set_radio('member_sex','1')}{else}{if $info['sex'] == '1'}checked{/if}{/if} name="member_sex">男</label>
               </li>
               <li>
-                <label><input type="radio" value="F" {if $inpost}{set_radio('member_sex','F')}{else}{if $info['sex'] == 'F'}checked{/if}{/if} name="member_sex">女</label>
+                <label><input type="radio" value="2" {if $inpost}{set_radio('member_sex','2')}{else}{if $info['sex'] == '2'}checked{/if}{/if} name="member_sex">女</label>
               </li>
             </ul></td>
           <td class="vatop tips"></td>

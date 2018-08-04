@@ -22,11 +22,6 @@ class Cms extends Ydzj_Admin_Controller {
 	}
 	
 	
-	private function _clearCache(){
-		$this->cache->file->delete(CACHE_KEY_SiteSetting);
-	}
-	
-	
 	public function index(){
 		$feedback = '';
 		
@@ -70,7 +65,6 @@ class Cms extends Ydzj_Admin_Controller {
 				if($this->base_service->updateSetting($data) >= 0){
 					$feedback = getSuccessTip('保存成功');
 					
-					$this->_clearCache();
 					
 					$currentSetting = $this->base_service->getSettingList(array(
 						'where_in' => array(

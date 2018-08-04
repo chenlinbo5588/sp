@@ -17,7 +17,8 @@ class Order extends Ydzj_Admin_Controller {
 		$this->assign(array(
 			'moduleTitle' => $this->_moduleTitle,
 			'moduleClassName' => $this->_className,
-			'OrderStatus' => OrderStatus::$statusName
+			'OrderStatus' => OrderStatus::$statusName,
+			'OrderVerify' => OrderVerify::$statusName,
 		));
 		
 		
@@ -25,7 +26,7 @@ class Order extends Ydzj_Admin_Controller {
 			array('url' => $this->_className.'/index','title' => '管理'),
 			array('url' => $this->_className.'/unpay','title' => '未支付'),
 			array('url' => $this->_className.'/payed','title' => '已支付'),
-			array('url' => $this->_className.'/cancel','title' => '已关闭'),
+			array('url' => $this->_className.'/closed','title' => '已关闭'),
 			array('url' => $this->_className.'/deleted','title' => '已删除'),
 		);
 		
@@ -63,11 +64,11 @@ class Order extends Ydzj_Admin_Controller {
 		}
 		
 		if($search['amount_s']){
-			$condition['where']['amount >='] = $search['amount_s'];
+			$condition['where']['amount >='] = intval($search['amount_s']*100);
 		}
 		
 		if($search['amount_e']){
-			$condition['where']['amount <='] = $search['amount_e'];
+			$condition['where']['amount <='] = intval($search['amount_e']*100);
 		}
 		
 		if($search['mobile']){
@@ -95,7 +96,14 @@ class Order extends Ydzj_Admin_Controller {
 	 */
 	public function index(){
 		
+		/*
+		$this->_searchCondition(array(
+			'status != ' => OrderStatus::$closed,
+			'status   != ' => OrderStatus::$deleted,
+		));
+		*/
 		$this->_searchCondition();
+		
 		$this->display($this->_className.'/index');
 	}
 	
@@ -129,7 +137,7 @@ class Order extends Ydzj_Admin_Controller {
 	/**
 	 * 已取消
 	 */
-	public function cancel(){
+	public function closed(){
 		$this->_searchCondition(array(
 			'status' => OrderStatus::$closed
 		));
@@ -175,9 +183,13 @@ class Order extends Ydzj_Admin_Controller {
 				$ids = (array)$ids;
 			}
 			
-			$this->order_service->updateOrderStatusByIds($ids,OrderStatus::$deleted);
+			$affectRow = $this->order_service->updateOrderStatusByIds($ids,OrderStatus::$deleted,OrderStatus::$closed);
 			
-			$this->jsonOutput('删除成功',array('jsReload' => true));
+			if($affectRow){
+				$this->jsonOutput('删除成功',array('jsReload' => true));
+			}else{
+				$this->jsonOutput('删除操作完成,没有订单被删除,只有已关闭的订单可以被删除');
+			}
 			
 		}else{
 			$this->jsonOutput('请求非法',$this->getFormHash());
@@ -199,9 +211,13 @@ class Order extends Ydzj_Admin_Controller {
 				$ids = (array)$ids;
 			}
 			
-			$this->order_service->updateOrderStatusByIds($ids,OrderStatus::$deleted);
+			$affectRow = $this->order_service->updateOrderStatusByIds($ids,OrderStatus::$deleted,OrderStatus::$closed);
   			
-			$this->jsonOutput('删除成功',array('redirectUrl' => $this->lastUrl));
+  			if($affectRow){
+				$this->jsonOutput('删除成功',array('jsReload' => true));
+			}else{
+				$this->jsonOutput('删除操作完成,没有订单被删除,只有已关闭的订单可以被删除',array('jsReload' => true));
+			}
 			
 		}else{
 			$this->jsonOutput('请求非法',$this->getFormHash());
@@ -222,9 +238,13 @@ class Order extends Ydzj_Admin_Controller {
 				$ids = (array)$ids;
 			}
 			
-			$this->order_service->updateOrderStatusByIds($ids,OrderStatus::$closed);
+			$affectRow = $this->order_service->updateOrderStatusByIds($ids,OrderStatus::$closed,OrderStatus::$unPayed);
 			
-			$this->jsonOutput('关闭成功',array('jsReload' => true));
+			if($affectRow){
+				$this->jsonOutput('关闭成功',array('jsReload' => true));
+			}else{
+				$this->jsonOutput('关闭操作完成,没有订单被关闭');
+			}
 			
 		}else{
 			
@@ -246,122 +266,22 @@ class Order extends Ydzj_Admin_Controller {
 				$ids = (array)$ids;
 			}
 			
+			$affectRow = $this->order_service->updateOrderStatusByIds($ids,OrderStatus::$closed,OrderStatus::$unPayed);
 			
-			$this->order_service->updateOrderStatusByIds($ids,OrderStatus::$closed);
+			if($affectRow){
+				$this->jsonOutput('关闭成功',array('redirectUrl' => $this->lastUrl));
+			}else{
+				$this->jsonOutput('关闭操作完成,没有订单被关闭',array('jsReload' => true));
+			}
 			
-			$this->jsonOutput('删除成功',array('redirectUrl' => $this->lastUrl));
-			
-  			$jumpUrl = $this->session->userdata('jumpUrl');
   			$this->session->unset_userdata('jumpUrl');
   			
-			$this->jsonOutput('关闭成功',array('redirectUrl' => $jumpUrl));
 
 		}else{
 			$this->jsonOutput('请求非法',$this->getFormHash());
 		}
 		
 		
-	}
-	
-	
-	/**
-	 * 解析自定义额外信息
-	 */
-	private function _staffOrderExtra($extraJson){
-		
-		$item = array();
-		
-		foreach ($extraJson as $key => $value) {
-			
-			if('cart' == $key){
-				$item['extra_info']=$item['extra_info']."预约人姓名: ";
-				foreach ($value as $key2 => $value2) {
-					$item['extra_info'] = $item['extra_info'].$value2['name']." ";
-		 		}
-			}else if('meet_time' == $key){
-				$item['extra_info']=$item['extra_info']."面试时间: ".$value." ";
-			}else if('address' == $key){
-				$item['extra_info']=$item['extra_info']."面试地址: ".$value." ";
-			}else if('remark' == $key){
-				$item['extra_info']=$item['extra_info']."退款原因: ".$value." ";
-			}else if('remark' == $key){
-				$item['extra_info']=$item['extra_info']."备注: ".$value." ";
-			}		
-	 	}
-		
-		return $item;
-	}
-	
-	
-	/**
-	 * 解析物业能耗费自定义数据
-	 */
-	private function _wuyeOrderExtra($extraJson){
-		
-		$item = array();
-		
-		foreach( $extraJson as $key => $value ){
-			if('fee_start'  == $key){
-				$value =date('Y-m-d', $value);
-				$item['extra_info']=$item['extra_info']."上次缴费到期时间: ".$value." ";
-			}else if('fee_expire'  == $key){
-				$value =date('Y-m-d', $value);
-				$item['extra_info']=$item['extra_info']."本次缴费到期时间: ".$value." ";
-			}else if('reason' == $key){
-	 		 	$item['extra_info']=$item['extra_info']."退款原因: ".$value." ";
-	 		}else  if('remark' ==$key){
-	 		 	$item['extra_info']=$item['extra_info']."备注: ".$value." ";
-	 		}
-	 	}
-	 	
-	 	return $item;
-	}
-	
-	
-	/**
-	 * 转译
-	 */
-	private function _valueChange($info){
-		
-		$item = $info;
-		
-		switch($info['pay_channel']){
-			case 1:
-				$item['pay_channel']="微信支付";
-				break;
-			case 1:
-				break;
-			default:
-				break;
-		}
-		switch($info['pay_method']){
-			case 1001:
-				$item['pay_method']="小程序支付";
-				break;
-			case 1:
-				break;
-			default:
-				break;
-		}
-		
-		
-		if(!empty($info['extra_info'])){
-			
-			$item['extra_info'] ="";
-			$arr = json_decode($info['extra_info'],true);
-			
-			
-			if(strpos($info['order_typename'],'预约单') !== false){
-				$item = $this->_staffOrderExtra($arr);
-			}else if(strpos($info['order_typename'],'报修') !== false){
-				//@TODO 待完成
-			}else{
-				$item = $this->_wuyeOrderExtra($arr);
-			}
-			
-		}
-		
-		return $item;
 	}
 	
 	
@@ -373,15 +293,15 @@ class Order extends Ydzj_Admin_Controller {
 		$this->session->set_userdata('jumpUrl',$this->lastUrl);
 		
 		$id = $this->input->get_post('id');
-		$info = $this->Order_Model->getFirstByKey($id);
+		$info = $this->order_service->getOrderInfoById($id);
 		
 		$this->_subNavs[] = array('url' => $this->_className.'/detail?id='.$id,'title' => $this->_moduleTitle.'详情');
 		
-		$item = array();	
-		$item = $this->_valueChange($info);
-  			
-  		$this->assign('info',$info);
-		$this->assign('item',$item);
+  		
+		$this->assign(array(
+			'info' => $info,
+			'extraItem' => $this->order_service->extraInfoToArray($info)
+		));
 		
 		
 		$this->display();

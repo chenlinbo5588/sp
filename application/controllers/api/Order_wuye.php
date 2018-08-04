@@ -52,7 +52,7 @@ class PayNotifyCallBack extends WxPayNotify
 			return false;
 		}
 		
-		$orderInfo = $this->_ci->Order_Model->getFirstByKey($data['out_trade_no'],'order_id');
+		$orderInfo = $this->_ci->order_service->getOrderInfoById($data['out_trade_no'],'order_id');
 		if($orderInfo['amount'] != $data['total_fee']){
 			$msg = "订单金额错误";
 			return false;
@@ -76,7 +76,7 @@ class PayNotifyCallBack extends WxPayNotify
 		
 		
 		if($affectRow > 0 ){
-			$feeInfo = json_decode($orderInfo['extra_info'],true);
+			$feeInfo = $orderInfo['extra_info'];
 			$updateKey = '';
 			switch($orderInfo['order_typename']){
 				case '物业费':

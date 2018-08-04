@@ -99,8 +99,6 @@ class Message extends Ydzj_Admin_Controller {
 					break;
 				}
 				
-				$this->getCacheObject()->delete(CACHE_KEY_SiteSetting);
-				
 				$feedback = getSuccessTip('保存成功');
 				$currentSetting = $this->base_service->getSettingList(array(
 					'where_in' => array(

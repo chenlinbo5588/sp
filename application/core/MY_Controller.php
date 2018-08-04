@@ -180,6 +180,8 @@ class MY_Controller extends CI_Controller {
     }
     
     private function _initSiteSetting(){
+    	
+    	/*
     	$settingList = $this->getCacheObject()->get(CACHE_KEY_SiteSetting);
     	if(empty($settingList)){
     		$temp = $this->Setting_Model->getList();
@@ -190,6 +192,14 @@ class MY_Controller extends CI_Controller {
 	    	}
 	    	
 	    	$this->getCacheObject()->save(CACHE_KEY_SiteSetting,$settingList,CACHE_ONE_DAY);
+    	}
+    	*/
+    	
+    	$temp = $this->Setting_Model->getList();
+		//print_r($list);
+    	$settingList = array();
+    	foreach($temp as $item){
+    		$settingList[$item['name']] = $item['value'];
     	}
     	
     	$this->_siteSetting = $settingList;
@@ -351,14 +361,14 @@ class MY_Controller extends CI_Controller {
 		foreach($tplDir as $tplDirItem){
 			
 			if($this->input->is_ajax_request()){
-	    		$viewname = $viewname.'_ajax';
+	    		$viewname = $unchangeTplName.'_ajax';
 	    	}else{
 	    		if($this->agent->is_mobile()){
-	    			$viewname = $viewname . '_mobile';
+	    			$viewname = $unchangeTplName . '_mobile';
 	    		}
 	    	}
 	    	
-	    	$realPath = $tplDirItem.$viewname.'.tpl';
+	    	$realPath = $tplDirItem.$unchangeTplName.'.tpl';
 	    	
 	    	if(file_exists($realPath)){
 	    		$viewFileName = $realPath;
@@ -387,7 +397,7 @@ class MY_Controller extends CI_Controller {
     	}else{
     		
     		if(ENVIRONMENT == 'development'){
-    			echo "template {$viewname} not found";
+    			echo "template {$viewname}.tpl not found";
     		}
     		
     	}

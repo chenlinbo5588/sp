@@ -45,13 +45,13 @@
         <tr class="noborder">
           <td class="vatop rowform"><ul>
               <li>
-                <label><input type="radio" checked="checked" value="S" {set_radio('member_sex','S')} name="member_sex">保密</label>
+                <label><input type="radio" checked="checked" value="0" {set_radio('member_sex','0')} name="member_sex">保密</label>
               </li>
               <li>
-                <label><input type="radio" value="M" {set_radio('member_sex','M')} name="member_sex">男</label>
+                <label><input type="radio" value="1" {set_radio('member_sex','1')} name="member_sex">男</label>
               </li>
               <li>
-                <label><input type="radio" value="F" {set_radio('member_sex','F')} name="member_sex">女</label>
+                <label><input type="radio" value="2" {set_radio('member_sex','2')} name="member_sex">女</label>
               </li>
             </ul></td>
           <td class="vatop tips"></td>
