@@ -49,7 +49,7 @@
       	<tr class="hover edit" id="row{$item['id']}">
           <td><input type="checkbox" name="id[]" group="chkVal" value="{$item['id']}" class="checkitem"></td>
           <td><a href="{admin_site_url($moduleClassName|cat:'/detail')}?id={$item['id']}">{$item['order_id']}</a></td>
-          <td>{$item['add_username']}</td>
+          <td>{$item['username']}</td>
           <td>{$item['mobile']}</td>
           <td>{$item['order_typename']}</td>
           <td>{$item['pay_channel']}</td>

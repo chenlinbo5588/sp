@@ -178,7 +178,7 @@ class Wuye extends Wx_Controller {
 			$detail =array(
 				'mobile'=>$this->yezhuInfo['mobile'],
 				'name' =>$this->yezhuInfo['name'],
-				'repairTypeList' => RepairType::$statusName
+				'repairTypeList' => RepairType::$typeName
 			);
 			
 			if($detail){
