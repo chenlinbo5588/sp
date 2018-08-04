@@ -33,18 +33,22 @@ class StaffStatus
 class BookingMeet
 {
 	//未碰面
-	public static $onmeet = 1;
+	public static $unmeet = 1;
+	
+	//有意向
+	public static $intention = 2;
 	
 	//预约成功
-	public static $meetsuccess = 2;
+	public static $meetsuccess = 3;
 	
 	//预约失败
-	public static $meetfail = 3;
+	public static $meetfail = 4;
 		
 	public static $statusName = array(
 		1 => '未碰面',
-		2 => '预约成功',
-		3 => '预约失败',
+		2 => '有意向',
+		3 => '预约成功',
+		4 => '预约失败',
 	);
 }
 

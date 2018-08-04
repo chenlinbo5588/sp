@@ -34,6 +34,7 @@ class Staff_booking extends Ydzj_Admin_Controller {
 		$search['order_status'] = $this->input->get_post('order_status') ? $this->input->get_post('order_status') : '';
 		$search['staff_name'] = $this->input->get_post('staff_name') ? $this->input->get_post('staff_name') : '';
 		$search['staff_mobile'] = $this->input->get_post('staff_mobile') ? $this->input->get_post('staff_mobile') : '';
+		$search['order_id'] = $this->input->get_post('order_id') ? $this->input->get_post('order_id') : '';
 		
 		
 		$condition = array(
@@ -69,6 +70,9 @@ class Staff_booking extends Ydzj_Admin_Controller {
 		
 		if(isset($search['is_cancel'])){
 			$condition['where']['is_cancel'] = intval($search['is_cancel']);
+		}
+		if(isset($search['order_id'])){
+			$condition['like']['order_id'] = $search['order_id'];
 		}
 		
 		$list = $this->Staff_Booking_Model->getList($condition);
@@ -107,15 +111,13 @@ class Staff_booking extends Ydzj_Admin_Controller {
 			
 		$id = $this->input->post('id');
 		$idAr = explode(',',$id);
-
-		$returnVal = $this->staff_bookingVerify(array(
+		
+		$returnVal = $this->_bookingVerify(array(
 			'op' => $op,
 			'id' => $idAr,
 			'reason' => $this->input->post('reason')
 		),$this->_reqtime, $this->addWhoHasOperated('verify'));
 		
-	
-	
 		return $returnVal;
 
 	}
@@ -127,7 +129,6 @@ class Staff_booking extends Ydzj_Admin_Controller {
 		
 		//@TOOD
 		//待加入微信通知
-	
 		if($this->isPostRequest()){
 			$this->_getVerifyRules();
 			
@@ -169,17 +170,60 @@ class Staff_booking extends Ydzj_Admin_Controller {
 			else
 			{
 				$this->display($this->_className.'/batch_verify');
+			}	
+		}		
+	}
+	
+	/**
+	 * 更改状态
+	 */
+	public function change_state(){
+		
+		//@TOOD
+		//待加入微信通知
+		if($this->isPostRequest()){
+			$this->_getVerifyRules();
+			
+			for($i = 0; $i < 1 ; $i++){
+				
+				if(!$this->form_validation->run()){
+					$this->jsonOutput('数据校验失败,'.$this->form_validation->error_html('<div>','<div>'),array('errors' => $this->form_validation->error_array()));
+					break;
+				}
+				
+				$op = $this->input->post("meetResult");
+				$returnVal = $this->_doBatchOp($op);
+				
+				if($returnVal < 1){
+					$this->jsonOutput('服务器发生错误,'.$op.'操作失败');
+					break;
+				}
+				
+				if($returnVal > 0)
+				{
+					$this->jsonOutput($op.'操作成功',array('jsReload' => true));
+				}
 			}
 			
-		}
-		
+		}else{
+			$id=$this->input->get_post('id');
+
+			$this->assign('id',implode(',',$this->input->get_post('id')));
+			$bookingList=$this->Staff_Booking_Model->getById(array(
+				'where' => array(
+					'id' => $id[0]
+				)
+			));
+			
+			$this->display($this->_className.'/change_state');
+		}		
 	}
 	
 
 	/**
 	 * 审核
 	 */
-	public function staff_bookingVerify($param ,$when, $who){
+	private function _bookingVerify($param ,$when, $who){
 		$updateData = array(
 			'reason' => $param['reason']
 		);
@@ -189,16 +233,29 @@ class Staff_booking extends Ydzj_Admin_Controller {
 		switch($param['op']){
 			case '取消预约':
 				$updateData['is_cancel'] = 1;
-				$updateData = array_merge($updateData,$who);
-				$updateData['verify_time'] = $when;
 				break;
 			case '恢复预约':
 				$updateData['is_cancel'] = 0;
 				break;
+			case '未碰面':
+				$updateData['meet_result'] = BookingMeet::$unmeet;
+				break;
+			case '有意向':
+				$updateData['meet_result'] = BookingMeet::$intention;
+				break;
+			case '预约成功':
+				$updateData['meet_result'] = BookingMeet::$meetsuccess;
+				break;
+			case '预约失败':
+				$updateData['meet_result'] = BookingMeet::$meetfail;
+				break;
+				
 			default:
 				break;
 		}
-		
+		$updateData = array_merge($updateData,$who);
+		$updateData['verify_time'] = $when;
+
 		return $this->Staff_Booking_Model->updateByCondition($updateData,array(
 			'where_in' => array(
 				array('key' => 'id', 'value' => $param['id'])
@@ -209,10 +266,10 @@ class Staff_booking extends Ydzj_Admin_Controller {
 	/**
 	 * 提醒
 	 */
-	
-	public function notify(){
+	//框架完成 功能未完成
+	public function remind(){
 		$ids = $this->input->post('id');
-		
+		$info = $this->Staff_Booking_Model->getList($ids);
 		//@TOOD
 		//待加入微信通知
 		if($this->isPostRequest() && !empty($ids)){
@@ -238,8 +295,12 @@ class Staff_booking extends Ydzj_Admin_Controller {
 			}
 			
 		}else{
-			$this->jsonOutput('请求非法',$this->getFormHash());
+			$this->assign('info',$info);
+			$this->display($this->_className.'/remind');
 		}
+
+			
+
 		
 		
 		
@@ -247,7 +308,7 @@ class Staff_booking extends Ydzj_Admin_Controller {
 	
 	
 	/**
-	 * 
+	 * 预约单详情
 	 */
 	public function detail(){
 		
@@ -260,9 +321,9 @@ class Staff_booking extends Ydzj_Admin_Controller {
 		
 		$this->assign('info',$info);
 		$this->display($this->_className.'/add');
-			
-		
+
 	}
+	
 	
 	private function _getVerifyRules(){
 		

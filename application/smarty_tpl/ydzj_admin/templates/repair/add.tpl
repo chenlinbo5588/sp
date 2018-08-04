@@ -6,7 +6,7 @@
   {else}
   {form_open_multipart(site_url($uri_string),'id="infoform"')}
   {/if}
-
+	<input type="hidden" name="gobackUrl" value="{$gobackUrl}"/>
     <table class="table tb-type2 mgbottom">
       <tbody>
 		<tr class="noborder">
@@ -14,7 +14,7 @@
         </tr>
         <tr class="noborder">
           <td class="vatop rowform">
-          	<select name="repair_type" id="repair_type">
+          	<select name="repair_type" >
 	          <option value="">请选择...</option>
 	          {foreach from=$repairType key=key item=item}
 	          <option value="{$key}" {if $info['repair_type'] == $key}selected{/if}>{$item}</option>
@@ -31,7 +31,7 @@
           <td class="vatop tips"><label id="error_address"></label>{form_error('address')}</td>
         </tr>
         <tr class="noborder">
-          <td colspan="2" class="required">{#yezhu_name#}:</label></td>
+          <td colspan="2" class="required">{#yezhu_name#}:</td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input type="text" value="{$info['yezhu_name']|escape}" name="yezhu_name" id="yezhu_name" class="txt"></td>
@@ -43,6 +43,33 @@
         <tr class="noborder">
           <td class="vatop rowform"><input type="text" value="{$info['mobile']|escape}" name="mobile" id="mobile" class="txt"></td>
           <td class="vatop tips"><label id="error_mobile"></label>{form_error('mobile')}</td>
+        </tr>
+		<tr class="noborder">
+          <td colspan="2" class="required"><label class="validation" for="name">{#status#}:</label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform">
+          	<select name="status" >
+	          <option value="">请选择...</option>
+	          {foreach from=$repairStatus key=key item=item}
+	          <option value="{$key}" {if $item == '已受理' && empty($info['status'])} selected {else if $info['status'] == $key} selected{/if}>{$item}</option>
+              {/foreach}
+	        </select>
+          </td>
+        </tr>
+        <tr class="noborder">
+          <td colspan="2" class="required">{#worker_name#}:</td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform"><input type="text" value="{$info['worker_name']|escape}" name="worker_name" id="worker_name" class="txt"></td>
+          <td class="vatop tips"><label id="error_worker_name"></label>{form_error('worker_name')}</td>
+        </tr>
+        <tr class="noborder">
+          <td colspan="2" class="required">{#worker_mobile#}:</td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform"><input type="text" value="{$info['worker_mobile']|escape}" name="worker_mobile" id="worker_mobile" class="txt"></td>
+          <td class="vatop tips"><label id="error_worker_mobile"></label>{form_error('worker_mobile')}</td>
         </tr>
         <tr class="noborder">
           <td colspan="2" class="required"><label class="validation" for="remark">{#remark#}:</label><label id="error_remark"></label></td>
@@ -94,6 +121,7 @@
   </form>
   {include file="common/ke.tpl"}
   {include file="common/uploadify.tpl"}
+  {include file="common/fancybox.tpl"}
 
   <script type="text/javascript">
   	var submitUrl = [new RegExp("{$uri_string}")],searchAddressUrl = "{admin_site_url('house/getAddress')}",
@@ -102,5 +130,5 @@
 	
   </script>
   <script type="text/javascript" src="{resource_url('js/wuye/repair.js',true)}"></script>
-  <script type="text/javascript" src="{resource_url('js/service/info.js',true)}"></script>
+ <script type="text/javascript" src="{resource_url('js/service/info.js',true)}"></script>
 {include file="common/main_footer.tpl"}	

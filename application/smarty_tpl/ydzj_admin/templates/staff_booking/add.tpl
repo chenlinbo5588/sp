@@ -6,10 +6,7 @@
   {else}
   {form_open(site_url($uri_string),'id="infoform"')}
   {/if}
-  <input type="hidden" name="gobackUrl" value="{$gobackUrl}"/>
-  <input type="hidden" name="lng" value="{$info['lng']}"/>
-  <input type="hidden" name="lat" value="{$info['lat']}"/>
-    <table class="table tb-type2">
+    <table class="table tb-type2 mgbottom">
       <tbody>
 		<tr class="noborder">
           <td colspan="2" class="required">{#username#}:</label></td>
@@ -111,7 +108,9 @@
         </tr>
       </tbody>
     </table>
-    <a href="{$gobackUrl}" class="salvebtn">返回</a>
+    <div class="fixedOpBar">
+    	<a href="{$gobackUrl}" class="salvebtn">返回</a>
+    </div>
   </form>
 
   <script type="text/javascript" src="{resource_url('js/service/staff.js',true)}"></script>

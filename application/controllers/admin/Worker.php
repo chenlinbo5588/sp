@@ -28,8 +28,6 @@ class Worker extends Ydzj_Admin_Controller {
 		$this->assign('basicData',$this->basic_data_service->getBasicDataList());
 	}
 	
-	
-	
 	public function index(){
 		
 		

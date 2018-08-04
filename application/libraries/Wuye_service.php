@@ -17,12 +17,40 @@ class RepairType{
 	//其他报修
 	public static $others = 5;	
 		
-	public static $statusName = array(
+	public static $typeName = array(
 		1 => '管道维修',
 		2 => '电路报修',
 		3 => '电器报修',
 		4 => '网络报修',
 		5 => '其他报修'
+	);
+}
+
+
+class RepairStatus {
+
+	
+	//未受理
+	public static $unReceived  = 1;
+	
+	//已受理
+	public static $received = 2;
+	
+	//已派单
+	public static $sendOrder = 3;
+	
+	//已完成
+	public static $accomplish = 4;
+	
+	//已删除
+	public static $deleted = 5;
+		
+	public static $statusName = array(
+		1 => '未受理',
+		2 => '已受理',
+		3 => '已派单',
+		4 => '已完成',
+		5 => '已删除'
 	);
 }
 
@@ -317,6 +345,23 @@ class Wuye_service extends Base_service {
 		return self::$memberModel->getFirstByKey($idVal,$idKey);
 		
 	}
+	/**
+	 * 改变状态
+	 */
+	public function changeRepairStatus($pIds,$pNewValue,$pOldValue,$pFieldName,$extraData = array()){
+		return $this->_repairModel->updateByCondition(array_merge(array(
+			$pFieldName => $pNewValue
+		),$extraData),array(
+			'where' => array(
+				$pFieldName => $pOldValue
+			),
+			'where_in' => array(
+				array('key' => 'id', 'value' => $pIds)
+			)
+		));
+	}
+	
+	
 	
 	/**
 	 * 获得业主信息

@@ -12,7 +12,6 @@ $entity = array(
 'remark' => 'varchar',
 'photos' => 'text',
 'status' => 'tinyint',
-'source' => 'varchar',
 'worker_name' => 'varchar',
 'worker_mobile' => 'varchar',
 'worker2_name' => 'varchar',

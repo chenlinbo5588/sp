@@ -2,13 +2,13 @@
   {config_load file="worker.conf"}
   {form_open(site_url($uri_string),'id="formSearch" method="get"')}
   <input type="hidden" name="page" value="{$currentPage}"/>
-    <table class="tb-type1 noborder search">
+    <table class="tb-type1 noborder search mgbottom">
       <tbody>
         <tr>
           <th><label for="username">{#username#}</label></th>
           <td><input type="text" value="{$search['username']|escape}" name="username" id="username" class="txt"></td>
-          <th><label for="staff_name">{#staff_name#}</label></th>
-          <td><input type="text" value="{$search['staff_name']|escape}" name="staff_name" id="staff_name" class="txt"></td>
+         <th><label for="username">客户{#mobile#}</label></th>
+          <td><input type="text" value="{$search['mobile']|escape}" name="mobile" id="mobile" class="txt"></td>
           <th><label>{#meet_result#}</label></th>
           <td>
           	<select name="meet_result">
@@ -20,13 +20,15 @@
           </td>
           <td><input type="submit" class="msbtn" name="tijiao" value="查询"/></td>
         </tr>
-        <tr>	
-	      <th><label for="username">客户{#mobile#}</label></th>
-          <td><input type="text" value="{$search['mobile']|escape}" name="mobile" id="mobile" class="txt"></td>
+        <tr>
+          <th><label for="staff_name">{#staff_name#}</label></th>
+          <td><input type="text" value="{$search['staff_name']|escape}" name="staff_name" id="staff_name" class="txt"></td>	   
           <th><label for="staff_mobile">{#staff_mobile#}</label></th>
           <td><input type="text" value="{$search['staff_mobile']|escape}" name="staff_mobile" id="staff_mobile" class="txt"></td>
+          <th><label for="username">{#order_id#}</label></th>
+          <td><input type="text" value="{$search['order_id']|escape}" name="order_id" id="order_id" class="txt"></td>
           <th><label>{#order_status#}</label></th>
-          <td>
+      	  <td>
           	<select name="order_status">
           	  <option value="">请选中</option>
           	  {foreach from=$bookingStatus key=key item=item}
@@ -51,6 +53,7 @@
           <th>{#is_cancel#}</th>
           <th>{#meet_result#}</th>
           <th>{#is_notify#}</th>
+          <th>{#order_id#}</th>
           <th>{#order_status#}</th>
           <th>操作</th>
         </tr>
@@ -66,9 +69,10 @@
          <td>{$item['service_name']}</td>
          <td>{$item['meet_time']|date_format:"%Y-%m-%d %H:%M"}</td>
          <td>{if $item['is_cancel'] == 0}正常{elseif $item['is_cancel'] == 1}已取消{/if}</td>
-         <td>{if $item['meet_result']==1}未碰面{elseif $item['meet_result']==2}预约成功{elseif $item['meet_result']==3}预约失败{/if	}</td>
+         <td><div>{$bookingMeet[$item['meet_result']]}</div></td>
          <td>{if $item['is_notify']==1}已提醒{else}未提醒{/if}</td>
-         <td>{if $item['order_status']==1}预约单未完成{elseif $item['order_status']==2}预约单完成{elseif $item['order_status']==3}预约单取消{/if}</td>
+    	 <td><a href="{admin_site_url('order/detail')}?order_id={$item['order_id']}">{$item['order_id']}</a></td>
+         <td><div>{$bookingStatus[$item['order_status']]}</div></td>
          <td>
           	<a href="{admin_site_url($moduleClassName|cat:'/detail')}?id={$item['id']}">预约单详情</a>
           </td>
@@ -80,7 +84,8 @@
     	<label><input type="checkbox" class="checkall" id="checkallBottom" name="chkVal">全选</label>&nbsp;
        	<a href="javascript:void(0);" class="btn verifyBtn" data-title="取消预约" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/batch_cancel')}" data-ajaxformid="#verifyForm"><span>取消预约</span></a>
        	<a href="javascript:void(0);" class="btn verifyBtn" data-title="恢复预约" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/batch_cancel')}" data-ajaxformid="#verifyForm"><span>恢复预约</span></a>
-       	<a href="javascript:void(0);" class="btn opBtn" data-title="确定要发送提醒吗" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/notify')}" data-ajaxformid="#verifyForm"><span>提醒</span></a>
+       	<a href="javascript:void(0);" class="btn verifyBtn" data-title="发送提醒" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/remind')}" data-ajaxformid="#verifyForm"><span>提醒</span></a>
+   		<a href="javascript:void(0);" class="btn verifyBtn" data-title="选择更改的状态" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/change_state')}" data-ajaxformid="#verifyForm"><span>更改状态</span></a>
         {include file="common/pagination.tpl"}
     </div>
   </form>
