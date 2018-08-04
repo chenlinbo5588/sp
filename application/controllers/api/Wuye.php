@@ -82,7 +82,7 @@ class Wuye extends Wx_Controller {
 					),
 					'order' => 'id DESC',
 					'limit' => 1,
-					'status' => 4 //@todo modify
+					'status' => RepairStatus::$accomplish
 				);
 				
       			
@@ -111,7 +111,7 @@ class Wuye extends Wx_Controller {
       			
       			
       			if(!$this->form_validation->run()){
-					$this->jsonOutput2("参数错误",$this->form_validation->error_array());
+					$this->jsonOutput2($this->form_validation->error_first_html());
 					break;
 				}
 				

@@ -30,7 +30,7 @@ class Wx_Controller extends MY_Controller {
 		parent::__construct();
 		
 		$this->load->library(array('Seo_service','Weixin_service','Wuye_service'));
-		$this->form_validation->set_error_delimiters('<label class="form_error">','</label>');
+		$this->form_validation->set_error_delimiters('','');
 		
 		
 		$this->version = $this->input->get_post('version');
