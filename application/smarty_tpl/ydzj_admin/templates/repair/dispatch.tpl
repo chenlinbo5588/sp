@@ -1,11 +1,8 @@
   {config_load file="wuye.conf"}
   {form_open(site_url($uri_string),'id="ajaxForm"')}
 	<input type="hidden" name="id" value="{$id}"/>
-	<table class="table">
+	<table class="table tb-type2">
 		<tbody>
-			<tr>
-				<td>请输入人员信息</td>
-			</tr>
 		    <tr class="noborder">
 		      <td colspan="2" class="required"><label class="validation" for="worker_name">{#worker_name#}:</label><label id="error_worker_name"></label></td>
 		    </tr>

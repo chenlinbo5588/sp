@@ -227,6 +227,7 @@ $.loadingbar = function(settings) {
         spin_wrap.find(".loading_close").hide();
     }
 
+
     if(0 == $(cfg.container).find("> .lightbox").length){
         $(cfg.container).append(spin_wrap);
     }else{
@@ -236,6 +237,14 @@ $.loadingbar = function(settings) {
     $(document).ajaxSend(function(event, jqxhr, settings) {
         var surl = settings.url;
         var state = false;
+        
+        //异步加载的页面
+        if(0 == $(cfg.container).find("> .lightbox").length){
+            $(cfg.container).append(spin_wrap);
+        }else{
+            spin_wrap = $("> .lightbox",$(cfg.container));
+        }
+        
         if(typeof cfg.urls != 'undefined'){
             $.each(cfg.urls,function(i,item){
                 if($.type(item) === 'regexp'){

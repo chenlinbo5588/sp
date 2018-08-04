@@ -77,7 +77,7 @@
   <div id="verifyDlg"></div>
   
   <script>
-  	var submitUrl = [new RegExp("{admin_site_url($moduleClassName|cat:'/dispatch')}")];
+  	var submitUrl = [new RegExp("{admin_site_url($moduleClassName|cat:'/dispatch')}"),new RegExp("{admin_site_url($moduleClassName|cat:'/complete_repair')}")];
   	var editUrl = "{admin_site_url($moduleClassName|cat:'/inline_edit')}";
   	
   </script>
