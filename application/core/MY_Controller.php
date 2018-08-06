@@ -361,14 +361,14 @@ class MY_Controller extends CI_Controller {
 		foreach($tplDir as $tplDirItem){
 			
 			if($this->input->is_ajax_request()){
-	    		$viewname = $unchangeTplName.'_ajax';
+	    		$viewname = $viewname.'_ajax';
 	    	}else{
 	    		if($this->agent->is_mobile()){
-	    			$viewname = $unchangeTplName . '_mobile';
+	    			$viewname = $viewname . '_mobile';
 	    		}
 	    	}
 	    	
-	    	$realPath = $tplDirItem.$unchangeTplName.'.tpl';
+	    	$realPath = $tplDirItem.$viewname.'.tpl';
 	    	
 	    	if(file_exists($realPath)){
 	    		$viewFileName = $realPath;

@@ -304,10 +304,12 @@ class Refund extends Ydzj_Admin_Controller {
 					$refundObj = new $className;
 					$refundObj->setController($this);
 					
-					$isOk = $this->order_service->requestWeixinRefund($refundOrder,$refundObj);
+					$message = '退款失败';
+					
+					$isOk = $this->order_service->requestWeixinRefund($refundOrder,$refundObj,$message);
 					
 					if(!$isOk){
-						$this->jsonOutput("退款失败");
+						$this->jsonOutput($message);
 						break;
 					}
 				}

@@ -164,7 +164,7 @@ class Order_service extends Base_service {
 	/**
 	 * 请求微信退款
 	 */
-	public function requestWeixinRefund($pRefundOrder,$refundObj){
+	public function requestWeixinRefund($pRefundOrder,$refundObj,&$message){
 		
 		try {
 			
@@ -199,6 +199,7 @@ class Order_service extends Base_service {
 			
 			
 			if(!$this->checkWeixinRespSuccess($refundResp)){
+				$message = $refundResp['err_code_des'];
 				return false;
 			}
 			
@@ -238,10 +239,11 @@ class Order_service extends Base_service {
 			//原正常订单
 			$oldOrderInfo = $this->getOrderDetailByOrderId($pOrderParam['order_id']);
 			
-			if($oldOrderInfo['is_refund']){
+			if(!$oldOrderInfo['is_refund']){
 				//检查一下是否有退款中的退款订单
 				$tempOrder = $this->_orderModel->getList(array(
 					'where' => array(
+						'goods_id' => $oldOrderInfo['goods_id'],
 						'order_old' => $oldOrderInfo['order_id'],
 						'status' => OrderStatus::$refounding
 					),

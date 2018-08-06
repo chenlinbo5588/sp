@@ -55,7 +55,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td>验证码</td>
+				<td><label class="validation">验证码</label></td>
 				<td>
 					<input name="auth_code" type="text" class="txt-short" id="captcha" placeholder="输入验证" title="验证码为4个字符" autocomplete="off" value="" >
 					<label class="errtip" id="error_auth_code"></label>

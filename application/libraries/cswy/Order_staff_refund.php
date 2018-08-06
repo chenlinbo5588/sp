@@ -40,7 +40,7 @@ class Order_staff_refund extends Weixin_refund {
 			
 			
 			//更新退款统计信息
-			$this->updateOrderRefundStat($pRefundOrder['order_old'],$refundResp['refund_fee']);
+			$affectRow = $this->updateOrderRefundStat($pRefundOrder['order_old'],$refundResp['refund_fee']);
 			
 			if($this->_ci->Order_Model->getTransStatus() === FALSE){
 				$this->_ci->Order_Model->rollBackTrans();
