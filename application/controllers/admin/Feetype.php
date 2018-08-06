@@ -325,7 +325,6 @@ class Feetype extends Ydzj_Admin_Controller {
 	}
 	
 	
-	
 	/**
 	 * 导入输出
 	 */
@@ -350,8 +349,6 @@ class Feetype extends Ydzj_Admin_Controller {
     	
     	$this->form_validation->set_error_delimiters('','');
     	
-    
-    
     	if($this->isPostRequest()){
        		
     		for($i = 0; $i < 1; $i++){
@@ -380,7 +377,6 @@ class Feetype extends Ydzj_Admin_Controller {
 					
 					$result = array();
 					$successCnt = 0;
-					
 					
 					$feeTypeList = $this->basic_data_service->getTopChildList('费用类型');
 					$provinceIdcard = config_item('province_idcard');
@@ -440,15 +436,13 @@ class Feetype extends Ydzj_Admin_Controller {
 						
 						$result[] = $tmpRow;
 					}
-					
-					
+								
 					$feedback = getSuccessTip('导入完成,导入'.$successCnt.'条,失败'.(count($result) - $successCnt).'条');
 					
 					$this->assign(array(
 						'output' => '<table class="table">'.$this->_importOutput($result).'</table>',
 						'successCnt' => $successCnt,
 					));
-					
 					
 	    			@unlink($excelFile);
 	    		}catch(Exception $e){
@@ -466,5 +460,153 @@ class Feetype extends Ydzj_Admin_Controller {
     		$this->display();
     	}
     	
+    }
+    /**
+     * 费用管理数据导出
+     */
+    public function export(){
+    	
+    	$message = '';
+    	
+    	if($this->isPostRequest()){
+    		
+    		try {
+    			
+    			$search = $this->input->post(array('name','resident_name','page'));
+    			
+    			$condition = array(
+    				'order' => 'year DESC'
+    			);
+    			
+    			if($search['name']){
+    				$condition['where']['name'] = $search['name'];
+    			}
+    			
+    			if($search['resident_name']){
+    				$condition['where']['resident_name'] = $search['resident_name'];
+    			}
+    			 			
+    			$search['page'] = intval($search['page']) == 0 ? 1 : intval($search['page']);
+    			
+    			$dataCnt = $this->Feetype_Model->getCount($condition);
+    			
+    			$perPageSize = config_item('excel_export_limit');
+    			
+    			if($dataCnt > $perPageSize){
+    				$condition['pager'] = array(
+						'page_size' => $perPageSize,
+						'current_page' => $search['page'],
+						'form_id' => '#formSearch'
+	    			);
+    			}
+    			
+    			$this->_doExport($condition);
+    		}catch(Exception $e){
+    			//出错信息
+    			$message = $e->getMessage();
+    		}
+    		
+    	}else{
+    		
+    		$this->display();
+    	}
+    	
+    }
+    
+    /**
+     * 导出数据列
+     */
+    private function _getExportConfig(){
+    	return array(
+    		'A' => array('db_key' => 'name','width' => 15 ,'title' => '费用类型'),
+    		'B' => array('db_key' => 'year','width' => 12 ,'title' => '缴费年份'),
+    		'C' => array('db_key' => 'resident_name','width' => 25 ,'title' => '小区名称'),
+    		'D' => array('db_key' => 'price','width' => 15 ,'title' => '单价/每平米'),
+    	);
+	
+    }
+    
+    /**
+     * 执行导出动作
+     */
+    private function _doExport($condition = array()){
+    	
+    	$this->_initPHPExcel();
+    	
+        $objPHPExcel = new PHPExcel();
+        
+        $data = $this->Feetype_Model->getList($condition);
+    	
+    	$colConfig = $this->_getExportConfig();
+    	
+    	foreach($colConfig as $colKey => $colItemConfig){
+    		$objPHPExcel->getActiveSheet()->getCell($colKey.'1')->setValueExplicit($colItemConfig['title'], PHPExcel_Cell_DataType::TYPE_STRING2);
+    		$objPHPExcel->getActiveSheet()->getColumnDimension($colKey)->setWidth($colItemConfig['width']);
+    	}
+    	
+    	$colKeys = array_keys($colConfig);
+    	
+    	$objPHPExcel->getActiveSheet()->getStyle($colKeys[0].'1:'.$colKeys[count($colKeys) - 1].'1')->applyFromArray(
+    		array(
+                'font'    => array(
+                    'bold'      => true,
+                    'size'     => 12
+                ),
+
+                'fill' => array(
+                    'type'       => PHPExcel_Style_Fill::FILL_PATTERN_LIGHTGRAY,
+                    'startcolor' => array(
+                        'argb' => 'FFC0C0C0'
+                    ),
+                    'endcolor'   => array(
+                        'argb' => 'FFC0C0C0'
+                    )
+                )
+             )
+	    );
+        
+        if($condition['pager']){
+        	$list = $data['data'];
+        	$objPHPExcel->getActiveSheet()->setTitle('第'.$data['pager']['pageNow'].'页之共'.$data['pager']['pageLastNum'].'页');
+        }else{
+        	$list = $data;
+        }
+
+    	foreach($list as $rowId => $yezhu){
+    		foreach($colConfig as $colKey => $colItemConfig){
+    			
+    			$val = $yezhu[$colItemConfig['db_key']];
+    			$objPHPExcel->getActiveSheet()->getCell($colKey.($rowId + 2))->setValueExplicit($val, PHPExcel_Cell_DataType::TYPE_STRING2);
+    		}
+    	}
+
+    	$objPHPExcel->getActiveSheet()->getStyle($colKeys[0].'1:'.$colKeys[count($colKeys) - 1].(count($list) + 1))->applyFromArray(
+            array(
+                'alignment' => array(
+                    'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
+                    'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                ),
+                'borders' => array(
+                    'allborders' => array(
+                        'style' => PHPExcel_Style_Border::BORDER_THIN,
+                        'color' => array('argb' => 'FF000000')
+                    )
+                )
+            )
+        );
+        
+    	$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+        $downloadName = $this->_moduleTitle.'.xlsx';
+        $fileRealName = md5(uniqid());
+        
+        $filePath = ROOTPATH.'/temp/'.$fileRealName.'.xlsx';
+        
+        $objWriter->save($filePath);
+        $objPHPExcel->disconnectWorksheets(); 
+        
+        unset($objPHPExcel,$objWriter);
+        
+        force_download($downloadName,  file_get_contents($filePath));
+        
     }
 }

@@ -7,6 +7,8 @@
 	        <tr>
 	          <th><label for="address">{#address#}</label></th>
 	          <td><input class="txt" name="address" id="address" value="{$smarty.get['address']|escape}" type="text"></td>
+	           <th><label for="resident_name">{#resident_name#}</label></th>
+	          <td><input class="txt" name="resident_name" id="resident_name" value="{$smarty.get['resident_name']|escape}" type="text"></td>
 	          <th><label for="name">{#yezhu_name#}</label></th>
 	          <td><input class="txt" name="yezhu_name" value="{$smarty.get['yezhu_name']|escape}" type="text"></td>
 	          <td><input type="submit" class="msbtn" name="tijiao" value="查询"/></td>
@@ -35,7 +37,7 @@
           <td class="sort"><span class="editable" data-id="{$item['id']}" data-fieldname="displayorder">{$item['displayorder']}</span></td>
           <td class="name"><span class="editable" data-id="{$item['id']}" data-fieldname="address">{$item['address']|escape}</span></td>
           <td>{$item['jz_area']|escape}</td>
-          <td>{if $item['yezhu_id']}{$item['yezhu_id']}{else}暂未入驻{/if}</td>
+          <td>{if $item['yezhu_id']}{$item['yezhu_name']}{else}暂未入驻{/if}</td>
           <td>{$item['mobile']|escape}</td>
           <td>{$item['telephone']|escape}</td>
           <td>{if $item['wuye_expire']}{$item['wuye_expire']|date_format:"%Y-%m-%d"}{else}无缴费记录{/if}</td>

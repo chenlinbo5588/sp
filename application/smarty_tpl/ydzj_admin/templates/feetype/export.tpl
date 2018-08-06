@@ -24,32 +24,21 @@
       </thead>
       <tbody>
 			<tr class="noborder">
-	          <td colspan="2"><label for="name">{#yezhu_name#}:</label></td>
+	          <td colspan="2"><label for="name">{#type_name#}:</label></td>
 	        </tr>
 	        <tr class="noborder">
 	          <td class="vatop rowform"><input class="txt" name="name" value="" type="text"></td>
 	          <td class="vatop tips">选填</td>
 	        </tr>
 			<tr class="noborder">
-	          <td colspan="2"><label for="name">{#mobile#}</label></th>
+	          <td colspan="2"><label for="name">{#resident_name#}</label></th>
 	        </tr>
 	        <tr class="noborder">
 	          <td class="vatop rowform">
-	          	<input class="txt" name="mobile" value="" type="text">
+	          	<input class="txt" name="resident_name" value="" type="text">
 	          </td>
 	          <td class="vatop tips">选填</td>
 	        </tr>   
-	        <tr class="noborder">
-	          <td colspan="2"><label for="name">{#age#}</label></th>
-	        </tr>
-	        <tr class="noborder">
-	          <td>
-        		从&nbsp;<input type="text" value="" name="age_s" value="" class="smtxt"/>
-        		-
-        		到&nbsp;<input type="text" value="" name="age_e" value="" class="smtxt"/>
-		        </td>
-		        <td class="vatop tips">选填</td>
-	        </tr>
 	        <tr class="noborder">
 	          <td colspan="2"><label for="name">页码</label>
 	        </tr>

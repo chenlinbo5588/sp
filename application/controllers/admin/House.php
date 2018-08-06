@@ -24,6 +24,7 @@ class House extends Ydzj_Admin_Controller {
 			array('url' => $this->_className.'/add','title' => '添加'),
 			array('url' => $this->_className.'/import','title' => $this->_moduleTitle.'导入'),
 			array('url' => $this->_className.'/yezhu_import','title' => '业主导入'),
+			array('url' => $this->_className.'/export','title' => '导出'),
 		);
 		
 		
@@ -54,6 +55,7 @@ class House extends Ydzj_Admin_Controller {
 		
 		$search['name'] = $this->input->get_post('name');
 		$search['address'] = $this->input->get_post('address');
+		$search['resident_name'] = $this->input->get_post('resident_name');
 		
 		if($search['name']){
 			$condition['like']['name'] = $search['name'];
@@ -62,7 +64,19 @@ class House extends Ydzj_Admin_Controller {
 		if($search['address']){
 			$condition['like']['address'] = $search['address'];
 		}
-		
+		if($search['resident_name']){
+			$resident_name = $search['resident_name'];
+			
+			$resident = $this->Resident_Model->getById(array(
+				'where' => array(
+					'name' => $resident_name
+				)
+			));
+			
+			if($resident['id']){
+				$condition['where']['resident_id'] = $resident['id'];
+			}
+		}
 		
 		$list = $this->House_Model->getList($condition);
 		
@@ -731,5 +745,178 @@ class House extends Ydzj_Admin_Controller {
     		$this->display();
     	}
     	
+    }
+    /**
+     * 导出exl表
+     */
+   public function export(){
+    	
+    	$message = '';
+    	
+    	if($this->isPostRequest()){
+    		
+    		try {
+    			
+    			$search = $this->input->post(array('address','yezhu_name','page','resident_name'));
+    			
+    			$condition = array();
+    			
+    			if($search['address']){
+    				$condition['where']['address'] = $search['address'];
+    			}
+    			
+    			if($search['yezhu_name']){
+    				$condition['where']['yezhu_name'] = $search['yezhu_name'];
+    			}
+    			
+				if($search['resident_name']){
+					$resident_name = $search['resident_name'];
+					$resident = $this->Resident_Model->getById(array(
+						'where' => array(
+							'name' => $resident_name
+						)
+					));
+					
+					if($resident['id']){
+						$condition['where']['resident_id'] = $resident['id'];
+					}
+				}
+				
+    				
+    			$search['page'] = intval($search['page']) == 0 ? 1 : intval($search['page']);
+    			
+    			$dataCnt = $this->House_Model->getCount($condition);
+    			
+    			
+    			$perPageSize = config_item('excel_export_limit');
+    			
+    			if($dataCnt > $perPageSize){
+    				$condition['pager'] = array(
+						'page_size' => $perPageSize,
+						'current_page' => $search['page'],
+						'form_id' => '#formSearch'
+	    			);
+    			}
+    			
+    			$this->_doExport($condition);
+    		}catch(Exception $e){
+    			//出错信息
+    			$message = $e->getMessage();
+    		}
+    		
+    	}else{
+    		$this->display();
+    	}
+    }
+    
+   /**
+     * 导出数据列
+     */
+    private function _getExportConfig(){
+    	return array(
+    		'A' => array('db_key' => 'address','width' => 30 ,'title' => '地址'),
+    		'B' => array('db_key' => 'jz_area','width' => 12 ,'title' => '建筑面积'),
+    		'C' => array('db_key' => 'yezhu_name','width' => 10 ,'title' => '业主姓名'),
+    		'D' => array('db_key' => 'mobile','width' => 25 ,'title' => '联系方式'),
+    		'E' => array('db_key' => 'telephone','width' => 15 ,'title' => '固定电话'),
+    		'F' => array('db_key' => 'wuye_expire','width' => 25 ,'title' => '物业费到期时间'),
+    		'G' => array('db_key' => 'nenghao_expire','width' => 25 ,'title' => '能耗费到期时间'),
+    		'H' => array('db_key' => 'wuye_cnt','width' => 15 ,'title' => '物业数量'),
+    	);
+    	
+    }
+    
+    /**
+     * 执行导出动作
+     */
+    private function _doExport($condition = array()){
+    	
+    	$this->_initPHPExcel();
+    	
+        $objPHPExcel = new PHPExcel();
+          
+        $data = $this->House_Model->getList($condition);
+
+    	$colConfig = $this->_getExportConfig();
+    	
+    	foreach($colConfig as $colKey => $colItemConfig){
+    		$objPHPExcel->getActiveSheet()->getCell($colKey.'1')->setValueExplicit($colItemConfig['title'], PHPExcel_Cell_DataType::TYPE_STRING2);
+    		$objPHPExcel->getActiveSheet()->getColumnDimension($colKey)->setWidth($colItemConfig['width']);
+    	}
+    	
+    	$colKeys = array_keys($colConfig);
+    	
+    	$objPHPExcel->getActiveSheet()->getStyle($colKeys[0].'1:'.$colKeys[count($colKeys) - 1].'1')->applyFromArray(
+    		array(
+                'font'    => array(
+                    'bold'      => true,
+                    'size'     => 12
+                ),
+
+                'fill' => array(
+                    'type'       => PHPExcel_Style_Fill::FILL_PATTERN_LIGHTGRAY,
+                    'startcolor' => array(
+                        'argb' => 'FFC0C0C0'
+                    ),
+                    'endcolor'   => array(
+                        'argb' => 'FFC0C0C0'
+                    )
+                )
+             )
+	    );
+        
+        if($condition['pager']){
+        	$list = $data['data'];
+        	$objPHPExcel->getActiveSheet()->setTitle('第'.$data['pager']['pageNow'].'页之共'.$data['pager']['pageLastNum'].'页');
+        }else{
+        	$list = $data;
+        }
+              
+    	foreach($list as $rowId => $house){
+    		foreach($colConfig as $colKey => $colItemConfig){
+    			$val = $house[$colItemConfig['db_key']];
+    			if('wuye_expire' == $colItemConfig['db_key'] || 'nenghao_expire' == $colItemConfig['db_key']){
+    				if(!empty($val)){
+						$val = date('Y-m-d',$val);
+					}else{
+						$val = '无缴费记录';
+					}
+    			}
+
+    						
+    			$objPHPExcel->getActiveSheet()->getCell($colKey.($rowId + 2))->setValueExplicit($val, PHPExcel_Cell_DataType::TYPE_STRING2);
+    		}
+    	}
+    	
+    	
+    	$objPHPExcel->getActiveSheet()->getStyle($colKeys[0].'1:'.$colKeys[count($colKeys) - 1].(count($list) + 1))->applyFromArray(
+            array(
+                'alignment' => array(
+                    'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
+                    'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                ),
+                'borders' => array(
+                    'allborders' => array(
+                        'style' => PHPExcel_Style_Border::BORDER_THIN,
+                        'color' => array('argb' => 'FF000000')
+                    )
+                )
+            )
+        );
+        
+    	
+    	$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+        $downloadName = '房屋.xlsx';
+        $fileRealName = md5(uniqid());
+        
+        $filePath = ROOTPATH.'/temp/'.$fileRealName.'.xlsx';
+        
+        $objWriter->save($filePath);
+        $objPHPExcel->disconnectWorksheets(); 
+        
+        unset($objPHPExcel,$objWriter);
+        
+        force_download($downloadName,  file_get_contents($filePath));
+        
     }
 }

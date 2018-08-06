@@ -23,6 +23,7 @@ class Building extends Ydzj_Admin_Controller {
 			array('url' => $this->_className.'/index','title' => '管理'),
 			array('url' => $this->_className.'/add','title' => '添加'),
 			array('url' => $this->_className.'/import','title' => '导入'),
+			array('url' => $this->_className.'/export','title' => '导出'),
 		);
 		
 		
@@ -50,6 +51,7 @@ class Building extends Ydzj_Admin_Controller {
 		
 		$search['name'] = $this->input->get_post('name');
 		$search['address'] = $this->input->get_post('address');
+		$search['resident_name'] = $this->input->get_post('resident_name');
 		
 		if($search['name']){
 			$condition['like']['name'] = $search['name'];
@@ -57,6 +59,19 @@ class Building extends Ydzj_Admin_Controller {
 		
 		if($search['address']){
 			$condition['like']['address'] = $search['address'];
+		}
+		
+		if($search['resident_name']){
+			$resident_name = $search['resident_name'];
+			$resident = $this->Resident_Model->getById(array(
+				'where' => array(
+					'name' => $resident_name
+				)
+			));
+			
+			if($resident['id']){
+				$condition['where']['resident_id'] = $resident['id'];
+			}
 		}
 		
 		
@@ -559,4 +574,174 @@ class Building extends Ydzj_Admin_Controller {
     	}
     	
     }
+
+
+	/**
+	 * 导出excel
+	 */
+    public function export(){
+    	
+    	$message = '';
+    	
+    	if($this->isPostRequest()){
+    		
+    		try {
+    			
+    			$search = $this->input->post(array('name','address','resident_name','page'));
+    			
+    			$condition = array();
+    			
+    			if($search['name']){
+    				$condition['where']['name'] = $search['name'];
+    			}
+    			
+    			if($search['address']){
+    				$condition['where']['address'] = $search['address'];
+    			}
+    			
+				if($search['resident_name']){
+					$resident_name = $search['resident_name'];
+					
+					$resident = $this->Resident_Model->getById(array(
+						'where' => array(
+							'name' => $resident_name
+						)
+					));
+					
+					if($resident['id']){
+						$condition['where']['resident_id'] = $resident['id'];
+					}
+				}
+				
+    			
+    			$search['page'] = intval($search['page']) == 0 ? 1 : intval($search['page']);
+    			
+    			$dataCnt = $this->Building_Model->getCount($condition);
+    			
+    			$perPageSize = config_item('excel_export_limit');
+    			
+    			if($dataCnt > $perPageSize){
+    				$condition['pager'] = array(
+						'page_size' => $perPageSize,
+						'current_page' => $search['page'],
+						'form_id' => '#formSearch'
+	    			);
+    			}
+    			
+    			$this->_doExport($condition);
+    		}catch(Exception $e){
+    			//出错信息
+    			$message = $e->getMessage();
+    		}
+    		
+    	}else{
+    		
+    		$this->display();
+    	}
+    	
+    }
+
+    /**
+     * 导出数据列
+     */
+    private function _getExportConfig(){
+    	return array(
+    		'A' => array('db_key' => 'name','width' => 25 ,'title' => '建筑物名称'),
+    		'B' => array('db_key' => 'address','width' => 60 ,'title' => '详细地址'),
+    		'C' => array('db_key' => 'unit_num','width' => 10 ,'title' => '单元数量'),
+    		'D' => array('db_key' => 'max_plies','width' => 10 ,'title' => '最高层数'),
+    		'E' => array('db_key' => 'floor_plies','width' => 10 ,'title' => '地下层数'),
+    		'F' => array('db_key' => 'total_num','width' => 10 ,'title' => '总套数'),
+    		'G' => array('db_key' => 'yezhu_num','width' => 20 ,'title' => '已入驻业主数量'),
+    	);
+    	
+    }
+    
+    /**
+     * 执行导出动作
+     */
+    private function _doExport($condition = array()){
+    	
+    	$this->_initPHPExcel();
+    	
+        $objPHPExcel = new PHPExcel();
+        
+        $data = $this->Building_Model->getList($condition);
+    	
+    	$colConfig = $this->_getExportConfig();
+    	
+    	foreach($colConfig as $colKey => $colItemConfig){
+    		$objPHPExcel->getActiveSheet()->getCell($colKey.'1')->setValueExplicit($colItemConfig['title'], PHPExcel_Cell_DataType::TYPE_STRING2);
+    		$objPHPExcel->getActiveSheet()->getColumnDimension($colKey)->setWidth($colItemConfig['width']);
+    	}
+    	
+    	
+    	$colKeys = array_keys($colConfig);
+    	
+    	$objPHPExcel->getActiveSheet()->getStyle($colKeys[0].'1:'.$colKeys[count($colKeys) - 1].'1')->applyFromArray(
+    		array(
+                'font'    => array(
+                    'bold'      => true,
+                    'size'     => 12
+                ),
+
+                'fill' => array(
+                    'type'       => PHPExcel_Style_Fill::FILL_PATTERN_LIGHTGRAY,
+                    'startcolor' => array(
+                        'argb' => 'FFC0C0C0'
+                    ),
+                    'endcolor'   => array(
+                        'argb' => 'FFC0C0C0'
+                    )
+                )
+             )
+	    );
+        
+        if($condition['pager']){
+        	$list = $data['data'];
+        	$objPHPExcel->getActiveSheet()->setTitle('第'.$data['pager']['pageNow'].'页之共'.$data['pager']['pageLastNum'].'页');
+        }else{
+        	$list = $data;
+        }
+        
+        
+    	foreach($list as $rowId => $building){
+    		foreach($colConfig as $colKey => $colItemConfig){
+    			
+    			$val = $building[$colItemConfig['db_key']];
+    			
+    			$objPHPExcel->getActiveSheet()->getCell($colKey.($rowId + 2))->setValueExplicit($val, PHPExcel_Cell_DataType::TYPE_STRING2);
+    		}
+    	}
+    	    	
+    	$objPHPExcel->getActiveSheet()->getStyle($colKeys[0].'1:'.$colKeys[count($colKeys) - 1].(count($list) + 1))->applyFromArray(
+            array(
+                'alignment' => array(
+                    'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
+                    'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                ),
+                'borders' => array(
+                    'allborders' => array(
+                        'style' => PHPExcel_Style_Border::BORDER_THIN,
+                        'color' => array('argb' => 'FF000000')
+                    )
+                )
+            )
+        );
+        
+    	$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+        $downloadName = $this->_moduleTitle.'.xlsx';
+        $fileRealName = md5(uniqid());
+        
+        $filePath = ROOTPATH.'/temp/'.$fileRealName.'.xlsx';
+        
+        $objWriter->save($filePath);
+        $objPHPExcel->disconnectWorksheets(); 
+        
+        unset($objPHPExcel,$objWriter);
+        
+        force_download($downloadName,  file_get_contents($filePath));
+        
+    }
+
 }

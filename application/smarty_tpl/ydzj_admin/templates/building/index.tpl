@@ -7,6 +7,8 @@
 	        <tr>
 	          <th><label for="name">{#building_name#}</label></th>
 	          <td><input class="txt" name="name" id="name" value="{$smarty.get['name']|escape}" type="text"></td>
+  	          <th><label for="resident_name">{#resident_name#}</label></th>
+	          <td><input class="txt" name="resident_name" id="resident_name" value="{$smarty.get['resident_name']|escape}" type="text"></td>
 	          <th><label for="address">{#address#}</label></th>
 	          <td><input class="txt" name="address" id="address" value="{$smarty.get['address']|escape}" type="text"></td>
 	          <td><input type="submit" class="msbtn" name="tijiao" value="查询"/></td>
