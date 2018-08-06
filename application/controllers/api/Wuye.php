@@ -52,12 +52,11 @@ class Wuye extends Wx_Controller {
 				}
 				
 				$houseInfo = $this->wuye_service->getYezhuHouseDetail($id,$this->yezhuInfo);
-			
-				if($houseInfo){
-					$this->jsonOutput2(RESP_SUCCESS,$houseInfo);
-				}else{
-					$this->jsonOutput2(RESP_ERROR);
-				}
+	            if($houseInfo){
+	            	$this->jsonOutput2(RESP_SUCCESS,$houseInfo);
+	            }else{
+	            	$this->jsonOutput2(RESP_ERROR);
+	            }
 			}
 			
 		}else{
@@ -147,6 +146,88 @@ class Wuye extends Wx_Controller {
 		}
 	
 	}
+	
+	/**
+	 * 获取维修订单列表
+	 */
+	public function getRepairList(){
+		
+		if($this->yezhuInfo){
+			
+			$page = $this->postJson['page'];
+			$statusName = $this->postJson['statusName'];
+			
+			if(empty($page)){
+				$page = 1;
+			}
+			
+			$statusNameList = RepairStatus::$statusName;
+			$repairStatus = 0;
+			
+			if (in_array ($statusName, $statusNameList)) {
+				$repairStatus = array_search($statusName,$statusNameList);
+			}else{
+				$repairStatus = -1;
+			}
+					
+			$condition = array(
+				'where' => array(
+					'yezhu_id' => $this->yezhuInfo['id'],
+					'status' => $repairStatus
+				),
+				'pager' => array(
+					'page_size' => config_item('page_size'),
+					'current_page' => $page,
+				),
+				'order' => 'id DESC'
+			);
+			
+			$repairList = $this->Repair_Model->getList($condition);
+			$this->jsonOutput2(RESP_SUCCESS,$repairList);
+			
+		}else{
+			$this->jsonOutput2(UNBINDED,$this->unBind);
+		}
+	}
+	
+	/**
+	 * 取消报修
+	 */
+	public function closeRepair(){
+		
+		if($this->yezhuInfo){
+			
+			for($i = 0; $i < 1; $i++){
+				
+				$this->form_validation->set_data(array(
+					'repair_id' => $this->postJson['repair_id']
+				));
+				
+				
+				$this->form_validation->set_rules('repair_id','报修','required|in_db_list['.$this->Repair_Model->getTableRealName().'.id]');
+		
+				if(!$this->form_validation->run()){
+					$this->jsonOutput2($this->form_validation->error_first_html());
+					break;
+				}
+				
+				$id = $this->postJson['repair_id'];
+				$resp = $this->Repair_Model->updateByWhere(array(
+						'status' => RepairStatus::$deleted
+				),array('id' => $id));
+				
+				if(!$resp){
+					$this->jsonOutput2("取消失败,请联系物业");
+					break;
+				}
+				
+				$this->jsonOutput2(RESP_SUCCESS);
+			}
+			
+		}else{
+			$this->jsonOutput2(UNBINDED,$this->unBind);
+		}
+	}
 
 	/**
 	 * 文件上传
@@ -196,6 +277,7 @@ class Wuye extends Wx_Controller {
 		
 		
 	}
+	
 	
 	
 	/**
