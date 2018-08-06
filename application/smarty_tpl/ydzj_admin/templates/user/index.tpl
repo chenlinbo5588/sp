@@ -1,4 +1,4 @@
-{include file="common/main_header.tpl"}
+{include file="common/main_header_navs.tpl"}
   {form_open(admin_site_url('user/index'),'id="formSearch" class="formSearch"')}
   	<input type="hidden" name="page" value=""/>
   	<input type="hidden" name="submit_type" id="submit_type" value="" />

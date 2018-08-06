@@ -48,7 +48,7 @@ class Order extends Ydzj_Admin_Controller {
 		$search = array_merge($search,$moreSearchVal);
 		
 		$condition = array(
-			'where' => array_merge(array(),$moreSearchVal),
+			'where' => array_merge(array('is_refund' => 0),$moreSearchVal),
 			'order' => 'id DESC',
 			'pager' => array(
 				'page_size' => config_item('page_size'),
@@ -96,13 +96,11 @@ class Order extends Ydzj_Admin_Controller {
 	 */
 	public function index(){
 		
-		/*
 		$this->_searchCondition(array(
+			
 			'status != ' => OrderStatus::$closed,
 			'status   != ' => OrderStatus::$deleted,
 		));
-		*/
-		$this->_searchCondition();
 		
 		$this->display($this->_className.'/index');
 	}

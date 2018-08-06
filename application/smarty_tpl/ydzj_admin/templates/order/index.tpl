@@ -34,7 +34,6 @@
           <th>{#amount#}(元)</th>
           <th>{#refund_amount#}</th>
           <th>{#refund_cnt#}</th>
-          <th>{#verify_status#}</th>
           <th>{#goods_name#}</th>
           <th>{#status#}</th>
           <th>{#order_time#}</th>
@@ -57,7 +56,6 @@
           <td>{$item['amount']/100}</td>
           <td>{$item['refund_amount']/100}</td>
           <td>{$item['refund_cnt']}</td>
-          <td>{$OrderVerify[$item['verify_status']]}</td>
           <td>{$item['goods_name']}</td>
           <td>{$OrderStatus[$item['status']]}</td>      
           <td>{$item['gmt_create']|date_format:"%Y-%m-%d %H:%M:%S"}</td>

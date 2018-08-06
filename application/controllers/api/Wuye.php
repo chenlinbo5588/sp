@@ -134,7 +134,10 @@ class Wuye extends Wx_Controller {
       				$batchInsert[] = array_merge(array('repair_id' => $newRepairId,'uid' => $this->yezhuInfo['id']),$imgArray);
       			}
       			
-      			$insertRows = $this->Repair_Images_Model->batchInsert($batchInsert);
+      			if($batchInsert){
+      				$insertRows = $this->Repair_Images_Model->batchInsert($batchInsert);
+      			}
+      			
 				$this->jsonOutput2(RESP_SUCCESS);
 			
 			}

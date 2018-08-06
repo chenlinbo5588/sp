@@ -17,7 +17,6 @@ class User extends Ydzj_Admin_Controller {
 			'moduleClassName' => $this->_className
 		));
 		
-		
 		$this->_subNavs = array(
 			array('url' => $this->_className.'/index','title' => '管理'),
 			array('url' => $this->_className.'/add','title' => '新增'),
@@ -183,7 +182,7 @@ class User extends Ydzj_Admin_Controller {
 				$info = $this->_prepareUserData();
 				
 				if(!$this->form_validation->run()){
-					$feedback = $this->form_validation->error_string();
+					$feedback = getErrorTip($this->form_validation->error_first_html());
 					break;
 				}
 				

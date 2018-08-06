@@ -35,10 +35,10 @@ class Order_wuye_refund extends Weixin_refund {
 			$houseWuyeInfo = $pRefundOrder['extra_info'];
 			
 			switch($pRefundOrder['order_typename']){
-				case '物业费退款':
+				case '物业费':
 					$updateFiled = 'wuye_expire';
 					break;
-				case '能耗费退款':
+				case '能耗费':
 					$updateFiled = 'nenghao_expire';
 					break;
 				default:

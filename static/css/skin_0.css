@@ -308,7 +308,7 @@ input[type=checkbox],input[type=radio] {
     .nohover td { background:#FFF !important;}
 
 
-.table tbody tr:hover td {background: #FBFBFB;}
+.table tbody tr:hover td {background: #f5fcff;}
 
 
 .tb-type1{}

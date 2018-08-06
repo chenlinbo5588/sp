@@ -238,7 +238,7 @@ class Order_service extends Base_service {
 			//原正常订单
 			$oldOrderInfo = $this->getOrderDetailByOrderId($pOrderParam['order_id']);
 			
-			if(strpos($oldOrderInfo['order_typename'],'退款') === false){
+			if($oldOrderInfo['is_refund']){
 				//检查一下是否有退款中的退款订单
 				$tempOrder = $this->_orderModel->getList(array(
 					'where' => array(
@@ -262,11 +262,9 @@ class Order_service extends Base_service {
 			return $tuiOrder;
 		}else{
 			//创建一个退订单
-			$tuiOrderType = self::$orderType['nameKey'][$oldOrderInfo['order_typename'].'退款'];
-			
 			$tuiOrder = array(
-				'order_type' => $tuiOrderType['id'],
-				'order_typename' => $tuiOrderType['name'],
+				'order_type' => $oldOrderInfo['order_type'],
+				'order_typename' => $oldOrderInfo['order_typename'],
 				'pay_channel' => $oldOrderInfo['pay_channel'],
 				'pay_method' => $oldOrderInfo['pay_method'],
 				'is_refund' => 1,
@@ -285,6 +283,8 @@ class Order_service extends Base_service {
 			
 			if($pOrderParam['extra_info']){
 				$tuiOrder['extra_info'] = $pOrderParam['extra_info'];
+			}else{
+				$tuiOrder['extra_info'] = $oldOrderInfo['extra_info'];
 			}
 			
 			$isNewCreate = true;
