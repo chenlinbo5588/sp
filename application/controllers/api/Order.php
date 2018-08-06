@@ -293,7 +293,7 @@ class Order extends Wx_Controller {
 					$this->postJson['goods_name'] = $houseInfo['address'];
 					
 					
-					$this->postJson['extra_info'] = array(array('end_month' => $this->postJson['end_month']),$currentHouseFeeExpire);
+					$this->postJson['extra_info'] = array_merge(array('end_month' => $this->postJson['end_month']),$currentHouseFeeExpire);
 					
 					if(ENVIRONMENT == 'development'){
 						//@todo 修改金额

@@ -643,11 +643,11 @@ class Order_service extends Base_service {
 		foreach($extraArray as $key => $value ){
 			$temp = array();
 			
-			if('expireTimeStamp'  == $key){
+			if('expireTimeStamp' == $key){
 				$temp[] ="上次缴费到期时间";
 				$temp[] = $value == 0 ? '未缴费' : date('Y-m-d', $value);
 				
-			}else if('newStartTimeStamp'  == $key){
+			}else if('newStartTimeStamp' == $key){
 				$temp[] ="本次缴费开始时间";
 				$temp[] = date('Y-m-d', $value);
 				

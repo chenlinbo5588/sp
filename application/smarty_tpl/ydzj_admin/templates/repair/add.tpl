@@ -119,7 +119,7 @@
     </div>
     
   </form>
-  {include file="common/ke.tpl"}
+  
   {include file="common/uploadify.tpl"}
   {include file="common/fancybox.tpl"}
 
@@ -130,5 +130,5 @@
 	
   </script>
   <script type="text/javascript" src="{resource_url('js/wuye/repair.js',true)}"></script>
- <script type="text/javascript" src="{resource_url('js/service/info.js',true)}"></script>
+  <script type="text/javascript" src="{resource_url('js/upload_img.js',true)}"></script>
 {include file="common/main_footer.tpl"}	
