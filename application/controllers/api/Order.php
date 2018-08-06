@@ -187,7 +187,8 @@ class Order extends Wx_Controller {
 	public function createWuyeOrder(){
 		
 		if($this->yezhuInfo){
-		
+			$this->load->library('Wuye_service');
+			
 			for($i = 0; $i < 1; $i++){
 				
 				if($this->postJson['order_id']){
@@ -202,11 +203,38 @@ class Order extends Wx_Controller {
 						break;
 					}
 					
+					
+					$orderInfo = $this->order_service->getOrderInfoById($this->postJson['order_id'],'order_id');
+					$houseInfo = $this->House_Model->getFirstByKey($orderInfo['goods_id'],'id','wuye_expire,nenghao_expire');
+					
+					$whichField = '';
+					switch($orderInfo['order_typename']){
+						case '物业费':
+							$whichField = 'wuye_expire';
+							break;
+						case '能耗费':
+							$whichField = 'nenghao_expire';
+							break;
+						default:
+							break;
+					}
+					
+					if(empty($whichField)){
+						$this->jsonOutput2('订单类型非法');
+						break;
+					}
+					
+					//fixed 用户先选择一个月份在创建订单付款界面取消后， 重新选择缴费月份，然后付款后一笔交易成功后， 最后我的订单中继续付款前一个交易。
+					if($orderInfo['extra_info']['expireTimeStamp'] != $houseInfo[$whichField]){
+						$this->order_service->updateOrderStatusByIds(array($orderInfo['id']),OrderStatus::$closed,OrderStatus::$unPayed);
+						
+						$this->jsonOutput2('该订单已过期');
+						break;
+					}
+					
 				}else{
 					
-					$this->load->library('Wuye_service');
 					$this->form_validation->set_data($this->postJson);
-					
 					
 					$this->form_validation->set_rules('order_typename','in_db_list['.$this->Order_Type_Model->getTableRealName().'.name]');
 					$this->form_validation->set_rules('house_id','物业标识',array(
@@ -235,13 +263,11 @@ class Order extends Wx_Controller {
 						break;
 					}
 					
-					
 					//在校验  缴费的时间一定要大于已缴费的时间
 					if($currentHouseFeeExpire['expireTimeStamp'] >= $currentHouseFeeExpire['newEndTimeStamp']){
 						$this->jsonOutput2("请选择合理的缴费时间");
 						break;
 					}
-					
 					
 					//开始创建订单
 					
@@ -267,11 +293,7 @@ class Order extends Wx_Controller {
 					$this->postJson['goods_name'] = $houseInfo['address'];
 					
 					
-					$this->postJson['extra_info'] = array(
-						'house_id' => $this->postJson['house_id'],
-						'fee_start' => $currentHouseFeeExpire['expireTimeStamp'],
-						'fee_expire' => $currentHouseFeeExpire['newEndTimeStamp'],
-					);
+					$this->postJson['extra_info'] = array(array('end_month' => $this->postJson['end_month']),$currentHouseFeeExpire);
 					
 					if(ENVIRONMENT == 'development'){
 						//@todo 修改金额

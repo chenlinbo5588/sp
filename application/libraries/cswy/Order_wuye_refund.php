@@ -48,7 +48,7 @@ class Order_wuye_refund extends Weixin_refund {
 			
 			//还原缴费时间
 			$this->_ci->House_Model->updateByWhere(array(
-				$updateFiled => $houseWuyeInfo['fee_start'],
+				$updateFiled => $houseWuyeInfo['expireTimeStamp'],
 			),array('id' => $houseWuyeInfo['house_id']));
 			
 			//更新退款统计信息

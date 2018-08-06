@@ -92,9 +92,9 @@ class PayNotifyCallBack extends WxPayNotify
 			file_put_contents('wuye_callback.txt',print_r($feeInfo,true),FILE_APPEND);
 			
 			$this->_ci->House_Model->updateByWhere(array(
-				$updateKey => $feeInfo['fee_expire'],
+				$updateKey => $feeInfo['newEndTimeStamp'],
 			),array(
-				'id' => $feeInfo['house_id']
+				'id' => $orderInfo['goods_id']
 			));
 			
 			
