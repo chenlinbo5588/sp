@@ -34,6 +34,7 @@ class Weixin_refund
 		$this->_ci->Order_Model->updateByWhere(array(
 			'ref_order' => $refundResp['transaction_id'],
 			'ref_refund' => $refundResp['refund_id'],
+			'pay_time_end' => date("YmdHis"),
 			'status' => OrderStatus::$refounded
 		),array('order_id' => $pOrderId));
 		

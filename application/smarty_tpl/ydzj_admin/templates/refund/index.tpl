@@ -37,6 +37,8 @@
           <th>{#status#}</th>
           <th>{#refund_amount#}</th>
           <th>{#verify_status#}</th>
+          <th>{#order_time#}</th>
+          <th>{#refund_time_end#}</th>
           <th>{#ip#}</th>
           <th>操作</th>
         </tr>
@@ -57,6 +59,8 @@
           <td>{$OrderStatus[$item['status']]}</td>      
           <td>{$item['refund_amount']/100}</td>
           <td>{$OrderVerify[$item['verify_status']]}</td>
+          <td>{$item['gmt_create']|date_format:"%Y-%m-%d %H:%M:%S"}</td>
+          <td>{$item['pay_time_end']|date_format:"%Y-%m-%d %H:%M:%S"}</td>
           <td>{$item['ip']}</td>
           <td>
           	{if '审核通过' == $OrderVerify[$item['verify_status']] && '退款中' == $OrderStatus[$item['status']]}

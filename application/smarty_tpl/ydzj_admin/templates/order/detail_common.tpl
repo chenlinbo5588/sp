@@ -57,7 +57,7 @@
           <td class="vatop rowform">{$info['time_expire']|escape|date_format:"%Y-%m-%d %H:%M:%S"}</td>      
        	</tr>
        	<tr>
-   		  <td class="required">{#pay_time_end#}: </td>
+   		  <td class="required">{if $info['is_refund']}{#refund_time_end#}{else}{#pay_time_end#}{/if}: </td>
           <td class="vatop rowform">{$info['pay_time_end']|escape|date_format:"%Y-%m-%d %H:%M:%S"}</td>      
        	</tr>
        	<tr>

@@ -1,34 +1,50 @@
-{include file="common/website_header.tpl"}
-	<div class="linePg">
-		<div class="{$pgClass}"></div>
-		<div class="boxz clearfix mg10">
-			<form id="detailForm" name="detailForm" action="{base_url('article/plist.html')}" method="get">
-			{if !$isMobile}{include file="./article_side.tpl"}{/if}
-			<div class="contentArea">
-				<div class="breadcrumb"><span>{$your_position}:</span>{$breadcrumb}</div>
-				<div class="bd bdlist">
-				    <article>
-					{if $info}
-					<div class="articleHeader">
-						<h1>{$info['article_title']|escape}</h1>
-						<div><em class="mute">{$visit_count}:</em><strong>{$info['article_click']}</strong><em class="mute">{$online_date}:</em><strong>{$info['gmt_create']|date_format:"%Y-%m-%d"}</strong></div>
+{include file="common/share_header.tpl"}
+<body {if $bodyClass}class="{$bodyClass}"{/if}>
+	<style>
+		img { 
+		    height: auto; 
+		    width: auto\9; 
+		    width:100%;
+		}
+	</style>
+	<div id="wrap">
+		<header class="articleTitle">
+			<h1 class="articleMainTitle">{$article['article_title']|escape}</h1>
+			<h4 class="articleSubTitle">{$siteSetting['site_name']|escape} {$article['publish_time']|date_format:"%Y-%m-%d"}</h4>
+		</header>
+		
+		<article class="articleContent">
+			{*<div class="digest">{$article['digest']|escape}</div>*}
+			<div>{$article['content']}</div>
+		</article>
+		
+		{*
+		<div id="relateArticle">
+			<div class="articleList">
+				<div class="articleItem clearfix">
+					<div class="articleTxt">
+						<a href="javascript:void(0);">哈哈杀手撒谎好</a>
+						<h4></h4>
 					</div>
-					<div class="articleContent">
-						{$info['article_content']}
+					<div class="articleImg"><img src="http://img01.sogoucdn.com/net/a/04/link?appid=100520033&url=http%3A%2F%2Fmmbiz.qpic.cn%2Fmmbiz_jpg%2FO9F3NTo58yrsqSGEFAozFSJ8IYoN5UeCvsePbH1Jjc3Ar3fpibg4ZgQml4O5o7ll6rdWTtMyOf5jKmAPPxQz7QA%2F0%3Fwx_fmt%3Djpeg"/></div>
+				</div>
+				<div class="articleItem clearfix">
+					<div class="articleTxt">
+						<a href="javascript:void(0);">哈哈杀手撒谎好</a>
+						<h4></h4>
 					</div>
-					
-					<div class="articleRelate clearfix">
-						<div class="prevArticle"><span>{$prev_article}：{if empty($preArticle)}{$cm_none}{else}<a href="{$preArticle['article_url']}">{$preArticle['article_title']|escape}</a>{/if}</div>
-						<div class="nextArticle"><span>{$next_article}：{if empty($nextArticle)}{$cm_none}{else}<a href="{$nextArticle['article_url']}">{$nextArticle['article_title']|escape}</a>{/if}</div>
+					<div class="articleImg"><img src="http://img01.sogoucdn.com/net/a/04/link?appid=100520033&url=http%3A%2F%2Fmmbiz.qpic.cn%2Fmmbiz_jpg%2FO9F3NTo58yrsqSGEFAozFSJ8IYoN5UeCvsePbH1Jjc3Ar3fpibg4ZgQml4O5o7ll6rdWTtMyOf5jKmAPPxQz7QA%2F0%3Fwx_fmt%3Djpeg"/></div>
+				</div>
+				<div class="articleItem clearfix">
+					<div class="articleTxt">
+						<a href="javascript:void(0);">哈哈杀手撒谎好</a>
+						<h4></h4>
 					</div>
-					{else}
-					<div class="errorPage">{$not_found_msg}<a href="javascript:history.go(-1);">{$cm_goback}</a></div>
-					{/if}
-					</article>
+					<div class="articleImg"><img src="http://img01.sogoucdn.com/net/a/04/link?appid=100520033&url=http%3A%2F%2Fmmbiz.qpic.cn%2Fmmbiz_jpg%2FO9F3NTo58yrsqSGEFAozFSJ8IYoN5UeCvsePbH1Jjc3Ar3fpibg4ZgQml4O5o7ll6rdWTtMyOf5jKmAPPxQz7QA%2F0%3Fwx_fmt%3Djpeg"/></div>
 				</div>
 			</div>
-			</form>
-			{if $isMobile}{include file="./article_side.tpl"}{/if}
 		</div>
+		*}
 	</div>
-{include file="common/website_footer.tpl"}
+</body>
+</html>
