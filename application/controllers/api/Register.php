@@ -92,7 +92,7 @@ class Register extends Wx_Controller {
 				));
 				
 				
-				if('OK' == $sendResult['Code']){
+				if('OK' == $sendResult->Code){
 					$rt['code'] = 'success';
 					
 					$this->verify_service->updateSendFlag(array(

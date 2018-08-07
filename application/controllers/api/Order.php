@@ -616,7 +616,6 @@ class Order extends Wx_Controller {
 				$param = array(
 					'uid' => $this->memberInfo['uid'],
 					'order_id' => $this->postJson['order_id'],
-					//'refund_id' => 
 					'amount' => $this->postJson['amount'],
 					'reason' => $this->postJson['reason'],
 					'remark' => $this->postJson['remark']
@@ -625,8 +624,9 @@ class Order extends Wx_Controller {
 				$this->form_validation->set_data($param);
 				$this->_setIsUserOrderRules();
 				
-				//目前不提交退款金额、 进行全额退款
+				$orderInfo = $this->order_service->getOrderInfoById($this->postJson['order_id'],'order_id');
 				
+				$this->form_validation->set_rules('amount','退款金额','required|is_numeric|greater_than[0]|less_than_equal_to['.(($orderInfo['amount'] - $orderInfo['refund_amount'])/100).']');
 				$this->form_validation->set_rules('reason','退款原因','required|min_length[3]|max_length[100]');
 				$this->form_validation->set_rules('remark','备注','min_length[3]|max_length[100]');
 				
@@ -635,8 +635,7 @@ class Order extends Wx_Controller {
 					break;
 				}
 				
-				$orderInfo = $this->order_service->getOrderInfoById($this->postJson['order_id'],'order_id');
-			
+				
 				if(is_array($orderInfo['extra_info'])){
 					$param['extra_info'] = array_merge($orderInfo['extra_info'],array(
 						'reason' => $this->postJson['reason'],
