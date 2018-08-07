@@ -84,9 +84,6 @@ class Order extends Wx_Controller {
 					
 				}else{
 					
-					$this->postJson['order_typename'] = str_replace('预约单','',$this->postJson['order_typename']);
-					$this->postJson['order_typename'] .= '预约单';
-					
 					$this->form_validation->set_data($this->postJson);
 					
 					$this->form_validation->set_rules('order_typename','in_db_list['.$this->Order_Type_Model->getTableRealName().'.name]');
@@ -103,8 +100,6 @@ class Order extends Wx_Controller {
 					//联系人名称
 					$this->form_validation->set_rules('username','required');
 					
-					
-					$this->form_validation->set_rules('amount','缴费金额','required|is_numeric|greater_than_equal_to[0]');
 					
 					if(!$this->form_validation->run()){
 						$this->jsonOutput2($this->form_validation->error_first_html());
@@ -131,6 +126,7 @@ class Order extends Wx_Controller {
 					
 					//附加信息
 					$this->postJson['extra_info'] = array(
+						'address' => $this->postJson['address'],
 						'username' => $this->postJson['username'],
 						'visit_time' => $this->postJson['visit_time'],
 					);
@@ -245,7 +241,8 @@ class Order extends Wx_Controller {
 					//面谈地点
 					$this->form_validation->set_rules('address','required');
 					
-					$this->form_validation->set_rules('amount','缴费金额','required|is_numeric|greater_than_equal_to[0]');
+					
+					//$this->form_validation->set_rules('amount','缴费金额','required|is_numeric|greater_than_equal_to[0]');
 					
 					if(!$this->form_validation->run()){
 						$this->jsonOutput2($this->form_validation->error_first_html());

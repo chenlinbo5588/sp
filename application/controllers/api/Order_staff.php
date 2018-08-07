@@ -117,7 +117,7 @@ class PayNotifyCallBack extends WxPayNotify
 				'service_type' => $staffItem['service_type'],
 				'service_name' => $serviceTypeIdAssoc[$staffItem['service_type']],
 				'avatar_url' => $staffItem['avatar_s'],
-				'expire_key' => date('Ymd',strtotime($extraInfo['meet_time'].' -1 day')),
+				'expire_key' => strtotime($extraInfo['meet_time'].' -1 day'),
 				'order_id' => $orderInfo['order_id'],
 				'order_status' => OrderStatus::$payed,
 				'add_uid' => $orderInfo['uid'],

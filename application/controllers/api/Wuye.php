@@ -94,7 +94,7 @@ class Wuye extends Wx_Controller {
       			}
       			
       			
-      			$repairTypeList = RepairType::$statusName;
+      			$repairTypeList = RepairType::$typeName;
       			
       			$repair_type = $this->postJson['repairType'];  			
       			$address = $this->postJson['address'];

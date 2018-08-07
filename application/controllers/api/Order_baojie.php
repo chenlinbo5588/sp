@@ -75,38 +75,44 @@ class PayNotifyCallBack extends WxPayNotify
 			array('order_id' => $data['out_trade_no'],'status' => OrderStatus::$unPayed)
 		);
 		
+		$extraInfo = $orderInfo['extra_info'];
 		
-		if($affectRow > 0 ){
-			if($this->_ci->Order_Model->getTransStatus() === FALSE){
-				$this->_ci->Order_Model->rollBackTrans();
-				
-				$msg = "订单数据更新失败";
-				
-				return false;
-			}else{
-				$this->_ci->Order_Model->commitTrans();
-				return true;
-			}
+		
+		$dateKey = date('Ymd');
+		
+		$this->_ci->load->library(array('Basic_data_service'));
+		
+		$serviceType = $this->_ci->basic_data_service->getTopChildList('业务类型');
+		
+		$meetTime = strtotime($extraInfo['visit_time']);
+		
+		$addInfo = array(
+			'meet_time' => $meetTime,
+			'address' => $extraInfo['address'],
+			'mobile' => $orderInfo['mobile'],
+			'username' => $orderInfo['username'],
+			'service_type' => $serviceType['保洁']['id'],
+			'service_name' => '保洁',
+			'expire_key' => strtotime($extraInfo['meet_time'].' -2 hours'),
+			'order_id' => $orderInfo['order_id'],
+			'order_status' => OrderStatus::$payed,
+			'add_uid' => $orderInfo['uid'],
+			'add_username' => $orderInfo['add_username'],
+		);
+		
+		//加预约记录加入到
+		$this->_ci->Staff_Booking_Model->_add($addInfo);
+		
+		
+		if($this->_ci->Order_Model->getTransStatus() === FALSE){
+			$this->_ci->Order_Model->rollBackTrans();
 			
-		}else if($affectRow == 0){
+			$msg = "订单数据更新失败";
 			
-			$shortInfo = $this->_ci->Order_Model->getFirstByKey($data['out_trade_no'],'order_id','status');
-			if($shortInfo['status'] == OrderStatus::$payed){
-				
-				if($this->_ci->Order_Model->getTransStatus() === FALSE){
-					return false;
-				}
-				
-				$this->_ci->Order_Model->commitTrans();
-				
-				return true;
-			}else{
-				
-				$this->_ci->Order_Model->rollBackTrans();
-				
-				$msg = "订单数据更新失败";
-				return false;
-			}
+			return false;
+		}else{
+			$this->_ci->Order_Model->commitTrans();
+			return true;
 		}
 		
 	}

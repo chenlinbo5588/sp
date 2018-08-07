@@ -659,8 +659,6 @@ class Order_service extends Base_service {
 				
 				$temp[] ="退款原因";
 				$temp[] = $value;
-				
-	 		 	$item .= "<div>退款原因: {$value}</div>";
 	 		 	
 	 		}else  if('remark' ==$key){
 	 			$temp[] ="备注";
@@ -678,13 +676,60 @@ class Order_service extends Base_service {
 	
 	
 	/**
+	 * 保洁
+	 */
+	public function getBaojieExtraInfo($extraArray){
+		
+		
+		$list = array();
+		
+		foreach($extraArray as $key => $value ){
+			$temp = array();
+			
+			if('username' == $key){
+				$temp[] ="预约人名称：";
+				$temp[] = $value;
+				
+			}else if('visit_time' == $key){
+				$temp[] ="上门时间";
+				$temp[] = date('Y-m-d', $value);
+				
+			}else if('address'  == $key){
+				$temp[] ="上门地址";
+				$temp[] = $value;
+				
+			}else if('reason' == $key){
+				$temp[] ="退款原因";
+				$temp[] = $value;
+	 		 	
+	 		}else  if('remark' ==$key){
+	 			$temp[] ="备注";
+				$temp[] = $value;
+	 		}
+	 		
+	 		if($temp){
+	 			$list[] = $temp;
+	 		}
+	 		
+	 	}
+	 	
+	 	return $list;
+	 	
+	 	
+	}
+	
+	
+	/**
 	 * 解析额外信息
 	 */
 	public function extraInfoToArray($pOrderInfo){
 		
 		$item = array();
 		
-		if(strpos($pOrderInfo['order_typename'],'预约单') !== false){
+		if(strpos($pOrderInfo['order_typename'],'保洁') !== false ){
+			$item = $this->getBaojieExtraInfo($pOrderInfo['extra_info']);
+			
+		}elseif(strpos($pOrderInfo['order_typename'],'预约单') !== false){
 			$item = $this->getStaffExtraInfo($pOrderInfo['extra_info']);
 		
   		}elseif(strpos($pOrderInfo['order_typename'],'物业费') !== false || strpos($pOrderInfo['order_typename'],'能耗费') !== false){

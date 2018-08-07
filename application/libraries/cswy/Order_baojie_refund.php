@@ -29,6 +29,15 @@ class Order_baojie_refund extends Weixin_refund {
 			$this->commonOrderUpdate($pRefundOrder['order_id'],$refundResp);
 			
 			
+			//预约订单 退款
+			$affectRow = $this->_ci->Staff_Booking_Model->updateByWhere(array(
+				'order_refund' => $pRefundOrder['order_id'],
+				'order_status' => OrderStatus::$refounded
+			),array(
+				'order_id' => $pRefundOrder['order_old'],
+				'order_status' => OrderStatus::$payed
+			));
+			
 			//更新退款统计信息
 			$affectRow = $this->updateOrderRefundStat($pRefundOrder['order_old'],$refundResp['refund_fee']);
 			

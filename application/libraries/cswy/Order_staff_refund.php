@@ -29,7 +29,7 @@ class Order_staff_refund extends Weixin_refund {
 			
 			$this->_ci->load->library(array('Staff_service'));
 		
-			//家政服务订单 退款
+			//预约订单 退款
 			$affectRow = $this->_ci->Staff_Booking_Model->updateByWhere(array(
 				'order_refund' => $pRefundOrder['order_id'],
 				'order_status' => OrderStatus::$refounded
