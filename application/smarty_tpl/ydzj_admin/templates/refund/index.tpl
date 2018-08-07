@@ -49,7 +49,7 @@
           <td><a href="{admin_site_url('order/index')}?order_id={$item['order_old']}">{$item['order_old']}</a></td>
           <td>{$item['username']}</td>
           <td>{$item['mobile']}</td>
-          <td>{$item['order_typename']}</td>
+          <td>{$item['order_typename']}{if $item['is_refund']}退款{/if}</td>
           <td>{$item['pay_channel']}</td>
           <td>{$item['pay_method']}</td> 
           <td>{$item['goods_name']}</td>

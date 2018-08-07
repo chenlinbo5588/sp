@@ -204,7 +204,7 @@ class Notify extends Ydzj_Admin_Controller {
 		$id = $this->input->get_post('id');
 		$info = $this->Site_Message_Model->getFirstByKey($id);
 		
-		$info['users'] = json_decode($info['users'],true);
+		$info['users'] = implode("\n",json_decode($info['users'],true));
 		$info['groups'] = json_decode($info['groups'],true);
 		$info['send_ways'] = json_decode($info['send_ways'],true);
 		

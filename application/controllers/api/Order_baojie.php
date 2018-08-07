@@ -6,7 +6,7 @@ require_once(WEIXIN_PAY_PATH.'WxPay.Notify.php');
 
 
 /**
- * 月嫂、保姆、陪护  支付回调
+ * 保洁  支付回调
  */
 class PayNotifyCallBack extends WxPayNotify
 {
@@ -39,7 +39,7 @@ class PayNotifyCallBack extends WxPayNotify
 	//重写回调处理函数
 	public function NotifyProcess($data, &$msg)
 	{
-		file_put_contents('staff_callback.txt',print_r($data,true));
+		file_put_contents('baojie_callback.txt',print_r($data,true));
 		$notfiyOutput = array();
 		
 		if(!array_key_exists("transaction_id", $data)){
@@ -65,7 +65,7 @@ class PayNotifyCallBack extends WxPayNotify
 		}
 		
 		
-		file_put_contents('staff_callback.txt',print_r($orderInfo,true),FILE_APPEND);
+		file_put_contents('baojie_callback.txt',print_r($orderInfo,true),FILE_APPEND);
 		
 		//启用事务
 		$this->_ci->Order_Model->beginTrans();
@@ -76,81 +76,49 @@ class PayNotifyCallBack extends WxPayNotify
 		);
 		
 		
-		$extraInfo = $orderInfo['extra_info'];
-		$cartList = $extraInfo['cart'];
-		
-		$staffIds = array();
-		foreach($cartList as $cartItem){
-			$staffIds[] = $cartItem['id'];
-		}
-		
-		$staffList = $this->_ci->Staff_Model->getList(array(
-			'select' => 'id,service_type,sub_type,name,sex,mobile,avatar_s',
-			'where_in' => array(
-				array('key' => 'id','value' => $staffIds)
-			)
-		),'id');
-		
-		$serviceType = $this->_ci->basic_data_service->getTopChildList('业务类型');
-		
-		//以 id 为下标
-		$serviceTypeIdAssoc = array();
-		foreach($serviceType as $serviceTypKey => $serviceTypeItem){
-			$serviceTypeIdAssoc[$serviceTypeItem['id']] = $serviceTypeItem['show_name'];
-		}
-		
-		$batchInsert = array();
-		$dateKey = date('Ymd');
-		
-		$meetTime = strtotime($extraInfo['meet_time']);
-		
-		foreach($staffList as $staffItem){
-			$batchInsert[] = array(
-				'meet_time' => $meetTime,
-				'address' => $extraInfo['address'],
-				'mobile' => $orderInfo['mobile'],
-				'username' => $orderInfo['add_username'],
-				'staff_id' => $staffItem['id'],
-				'staff_name' => $staffItem['name'],
-				'staff_mobile' => $staffItem['mobile'],
-				'staff_sex' => $staffItem['sex'],
-				'service_type' => $staffItem['service_type'],
-				'service_name' => $serviceTypeIdAssoc[$staffItem['service_type']],
-				'avatar_url' => $staffItem['avatar_s'],
-				'expire_key' => date('Ymd',strtotime($extraInfo['meet_time'].' -1 day')),
-				'order_id' => $orderInfo['order_id'],
-				'order_status' => OrderStatus::$payed,
-				'add_uid' => $orderInfo['uid'],
-				'add_username' => $orderInfo['add_username'],
-			);
-		}
-		
-		//加预约记录加入到
-		$this->_ci->Staff_Booking_Model->batchInsert($batchInsert);
-		
-		
-		if($this->_ci->Order_Model->getTransStatus() === FALSE){
-			$this->_ci->Order_Model->rollBackTrans();
+		if($affectRow > 0 ){
+			if($this->_ci->Order_Model->getTransStatus() === FALSE){
+				$this->_ci->Order_Model->rollBackTrans();
+				
+				$msg = "订单数据更新失败";
+				
+				return false;
+			}else{
+				$this->_ci->Order_Model->commitTrans();
+				return true;
+			}
 			
-			$msg = "订单数据更新失败";
+		}else if($affectRow == 0){
 			
-			return false;
-		}else{
-			$this->_ci->Order_Model->commitTrans();
-			return true;
+			$shortInfo = $this->_ci->Order_Model->getFirstByKey($data['out_trade_no'],'order_id','status');
+			if($shortInfo['status'] == OrderStatus::$payed){
+				
+				if($this->_ci->Order_Model->getTransStatus() === FALSE){
+					return false;
+				}
+				
+				$this->_ci->Order_Model->commitTrans();
+				
+				return true;
+			}else{
+				
+				$this->_ci->Order_Model->rollBackTrans();
+				
+				$msg = "订单数据更新失败";
+				return false;
+			}
 		}
+		
 	}
-	
-	
 }
 
 
-class Order_staff extends Wx_Controller {
+class Order_baojie extends Wx_Controller {
 	
 	public function __construct(){
 		parent::__construct();
         
-        $this->load->library(array('Order_service','Staff_service'));
+        $this->load->library(array('Order_service'));
     	$this->form_validation->set_error_delimiters('','');
 	}
 	

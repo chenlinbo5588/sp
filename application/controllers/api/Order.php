@@ -24,8 +24,151 @@ class Order extends Wx_Controller {
 	}
 	
 	
+	
 	/**
-	 * 创建订单
+	 * 获得保洁配置
+	 */
+	public function getBaojieConfig(){
+		
+		$data = array(
+			'amount' => intval($this->_getSiteSetting('service_prepay_amount')),
+		);
+		
+		$this->jsonOutput2(RESP_SUCCESS,$data);
+	}
+	
+	
+	/**
+	 * 创建 保洁订单
+	 */
+	public function createBaojieOrder(){
+		
+		if($this->memberInfo){
+			
+			for($i = 0; $i < 1; $i++){
+				$isEnable = $this->_getSiteSetting('service_booking_status');
+				if('关闭' == $isEnable){
+					$this->jsonOutput2('该功能暂时关闭，不能预约');
+					break;
+				}
+				
+				$orderCountLimit = intval($this->_getSiteSetting('service_order_limit'));
+				
+				if($orderCountLimit){
+					$todayStart = strtotime(date('Y-m-d'));
+					$currentCount = $this->Order_Model->getCount(array(
+						'where' => array(
+							'gmt_create >=' => $todayStart,
+							'gmt_create <' => $todayStart + CACHE_ONE_DAY
+						)
+					));
+					
+					if($currentCount >= $orderCountLimit){
+						$this->jsonOutput2("今日预约单数量已经达到{$orderCountLimit}");
+						break;
+					}
+				}
+				
+				
+				if($this->postJson['order_id']){
+					
+					$this->postJson['uid'] = $this->memberInfo['uid'];
+					$this->form_validation->set_data($this->postJson);
+					
+					$this->_setIsUserOrderRules();
+					
+					if(!$this->form_validation->run()){
+						$this->jsonOutput2($this->form_validation->error_first_html());
+						break;
+					}
+					
+				}else{
+					
+					$this->postJson['order_typename'] = str_replace('预约单','',$this->postJson['order_typename']);
+					$this->postJson['order_typename'] .= '预约单';
+					
+					$this->form_validation->set_data($this->postJson);
+					
+					$this->form_validation->set_rules('order_typename','in_db_list['.$this->Order_Type_Model->getTableRealName().'.name]');
+					
+					//上门 时间
+					$this->form_validation->set_rules('visit_time','required|valid_datetime');
+					
+					//上门地址
+					$this->form_validation->set_rules('address','required');
+					
+					//联系方式
+					$this->form_validation->set_rules('mobile','required|valid_mobile');
+					
+					//联系人名称
+					$this->form_validation->set_rules('username','required');
+					
+					
+					$this->form_validation->set_rules('amount','缴费金额','required|is_numeric|greater_than_equal_to[0]');
+					
+					if(!$this->form_validation->run()){
+						$this->jsonOutput2($this->form_validation->error_first_html());
+						break;
+					}
+					
+					
+					$this->postJson['order_type'] = Order_service::$orderType['nameKey'][$this->postJson['order_typename']]['id'];
+					
+					$this->postJson['uid'] = $this->memberInfo['uid'];
+					$this->postJson['add_username'] = $this->memberInfo['username'];
+					
+					if($this->postJson['mobile'] == $this->yezhuInfo['mobile']){
+						//业主自己
+						$this->postJson['add_username'] = $this->yezhuInfo['name'];
+					}
+					
+					//异步回调
+					$this->postJson['notify_url'] = site_url(Order_service::$orderType['nameKey'][$this->postJson['order_typename']]['order_url']);
+					
+					$message = '订单创建失败';
+					
+					$this->postJson['goods_name'] = $this->postJson['address'];
+					
+					//附加信息
+					$this->postJson['extra_info'] = array(
+						'username' => $this->postJson['username'],
+						'visit_time' => $this->postJson['visit_time'],
+					);
+					
+					if(ENVIRONMENT == 'development'){
+						//@todo 修改金额
+						$this->postJson['amount'] = mt_rand(1,3);
+					}else{
+						$this->postJson['amount'] = intval($this->_getSiteSetting('service_prepay_amount')) * 100;
+					}
+				}
+				
+				
+				file_put_contents('baojie.txt',print_r($this->sessionInfo,true));
+				file_put_contents('baojie.txt',print_r($this->memberInfo,true),FILE_APPEND);
+				file_put_contents('baojie.txt',print_r($this->yezhuInfo,true),FILE_APPEND);
+				file_put_contents('baojie.txt',print_r($this->postJson,true),FILE_APPEND);
+				
+				$callPayJson = $this->order_service->createWeixinOrder($this->postJson);
+				
+				file_put_contents('baojie.txt',print_r($callPayJson,true),FILE_APPEND);
+				
+				if($callPayJson){
+					$this->jsonOutput2(RESP_SUCCESS,$callPayJson);
+				}else{
+					$this->jsonOutput2("预约单创建失败");
+				}
+			}
+			
+		}else{
+			$this->jsonOutput2(UNBINDED,$this->unBind);
+		}
+	}
+	
+	
+	
+	/**
+	 * 创建 月嫂、保姆、护工订单
 	 */
 	public function createStaffOrder(){
 		

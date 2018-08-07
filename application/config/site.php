@@ -7,9 +7,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $config['api_secret'] = 'b53209f0e4d2b2335d726e4e381511d59d22a31f';
 
 $config['aliyun_dm'] = array(
+	/*
 	'account' => 'system@safetyfst.com',
 	'api_key' => 'LTAIljFXelniCvtz',
 	'api_secret' => 'sodR7uUrudMNXetEyhKTussLH67gIO'
+	*/
+);
+
+$config['aliyun_SMS'] = array(
+	'signName' => '盛元城市物业'
 );
 
 
@@ -21,10 +27,6 @@ $config['image_max_filesize'] = '2048';
 $config['mail_list'] = array(
 	'sina.com','126.com','163.com','gmail.com','qq.com','vip.qq.com','hotmail.com','sohu.com','139.com','vip.sina.com','21cn.cn','189.cn','sina.cn'
 );
-
-
-// @todo 修改 清风
-$config['SMS_apikey'] = 'cfdebd90a76ce2243a66e17ed2dfc682';
 
 
 $config['notify_ways'] = array(

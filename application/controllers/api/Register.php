@@ -76,11 +76,25 @@ class Register extends Wx_Controller {
 					}
 				}
 				
-				$rt['code'] = 'success';
+				$rt['code'] = 'failed';
 				
-				$this->load->library('Sms_service');
+			    $this->load->file(LIB_PATH.'Sms_api.php');
+			    
+				$smsConfig = config_item('aliyun_SMS');
 				
-				if($this->sms_service->sendMessage($this->postJson['phoneNo'],$codeInfo['code'])){
+				$sendResult = Sms_api::sendSms(array(
+					'phoneNo' => $this->postJson['phoneNo'],
+					'templateVar' => array(
+						'code' => $codeInfo['code']
+					),
+					'templateCode' => 'SMS_136055238',
+					'signName' => $smsConfig['signName']
+				));
+				
+				
+				if('OK' == $sendResult['Code']){
+					$rt['code'] = 'success';
+					
 					$this->verify_service->updateSendFlag(array(
 			    		array('key' => 'send_normal' , 'value' => 'send_normal + 1')
 			    	),array('id' => $codeInfo['id']));

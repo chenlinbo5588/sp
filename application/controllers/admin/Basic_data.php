@@ -94,6 +94,7 @@ class Basic_Data extends Ydzj_Admin_Controller {
 		$currentPage = $this->input->get_post('page') ? $this->input->get_post('page') : 1;
 	
 		$condition = array(
+			'where' => array('status' => 1),
 			'order' => 'displayorder ASC',
 			'pager' => array(
 				'page_size' => config_item('page_size'),

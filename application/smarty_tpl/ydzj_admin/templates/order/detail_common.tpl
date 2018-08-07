@@ -16,7 +16,7 @@
        	</tr>
        	<tr>
    		  <td class="required">{#order_typename#}: </td>
-          <td class="vatop rowform">{$info['order_typename']}</td>      
+          <td class="vatop rowform">{$info['order_typename']}{if $info['is_refund']}退款{/if}</td>      
        	</tr>
        	<tr>
    		  <td class="required">{#pay_channel#}: </td>
@@ -38,10 +38,12 @@
    		  <td class="required">{#refund_amount#}: </td>
           <td class="vatop rowform">{$info['refund_amount']/100|escape}</td>      
        	</tr>
+       	{if !$info['is_refund']}
        	<tr>
    		  <td class="required">{#refund_cnt#}: </td>
-          <td class="vatop rowform">{$info['refund_cnt']/100|escape}</td>      
+          <td class="vatop rowform">{$info['refund_cnt']}</td>      
        	</tr>
+       	{/if}
        	<tr>
    		  <td class="required">{#status#}: </td>
           <td class="vatop rowform"><strong class="orange">{$OrderStatus[$info['status']]|escape}</strong></td>      
