@@ -1,9 +1,8 @@
 $(function(){
-	
 	KindEditor.ready(function(K) {
 		remarkEditor = K.create('textarea[name="remark"]', {
-            uploadJson : KEUploadUrl,
-            filePostName:'Filedata',
+            /*uploadJson : KEUploadUrl,
+            filePostName:'Filedata',*/
             extraFileUploadParams:{ formhash: formhash },
             items : [
              		'undo', 'redo', '|', 'cut', 'copy', 'paste',
@@ -30,8 +29,6 @@ $(function(){
         });
     });
 	
-	
-
 	
 	$("#id_no").bind("focusout",function(){
 		var idNo = $.trim($(this).val());

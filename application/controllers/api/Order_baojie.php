@@ -64,7 +64,6 @@ class PayNotifyCallBack extends WxPayNotify
 			return false;
 		}
 		
-		
 		file_put_contents('baojie_callback.txt',print_r($orderInfo,true),FILE_APPEND);
 		
 		//启用事务
@@ -78,22 +77,19 @@ class PayNotifyCallBack extends WxPayNotify
 		$extraInfo = $orderInfo['extra_info'];
 		
 		
-		$dateKey = date('Ymd');
-		
 		$this->_ci->load->library(array('Basic_data_service'));
+		$this->_ci->load->Model('Staff_Booking_Model');
 		
 		$serviceType = $this->_ci->basic_data_service->getTopChildList('业务类型');
 		
-		$meetTime = strtotime($extraInfo['visit_time']);
-		
 		$addInfo = array(
-			'meet_time' => $meetTime,
+			'meet_time' => strtotime($extraInfo['booking_time']),
 			'address' => $extraInfo['address'],
 			'mobile' => $orderInfo['mobile'],
 			'username' => $orderInfo['username'],
 			'service_type' => $serviceType['保洁']['id'],
 			'service_name' => '保洁',
-			'expire_key' => strtotime($extraInfo['meet_time'].' -2 hours'),
+			'expire_key' => strtotime($extraInfo['booking_time'].' -2 hours'),
 			'order_id' => $orderInfo['order_id'],
 			'order_status' => OrderStatus::$payed,
 			'add_uid' => $orderInfo['uid'],

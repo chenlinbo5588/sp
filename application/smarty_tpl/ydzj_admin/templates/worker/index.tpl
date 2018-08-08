@@ -42,7 +42,7 @@
          <td>{$item['mobile']}</td>
          <td>{$item['address']|escape}</td>
          <td>
-          	<p><a href="{admin_site_url($moduleClassName|cat:'/detail')}?id={$item['id']}" target="_blank">查看</a> | <a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}">编辑</a></p>
+          	<p><a href="{admin_site_url($moduleClassName|cat:'/detail')}?id={$item['id']}">详情</a> | <a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}">编辑</a></p>
           	<p>
           		{if $item['yuesao_id']}<a href="{admin_site_url('yuesao/edit')}?id={$item['yuesao_id']}">月嫂 | </a>{else}<a href="{admin_site_url('yuesao/add')}?worker_id={$item['id']}">月嫂入驻</a> | {/if}
           		{if $item['baomu_id']}<a href="{admin_site_url('baomu/edit')}?id={$item['baomu_id']}">保姆 | </a>{else}<a href="{admin_site_url('baomu/add')}?worker_id={$item['id']}">保姆入驻</a> | {/if}

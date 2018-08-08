@@ -10,36 +10,53 @@
   <input type="hidden" name="gobackUrl" value="{$gobackUrl}"/>
     <table class="table tb-type2 mgbottom">
       <tbody>
+      	<tr class="noborder">
+          <td colspan="2" class="required"><label class="validation" for="worker_type">{#worker_type#}:</label></td>
+        </tr>
+      	<tr class="noborder">
+          <td class="vatop rowform">
+          	<select name="worker_type" id="worker_type">
+	          <option value="">请选择...</option>
+	          {foreach from=$workerTypeList item=item}
+	          <option {if $info['worker_type'] == $item['id']}selected{/if} value="{$item['id']}">{$item['show_name']}</option>
+	          {/foreach}
+	        </select>
+          </td>
+          <td class="vatop tips">{form_error('worker_type')}</td>
+        </tr>
         {include file="./basic_info.tpl"}
         <tr>
-          <td colspan="2" class="required">{#people_photo#}: </td>
+          <td colspan="2" class="required">{#avatar_photo#}:<span class="orange">用于显示在搜索列表页面,JPG格式,文件大小2M以内</span></td>
         </tr>
         <tr class="noborder">
-          <td class="vatop rowform">
-          	<input type="hidden" name="old_pic" value="{if $info['old_pic']}{$info['old_pic']}{/if}"/>
-          	<span class="type-file-show">
-          		<img class="show_image" src="{resource_url('img/preview.png')}">
-          		<div class="type-file-preview">{if $info['avatar_m']}<img src="{resource_url($info['avatar_m'])}"/>{else if $info['avatar_b']}<img src="{resource_url($info['avatar_b'])}"/>{elseif $info['avatar']}<img src="{resource_url($info['avatar'])}"/>{/if}</div>
-            </span>
-            <span class="type-file-box"><input type='text' name='worker_pic_txt' value="{if $info['avatar']}{$info['avatar']}{/if}" id='worker_pic_txt' class='type-file-text' /><input type='button' name='button' id='button1' value='' class='type-file-button' />
-            <input name="worker_pic" type="file" class="type-file-file" id="worker_pic" size="30" hidefocus="true" nc_type="change_brand_logo">
-            </span></td>
-          <td class="vatop tips"><span class="vatop rowform">工作人员照片。</span></td>
+          <td colspan="2">
+          	{if $editable}
+          	<input type="file" id="avatarFile" name="avatarFile" />
+          	{/if}
+          	<input type="hidden" name="avatar" value="{$info['avatar_b']}" id="avatar"/>
+          	<input type="hidden" name="old_pic" value="" id="old_pic"/>
+          	<div>
+          		<img id="view_img" src="{if $info['avatar_m']}{resource_url($info['avatar_m'])}{/if}"/>
+          	</div>
+          </td>
         </tr>
-       	<tr>
-          <td colspan="2" class="required">{#other_photo#}:<span class="orange">【JPG格式:文件大小2M以内】</span></td>
+        
+       	<tr class="noborder">
+          <td colspan="2" class="required">{#other_photo#}:<span class="orange">【JPG格式:文件大小{config_item('max_upload_size')}M以内】</span></td>
         </tr>
+        {if $editable}
         <tr class="noborder">
           <td colspan="2">
           	<input type="file" id="fileupload" name="fileupload" />
           </td>
         </tr>
+        {/if}
         <tr>
        		<td colspan="2">
-       			<ul id="thumbnails" class="thumblists">
-       			{foreach from=$fileList item=item}
-       			<li id="{$item['image_aid']}" class="picture">
-       				<input type="hidden" name="file_id[]" value="{$item['image_aid']}" />
+       			<ul id="imageList" class="thumblists">
+       			{foreach from=$imgList item=item}
+       			<li id="img{$item['id']}" class="picture">
+       				<input type="hidden" name="img_file_id[]" value="{$item['id']}" />
        				<div class="size-64x64">
        					<span class="thumb"><i></i>
        						<a class="fancybox" href="{resource_url($item['image_b'])}" data-fancybox-group="gallery">
@@ -48,61 +65,93 @@
    						</span>
 					</div>
 					<p>
-						<span><a href="javascript:del_file_upload('{$item['image_aid']}');">删除</a></span>
+						<span>{if $editable}<a data-id="{$item['id']}" class="delLink" href="javascript:void(0);">删除</a>{/if}</span>
 					</p>
 				</li>
        			{/foreach}
        			</ul>
        		</td>
        	</tr>
+       	<tr>
+          <td colspan="2" class="required">{#other_file#}:<span class="orange">【PDF, DOC, DOCX:文件大小{config_item('max_upload_size')}M以内】</span></td>
+        </tr>
+        {if $editable}
+        <tr class="noborder">
+          <td colspan="2">
+          	<input type="file" id="other_fileupload" name="other_fileupload" data-allowFile="*.doc;*.docx;*.pdf;" data-appendId="#thumbnails"  />
+          </td>
+        </tr>
+        {/if}                          
         <tr>
+       		<td colspan="2">
+       			<table>
+       				<thead>
+       					<tr>
+       						<th>文件名称</th>
+       						<th>文件大小</th>
+       						<th>操作</th>
+       					</tr>
+       				</thead>
+       				<tbody id="fileList">
+       			{foreach from=$fileList item=item}
+		       			<tr id="file{$item['id']}">
+		       				<td><input type="hidden" name="file_id[]" value="{$item['id']}" /><a target="_blank" href="{resource_url($item['file_url'])}">{$item['title']|escape}</a></td>
+		       				<td>{byte_format($item['file_size'])}</td>
+							<td>{if $editable}<a data-id="{$item['id']}" class="delLink" href="javascript:void(0);">删除</a>{/if}</td>
+						</tr>
+       			{/foreach}
+       				</tbody>
+       			</table>
+       		</td>
+       	</tr>
+        <tr class="noborder">
           <td colspan="2" class="required"><label>备注: </label>{form_error('remark')}</td>
         </tr>
         <tr>
-        	<td colspan="2" ><textarea id="remark" name="remark" style="width:100%;height:300px;visibility:hidden;">{$info['remark']}</textarea></td>
-        	
+        	<td colspan="2"><textarea id="remark" name="remark" style="width:100%;height:300px;visibility:hidden;">{$info['remark']}</textarea></td>
         </tr>
       </tbody>
     </table>
+    
     <div class="fixedOpBar">
+    	{if $editable}
     	<input type="submit" name="tijiao" value="保存" class="msbtn"/>
+    	{/if}
     	{if $gobackUrl}
     	<a href="{$gobackUrl}" class="salvebtn">返回</a>
     	{/if}
     </div>
   </form>
+  <div id="avatarDlg"></div>
   {include file="common/ke.tpl"}
-  {include file="common/uploadify.tpl"}
   {include file="common/fancybox.tpl"}
+  {include file="common/uploadify.tpl"}
+  {include file="common/jcrop.tpl"}
   <script type="text/javascript">
-  	var province_idcard = {$province_idcard},
-  		remarkEditor,
-  		KEUploadUrl = commonUploadUrl + '?mod={$moduleClassName}',
-  		deleteImgUrl = '{admin_site_url($moduleClassName|cat:"/delimg")}?mod={$moduleClassName}',
-  		uploadUrl = '{admin_site_url($moduleClassName|cat:"/addimg")}?mod={$moduleClassName}&id={$info['id']}';
-	
-	$(function(){
-		$( ".datepicker" ).datepicker();
-		$('.fancybox').fancybox();
-		
-		
-		$("#worker_pic").change(function(){
-			$("#worker_pic_txt").val($(this).val());
-		});
-	});
-	
+  	var province_idcard = {$province_idcard}, remarkEditor, editable = "{$editable}";
+  	var cutUrl = '{admin_site_url($moduleClassName|cat:"/pic_cut")}?mod={$moduleClassName}&id={$info['id']}';
+  	
+  	var uploadUrls = {
+  		img :  {
+  			uploadUrl : '{admin_site_url($moduleClassName|cat:"/addimg")}?id={$info['id']}',
+  			deleteUrl : '{admin_site_url($moduleClassName|cat:"/delimg")}?id={$info['id']}'
+  		},
+  		file : {
+  			uploadUrl : '{admin_site_url($moduleClassName|cat:"/addfile")}?id={$info['id']}',
+  			deleteUrl : '{admin_site_url($moduleClassName|cat:"/delfile")}?id={$info['id']}'
+  		}
+  	};
+  	
 	{if $successMessage}
 		showToast('success','{$successMessage}')
 	{/if}
-	
 	
 	{if $redirectUrl}
 		setTimeout(function(){
 			location.href="{$redirectUrl}";
 		},2000);
 	{/if}
-		
   </script>
-  <script type="text/javascript" src="{resource_url('js/service/info.js',true)}"></script>
-  <script type="text/javascript" src="{resource_url('js/upload_img.js',true)}"></script>
+  <script type="text/javascript" src="{resource_url('js/avatar_upload.js',true)}"></script>
+  <script type="text/javascript" src="{resource_url('js/service/worker.js',true)}"></script>
 {include file="common/main_footer.tpl"}

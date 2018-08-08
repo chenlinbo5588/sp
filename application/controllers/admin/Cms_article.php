@@ -486,7 +486,6 @@ class Cms_Article extends Ydzj_Admin_Controller {
 			'jump_url' => $this->input->post('jump_url') ? $this->input->post('jump_url') : '',
 			'article_sort' => $this->input->post('article_sort') ? $this->input->post('article_sort') : 255,
 			'image_url' => $this->input->post('image_url') ? $this->input->post('image_url') : '',
-			'image_aid' => $this->input->post('image_aid') ? $this->input->post('image_aid') : 0,
 			//'keyword' => $this->input->post('keyword') ? $this->input->post('keyword') : '',
 			'article_tag' => $this->input->post('article_tag') ? $this->input->post('article_tag') : '',
 			'article_state' => $this->input->post('article_state'),

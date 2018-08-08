@@ -89,10 +89,10 @@
         </tr>
         <tr>
        		<td colspan="2">
-       			<ul id="thumbnails" class="thumblists">
-       			{foreach from=$fileList item=item}
-       			<li id="{$item['image_aid']}" class="picture">
-       				<input type="hidden" name="file_id[]" value="{$item['image_aid']}" />
+       			<ul id="imageList" class="thumblists">
+       			{foreach from=$imgList item=item}
+       			<li id="img{$item['id']}" class="picture">
+       				<input type="hidden" name="img_file_id[]" value="{$item['id']}" />
        				<div class="size-64x64">
        					<span class="thumb"><i></i>
        						<a class="fancybox" href="{resource_url($item['image_b'])}" data-fancybox-group="gallery">
@@ -101,7 +101,7 @@
    						</span>
 					</div>
 					<p>
-						<span><a href="javascript:del_file_upload('{$item['image_aid']}');">删除</a></span>
+						<span><a class="delLink" data-id="{$item['id']}" href="javascript:void(0);">删除</a></span>
 					</p>
 				</li>
        			{/foreach}
@@ -110,25 +110,24 @@
        	</tr>
       </tbody>
     </table>
-    
     <div class="fixedOpBar">
     	<input type="submit" name="tijiao" value="保存" class="msbtn"/>
     	{if $gobackUrl}
     	<a href="{$gobackUrl}" class="salvebtn">返回</a>
     	{/if}
     </div>
-    
   </form>
-  
   {include file="common/uploadify.tpl"}
   {include file="common/fancybox.tpl"}
-
   <script type="text/javascript">
-  	var submitUrl = [new RegExp("{$uri_string}")],searchAddressUrl = "{admin_site_url('house/getAddress')}",
-		uploadUrl = '{admin_site_url($moduleClassName|cat:"/addimg")}?mod={$moduleClassName}&id={$info['id']}',
-		deleteImgUrl = '{admin_site_url($moduleClassName|cat:"/delimg")}?mod={$moduleClassName}';
-	
+  	var submitUrl = [new RegExp("{$uri_string}")],searchAddressUrl = "{admin_site_url('house/getAddress')}";
+  	
+	var uploadUrls = {
+  		img :  {
+  			uploadUrl : '{admin_site_url($moduleClassName|cat:"/addimg")}?id={$info['id']}',
+  			deleteUrl : '{admin_site_url($moduleClassName|cat:"/delimg")}?id={$info['id']}'
+  		}
+  	};
   </script>
   <script type="text/javascript" src="{resource_url('js/wuye/repair.js',true)}"></script>
-  <script type="text/javascript" src="{resource_url('js/upload_img.js',true)}"></script>
 {include file="common/main_footer.tpl"}	

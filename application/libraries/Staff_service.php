@@ -59,6 +59,7 @@ class Staff_service extends Base_service {
 	
 	private $_workerModel = null;
 	private $_workerImagesModel = null;
+	private $_workerFilesModel = null;
 	private $_staffModel = null;
 	private $_staffImagesModel = null;
 	
@@ -76,7 +77,7 @@ class Staff_service extends Base_service {
 		parent::__construct();
 		
 		self::$CI->load->model(array(
-			'Worker_Model','Worker_Images_Model','Staff_Model','Staff_Images_Model',
+			'Worker_Model','Worker_Images_Model','Worker_Files_Model','Staff_Model','Staff_Images_Model',
 			'Staff_Booking_Model'
 		));
 		
@@ -86,6 +87,7 @@ class Staff_service extends Base_service {
 		
 		$this->_workerModel = self::$CI->Worker_Model;
 		$this->_workerImagesModel = self::$CI->Worker_Images_Model;
+		$this->_workerFilesModel = self::$CI->Worker_Files_Model;
 		$this->_staffModel = self::$CI->Staff_Model;
 		$this->_staffImagesModel = self::$CI->Staff_Images_Model;
 		$this->_staffBookingModel = self::$CI->Staff_Booking_Model;
@@ -114,37 +116,59 @@ class Staff_service extends Base_service {
 	}
 	
 	
+	
+	/**
+	 * 添加ID 校验
+	 */
+	public function addIDRules($idTypeList,$pIdType,$id = 0,$dbCheck = true,$tableName = ''){
+		$idRules = array('required');
+		
+		if(ENVIRONMENT == 'production'){
+			$idName = '';
+			
+			foreach($idTypeList as $idTypeItem){
+				if($idTypeItem['id'] == $pIdType || $idTypeItem['show_name'] == $pIdType){
+					$idName = $idTypeItem['show_name'];
+				}
+			}
+			
+			if('身份证' == $idName || '驾驶证' == $idName){
+				$idRules[] = 'valid_idcard';
+			}else{
+				$idRules[] = 'max_length[50]';
+			}
+		}else{
+			$idRules[] = 'max_length[50]';
+		}
+		
+		//数据库校验
+		if($dbCheck){
+			if($id){
+				$idRules[] = 'is_unique_not_self['.$tableName.".id_no.id.{$id}]";
+			}else{
+				$idRules[] = 'is_unique['.$tableName.".id_no]";
+			}
+		}
+		
+		self::$CI->form_validation->set_rules('id_no','证件号码',implode('|',$idRules));
+	}
+	
+	
+	
 	/**
 	 * 
 	 */
 	public function addWorkerRules(){
 		
 		self::$CI->form_validation->set_rules('name','姓名','required|max_length[60]');
-		
-		if(ENVIRONMENT == 'production'){
-			$idType = self::$CI->input->post('id_type');
-			$idName = '';
-			
-			$idTypeList = $this->_basicDataService->getTopChildList('证件类型');
-			foreach($idTypeList as $idTypeItem){
-				if($idTypeItem['id'] == $idType){
-					$idName = $idTypeItem['show_name'];
-				}
-			}
-			
-			if('身份证' == $idName || '驾驶证' == $idName){
-				self::$CI->form_validation->set_rules('id_no','证件号码',"required|valid_idcard");
-			}else{
-				self::$CI->form_validation->set_rules('id_no','证件号码',"required|max_length[30]");
-			}
-		}else{
-			self::$CI->form_validation->set_rules('id_no','证件号码',"required|max_length[30]");
-		}
-		
+		self::$CI->form_validation->set_rules('id_type','证件类型','required|is_natural_no_zero');
 		self::$CI->form_validation->set_rules('birthday','出生年月','required|valid_date');
 		self::$CI->form_validation->set_rules('age','年龄','required|is_natural_no_zero');
 		self::$CI->form_validation->set_rules('sex','性别','required|is_natural_no_zero');
+		self::$CI->form_validation->set_rules('sg','身高','required|is_natural_no_zero|less_than[255]');
 		self::$CI->form_validation->set_rules('marriage','婚育状态',"required|is_natural_no_zero");
+		self::$CI->form_validation->set_rules('zzmm','政治面貌',"required|is_natural_no_zero");
+		self::$CI->form_validation->set_rules('job_status','职务状态',"required|is_natural_no_zero");
 		self::$CI->form_validation->set_rules('jiguan','籍贯',"required|is_natural_no_zero");
 		self::$CI->form_validation->set_rules('mobile','手机号码','required|valid_mobile');
 		self::$CI->form_validation->set_rules('address','现居住地址','required|max_length[100]');
@@ -197,16 +221,19 @@ class Staff_service extends Base_service {
 	/**
 	 * 保存worker
 	 */
-	public function saveWorker($pParam,$who,$fileList = array()){
+	public function saveWorker($pParam,$who,$imageList = array(),$fileList = array()){
 		
 		$returnVal = false;
 		
 		$pParam = $this->addShuXiangField($pParam);
 		$workerId = 0;
 		
+		$this->_workerModel->beginTrans();
 		
-		if($fileList){
-			$this->_workerModel->beginTrans();
+		
+		if($pParam['avatar']){
+			$avatarImg = getImgPathArray($pParam['avatar'],array('b','m','s'));
+			$pParam = array_merge($pParam,$avatarImg);
 		}
 		
 		if(!isset($pParam['id'])){
@@ -215,34 +242,78 @@ class Staff_service extends Base_service {
 			
 		}else{
 			$returnVal = $this->_workerModel->update(array_merge($pParam,$who),array('id' => $pParam['id']));
+			
 			$workerId = $pParam['id'];
+			//同步修改 staff 表对应的 worker_id
+			
+			$this->_staffModel->updateByWhere(array(
+				'worker_type' => $pParam['worker_type'],
+				'name' => $pParam['name'],
+				'show_name' => mb_substr($pParam['name'],0,1).($pParam['sex'] == 1 ? '先生' : '阿姨'),
+				'id_type' => $pParam['id_type'],
+				'id_no' => $pParam['id_no'],
+				'mobile' => $pParam['mobile'],
+				'jiguan' => $pParam['jiguan'],
+				'marriage' => $pParam['marriage'],
+				'address' => $pParam['address'],
+				'age' => $pParam['age'],
+				'sex' => $pParam['sex'],
+				'sg' => $pParam['sg'],
+				'zzmm' => $pParam['zzmm'],
+				'job_status' => $pParam['job_status'],
+				'birthday' => $pParam['birthday'],
+				'shu' => $pParam['shu']
+			),array(
+				'worker_id' => $workerId
+			));
 		}
 		
-		if($fileList){
+		//
+		if($imageList){
 			$updateFileIds = array();
-			foreach($fileList as $fileInfo){
-				$updateFileIds[] = $fileInfo['image_aid'];
+			foreach($imageList as $fileInfo){
+				$updateFileIds[] = $fileInfo['id'];
 			}
 			
 			$this->_workerImagesModel->updateByCondition(array(
 				'worker_id' => $workerId
 			),array(
+				'where' => array(
+					'worker_id' => 0
+				),
 				'where_in' => array(
-					array('key' => 'image_aid', 'value' => $updateFileIds)
+					array('key' => 'id', 'value' => $updateFileIds)
 				)
 			));
-			
-			if($this->_workerModel->getTransStatus() === FALSE){
-				$this->_workerModel->rollBackTrans();
-				return false;
-			}else{
-				$this->_workerModel->commitTrans();
-				return $returnVal;
+		}
+		
+		//
+		if($fileList){
+			$updateFileIds = array();
+			foreach($fileList as $fileInfo){
+				$updateFileIds[] = $fileInfo['id'];
 			}
-		}else{
 			
+			$this->_workerFilesModel->updateByCondition(array(
+				'worker_id' => $workerId
+			),array(
+				'where' => array(
+					'worker_id' => 0
+				),
+				'where_in' => array(
+					array('key' => 'id', 'value' => $updateFileIds)
+				)
+			));
+		}
+		
+		if($this->_workerModel->getTransStatus() === FALSE){
+			$this->_workerModel->rollBackTrans();
+			return false;
+		}else{
+			$this->_workerModel->commitTrans();
 			return $returnVal;
 		}
+		
 	}
 	
 	
@@ -325,7 +396,7 @@ class Staff_service extends Base_service {
 	/**
 	 * 家政业务人员
 	 */
-	public function saveStaff($servTypeName,$pStaffParam,$who,$fileList = array()){
+	public function saveStaff($servTypeName,$pStaffParam,$who,$imgList = array()){
 		
 		$returnVal = false;
 		$staffId = 0;
@@ -379,17 +450,20 @@ class Staff_service extends Base_service {
 			$staffId = $pStaffParam['id'];
 		}
 		
-		if($fileList){
+		if($imgList){
 			$updateFileIds = array();
-			foreach($fileList as $fileInfo){
-				$updateFileIds[] = $fileInfo['image_aid'];
+			foreach($imgList as $fileInfo){
+				$updateFileIds[] = $fileInfo['id'];
 			}
 			
 			$this->_staffImagesModel->updateByCondition(array(
 				'staff_id' => $staffId
 			),array(
+				'where' => array(
+					'staff_id' => 0
+				),
 				'where_in' => array(
-					array('key' => 'image_aid', 'value' => $updateFileIds)
+					array('key' => 'id', 'value' => $updateFileIds)
 				)
 			));
 		}
@@ -708,7 +782,7 @@ class Staff_service extends Base_service {
 		
 		$currentPage = $pCondition['page'] ? $pCondition['page'] : 1;
 		$condition = array(
-			'select' => 'id,name,show_name,jiguan,age,avatar_m,avatar_s,work_month,service_cnt,salary_amount,salary_detail,has_photo,has_photo,has_video,sbt_exp',
+			'select' => 'id,service_type,name,show_name,jiguan,age,avatar_m,avatar_s,work_month,service_cnt,salary_amount,salary_detail,has_photo,has_photo,has_video,sbt_exp',
 			'pager' => array(
 				'page_size' => config_item('page_size'),
 				'current_page' => $currentPage,

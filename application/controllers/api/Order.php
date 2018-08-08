@@ -128,7 +128,8 @@ class Order extends Wx_Controller {
 					$this->postJson['extra_info'] = array(
 						'address' => $this->postJson['address'],
 						'username' => $this->postJson['username'],
-						'visit_time' => $this->postJson['visit_time'],
+						'booking_time' => $this->postJson['visit_time'],
+						'bz' => $this->postJson['remark'] ? $this->postJson['remark'] : ''
 					);
 					
 					if(ENVIRONMENT == 'development'){
@@ -279,7 +280,7 @@ class Order extends Wx_Controller {
 					//附加信息
 					$this->postJson['extra_info'] = array(
 						'cart' => $list,
-						'meet_time' => $this->postJson['meet_time'],
+						'booking_time' => $this->postJson['meet_time'],
 						'address' => $this->postJson['address'],
 					);
 					
@@ -552,7 +553,34 @@ class Order extends Wx_Controller {
 					break;
 				}
 				
-				$orderInfo = $this->order_service->getOrderDetailByOrderId($this->postJson['order_id'],$this->memberInfo);
+				$condition = array(
+					'where' => array(
+						'order_id' => $this->postJson['order_id'],
+						'uid' => $this->memberInfo['uid']
+					)
+				);
+				
+				$orderInfo = $this->Order_Model->getById($condition);
+				$statusNameList = OrderStatus::$statusName;
+				
+				if($orderInfo){
+					$orderInfo['statusName'] = $statusNameList[$orderInfo['status']];
+					$orderInfo['extra_info'] = json_decode($orderInfo['extra_info'],true);
+					
+					if(strpos($orderInfo['order_typename'],'预约单') !== false){
+						$orderInfo['extra_info_translate']['上次缴费到期时间'] = $orderInfo['extra_info']['expireTimeStamp'] == 0 ? '未缴费' : date('Y-m-d', $orderInfo['extra_info']['expireTimeStamp']);
+						$orderInfo['extra_info_translate']['本次缴费开始时间'] = date('Y-m-d', $orderInfo['extra_info']['newStartTimeStamp']);
+						$orderInfo['extra_info_translate']['本次缴费到期时间'] = date('Y-m-d', $orderInfo['extra_info']['newEndTimeStamp']);
+					}
+					
+					if(isset($orderInfo['extra_info']['reason'])){
+						$orderInfo['extra_info_translate']['退款原因'] = $orderInfo['extra_info']['reason'];
+					}
+					
+				}else{
+					$orderInfo = array();
+				}
+				
 				$this->jsonOutput2(RESP_SUCCESS,$orderInfo);
 			}
 			

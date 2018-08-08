@@ -27,13 +27,11 @@ class Staff_Images_Model extends MY_Model {
     	if(!is_array($pFileIds)){
     		$pFileIds = (array)$pFileIds;
     	}
-    	
 		
 		if($pFileIds){
 			$fileList = $this->getList(array(
-				//'select' => 'id as image_aid,file_url',
 				'where_in' => array(
-					array('key' => 'image_aid', 'value' => $pFileIds)
+					array('key' => 'id', 'value' => $pFileIds)
 				),
 				'order' => 'id DESC'
 			));

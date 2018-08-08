@@ -21,13 +21,36 @@
        		<td class="vatop rowform" colspan="2">
        			{if $workerFileList}
        			<ul class="thumblists">
-       			{foreach from=$workerFileList item=item}
+       			{foreach from=$workerImageList item=item}
        			<li class="picture"><div class="size-64x64"><span class="thumb"><i></i><a class="fancybox" href="{resource_url($item['image_b'])}" data-fancybox-group="galleryWorker"><img src="{resource_url($item['image_m'])}" alt="" width="64px" height="64px"/></a></span></div></li>
        			{/foreach}
        			</ul>
        			{else}
        			暂无
        			{/if}
+       		</td>
+       	</tr>
+       	<tr>
+          <td colspan="2" class="required">{#other_file#}:</td>
+        </tr>
+        <tr>
+       		<td colspan="2">
+       			<table style="width:600px;">
+       				<thead>
+       					<tr>
+       						<th>文件名称</th>
+       						<th>文件大小</th>
+       					</tr>
+       				</thead>
+       				<tbody id="fileList">
+       			{foreach from=$workerFileList item=item}
+		       			<tr id="file{$item['id']}">
+		       				<td><input type="hidden" name="file_id[]" value="{$item['id']}" /><a target="_blank" href="{resource_url($item['file_url'])}">{$item['title']|escape}</a></td>
+		       				<td>{byte_format($item['file_size'])}</td>
+						</tr>
+       			{/foreach}
+       				</tbody>
+       			</table>
        		</td>
        	</tr>
        	{if '保姆' == $moduleTitle || '护工' == $moduleTitle}
@@ -48,7 +71,7 @@
        	
        	{if '护工' == $moduleTitle}
        	<tr class="noborder">
-          <td colspan="2" class="required"><label class="validation" for="name">{$moduleTitle}{#grade#}:</label></td>
+          <td colspan="2" class="required"><label class="validation" for="grade">{$moduleTitle}{#grade#}:</label></td>
         </tr>
        	<tr class="noborder">
           <td class="vatop rowform">
@@ -61,14 +84,14 @@
        	{/if}
         {include file="worker/basic_info.tpl"}
        	<tr class="noborder">
-          <td colspan="2"><label class="validation" for="name">{#work_month#}:</label></td>
+          <td colspan="2"><label class="validation" for="work_month">{#work_month#}:</label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input type="text" value="{$info['work_month']|escape}" name="work_month" id="work_month" class="txt"></td>
           <td class="vatop tips">{form_error('work_month')}</td>
         </tr>
         <tr class="noborder">
-          <td colspan="2"><label class="validation" for="name">{#service_cnt#}:</label></td>
+          <td colspan="2"><label class="validation" for="service_cnt">{#service_cnt#}:</label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input type="text" value="{$info['service_cnt']|escape}" name="service_cnt" id="service_cnt" class="txt"><span>户</span></td>

@@ -140,20 +140,24 @@ class Repair extends Ydzj_Admin_Controller{
 					break;
 				}
 				
-				if($_POST['file_id']){
+				if($_POST['img_file_id']){
 					$this->Repair_Images_Model->updateByCondition(array(
 						'repair_id' => $newId
 					),array(
+					
+						'where' => array(
+							'repair_id' => 0
+						),
 						'where_in' => array(
-							array('key' => 'image_aid','value' => $_POST['file_id'])
+							array('key' => 'id','value' => $_POST['img_file_id'])
 						)
 					));
 				}
 				
 				$this->jsonOutput('保存成功,页面即将刷新',array('redirectUrl' => admin_site_url($this->_className.'/index')));	
-
 			}
 		}else{
+			
 			$this->display();
 		}
 
@@ -333,10 +337,10 @@ class Repair extends Ydzj_Admin_Controller{
 				$this->jsonOutput('保存成功,页面即将刷新',array('redirectUrl' => admin_site_url($this->_className.'/index')));
 			}
 		}else{
-			$fileList = $this->Repair_Images_Model->getlist(array(
-				'where' => array('repair_id' => $id)
-			));
-			$this->assign('fileList',$fileList);
+			
+			$imgList = $this->Repair_Images_Model->getImagesListByRepairId($id);
+			
+			$this->assign('imgList',$imgList);
 			$this->assign('info',$info);
 			$this->display($this->_className.'/add');
 			
@@ -420,17 +424,16 @@ class Repair extends Ydzj_Admin_Controller{
 			
 			$info = array(
 				'repair_id' => $this->input->get_post('id') ? $this->input->get_post('id') : 0,
-				'image_aid' => $fileData['id'],
 				'image' => $fileData['file_url'],
 				'image_b' => !empty($fileData['img_b']) ? $fileData['img_b'] : '',
 				'image_m' => !empty($fileData['img_m']) ? $fileData['img_m'] : '',
-				'uid' => $this->_adminProfile['basic']['uid']
+				'uid' => $this->_adminProfile['basic']['uid'],
+				'ip' => $fileData['ip'],
 			);
 			$imageId = $this->Repair_Images_Model->_add($info);
 			if($imageId){
 				$json['error'] = 0;
-				$json['id'] = $fileData['id'];
-				$json['image_id'] = $imageId;
+				$json['id'] = $imageId;
 				$json['url'] = base_url($fileData['file_url']);
 				$json['msg'] = '上传成功';
 				//尽量选择小图
@@ -465,29 +468,30 @@ class Repair extends Ydzj_Admin_Controller{
 		$file_id = intval($this->input->get_post('file_id'));
 		$repair_id = intval($this->input->get_post('id'));
 		
+		$fileInfo = $this->Repair_Images_Model->getFirstByKey($file_id);
 		
+		$rowsDelete = 0;
 		if($repair_id){
 			//如果在编辑页面
-			$aaa=$this->Repair_Images_Model->deleteByCondition(array(
+			$rowsDelete = $this->Repair_Images_Model->deleteByCondition(array(
 				'where' => array(
-					'image_aid' => $file_id,
+					'id' => $file_id,
 					'repair_id' => $repair_id,
 					'uid' => $this->_adminProfile['basic']['uid']
 				)
 			));
 		}else{
 			//在新增界面，还没有worker id
-			$this->Repair_Images_Model->deleteByCondition(array(
+			$rowsDelete = $this->Repair_Images_Model->deleteByCondition(array(
 				'where' => array(
-					'image_aid' => $file_id,
+					'id' => $file_id,
 					'uid' => $this->_adminProfile['basic']['uid']
 				)
 			));
 		}
 		
-		if($file_id){
-			//文件删除，数据库记录不删除
-			$this->attachment_service->deleteFiles($file_id,'all',FROM_BACKGROUND);
+		if($rowsDelete){
+			$this->attachment_service->deleteByFileUrl(array($fileInfo['image'],$fileInfo['image_b'],$fileInfo['image_m']));
 		}
 		
 		$this->jsonOutput('成功',$this->getFormHash());

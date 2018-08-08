@@ -20,20 +20,18 @@ class Worker_Images_Model extends MY_Model {
     /**
      * 根据文件ID 获得文件列表
      */
-    public function getImageListByFileIds($pFileIds){
+    public function getImageListByIds($pFileIds){
     	
     	$fileList = array();
     	
     	if(!is_array($pFileIds)){
     		$pFileIds = (array)$pFileIds;
     	}
-    	
 		
 		if($pFileIds){
 			$fileList = $this->getList(array(
-				//'select' => 'id as image_aid,file_url',
 				'where_in' => array(
-					array('key' => 'image_aid', 'value' => $pFileIds)
+					array('key' => 'id', 'value' => $pFileIds)
 				),
 				'order' => 'id DESC'
 			));
@@ -51,7 +49,8 @@ class Worker_Images_Model extends MY_Model {
     	return $this->getList(array(
     		'where' => array(
     			'worker_id' => $pId
-    		)
+    		),
+    		'order' => 'id DESC'
     	));
     	
     }

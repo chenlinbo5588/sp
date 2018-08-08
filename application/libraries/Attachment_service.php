@@ -8,6 +8,8 @@ class Attachment_service extends Base_service {
 	private $_attachModel ;
 	private $_imageSizeConfig ;
 	
+	private $_tempFilePrefix = 'temp';
+	
 
 	public function __construct(){
 		parent::__construct();
@@ -18,6 +20,15 @@ class Attachment_service extends Base_service {
 		$this->_attachModel = self::$CI->Attachment_Model;
 		$this->_imageSizeConfig = $this->getImageSizeConfig();
 	}
+	
+	
+	/**
+	 * 甚至临时文件浅醉
+	 */
+	public function setTempPrefix($pPrefix){
+		$this->_tempFilePrefix = $pPrefix;
+	}
+	
 	
 	/*
 	 * 
@@ -42,9 +53,10 @@ class Attachment_service extends Base_service {
 			$config['upload_path'] = $destPath;
 		}
         
+        $config['without_db'] = true;
 		$config['file_ext_tolower'] = true;
 		$config['encrypt_name'] = true;
-		$config['max_size'] = 2048;
+		$config['max_size'] = config_item('image_max_filesize');
 		
 		return $config;
 	}
@@ -219,9 +231,7 @@ class Attachment_service extends Base_service {
 	public function addAttachment($filename, $config = array(),$from = 0,$mod = ''){
 		//print_r($config);
 		
-		if(empty($config['upload_path'])){
-			$config = array_merge($this->getUploadConfig(),$config);
-		}
+		$config = array_merge($this->getUploadConfig(),$config);
 		
 		self::$CI->load->library('upload', $config);
 		if(self::$CI->upload->do_upload($filename)){
@@ -242,7 +252,7 @@ class Attachment_service extends Base_service {
 			
 			$fileData['from_bg'] = $from;
 			
-			if($config['widthout_db'] != true){
+			if($config['without_db'] != true){
 				$file_id = self::$CI->Attachment_Model->_add($fileData);
 				$fileData['id'] = $file_id;
 			}
@@ -291,7 +301,7 @@ class Attachment_service extends Base_service {
 	public function pic_upload($uid,$uploadName ,$fromBg = 0,$mod = ''){
 		
 		$this->setUid($uid);
-		$fileData = $this->addImageAttachment($uploadName,array('widthout_db' => true),$fromBg,$mod);
+		$fileData = $this->addImageAttachment($uploadName,array(),$fromBg,$mod);
 		//$Orientation[$exif[IFD0][Orientation]];
 		//$exif = exif_read_data($fileData['file_url'],0,true);
 		if($fileData){

@@ -1,9 +1,9 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Repair_Images_Model extends MY_Model {
+class Worker_Files_Model extends MY_Model {
     
-    public $_tableName = 'repair_images';
+    public $_tableName = 'worker_files';
     public static $_tableMeta = null;
 
 
@@ -16,14 +16,17 @@ class Repair_Images_Model extends MY_Model {
     	return self::$_tableMeta;
     }
     
-   public function getImageListByFileIds($pFileIds){
+    
+    /**
+     * 根据文件ID 获得文件列表
+     */
+    public function getFileListByIds($pFileIds){
     	
     	$fileList = array();
     	
     	if(!is_array($pFileIds)){
     		$pFileIds = (array)$pFileIds;
     	}
-    	
 		
 		if($pFileIds){
 			$fileList = $this->getList(array(
@@ -41,11 +44,11 @@ class Repair_Images_Model extends MY_Model {
     /**
      * 根据工作人员的ID
      */
-    public function getImagesListByRepairId($pId){
+    public function getFileListByWorkerId($pId){
     	
     	return $this->getList(array(
     		'where' => array(
-    			'repair_id' => $pId
+    			'worker_id' => $pId
     		)
     	));
     	

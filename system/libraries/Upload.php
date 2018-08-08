@@ -138,6 +138,13 @@ class CI_Upload {
 	 * @var	int
 	 */
 	public $file_size = NULL;
+	
+	/**
+	 * File size unmodify
+	 * 
+	 * @var int
+	 */
+	public $orig_size = 0;
 
 	/**
 	 * Filename extension
@@ -447,6 +454,7 @@ class CI_Upload {
 		// Set the uploaded data as class variables
 		$this->file_temp = $_file['tmp_name'];
 		$this->file_size = $_file['size'];
+		$this->orig_size = $_file['size'];
 
 		// Skip MIME type detection?
 		if ($this->detect_mime !== FALSE)
@@ -597,7 +605,6 @@ class CI_Upload {
 	public function data($index = NULL)
 	{
 		$data = array(
-				'orig_name'		=> $this->orig_name,
 				'file_name'		=> $this->file_name,
 				'file_type'		=> $this->file_type,
 				'file_path'		=> $this->upload_path,
@@ -607,6 +614,7 @@ class CI_Upload {
 				'client_name'		=> $this->client_name,
 				'file_ext'		=> $this->file_ext,
 				'file_size'		=> $this->file_size,
+				'orig_size'     => $this->orig_size,
 				'is_image'		=> $this->is_image(),
 				'image_width'		=> $this->image_width,
 				'image_height'		=> $this->image_height,

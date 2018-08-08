@@ -100,13 +100,10 @@ class PayNotifyCallBack extends WxPayNotify
 		}
 		
 		$batchInsert = array();
-		$dateKey = date('Ymd');
-		
-		$meetTime = strtotime($extraInfo['meet_time']);
 		
 		foreach($staffList as $staffItem){
 			$batchInsert[] = array(
-				'meet_time' => $meetTime,
+				'meet_time' => strtotime($extraInfo['booking_time']),
 				'address' => $extraInfo['address'],
 				'mobile' => $orderInfo['mobile'],
 				'username' => $orderInfo['add_username'],
@@ -117,7 +114,7 @@ class PayNotifyCallBack extends WxPayNotify
 				'service_type' => $staffItem['service_type'],
 				'service_name' => $serviceTypeIdAssoc[$staffItem['service_type']],
 				'avatar_url' => $staffItem['avatar_s'],
-				'expire_key' => strtotime($extraInfo['meet_time'].' -1 day'),
+				'expire_key' => strtotime($extraInfo['booking_time'].' -1 day'),
 				'order_id' => $orderInfo['order_id'],
 				'order_status' => OrderStatus::$payed,
 				'add_uid' => $orderInfo['uid'],

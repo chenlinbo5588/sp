@@ -5,9 +5,9 @@ function call_back(resp){
     $('#avatar').val(resp.picname);
     $('#view_img').attr('src',resp.url);
     
-    
     $("#avatarDlg" ).dialog( "close" );
 }
+
 
 function resizeDlg(){
 	$("#avatarDlg").dialog({
@@ -20,13 +20,6 @@ $(function(){
 	
 	$( ".datepicker" ).datepicker();
 	$('.fancybox').fancybox();
-	
-	
-	$("#fillText").bind('click',function(){
-		var targetId = $(this).attr('data-id');
-		
-		$(targetId).val($(this).html());
-	});
 	
 	
 	var uploadConfig = [
@@ -60,12 +53,45 @@ $(function(){
 			        }
 			    });
 			}
+		},
+		
+		{
+			fileId : '#other_fileupload',
+			uploadUrl : uploadUrls.file.uploadUrl,
+			deleteUrl : uploadUrls.file.deleteUrl,
+			fileAllow :  "*.pdf;*.doc;*.docx",
+			uploadLimit: 0,
+			buttonText: '选择文件',
+			deleteBtn : 'a.delLink',
+			appendId : '#fileList',
+			successHandler : function(file_data){
+			    var newFile = '<tr id="file' + file_data.id + '"><td><input type="hidden" name="file_id[]" value="' + file_data.id + '" /><a target="_blank" href="' + file_data.url + '">' + file_data.file_name + '</a></td><td>' +  file_data.file_size + '</td><td><a class="delLink" data-id="' + file_data.id + '" href="javascript:void(0);">删除</a></td></tr>';
+			    $(this.appendId).prepend(newFile);
+			},
+			deleteFileHandler: function(clickedObj){
+				if(!window.confirm('您确定要删除吗?')){
+			        return;
+			    }
+			    
+				var fileId = clickedObj.attr('data-id');
+				
+			    $.getJSON(this.deleteUrl, {  file_id : fileId } , function(result){
+			    	refreshFormHash(result.data);
+			    	
+			        if(result){
+			            $('#file' + fileId).remove();
+			        }else{
+			        	showToast('error','删除失败');
+			        }
+			    });
+			}
 		}
 	];
 	
 	for(var i = 0; i < uploadConfig.length; i++){
 		MySwfUploader(uploadConfig[i]);
 	}
+	
 	
 	avatarUpload({
 		uploadId : '#avatarFile',
@@ -136,8 +162,4 @@ $(function(){
 		}
 		
 	});
-	
-	
-	
-	
 });

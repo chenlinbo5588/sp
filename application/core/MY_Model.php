@@ -288,7 +288,7 @@ class MY_Model extends CI_Model {
 	            }
 	        }
         }else if ($action == 'update'){
-        	if(empty($data['gmt_modify']) && array_key_exists('gmt_modify',$fields)){
+        	if(array_key_exists('gmt_modify',$fields)){
 	            $data['gmt_modify'] = $now;
 	        }
         }

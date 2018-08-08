@@ -76,7 +76,7 @@ abstract class Staff extends Ydzj_Admin_Controller {
 		
 		
 		$condition = array(
-			'select' => 'id,name,show_name,id_type,id_no,mobile,address,jiguan,age,avatar_m,avatar_s,status,work_month,service_cnt,salary_amount,salary_detail',
+			'select' => 'id,name,worker_id,show_name,id_type,id_no,mobile,address,jiguan,age,avatar_m,avatar_s,status,work_month,service_cnt,salary_amount,salary_detail',
 			'where' => array_merge(array(
 					'service_type' => $staffServiceId
 				),$moreSearchVal),
@@ -274,14 +274,17 @@ abstract class Staff extends Ydzj_Admin_Controller {
 		$info = array();
 		
 		$info = $this->staff_service->getStaffInfoById($id);
-		$fileList = array();
+		$imgList = array();
+		
 		$workerFileList = array();
 		
 		
 		if($info['worker_id']){
 			$workerInfo = $this->Worker_Model->getFirstByKey($info['worker_id']);
 			$this->assign('workerInfo',$workerInfo);
-			$workerFileList = $this->Worker_Images_Model->getImagesListByWorkerId($info['worker_id']);
+			
+			$workerImageList = $this->Worker_Images_Model->getImagesListByWorkerId($info['worker_id']);
+			$workerFileList = $this->Worker_Files_Model->getFileListByWorkerId($info['worker_id']);
 		}
 		
 		
@@ -293,7 +296,6 @@ abstract class Staff extends Ydzj_Admin_Controller {
 			$inPost = true;
 			
 			for($i = 0; $i < 1; $i++){
-				//$fileList = $this->_getFileList();
 				$info['id'] = $id;
 				
 				if(!$this->form_validation->run()){
@@ -319,14 +321,13 @@ abstract class Staff extends Ydzj_Admin_Controller {
 				
 			}
 		}else{
-			$fileList = $this->Staff_Images_Model->getImagesListByStaffId($id);
+			$imgList = $this->Staff_Images_Model->getImagesListByStaffId($id);
 			
 			
-			//print_r($info);
-		
 			$this->_commonPageData();
 			$this->assign(array(
-				'fileList' => $fileList,
+				'imgList' => $imgList,
+				'workerImageList' => $workerImageList,
 				'workerFileList' => $workerFileList,
 				'inPost' => $inPost,
 				'info' => $info,
@@ -462,8 +463,8 @@ abstract class Staff extends Ydzj_Admin_Controller {
 	/**
 	 * 获得人员的证件相关照片
 	 */
-	private function _getFileList(){
-		$file_ids = $this->input->post('file_id');
+	private function _getImageList(){
+		$file_ids = $this->input->post('img_file_id');
 		return $this->Staff_Images_Model->getImageListByFileIds($file_ids);
 	}
 	
@@ -482,8 +483,11 @@ abstract class Staff extends Ydzj_Admin_Controller {
 			$info['worker_id'] = $workerId;
 			$this->assign('workerInfo',$info);
 			
+			//重要
 			unset($info['id'],$info['avatar'],$info['avatar_b'],$info['avatar_m'],$info['avatar_s']);
-			$workerFileList = $this->Worker_Images_Model->getImagesListByWorkerId($workerId);
+			
+			$workerImageList = $this->Worker_Images_Model->getImagesListByWorkerId($workerId);
+			$workerFileList = $this->Worker_Files_Model->getFileListByWorkerId($workerId);
 		}
 		
 		$redirectUrl = '';
@@ -500,7 +504,7 @@ abstract class Staff extends Ydzj_Admin_Controller {
 			for($i = 0; $i < 1; $i++){
 				
 				$info = array_merge($_POST,$this->_prepareData());
-				$fileList = $this->_getFileList();
+				$fileList = $this->_getImageList();
 				
 				$this->assign('fileList',$fileList);
 				if(!$this->form_validation->run()){
@@ -537,6 +541,8 @@ abstract class Staff extends Ydzj_Admin_Controller {
 		$this->_commonPageData();
 		
 		$this->assign(array(
+			'editable' => true,
+			'workerImageList' => $workerImageList,
 			'workerFileList' => $workerFileList,
 			'inPost' => $inPost,
 			'info' => $info,
@@ -552,25 +558,25 @@ abstract class Staff extends Ydzj_Admin_Controller {
 		
 		$json = array('error' => 1, 'formhash'=>$this->security->get_csrf_hash(),'id' => 0,'msg' => '上传失败');
 		
-		$fileData = $this->attachment_service->addImageAttachment('Filedata',array(),FROM_BACKGROUND,'worker');
+		$fileData = $this->attachment_service->addImageAttachment('Filedata',array('allowed_types' => 'jpg'));
+		
 		if($fileData){
 			
 			$fileData = $this->attachment_service->resize($fileData);
 			
 			$info = array(
 				'staff_id' => $this->input->get_post('id') ? $this->input->get_post('id') : 0,
-				'image_aid' => $fileData['id'],
 				'image' => $fileData['file_url'],
 				'image_b' => !empty($fileData['img_b']) ? $fileData['img_b'] : '',
 				'image_m' => !empty($fileData['img_m']) ? $fileData['img_m'] : '',
-				'uid' => $this->_adminProfile['basic']['uid']
+				'uid' => $this->_adminProfile['basic']['uid'],
+				'ip' => $fileData['ip'],
 			);
 			
 			$imageId = $this->Staff_Images_Model->_add($info);
 			if($imageId){
 				$json['error'] = 0;
-				$json['id'] = $fileData['id'];
-				$json['image_id'] = $imageId;
+				$json['id'] = $imageId;
 				$json['url'] = base_url($fileData['file_url']);
 				$json['msg'] = '上传成功';
 				//尽量选择小图
@@ -583,7 +589,7 @@ abstract class Staff extends Ydzj_Admin_Controller {
 				}
 				
 			}else{
-				$json['error'] = 0;
+				$json['error'] = 1;
 				$json['msg'] = '系统异常';
 				$this->attachment_service->deleteByFileUrl(array(
 					$fileData['file_url'],
@@ -600,33 +606,39 @@ abstract class Staff extends Ydzj_Admin_Controller {
 		
 	}
 	
-	
+	/**
+	 * 
+	 */
 	public function delimg(){
 		$file_id = intval($this->input->get_post('file_id'));
-		$Refid = intval($this->input->get_post('staff_id'));
+		$staffId = intval($this->input->get_post('id'));
 		
-		if($Refid){
+		
+		$fileInfo = $this->Staff_Images_Model->getFirstByKey($file_id);
+		
+		$rowsDelete = 0;
+		
+		if($staffId){
 			//如果在编辑页面
-			$this->Staff_Images_Model->deleteByCondition(array(
+			$rowsDelete = $this->Staff_Images_Model->deleteByCondition(array(
 				'where' => array(
-					'image_aid' => $file_id,
-					'staff_id' => $Refid,
+					'id' => $file_id,
+					'staff_id' => $staffId,
 					'uid' => $this->_adminProfile['basic']['uid']
 				)
 			));
 		}else{
 			//在新增界面，还没有worker id
-			$this->Staff_Images_Model->deleteByCondition(array(
+			$rowsDelete = $this->Staff_Images_Model->deleteByCondition(array(
 				'where' => array(
-					'image_aid' => $file_id,
+					'id' => $file_id,
 					'uid' => $this->_adminProfile['basic']['uid']
 				)
 			));
 		}
 		
-		if($file_id){
-			//文件删除，数据库记录不删除
-			$this->attachment_service->deleteFiles($file_id,'all',FROM_BACKGROUND);
+		if($rowsDelete){
+			$this->attachment_service->deleteByFileUrl(array($fileInfo['image'],$fileInfo['image_b'],$fileInfo['image_m']));
 		}
 		
 		$this->jsonOutput('成功',$this->getFormHash());
@@ -642,6 +654,8 @@ abstract class Staff extends Ydzj_Admin_Controller {
 		$pageData = array(
 			'province_idcard' => json_encode(config_item('province_idcard')),
 			'idTypeList' => $this->basic_data_service->getTopChildList('证件类型'),
+			'zzmmList' => $this->basic_data_service->getTopChildList('政治面貌'),
+			'jobStatusList' => $this->basic_data_service->getTopChildList('职务状态'),
 			'jiguanList' => $this->basic_data_service->getTopChildList('籍贯'),
 			'xueliList' => $this->basic_data_service->getTopChildList('学历'),
 			'marriageList' => $this->basic_data_service->getTopChildList('婚育状态'),
@@ -662,6 +676,53 @@ abstract class Staff extends Ydzj_Admin_Controller {
 	
 	
 	/**
+	 * 详情信息
+	 */
+	public function detail(){
+		
+		$feedback = '';
+		$inPost = false;
+		$id = $this->input->get_post('id');
+		
+		$info = array();
+		
+		$info = $this->staff_service->getStaffInfoById($id);
+		
+		$imgList = array();
+		$workerFileList = array();
+		
+		if($info['worker_id']){
+			$workerInfo = $this->Worker_Model->getFirstByKey($info['worker_id']);
+			$this->assign('workerInfo',$workerInfo);
+			
+			$workerImageList = $this->Worker_Images_Model->getImagesListByWorkerId($info['worker_id']);
+			$workerFileList = $this->Worker_Files_Model->getFileListByWorkerId($info['worker_id']);
+		}
+		
+		$oldAvatar = $info['avatar'];
+		
+		$this->_subNavs[] = array('url' => $this->_className.'/detail?id='.$id, 'title' => '详情');
+		
+		$imgList = $this->Staff_Images_Model->getImagesListByStaffId($id);
+		
+		//print_r($info);
+		
+		$this->_commonPageData();
+		
+		$this->assign(array(
+			'editable' => false,
+			'imgList' => $imgList,
+			'workerImageList' => $workerImageList,
+			'workerFileList' => $workerFileList,
+			'info' => $info,
+		));
+		
+		$this->display($this->staffClass.'/add');
+		
+	}
+	
+	
+	/**
 	 * 编辑服务人员
 	 */
 	public function edit(){
@@ -669,19 +730,21 @@ abstract class Staff extends Ydzj_Admin_Controller {
 		$feedback = '';
 		$inPost = false;
 		$id = $this->input->get_post('id');
-		$actioName = '编辑';
 		
 		$info = array();
 		
 		
 		$info = $this->staff_service->getStaffInfoById($id);
-		$fileList = array();
+		
+		$imgList = array();
 		$workerFileList = array();
 		
 		if($info['worker_id']){
 			$workerInfo = $this->Worker_Model->getFirstByKey($info['worker_id']);
 			$this->assign('workerInfo',$workerInfo);
-			$workerFileList = $this->Worker_Images_Model->getImagesListByWorkerId($info['worker_id']);
+			
+			$workerImageList = $this->Worker_Images_Model->getImagesListByWorkerId($info['worker_id']);
+			$workerFileList = $this->Worker_Files_Model->getFileListByWorkerId($info['worker_id']);
 		}
 		
 		$oldAvatar = $info['avatar'];
@@ -695,7 +758,7 @@ abstract class Staff extends Ydzj_Admin_Controller {
 			
 			for($i = 0; $i < 1; $i++){
 				$postInfo = $this->_prepareData('edit');
-				$fileList = $this->_getFileList();
+				$imgList = $this->_getImageList();
 				
 				$info = array_merge($_POST,$postInfo);
 				$info['id'] = $id;
@@ -713,7 +776,7 @@ abstract class Staff extends Ydzj_Admin_Controller {
 				
 				//print_r($info);
 				
-				if($this->staff_service->saveStaff($this->_moduleTitle,$info,$this->addWhoHasOperated('edit'),$fileList) < 0){
+				if($this->staff_service->saveStaff($this->_moduleTitle,$info,$this->addWhoHasOperated('edit'),$imgList) < 0){
 					$feedback = getErrorTip('保存失败');
 					break;
 				}
@@ -729,19 +792,20 @@ abstract class Staff extends Ydzj_Admin_Controller {
 				$this->assign('successMessage','保存成功');
 			}
 		}else{
-			$fileList = $this->Staff_Images_Model->getImagesListByStaffId($id);
+			$imgList = $this->Staff_Images_Model->getImagesListByStaffId($id);
 		}
 		
 		//print_r($info);
 		
 		$this->_commonPageData();
 		$this->assign(array(
-			'fileList' => $fileList,
+			'editable' => true,
+			'imgList' => $imgList,
+			'workerImageList' => $workerImageList,
 			'workerFileList' => $workerFileList,
 			'inPost' => $inPost,
 			'info' => $info,
 			'feedback' => $feedback,
-			'actioName' => $actioName
 		));
 		
 		$this->display($this->staffClass.'/add');

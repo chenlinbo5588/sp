@@ -53,6 +53,41 @@
           <td class="vatop tips">{form_error('birthday')}</td>
         </tr>
         <tr class="noborder">
+          <td colspan="2" class="required"><label class="validation" for="age">{#sg#}(CM):</label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform"><input type="text" value="{$info['sg']}" name="sg" id="sg" class="txt"></td>
+          <td class="vatop tips">{form_error('sg')}</td>
+        </tr>
+        <tr class="noborder">
+          <td colspan="2" class="required"><label class="validation" for="zzmm">{#zzmm#}:</label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform">
+          	<select name="zzmm" id="zzmm">
+	          <option value="">请选择...</option>
+	          {foreach from=$zzmmList item=item}
+	          <option {if $info['zzmm'] == $item['id']}selected{/if} value="{$item['id']}">{$item['show_name']}</option>
+	          {/foreach}
+	        </select>
+          </td>
+          <td class="vatop tips">{form_error('zzmm')}</td>
+        </tr>
+        <tr class="noborder">
+          <td colspan="2" class="required"><label class="validation" for="job_status">{#job_status#}:</label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform">
+          	<select name="job_status" id="job_status">
+	          <option value="">请选择...</option>
+	          {foreach from=$jobStatusList item=item}
+	          <option {if $info['job_status'] == $item['id']}selected{/if} value="{$item['id']}">{$item['show_name']}</option>
+	          {/foreach}
+	        </select>
+          </td>
+          <td class="vatop tips">{form_error('job_status')}</td>
+        </tr>
+        <tr class="noborder">
           <td colspan="2" class="required"><label class="validation" for="marriage">{#marriage#}:</label></td>
         </tr>
         <tr class="noborder">

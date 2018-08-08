@@ -41,6 +41,7 @@
           <th class="w24">选择</th>
           <th class="w120">{#avatar#}</th>
           <th>{#name#}</th>
+          <th>{#show_name#}</th>
           <th>{#id_type#}</th>
           <th>{#id_no#}</th>
           <th>{#sex#}</th>
@@ -55,9 +56,10 @@
       <tbody>
       	{foreach from=$list['data'] item=item}
       	<tr class="hover edit" id="row{$item['id']}">
-          <td><input type="checkbox" name="id[]" group="chkVal" value="{$item['id']}" class="checkitem"></td>
-          <td class="w120 picture"><a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}"><img class="size-100x100" src="{if $item['avatar_s']}{resource_url($item['avatar_s'])}{else if $item['avatar_b']}{resource_url($item['avatar_b'])}{else if $item['avatar_m']}{resource_url($item['avatar_m'])}{else}{resource_url('img/default.jpg')}{/if}"/></a></td>
-          <td class="name"><a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}">{$item['name']|escape}</a></td>
+         <td><input type="checkbox" name="id[]" group="chkVal" value="{$item['id']}" class="checkitem"></td>
+         <td class="w120 picture"><a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}"><img class="size-100x100" src="{if $item['avatar_s']}{resource_url($item['avatar_s'])}{else if $item['avatar_b']}{resource_url($item['avatar_b'])}{else if $item['avatar_m']}{resource_url($item['avatar_m'])}{else}{resource_url('img/default.jpg')}{/if}"/></a></td>
+         <td class="name"><a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}">{$item['name']|escape}</a></td>
+         <td>{$item['show_name']|escape}</td>
          <td>{$basicData[$item['id_type']]['show_name']}</td>
          <td>{$item['id_no']}</td>
          <td>{if $item['sex'] == 1}男{else}女{/if}</td>
@@ -73,8 +75,8 @@
          <td>
           	<p>
           		<a href="{admin_site_url('worker/edit')}?id={$item['worker_id']}">人员信息</a> |
-          		<a href="javascript:void(0);" target="_blank">小程序预览</a> | 
           		{if $statusConfig[$item['status']] == '待审核'}<a href="{admin_site_url($moduleClassName|cat:'/single_verify')}?id={$item['id']}">审核</a> |{/if}
+          		<a href="{admin_site_url($moduleClassName|cat:'/detail')}?id={$item['id']}">详情</a> | 
           		<a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}">编辑</a>
           	</p>
           </td>

@@ -25,8 +25,8 @@
         <tr>
        		<td colspan="2">
        			<ul id="thumbnails" class="thumblists">
-       			{foreach from=$fileList item=item}
-       			<li id="{$item['image_aid']}" class="picture"><input type="hidden" name="file_id[]" value="{$item['image_aid']}" /><div class="size-64x64"><span class="thumb"><i></i><a class="fancybox" href="{resource_url($item['image_b'])}" data-fancybox-group="gallery"><img src="{resource_url($item['image_b'])}" alt="" width="64px" height="64px"/></a></span></div></li>
+       			{foreach from=$imgList item=item}
+       			<li id="img{$item['id']}" class="picture"><input type="hidden" name="file_id[]" value="{$item['id']}" /><div class="size-64x64"><span class="thumb"><i></i><a class="fancybox" href="{resource_url($item['image_b'])}" data-fancybox-group="gallery"><img src="{resource_url($item['image_b'])}" alt="" width="64px" height="64px"/></a></span></div></li>
        			{/foreach}
        			</ul>
        		</td>
@@ -62,9 +62,6 @@
   
   {include file="common/fancybox.tpl"}
   <script type="text/javascript">
-  	var province_idcard = {$province_idcard},
-  		cutUrl = '{admin_site_url($moduleClassName|cat:"/pic_cut")}?mod={$moduleClassName}&id={$info['id']}',
-  		uploadUrl = '{admin_site_url($moduleClassName|cat:"/addimg")}?mod={$moduleClassName}&id={$info['id']}';
 	
 	$(function(){
 		$( ".datepicker" ).datepicker();

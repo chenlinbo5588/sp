@@ -233,11 +233,11 @@ class Order_service extends Base_service {
 		
 		if($pOrderParam['refund_id']){
 			//退款中订单 继续退款
-			$tuiOrder = $this->getOrderDetailByOrderId($pOrderParam['refund_id']);
+			$tuiOrder = $this->getOrderInfoById($pOrderParam['refund_id'],'order_id');
 			
 		}else if($pOrderParam['order_id']){
 			//原正常订单
-			$oldOrderInfo = $this->getOrderDetailByOrderId($pOrderParam['order_id']);
+			$oldOrderInfo = $this->getOrderInfoById($pOrderParam['order_id'],'order_id');
 			
 			if(!$oldOrderInfo['is_refund']){
 				//检查一下是否有退款中的退款订单
@@ -470,37 +470,6 @@ class Order_service extends Base_service {
 		return $orderList;
 	}
 	
-	/**
-	 * 根据订单号码获得订单详情
-	 */
-	public function getOrderDetailByOrderId($pOrderId,$pUser = array()){
-		
-		if(empty($pOrderId)){
-			return false;
-		}
-		
-		$condition = array(
-			'where' => array(
-				'order_id' => $pOrderId
-			)
-		);
-		
-		if($pUser){
-			$condition['where']['uid'] = $pUser['uid'];
-		}
-		
-		$orderInfo = $this->_orderModel->getById($condition);
-		
-		$statusNameList = OrderStatus::$statusName;
-		
-		if($orderInfo){
-			$orderInfo['statusName'] = $statusNameList[$orderInfo['status']];
-		}
-		
-		return $orderInfo;
-		
-	}
-	
 	
 	/**
 	 * 设置关闭
@@ -602,7 +571,7 @@ class Order_service extends Base_service {
 		 		}
 		 		$temp[] = $tempStr;
 		 		
-			}else if('meet_time' == $key){
+			}else if('booking_time' == $key){
 				
 				$temp[] = '碰面时间';
 				$temp[] = $value;
@@ -692,10 +661,14 @@ class Order_service extends Base_service {
 				
 			}else if('visit_time' == $key){
 				$temp[] ="上门时间";
-				$temp[] = date('Y-m-d', $value);
+				$temp[] = $value;
 				
 			}else if('address'  == $key){
 				$temp[] ="上门地址";
+				$temp[] = $value;
+				
+			}else if('bz'  == $key){
+				$temp[] ="用户备注";
 				$temp[] = $value;
 				
 			}else if('reason' == $key){

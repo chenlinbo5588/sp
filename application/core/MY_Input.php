@@ -27,7 +27,10 @@ class MY_Input extends CI_Input {
 		parent::_sanitize_globals();
 		
 		if(!$this->is_ajax_request() && !$this->is_cli_request()){
-			$this->begin_protect();
+			//@TODO 优化 ，需要更加安全的逻辑
+			if(strpos($_SERVER['HTTP_X_REQUESTED_WITH'],'ShockwaveFlash') === false){
+				$this->begin_protect();
+			}
 		}
 	}
 	

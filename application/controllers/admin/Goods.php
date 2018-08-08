@@ -291,8 +291,7 @@ class Goods extends Ydzj_Admin_Controller {
 	
 	private function _prepareGoodsData(){
 		
-		$fileInfo = $this->attachment_service->addImageAttachment('goods_pic',array('widthout_db' => true),FROM_BACKGROUND,'goods');
-		
+		$fileInfo = $this->attachment_service->addImageAttachment('goods_pic',array(),FROM_BACKGROUND,'goods');
 		
 		$info = array(
 			'goods_name' => $this->input->post('goods_name'),
@@ -392,7 +391,6 @@ class Goods extends Ydzj_Admin_Controller {
 						
 						$insData[] = array(
 							'goods_id' => $newid,
-							'goods_image_aid' => $fileInfo['id'],
 							'goods_image' => $fileInfo['file_url'],
 							'goods_image_b' => $imgs['img_b'],
 							'goods_image_m' => $imgs['img_m'],
@@ -433,7 +431,6 @@ class Goods extends Ydzj_Admin_Controller {
 			
 			$info = array(
 				'goods_id' => $this->input->post('goods_id') ? $this->input->post('goods_id') : 0,
-				'goods_image_aid' => $fileData['id'],
 				'goods_image' => $fileData['file_url'],
 				'goods_image_b' => !empty($fileData['img_b']) ? $fileData['img_b'] : '',
 				'goods_image_m' => !empty($fileData['img_m']) ? $fileData['img_m'] : '',
@@ -443,8 +440,7 @@ class Goods extends Ydzj_Admin_Controller {
 				$imageId = $this->Goods_Images_Model->_add($info);
 				if($imageId){
 					$json['error'] = 0;
-					$json['id'] = $fileData['id'];
-					$json['image_id'] = $imageId;
+					$json['id'] = $imageId;
 					$json['url'] = base_url($fileData['file_url']);
 					
 					//尽量选择小图
@@ -491,7 +487,6 @@ class Goods extends Ydzj_Admin_Controller {
 			//如果在商品编辑页面
 			$this->Goods_Images_Model->deleteByCondition(array(
 				'where' => array(
-					'goods_image_aid' => $file_id,
 					'goods_id' => $goods_id,
 					'uid' => $this->_adminProfile['basic']['uid']
 				)

@@ -207,6 +207,10 @@ class MY_Controller extends CI_Controller {
     	$this->assign('siteSetting',$this->_siteSetting);
     	$this->config->set_item('site_name',$this->_siteSetting['site_name']);
     	$this->config->set_item('image_max_filesize',$this->_siteSetting['image_max_filesize']);
+    	
+    	//转成 Mb 用于显示
+    	$this->config->set_item('max_upload_size',$this->_siteSetting['image_max_filesize']/1024);
+    	
     	$this->config->set_item('background_image_allow_ext',$this->_siteSetting['background_image_allow_ext']);
     	$this->config->set_item('forground_image_allow_ext',$this->_siteSetting['forground_image_allow_ext']);
     	
@@ -271,7 +275,7 @@ class MY_Controller extends CI_Controller {
     
     
     protected function _initLibrary(){
-		$this->load->helper(array('form','directory','file', 'url','string','download'));
+		$this->load->helper(array('form','directory','file', 'url','string','download','number'));
 		$this->load->driver('cache');
 		$this->load->model(array('Member_Model','Setting_Model','Seo_Model'));
 		$this->load->library(array('user_agent','Form_validation','encrypt','PHPTree','Base_service'));
