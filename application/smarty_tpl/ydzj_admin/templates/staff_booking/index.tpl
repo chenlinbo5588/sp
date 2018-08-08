@@ -9,6 +9,8 @@
           <td><input type="text" value="{$search['username']|escape}" name="username" id="username" class="txt"></td>
          <th><label for="username">客户{#mobile#}</label></th>
           <td><input type="text" value="{$search['mobile']|escape}" name="mobile" id="mobile" class="txt"></td>
+          <th><label for="username">{#order_id#}</label></th>
+          <td><input type="text" value="{$search['order_id']|escape}" name="order_id" id="order_id" class="txt"></td>
           <th><label>{#meet_result#}</label></th>
           <td>
           	<select name="meet_result">
@@ -25,8 +27,8 @@
           <td><input type="text" value="{$search['staff_name']|escape}" name="staff_name" id="staff_name" class="txt"></td>	   
           <th><label for="staff_mobile">{#staff_mobile#}</label></th>
           <td><input type="text" value="{$search['staff_mobile']|escape}" name="staff_mobile" id="staff_mobile" class="txt"></td>
-          <th><label for="username">{#order_id#}</label></th>
-          <td><input type="text" value="{$search['order_id']|escape}" name="order_id" id="order_id" class="txt"></td>
+          <th><label for="username">{#order_refund#}</label></th>
+          <td><input type="text" value="{$search['order_refund']|escape}" name="order_refund" id="order_refund" class="txt"></td>
           <th><label>{#order_status#}</label></th>
       	  <td>
           	<select name="order_status">
@@ -39,7 +41,6 @@
         </tr>
       </tbody>
     </table>
-  </form>
     <table class="table tb-type2 mgbottom">
       <thead>
         <tr class="thead">
@@ -53,7 +54,7 @@
           <th>{#is_cancel#}</th>
           <th>{#meet_result#}</th>
           <th>{#is_notify#}</th>
-          <th>{#order_id#}</th>
+          <th>{#order_id#}&<br>{#order_refund#}</th>
           <th>{#order_status#}</th>
           <th>操作</th>
         </tr>
@@ -62,19 +63,27 @@
       	{foreach from=$list['data'] item=item}
       	<tr class="hover edit" id="row{$item['id']}">
           <td><input type="checkbox" name="id[]" group="chkVal" value="{$item['id']}" class="checkitem"></td>
-          <td class="username"><a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}">{$item['username']|escape}</a><br/>{$item['mobile']}</td>
-         <td>{$item['staff_name']}<br/>{$item['staff_mobile']}</td>
-         <td>{if $item['staff_sex'] == 1}男{else}女{/if}</td>
-         <td class="w120 picture"><a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}"><img class="size-100x100" src="{if $item['avatar_url']}{resource_url($item['avatar_url'])}{else}{resource_url('img/default.jpg')}{/if}"/></a></td>
+          <td class="username">{$item['username']}<br/>{$item['mobile']}</td>
+         <td>{if $item['service_name'] == '月嫂'}<a href="{admin_site_url('yuesao/edit')}?id={$item['staff_id']}">{$item['staff_name']|escape}</a>
+         {else if $item['service_name'] == '保姆'}<a href="{admin_site_url('baomu/edit')}?id={$item['staff_id']}">{$item['staff_name']|escape}</a>
+         {else if $item['service_name'] == '护工'}<a href="{admin_site_url('hugong/edit')}?id={$item['staff_id']}">{$item['staff_name']|escape}</a>
+         {else if $item['service_name'] == '保洁'}{$item['staff_name']|escape}{/if}<br/> 
+         {$item['staff_mobile']}</td>
+         <td>{if $item['staff_sex'] == 1}男{else if $item['staff_sex'] == 2}女{/if}</td>
+         <td class="w120 picture"><img class="size-100x100" src="{if $item['avatar_url']}{resource_url($item['avatar_url'])}{else}{resource_url('img/default.jpg')}{/if}"/></a></td>
          <td>{$item['service_name']}</td>
          <td>{$item['meet_time']|date_format:"%Y-%m-%d %H:%M"}</td>
          <td>{if $item['is_cancel'] == 0}正常{elseif $item['is_cancel'] == 1}已取消{/if}</td>
          <td><div>{$bookingMeet[$item['meet_result']]}</div></td>
          <td>{if $item['is_notify']==1}已提醒{else}未提醒{/if}</td>
-    	 <td><a href="{admin_site_url('order/detail')}?order_id={$item['order_id']}">{$item['order_id']}</a></td>
+    	 <td><a href="{admin_site_url('order/detail')}?order_id={$item['order_id']}">{$item['order_id']}</a><br><a href="{admin_site_url('refund/detail')}?order_id={$item['order_refund']}">{$item['order_refund']}</a></td>
          <td><div>{$bookingStatus[$item['order_status']]}</div></td>
          <td>
-          	<a href="{admin_site_url($moduleClassName|cat:'/detail')}?id={$item['id']}">预约单详情</a>
+         	{if $item['service_name'] == '保洁'}
+         		<a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}">编辑</a>
+         	{/if}
+          		<a href="{admin_site_url($moduleClassName|cat:'/detail')}?id={$item['id']}">预约单详情</a>
+          	
           </td>
         </tr>
         {/foreach}
@@ -82,11 +91,10 @@
     </table>
     <div class="fixedOpBar">
     	<label><input type="checkbox" class="checkall" id="checkallBottom" name="chkVal">全选</label>&nbsp;
-       	<a href="javascript:void(0);" class="btn verifyBtn" data-title="取消预约" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/batch_cancel')}" data-ajaxformid="#verifyForm"><span>取消预约</span></a>
-       	<a href="javascript:void(0);" class="btn verifyBtn" data-title="恢复预约" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/batch_cancel')}" data-ajaxformid="#verifyForm"><span>恢复预约</span></a>
+       	<a href="javascript:void(0);" class="btn verifyBtn" data-title="取消预约" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/batchCancel')}" data-ajaxformid="#verifyForm"><span>取消预约</span></a>
+       	<a href="javascript:void(0);" class="btn verifyBtn" data-title="恢复预约" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/batchRestore')}" data-ajaxformid="#verifyForm"><span>恢复预约</span></a>
        	<a href="javascript:void(0);" class="btn verifyBtn" data-title="发送提醒" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/remind')}" data-ajaxformid="#verifyForm"><span>提醒</span></a>
-   		<a href="javascript:void(0);" class="btn verifyBtn" data-title="选择更改的状态" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/change_state')}" data-ajaxformid="#verifyForm"><span>更改状态</span></a>
-        {include file="common/pagination.tpl"}
+   		<a href="javascript:void(0);" class="btn verifyBtn" data-title="选择更改的状态" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/changeState')}" data-ajaxformid="#verifyForm"><span>更改状态</span></a>
     </div>
   </form>
   <div id="verifyDlg"></div>

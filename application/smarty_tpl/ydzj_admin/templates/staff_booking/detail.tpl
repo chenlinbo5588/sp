@@ -36,21 +36,20 @@
           <td class="vatop rowform"><input type="text" readonly value="{$info['mobile']|escape}" name="mobile" id="mobile" class="txt"></td>
           <td class="vatop tips">{form_error('mobile')}</td>
         </tr>
-       <tr class="noborder">
-          <td colspan="2" class="required"><label class="validation" for="staff_mobile">{#staff_mobile#}:</label></td>
-        </tr>
         <tr class="noborder">
-          <td class="vatop rowform"><input type="text" value="{$info['staff_mobile']|escape}" name="staff_mobile" id="staff_mobile" class="txt"></td>
-          <td class="vatop tips"><label id="error_staff_mobile"></label>{form_error('staff_mobile')}</td>
-        </tr>
-        <tr class="noborder">
-          <td colspan="2" class="required"><label class="validation" for="staff_name">{#staff_name#}:</label></td>
+          <td colspan="2" class="required">{#staff_name#}:</td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input type="text"  value="{$info['staff_name']|escape}" name="staff_name" id="staff_name" class="txt"></td>
           <td class="vatop tips">{form_error('staff_name')}</td>
         </tr>
-
+        <tr class="noborder">
+          <td colspan="2" class="required">{#staff_mobile#}:</td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform"><input type="text"  value="{$info['staff_mobile']|escape}" name="staff_mobile" id="staff_mobile" class="txt"></td>
+          <td class="vatop tips">{form_error('staff_mobile')}</td>
+        </tr>
         <tr class="noborder">
           <td colspan="2" class="required">{#staff_sex#}:</td>
         </tr>
@@ -65,7 +64,27 @@
           <td class="vatop rowform"><input type="text" readonly value="{$info['service_name']|escape}" name="service_name" id="service_name" class="txt"></td>
           <td class="vatop tips">{form_error('service_name')}</td>
         </tr>
-
+        <tr class="noborder">
+          <td colspan="2" class="required">{#meet_result#}:</td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform"><input type="text" readonly value={$bookingMeet[$info['meet_result']]} name="meet_result" id="meet_result" class="txt"></td>
+          <td class="vatop tips">{form_error('meet_result')}</td>
+        </tr>
+        <tr class="noborder">
+          <td colspan="2" class="required">{#is_cancel#}:</td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform"><input type="text" readonly value="{if $info['is_cancel']==1}预约中 {else}预约取消{/if	}" name="is_cancel" id="is_cancel" class="txt"></td>
+          <td class="vatop tips">{form_error('is_cancel')}</td>
+        </tr>
+        <tr class="noborder">
+          <td colspan="2" class="required">{#is_notify#}:</td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform"><input type="text" readonly value="{if $info['is_notify']==2}已提醒{else}未提醒{/if}" name="is_notify" id="username" class="txt"></td>
+          <td class="vatop tips">{form_error('is_notify')}</td>
+        </tr>
         <tr class="noborder">
           <td colspan="2" class="required">{#order_id#}:</td>
         </tr>
@@ -73,17 +92,28 @@
           <td class="vatop rowform"><input type="text" readonly value="{$info['order_id']|escape}" name="order_id" id="order_id" class="txt"></td>
           <td class="vatop tips">{form_error('order_id')}</td>
         </tr>
+        <tr class="noborder">
+          <td colspan="2" class="required">{#order_refund#}:</td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform"><input type="text" readonly value="{$info['order_refund']|escape}" name="order_refund" id="order_refund" class="txt"></td>
+          <td class="vatop tips">{form_error('order_refund')}</td>
+        </tr>
+        <tr class="noborder">
+          <td colspan="2" class="required">{#order_status#}:</td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform"><input type="text" readonly value="{if $info['order_status']==1}预约单未完成{elseif $info['order_status']==2}预约单完成{elseif $info['order_status']==3}预约单取消{/if}" name="username" id="order_status" class="txt"></td>
+          <td class="vatop tips">{form_error('order_status')}</td>
+        </tr>
       </tbody>
     </table>
     <div class="fixedOpBar">
-		<input type="submit" name="tijiao" value="保存" class="msbtn"/>
+    	{if $compile == 'yes'}
+    		<input type="submit" name="tijiao" value="保存" class="msbtn"/>
+    	{/if}
     	<a href="{$gobackUrl}" class="salvebtn">返回</a>
     </div>
   </form>
 
-  <script>
-  	var submitUrl = [new RegExp("{$uri_string}")],searchMobileUrl = "{admin_site_url('staff_booking/getStaffMobile')}";
-  	
-  </script>
-    <script type="text/javascript" src="{resource_url('js/service/staff_booking.js',true)}"></script>
 {include file="common/main_footer.tpl"}

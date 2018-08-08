@@ -227,12 +227,17 @@ class Refund extends Ydzj_Admin_Controller {
 		$id = $this->input->get_post('id');
 		$info = $this->order_service->getOrderInfoById($id);
 		
-		$this->_subNavs[] = array('url' => $this->_className.'/detail?id='.$id,'title' => $this->_moduleTitle.'详情');
-		
-		$showSubmit = false;
-		
-		if($info['verify_status'] == OrderVerify::$unVerify && $info['status'] == OrderStatus::$refounding){
-			$showSubmit = true;
+		if(empty($id)){
+			$orderId = $this->input->get_post('order_id');
+			$info = $this->order_service->getOrderInfoById($orderId,'order_id');
+			
+			$this->_subNavs[] = array('url' => $this->_className.'/detail?order_id='.$orderId,'title' => $this->_moduleTitle.'详情');
+			
+		}else{
+			$info = $this->order_service->getOrderInfoById($id);
+			
+			$this->_subNavs[] = array('url' => $this->_className.'/detail?id='.$id,'title' => $this->_moduleTitle.'详情');
+			
 		}
 		
 		$this->assign(array(
