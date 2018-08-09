@@ -568,7 +568,9 @@ class Order extends Wx_Controller {
 					$orderInfo['extra_info'] = json_decode($orderInfo['extra_info'],true);
 					
 					if(strpos($orderInfo['order_typename'],'预约单') !== false){
-						$orderInfo['extra_info_translate']['上次缴费到期时间'] = $orderInfo['extra_info']['expireTimeStamp'] == 0 ? '未缴费' : date('Y-m-d', $orderInfo['extra_info']['expireTimeStamp']);
+						
+					}else{
+						$orderInfo['extra_info_translate']['上次缴费到期时间'] = $orderInfo['extra_info']['expireTimeStamp'] == 0 ? '无缴费记录' : date('Y-m-d', $orderInfo['extra_info']['expireTimeStamp']);
 						$orderInfo['extra_info_translate']['本次缴费开始时间'] = date('Y-m-d', $orderInfo['extra_info']['newStartTimeStamp']);
 						$orderInfo['extra_info_translate']['本次缴费到期时间'] = date('Y-m-d', $orderInfo['extra_info']['newEndTimeStamp']);
 					}
@@ -654,7 +656,8 @@ class Order extends Wx_Controller {
 				
 				$orderInfo = $this->order_service->getOrderInfoById($this->postJson['order_id'],'order_id');
 				
-				$this->form_validation->set_rules('amount','退款金额','required|is_numeric|greater_than[0]|less_than_equal_to['.(($orderInfo['amount'] - $orderInfo['refund_amount'])/100).']');
+				$this->form_validation->set_rules('amount','退款金额','required|is_numeric|greater_than[0]|less_than_equal_to['.($orderInfo['amount'] - $orderInfo['refund_amount']).']');
+				
 				$this->form_validation->set_rules('reason','退款原因','required|min_length[3]|max_length[100]');
 				$this->form_validation->set_rules('remark','备注','min_length[3]|max_length[100]');
 				

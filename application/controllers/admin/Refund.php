@@ -240,6 +240,12 @@ class Refund extends Ydzj_Admin_Controller {
 			
 		}
 		
+		$showSubmit = false;
+		
+		if($info['verify_status'] == OrderVerify::$unVerify && $info['status'] == OrderStatus::$refounding){
+			$showSubmit = true;
+		}
+			
 		$this->assign(array(
 			'info' => $info,
 			'extraItem' => $this->order_service->extraInfoToArray($info),
