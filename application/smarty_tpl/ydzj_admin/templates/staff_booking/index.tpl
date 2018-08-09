@@ -7,10 +7,8 @@
         <tr>
           <th><label for="username">{#username#}</label></th>
           <td><input type="text" value="{$search['username']|escape}" name="username" id="username" class="txt"></td>
-         <th><label for="username">客户{#mobile#}</label></th>
+          <th><label for="username">客户{#mobile#}</label></th>
           <td><input type="text" value="{$search['mobile']|escape}" name="mobile" id="mobile" class="txt"></td>
-          <th><label for="username">{#order_id#}</label></th>
-          <td><input type="text" value="{$search['order_id']|escape}" name="order_id" id="order_id" class="txt"></td>
           <th><label>{#meet_result#}</label></th>
           <td>
           	<select name="meet_result">
@@ -20,15 +18,13 @@
           	  {/foreach}
             </select>
           </td>
-          <td><input type="submit" class="msbtn" name="tijiao" value="查询"/></td>
+          
         </tr>
         <tr>
           <th><label for="staff_name">{#staff_name#}</label></th>
           <td><input type="text" value="{$search['staff_name']|escape}" name="staff_name" id="staff_name" class="txt"></td>	   
           <th><label for="staff_mobile">{#staff_mobile#}</label></th>
           <td><input type="text" value="{$search['staff_mobile']|escape}" name="staff_mobile" id="staff_mobile" class="txt"></td>
-          <th><label for="username">{#order_refund#}</label></th>
-          <td><input type="text" value="{$search['order_refund']|escape}" name="order_refund" id="order_refund" class="txt"></td>
           <th><label>{#order_status#}</label></th>
       	  <td>
           	<select name="order_status">
@@ -38,6 +34,15 @@
           	  {/foreach}
             </select>
           </td>
+        </tr>
+        <tr>
+          <th><label for="username">{#meet_time#}</label></th>
+          <td><input type="text" class="datepicker" value="{$search['meet_time']|escape}" name="meet_time" id="meet_time" class="txt"></td>
+          <th><label for="username">{#order_id#}</label></th>
+          <td><input type="text" value="{$search['order_id']|escape}" name="order_id" id="order_id" class="txt"></td>
+          <th><label for="username">{#order_refund#}</label></th>
+          <td><input type="text" value="{$search['order_refund']|escape}" name="order_refund" id="order_refund" class="txt"></td>
+          <td><input type="submit" class="msbtn" name="tijiao" value="查询"/></td>
         </tr>
       </tbody>
     </table>
@@ -98,5 +103,5 @@
     </div>
   </form>
   <div id="verifyDlg"></div>
-  <script type="text/javascript" src="{resource_url('js/service/staff_index.js',true)}"></script>
+  <script type="text/javascript" src="{resource_url('js/service/staff_booking_index.js',true)}"></script>
 {include file="common/main_footer.tpl"}

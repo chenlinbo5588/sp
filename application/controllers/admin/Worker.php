@@ -8,7 +8,7 @@ class Worker extends Ydzj_Admin_Controller {
 	public function __construct(){
 		parent::__construct();
 		
-		$this->load->library(array('Basic_data_service','Staff_service','Attachment_service'));
+		$this->load->library(array('Basic_data_service','Staff_service','Attachment_service','Wuye_service'));
 		$this->attachment_service->setUid($this->_adminProfile['basic']['uid']);
 		
 		$this->_moduleTitle = '家政从业人员';
@@ -23,6 +23,8 @@ class Worker extends Ydzj_Admin_Controller {
 		$this->_subNavs = array(
 			array('url' => $this->_className.'/index','title' => '管理'),
 			array('url' => $this->_className.'/add','title' => '新增'),
+			array('url' => $this->_className.'/import','title' => '导入'),
+			array('url' => $this->_className.'/export','title' => '导出'),
 		);
 		
 		$this->assign('basicData',$this->basic_data_service->getBasicDataList());
@@ -495,7 +497,7 @@ class Worker extends Ydzj_Admin_Controller {
 		$this->display($this->_className.'/add');
 	}
 	
-	
+
 	
 	/**
 	 * 裁剪头像
@@ -544,4 +546,392 @@ class Worker extends Ydzj_Admin_Controller {
 		}
 		
 	}
+
+
+	/**
+	 * 导入输出
+	 */
+	private function _importOutput($result){
+		
+		$str = array();
+		foreach($result as $key => $line){
+			$str[] = "<tr class=\"{$line['classname']}\"><td>{$line['name']}</td><td>{$line['id_type']}</td><td>{$line['id_no']}</td><td>{$line['mobile']}</td><td>{$line['message']}</td></tr>";
+		}
+		
+		return implode('',$str);
+		
+	}
+	
+	
+	/**
+     * 导入excel
+     */
+    public function import(){
+    	$feedback = '';
+    	
+    	$this->form_validation->set_error_delimiters('','');
+    	
+    	if($this->isPostRequest()){
+       		header('Content-Type: text/html;charset='.config_item('charset'));
+       		
+    		for($i = 0; $i < 1; $i++){
+    			if(0 != $_FILES['excelFile']['error']){
+    				$feedback = getErrorTip('请上传文件');
+	    			break;
+	    		}
+	    		
+	    		$this->_initPHPExcel();
+		        
+	    		try {
+	    			
+	    			$excelFile = $_FILES['excelFile']['tmp_name'];
+	    			$objPHPexcel = PHPExcel_IOFactory::load($excelFile);
+					$objWorksheet = $objPHPexcel->getActiveSheet(0); 
+					
+					$startRow = 2;
+					$highestRow = $objWorksheet->getHighestRow();
+					
+					$importMaxLimit = config_item('excel_import_limit');
+					
+					if(($highestRow + 1) > $importMaxLimit){
+						$highestRow = $importMaxLimit + 1;
+					}
+					
+					$result = array();
+					$successCnt = 0;
+					
+					
+					
+					$idTypeList = $this->basic_data_service->getTopChildList('证件类型');
+					$jiguanList = $this->basic_data_service->getTopChildList('籍贯');
+					$shuList = $this->basic_data_service->getTopChildList('属相');
+					$marriageList = $this->basic_data_service->getTopChildList('婚育状态');
+					$zzmmList = $this->basic_data_service->getTopChildList('政治面貌');
+					$degreeList = $this->basic_data_service->getTopChildList('学历');
+					$workerTypeList = $this->basic_data_service->getTopChildList('工种类型');
+					
+					
+					//$basicData = $this->basic_data_service->getAssocBasicDataTree();
+					
+					$provinceIdcard = config_item('province_idcard');
+					$currentYear = date('Y');
+					
+					// 列从 0 开始  行从1 开始
+					for($rowIndex = $startRow; $rowIndex <= $highestRow; $rowIndex++){
+						$tmpRow = array();
+						
+						$tmpRow['classname'] = 'failed';
+						$tmpRow['worker_type'] = getCleanValue($objWorksheet->getCell('A'.$rowIndex)->getValue());
+						$tmpRow['name'] = getCleanValue($objWorksheet->getCell('B'.$rowIndex)->getValue());
+						$tmpRow['id_type'] = getCleanValue($objWorksheet->getCell('C'.$rowIndex)->getValue());
+						$tmpRow['id_no'] = getCleanValue($objWorksheet->getCell('D'.$rowIndex)->getValue());
+						$tmpRow['mobile'] = getCleanValue($objWorksheet->getCell('E'.$rowIndex)->getValue());
+						$tmpRow['marriage'] = getCleanValue($objWorksheet->getCell('F'.$rowIndex)->getValue());
+						$tmpRow['address'] = getCleanValue($objWorksheet->getCell('G'.$rowIndex)->getValue());
+						$tmpRow['sg'] = getCleanValue($objWorksheet->getCell('H'.$rowIndex)->getValue());
+						$tmpRow['zzmm'] = getCleanValue($objWorksheet->getCell('I'.$rowIndex)->getValue());
+						$tmpRow['shu'] = getCleanValue($objWorksheet->getCell('J'.$rowIndex)->getValue());
+						$tmpRow['degree'] = getCleanValue($objWorksheet->getCell('K'.$rowIndex)->getValue());
+						
+						$this->form_validation->reset_validation();
+						
+						
+						if(('身份证' == $tmpRow['id_type'] || '驾驶证' == $tmpRow['id_type']) && strlen($tmpRow['id_no']) >= 15){
+							$sex = intval(substr($tmpRow['id_no'],-2,1));
+							$tmpRow['sex'] = $sex % 2 == 0 ? '2' : '1';
+							
+							$birthday = substr($tmpRow['id_no'],6,8);
+							$tmpRow['birthday'] = substr($birthday,0,4). '-'.substr($birthday,4,2).'-' .substr($birthday,6,2);
+							
+							$tmpRow['age'] = $currentYear - intval(substr($birthday,0,4));
+							$provinceName = $provinceIdcard[substr($tmpRow['id_no'],0,3)."000"];
+							
+							$tmpRow['jiguan'] = $provinceName;
+						}
+						
+						$this->form_validation->set_data($tmpRow);
+						
+						$this->wuye_service->addIDRules($idTypeList,$tmpRow['id_type'],0,false);
+						
+						$this->form_validation->set_rules('name','姓名','required|max_length[50]');
+						$this->form_validation->set_rules('birthday','出生年月','required|valid_date');
+						$this->form_validation->set_rules('age','年龄','required|is_natural_no_zero');
+						$this->form_validation->set_rules('sex','性别','required|in_list[1,2]');
+						$this->form_validation->set_rules('mobile','手机号码','required|valid_mobile');
+						//设置籍贯
+						$this->form_validation->set_rules('jiguan','籍贯','required|in_list['.implode(',',array_values($provinceIdcard)).']');
+						
+						
+						if(!$this->form_validation->run()){
+							$tmpRow['message'] = $this->form_validation->error_first_html();
+							$result[] = $tmpRow;
+							continue;
+						}
+						$insertData = array_merge(array(
+							'worker_type' => $workerTypeList[$tmpRow['worker_type']]['id'],
+							'name' => $tmpRow['name'],
+							'mobile' => $tmpRow['mobile'],
+							'id_type' => $idTypeList[$tmpRow['id_type']]['id'],
+							'id_no' => $tmpRow['id_no'],
+							'sex' => $tmpRow['sex'],
+							'age' => $tmpRow['age'],
+							'birthday' => $tmpRow['birthday'],
+							'jiguan' => $jiguanList[$provinceName]['id'],
+							'marriage' => $marriageList[$tmpRow['marriage']]['id'],
+							'shu' => $shuList[$tmpRow['shu']]['id'],
+							'zzmm' => $zzmmList[$tmpRow['zzmm']]['id'],
+							'degree' => $degreeList[$tmpRow['degree']]['id'],
+							'sg' => $tmpRow['sg'],
+							'address' => $tmpRow['address'],		
+						),$this->addWhoHasOperated('add'));
+						
+						print_r($insertData);
+						//$this->Worker_Model->_add($insertData);
+						
+						$error = $this->Worker_Model->getError();
+						if(QUERY_OK != $error['code']){
+							$tmpRow['message'] = '数据库错误';
+							if($error['code'] == MySQL_Duplicate_CODE){
+								$tmpRow['message'] = '工作人员' .
+										'已经存在';
+							}
+						}else{
+							$tmpRow['message'] = '导入成功';
+							$tmpRow['classname'] = 'ok';
+							$successCnt++;
+						}
+						
+						$result[] = $tmpRow;
+						
+					}
+					
+					$feedback = getSuccessTip('导入完成,导入'.$successCnt.'条,失败'.(count($result) - $successCnt).'条');
+					
+	    			$this->assign(array(
+						'output' => '<table class="table">'.$this->_importOutput($result).'</table>',
+						'successCnt' => $successCnt,
+					));
+					
+	    			@unlink($excelFile);
+	    		}catch(Exception $e){
+	    			$feedback = '导入错误,请检查文件格式是否正确';
+	    		}
+    		}
+    		
+    		
+    		$this->assign(array(
+    			'feedback' => $feedback,
+    		));
+    		
+    		$this->display('common/import_resp');
+    	}else{
+    		
+	    	$this->display();
+    	}
+    	
+    	
+    }
+
+    /**
+     * 工作人员数据导出
+     */
+    public function export(){
+    	
+    	$message = '';
+    	
+    	if($this->isPostRequest()){
+    		
+    		try {
+    			
+    			$search = $this->input->post(array('worker_type','name','mobile','age_s','age_e','page'));
+    			$search['marriage'] = $this->input->get_post('marriage');
+    			$condition = array();
+    			
+    			if($search['worker_type']){
+    				$condition['where']['worker_type'] = $search['worker_type'];
+    			}
+    			if($search['name']){
+    				$condition['where']['name'] = $search['name'];
+    			}
+    			
+    			if($search['mobile']){
+    				$condition['where']['mobile'] = $search['mobile'];
+    			}
+    			
+    			if($search['marriage']){
+    				$condition['where']['marriage'] = $search['marriage'];
+    			}
+    			
+    			if($search['age_s']){
+    				$condition['where']['age >='] = intval($search['age_s']);
+    			}
+    			
+    			if($search['age_e']){
+    				$condition['where']['age <='] = intval($search['age_e']);
+    			}
+		
+    			$search['page'] = intval($search['page']) == 0 ? 1 : intval($search['page']);
+    			
+    			$dataCnt = $this->Worker_Model->getCount($condition);
+    			
+    			
+    			$perPageSize = config_item('excel_export_limit');
+    			
+    			if($dataCnt > $perPageSize){
+    				$condition['pager'] = array(
+						'page_size' => $perPageSize,
+						'current_page' => $search['page'],
+						'form_id' => '#formSearch'
+	    			);
+    			}
+    			
+    			$this->_doExport($condition);
+    		}catch(Exception $e){
+    			//出错信息
+    			$message = $e->getMessage();
+    		}
+    		
+    	}else{
+    		
+    		$this->display();
+    	}
+    	
+    }
+    
+    
+    /**
+     * 导出数据列
+     */
+    private function _getExportConfig(){
+    	return array(
+    		'A' => array('db_key' => 'worker_type','width' => 15 ,'title' => '工种类型'),
+    		'B' => array('db_key' => 'name','width' => 15 ,'title' => '姓名'),
+    		'C' => array('db_key' => 'id_type','width' => 12 ,'title' => '证件类型'),
+    		'D' => array('db_key' => 'id_no','width' => 25 ,'title' => '证件号码'),
+    		'E' => array('db_key' => 'mobile','width' => 15 ,'title' => '手机号码'),
+    		'F' => array('db_key' => 'sex','width' => 8 ,'title' => '性别'),
+    		'G' => array('db_key' => 'age','width' => 8 ,'title' => '年龄'),
+    		'H' => array('db_key' => 'birthday','width' => 15 ,'title' => '出生日期'),
+    		'I' => array('db_key' => 'jiguan','width' => 20 ,'title' => '籍贯'),
+    		'J' => array('db_key' => 'marriage','width' => 20 ,'title' => '婚育状态'),
+    		'K' => array('db_key' => 'address','width' => 20 ,'title' => '居住地'),
+    		'L' => array('db_key' => 'sg','width' => 20 ,'title' => '身高'),
+    		'M' => array('db_key' => 'zzmm','width' => 20 ,'title' => '政治面貌'),
+    		'N' => array('db_key' => 'shu','width' => 20 ,'title' => '属相'),
+    		'O' => array('db_key' => 'degree','width' => 20 ,'title' => '最高学历'),
+    		
+    	);
+    	
+    }
+    
+    /**
+     * 执行导出动作
+     */
+    private function _doExport($condition = array()){
+    	
+    	$this->_initPHPExcel();
+    	
+        $objPHPExcel = new PHPExcel();
+        
+        
+        $data = $this->Worker_Model->getList($condition);
+    	
+    	$colConfig = $this->_getExportConfig();
+    	
+    	foreach($colConfig as $colKey => $colItemConfig){
+    		$objPHPExcel->getActiveSheet()->getCell($colKey.'1')->setValueExplicit($colItemConfig['title'], PHPExcel_Cell_DataType::TYPE_STRING2);
+    		$objPHPExcel->getActiveSheet()->getColumnDimension($colKey)->setWidth($colItemConfig['width']);
+    	}
+    	
+    	
+    	$colKeys = array_keys($colConfig);
+    	
+    	$objPHPExcel->getActiveSheet()->getStyle($colKeys[0].'1:'.$colKeys[count($colKeys) - 1].'1')->applyFromArray(
+    		array(
+                'font'    => array(
+                    'bold'      => true,
+                    'size'     => 12
+                ),
+
+                'fill' => array(
+                    'type'       => PHPExcel_Style_Fill::FILL_PATTERN_LIGHTGRAY,
+                    'startcolor' => array(
+                        'argb' => 'FFC0C0C0'
+                    ),
+                    'endcolor'   => array(
+                        'argb' => 'FFC0C0C0'
+                    )
+                )
+             )
+	    );
+        
+        if($condition['pager']){
+        	$list = $data['data'];
+        	$objPHPExcel->getActiveSheet()->setTitle('第'.$data['pager']['pageNow'].'页之共'.$data['pager']['pageLastNum'].'页');
+        }else{
+        	$list = $data;
+        }
+        
+        
+        $basicData = $this->basic_data_service->getBasicData();
+        
+    	foreach($list as $rowId => $worker){
+    		foreach($colConfig as $colKey => $colItemConfig){
+    			
+    			$val = $worker[$colItemConfig['db_key']];
+    			
+    			
+    			switch($colItemConfig['title']){
+    				case '性别':
+    					$val = $val == 1 ? '男':'女';
+    					break;
+    				case '工种类型':
+    				case '籍贯':
+    				case '婚育状态':
+    				case '属相':
+    				case '学历':
+    				case '证件类型':
+    					$val = $basicData[$val]['show_name'];
+    					break;
+    				default:
+    					break;
+    			}
+    			
+    			
+    			$objPHPExcel->getActiveSheet()->getCell($colKey.($rowId + 2))->setValueExplicit($val, PHPExcel_Cell_DataType::TYPE_STRING2);
+    		}
+    	}
+    	
+    	
+    	$objPHPExcel->getActiveSheet()->getStyle($colKeys[0].'1:'.$colKeys[count($colKeys) - 1].(count($list) + 1))->applyFromArray(
+            array(
+                'alignment' => array(
+                    'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
+                    'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                ),
+                'borders' => array(
+                    'allborders' => array(
+                        'style' => PHPExcel_Style_Border::BORDER_THIN,
+                        'color' => array('argb' => 'FF000000')
+                    )
+                )
+            )
+        );
+        
+    	
+    	$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+        $downloadName = $this->_moduleTitle.'.xlsx';
+        $fileRealName = md5(uniqid());
+        
+        $filePath = ROOTPATH.'/temp/'.$fileRealName.'.xlsx';
+        
+        $objWriter->save($filePath);
+        $objPHPExcel->disconnectWorksheets(); 
+        
+        unset($objPHPExcel,$objWriter);
+        
+        force_download($downloadName,  file_get_contents($filePath));
+        
+    }		
+
 }
