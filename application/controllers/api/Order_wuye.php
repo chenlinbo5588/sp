@@ -34,28 +34,28 @@ class PayNotifyCallBack extends WxPayNotify
         
 		$data = array(
 	    	'touser' => $weixinUser['openid'],
-	    	'template_id' => 'NBt5KX6dJv19TkgWB047g97Nliqbf6-0b23gVSD_N-c',
+	    	'template_id' => 'thLs5shnt45ne7y6IWy9sIfJNrUxgMuFG3lN4dK2MvA',
 	    	'page' => "pages/mine/order/order",
 	    	'form_id' => $orderInfo['prepay_id'],
 	    	'data' => array(
 	    	  'keyword1' => array(
-			       "value" => date('Y-m-d H:i:s',$orderInfo['gmt_create']),
-			   ),
-	    	  'keyword2' => array(
 			       "value" => $orderInfo['order_id'],
 			   ),
-			   'keyword3' => array(
+			   'keyword2' => array(
 			       "value" => $orderInfo['order_typename'],
 			   ),
+			   'keyword3' => array(
+			       "value" => date('Y-m-d H:i:s',$orderInfo['pay_time_end']),
+			   ),
 			   'keyword4' => array(
-			       "value" => '从'.date('Y年m月d日',$orderInfo['extra_info']['newStartTimeStamp']).'到'.date('Y年m月d日',$orderInfo['extra_info']['newEndTimeStamp']),
+			       "value" => $orderInfo['goods_name'],
 			   ),
 			   'keyword5' => array(
 			       "value" => $orderInfo['amount']/100,
 			   ),
 			   'keyword6' => array(
-			       "value" => $orderInfo['amount']/100,
-			   )
+			       "value" => '缴费起止时间: 从'.date('Y年m月d日',$orderInfo['extra_info']['newStartTimeStamp']).'到'.date('Y年m月d日',$orderInfo['extra_info']['newEndTimeStamp']),
+			   ),
 	    	)
 	    );
 	    
