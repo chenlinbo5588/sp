@@ -25,7 +25,12 @@ class Wuye extends Wx_Controller {
 			}
 			
 		}else{
-			$this->jsonOutput2(UNBINDED,$this->unBind);
+			if($this->memberInfo){
+				$this->jsonOutput2(NONOWNER);
+			}else{
+				$this->jsonOutput2(UNBINDED,$this->unBind);
+			}
+			
 		}
 	}
 	
@@ -60,7 +65,11 @@ class Wuye extends Wx_Controller {
 			}
 			
 		}else{
-			$this->jsonOutput2(UNBINDED,$this->unBind);
+			if($this->memberInfo){
+				$this->jsonOutput2(NONOWNER);
+			}else{
+				$this->jsonOutput2(UNBINDED,$this->unBind);
+			}
 		}
 	
 	}
@@ -142,7 +151,11 @@ class Wuye extends Wx_Controller {
 			}
 			
 		}else{
-			$this->jsonOutput2(UNBINDED,$this->unBind);
+			if($this->memberInfo){
+				$this->jsonOutput2(NONOWNER);
+			}else{
+				$this->jsonOutput2(UNBINDED,$this->unBind);
+			}
 		}
 	
 	}
@@ -186,7 +199,11 @@ class Wuye extends Wx_Controller {
 			$this->jsonOutput2(RESP_SUCCESS,$repairList);
 			
 		}else{
-			$this->jsonOutput2(UNBINDED,$this->unBind);
+			if($this->memberInfo){
+				$this->jsonOutput2(NONOWNER);
+			}else{
+				$this->jsonOutput2(UNBINDED,$this->unBind);
+			}
 		}
 	}
 	
@@ -225,7 +242,11 @@ class Wuye extends Wx_Controller {
 			}
 			
 		}else{
-			$this->jsonOutput2(UNBINDED,$this->unBind);
+			if($this->memberInfo){
+				$this->jsonOutput2(NONOWNER);
+			}else{
+				$this->jsonOutput2(UNBINDED,$this->unBind);
+			}
 		}
 	}
 
@@ -248,7 +269,11 @@ class Wuye extends Wx_Controller {
 			
 			
 		}else{
-			$this->jsonOutput2(UNBINDED,$this->unBind);
+			if($this->memberInfo){
+				$this->jsonOutput2(NONOWNER);
+			}else{
+				$this->jsonOutput2(UNBINDED,$this->unBind);
+			}
 		}
 		
 	}
@@ -272,9 +297,37 @@ class Wuye extends Wx_Controller {
 			}
 			
 		}else{
-			$this->jsonOutput2(UNBINDED,$this->unBind);
+			if($this->memberInfo){
+				$this->jsonOutput2(NONOWNER);
+			}else{
+				$this->jsonOutput2(UNBINDED,$this->unBind);
+			}
 		}
 		
+		
+	}
+	
+	/**
+	 * 获取用户信息
+	 */
+	public function getMemberDetail(){
+		
+		if($this->memberInfo){
+			
+			$detail =array(
+				'mobile'=>$this->memberInfo['mobile'],
+				'name' =>$this->memberInfo['username'],
+			);
+			
+			if($detail){
+				$this->jsonOutput2(RESP_SUCCESS,$detail);
+			}else{
+				$this->jsonOutput2(RESP_ERROR);
+			}
+			
+		}else{
+			$this->jsonOutput2(UNBINDED,$this->unBind);
+		}
 		
 	}
 	
@@ -324,7 +377,11 @@ class Wuye extends Wx_Controller {
 			}
 			
 		}else{
-			$this->jsonOutput2(UNBINDED,$this->unBind);
+			if($this->memberInfo){
+				$this->jsonOutput2(NONOWNER);
+			}else{
+				$this->jsonOutput2(UNBINDED,$this->unBind);
+			}
 		}
 	}
 	
@@ -389,7 +446,11 @@ class Wuye extends Wx_Controller {
 			}
 			
 		}else{
-			$this->jsonOutput2(UNBINDED,$this->unBind);
+			if($this->memberInfo){
+				$this->jsonOutput2(NONOWNER);
+			}else{
+				$this->jsonOutput2(UNBINDED,$this->unBind);
+			}
 		}
 	}
 	

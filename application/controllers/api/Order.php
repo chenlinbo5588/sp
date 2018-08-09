@@ -42,7 +42,7 @@ class Order extends Wx_Controller {
 	 * 创建 保洁订单
 	 */
 	public function createBaojieOrder(){
-		
+	
 		if($this->memberInfo){
 			
 			for($i = 0; $i < 1; $i++){
@@ -86,19 +86,19 @@ class Order extends Wx_Controller {
 					
 					$this->form_validation->set_data($this->postJson);
 					
-					$this->form_validation->set_rules('order_typename','in_db_list['.$this->Order_Type_Model->getTableRealName().'.name]');
+					$this->form_validation->set_rules('order_typename','订单类型', 'in_db_list['.$this->Order_Type_Model->getTableRealName().'.name]');
 					
 					//上门 时间
-					$this->form_validation->set_rules('visit_time','required|valid_datetime');
+					$this->form_validation->set_rules('visit_time', '上门时间', 'required|valid_datetime');
 					
 					//上门地址
-					$this->form_validation->set_rules('address','required');
+					$this->form_validation->set_rules('address','地址','required');
 					
 					//联系方式
-					$this->form_validation->set_rules('mobile','required|valid_mobile');
+					$this->form_validation->set_rules('mobile','联系方式','required|valid_mobile');
 					
 					//联系人名称
-					$this->form_validation->set_rules('username','required');
+					$this->form_validation->set_rules('username','联系人名称', 'required');
 					
 					
 					if(!$this->form_validation->run()){
@@ -254,13 +254,14 @@ class Order extends Wx_Controller {
 					$this->postJson['order_type'] = Order_service::$orderType['nameKey'][$this->postJson['order_typename']]['id'];
 					$this->postJson['uid'] = $this->memberInfo['uid'];
 					$this->postJson['add_username'] = $this->memberInfo['username'];
+					$this->postJson['mobile'] = $this->memberInfo['mobile'];
 					
 					if($this->yezhuInfo){
 						$this->postJson['add_username'] = $this->yezhuInfo['name'];
 					}
 					
 					$this->postJson['username'] = $this->postJson['add_username'];
-					$this->postJson['mobile'] = $this->yezhuInfo['mobile'];
+					
 					
 					//异步回调
 					$this->postJson['notify_url'] = site_url(Order_service::$orderType['nameKey'][$this->postJson['order_typename']]['order_url']);
@@ -462,6 +463,7 @@ class Order extends Wx_Controller {
 			}
 			
 		}else{
+			
 			$this->jsonOutput2(UNBINDED,$this->unBind);
 		}
 		

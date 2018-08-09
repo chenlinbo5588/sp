@@ -110,6 +110,8 @@ define('CACHE_KEY_SiteSetting','siteSettingList');
 define('RESP_SUCCESS','响应成功');
 define('RESP_ERROR','响应错误');
 
+define('NONOWNER','尚未绑定物业身份');
+
 define('UNBINDED','尚未绑定');
 
 define('QUERY_OK',0);
