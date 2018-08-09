@@ -11,15 +11,15 @@ class Base_service {
 	public static $settingModel = null;
 	
 	
+	
 	public static function initStaticVars(){
 		
 		self::$CI = & get_instance();
-		self::$CI->load->model('Member_Model');
-		self::$CI->load->model('Adminuser_Model');
+		self::$CI->load->model(array('Member_Model','Adminuser_Model','Setting_Model'));
 		
 		self::$CI->load->model('Common_District_Model');
+		
 		self::$CI->load->library('form_validation');
-		self::$CI->load->model('Setting_Model');
 		
 		self::$memberModel = self::$CI->Member_Model;
 		self::$adminUserModel = self::$CI->Adminuser_Model;
@@ -93,4 +93,6 @@ class Base_service {
 	public function getSettingList($condition = array()){
 		return self::$settingModel->getList($condition,'name');
 	}
+	
+	
 }

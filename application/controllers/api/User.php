@@ -27,6 +27,8 @@ class User extends Wx_Controller {
 				
 				$bindInfo = $this->weixin_service->checkUserBind($weixinUser);
 				
+				$this->initMemberInfo();
+				
 				if($this->memberInfo){
 					$bindInfo['mobile'] = $this->memberInfo['mobile'];
 				}

@@ -20,8 +20,6 @@ class Weixin_Mp_Api extends Weixin_api {
     public $msgCrypt = null;
     
     
-    private $_menuStr = null;
-    
     
     public function __construct(){
         parent::__construct();
@@ -65,63 +63,7 @@ class Weixin_Mp_Api extends Weixin_api {
         $this->msgCrypt = new WXBizMsgCrypt($config['token'],$config['EncodingAESKey'],$config['appid']);
         
         $this->_mpAccessToken = $this->fetchToken();
-        
-        
-        //@todo delete;
-        $this->_menuStr = <<< EOF
-                {
-    "button": [
-        {
-            "name": "慈溪土勘", 
-            "sub_button": [
-                {
-                    "type": "click", 
-                    "name": "公司简介", 
-                    "key": "tk_company_intro"
-                },
-                {
-                    "type": "click", 
-                    "name": "联系电话",
-                    "key": "tk_company_address"
-                },
-                {
-                    "type": "click", 
-                    "name": "新闻纪要",
-                    "key": "tk_company_news"
-                }
-            ]
-        },
-        {
-            "name": "业务查询", 
-            "sub_button": [
-                {
-                    "type": "click", 
-                    "name": "我当前的业务",
-                    "key": "tk_busi_my"
-                    
-                },
-                {
-                    "type": "click", 
-                    "name": "土地相关业务查询", 
-                    "key": "tk_busi_tudi"
-                    
-                }
-            ]
-        },
-        {
-            "name": "更多", 
-            "sub_button": [
-                {
-                    "type": "view", 
-                    "name": "慈溪之窗", 
-                    "url": "http://www.cxmap.cn/index.php?m=house&q=new"
-                }
-            ]
-        }
-        
-    ]
-}
-EOF;
+
 
     }
     
@@ -184,6 +126,49 @@ EOF;
     
     
     
+    /**
+     * 发送模版消息给用户
+     */
+    public function sendTemplateMsg($data){
+    	$param = array(
+	        'url' => '/cgi-bin/message/wxopen/template/send?access_token='.$this->_mpAccessToken,
+	        'method' => 'POST'
+	    );
+	    
+	    $param['data'] = json_encode($data);
+	    
+		$respone = $this->request($param);
+	    $result = json_decode($respone,true);
+        
+        return $result;
+    	
+    }
+    
+    
+    /**
+     * 获得小程序模版消息
+     */
+    public function getTemplateList($offset,$count){
+    	
+    	$param = array(
+	        'url' => '/cgi-bin/wxopen/template/library/list?access_token='.$this->_mpAccessToken,
+	        'method' => 'POST',
+	    );
+	    
+	    $param['data'] = json_encode(array(
+        	'offset' => $offset,
+        	'count' => $count
+        ));
+	    
+	   
+		$respone = $this->request($param);
+	    $result = json_decode($respone,true);
+        
+        return $result;
+        
+    }
+    
+    
     
     
     
@@ -240,33 +225,6 @@ EOF;
         return $result;
     }
     
-    /**
-     * https://api.weixin.qq.com/cgi-bin/menu/create?access_token=ACCESS_TOKEN
-     * 
-     * {"errcode":0,"errmsg":"ok"}
-     */
-    
-    public function menu_create(){
-        
-        $param = array(
-            'url' => '/cgi-bin/menu/create?access_token='.$this->_mpAccessToken,
-            'method' => 'post',
-            'data' => $this->_menuStr
-        );
-        //print_r($param);
-        /**
-         * Array ( [url] => /cgi-bin/menu/create?access_token=JduZsXEethGKUBQ-CzMONF61IWOIYsCCiWmc11Oi4Yw3LX0nOGqHSi1xgQp5_FiKZVO9KgFSKB4yJyfsoO-SgmcvT85PKG8qwMjx6JxkQsA [method] => post [data] => { "button": [ { "name": "鎱堟邯鍦熷牚", "sub_button": [ { "type": "click", "name": "鍏徃绠€浠�", "key": "company_intro" }, { "type": "click", "name": "鍥㈤槦鎴愬憳", "key": "team_intro" } ] } ] } ) string(27) 
-         * 
-         * "{"errcode":0,"errmsg":"ok"}" 1
-         */
-        
-        
-        $respone = $this->request($param);
-        //var_dump($respone);
-        $result = json_decode($respone,true);
-        
-        return $result;
-    }
     
     
     /***

@@ -18,6 +18,69 @@ class PayNotifyCallBack extends WxPayNotify
 		$this->_ci = $pController;
 	}
 	
+	
+	/**
+	 * 发送微信
+	 */
+	public function weixinNotify($orderInfo){
+		
+		$this->_ci->load->library('Weixin_mp_api');
+		
+		$mpConfig = config_item('mp_xcxCswy');
+		
+        $this->_ci->weixin_mp_api->initSetting($mpConfig);
+        
+        $weixinUser = $this->_ci->Member_Model->getFirstByKey($orderInfo['uid'],'uid','openid');
+        
+		$data = array(
+	    	'touser' => $weixinUser['openid'],
+	    	'template_id' => 'NBt5KX6dJv19TkgWB047g97Nliqbf6-0b23gVSD_N-c',
+	    	'page' => "pages/mine/order/order",
+	    	'form_id' => $orderInfo['prepay_id'],
+	    	'data' => array(
+	    	  'keyword1' => array(
+			       "value" => date('Y-m-d H:i:s',$orderInfo['gmt_create']),
+			   ),
+	    	  'keyword2' => array(
+			       "value" => $orderInfo['order_id'],
+			   ),
+			   'keyword3' => array(
+			       "value" => $orderInfo['order_typename'],
+			   ),
+			   'keyword4' => array(
+			       "value" => '从'.date('Y年m月d日',$orderInfo['extra_info']['newStartTimeStamp']).'到'.date('Y年m月d日',$orderInfo['extra_info']['newEndTimeStamp']),
+			   ),
+			   'keyword5' => array(
+			       "value" => $orderInfo['amount']/100,
+			   ),
+			   'keyword6' => array(
+			       "value" => $orderInfo['amount']/100,
+			   )
+	    	)
+	    );
+	    
+	    
+	    $resp = $this->_ci->weixin_mp_api->sendTemplateMsg($data);
+	    
+	    $writeLog = true;
+	    
+	    if($resp && !$resp['errcode']){
+	    	$writeLog = false;
+	    }
+	    
+	    if($writeLog){
+	    	//发送失败
+	    	$this->_ci->load->model('Weixin_Message_Model');
+	    	$this->_ci->Weixin_Message_Model->_add(array(
+	    		'uid' => $orderInfo['uid'],
+	    		'order_id' => $orderInfo['order_id'],
+	    		'content' => json_encode($data),
+	    	));
+	    }
+		
+	}
+	
+	
 	//查询订单
 	public function Queryorder($transaction_id)
 	{
@@ -106,6 +169,9 @@ class PayNotifyCallBack extends WxPayNotify
 				return false;
 			}else{
 				$this->_ci->Order_Model->commitTrans();
+				
+				$this->weixinNotify($orderInfo);
+				
 				return true;
 			}
 			

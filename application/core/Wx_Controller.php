@@ -44,6 +44,18 @@ class Wx_Controller extends MY_Controller {
 			$this->postJson = array();
 		}
 		
+		
+		$this->initMemberInfo();
+		
+	}
+	
+	
+	/**
+	 * 初始化用户信息
+	 */
+	protected function initMemberInfo(){
+		
+		
 		$this->sessionInfo = $this->session->all_userdata();
 		
 		//微信用户
