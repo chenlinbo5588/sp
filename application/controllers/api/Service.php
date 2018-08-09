@@ -69,17 +69,47 @@ class Service extends Wx_Controller {
 	public function getStaffList(){
 		
 		$serveTypeName = $this->input->get_post('serviceTypeName');
+
 		
-		$page = 1;
-		$searchKeys = array(
-			'where' => array(),
-			'page' => 1,
-			'order' => 'id DESC'
-		);
 		
 		//file_put_contents("search.txt",print_r($this->postJson,true));
 		
 		if($this->postJson){
+			
+			$orderKeys = $this->postJson['order'];
+			
+			$order = 'id DESC';
+			
+			
+			if('价格' == $orderKeys['name']){
+				
+				if('升序' == $orderKeys['name']) {
+					$order = 'salary_amount ASC';
+				}
+				
+				if('降序' == $orderKeys['type']){
+					$order = 'salary_amount DESC';
+				}
+				
+			}else if('经验' == $orderKeys['name']){
+				
+				if('升序' == $orderKeys['type']) {
+					$order = 'work_month ASC';
+				}
+				
+				if('降序' == $orderKeys['type'] ){
+					$order = 'work_month DESC';
+				}
+			}
+			
+			$page = 1;
+			
+			$searchKeys = array(
+				'where' => array(),
+				'page' => $page,
+				'order' => $order
+			);
+			
 			$searchKeys['page'] = intval($this->postJson['page']);
 			
 			if(empty($searchKeys['page'])){
