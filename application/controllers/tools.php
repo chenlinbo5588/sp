@@ -382,9 +382,17 @@ EOT;
 
         
         $tables = $this->db->list_tables();
+        
+        $tableName = $this->input->get('table');
 
         
         foreach($tables as $table){
+        	
+        	if($tableName && $table != $tableName){
+        		continue;
+        	}
+        	
+        	
         	if(preg_match('/^sp_push_chat\d+$/i',$table,$match)){
         		continue;
         	}

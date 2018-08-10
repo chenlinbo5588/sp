@@ -18,6 +18,7 @@ class PayNotifyCallBack extends WxPayNotify
 		$this->_ci = $pController;
 	}
 	
+	
 	//查询订单
 	public function Queryorder($transaction_id)
 	{
@@ -134,6 +135,9 @@ class PayNotifyCallBack extends WxPayNotify
 			return false;
 		}else{
 			$this->_ci->Order_Model->commitTrans();
+			
+			$this->_ci->weixin_service->staffOrderNotify($orderInfo);
+			
 			return true;
 		}
 	}

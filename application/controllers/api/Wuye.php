@@ -393,7 +393,7 @@ class Wuye extends Wx_Controller {
 		$this->load->model('Order_Type_Model');
 		
 		$this->form_validation->set_rules('id','物业标识','required|in_db_list['.$this->House_Model->getTableRealName().'.id]');
-		$this->form_validation->set_rules('order_typename','in_db_list['.$this->Order_Type_Model->getTableRealName().'.name]');
+		$this->form_validation->set_rules('order_typename','订单类型','in_db_list['.$this->Order_Type_Model->getTableRealName().'.name]');
 	}
 	
 	

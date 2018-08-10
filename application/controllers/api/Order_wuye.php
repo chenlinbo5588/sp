@@ -19,68 +19,6 @@ class PayNotifyCallBack extends WxPayNotify
 	}
 	
 	
-	/**
-	 * 发送微信
-	 */
-	public function weixinNotify($orderInfo){
-		
-		$this->_ci->load->library('Weixin_mp_api');
-		
-		$mpConfig = config_item('mp_xcxCswy');
-		
-        $this->_ci->weixin_mp_api->initSetting($mpConfig);
-        
-        $weixinUser = $this->_ci->Member_Model->getFirstByKey($orderInfo['uid'],'uid','openid');
-        
-		$data = array(
-	    	'touser' => $weixinUser['openid'],
-	    	'template_id' => 'thLs5shnt45ne7y6IWy9sIfJNrUxgMuFG3lN4dK2MvA',
-	    	'page' => "pages/mine/order/order",
-	    	'form_id' => $orderInfo['prepay_id'],
-	    	'data' => array(
-	    	  'keyword1' => array(
-			       "value" => $orderInfo['order_id'],
-			   ),
-			   'keyword2' => array(
-			       "value" => $orderInfo['order_typename'],
-			   ),
-			   'keyword3' => array(
-			       "value" => date('Y-m-d H:i:s',$orderInfo['pay_time_end']),
-			   ),
-			   'keyword4' => array(
-			       "value" => $orderInfo['goods_name'],
-			   ),
-			   'keyword5' => array(
-			       "value" => $orderInfo['amount']/100,
-			   ),
-			   'keyword6' => array(
-			       "value" => '缴费起止时间: 从'.date('Y年m月d日',$orderInfo['extra_info']['newStartTimeStamp']).'到'.date('Y年m月d日',$orderInfo['extra_info']['newEndTimeStamp']),
-			   ),
-	    	)
-	    );
-	    
-	    
-	    $resp = $this->_ci->weixin_mp_api->sendTemplateMsg($data);
-	    
-	    $writeLog = true;
-	    
-	    if($resp && !$resp['errcode']){
-	    	$writeLog = false;
-	    }
-	    
-	    if($writeLog){
-	    	//发送失败
-	    	$this->_ci->load->model('Weixin_Message_Model');
-	    	$this->_ci->Weixin_Message_Model->_add(array(
-	    		'uid' => $orderInfo['uid'],
-	    		'order_id' => $orderInfo['order_id'],
-	    		'content' => json_encode($data),
-	    	));
-	    }
-		
-	}
-	
-	
 	//查询订单
 	public function Queryorder($transaction_id)
 	{
@@ -170,7 +108,7 @@ class PayNotifyCallBack extends WxPayNotify
 			}else{
 				$this->_ci->Order_Model->commitTrans();
 				
-				$this->weixinNotify($orderInfo);
+				$this->_ci->weixin_service->wuyeOrderNotify($orderInfo);
 				
 				return true;
 			}
@@ -205,8 +143,11 @@ class Order_wuye extends Wx_Controller {
 	public function __construct(){
 		parent::__construct();
         
-        $this->load->library(array('Order_service','Wuye_service'));
+        $this->load->library(array('Order_service'));
     	$this->form_validation->set_error_delimiters('','');
+    	
+    	
+    	
 	}
 	
 	/**

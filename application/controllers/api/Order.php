@@ -82,6 +82,15 @@ class Order extends Wx_Controller {
 						break;
 					}
 					
+					
+					$orderInfo = $this->Order_Model->getFirstByKey($this->postJson['order_id'],'order_id','time_expire');
+					
+					if($this->_reqtime >= strtotime($orderInfo['time_expire'])){
+						$this->order_service->updateOrderStatusByIds(array($orderInfo['id']),OrderStatus::$closed,OrderStatus::$unPayed);
+						$this->jsonOutput2('订单已过期');
+						break;
+					}
+					
 				}else{
 					
 					$this->form_validation->set_data($this->postJson);
@@ -208,6 +217,15 @@ class Order extends Wx_Controller {
 						break;
 					}
 					
+					$orderInfo = $this->Order_Model->getFirstByKey($this->postJson['order_id'],'order_id','time_expire');
+					
+					if($this->_reqtime >= strtotime($orderInfo['time_expire'])){
+						$this->order_service->updateOrderStatusByIds(array($orderInfo['id']),OrderStatus::$closed,OrderStatus::$unPayed);
+						$this->jsonOutput2('订单已过期');
+						break;
+					}
+					
+					
 				}else{
 					
 					$list = $this->cart->contents();
@@ -234,13 +252,13 @@ class Order extends Wx_Controller {
 					$this->form_validation->set_data($this->postJson);
 					
 					//新创订单
-					$this->form_validation->set_rules('order_typename','in_db_list['.$this->Order_Type_Model->getTableRealName().'.name]');
+					$this->form_validation->set_rules('order_typename','订单类型','required|in_db_list['.$this->Order_Type_Model->getTableRealName().'.name]');
+					
+					//面谈时间
+					$this->form_validation->set_rules('meet_time','面谈时间','required|valid_datetime');
 					
 					//面谈地点
-					$this->form_validation->set_rules('meet_time','required|valid_datetime');
-					
-					//面谈地点
-					$this->form_validation->set_rules('address','required');
+					$this->form_validation->set_rules('address','面谈地址', 'required');
 					
 					
 					//$this->form_validation->set_rules('amount','缴费金额','required|is_numeric|greater_than_equal_to[0]');
@@ -366,6 +384,13 @@ class Order extends Wx_Controller {
 						break;
 					}
 					
+					
+					if($this->_reqtime >= strtotime($orderInfo['time_expire'])){
+						$this->order_service->updateOrderStatusByIds(array($orderInfo['id']),OrderStatus::$closed,OrderStatus::$unPayed);
+						$this->jsonOutput2('订单已过期');
+						break;
+					}
+					
 					//fixed 用户先选择一个月份在创建订单付款界面取消后， 重新选择缴费月份，然后付款后一笔交易成功后， 最后我的订单中继续付款前一个交易。
 					if($orderInfo['extra_info']['expireTimeStamp'] != $houseInfo[$whichField]){
 						$this->order_service->updateOrderStatusByIds(array($orderInfo['id']),OrderStatus::$closed,OrderStatus::$unPayed);
@@ -378,7 +403,7 @@ class Order extends Wx_Controller {
 					
 					$this->form_validation->set_data($this->postJson);
 					
-					$this->form_validation->set_rules('order_typename','in_db_list['.$this->Order_Type_Model->getTableRealName().'.name]');
+					$this->form_validation->set_rules('order_typename','订单类型','in_db_list['.$this->Order_Type_Model->getTableRealName().'.name]');
 					$this->form_validation->set_rules('house_id','物业标识',array(
 							'required',
 							array(
@@ -392,8 +417,6 @@ class Order extends Wx_Controller {
 							'feetype_callable' => '该%s尚未配置小区费用信息'
 						)
 					);
-					
-					$this->form_validation->set_rules('order_typename','in_db_list['.$this->Order_Type_Model->getTableRealName().'.name]');
 					
 					$currentHouseFeeExpire = $this->wuye_service->getCurrentHouseFeeInfo($this->postJson['house_id'],$this->postJson['order_typename'],$this->postJson['end_month']);
 					$this->wuye_service->setFeeTimeRules($currentHouseFeeExpire['year']);
@@ -570,6 +593,9 @@ class Order extends Wx_Controller {
 					$orderInfo['extra_info'] = json_decode($orderInfo['extra_info'],true);
 					
 					if(strpos($orderInfo['order_typename'],'预约单') !== false){
+						
+						$orderInfo['extra_info_translate']['address'] = $orderInfo['extra_info']['address'] ;
+						$orderInfo['extra_info_translate']['booking_time'] =$orderInfo['extra_info']['booking_time'] ;
 						
 					}else{
 						$orderInfo['extra_info_translate']['上次缴费到期时间'] = $orderInfo['extra_info']['expireTimeStamp'] == 0 ? '无缴费记录' : date('Y-m-d', $orderInfo['extra_info']['expireTimeStamp']);

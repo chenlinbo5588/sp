@@ -57,7 +57,6 @@ class Weixin_refund
 	 */
 	protected function updateOrderRefundStat($pOldOrderId,$refundFee){
 		
-		
 		file_put_contents('callback_refund.txt',print_r(array(
 			array('key'  => 'refund_amount', 'value' => "refund_amount + {$refundResp['refund_fee']}"),
 			array('key'  => 'refund_cnt', 'value' => "refund_cnt + 1"),

@@ -64,10 +64,12 @@
    		  <td class="required">{#ip#}: </td>
           <td class="vatop rowform">{$info['ip']|escape}</td>      
        	</tr>
+       	{if $info['is_refund']}
        	<tr>
    		  <td class="required">{#verify_status#}: </td>
           <td class="vatop rowform"><strong class="orange">{$OrderVerify[$info['verify_status']]}</strong></td>      
        	</tr>
+       	{/if}
        	{foreach from=$extraItem item=item}
        	<tr>
    		  <td class="required">{$item[0]}: </td>

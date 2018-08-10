@@ -28,6 +28,12 @@ class Order_wuye_refund extends Weixin_refund {
 			
 			$this->commonOrderUpdate($pRefundOrder['order_id'],$refundResp);
 			
+			if($this->_ci->Order_Model->getTransStatus() === FALSE){
+				$this->_ci->Order_Model->rollBackTrans();
+				return false;
+			}
+			
+			
 			$this->_ci->load->library(array('Wuye_service'));
 			
 			
@@ -49,7 +55,13 @@ class Order_wuye_refund extends Weixin_refund {
 			//还原缴费时间
 			$this->_ci->House_Model->updateByWhere(array(
 				$updateFiled => $houseWuyeInfo['expireTimeStamp'],
-			),array('id' => $houseWuyeInfo['house_id']));
+			),array('id' => $pRefundOrder['goods_id']));
+			
+			
+			if($this->_ci->Order_Model->getTransStatus() === FALSE){
+				$this->_ci->Order_Model->rollBackTrans();
+				return false;
+			}
 			
 			//更新退款统计信息
 			$affectRow = $this->updateOrderRefundStat($pRefundOrder['order_old'],$refundResp['refund_fee']);
@@ -57,12 +69,14 @@ class Order_wuye_refund extends Weixin_refund {
 			if($this->_ci->Order_Model->getTransStatus() === FALSE){
 				$this->_ci->Order_Model->rollBackTrans();
 				return false;
-			}else{
-				$this->_ci->Order_Model->commitTrans();
-				return true;
 			}
 			
+			return $this->_ci->Order_Model->commitTrans();
+			
+			
 		}catch(Exception $e){
+			
+			$this->_ci->Order_Model->rollBackTrans();
 			
 			return false;
 		}

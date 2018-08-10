@@ -325,4 +325,25 @@ class Service extends Wx_Controller {
 		
 	}
 	
+	
+	/**
+	 * 获得籍贯
+	 */
+	public function getJiguanList(){
+		
+		$jiguan = $this->Basic_Data_Model->getFirstByKey('籍贯','show_name','id');
+		
+		$jiguanTypeList = $this->Basic_Data_Model->getList(array(
+			'select' => 'id,show_name', 
+			'order' => 'id ASC',
+			'where' => array('pid' =>$jiguan['id'])
+				
+		),'id');
+		
+		
+		$this->jsonOutput2(RESP_SUCCESS,array('jiguan' => $jiguanTypeList));
+		
+	}
+	
+	
 }

@@ -6,6 +6,7 @@ $entity = array(
 'uid' => 'int',
 'order_id' => 'varchar',
 'content' => 'text',
+'resp' => 'text',
 'status' => 'tinyint',
 'retry_cnt' => 'tinyint',
 'gmt_create' => 'int',

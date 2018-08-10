@@ -28,6 +28,13 @@ class Order_baojie_refund extends Weixin_refund {
 			
 			$this->commonOrderUpdate($pRefundOrder['order_id'],$refundResp);
 			
+			if($this->_ci->Order_Model->getTransStatus() === FALSE){
+				$this->_ci->Order_Model->rollBackTrans();
+				return false;
+			}
+			
+			
+			$this->_ci->load->library(array('Staff_service'));
 			
 			//预约订单 退款
 			$affectRow = $this->_ci->Staff_Booking_Model->updateByWhere(array(
@@ -38,18 +45,25 @@ class Order_baojie_refund extends Weixin_refund {
 				'order_status' => OrderStatus::$payed
 			));
 			
+			if($this->_ci->Order_Model->getTransStatus() === FALSE){
+				$this->_ci->Order_Model->rollBackTrans();
+				return false;
+			}
+			
 			//更新退款统计信息
 			$affectRow = $this->updateOrderRefundStat($pRefundOrder['order_old'],$refundResp['refund_fee']);
 			
 			if($this->_ci->Order_Model->getTransStatus() === FALSE){
 				$this->_ci->Order_Model->rollBackTrans();
 				return false;
-			}else{
-				$this->_ci->Order_Model->commitTrans();
-				return true;
 			}
 			
+			
+			return $this->_ci->Order_Model->commitTrans();
+			
 		}catch(Exception $e){
+			
+			$this->_ci->Order_Model->rollBackTrans();
 			
 			return false;
 		}

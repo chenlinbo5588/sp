@@ -33,6 +33,10 @@ class Wx_Controller extends MY_Controller {
 		$this->form_validation->set_error_delimiters('','');
 		
 		
+		//初始化配置
+		$this->weixin_service->setConfig(config_item('mp_xcxCswy'));
+		
+		
 		$this->version = $this->input->get_post('version');
 		
 		
@@ -46,6 +50,10 @@ class Wx_Controller extends MY_Controller {
 		
 		
 		$this->initMemberInfo();
+		
+		$mpConfig = config_item('mp_xcxCswy');
+		
+        $this->weixin_service->setConfig($mpConfig);
 		
 	}
 	

@@ -800,19 +800,6 @@ class Staff_service extends Base_service {
 		$data = $this->_staffModel->getList($condition);
 		
 		
-		//@todo delete
-		if(ENVIRONMENT == 'development'){
-			foreach($data['data'] as $index => $staffItem){
-				$matchCnt = preg_match('/^(\d+)/is',$staffItem['salary_detail'],$salaryMatch);
-				
-				if($matchCnt){
-					$staffItem['salary_amount'] = $salaryMatch[1];
-					$data['data'][$index] = $staffItem;
-				}
-			}
-		}
-		
-		
 		return $data;
 	}
 	

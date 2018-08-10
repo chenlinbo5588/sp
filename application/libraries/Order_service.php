@@ -203,7 +203,16 @@ class Order_service extends Base_service {
 				return false;
 			}
 			
-			return $refundObj->customHandle($pRefundOrder,$refundResp);
+			if(!is_array($pRefundOrder['extra_info'])){
+				$pRefundOrder['extra_info'] = json_decode($pRefundOrder['extra_info'],true);
+			}
+			
+			$refundFlag = $refundObj->customHandle($pRefundOrder,$refundResp);
+			if($refundFlag){
+				$this->_weixinServiceObj->refundOrderNotify($pRefundOrder);
+			}
+			
+			return $refundFlag;
 			
 		}catch(WxPayException $payException){
 			log_message('error',"code=".$payException->getCode().",message=".$payException->errorMessage());
@@ -265,6 +274,7 @@ class Order_service extends Base_service {
 		}else{
 			//创建一个退订单
 			$tuiOrder = array(
+				'prepay_id' => $oldOrderInfo['prepay_id'],
 				'order_type' => $oldOrderInfo['order_type'],
 				'order_typename' => $oldOrderInfo['order_typename'],
 				'pay_channel' => $oldOrderInfo['pay_channel'],
@@ -284,7 +294,7 @@ class Order_service extends Base_service {
 			);
 			
 			if($pOrderParam['extra_info']){
-				$tuiOrder['extra_info'] = $pOrderParam['extra_info'];
+				$tuiOrder['extra_info'] = array_merge($oldOrderInfo['extra_info'],$pOrderParam['extra_info']);
 			}else{
 				$tuiOrder['extra_info'] = $oldOrderInfo['extra_info'];
 			}
@@ -346,8 +356,6 @@ class Order_service extends Base_service {
 			return false;
 		}
 		
-		file_put_contents('weixinOrder.txt',print_r($localOrder,true));
-		
 		if($param['order_id']){
 			//已有订单重新签发
 			return $this->genPaymentParam($localOrder['prepay_id']);
@@ -385,8 +393,6 @@ class Order_service extends Base_service {
 				
 				$weixinOrder = WxPayApi::unifiedOrder($input);
 				
-				file_put_contents('weixinOrder.txt',print_r($weixinOrder,true),FILE_APPEND);
-				
 				if($this->checkWeixinRespSuccess($weixinOrder)){
 					
 					//将 prepay_id 保存起来, 用来在用户取消订单后，后续可以再次进行下发 换起支付的参数
@@ -398,7 +404,7 @@ class Order_service extends Base_service {
 					
 					return $this->genPaymentParam($weixinOrder['prepay_id']);
 				}else{
-					log_message('error',"return_code={$weixinOrder['return_code']},return_msg={$weixinOrder['return_msg']},order_id={$localOrder['order_id']}");
+					log_message('error',"order_id={$localOrder['order_id']},RESP:".json_encode($weixinOrder));
 				}
 			}catch(WxPayException $e1){
 				log_message('error','code='.$e1->getCode().',message='.$e1->getMessage());
@@ -745,5 +751,6 @@ class Order_service extends Base_service {
 		
 		
 	}
+	
 	
 }

@@ -26,7 +26,7 @@
         </tr>
         {include file="./basic_info.tpl"}
         <tr>
-          <td colspan="2" class="required">{#avatar_photo#}:<span class="orange">用于显示在搜索列表页面,JPG格式,文件大小2M以内</span></td>
+          <td colspan="2" class="required">{#avatar_photo#}:<span class="orange">用于显示在搜索列表页面,JPG格式,文件大小{config_item('max_upload_size')}M以内</span></td>
         </tr>
         <tr class="noborder">
           <td colspan="2">
