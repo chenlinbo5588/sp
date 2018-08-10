@@ -51,6 +51,7 @@ class Role extends Ydzj_Admin_Controller {
 	public function index(){
 		
 		$currentPage = $this->input->get_post('page') ? $this->input->get_post('page') : 1;
+		$keywords = $this->input->get_post('keywords');
 		$condition = array(
 			'order' => 'id DESC',
 			'pager' => array(
@@ -62,48 +63,42 @@ class Role extends Ydzj_Admin_Controller {
 			
 		);
 		
-		
-		$keywords = $this->input->post('keywords');
 		if($keywords){
 			$condition['like']['name'] = $keywords;
 		}
 		
+
+		$switchType = $this->input->get_post('submit_type');
 		
-		//update status
-		if($this->isPostRequest()){
-			$switchType = $this->input->post('submit_type');
-			for($i = 0; $i < 1; $i++){
-				
-				if(!in_array($switchType,array('开启','关闭'))){
-					break;
-				}
-				
-				$ids = $this->input->post('del_id');
-				
-				if(empty($ids)){
-					break;
-				}
-				
-				$updateData = array();
-				
-				foreach($ids as $id){
-					
-					$updateData[] = array(
-						'id' => $id,
-						'status' => $switchType
-					);
-				}
-				
-				$this->Role_Model->batchUpdate($updateData,'id');
-				
+		for($i = 0; $i < 1; $i++){
+			
+			if(!in_array($switchType,array('开启','关闭'))){
+				break;
 			}
 			
+			$ids = $this->input->get_post('del_id');
+			
+			if(empty($ids)){
+				break;
+			}
+			
+			$updateData = array();
+			
+			foreach($ids as $id){
+				
+				$updateData[] = array(
+					'id' => $id,
+					'status' => $switchType
+				);
+			}
+			
+			$this->Role_Model->batchUpdate($updateData,'id');
+			
 		}
-		
+
 		
 		$list = $this->Role_Model->getList($condition);
-		//print_r($list);
-		//print_r($_POST);
+		
 		$this->assign(array(
 			'list' => $list,
 			'page' => $list['pager'],

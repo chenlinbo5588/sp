@@ -5,7 +5,9 @@
 	    <tbody>
 	        <tr>
 	          <th><label>系统消息发送时间</label></th>
-	          <td><input class="txt" name="stime" type="text"></td>
+	          <td><input type="text" class="datepicker" value="{$search['gmt_create_s']|escape}" name="gmt_create_s" id="gmt_create_s" class="txt"></td>
+	          ~
+	          <td><input type="text" class="datepicker" value="{$search['gmt_create_e']|escape}" name="gmt_create_e" id="gmt_create_e" class="txt"></td>
 	          <td><input type="submit" class="msbtn" name="tijiao" value="查询"/></td>
 	        </tr>
 	    </tbody>
@@ -44,4 +46,5 @@
        </tfoot>
     </table>
   </form>
+<script type="text/javascript" src="{resource_url('js/service/staff_booking_index.js',true)}"></script>
 {include file="common/main_footer.tpl"}

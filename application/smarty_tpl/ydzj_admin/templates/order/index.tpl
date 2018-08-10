@@ -9,7 +9,7 @@
           <td><input type="text" value="{$search['order_id']|escape}" name="order_id" id="order_id" class="txt"></td>
           <th><label for="mobile">{#mobile#}</label></th>
           <td><input type="text" value="{$search['mobile']|escape}" name="mobile" id="mobile" class="txt"></td>
-          <th><label for="add_username">{#name#}</label></th>
+          <th><label for="add_username">{#customer_name#}</label></th>
           <td><input type="text" value="{$search['add_username']|escape}" name="add_username" id="add_username" class="txt"></td>
     	  <td>{#amount#}:</td>
     	  <td>

@@ -42,6 +42,8 @@ class Notify extends Ydzj_Admin_Controller {
 		//echo $this->_reqtime;
 		//print_r($this->session->all_userdata());
 		$currentPage = $this->input->get_post('page') ? $this->input->get_post('page') : 1;
+		$search['gmt_create_s'] = $this->input->get_post('gmt_create_s') ? $this->input->get_post('gmt_create_s') : '';
+		$search['gmt_create_e'] = $this->input->get_post('gmt_create_e') ? $this->input->get_post('gmt_create_e') : '';
 		
 		$groupList = $this->message_service->getAllMemberGroup();
 		$keyedGroupList = array();
@@ -60,7 +62,12 @@ class Notify extends Ydzj_Admin_Controller {
 				'form_id' => '#formSearch'
 			)
 		);
-		
+		if($search['gmt_create_s']){
+			$condition['where']['gmt_create >'] = strtotime($search['gmt_create_s']);
+		}
+		if($search['gmt_create_e']){
+			$condition['where ']['gmt_create <'] = strtotime($search['gmt_create_e']+86400);
+		}
 		
 		//print_r($condition);
 		$list = $this->Site_Message_Model->getList($condition);
@@ -78,6 +85,7 @@ class Notify extends Ydzj_Admin_Controller {
 		$this->assign(array(
 			'list' => $list,
 			'page' => $list['pager'],
+			'search' => $search,
 			'group' => $keyedGroupList
 		
 		));

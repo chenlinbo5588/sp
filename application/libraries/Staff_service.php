@@ -448,6 +448,9 @@ class Staff_service extends Base_service {
 		}else{
 			$returnVal = $this->_staffModel->update(array_merge($pStaffParam,$who),array('id' => $pStaffParam['id']));
 			$staffId = $pStaffParam['id'];
+			
+			
+			//@TODO 可能需要同步修改 worker 表 公共字段
 		}
 		
 		if($imgList){
@@ -560,7 +563,7 @@ class Staff_service extends Base_service {
 				}
 				
 			}
-			
+			$updateData['status'] = StaffStatus::$recylebin;
 			$imageDeleteRows = $this->_staffImagesModel->deleteByCondition(array(
 				'where_in' => array(
 					array('key' => 'staff_id', 'value' => $staffIds)
@@ -568,7 +571,7 @@ class Staff_service extends Base_service {
 			));
 			
 			
-			$staffDeleteRows = $this->_staffModel->deleteByCondition(array(
+			$staffDeleteRows = $this->_staffModel->updateByCondition($updateData,array(
 				'where_in' => array(
 					array('key' => 'id', 'value' => $staffIds)
 				)

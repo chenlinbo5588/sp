@@ -190,7 +190,6 @@ class Building extends Ydzj_Admin_Controller {
 			$this->_getRules();
 			$this->_getNameRule();
 			
-			
 			for($i = 0; $i < 1; $i++){
 				if(!$this->form_validation->run()){
 					$this->jsonOutput('数据校验失败,'.$this->form_validation->error_string(),array('errors' => $this->form_validation->error_array()));
@@ -210,7 +209,7 @@ class Building extends Ydzj_Admin_Controller {
 					break;
 				}
 				
-				$this->jsonOutput('保存成功,页面即将刷新',array('redirectUrl' => admin_site_url($this->_className.'/edit?id='.$newid)));
+				$this->jsonOutput('保存成功,页面即将刷新',array('redirectUrl' => admin_site_url($this->_className.'/index')));
 			}
 		}else{
 			
@@ -284,6 +283,8 @@ class Building extends Ydzj_Admin_Controller {
 		$id = $this->input->get_post('id');
 		$residentId = $this->input->get_post('resident_id');
 		
+		
+		
 		$info = $this->Building_Model->getFirstByKey($id);
 		
 		$this->_subNavs[] = array('url' => $this->_className.'/edit?id='.$id, 'title' => '编辑');
@@ -319,6 +320,7 @@ class Building extends Ydzj_Admin_Controller {
 				$this->jsonOutput('保存成功');
 			}
 		}else{
+			
 			
 			$this->assign('info',$info);
 			

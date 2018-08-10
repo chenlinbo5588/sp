@@ -62,11 +62,11 @@ class Refund extends Ydzj_Admin_Controller {
 		}
 		
 		if($search['amount_s']){
-			$condition['where']['amount >='] = $search['amount_s'];
+			$condition['where']['amount >= '] = intval($search['amount_s']) * 100;
 		}
 		
 		if($search['amount_e']){
-			$condition['where']['amount <='] = $search['amount_e'];
+			$condition['where']['amount <= '] = intval($search['amount_e']) * 100;
 		}
 		
 		if($search['mobile']){

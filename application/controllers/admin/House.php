@@ -56,6 +56,7 @@ class House extends Ydzj_Admin_Controller {
 		$search['name'] = $this->input->get_post('name');
 		$search['address'] = $this->input->get_post('address');
 		$search['resident_name'] = $this->input->get_post('resident_name');
+		$search['yezhu_name'] = $this->input->get_post('yezhu_name');
 		
 		if($search['name']){
 			$condition['like']['name'] = $search['name'];
@@ -63,6 +64,9 @@ class House extends Ydzj_Admin_Controller {
 		
 		if($search['address']){
 			$condition['like']['address'] = $search['address'];
+		}
+		if($search['yezhu_name']){
+			$condition['like']['yezhu_name'] = $search['yezhu_name'];
 		}
 		if($search['resident_name']){
 			$resident_name = $search['resident_name'];
@@ -258,10 +262,9 @@ class House extends Ydzj_Admin_Controller {
 				}
 				
 				
-				$this->jsonOutput('保存成功,页面即将刷新',array('redirectUrl' => admin_site_url($this->_className.'/edit?id='.$newid)));
+				$this->jsonOutput('保存成功,页面即将刷新',array('redirectUrl' => admin_site_url($this->_className.'/index')));
 			}
 		}else{
-			
 			$this->_preparePageData();
 			$this->display();
 		}

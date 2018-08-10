@@ -203,7 +203,7 @@ class Worker extends Ydzj_Admin_Controller {
 				$this->assign('successMessage','保存成功,3秒后自动刷新');
 				$info = $this->Worker_Model->getFirstByKey($newid);
 				
-				$redirectUrl = admin_site_url($this->_className.'/edit?id='.$info['id']);
+				$redirectUrl = admin_site_url($this->_className.'/index');
 			}
 		}
 		

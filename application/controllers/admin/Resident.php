@@ -158,7 +158,7 @@ class Resident extends Ydzj_Admin_Controller {
 					break;
 				}
 				
-				$this->jsonOutput('保存成功,页面即将刷新',array('redirectUrl' => admin_site_url($this->_className.'/edit?id='.$newid)));
+				$this->jsonOutput('保存成功,页面即将刷新',array('redirectUrl' => admin_site_url($this->_className.'/index')));
 			}
 		}else{
 			$this->display();

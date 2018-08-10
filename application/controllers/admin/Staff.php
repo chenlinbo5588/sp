@@ -189,7 +189,17 @@ abstract class Staff extends Ydzj_Admin_Controller {
 		$this->display($this->staffClass.'/index');
 		
 	}
-	
+	/**
+	 * 工作中
+	 */
+	public function working(){
+		$this->_searchCondition(array(
+			'in_working' => 1
+		));
+		
+		$this->display($this->staffClass.'/index');
+		
+	}
 	/**
 	 * 回收站
 	 */
@@ -253,6 +263,33 @@ abstract class Staff extends Ydzj_Admin_Controller {
 				$this->jsonOutput('发布成功',$this->getFormHash());
 			}else{
 				$this->jsonOutput('发布失败,没有记录被发布',$this->getFormHash());
+			}
+			
+		}else{
+			$this->jsonOutput('请求非法',$this->getFormHash());
+		}
+		
+	}
+	
+	/**
+	 * 批量恢复
+	 */
+	public function recover(){
+		
+		$ids = $this->input->post('id');
+		
+		if($this->isPostRequest() && !empty($ids)){
+			
+			if(!is_array($ids)){
+				$ids = (array)$ids;
+			}
+			
+			$returnVal = $this->staff_service->changeStaffStatus($ids,StaffStatus::$unverify,StaffStatus::$recylebin);
+			
+			if($returnVal >= 0){
+				$this->jsonOutput('恢复成功',$this->getFormHash());
+			}else{
+				$this->jsonOutput('恢复失败',$this->getFormHash());
 			}
 			
 		}else{
@@ -732,8 +769,7 @@ abstract class Staff extends Ydzj_Admin_Controller {
 		$id = $this->input->get_post('id');
 		
 		$info = array();
-		
-		
+
 		$info = $this->staff_service->getStaffInfoById($id);
 		
 		$imgList = array();
@@ -759,8 +795,9 @@ abstract class Staff extends Ydzj_Admin_Controller {
 			for($i = 0; $i < 1; $i++){
 				$postInfo = $this->_prepareData('edit');
 				$imgList = $this->_getImageList();
-				
+
 				$info = array_merge($_POST,$postInfo);
+				
 				$info['id'] = $id;
 				
 				if(!$this->form_validation->run()){
@@ -774,9 +811,7 @@ abstract class Staff extends Ydzj_Admin_Controller {
 					break;
 				}
 				
-				//print_r($info);
-				
-				if($this->staff_service->saveStaff($this->_moduleTitle,$info,$this->addWhoHasOperated('edit'),$imgList) < 0){
+				if($this->staff_service->saveStaff($this->_moduleTitle,$info,$this->addWhoHasOperated('edit'),$imgList) < 1 ){
 					$feedback = getErrorTip('保存失败');
 					break;
 				}

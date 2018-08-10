@@ -47,8 +47,8 @@ class Staff_booking extends Ydzj_Admin_Controller {
 		$search['staff_mobile'] = $this->input->get_post('staff_mobile') ? $this->input->get_post('staff_mobile') : '';
 		$search['order_id'] = $this->input->get_post('order_id') ? $this->input->get_post('order_id') : '';
 		$search['order_refund'] = $this->input->get_post('order_refund') ? $this->input->get_post('order_refund') : '';
-		$search['meet_time'] = $this->input->get_post('meet_time') ? $this->input->get_post('meet_time') : '';
-		
+		$search['meet_time_s'] = $this->input->get_post('meet_time_s') ? $this->input->get_post('meet_time_s') : '';
+		$search['meet_time_e'] = $this->input->get_post('meet_time_e') ? $this->input->get_post('meet_time_e') : '';
 		
 		$condition = array(
 			'where' => array(),
@@ -91,9 +91,11 @@ class Staff_booking extends Ydzj_Admin_Controller {
 		if(isset($search['order_refund'])){
 			$condition['like']['order_refund'] = $search['order_refund'];
 		}
-		if($search['meet_time']){
-			$condition['where']['meet_time <'] = strtotime($search['meet_time'])+172800;
-			$condition['where']['meet_time >'] = strtotime($search['meet_time'])+86400;
+		if($search['meet_time_s']){
+			$condition['where']['meet_time >'] = strtotime($search['meet_time_s']);
+		}
+		if($search['meet_time_e']){
+			$condition['where']['meet_time <'] = strtotime($search['meet_time_e'])+86400;
 		}
 		
 		$list = $this->Staff_Booking_Model->getList($condition);

@@ -62,7 +62,7 @@
         </tr>
         <tr class="noborder">
           <td class="vatop rowform">
-            <input type="hidden" name="image_aid" id="image_aid" value=""/>
+            
             <div class="upload"><input type='text' readonly="readonly" class="txt" name='image_url' id='image_url' value="{$info['image_url']}"/><input type="button" id="uploadButton" value="浏览" /></div>
             </td>
           <td class="vatop tips">{form_error('image_url')} 支持格式jpg或者PNG 最小尺寸 <strong class="warning">{$imageConfig['m']['width']}x{$imageConfig['m']['height']}</strong></td>
