@@ -24,6 +24,7 @@ $entity = array(
 'shu' => 'int',
 'degree' => 'int',
 'grade' => 'int',
+'other_id' => 'varchar',
 'aid' => 'int',
 'avatar' => 'varchar',
 'avatar_b' => 'varchar',

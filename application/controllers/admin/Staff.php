@@ -541,6 +541,7 @@ abstract class Staff extends Ydzj_Admin_Controller {
 			for($i = 0; $i < 1; $i++){
 				
 				$info = array_merge($_POST,$this->_prepareData());
+				
 				$fileList = $this->_getImageList();
 				
 				$this->assign('fileList',$fileList);
@@ -568,12 +569,9 @@ abstract class Staff extends Ydzj_Admin_Controller {
 				$redirectUrl = admin_site_url($this->_className.'/edit?id='.$info['id']);
 			}
 		}else{
-			
+			$info['other_id'] = array();
 			$info['serv_ablity'] = array();
 		}
-		
-		//print_r($servAblity);
-		
 		
 		$this->_commonPageData();
 		
@@ -699,6 +697,7 @@ abstract class Staff extends Ydzj_Admin_Controller {
 			'regionList' => $this->basic_data_service->getTopChildList('服务区域'),
 			'salaryList' => $basicData[$this->_moduleTitle]['children'][$this->_moduleTitle.'薪资']['children'],
 			'ablityList' => $basicData[$this->_moduleTitle]['children'][$this->_moduleTitle.'服务能力']['children'],
+			'documentList' =>  $this->basic_data_service->getTopChildList('证件证明'),
 		);
 		
 		if('保姆' == $this->_moduleTitle){
@@ -707,7 +706,6 @@ abstract class Staff extends Ydzj_Admin_Controller {
 			$pageData['subTypeList'] = $basicData[$this->_moduleTitle]['children'][$this->_moduleTitle.'类型']['children'];
 			$pageData['gradeList'] = $basicData[$this->_moduleTitle]['children'][$this->_moduleTitle.'等级']['children'];
 		}
-		
 		$this->assign($pageData);
 	}
 	
@@ -742,7 +740,6 @@ abstract class Staff extends Ydzj_Admin_Controller {
 		
 		$imgList = $this->Staff_Images_Model->getImagesListByStaffId($id);
 		
-		//print_r($info);
 		
 		$this->_commonPageData();
 		
@@ -810,7 +807,6 @@ abstract class Staff extends Ydzj_Admin_Controller {
 					
 					break;
 				}
-				
 				if($this->staff_service->saveStaff($this->_moduleTitle,$info,$this->addWhoHasOperated('edit'),$imgList) < 1 ){
 					$feedback = getErrorTip('保存失败');
 					break;
@@ -830,7 +826,6 @@ abstract class Staff extends Ydzj_Admin_Controller {
 			$imgList = $this->Staff_Images_Model->getImagesListByStaffId($id);
 		}
 		
-		//print_r($info);
 		
 		$this->_commonPageData();
 		$this->assign(array(

@@ -153,6 +153,20 @@
           	</ul>
           </td>
         </tr>
+        <tr class="noborder">
+          <td colspan="2"><label class="validation">{#certificate_prove#}:</label>{form_error('other_id[]')}</td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop" colspan="2">
+          	<ul class="ulListStyle1 clearfix">
+          	
+  			{foreach from=$documentList key=Key item=Item}
+  			<li><label><input type="checkbox" name="other_id[]" value="{$Item['id']}" {if $inPost}{set_checkbox('other_id[]',$Item['id'])}{else}{if in_array($Item['id'],$info['other_id'])}checked="checked"{/if}{/if}/>{$Item['show_name']|escape}</label></li>
+  			{/foreach}
+
+          	</ul>
+          </td>
+        </tr>
         {if '月嫂' == $moduleTitle}
         <tr>
           <td colspan="2"><label class="validation">{#sbt_exp#}: </label></td>

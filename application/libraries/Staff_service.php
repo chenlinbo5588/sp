@@ -201,7 +201,7 @@ class Staff_service extends Base_service {
 		
 		
 		self::$CI->form_validation->set_rules('serv_ablity[]','服务能力',"required");
-		
+		self::$CI->form_validation->set_rules('other_id[]','已有证件',"required");
 		
 		if('月嫂' == $pServTypeName){
 			self::$CI->form_validation->set_rules('sbt_exp','双胞胎经验',"required|in_list[0,1]");
@@ -410,7 +410,7 @@ class Staff_service extends Base_service {
 		//print_r($pStaffParam);
 		//服务能力 保存为 json
 		$pStaffParam['serv_ablity'] = json_encode($pStaffParam['serv_ablity']);
-		
+		$pStaffParam['other_id'] = json_encode($pStaffParam['other_id']);
 		switch($pStaffParam['sex']){
 			case 1:
 				$pStaffParam['show_name'] = mb_substr($pStaffParam['name'],0,1).'先生';
@@ -620,6 +620,7 @@ class Staff_service extends Base_service {
 		
 		if($info){
 			$info['serv_ablity'] = json_decode($info['serv_ablity'],true);
+			$info['other_id'] = json_decode($info['other_id'],true);
 		}
 		
 		if($extra['photos']){
@@ -671,10 +672,11 @@ class Staff_service extends Base_service {
 		
 		
 		$info = $this->_staffModel->getFirstByKey($pStaffId,'id',
-			'id,service_type,sub_type,name,show_name,id_type,jiguan,marriage,address,age,sex,birthday,shu,degree,grade,avatar,avatar_b,avatar_m,avatar_s,region,work_month,service_cnt,salary_amount,salary_detail,serv_ablity,sbt_exp,zcbaby_exp');
+			'id,service_type,sub_type,name,show_name,id_type,jiguan,marriage,address,age,sex,birthday,shu,degree,grade,avatar,avatar_b,avatar_m,avatar_s,region,work_month,service_cnt,salary_amount,salary_detail,serv_ablity,other_id,sbt_exp,zcbaby_exp');
 		
 		if($info){
 			$info['serv_ablity'] = json_decode($info['serv_ablity'],true);
+			$info['other_id'] = json_decode($info['other_id'],true);
 			
 			$servTypeName = $this->getServerTypeNameById($info['service_type']);
 			$ablityList = $this->_basicAssocDataTree[$servTypeName]['children'][$servTypeName.'服务能力']['children'];
