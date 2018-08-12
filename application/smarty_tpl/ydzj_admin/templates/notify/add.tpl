@@ -3,6 +3,16 @@
   {form_open(site_url($uri_string),'id="notifyForm"')}
     <table class="table tb-type2">
       <tbody>
+      	<tr class="noborder">
+          <td colspan="2" class="required"><label class="validation">消息类型: </label></td>
+        </tr>
+      	<tr class="noborder">
+      		<td class="vatop rowform">
+      			<lable><input type="radio" name="msg_type"  {if $inDetail}{else}{set_checkbox('msg_type','前台消息')}{/if} value="前台消息" />前台消息</lable>&nbsp;
+      			<lable><input type="radio" name="msg_type" {if $inDetail}{else}{set_checkbox('msg_type','后台消息')}{/if}  value="后台消息" />后台消息</lable>
+      		</td>
+      		<td class="vatop tips"><label class="errtip" id="error_msg_type"></label>{form_error('msg_type')}</td>
+      	</tr>
         <tr class="noborder">
           <td colspan="2" class="required"><label class="validation">目标组: </label><label><input type="checkbox" name="ckall" class="checkall" value="全选"/>全选</label></td>
         </tr>
@@ -78,5 +88,5 @@
     	},2000);
     {/if}
   </script>
-  <script type="text/javascript" src="{resource_url('js/notify/admin_pm.js',true)}"></script>
+  <script type="text/javascript" src="{resource_url('js/notify/notify_add.js',true)}"></script>
 {include file="common/main_footer.tpl"}

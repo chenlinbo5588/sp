@@ -183,6 +183,10 @@ input[type=checkbox],input[type=radio] {
     padding: 5px 0;
 }
 
+.pd5 {
+    padding: 5px;	
+}
+
 .mgbottom {
 	margin-bottom:40px;
 }
@@ -935,4 +939,25 @@ tfoot label { +display: inline-block; +float:left; +line-height:38px; /* IE */}
 	text-indent:40px;
 	height:40px;
 	line-height:40px;
+}
+
+
+
+#pmDetail {
+	word-break:break-all;
+}
+
+.pm_title {
+	border:1px solid #dcdcdc;
+	border-width:1px 0px 1px 0px;
+}
+
+.pm_content {
+	padding:5px 0;
+}
+
+.pm_content .link {
+	
+	color:blue;
+	text-decoration:underline;
 }

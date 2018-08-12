@@ -4,9 +4,9 @@
 	 <table class="tb-type1 noborder search">
 	    <tbody>
 	        <tr>
-	          <th><label>系统消息发送时间</label></th>
+	          <th><label>开始时间</label></th>
 	          <td><input type="text" class="datepicker" value="{$search['gmt_create_s']|escape}" name="gmt_create_s" id="gmt_create_s" class="txt"></td>
-	          ~
+	          <th><label>结束时间</label></th>
 	          <td><input type="text" class="datepicker" value="{$search['gmt_create_e']|escape}" name="gmt_create_e" id="gmt_create_e" class="txt"></td>
 	          <td><input type="submit" class="msbtn" name="tijiao" value="查询"/></td>
 	        </tr>
@@ -16,6 +16,7 @@
       <thead>
         <tr class="thead">
           <th>序号</th>
+          <th>消息类型</th>
           <th>标题</th>
           <th>发送方式</th>
           <th>发送对象匹配模式</th>
@@ -28,6 +29,7 @@
       	{foreach from=$list['data'] item=item}
       	<tr class="hover edit" id="row{$item['brand_id']}">
           <td>{$item['id']}</td>
+          <td>{if $item['msg_type'] == 1}前{else}后{/if}台消息</td>
           <td>{$item['title']|escape}</td>
           <td>{$item['send_ways']}</td>
           <td>{$msgMode[$item['msg_mode']]}</td>
@@ -37,14 +39,10 @@
         </tr>
         {/foreach}
       </tbody>
-      <tfoot>
-      	<tr class="tfoot">
-          <td colspan="7">
-          	{include file="common/pagination.tpl"}
-           </td>
-        </tr>
-       </tfoot>
     </table>
+    <div class="fixedOpBar">
+        {include file="common/pagination.tpl"}
+    </div>
   </form>
 <script type="text/javascript" src="{resource_url('js/service/staff_booking_index.js',true)}"></script>
 {include file="common/main_footer.tpl"}

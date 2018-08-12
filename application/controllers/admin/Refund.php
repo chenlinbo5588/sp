@@ -222,8 +222,6 @@ class Refund extends Ydzj_Admin_Controller {
 	public function detail(){
 		
 		
-		$this->session->set_userdata('jumpUrl',$this->lastUrl);
-		
 		$id = $this->input->get_post('id');
 		$info = $this->order_service->getOrderInfoById($id);
 		
@@ -250,7 +248,6 @@ class Refund extends Ydzj_Admin_Controller {
 			'info' => $info,
 			'extraItem' => $this->order_service->extraInfoToArray($info),
 			'showSubmit' => $showSubmit,
-			'lastUrl' => $this->session->userdata('jumpUrl'),
 			'reasonList' => $this->basic_data_service->getTopChildList('退款原因'),
 		));
 		

@@ -28,7 +28,7 @@ class Order extends Wx_Controller {
 	/**
 	 * 获得保洁配置
 	 */
-	public function getBaojieConfig(){
+	public function getStaffConfig(){
 		
 		$data = array(
 			'amount' => intval($this->_getSiteSetting('service_prepay_amount')),

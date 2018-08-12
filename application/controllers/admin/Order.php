@@ -273,7 +273,6 @@ class Order extends Ydzj_Admin_Controller {
 				$this->jsonOutput('关闭操作完成,没有订单被关闭',array('jsReload' => true));
 			}
 			
-  			$this->session->unset_userdata('jumpUrl');
   			
 
 		}else{
@@ -289,7 +288,6 @@ class Order extends Ydzj_Admin_Controller {
 	 */
 	public function detail(){
 		
-		$this->session->set_userdata('jumpUrl',$this->lastUrl);
 		
 		$id = $this->input->get_post('id');
 		
@@ -306,9 +304,6 @@ class Order extends Ydzj_Admin_Controller {
 			
 		}
 		
-		
-		
-  		
 		$this->assign(array(
 			'info' => $info,
 			'extraItem' => $this->order_service->extraInfoToArray($info)

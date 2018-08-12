@@ -136,6 +136,7 @@ class Member extends Ydzj_Controller {
 				}
 				
 				$this->session->set_userdata(array(
+					'forcePmCheck' => true,
 					'manage_profile' => $result['data'],
 					'lastvisit' => $this->_reqtime
 				));

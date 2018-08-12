@@ -48,7 +48,7 @@
       	<tr class="hover edit" id="row{$item['id']}">
           {*<td><input type="checkbox" name="id[]" group="chkVal" value="{$item['id']}" class="checkitem"></td>*}
           <td><a href="{admin_site_url($moduleClassName|cat:'/detail')}?id={$item['id']}">{$item['order_id']}</a></td>
-          <td><a href="{admin_site_url('order/index')}?order_id={$item['order_old']}">{$item['order_old']}</a></td>
+          <td><a href="{admin_site_url('order/detail')}?order_id={$item['order_old']}">{$item['order_old']}</a></td>
           <td>{$item['username']}</td>
           <td>{$item['mobile']}</td>
           <td>{$item['order_typename']}{if $item['is_refund']}退款{/if}</td>

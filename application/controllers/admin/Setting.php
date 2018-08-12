@@ -251,9 +251,6 @@ class Setting extends Ydzj_Admin_Controller {
 			}
 			
 			
-			$this->getCacheObject()->delete(CACHE_KEY_SeoSetting);
-			
-			
 			if($rows >= 0){
 				$feedback = getSuccessTip('保存成功');
 			}else{

@@ -9,7 +9,7 @@
   </div>
   <div class="fixed-empty"></div>
   <div class="feedback">{$feedback}</div>
-  {form_open(admin_site_url('index/profile'),'id="aform"')}
+  {form_open(site_url($uri_string),'id="aform"')}
   <input type="hidden" name="uid" value="{$info['uid']}"/>
     <table class="table tb-type2 nobdb">
       <tbody>

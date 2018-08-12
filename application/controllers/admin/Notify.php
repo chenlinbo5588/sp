@@ -34,7 +34,6 @@ class Notify extends Ydzj_Admin_Controller {
 			array('url' => $this->_className.'/add','title' => '新增'),
 		);
 		
-		
 	}
 	
 	
@@ -119,6 +118,11 @@ class Notify extends Ydzj_Admin_Controller {
 			$info['content'] = $this->input->post('content');
 			$info['users'] = $this->input->post('users');
 			
+			
+			$this->form_validation->set_rules('msg_type','消息类型','required|in_list[前台消息,后台消息]');
+			
+			$msg_type = $this->input->post('msg_type');
+			
 			$this->form_validation->set_rules('send_group[]','目标组','required');
 			$this->form_validation->set_rules('msg_mode','发送模式','required|in_list[0,1,2]');
 			
@@ -140,7 +144,7 @@ class Notify extends Ydzj_Admin_Controller {
 				}
 				
 				$data = array(
-					'msg_type' => 0,
+					'msg_type' => $msg_type == '前台消息' ? 1 : 2,
 					'msg_mode' => $this->input->post('msg_mode'),
 					'send_ways' => json_encode($this->input->post('send_ways')),
 					'title' => $this->input->post('title'),
@@ -176,7 +180,7 @@ class Notify extends Ydzj_Admin_Controller {
 				}
 				
 				$feedback = getSuccessTip('保存成功,页面即将刷新');
-				$redirectUrl = admin_site_url($this->_className);
+				$redirectUrl = admin_site_url($this->_className.'/index');
 			}
 		}
 		

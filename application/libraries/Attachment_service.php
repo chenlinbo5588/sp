@@ -310,6 +310,7 @@ class Attachment_service extends Base_service {
 			$fileData = $this->resize($fileData);
 			
 			$returnArray = array('error' => 0, 'formhash'=>self::$CI->security->get_csrf_hash(),'id' => $fileData['id'], 'url'=>base_url($fileData['file_url']));
+			
 			if($fileData['img_b']){
 				$returnArray['url']  = base_url($fileData['img_b']);
 			}else if($fileData['img_m']){
@@ -322,6 +323,8 @@ class Attachment_service extends Base_service {
 				$this->deleteFiles(array(self::$CI->input->post('id')),'all');
 			}
 			*/
+			
+			
 			return $returnArray;
 		}else{
 			return array('error' => 1, 'formhash'=>self::$CI->security->get_csrf_hash(),'msg'=>$this->getErrorMsg('',''));

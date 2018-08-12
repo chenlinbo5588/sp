@@ -104,8 +104,6 @@ define('CACHE_ONE_MONTH',2592000);
 define('CACHE_ONE_YEAR',31536000);
 
 
-define('CACHE_KEY_SeoSetting','seoSettingList');
-define('CACHE_KEY_SiteSetting','siteSettingList');
 
 define('RESP_SUCCESS','响应成功');
 define('RESP_ERROR','响应错误');

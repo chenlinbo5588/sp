@@ -4,8 +4,10 @@
 <meta http-equiv="Content-Type" content="text/html;" charset="UTF-8">
 <title>{config_item('site_name')}-管理中心</title>
 <link href="{resource_url('css/skin_0.css')}" rel="stylesheet" type="text/css" id="cssfile"/>
+<link rel="stylesheet" href="{resource_url('js/toast/jquery.toast.min.css')}"/>
 <script src="{resource_url('js/jquery-1.11.3.js')}" type="text/javascript"></script>
 <script type="text/javascript" src="{resource_url('js/jquery.cookie.js')}"></script>
+<script type="text/javascript" src="{resource_url('js/toast/jquery.toast.min.js')}"></script>
 <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!--[if lt IE 9]>
       <script src="{resource_url('js/html5shiv.js')}"></script>
@@ -310,8 +312,8 @@ $(function(){
 	          <div id="topnav" class="top-nav">
 	            <ul>
 	              <li class="adminid" title="您好:{$manage_profile['basic']['username']|escape}">您好&nbsp;:&nbsp;<strong>{$manage_profile['basic']['username']|escape}</strong></li>
-	              <li><a href="{admin_site_url('index/profile')}" target="workspace" ><span>修改密码</span></a></li>
-	              <li><a href="{admin_site_url('index/logout')}" title="退出"><span>退出</span></a></li>
+	              <li><a href="{admin_site_url('my/profile')}" target="workspace" ><span>修改密码</span></a></li>
+	              <li><a href="{admin_site_url('my/logout')}" title="退出"><span>退出</span></a></li>
 	              <li><a href="{base_url()}" target="_blank" title="{config_item('site_name')}"><span>{config_item('site_name')}</span></a></li>
 	            </ul>
 	          </div>
@@ -321,6 +323,7 @@ $(function(){
 	            <ul>
 	                <li><a class="link actived" id="nav_dashboard" href="javascript:void(0);" onclick="openItem('dashboard');"><span>控制台</span></a></li>
 					<li><a class="link" id="nav_setting" href="javascript:void(0);" onclick="openItem('setting');"><span>设置</span></a></li>
+					<li><a class="link" id="nav_my" href="javascript:void(0);" onclick="openItem('my');"><span>个人中心</span></a></li>
 					<li><a class="link" id="nav_member" href="javascript:void(0);" onclick="openItem('member');"><span>会员</span></a></li>
 					<li><a class="link" id="nav_service" href="javascript:void(0);" onclick="openItem('service');"><span>服务</span></a></li>
 					<li><a class="link" id="nav_wuye" href="javascript:void(0);" onclick="openItem('wuye');"><span>物业</span></a></li>
@@ -334,6 +337,7 @@ $(function(){
 					<li><a class="link" id="nav_stat" href="javascript:void(0);" onclick="openItem('stat');"><span>统计</span></a></li>
 					<li><a class="link" id="nav_weixin" href="javascript:void(0);" onclick="openItem('weixin');"><span>微信营销</span></a></li>*}
 					<li><a class="link" id="nav_cms" href="javascript:void(0);" onclick="openItem('cms');"><span>CMS</span></a></li>
+					
 					<li><a class="link" id="nav_authority" href="javascript:void(0);" onclick="openItem('authority');"><span>权限</span></a></li>
 	            </ul>
 	          </nav>
@@ -341,6 +345,7 @@ $(function(){
 	            <div id="crumbs" class="crumbs"><span>控制台</span><span class="arrow">&nbsp;</span><span>欢迎页面</span> </div>
 	          </div>
 	          <div class="toolbar">
+	          	{*
 	            <ul id="skin" class="skin"><span>换肤</span>
 	              <li id="skin_0" class="" title="默认风格"></li>
 	            </ul>
@@ -351,6 +356,7 @@ $(function(){
 	                <li><a href="{site_url('admin')}" id="iframe_refresh">刷新管理中心</a></li>
 	              </ul>
 	            </div>
+	            *}
 	          </div>
             </div>
         </td>
@@ -364,6 +370,18 @@ $(function(){
                   <ol>
                     <li><a href="javascript:void(0);" id="welcome_dashboard" onclick="openItem('welcome,dashboard,dashboard');">欢迎页面</a></li>
                     {*<li><a href="javascript:void(0);" id="aboutus_dashboard" onclick="openItem('aboutus,dashboard,dashboard');">关于我们</a></li>*}
+                  </ol>
+                </dd>
+              </dl>
+            </li>
+          </ul>
+          <ul id="sort_my">
+            <li>
+              <dl>
+                <dd>
+                  <ol>
+                    <li><a href="javascript:void(0);" id="unread_pm" onclick="openItem('unread,pm,my');">消息中心</a></li>
+                    <li><a href="javascript:void(0);" id="profile_my" onclick="openItem('profile,my,my');">修改密码</a></li>
                   </ol>
                 </dd>
               </dl>
@@ -626,5 +644,17 @@ $(function(){
     </tr>
   </tbody>
 </table>
+
+<script type="text/javascript" src="{resource_url('js/pm/pm_notify.js')}"></script>
+<script>
+	var notify = $.myNotify.init();
+	notify.setPmUrl("{admin_site_url('pm/unread')}");
+	notify.updatePm("{admin_site_url('my/check_newpm')}");
+	
+	{if $newPm}
+	notify.showToast();
+	notify.titleChange();
+	{/if}
+</script>
 </body>
 </html>

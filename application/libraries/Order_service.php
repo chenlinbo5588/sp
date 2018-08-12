@@ -448,7 +448,7 @@ class Order_service extends Base_service {
 	 */
 	public function getOrderListByCondition($pCondition){
 		$condition = array(
-			'select' => 'order_id,order_typename,status,amount,time_start,time_expire',
+			'select' => 'order_id,order_type,order_typename,status,amount,time_start,time_expire',
 		);
 		
 		$condition = array_merge($condition,$pCondition);

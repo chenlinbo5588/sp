@@ -7,6 +7,10 @@ class MY_Controller extends CI_Controller {
 	public $_currentLang = '';
 	public $_verifyName = 'verify';
 	public $_lastVisit = 'lastvisit';
+	
+	//请求时间间隔
+	public $_reqInterval = 0;
+	
 	public $_reqtime ;
 	public $_navigation = array();
 	
@@ -29,7 +33,6 @@ class MY_Controller extends CI_Controller {
 		parent::__construct();
 		$this->_reqtime = $this->input->server('REQUEST_TIME');
 		
-		
 		$this->_initLanguage();
 		
 		$this->_initLibrary();
@@ -39,8 +42,6 @@ class MY_Controller extends CI_Controller {
 		
 		$this->_security();
 		$this->_initMobile();
-		
-		
 		
 		
 		$this->_initSiteSetting();
@@ -181,20 +182,6 @@ class MY_Controller extends CI_Controller {
     
     private function _initSiteSetting(){
     	
-    	/*
-    	$settingList = $this->getCacheObject()->get(CACHE_KEY_SiteSetting);
-    	if(empty($settingList)){
-    		$temp = $this->Setting_Model->getList();
-    		//print_r($list);
-	    	$settingList = array();
-	    	foreach($temp as $item){
-	    		$settingList[$item['name']] = $item['value'];
-	    	}
-	    	
-	    	$this->getCacheObject()->save(CACHE_KEY_SiteSetting,$settingList,CACHE_ONE_DAY);
-    	}
-    	*/
-    	
     	$temp = $this->Setting_Model->getList();
 		//print_r($list);
     	$settingList = array();
@@ -225,28 +212,22 @@ class MY_Controller extends CI_Controller {
     	
     }
     
-    
+    /**
+     * seo 设置
+     */
     private function _initSeoSetting(){
-    	
-    	$seoList = $this->getCacheObject()->get(CACHE_KEY_SeoSetting);
-    	if(empty($seoList)){
-    		$temp = $this->Seo_Model->getList();
-    		//print_r($list);
-	    	$seoList = array();
-	    	foreach($temp as $item){
-	    		$item['title'] = str_replace(array('{sitename}'),array($this->_siteSetting['site_name']),$item['title']);
-	    		$item['keywords'] = str_replace(array('{sitename}'),array($this->_siteSetting['site_name']),$item['keywords']);
-	    		$item['description'] = str_replace(array('{sitename}'),array($this->_siteSetting['site_name']),$item['description']);
-	    		
-	    		$seoList[$item['type']] = $item;
-	    	}
-	    	
-	    	//print_r($seoList);
-	    	$this->getCacheObject()->save(CACHE_KEY_SeoSetting,$seoList,CACHE_ONE_DAY);
+    	$temp = $this->Seo_Model->getList();
+		
+    	$seoList = array();
+    	foreach($temp as $item){
+    		$item['title'] = str_replace(array('{sitename}'),array($this->_siteSetting['site_name']),$item['title']);
+    		$item['keywords'] = str_replace(array('{sitename}'),array($this->_siteSetting['site_name']),$item['keywords']);
+    		$item['description'] = str_replace(array('{sitename}'),array($this->_siteSetting['site_name']),$item['description']);
+    		
+    		$seoList[$item['type']] = $item;
     	}
     	
     	$this->_seoSetting = $seoList;
-    	
     }
     
     

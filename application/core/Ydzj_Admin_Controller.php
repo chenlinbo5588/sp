@@ -6,7 +6,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 class Ydzj_Admin_Controller extends Ydzj_Controller {
 	
-	public $_adminProfile = array() ;
+	protected $_adminProfile = array() ;
+	protected $_adminUID = 0;
+	
+	
+	protected $_adminNewPm = 0;
 	
 	public function __construct(){
 		parent::__construct();
@@ -15,15 +19,42 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 		$this->_initAdminLogin();
 		//$this->_checkPermission();
 		
-		$seo = $this->_seoSetting['index'];
+		$this->_adminUID = $this->_adminProfile['basic']['uid'];
 		
+		$seo = $this->_seoSetting['index'];
 		$this->seo($seo['title'],$seo['keywords'],$seo['description']);
 		
+		$refresh = false;
+		$refresh = $this->session->userdata('forcePmCheck');
+		
+		if($refresh || $this->_reqInterval >= config_item('pmcheck_interval')){
+			$this->_pmUpdate();
+		}
+		
+		if($refresh){
+			$this->session->unset_userdata('forcePmCheck');
+		}
+		
+	}
+	
+	
+	/**
+	 * 更新用户站内信状态
+	 */
+	protected function _pmUpdate(){
+		
+		$this->_adminNewPm = $this->admin_pm_service->refreshAdminPm($this->_adminProfile['basic']);
+		
+		if($this->_adminNewPm){
+			$this->assign('newPm',$this->_adminNewPm);
+		}
 	}
 	
 	
 	protected function _initLibrary(){
 		parent::_initLibrary();
+		
+		$this->load->library('Admin_pm_service');
 		$this->load->model('Role_Model');
 	}
 	

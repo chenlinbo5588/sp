@@ -1,0 +1,430 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+
+class AdminPmStatus {
+	
+	const USER_PM = 1;
+	
+	const SYS_PM = 2;
+	
+	//交易信息
+	const TRANS_PM = 3;
+
+}
+
+
+
+class Admin_pm_service extends Base_service {
+
+	private $_adminPmModel = null;
+
+	//系统消息表
+	private $_siteMessageModel = null;
+	
+	//hash 对象
+	private $_pmHashObject = null;
+
+	
+	public function __construct(){
+		parent::__construct();
+		
+		self::$CI->load->model(array('Admin_Pm_Model','Site_Message_Model'));
+		
+		$this->_adminPmModel = self::$CI->Admin_Pm_Model;
+		$this->_siteMessageModel = self::$CI->Site_Message_Model;
+		
+	}
+	
+	
+	/**
+	 * 发送系统广播信息
+	 */
+	public function addSitePmMessage($data){
+		return $this->_siteMessageModel->_add($data);
+	}
+	
+	
+	/**
+	 * 更具用户id列表 添加系统消息
+	 */
+	public function sendSitePmMessageToUsersByUid($userIds,$moredata = array()){
+		
+		if(empty($userIds)){
+			return ;
+		}
+		
+		if(!is_array($userIds)){
+			$userIds = (array)$userIds;
+		}
+		
+		
+		$data = array(
+			'msg_mode' => 1,//白名单
+			'send_ways' => '站内信',
+		);
+		
+		$data = array_merge($data,$moredata);
+		
+		$userList = self::$memberModel->getList(array(
+			'select' => 'username',
+			'where_in' => array(
+				array('key' => 'uid','value' => $userIds)
+			)
+		));
+		
+		if($data['msg_mode'] != 0){
+			$tempList = array();
+			foreach($userList as $user){
+				$tempList[] = $user['username'];
+			}
+			
+			$data['users'] = str_replace(array("\r\n","\r","\n"),'',implode('|',$tempList)).'|';
+		}
+		
+		
+		return $this->addSitePmMessage($data);
+	}
+	
+	
+	/**
+	 * 获得 pm hash object
+	 */
+	public function getAdminPmHashObj(){
+		if(!$this->_pmHashObject){
+			$this->_pmHashObject = new Flexihash();
+			$this->_pmHashObject->addTargets(self::$CI->load->get_config('split_admin_pm'));
+		}
+		
+		return $this->_pmHashObject;
+	}
+	
+	
+	/**
+	 * 设置 Pm Message tableid
+	 */
+	public function setAdminPmTableByUid($uid){
+		$tableId = $this->getAdminPmHashObj()->lookup($uid);
+		$this->_adminPmModel->setTableId($tableId);
+	}
+	
+	
+	/**
+	 * 获得用户 站内信列表
+	 */
+	public function getAdminPmListByUid($condition , $uid){
+		$this->setAdminPmTableByUid($uid);
+		
+		return $this->_adminPmModel->getList($condition);
+		
+	}
+	
+	
+	/**
+	 * 获得用户站内信详情
+	 */
+	public function getAdminPmDetailById($pmId,$uid){
+		$this->setAdminPmTableByUid($uid);
+		return $this->_adminPmModel->getFirstByKey($pmId);
+	}
+	
+	
+	/**
+	 * 检查过去的给定的秒数内 已发送私信的最大条数
+	 */
+	public function pmFreqLimit($secondPast,$limitCount,$uid){
+		$this->setAdminPmTableByUid($uid);
+		
+		$count = $this->_adminPmModel->getCount(array(
+			'where' => array(
+				'gmt_create >=' => time() - $secondPast,
+				'uid' => $uid,
+				'msg_direction' => 1
+			)
+		));
+		
+		if($count >= $limitCount ){
+			return false;
+		}
+		
+		return true;
+		
+	}
+	
+
+	
+	/**
+	 * 发送后台 私信
+	 */
+	public function sendPrivateAdminPm($user,$from_uid,$title,$content,$escape = true){
+		
+		if(!is_array($user)){
+			$userInfo = self::$CI->Adminuser_Model->getById(array(
+				'select' => 'uid',
+				'where' => array(
+					'email' => $user
+				)
+			));
+			
+			if(empty($userInfo)){
+				return false;
+			}
+		}else{
+			$userInfo = $user;
+		}
+		
+		
+		// 插入两条记录
+		$data = array(
+			'uid' => $from_uid,
+			'from_uid' => $from_uid,
+			'msg_type' => 1,
+			'readed' => 1,
+			'msg_direction' => 1,//发
+			'title' => $escape == true ? strip_tags($title) : $title,
+			'content' => $escape == true ? strip_tags($content) : $content
+		);
+		
+		
+		// 发送方先记录
+		$this->setAdminPmTableByUid($from_uid);
+		$sendId = $this->_adminPmModel->_add($data);
+		
+		// 接受方再次记录
+		$this->setAdminPmTableByUid($userInfo['uid']);
+		
+		$data['uid'] = $userInfo['uid'];
+		$data['readed'] = 0;
+		$data['msg_direction'] = 0;//收
+		
+		$receiveId = $this->_adminPmModel->_add($data);
+		
+		return array('send_id' => $sendId, 'receive_id' => $receiveId);
+	}
+	
+	
+	/**
+	 * 批量或者单个删除 用户站内信
+	 */
+	public function deleteUserPm($pmIds , $uid){
+		if(!is_array($pmIds)){
+			$pmIds = (array)$pmIds;
+		}
+		
+		if(empty($pmIds)){
+			return false;
+		}
+		
+		$condition = array(
+			'where' => array(
+				'uid' => $uid
+			),
+			'where_in' => array(
+				array('key' => 'id' , 'value' => $pmIds)
+			)
+		);
+		
+		$this->setAdminPmTableByUid($uid);
+		
+		return $this->_adminPmModel->deleteByCondition($condition);
+		
+	}
+	
+	
+	
+	/**
+	 * 批量设置已读
+	 */
+	public function  setUserPmReaded($pmIds, $uid){
+		if(!is_array($pmIds)){
+			$pmIds = (array)$pmIds;
+		}
+		
+		if(empty($pmIds)){
+			return false;
+		}
+		
+		$condition = array(
+			'where' => array(
+				'uid' => $uid
+			),
+			'where_in' => array(
+				array('key' => 'id' , 'value' => $pmIds)
+			)
+		);
+		
+		$this->setAdminPmTableByUid($uid);
+		
+		return $this->_adminPmModel->updateByCondition(array('readed' => 1),$condition);
+		
+	}
+	
+	/*
+	 * 
+	 * 获得未读消息数量
+	 */
+	public function getUserUnreadCount($uid){
+		$this->setAdminPmTableByUid($uid);
+		
+		return $this->_adminPmModel->getCount(array(
+			'where' => array(
+				'uid' => $uid,
+				'readed' => 0
+			)
+		));
+		
+	}
+	
+	
+	/**
+	 * 更新用户 最新的站内新
+	 */
+	public function refreshAdminPm($pUser){
+		
+		$now = time();
+		
+		$newPmCnt = 0;
+		
+		//获得当前最大 系统消息记录
+		$maxSysPm = $this->getAdminPmListByUid(array(
+			'select' => 'site_msgid',
+			'where' => array(
+				'msg_type !=' => AdminPmStatus::USER_PM,
+				'uid' => $pUser['uid'],
+			),
+			'order' => 'id DESC',
+			'limit' => 1
+		),$pUser['uid']);
+		
+		
+		$currentSysId = 0 ;
+		
+		//最的站内新记录
+		if(!empty($maxSysPm)){
+			$currentSysId = $maxSysPm[0]['site_msgid'];
+		}
+		
+		$compareTs = $now - CACHE_ONE_DAY * 7;
+		if($pUser['gmt_create'] > $compareTs){
+			$compareTs = $pUser['gmt_create'];
+		}
+		
+		//系统广播消息
+		$sysPmList = $this->_siteMessageModel->getList(array(
+			'where' => array(
+				'msg_type !=' => AdminPmStatus::USER_PM,
+				'id > ' => $currentSysId,
+				//取用户创建日期之后的
+				'gmt_create >= ' => $compareTs
+			),
+			'limit' => 10
+		),'id');
+		
+		
+		//获得用户 未读 私信
+		$userPmList = $this->getAdminPmListByUid(array(
+			'select' => 'id',
+			'where' => array(
+				'msg_type' => AdminPmStatus::USER_PM,
+				'readed' => 0,
+				'uid' => $pUser['uid'],
+				'id > ' => intval($pUser['pm_id'])
+			),
+			'limit' => 10
+		),$pUser['uid']);
+		
+		$userPmCount = count($userPmList);
+		
+		$accept = false;
+		$needAddIndex = array();
+		
+		
+		foreach($sysPmList as $key => $item){
+			$accept = false;
+			
+			$item['users'] = json_decode($item['users'],true);
+			
+			if(1 == $item['msg_mode']){
+				//白名单
+				if(in_array($pUser['username'],$item['users'])){
+					$accept = true;
+				}
+			}else if(2 == $item['msg_mode']){
+				// 黑名单
+				if(!in_array($pUser['username'],$item['users'])){
+					$accept = true;
+				}
+			}else{
+				$accept = true;
+			}
+			
+			if($accept){
+				$needAddIndex[] = $key;
+			}
+		}
+		
+		if($needAddIndex){
+			foreach($needAddIndex as $pmIndex){
+				$sendWays = json_decode($sysPmList[$pmIndex]['send_ways'],true);
+				
+				if(in_array('站内信',$sendWays)){
+					$userPm[] = array(
+						'uid' => $pUser['uid'],
+						'site_msgid' => $sysPmList[$pmIndex]['id'],
+						'msg_type' => $sysPmList[$pmIndex]['msg_type'],
+						'title' => str_replace('{username}',$pUser['username'],$sysPmList[$pmIndex]['title']),
+						'content' => str_replace('{username}',$pUser['username'],$sysPmList[$pmIndex]['content']),
+					);
+				}
+				
+				
+				if(in_array('短信',$sendWays)){
+					//@TODO
+				}
+			}
+			
+			//插入管理 用户站内信表 $userPm
+			if($userPm){
+				$this->setAdminPmTableByUid($pUser['uid']);
+				$pmInsertRows = $this->_adminPmModel->batchInsert($userPm);
+				
+				if($pmInsertRows){
+					$newPmCnt = $pmInsertRows;
+				}
+			}
+		}
+		
+		if($userPmCount){
+			$latestPmId = $userPmList[$userPmCount - 1]['id'];
+			
+			self::$CI->Adminuser_Model->update(array('pm_id' => $latestPmId),array('uid' => $pUser['uid']));
+			
+			$userProfile = self::$CI->session->userdata('manage_profile');
+			$userProfile['basic']['pm_id'] = $latestPmId;
+			
+			self::$CI->session->set_userdata(array(
+				'manage_profile' => $userProfile
+			));
+		}
+		
+		return $newPmCnt + $userPmCount;
+		
+	}
+	
+	
+	/* ---------------以下站内 -------------------------------------------- */
+
+	
+	/**
+	 * 添加一条站内信，后台自动发送
+	 */
+	public function pushPmMessageToUser($data,$uid){
+		if(!$data['msg_type']){
+			$data['msg_type'] = 2;
+		}
+		
+		$this->setAdminPmTableByUid($uid);
+		$this->_adminPmModel->_add($data);
+	}
+	
+}

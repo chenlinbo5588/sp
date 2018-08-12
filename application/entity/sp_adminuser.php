@@ -21,6 +21,7 @@ $entity = array(
 'sid' => 'varchar',
 'newpm' => 'smallint',
 'newprompt' => 'smallint',
+'pm_id' => 'int',
 'freeze' => 'tinyint',
 'add_uid' => 'int',
 'edit_uid' => 'int',

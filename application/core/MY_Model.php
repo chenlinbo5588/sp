@@ -288,6 +288,8 @@ class MY_Model extends CI_Model {
 	            }
 	        }
         }else if ($action == 'update'){
+        	unset($data['gmt_create']);
+        	
         	if(array_key_exists('gmt_modify',$fields)){
 	            $data['gmt_modify'] = $now;
 	        }

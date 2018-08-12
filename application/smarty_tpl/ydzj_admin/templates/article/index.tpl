@@ -61,7 +61,7 @@
       <tbody>
       	{foreach from=$list['data'] item=item}
       	<tr class="hover edit" id="row{$item['article_id']}">
-          <td><input type="checkbox" name="id[]" group="chkVal" value="{$item['article_id']}" class="checkitem"></td>
+          <td><input type="checkbox" name="id[]" group="chkVal" value="{$item['article_id']}"></td>
           <td>{$item['article_id']}</td>
           <td>{$item['article_sort']}</td>
           <td>{$item['article_title']|escape}</td>

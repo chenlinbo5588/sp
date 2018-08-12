@@ -139,6 +139,20 @@ class Service extends Wx_Controller {
 			$this->_getBetweenCondition($this->postJson['select'][$serveTypeName.'服务数量'][0],'service_cnt', $searchKeys);
 			$this->_getBetweenCondition($this->postJson['select'][$serveTypeName.'经验月份'][0],'work_month', $searchKeys);
 			
+			$searchKeys['where']['age >='] = 0;
+			$searchKeys['where']['age <='] = 99;
+			
+			if(!empty($this->postJson['select']['年龄'])){
+				
+				if(isset($this->postJson['select']['年龄']['minage'])){
+					$searchKeys['where']['age >='] = intval($this->postJson['select']['年龄']['minage']);
+				}
+				
+				if(isset($this->postJson['select']['年龄']['maxage'])){
+					$searchKeys['where']['age <='] = intval($this->postJson['select']['年龄']['maxage']);
+				}
+			}
+			
 			
 			if('有' == $this->postJson['select']['双胞胎经验'][0]){
 				$searchKeys['where']['sbt_exp'] = 1;

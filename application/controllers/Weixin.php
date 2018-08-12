@@ -36,8 +36,7 @@ class Weixin extends Ydzj_Controller {
     	$this->Mp_Ticket_Model->deleteByCondition(array(
         	'where' => array(
         		'gmt_create <=' => $this->_reqtime - 86400
-        	),
-        	'limit' => 5
+        	)
         ));
         
         $mpConfig = config_item($groupName);

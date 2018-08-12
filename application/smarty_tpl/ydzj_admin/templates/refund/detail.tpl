@@ -30,8 +30,8 @@
     	<input type="submit" name="tijiao" value="审核通过" class="msbtn"/>
     	<input type="submit" name="tijiao" value="退回" class="msbtn"/>
     	{/if}
-    	{if $lastUrl}
-    	<a href="{$lastUrl}" class="salvebtn">返回</a>
+    	{if $gobackUrl}
+    	<a href="{$gobackUrl}" class="salvebtn" style>返回</a>
     	{/if}
     </div>
   </form>

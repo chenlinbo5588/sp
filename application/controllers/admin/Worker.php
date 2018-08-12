@@ -687,6 +687,7 @@ class Worker extends Ydzj_Admin_Controller {
 							'address' => $tmpRow['address'],		
 						),$this->addWhoHasOperated('add'));
 						
+
 						$this->Worker_Model->_add($insertData);
 						
 						$error = $this->Worker_Model->getError();

@@ -18,6 +18,9 @@ class Ydzj_Controller extends MY_Controller {
 		$this->form_validation->set_error_delimiters('<label class="form_error">','</label>');
 		
 		$this->_navs();
+		
+		$this->_userKeepFresh();
+		
 		$this->_initLogin();
 	}
 	
@@ -56,6 +59,24 @@ class Ydzj_Controller extends MY_Controller {
 	
 	protected function _initLibrary(){
 		parent::_initLibrary();
+	}
+	
+	
+	/**
+	 * 后台添加了新的通知  ，由用于触发信息的更新
+	 */
+	private function _userKeepFresh(){
+		$lsk = $this->input->get_cookie('lsk');
+		
+		if($lsk){
+			$this->_reqInterval = $this->_reqtime - $lsk;
+		}
+		
+		//大于更新时间
+		if(empty($lsk) || $this->_reqInterval > config_item('pmcheck_interval') ){
+			$this->input->set_cookie('lsk',$this->_reqtime,CACHE_ONE_DAY);
+		}
+		
 	}
 	
 	

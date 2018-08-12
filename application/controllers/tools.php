@@ -392,7 +392,6 @@ EOT;
         		continue;
         	}
         	
-        	
         	if(preg_match('/^sp_push_chat\d+$/i',$table,$match)){
         		continue;
         	}
@@ -404,6 +403,11 @@ EOT;
         	if(preg_match('/^sp_pm_message\d+$/i',$table,$match)){
         		continue;
         	}
+        	
+        	if(preg_match('/^sp_admin_pm\d+$/i',$table,$match)){
+        		continue;
+        	}
+        	
         	
         	if(preg_match('/^sp_hp_pub\d+$/i',$table,$match)){
         		continue;
@@ -515,5 +519,45 @@ EOF;
 	}
 	
 	
+	
+	
+	/**
+	 * 
+	 */
+	public function splitTableAdminPm(){
+		
+		
+		$config = $this->load->get_config('split_admin_pm');
+		
+		foreach($config as $tableIndex) {
+			
+			//echo "drop table sp_admin_pm{$tableIndex}".';<br/>';
+			
+			$table = <<< EOF
+CREATE TABLE `sp_admin_pm{$tableIndex}` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `uid` int(8) unsigned NOT NULL DEFAULT '0',
+  `from_uid` int(8) unsigned NOT NULL DEFAULT '0',
+  `site_msgid` int(8) unsigned NOT NULL DEFAULT '0' COMMENT '系统消息id',
+  `msg_type` tinyint(4) unsigned NOT NULL DEFAULT '0' COMMENT '1=主动前台广告消息  2=主动广播消息 3=被动广播消息',
+  `readed` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '1=已读',
+  `msg_direction` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '0=接收 1=发送',
+  `title` varchar(200) NOT NULL DEFAULT '',
+  `content` text,
+  `gmt_create` int(10) unsigned NOT NULL DEFAULT '0',
+  `gmt_modify` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `idx_uid` (`uid`,`msg_type`),
+  KEY `idx_ctime` (`gmt_create`),
+  KEY `idx_read` (`uid`,`readed`),
+  KEY `idx_dir` (`msg_direction`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+EOF;
+			
+			echo $table.'<br/>';
+		}
+		
+		
+	}
 
 }
