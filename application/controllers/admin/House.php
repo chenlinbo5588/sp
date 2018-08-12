@@ -922,4 +922,88 @@ class House extends Ydzj_Admin_Controller {
         force_download($downloadName,  file_get_contents($filePath));
         
     }
+	/**
+	 * 业主变更
+	 */
+	public function yezhu_change(){
+		
+		$feedback = '';
+		$id = $this->input->get_post('id');
+		$info = $this->House_Model->getFirstByKey($id);
+		
+		if($this->isPostRequest()){
+			
+			for($i = 0; $i < 1; $i++){
+				
+				$this->form_validation->set_rules('mobile','手机号码','required|valid_mobile|in_db_list['.$this->Yezhu_Model->getTableRealName().'.mobile]');
+				
+				
+				if(!$this->form_validation->run()){
+					$this->jsonOutput($this->form_validation->error_html(),array('errors' => $this->form_validation->error_array()));
+					break;
+				}
+				
+				$mobile = $this->input->post('mobile');
+				$yezhuInfo = $this->Yezhu_Model->getFirstByKey($mobile,'mobile');
+				
+				$info = array_merge(array('yezhu_id' => $yezhuInfo['id'],'mobile' => $yezhuInfo['mobile'],'yezhu_name' => $yezhuInfo['name']),$this->addWhoHasOperated('edit'));
+				
+				$this->House_Model->update($info,array('id' => $id));
+				
+				$error = $this->House_Model->getError();
+				
+				if(QUERY_OK != $error['code']){
+					if($error['code'] == MySQL_Duplicate_CODE){
+						$this->jsonOutput($this->input->post('address').'已存在');
+					}else{
+						$this->jsonOutput('数据库错误,请稍后再次尝试');
+					}
+					
+					break;
+				}
+				
+				
+				//TODO 未添加到业主历史表
+				
+				
+				$this->jsonOutput('保存成功,页面即将刷新',array('redirectUrl' => admin_site_url($this->_className.'/index')));
+			}
+		}else{
+			$this->assign('info',$info);
+			$this->display();
+			
+		}
+		
+	}
+	public function getYezhuInfo(){
+		
+		$searchKey = $this->input->get_post('term');
+		
+		$return = array();
+		
+		if($searchKey){
+			$yezhuList = $this->Yezhu_Model->getList(array(
+				'like' => array(
+					'mobile' => $searchKey
+				),
+				'limit' => 50
+			));
+
+			
+			foreach($yezhuList as $yuezhuItem ){
+
+				$return[] = array(
+					'id' => $yuezhuItem['id'],
+					'label' => $yuezhuItem['mobile'],
+					'value' => $yuezhuItem['mobile'],
+					'name'=> $yuezhuItem['name'],
+				);
+			}
+		}
+		
+		$this->jsonOutput2('',$return,false);
+		
+	}
+	
+	
 }

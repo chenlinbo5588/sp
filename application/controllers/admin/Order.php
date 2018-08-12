@@ -340,9 +340,13 @@ class Order extends Ydzj_Admin_Controller {
     			if($search['order_id']){
     				$condition['where']['order_id'] = $search['order_id'];
     			}
-    			
-    			if($search['add_username']){
-    				$condition['where']['add_username'] = $search['add_username'];
+				$MemberUid=$this->Member_Model->getById(array(
+					'where' => array(
+						'username' => $search['add_username']
+					)
+				));
+    			if($MemberUid['uid']){
+    				$condition['where']['uid'] = $MemberUid['uid'];
     			}
     			if($search['mobile']){
     				$condition['where']['mobile'] = $search['mobile'];

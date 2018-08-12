@@ -20,8 +20,22 @@ class Article extends Ydzj_Controller {
 		$articleId = $this->input->get_post('id');
 		$cmsArticleInfo = $this->Cms_Article_Model->getFirstByKey($articleId);
 		
-		$this->seo($cmsArticleInfo['article_title']);
 		
+		$key = 'Article'.$articleId.'Clicked';
+		
+		$isClicked = $this->session->userdata('Article'.$articleId.'Clicked');
+		
+		if(!$isClicked){
+			$this->Cms_Article_Model->updateByWhere(array(
+				'article_click' =>  $cmsArticleInfo['article_click'] + 1,
+			),array(
+				'id' => $cmsArticleInfo['id']
+			));
+			
+			$this->session->set_userdata('Article'.$articleId.'Clicked',true);
+		}
+		
+		$this->seo($cmsArticleInfo['article_title']);
 		$this->assign(array(
 			'article' => $cmsArticleInfo
 		));

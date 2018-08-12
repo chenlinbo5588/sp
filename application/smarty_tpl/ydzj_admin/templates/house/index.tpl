@@ -44,6 +44,7 @@
           <td>{if $item['nenghao_expire']}{$item['nenghao_expire']|date_format:"%Y-%m-%d"}{else}无缴费记录{/if}</td>
           <td class="align-center">
           	<a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}">编辑</a>&nbsp;|&nbsp;
+          	<a href="{admin_site_url($moduleClassName|cat:'/yezhu_change')}?id={$item['id']}">业主入驻</a>&nbsp;|&nbsp;
           	<a href="javascript:void(0)" class="delete" data-url="{admin_site_url($moduleClassName|cat:'/delete')}" data-id="{$item['id']}">删除</a>
           </td>
         </tr>

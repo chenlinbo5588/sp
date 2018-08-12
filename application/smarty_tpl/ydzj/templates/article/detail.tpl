@@ -6,6 +6,12 @@
 		    width: auto\9; 
 		    width:100%;
 		}
+		
+		.footer1 {
+			margin: 15px 0 ;
+			font-size:14px;
+			color:#aeaeae;
+		}
 	</style>
 	<div id="wrap">
 		<header class="articleTitle">
@@ -16,6 +22,10 @@
 		<article class="articleContent">
 			{*<div class="digest">{$article['digest']|escape}</div>*}
 			<div>{$article['content']}</div>
+			
+			<div class="footer1">
+				阅读数：{$article['article_click']}
+			</div>
 		</article>
 		
 		{*
@@ -45,6 +55,7 @@
 			</div>
 		</div>
 		*}
+		
 	</div>
 </body>
 </html>
