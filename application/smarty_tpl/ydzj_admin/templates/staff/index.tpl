@@ -61,7 +61,7 @@
          <td class="name"><a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}">{$item['name']|escape}</a></td>
          <td>{$item['show_name']|escape}</td>
          <td>{$basicData[$item['id_type']]['show_name']}</td>
-         <td>{$item['id_no']}</td>
+         <td>{mask_string($item['id_no'])}</td>
          <td>{if $item['sex'] == 1}男{else}女{/if}</td>
          <td>{$item['age']}</td>
          <td>{$jiguanList[$item['jiguan']]['show_name']}</td>
