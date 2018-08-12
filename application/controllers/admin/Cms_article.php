@@ -554,8 +554,8 @@ class Cms_Article extends Ydzj_Admin_Controller {
 					break;
 				}
 				
-				$feedback = getSuccessTip('保存成功');
 				$info = $this->Cms_Article_Model->getFirstByKey($newid);
+				$this->jsonOutput('保存成功,页面即将刷新',array('redirectUrl' => admin_site_url($this->_className.'/index')));
 			}
 		}else{
 			//$info['commend_flag'] = 0;

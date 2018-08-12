@@ -76,7 +76,7 @@ abstract class Staff extends Ydzj_Admin_Controller {
 		
 		
 		$condition = array(
-			'select' => 'id,name,worker_id,show_name,id_type,id_no,mobile,address,jiguan,age,avatar_m,avatar_s,status,work_month,service_cnt,salary_amount,salary_detail',
+			'select' => 'id,name,worker_id,show_name,id_type,id_no,mobile,address,jiguan,age,avatar_m,avatar_s,status,work_month,sex,service_cnt,salary_amount,salary_detail',
 			'where' => array_merge(array(
 					'service_type' => $staffServiceId
 				),$moreSearchVal),
@@ -116,7 +116,7 @@ abstract class Staff extends Ydzj_Admin_Controller {
 	
 		//print_r($condition);
 		$list = $this->staff_service->getStaffListByCondition($this->_moduleTitle,$condition);
-		
+
 		$this->assign(array(
 			'list' => $list,
 			'page' => $list['pager'],

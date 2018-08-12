@@ -600,8 +600,6 @@ class Worker extends Ydzj_Admin_Controller {
 					$result = array();
 					$successCnt = 0;
 					
-					
-					
 					$idTypeList = $this->basic_data_service->getTopChildList('证件类型');
 					$jiguanList = $this->basic_data_service->getTopChildList('籍贯');
 					$shuList = $this->basic_data_service->getTopChildList('属相');
@@ -660,7 +658,11 @@ class Worker extends Ydzj_Admin_Controller {
 						$this->form_validation->set_rules('mobile','手机号码','required|valid_mobile');
 						//设置籍贯
 						$this->form_validation->set_rules('jiguan','籍贯','required|in_list['.implode(',',array_values($provinceIdcard)).']');
-						
+						$this->form_validation->set_rules('marriage','婚育状态','required|in_list['.implode(',',array_keys($marriageList)).']');
+						$this->form_validation->set_rules('shu','属相','required|in_list['.implode(',',array_keys($shuList)).']');
+						$this->form_validation->set_rules('zzmm','政治面貌','required|in_list['.implode(',',array_keys($zzmmList)).']');
+						$this->form_validation->set_rules('degree','学历','required|in_list['.implode(',',array_keys($degreeList)).']');
+						$this->form_validation->set_rules('worker_type','工种类型','required|in_list['.implode(',',array_keys($workerTypeList)).']');
 						
 						if(!$this->form_validation->run()){
 							$tmpRow['message'] = $this->form_validation->error_first_html();
@@ -685,8 +687,7 @@ class Worker extends Ydzj_Admin_Controller {
 							'address' => $tmpRow['address'],		
 						),$this->addWhoHasOperated('add'));
 						
-						print_r($insertData);
-						//$this->Worker_Model->_add($insertData);
+						$this->Worker_Model->_add($insertData);
 						
 						$error = $this->Worker_Model->getError();
 						if(QUERY_OK != $error['code']){
@@ -930,8 +931,6 @@ class Worker extends Ydzj_Admin_Controller {
         
         unset($objPHPExcel,$objWriter);
         
-        force_download($downloadName,  file_get_contents($filePath));
-        
-    }		
-
+        force_download($downloadName,  file_get_contents($filePath));   
+    }
 }

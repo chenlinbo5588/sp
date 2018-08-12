@@ -40,7 +40,7 @@ class Cms extends Wx_Controller {
 		$notify = $this->Cms_Article_Model->getList(array(
 			'select' => 'id,image_url,article_title,publish_time,jump_url',
 			'where' => array(
-				'ac_id' => $artileClassAssoc['通知公告']['id'],
+				'ac_id' => $artileClassAssoc['通知讯息']['id'],
 				'article_state' => CmsArticleStatus::$published
 			),
 			'order' => 'publish_time DESC',
@@ -94,7 +94,7 @@ class Cms extends Wx_Controller {
 			foreach($information as $key => $item){
 				$information[$key]['image_url'] = resource_url($item['image_url']);
 				$information[$key]['publish_time'] = date('Y-m-d H:i',$item['publish_time']);
-				$information[$key]['jump_url'] = 'http://www.cswy.com/index.php/article/detail?id='.$item['id'];   
+				$information[$key]['jump_url'] = site_url('article/detail?id='.$item['id']);   
 			}
 		}
 		return $information;
