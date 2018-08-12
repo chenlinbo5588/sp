@@ -52,10 +52,16 @@ class Weixin extends Ydzj_Controller {
         
         if(empty($tickets)){
         	
+        	echo "need refresh\n";
 	        $ticket = $this->weixin_mp_api->getAccessToken($mpConfig);
+	        
+	        print_r($ticket);
 	    	if($ticket){
 	    		$row = $this->Mp_Ticket_Model->_add(array('appid' => $mpConfig['appid'], 'access_token' => $ticket['access_token'],'expire_in' => $ticket['expires_in'], 'gmt_create' => $this->_reqtime));
 	    	}
+        }else{
+        	
+        	echo "ticket is fresh\n";
         }
     }
     

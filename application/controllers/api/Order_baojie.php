@@ -108,6 +108,13 @@ class PayNotifyCallBack extends WxPayNotify
 			return false;
 		}else{
 			$this->_ci->Order_Model->commitTrans();
+			
+			
+			$this->_ci->load->library('Admin_pm_service');
+			
+			$this->_ci->admin_pm_service->addOrderMessage($orderInfo);
+			
+			
 			return true;
 		}
 		

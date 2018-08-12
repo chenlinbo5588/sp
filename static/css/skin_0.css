@@ -947,6 +947,14 @@ tfoot label { +display: inline-block; +float:left; +line-height:38px; /* IE */}
 	word-break:break-all;
 }
 
+#pmDetail a {
+	color:#df188b;
+}
+
+#pmDetail a:hover {
+	text-decoration:underline;
+}
+
 .pm_title {
 	border:1px solid #dcdcdc;
 	border-width:1px 0px 1px 0px;

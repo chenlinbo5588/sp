@@ -99,14 +99,6 @@ class PayNotifyCallBack extends WxPayNotify
 			));
 			
 			
-			$this->_ci->load->library('Admin_pm_message');
-			
-			$this->_ci->Site_Message_Model->_add(array(
-				'msg_type' => AdminPmStatus::TRANS_PM,
-				'title' => '新订单'.$orderInfo['order_typename'].' '.$orderInfo['goods_name'],
-				'content' => '<div>订单号码:<a target="workspace" href="'. admin_site_url('order/detail?id='.$orderInfo['id']).'">'.$orderInfo['order_id'].'</a></div>'
-			));
-			
 			
 			if($this->_ci->Order_Model->getTransStatus() === FALSE){
 				$this->_ci->Order_Model->rollBackTrans();
@@ -118,6 +110,10 @@ class PayNotifyCallBack extends WxPayNotify
 				$this->_ci->Order_Model->commitTrans();
 				
 				$this->_ci->weixin_service->wuyeOrderNotify($orderInfo);
+				
+				$this->_ci->load->library('Admin_pm_service');
+				
+				$this->_ci->admin_pm_service->addOrderMessage($orderInfo);
 				
 				return true;
 			}

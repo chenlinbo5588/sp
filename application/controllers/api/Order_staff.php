@@ -138,6 +138,10 @@ class PayNotifyCallBack extends WxPayNotify
 			
 			$this->_ci->weixin_service->staffOrderNotify($orderInfo);
 			
+			$this->_ci->load->library('Admin_pm_service');
+			
+			$this->_ci->admin_pm_service->addOrderMessage($orderInfo);
+			
 			return true;
 		}
 	}

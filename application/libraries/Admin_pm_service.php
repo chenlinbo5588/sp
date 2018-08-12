@@ -427,4 +427,34 @@ class Admin_pm_service extends Base_service {
 		$this->_adminPmModel->_add($data);
 	}
 	
+	
+	/**
+	 * 添加交易数据
+	 */
+	public function addTransMessage($pData){
+		
+		$default = array(
+			'msg_type' => AdminPmStatus::TRANS_PM,
+			'send_ways' => json_encode(array('站内信')),
+			'groups' => '[]',
+			'users' => '[]',
+		);
+		
+		return $this->_siteMessageModel->_add(array_merge($default,$pData));
+		
+	}
+	
+	/**
+	 * 订单站内信
+	 */
+	public function addOrderMessage($pOrderInfo){
+		
+		$jumpUrl = 0 == $pOrderInfo['is_refund'] ? admin_site_url('order/detail?id='.$pOrderInfo['id']) : admin_site_url('refund/detail?id='.$pOrderInfo['id']);
+		
+		$this->addTransMessage(array(
+			'title' => '新订单 '.$pOrderInfo['order_typename'].($pOrderInfo['is_refund'] == 1 ? '退款' : '').' '.$pOrderInfo['goods_name'],
+			'content' => '<div>订单号码:<a target="workspace" href="'. $jumpUrl.'">'.$pOrderInfo['order_id'].' 点击订单查看详情</a></div>'
+		));
+	
+	}
 }
