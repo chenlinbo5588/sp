@@ -512,6 +512,7 @@ abstract class Staff extends Ydzj_Admin_Controller {
 		$feedback = '';
 		
 		$info = array();
+		$imgList = array();
 		
 		$workerId = $this->input->get_post('worker_id');
 		
@@ -542,9 +543,9 @@ abstract class Staff extends Ydzj_Admin_Controller {
 				
 				$info = array_merge($_POST,$this->_prepareData());
 				
-				$fileList = $this->_getImageList();
+				$imgList = $this->_getImageList();
 				
-				$this->assign('fileList',$fileList);
+				$this->assign('imgList',$imgList);
 				if(!$this->form_validation->run()){
 					$feedback = getErrorTip($this->form_validation->error_string());
 					
@@ -556,7 +557,7 @@ abstract class Staff extends Ydzj_Admin_Controller {
 					break;
 				}
 				
-				if(($newid = $this->staff_service->saveStaff($this->_moduleTitle,$info,$this->addWhoHasOperated(),$fileList)) <= 0){
+				if(($newid = $this->staff_service->saveStaff($this->_moduleTitle,$info,$this->addWhoHasOperated(),$imgList)) <= 0){
 					$feedback = getErrorTip('保存失败');
 					break;
 				}
@@ -792,11 +793,9 @@ abstract class Staff extends Ydzj_Admin_Controller {
 			for($i = 0; $i < 1; $i++){
 				$postInfo = $this->_prepareData('edit');
 				$imgList = $this->_getImageList();
-
 				$info = array_merge($_POST,$postInfo);
 				
 				$info['id'] = $id;
-				
 				if(!$this->form_validation->run()){
 					$feedback = getErrorTip($this->form_validation->error_string());
 					
@@ -807,11 +806,11 @@ abstract class Staff extends Ydzj_Admin_Controller {
 					
 					break;
 				}
+				
 				if($this->staff_service->saveStaff($this->_moduleTitle,$info,$this->addWhoHasOperated('edit'),$imgList) < 1 ){
 					$feedback = getErrorTip('保存失败');
 					break;
 				}
-				
 				
 				$info = $this->staff_service->getStaffInfoById($id);
 				if($oldAvatar && $oldAvatar != $info['avatar']){

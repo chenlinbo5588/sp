@@ -433,6 +433,12 @@ class Staff_service extends Base_service {
 			$pStaffParam = array_merge($pStaffParam,$avatarImg);
 		}
 		
+		if($imgList){
+			$pStaffParam['has_photo'] = 1;
+		}else{
+			$pStaffParam['has_photo'] = 0;
+		}
+		
 		if(!isset($pStaffParam['id'])){
 			//事务
 			

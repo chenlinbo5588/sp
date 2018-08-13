@@ -891,7 +891,8 @@ class Worker extends Ydzj_Admin_Controller {
     				case '籍贯':
     				case '婚育状态':
     				case '属相':
-    				case '学历':
+    				case '政治面貌':
+    				case '最高学历':
     				case '证件类型':
     					$val = $basicData[$val]['show_name'];
     					break;
