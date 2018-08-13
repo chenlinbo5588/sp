@@ -13,6 +13,14 @@
 	          <td><input class="txt" name="yezhu_name" value="{$smarty.get['yezhu_name']|escape}" type="text"></td>
 	          <td><input type="submit" class="msbtn" name="tijiao" value="查询"/></td>
 	        </tr>
+	        <tr>
+	          <td>{#wuye_expire#}:</td>
+	    	  <td>
+	    		<input type="text" autocomplete="off"  value="{$search['wuye_expire_s']}" name="wuye_expire_s"  class="datepicker txt-short"/>
+	    		-
+	    		<input type="text" autocomplete="off"  value="{$search['wuye_expire_e']}" name="wuye_expire_e" class="datepicker txt-short"/>
+          </td>
+	        </tr>
 	    </tbody>
 	  </table>
     <table class="table tb-type2">
@@ -62,7 +70,7 @@
 <script>
 $(function(){
     bindDeleteEvent();
-    
+    $( ".datepicker" ).datepicker();
     $("span.editable").inline_edit({ 
     	url: "{admin_site_url($moduleClassName|cat:'/inline_edit')}",
     	clickNameSpace:'inlineEdit'

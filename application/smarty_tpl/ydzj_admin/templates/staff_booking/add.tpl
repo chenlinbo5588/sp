@@ -6,6 +6,7 @@
   {else}
   {form_open(site_url($uri_string),'id="infoform"')}
   {/if}
+  <input type="hidden" name="avatar_url" value=""/>
     <table class="table tb-type2 mgbottom">
       <tbody>
 		<tr class="noborder">

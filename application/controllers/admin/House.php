@@ -57,7 +57,15 @@ class House extends Ydzj_Admin_Controller {
 		$search['address'] = $this->input->get_post('address');
 		$search['resident_name'] = $this->input->get_post('resident_name');
 		$search['yezhu_name'] = $this->input->get_post('yezhu_name');
+		$search['wuye_expire_s'] = $this->input->get_post('wuye_expire_s') ? $this->input->get_post('wuye_expire_s') : '';
+		$search['wuye_expire_e'] = $this->input->get_post('wuye_expire_e') ? $this->input->get_post('wuye_expire_e') : '';
 		
+		if($search['wuye_expire_s']){
+			$condition['where']['wuye_expire >'] = strtotime($search['wuye_expire_s']);
+		}
+		if($search['wuye_expire_e']){
+			$condition['where']['wuye_expire <'] = strtotime($search['wuye_expire_e'])+86400;
+		}
 		if($search['name']){
 			$condition['like']['name'] = $search['name'];
 		}
@@ -87,6 +95,7 @@ class House extends Ydzj_Admin_Controller {
 		$this->assign(array(
 			'list' => $list,
 			'page' => $list['pager'],
+			'search' => $search,
 			'currentPage' => $currentPage
 		));
 		

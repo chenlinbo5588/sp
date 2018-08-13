@@ -42,6 +42,7 @@
           <th>{#status#}</th>
           <th>{#worker_name#}</th>
           <th>{#worker_mobile#}</th>
+          <th>{#gmt_create#}</th>
           <th class="w72 align-center">操作</th>
         </tr>
       </thead>
@@ -56,6 +57,7 @@
           <td><div>{$repairStatus[$item['status']]}</div></td>
           <td><span class="editable" data-id="{$item['id']}" data-fieldname="worker_name">{$item['worker_name']|escape}</span></td>
           <td><span class="editable" data-id="{$item['id']}" data-fieldname="worker_mobile">{$item['worker_mobile']|escape}</span></td>
+          <td>{$item['gmt_create']|date_format:"%Y-%m-%d %H:%M"}</td>
           <td class="align-center">
           	<a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}">编辑</a>&nbsp;|&nbsp;
           	<a href="javascript:void(0)" class="delete" data-url="{admin_site_url($moduleClassName|cat:'/delete')}" data-id="{$item['id']}">删除</a>

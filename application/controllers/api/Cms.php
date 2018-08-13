@@ -85,6 +85,7 @@ class Cms extends Wx_Controller {
 		);
 		$this->jsonOutput2(RESP_SUCCESS,$artileList);
 	}
+	
 	/**
 	 * 处理数据
 	 */
@@ -92,9 +93,16 @@ class Cms extends Wx_Controller {
 		if($information)
 		{
 			foreach($information as $key => $item){
-				$information[$key]['image_url'] = resource_url($item['image_url']);
+				if($information[$key]['image_url']){
+					$information[$key]['image_url'] = resource_url($item['image_url']);
+				}
+				else{
+					$information[$key]['image_url'] = '';
+				}
 				$information[$key]['publish_time'] = date('Y-m-d H:i',$item['publish_time']);
 				$information[$key]['jump_url'] = site_url('article/detail?id='.$item['id']);   
+
+				
 			}
 		}
 		return $information;

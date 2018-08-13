@@ -92,10 +92,10 @@ class Staff_booking extends Ydzj_Admin_Controller {
 			$condition['like']['order_refund'] = $search['order_refund'];
 		}
 		if($search['meet_time_s']){
-			$condition['where']['meet_time >'] = strtotime($search['meet_time_s']);
+			$condition['where']['meet_time >='] = strtotime($search['meet_time_s']);
 		}
 		if($search['meet_time_e']){
-			$condition['where']['meet_time <'] = strtotime($search['meet_time_e'])+86400;
+			$condition['where']['meet_time <='] = strtotime($search['meet_time_e'])+86400;
 		}
 		
 		$list = $this->Staff_Booking_Model->getList($condition);
@@ -489,6 +489,7 @@ class Staff_booking extends Ydzj_Admin_Controller {
 					'value' => $workerItem['mobile'],
 					'name'=> $workerItem['name'],
 					'sex'=> $workerItem['sex'],
+					'avatar_url' => $workerItem['avatar_s'],
 				);
 			}
 		}

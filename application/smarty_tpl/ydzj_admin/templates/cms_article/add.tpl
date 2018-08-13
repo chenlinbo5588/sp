@@ -63,12 +63,13 @@
         <tr class="noborder">
           <td class="vatop rowform">
             
-            <div class="upload"><input type='text'  class="txt" name='image_url' id='image_url' value="{$info['image_url']}"/><input type="button" id="uploadButton" value="浏览" /></div>
+            <div class="upload"><input type='text' readonly class="txt" name='image_url' id='image_url' value="{$info['image_url']}"/><input type="button" id="uploadButton" value="浏览" /></div>
             </td>
           <td class="vatop tips">{form_error('image_url')} 支持格式jpg或者PNG 最小尺寸 <strong class="warning">{$imageConfig['m']['width']}x{$imageConfig['m']['height']}</strong></td>
 	    </tr>
 	    <tr class="noborder">
-	    	<td colspan="2"><div id="preview">{if $info['image_url']}<img src="{resource_url($info['image_url'])}" width="{$imageConfig['m']['width']}" height="{$imageConfig['m']['height']}"/>{/if}</div></td>
+	    	<td colspan="2"><div id="preview">{if $info['image_url']}<img src="{resource_url($info['image_url'])}" width="{$imageConfig['m']['width']}" height="{$imageConfig['m']['height']}"/><div><a href="javascript:delImg(this);">刪除</a></div>{/if}</div>
+	    	</td>
 	    </tr>
         <tr>
           <td colspan="2" class="required"><label class="validation">文章内容:</label>{form_error('content')}</td>
@@ -210,6 +211,25 @@
     </div>
    </form>
   <script type="text/javascript">
+	function delImg(){
+  		var src = $("#preview").find("img").attr('src');
+  		
+  		$.ajax({
+  			url:"{admin_site_url($moduleClassName|cat:"/delimg")}?id={$info['id']}",
+  			dataType: 'json',
+  			data : { imgUrl : src },
+  			success:function(jsonResp){
+  				if(/成功/.test(jsonResp.message)){
+  					$("#preview").html('');
+  					document.getElementById("image_url").value = "";
+  				}else{
+  					showToast('error',jsonResp.message);
+  				}
+  			}
+  		});
+  		document.getElementById(preview);
+  	}
+
 	KindEditor.ready(function(K) {
 		var uploadbutton = K.uploadbutton({
 			button : K('#uploadButton')[0],
@@ -220,9 +240,7 @@
 				refreshFormHash(data);
 				if (data.error === 0) {
 					K('#image_url').val(data.url);
-					K('#image_aid').val(data.id);
-					
-					K('#preview').html('<img width="{$imageConfig['m']['width']}" height="{$imageConfig['m']['height']}" src="' + data.url + '"/>');
+					K('#preview').html('<img width="{$imageConfig['m']['width']}" height="{$imageConfig['m']['height']}" src="' + data.url + '"/><div><a href="javascript:delImg(this);">刪除</a></div>' );
 					
 				} else {
 					alert(data.msg);
@@ -232,7 +250,11 @@
 				alert('自定义错误信息: ' + str);
 			}
 		});
-		
+		{if $redirectUrl}
+		setTimeout(function(){
+			location.href="{$redirectUrl}";
+		},2000);
+		{/if}
 		
 		uploadbutton.fileBox.change(function(e) {
 			uploadbutton.submit();

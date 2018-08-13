@@ -533,7 +533,6 @@ class Cms_Article extends Ydzj_Admin_Controller {
 		
 		if($this->isPostRequest()){
 			$this->_getRules();
-			
 			for($i = 0; $i < 1; $i++){
 				
 				$info = array_merge($_POST,$this->_prepareData());
@@ -542,10 +541,11 @@ class Cms_Article extends Ydzj_Admin_Controller {
 					$feedback = getErrorTip($this->form_validation->error_string());
 					break;
 				}
-				
+				if($info['image_url']){
+					$avatarImg = getImgPathArray($info['image_url'],array('b','m','s'),'image_url');
+					$info = array_merge($info,$avatarImg);
+				}
 				$info = array_merge($info,$this->addWhoHasOperated('add'));
-				
-				
 				$newid = $this->Cms_Article_Model->_add($info);
 				$error = $this->Cms_Article_Class_Model->getError();
 				
@@ -553,9 +553,10 @@ class Cms_Article extends Ydzj_Admin_Controller {
 					$feedback = getErrorTip('保存失败,'.$error['message']);
 					break;
 				}
-				
 				$info = $this->Cms_Article_Model->getFirstByKey($newid);
-				$this->jsonOutput('保存成功,页面即将刷新',array('redirectUrl' => admin_site_url($this->_className.'/index')));
+				
+				$feedback = getSuccessTip('保存成功,页面即将刷新');
+				$redirectUrl = admin_site_url($this->_className.'/index');
 			}
 		}else{
 			//$info['commend_flag'] = 0;
@@ -567,13 +568,14 @@ class Cms_Article extends Ydzj_Admin_Controller {
 		$this->assign(array(
 			'info' => $info,
 			'feedback' => $feedback,
+			'redirectUrl' => $redirectUrl,
 			'articleClassList' => $treelist
 		));
 		
 		
 		$this->display();
 	}
-	
+
 	
 	public function edit(){
 		$feedback = '';
@@ -606,7 +608,10 @@ class Cms_Article extends Ydzj_Admin_Controller {
 					$feedback = getErrorTip($this->form_validation->error_string());
 					break;
 				}
-				
+				if($info['image_url']){
+					$avatarImg = getImgPathArray($info['image_url'],array('b','m','s'),'image_url');
+					$info = array_merge($info,$avatarImg);
+				}
 				
 				$info = array_merge($info,$this->addWhoHasOperated('edit'));
 				$this->Cms_Article_Model->update($info,array('id' => $id));
@@ -632,5 +637,32 @@ class Cms_Article extends Ydzj_Admin_Controller {
 		$this->display($this->_className.'/add');
 	}
 	
+	
+	/**
+	 * 删除图片
+	 */
+	public function delimg(){
+		
+		$imgUrl = $this->input->get_post('imgUrl');
+		$id = $this->input->get_post('id');
+		
+		if($id){
+			//如果在编辑页面
+			$rowsDelete = $this->Cms_Article_Model->updateByCondition(array(
+				'image_url' => '','image_url_m' => '' , 'image_url_s' => ''
+			),array(
+				'where' => array(
+					'id' => $id,
+				)
+			));
+		}		
+		$fileList = getImgPathArray($imgUrl,array('b','m','s'));
+		
+		
+		$this->attachment_service->deleteByFileUrl($fileList);
+		
+		
+		$this->jsonOutput('成功',$this->getFormHash());
+	}
 	
 }

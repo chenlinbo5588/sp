@@ -9,6 +9,7 @@ $(function(){
       select: function( event, ui ) {
 		$("input[name=staff_name]").val(ui.item.name);
 		$("input[name=staff_sex]").val(ui.item.sex);
+		$("input[name=avatar_url]").val(ui.item.avatar_url);
         //log( "Selected: " + ui.item.value + " aka " + ui.item.id );
       }
     });
