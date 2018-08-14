@@ -69,7 +69,6 @@ class Wx_Controller extends MY_Controller {
 		//微信用户
 		$weixinUser = $this->sessionInfo['weixin_user'];
 		
-		
 		if($weixinUser){
 			
 			/*

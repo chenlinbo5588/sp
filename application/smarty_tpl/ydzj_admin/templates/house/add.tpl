@@ -98,7 +98,7 @@
 	        		var data = resp.data;
 	        	
 	        		if(data.length == 0){
-	        			showToast('error',"该小区尚未配置建筑物信息");
+	        			showToast('error',resp.message);
 	        		}else{
 	        			$("select[name=building_id]").append('<option value="">请选择</option>');
 	        			for(var i = 0 ; i < data.length; i++){

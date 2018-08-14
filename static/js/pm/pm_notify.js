@@ -67,13 +67,15 @@
     			data:{ t : Math.random() },
     			dataType: 'json',
     			success:function(json){
+    				that.pmInUpdate = false;
+    				
     				if(json.data.newPm > 0){
     					that.showToast();
     					//that.playSound(1);
     					that.titleChange();
     				}
     				
-    				that.pmInUpdate = false;
+    				
     			},
     			errror: function(XMLHttpRequest, textStatus, thrownError){
     				that.pmInUpdate = false;

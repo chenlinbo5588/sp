@@ -401,7 +401,13 @@ class Building extends Ydzj_Admin_Controller {
 			)
 		));
 		
-		$this->jsonOutput('响应成功',$buildingList);
+		
+		if($buildingList){
+			$this->jsonOutput('响应成功',$buildingList);
+		}else{
+			$this->jsonOutput('该小区尚未配置建筑物信息',array());
+		}
+		
 		
 		
 	}

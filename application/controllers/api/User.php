@@ -33,6 +33,9 @@ class User extends Wx_Controller {
 					$bindInfo['mobile'] = $this->memberInfo['mobile'];
 				}
 				
+				$bindInfo['site_tel'] = $this->_getSiteSetting('site_tel');
+				$bindInfo['default_address'] = $this->_getSiteSetting('service_default_address');
+				
 				$this->jsonOutput2(RESP_SUCCESS,$bindInfo);
 			}else{
 				//$this->jsonOutput2("微信登陆失败",array('sessionId' => $this->session->session_id));

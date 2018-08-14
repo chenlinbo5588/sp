@@ -190,7 +190,7 @@ class Service extends Wx_Controller {
 		}
 		
 		
-		$data = $this->staff_service->getStaffListByCondition($serveTypeName,$searchKeys);
+		$data = $this->staff_service->getStaffListByCondition($serveTypeName,$searchKeys,array('other_id' => true));
 		
 		$this->jsonOutput2(RESP_SUCCESS,$data);
 	}

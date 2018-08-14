@@ -41,6 +41,7 @@ class Service_Setting extends Ydzj_Admin_Controller {
 			'service_booking_status',
 			'service_refund_verify',
 			'service_closed_reason',
+			'service_default_address',
 		);
 		
 		$currentSetting = $this->base_service->getSettingList(array(

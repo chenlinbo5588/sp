@@ -14,7 +14,7 @@ class MY_Controller extends CI_Controller {
 	public $_reqtime ;
 	public $_navigation = array();
 	
-	protected $_subNavs;
+	protected $_subNavs = array();
 	
 	public $_siteSetting = array();
 	public $_seoSetting = array();

@@ -107,6 +107,8 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
         //公共权限
         $this->_permission['admin'] = 1;
         $this->_permission['admin/'] = 1;
+        $this->_permission['index'] = 1;
+        $this->_permission['index/'] = 1;
         $this->_permission['index/index'] = 1;
         $this->_permission['my/index'] = 1;
         $this->_permission['my/logout'] = 1;
@@ -118,7 +120,6 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
         $this->_permission['dashboard/aboutus'] = 1;
 
         $this->assign('permission',$this->_permission);
-        
         
         if(!isset($this->_permission[$this->_checkPermitUrl])){
             if($this->input->is_ajax_request()){

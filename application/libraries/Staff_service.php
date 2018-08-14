@@ -786,12 +786,12 @@ class Staff_service extends Base_service {
 	/**
 	 * 
 	 */
-	public function getStaffListByCondition($pServTypeName,$pCondition){
+	public function getStaffListByCondition($pServTypeName,$pCondition,$otherInfo = array()){
 		
 		
 		$currentPage = $pCondition['page'] ? $pCondition['page'] : 1;
 		$condition = array(
-			'select' => 'id,service_type,name,show_name,jiguan,age,avatar_m,avatar_s,work_month,service_cnt,salary_amount,salary_detail,has_photo,has_photo,has_video,sbt_exp',
+			'select' => 'id,service_type,name,show_name,jiguan,age,avatar_m,avatar_s,work_month,service_cnt,salary_amount,salary_detail,other_id,has_photo,has_photo,has_video,sbt_exp',
 			'pager' => array(
 				'page_size' => config_item('page_size'),
 				'current_page' => $currentPage,
@@ -800,10 +800,37 @@ class Staff_service extends Base_service {
 			)
 		);
 		
+		
 		$condition = array_merge($condition,$pCondition);
 		$condition['where']['service_type'] = $this->_basicAssocDataTree['业务类型']['children'][$pServTypeName]['id'];
 		
+		
 		$data = $this->_staffModel->getList($condition);
+		
+		
+		if($otherInfo['other_id']){
+			
+			$otherIds = $this->_basicAssocDataTree['证件证明']['children'];
+			$otherIdName = array();
+			
+			foreach($otherIds as $tmpKey => $otherVal){
+				$otherIdName[$otherVal['id']] = $otherVal['show_name'];
+			}
+			
+			foreach($data['data'] as $dk => $item){
+				$temp = json_decode($item['other_id'],true);
+				
+				$tempArray = array();
+				
+				if($temp){
+					foreach($temp as $tempVal){
+						$tempArray[] = $otherIdName[$tempVal];
+					}
+				}
+				
+				$data['data'][$dk]['other_id'] = $tempArray;
+			}
+		}
 		
 		
 		return $data;

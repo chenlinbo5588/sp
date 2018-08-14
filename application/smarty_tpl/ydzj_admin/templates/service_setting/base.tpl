@@ -17,11 +17,18 @@
           <td class="vatop tips">{form_error('service_prepay_amount')}<span class="vatop rowform">用于支付预约单的预约金额</span></td>
         </tr>
         <tr class="noborder">
-          <td colspan="2" class="required"><label for="site_name_en">用户当日最大可预约订单数量:</label></td>
+          <td colspan="2" class="required"><label for="service_order_limit">用户当日最大可预约订单数量:</label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input id="service_order_limit" name="service_order_limit" value="{$currentSetting['service_order_limit']['value']|escape}" class="txt" type="text" /></td>
           <td class="vatop tips">{form_error('service_order_limit')}<span class="vatop rowform"> 0 表示不限制</span></td>
+        </tr>
+        <tr class="noborder">
+          <td colspan="2" class="required"><label for="service_default_address">默认预约见面地址:</label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform"><input id="service_default_address" name="service_default_address" value="{$currentSetting['service_default_address']['value']|escape}" class="txt" type="text" /></td>
+          <td class="vatop tips">{form_error('service_default_address')}<span class="vatop rowform"> 预约单默认见面地址</span></td>
         </tr>
         <tr>
           <td colspan="2" class="required">预约功能状态:</td>
@@ -33,6 +40,7 @@
             <input id="service_booking_status0" name="service_booking_status" {if $currentSetting['service_booking_status']['value'] == '关闭'}checked="checked"{/if} value="关闭" type="radio"></td>
           <td class="vatop tips"><span class="vatop rowform">可暂时将预约功能关闭，其他人无法预约，但不影响小程序的服务功能的正常使用</span></td>
         </tr>
+        
         <tr>
           <td colspan="2" class="required"><label for="closed_reason">关闭原因:</label></td>
         </tr>

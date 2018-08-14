@@ -55,8 +55,10 @@ class Ydzj_Controller extends MY_Controller {
 		    }
 	    }
 		
+		$this->_checkPermitUrl = strtolower($this->_checkPermitUrl);
+		
 		$this->assign(array(
-			'permitUri' => strtolower($this->_checkPermitUrl)
+			'permitUri' => $this->_checkPermitUrl
 		));
 		
 	}
