@@ -280,4 +280,35 @@ class Resident extends Ydzj_Admin_Controller {
 		}
 	}
 	
+	
+	/**
+	 * 获得小区名称 自动完成
+	 */
+	public function getResidentName(){
+		
+		$searchKey = $this->input->get_post('term');
+		
+		$return = array();
+		
+		if($searchKey){
+			$residentList = $this->Resident_Model->getList(array(
+				'like' => array(
+					'name' => $searchKey
+				),
+				'limit' => 50
+			));
+			
+			foreach($residentList as $feetypeItem){
+				$return[] = array(
+					'id' =>$feetypeItem['id'],
+					'label' => $feetypeItem['name'],	
+				);
+			}
+		}
+		
+		//echo json_encode($return);
+		$this->jsonOutput2('',$return,false);
+		
+	}
+	
 }

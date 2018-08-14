@@ -1,11 +1,18 @@
 $(function(){
 	
 	bindDeleteEvent({ },function(ids,json){
-        showToast('success',json.message);
-        for(var i = 0; i < ids.length; i++){
-            $("#row" + ids[i]).remove();
-            $(".row" + ids[i]).remove();
-        }
+		
+		if(check_success(json.message)){
+			showToast('success',json.message);
+			for(var i = 0; i < ids.length; i++){
+	            $("#row" + ids[i]).remove();
+	            $(".row" + ids[i]).remove();
+	        }
+			
+		}else{
+			showToast('error',json.message);
+		}
+		
         refreshFormHash(json.data);
     },function(){
         showToast('error','删除错误');

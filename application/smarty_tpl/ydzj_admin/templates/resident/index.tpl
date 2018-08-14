@@ -17,9 +17,9 @@
         <tr class="thead">
           <th class="w24"></th>
           <th class="w48">排序</th>
-          <th class="w270">小区名称</th>
-          <th class="w150">小区地址</th>
-          <th class="w72 align-center">操作</th>
+          <th class="">小区名称</th>
+          <th class="">小区地址</th>
+          <th class="align-center">操作</th>
         </tr>
       </thead>
       <tbody>

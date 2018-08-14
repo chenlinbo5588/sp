@@ -154,7 +154,7 @@ class Attachment_service extends Base_service {
 	 * 
 	 * $axis  裁切参数
 	 */
-	public function resize($fileData , $resizeConfig = array('b','m') , $axis = array() ){
+	public function resize($fileData , $resizeConfig = array('b','m','s') , $axis = array() ){
 		
 		if(!$fileData['full_path']){
 			$fileData['full_path'] = ROOTPATH .DIRECTORY_SEPARATOR. $fileData['file_url'];

@@ -18,7 +18,7 @@
           <th class="w48">排序</th>
           <th class="w270">显示名称</th>
           <th class="align-center">启用</th>
-          <th class="w72 align-center">操作</th>
+          <th class="align-center">操作</th>
         </tr>
       </thead>
       <tbody>

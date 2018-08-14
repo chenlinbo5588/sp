@@ -136,6 +136,7 @@
         </tr>
         <tr class="noborder">
           <td class="vatop" colspan="2">
+          	{if $ablityList}
           	<ul class="ulListStyle1 clearfix">
           	{foreach from=$ablityList key=keyName item=itemName}
           		{if !empty($itemName['children'])}
@@ -150,7 +151,9 @@
           		{/if}
           		
           	{/foreach}
+          	
           	</ul>
+          	{/if}
           </td>
         </tr>
         <tr class="noborder">
@@ -162,6 +165,7 @@
           	
   			{foreach from=$documentList key=Key item=Item}
   			<li><label><input type="checkbox" name="other_id[]" value="{$Item['id']}" {if $inPost}{set_checkbox('other_id[]',$Item['id'])}{else}{if in_array($Item['id'],$info['other_id'])}checked="checked"{/if}{/if}/>{$Item['show_name']|escape}</label></li>
+  			
   			{/foreach}
 
           	</ul>

@@ -77,7 +77,7 @@ class Order extends Ydzj_Admin_Controller {
 		}
 		
 		if($search['add_username']){
-			$condition['like']['add_username'] = $search['add_username'];
+			$condition['where']['add_username'] = $search['add_username'];
 		}
 		
 		$list = $this->Order_Model->getList($condition);

@@ -21,9 +21,6 @@ class Order_baojie_refund extends Weixin_refund {
 	 */
 	public function customHandle($pRefundOrder,$refundResp){
 		
-		file_put_contents('callback_refund.txt',print_r($pRefundOrder,true),FILE_APPEND);
-		file_put_contents('callback_refund.txt',print_r($refundResp,true),FILE_APPEND);
-		
 		try {
 			
 			$this->commonOrderUpdate($pRefundOrder['order_id'],$refundResp);

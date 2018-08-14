@@ -424,7 +424,7 @@ class Wuye_service extends Base_service {
 	public function getYezhuHouseDetail($houseId,$pYezhu = array()){
 		
 		$condition = array(
-			'select' => 'id,resident_id,address,jz_area,lng,lat,wuye_expire,nenghao_expire',
+			'select' => 'id,resident_id,address,jz_area,yezhu_name,lng,lat,wuye_expire,nenghao_expire',
 			'where' => array(
 				'id' => $houseId,
 			)

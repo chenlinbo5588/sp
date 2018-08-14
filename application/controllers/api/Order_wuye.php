@@ -40,7 +40,6 @@ class PayNotifyCallBack extends WxPayNotify
 	//重写回调处理函数
 	public function NotifyProcess($data, &$msg)
 	{
-		file_put_contents('wuye_callback.txt',print_r($data,true));
 		$notfiyOutput = array();
 		
 		if(!array_key_exists("transaction_id", $data)){
@@ -65,7 +64,6 @@ class PayNotifyCallBack extends WxPayNotify
 		}
 		
 		
-		file_put_contents('wuye_callback.txt',print_r($orderInfo,true),FILE_APPEND);
 		
 		//启用事务
 		$this->_ci->Order_Model->beginTrans();
@@ -90,7 +88,6 @@ class PayNotifyCallBack extends WxPayNotify
 					break;
 			}
 			
-			file_put_contents('wuye_callback.txt',print_r($feeInfo,true),FILE_APPEND);
 			
 			$this->_ci->House_Model->updateByWhere(array(
 				$updateKey => $feeInfo['newEndTimeStamp'],

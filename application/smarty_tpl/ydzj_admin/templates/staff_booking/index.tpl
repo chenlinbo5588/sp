@@ -102,10 +102,10 @@
     </table>
     <div class="fixedOpBar">
     	<label><input type="checkbox" class="checkall" id="checkallBottom" name="chkVal">全选</label>&nbsp;
-       	<a href="javascript:void(0);" class="btn verifyBtn" data-title="取消预约" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/batchCancel')}" data-ajaxformid="#verifyForm"><span>取消预约</span></a>
-       	<a href="javascript:void(0);" class="btn verifyBtn" data-title="恢复预约" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/batchRestore')}" data-ajaxformid="#verifyForm"><span>恢复预约</span></a>
+       	<a href="javascript:void(0);" class="btn verifyBtn" data-title="取消预约" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/batch_cancel')}" data-ajaxformid="#verifyForm"><span>取消预约</span></a>
+       	<a href="javascript:void(0);" class="btn verifyBtn" data-title="恢复预约" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/batch_restore')}" data-ajaxformid="#verifyForm"><span>恢复预约</span></a>
        	<a href="javascript:void(0);" class="btn verifyBtn" data-title="发送提醒" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/remind')}" data-ajaxformid="#verifyForm"><span>提醒</span></a>
-   		<a href="javascript:void(0);" class="btn verifyBtn" data-title="选择更改的状态" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/changeState')}" data-ajaxformid="#verifyForm"><span>更改状态</span></a>
+   		<a href="javascript:void(0);" class="btn verifyBtn" data-title="选择更改的状态" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/change_state')}" data-ajaxformid="#verifyForm"><span>更改状态</span></a>
     </div>
   </form>
   <div id="verifyDlg"></div>

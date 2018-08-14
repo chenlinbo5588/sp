@@ -74,7 +74,7 @@
          <td>{$item['address']|escape}</td>
          <td>
           	<p>
-          		<a href="{admin_site_url('worker/edit')}?id={$item['worker_id']}">人员信息</a> |
+          		<a href="{admin_site_url('worker/detail')}?id={$item['worker_id']}">人员信息</a> |
           		{if $statusConfig[$item['status']] == '待审核'}<a href="{admin_site_url($moduleClassName|cat:'/single_verify')}?id={$item['id']}">审核</a> |{/if}
           		<a href="{admin_site_url($moduleClassName|cat:'/detail')}?id={$item['id']}">详情</a> | 
           		<a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}">编辑</a>

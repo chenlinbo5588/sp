@@ -29,8 +29,6 @@
           <th>{#customer_name#}</th>
           <th>{#mobile#}</th>
           <th>{#order_typename#}</th>
-          <th>{#pay_channel#}</th>
-          <th>{#pay_method#}</th>
           <th>{#amount#}(元)</th>
           <th>{#refund_amount#}</th>
           <th>{#refund_cnt#}</th>
@@ -51,8 +49,6 @@
           <td>{$item['username']}</td>
           <td>{$item['mobile']}</td>
           <td>{$item['order_typename']}{if $item['is_refund']}退款{/if}</td>
-          <td>{$item['pay_channel']}</td>
-          <td>{$item['pay_method']}</td> 
           <td>{$item['amount']/100}</td>
           <td>{$item['refund_amount']/100}</td>
           <td>{$item['refund_cnt']}</td>

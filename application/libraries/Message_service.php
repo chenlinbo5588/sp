@@ -373,7 +373,7 @@ class Message_service extends Base_service {
 	 * 更新用户 最新的站内新
 	 */
 	public function getLastestSysPm($userProfile,$uid){
-		//file_put_contents('debug.txt',print_r($userProfile,true));
+		
 		$list = $this->_siteMessageModel->getList(array(
 			'where' => array(
 				'id > ' => intval($userProfile['basic']['msgid']),

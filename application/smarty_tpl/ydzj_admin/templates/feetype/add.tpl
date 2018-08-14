@@ -69,7 +69,7 @@
     </table>
   </form>
   <script type="text/javascript">
-	var submitUrl = [new RegExp("{$uri_string}")],searchUrl = "{admin_site_url($moduleClassName|cat:'/getResidentName')}";
+	var submitUrl = [new RegExp("{$uri_string}")],searchUrl = "{admin_site_url('resident/getResidentName')}";
   </script>
   <script type="text/javascript" src="{resource_url('js/wuye/feetype.js',true)}"></script>
 {include file="common/main_footer.tpl"}

@@ -21,8 +21,6 @@ class Order_wuye_refund extends Weixin_refund {
 	 */
 	public function customHandle($pRefundOrder,$refundResp){
 		
-		file_put_contents('callback_refund.txt',print_r($pRefundOrder,true),FILE_APPEND);
-		file_put_contents('callback_refund.txt',print_r($refundResp,true),FILE_APPEND);
 		
 		try {
 			
@@ -71,7 +69,9 @@ class Order_wuye_refund extends Weixin_refund {
 				return false;
 			}
 			
+			
 			return $this->_ci->Order_Model->commitTrans();
+			
 			
 			
 		}catch(Exception $e){

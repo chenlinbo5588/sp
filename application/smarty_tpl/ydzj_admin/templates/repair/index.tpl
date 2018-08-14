@@ -43,7 +43,7 @@
           <th>{#worker_name#}</th>
           <th>{#worker_mobile#}</th>
           <th>{#gmt_create#}</th>
-          <th class="w72 align-center">操作</th>
+          <th class="align-center">操作</th>
         </tr>
       </thead>
       <tbody>

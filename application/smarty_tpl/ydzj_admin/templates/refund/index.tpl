@@ -30,8 +30,6 @@
           <th>{#customer_name#}</th>
           <th>{#mobile#}</th>
           <th>{#order_typename#}</th>
-          <th>{#pay_channel#}</th>
-          <th>{#pay_method#}</th>
           <th>{#goods_name#}</th>
           <th>{#old_amount#}(元)</th>
           <th>{#status#}</th>
@@ -52,8 +50,6 @@
           <td>{$item['username']}</td>
           <td>{$item['mobile']}</td>
           <td>{$item['order_typename']}{if $item['is_refund']}退款{/if}</td>
-          <td>{$item['pay_channel']}</td>
-          <td>{$item['pay_method']}</td> 
           <td>{$item['goods_name']}</td>
           <td>{{$item['amount']}/100}</td>
           <td>{$OrderStatus[$item['status']]}</td>      

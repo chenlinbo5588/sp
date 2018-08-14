@@ -23,6 +23,7 @@ class Worker extends Ydzj_Admin_Controller {
 		$this->_subNavs = array(
 			array('url' => $this->_className.'/index','title' => '管理'),
 			array('url' => $this->_className.'/add','title' => '新增'),
+			array('url' => $this->_className.'/recylebin','title' => '回收站'),
 			array('url' => $this->_className.'/import','title' => '导入'),
 			array('url' => $this->_className.'/export','title' => '导出'),
 		);
@@ -30,13 +31,21 @@ class Worker extends Ydzj_Admin_Controller {
 		$this->assign('basicData',$this->basic_data_service->getBasicDataList());
 	}
 	
-	public function index(){
-		
+	
+	
+	private function _searchCondition($moreCondition = array()){
 		
 		$currentPage = $this->input->get_post('page') ? $this->input->get_post('page') : 1;
 	
+	
+		$where = array();
+		
+		if(!empty($moreCondition['where'])){
+			$where = array_merge(array(),$moreCondition['where']);
+		}
+	
 		$condition = array(
-			'where' => array(),
+			'where' => $where,
 			'order' => 'id DESC',
 			'pager' => array(
 				'page_size' => config_item('page_size'),
@@ -53,15 +62,43 @@ class Worker extends Ydzj_Admin_Controller {
 			$condition['like']['name'] = $name;
 		}
 		
-		
 		$list = $this->Worker_Model->getList($condition);
 		
 		$this->assign('list',$list);
 		$this->assign('page',$list['pager']);
 		$this->assign('currentPage',$currentPage);
+	}
+	
+	
+	/**
+	 * 
+	 */
+	public function index(){
+		
+		$this->_searchCondition(array(
+			'where' => array(
+				'status !=' => StaffStatus::$recylebin
+			)
+		));
 		
 		$this->display();
 	}
+	
+	
+	/**
+	 * 
+	 */
+	public function recylebin(){
+		
+		$this->_searchCondition(array(
+			'where' => array(
+				'status' => StaffStatus::$recylebin
+			)
+		));
+		
+		$this->display($this->_className.'/index');
+	}
+	
 	
 	
 	
@@ -541,6 +578,7 @@ class Worker extends Ydzj_Admin_Controller {
 			
 			$this->assign('image_width',$width);
 			$this->assign('image_height',$height);
+			
 			$this->assign('formUrl', admin_site_url($this->_className.'/pic_cut'));
 			$this->display('common/pic_cut');
 		}

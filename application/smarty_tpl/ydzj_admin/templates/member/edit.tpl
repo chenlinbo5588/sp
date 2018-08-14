@@ -78,6 +78,7 @@
           <td class="vatop rowform"><input type="text" {if $inpost}value="{set_value('member_weixin')}"{else}value="{$info['weixin']}"{/if} id="member_weixin" name="member_weixin" class="txt"></td>
           <td class="vatop tips"></td>
         </tr>
+        {*
         <tr>
           <td colspan="2" class="required"><label>头像:</label></td>
         </tr>
@@ -88,6 +89,7 @@
             </td>
           <td class="vatop tips">支持格式jpg</td>
         </tr>
+        *}
         <tr>
           <td colspan="2" class="required"><label>允许发表言论:</label>{form_error('allowtalk')}</td>
         </tr>
@@ -139,11 +141,7 @@
       </tfoot>
     </table>
   </form>
-<script type="text/javascript" src="{resource_url('js/dialog/dialog.js')}" id="dialog_js"></script>
-<script type="text/javascript" src="{resource_url('js/jquery-ui/jquery.ui.js')}"></script>
 
 
-{include file="common/jcrop.tpl"}
-{include file="member/member_common.tpl"}
 
 {include file="common/main_footer.tpl"}

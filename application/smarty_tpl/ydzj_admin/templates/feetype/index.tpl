@@ -23,7 +23,7 @@
           <th>{#year#}</th>
           <th>{#resident_name#}</th>
           <th>{#price#}</th>
-          <th class="w72 align-center">操作</th>
+          <th class="align-center">操作</th>
         </tr>
       </thead>
       <tbody>

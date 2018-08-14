@@ -21,6 +21,7 @@ class MY_Controller extends CI_Controller {
 	
 	public $lastUrl = '';
 	
+	
 	public $_seo = array(
 		'SEO_title' => '',
 		'SEO_description' => '',
@@ -369,6 +370,16 @@ class MY_Controller extends CI_Controller {
     	
     	
     	//echo $realPath;
+    	foreach($this->_subNavs as $navIndex => $subNavItem){
+    		$subNavItem['checkUrl'] = $subNavItem['url'];
+    		
+    		if(strpos($subNavItem['url'],'?') !== false){
+    			$subNavItem['checkUrl'] = substr($subNavItem['url'],0,strpos($subNavItem['url'],'?'));
+    		}
+    		
+    		$this->_subNavs[$navIndex] = $subNavItem;
+    		
+    	}
     	
     	$this->assign(array(
 			'subNavs' => $this->_subNavs,

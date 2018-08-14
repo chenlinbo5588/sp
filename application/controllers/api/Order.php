@@ -145,19 +145,13 @@ class Order extends Wx_Controller {
 						//@todo 修改金额
 						$this->postJson['amount'] = mt_rand(1,3);
 					}else{
-						$this->postJson['amount'] = intval($this->_getSiteSetting('service_prepay_amount')) * 100;
+						$this->postJson['amount'] = mt_rand(1,3);
+						
+						//$this->postJson['amount'] = intval($this->_getSiteSetting('service_prepay_amount')) * 100;
 					}
 				}
 				
-				
-				file_put_contents('baojie.txt',print_r($this->sessionInfo,true));
-				file_put_contents('baojie.txt',print_r($this->memberInfo,true),FILE_APPEND);
-				file_put_contents('baojie.txt',print_r($this->yezhuInfo,true),FILE_APPEND);
-				file_put_contents('baojie.txt',print_r($this->postJson,true),FILE_APPEND);
-				
 				$callPayJson = $this->order_service->createWeixinOrder($this->postJson);
-				
-				file_put_contents('baojie.txt',print_r($callPayJson,true),FILE_APPEND);
 				
 				if($callPayJson){
 					$this->jsonOutput2(RESP_SUCCESS,$callPayJson);
@@ -308,19 +302,14 @@ class Order extends Wx_Controller {
 						//@todo 修改金额
 						$this->postJson['amount'] = mt_rand(1,3);
 					}else{
-						$this->postJson['amount'] = intval($this->_getSiteSetting('service_prepay_amount')) * 100;
+						//@TODO 打开
+						$this->postJson['amount'] = mt_rand(1,3);
+						//$this->postJson['amount'] = intval($this->_getSiteSetting('service_prepay_amount')) * 100;
 					}
 				}
 				
 				
-				file_put_contents('staff.txt',print_r($this->sessionInfo,true));
-				file_put_contents('staff.txt',print_r($this->memberInfo,true),FILE_APPEND);
-				file_put_contents('staff.txt',print_r($this->yezhuInfo,true),FILE_APPEND);
-				file_put_contents('staff.txt',print_r($this->postJson,true),FILE_APPEND);
-				
 				$callPayJson = $this->order_service->createWeixinOrder($this->postJson);
-				
-				file_put_contents('staff.txt',print_r($callPayJson,true),FILE_APPEND);
 				
 				if($callPayJson){
 					$this->jsonOutput2(RESP_SUCCESS,$callPayJson);
@@ -464,19 +453,16 @@ class Order extends Wx_Controller {
 						//@todo 修改金额
 						$this->postJson['amount'] = mt_rand(1,3);
 					}else{
+						$this->postJson['amount'] = mt_rand(1,3);
 						//计算金额
-						$this->postJson['amount'] = intval(100 * $this->wuye_service->computeHouseFee($currentHouseFeeExpire));
+						//$this->postJson['amount'] = intval(100 * $this->wuye_service->computeHouseFee($currentHouseFeeExpire));
 					}
 				}
 				
 				
-				file_put_contents('wuye.txt',print_r($this->sessionInfo,true));
-				file_put_contents('wuye.txt',print_r($this->yezhuInfo,true),FILE_APPEND);
-				file_put_contents('wuye.txt',print_r($this->postJson,true),FILE_APPEND);
 				
 				$callPayJson = $this->order_service->createWeixinOrder($this->postJson);
 				
-				file_put_contents('wuye.txt',print_r($callPayJson,true),FILE_APPEND);
 				
 				if($callPayJson){
 					$this->jsonOutput2(RESP_SUCCESS,$callPayJson);
@@ -708,8 +694,6 @@ class Order extends Wx_Controller {
 				}
 				
 				//$param['notify_url'] = site_url(Order_service::$orderType['nameKey'][$orderInfo['order_typename']]['refund_url']);
-				file_put_contents('callback_refund.txt',print_r($param,true));
-				file_put_contents('callback_refund.txt',print_r($orderInfo,true),FILE_APPEND);
 				
 				$isNewRefund = true;
 				

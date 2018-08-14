@@ -90,7 +90,7 @@ class Wuye extends Wx_Controller {
 					),
 					'order' => 'id DESC',
 					'limit' => 1,
-					'status' => RepairStatus::$accomplish
+					'status !=' => RepairStatus::$deleted
 				);
 				
       			

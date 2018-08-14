@@ -252,8 +252,8 @@ class Repair extends Ydzj_Admin_Controller{
 				
 				$ids = explode(',',$ids);	
 				$returnstatusVal = $this->wuye_service->changeRepairStatus($ids,RepairStatus::$accomplish,RepairStatus::$sendOrder,'status',array(
-					'worker_name2' => $this->input->post("worker_name"),
-					'worker_mobile2' => $this->input->post("worker_mobile")
+					'worker2_name' => $this->input->post("worker_name"),
+					'worker2_mobile' => $this->input->post("worker_mobile")
 				));
 				
 				

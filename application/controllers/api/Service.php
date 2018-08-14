@@ -71,9 +71,6 @@ class Service extends Wx_Controller {
 		$serveTypeName = $this->input->get_post('serviceTypeName');
 
 		
-		
-		//file_put_contents("search.txt",print_r($this->postJson,true));
-		
 		if($this->postJson){
 			
 			$orderKeys = $this->postJson['order'];
@@ -83,7 +80,7 @@ class Service extends Wx_Controller {
 			
 			if('价格' == $orderKeys['name']){
 				
-				if('升序' == $orderKeys['name']) {
+				if('升序' == $orderKeys['type']) {
 					$order = 'salary_amount ASC';
 				}
 				
@@ -128,6 +125,11 @@ class Service extends Wx_Controller {
 						
 			foreach($groupNameField as $groupKey => $groupNameField){
 				if($this->postJson['select'][$groupKey]){
+					if('服务区域' == $groupKey && in_array(167,$this->postJson['select'][$groupKey])){
+						//不限
+						continue;
+					}
+					
 					$whereIn[] = array('key' => $groupNameField ,'value' => $this->postJson['select'][$groupKey]);
 				}
 			}
@@ -144,12 +146,19 @@ class Service extends Wx_Controller {
 			
 			if(!empty($this->postJson['select']['年龄'])){
 				
-				if(isset($this->postJson['select']['年龄']['minage'])){
-					$searchKeys['where']['age >='] = intval($this->postJson['select']['年龄']['minage']);
+				if(!empty(trim($this->postJson['select']['年龄']['minage']))){
+					$searchKeys['where']['age >='] = intval(trim($this->postJson['select']['年龄']['minage']));
 				}
 				
-				if(isset($this->postJson['select']['年龄']['maxage'])){
-					$searchKeys['where']['age <='] = intval($this->postJson['select']['年龄']['maxage']);
+				if(!empty(trim($this->postJson['select']['年龄']['maxage']))){
+					$searchKeys['where']['age <='] = intval(trim($this->postJson['select']['年龄']['maxage']));
+				}
+			}
+			
+			
+			if('护工' == $serveTypeName || '保姆' == $serveTypeName){
+				if(!empty($this->postJson['select'][$serveTypeName.'类型'][0])){
+					$searchKeys['where']['sub_type'] = $this->postJson['select'][$serveTypeName.'类型'][0];
 				}
 			}
 			
@@ -180,11 +189,8 @@ class Service extends Wx_Controller {
 			}
 		}
 		
-		//file_put_contents("search.txt",print_r($searchKeys,true),FILE_APPEND);
 		
 		$data = $this->staff_service->getStaffListByCondition($serveTypeName,$searchKeys);
-		
-		//file_put_contents("search.txt",print_r($data,true),FILE_APPEND);
 		
 		$this->jsonOutput2(RESP_SUCCESS,$data);
 	}

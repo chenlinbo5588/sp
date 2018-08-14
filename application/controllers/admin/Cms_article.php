@@ -121,7 +121,7 @@ class Cms_Article extends Ydzj_Admin_Controller {
 	
 	
 	/*
-	 * 未审核 列表
+	 * 草稿 列表
 	 */
 	public function draft(){
 		

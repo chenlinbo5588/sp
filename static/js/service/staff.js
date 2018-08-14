@@ -63,15 +63,18 @@ $(function(){
 		}
 	];
 	
-	for(var i = 0; i < uploadConfig.length; i++){
-		MySwfUploader(uploadConfig[i]);
-	}
 	
-	avatarUpload({
-		uploadId : '#avatarFile',
-		uploadUrl : commonUploadUrl,
-		cutUrl : cutUrl
-	});
+	if(inEdit == '1'){
+		for(var i = 0; i < uploadConfig.length; i++){
+			MySwfUploader(uploadConfig[i]);
+		}
+		
+		avatarUpload({
+			uploadId : '#avatarFile',
+			uploadUrl : commonUploadUrl,
+			cutUrl : cutUrl
+		});
+	}
 	
 	
 	KindEditor.ready(function(K) {

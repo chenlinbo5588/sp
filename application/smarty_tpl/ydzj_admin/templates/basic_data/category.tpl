@@ -47,13 +47,12 @@
   </form>
   <script type="text/javascript" src="{resource_url('js/jquery.edit.js')}"></script>
   <script type="text/javascript">
-  var configUrls = {
-  	'targetId' : '#listtable',
-  	'dataUrl' : "{admin_site_url($moduleClassName|cat:'/category')}",
-  	'inlineUrl' : "{admin_site_url($moduleClassName|cat:'/inline_edit')}"
-};
+  	var configUrls = {
+	  	'targetId' : '#listtable',
+	  	'dataUrl' : "{admin_site_url($moduleClassName|cat:'/category')}",
+	  	'inlineUrl' : "{admin_site_url($moduleClassName|cat:'/inline_edit')}"
+	};
 	
-
   </script>
-  <script type="text/javascript" src="{resource_url('js/service/tree_event.js')}"></script>
+  <script type="text/javascript" src="{resource_url('js/service/tree_event.js',true)}"></script>
 {include file="common/main_footer.tpl"}

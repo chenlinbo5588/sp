@@ -38,8 +38,8 @@
             position:'bottom-center',
             text: "<a href=\"" + this.pmUrl + "\" target=\"workspace\">您有新的消息，请点击查看</a>",
             icon: 'info',
-            hideAfter:5000,
-            bgColor: '#324DFF',
+            hideAfter:8000,
+            bgColor: '#f14e32',
             textColor: 'white',
             stack:1,
             loader:false

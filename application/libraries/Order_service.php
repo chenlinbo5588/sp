@@ -194,12 +194,10 @@ class Order_service extends Base_service {
 			
 			$refundResp = WxPayApi::refund($wxPayRefund);
 			
-			file_put_contents('weixin_refund.txt',print_r($pRefundOrder,true));
-			file_put_contents('weixin_refund.txt',print_r($refundResp,true),FILE_APPEND);
-			
+			//file_put_contents('weixinRefund.txt',print_r($refundResp,true));
 			
 			if(!$this->checkWeixinRespSuccess($refundResp)){
-				$message = $refundResp['err_code_des'];
+				$message = $refundResp['return_msg'];
 				return false;
 			}
 			
@@ -448,7 +446,7 @@ class Order_service extends Base_service {
 	 */
 	public function getOrderListByCondition($pCondition){
 		$condition = array(
-			'select' => 'order_id,order_type,order_typename,status,amount,time_start,time_expire',
+			'select' => 'order_id,order_type,order_typename,goods_name,status,amount,time_start,time_expire',
 		);
 		
 		$condition = array_merge($condition,$pCondition);

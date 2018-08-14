@@ -163,7 +163,9 @@ class Role extends Ydzj_Admin_Controller {
 		}
 		
 		
-		$list = $this->Fn_Model->getList();
+		$list = $this->Fn_Model->getList(array(
+			'order' => 'displayorder ASC, id ASC'
+		));
 		$fnTree = $this->phptree->makeTree($list,array(
 			'primary_key' => 'id',
 			'parent_key' => 'parent_id',
@@ -192,7 +194,7 @@ class Role extends Ydzj_Admin_Controller {
 			$limit_str = implode('|',$permisionArray);
 		}
 		
-		return $this->encrypt->encode($limit_str,config_item('encryption_key').md5($name));
+		return $this->encrypt->encode(strtolower($limit_str),config_item('encryption_key').md5($name));
 	}
 	
 	
@@ -217,8 +219,7 @@ class Role extends Ydzj_Admin_Controller {
 		
 		$id = $this->input->get_post('id');
 		
-		
-		$this->_subNavs['subNavs']['编辑角色'] = 'role/edit?id='.$id;
+		$this->_subNavs[] = array('url' => $this->_className.'/edit?id='.$id,'title' => '编辑');
 		
 		if($this->isPostRequest()){
 			$this->assign('ispost',true);
@@ -258,15 +259,16 @@ class Role extends Ydzj_Admin_Controller {
 		}
 		
 		
-		$list = $this->Fn_Model->getList();
+		$list = $this->Fn_Model->getList(array(
+			'order' => 'displayorder ASC, id ASC'
+		));
+		
 		$fnTree = $this->phptree->makeTree($list,array(
 			'primary_key' => 'id',
 			'parent_key' => 'parent_id',
 			'expanded' => true
 		));
 		
-		//print_r($fnTree);
-		//print_r($info['permission']);
 		
 		$this->assign('info',$info);
 		

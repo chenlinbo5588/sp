@@ -220,8 +220,7 @@ class User extends Ydzj_Admin_Controller {
 		
 		$info = $this->Adminuser_Model->getFirstByKey($id,'uid');
 		
-		
-		$this->_subNavs['subNavs']['编辑管理员'] = 'user/edit?uid='.$id;
+		$this->_subNavs[] = array('url' => $this->_className.'/edit?uid='.$id,'title' => '编辑');
 		
 		if($this->isPostRequest()){
 			$this->form_validation->set_rules('email','登陆名','required|valid_email|is_unique_not_self['.$this->Adminuser_Model->getTableRealName().".email.uid.{$id}]");

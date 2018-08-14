@@ -19,7 +19,7 @@
           <th class="w270">{#order_typename#}</th>
           <th class="align-center">{#enable#}</th>
           <th class="align-center">{#refund_verify#}</th>
-          <th class="w72 align-center">操作</th>
+          <th class="align-center">操作</th>
         </tr>
       </thead>
       <tbody>

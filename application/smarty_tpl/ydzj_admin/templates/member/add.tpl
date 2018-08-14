@@ -118,7 +118,6 @@
       </tfoot>
     </table>
   </form>
-{include file="member/member_common.tpl"}
 <script type="text/javascript">
 $(function(){
     

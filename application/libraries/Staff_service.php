@@ -757,21 +757,19 @@ class Staff_service extends Base_service {
 		
 		$searchAr[] = $this->_basicAssocDataTree[$pSearchTypeName]['children'][$pSearchTypeName.'薪资'];
 		$searchAr[] = $this->_basicAssocDataTree[$pSearchTypeName]['children'][$pSearchTypeName.'服务数量'];
+		$searchAr[] = $this->_basicAssocDataTree[$pSearchTypeName]['children'][$pSearchTypeName.'经验月份'];
 		
 		switch($pSearchTypeName){
 			case '月嫂':
-				$searchAr[] = $this->_basicAssocDataTree[$pSearchTypeName]['children'][$pSearchTypeName.'经验月份'];
 				$searchAr[] = $this->_basicAssocDataTree[$pSearchTypeName]['children']['双胞胎经验'];
 				$searchAr[] = $this->_basicAssocDataTree[$pSearchTypeName]['children']['早产儿经验'];
-				
 				break;
 			case '保姆':
 				//放置在第一个
 				array_unshift($searchAr,$this->_basicAssocDataTree[$pSearchTypeName]['children'][$pSearchTypeName.'类型']);
-				$searchAr[] = $this->_basicAssocDataTree[$pSearchTypeName]['children'][$pSearchTypeName.'经验'];
 				break;
 			case '护工':
-				$searchAr[] = $this->_basicAssocDataTree[$pSearchTypeName]['children'][$pSearchTypeName.'经验'];
+				array_unshift($searchAr,$this->_basicAssocDataTree[$pSearchTypeName]['children'][$pSearchTypeName.'类型']);
 				break;
 			default:
 				break;

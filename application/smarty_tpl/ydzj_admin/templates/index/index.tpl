@@ -313,6 +313,7 @@ $(function(){
 	            <ul>
 	              <li class="adminid" title="您好:{$manage_profile['basic']['username']|escape}">您好&nbsp;:&nbsp;<strong>{$manage_profile['basic']['username']|escape}</strong></li>
 	              <li><a href="{admin_site_url('my/profile')}" target="workspace" ><span>修改密码</span></a></li>
+	              <li><a href="{admin_site_url('pm/unread')}" target="workspace" ><span>消息中心</span></a></li>
 	              <li><a href="{admin_site_url('my/logout')}" title="退出"><span>退出</span></a></li>
 	              <li><a href="{base_url()}" target="_blank" title="{config_item('site_name')}"><span>{config_item('site_name')}</span></a></li>
 	            </ul>
@@ -322,23 +323,22 @@ $(function(){
 	          <nav id="nav" class="main-nav">
 	            <ul>
 	                <li><a class="link actived" id="nav_dashboard" href="javascript:void(0);" onclick="openItem('dashboard');"><span>控制台</span></a></li>
-					<li><a class="link" id="nav_setting" href="javascript:void(0);" onclick="openItem('setting');"><span>设置</span></a></li>
+					{if isset($permission['nav_setting'])}<li><a class="link" id="nav_setting" href="javascript:void(0);" onclick="openItem('setting');"><span>设置</span></a></li>{/if}
 					<li><a class="link" id="nav_my" href="javascript:void(0);" onclick="openItem('my');"><span>个人中心</span></a></li>
-					<li><a class="link" id="nav_member" href="javascript:void(0);" onclick="openItem('member');"><span>会员</span></a></li>
-					<li><a class="link" id="nav_service" href="javascript:void(0);" onclick="openItem('service');"><span>服务</span></a></li>
+					{if isset($permission['nav_member'])}<li><a class="link" id="nav_member" href="javascript:void(0);" onclick="openItem('member');"><span>会员</span></a></li>{/if}
+					{if isset($permission['nav_service'])}<li><a class="link" id="nav_service" href="javascript:void(0);" onclick="openItem('service');"><span>服务</span></a></li>{/if}
 					<li><a class="link" id="nav_wuye" href="javascript:void(0);" onclick="openItem('wuye');"><span>物业</span></a></li>
 					{*<li><a class="link" id="nav_team" href="javascript:void(0);" onclick="openItem('team');"><span>队伍</span></a></li>
 					<li><a class="link" id="nav_stadium" href="javascript:void(0);" onclick="openItem('stadium');"><span>场馆</span></a></li>
 					<li><a class="link" id="nav_game" href="javascript:void(0);" onclick="openItem('game');"><span>赛事</span></a></li>
 					<li><a class="link" id="nav_goods" href="javascript:void(0);" onclick="openItem('goods');"><span>商品</span></a></li>*}
-					<li><a class="link" id="nav_trade" href="javascript:void(0);" onclick="openItem('trade');"><span>交易</span></a></li>
+					{if isset($permission['nav_trade'])}<li><a class="link" id="nav_trade" href="javascript:void(0);" onclick="openItem('trade');"><span>交易</span></a></li>{/if}
 					{*<li><a class="link" id="nav_website" href="javascript:void(0);" onclick="openItem('website');"><span>网站</span></a></li>
 					<li><a class="link" id="nav_operation" href="javascript:void(0);" onclick="openItem('operation');"><span>运营</span></a></li>
 					<li><a class="link" id="nav_stat" href="javascript:void(0);" onclick="openItem('stat');"><span>统计</span></a></li>
 					<li><a class="link" id="nav_weixin" href="javascript:void(0);" onclick="openItem('weixin');"><span>微信营销</span></a></li>*}
-					<li><a class="link" id="nav_cms" href="javascript:void(0);" onclick="openItem('cms');"><span>CMS</span></a></li>
-					
-					<li><a class="link" id="nav_authority" href="javascript:void(0);" onclick="openItem('authority');"><span>权限</span></a></li>
+					{if isset($permission['nav_cms'])}<li><a class="link" id="nav_cms" href="javascript:void(0);" onclick="openItem('cms');"><span>CMS</span></a></li>{/if}
+					{if isset($permission['nav_authority'])}<li><a class="link" id="nav_authority" href="javascript:void(0);" onclick="openItem('authority');"><span>权限</span></a></li>{/if}
 	            </ul>
 	          </nav>
 	          <div class="loca"><strong>您的位置:</strong>
@@ -392,10 +392,10 @@ $(function(){
               <dl>
                 <dd>
                   <ol>
-                    <li><a href="javascript:void(0);" id="base_setting" onclick="openItem('base,setting,setting');">站点设置</a></li>
-                    <li><a href="javascript:void(0);" id="param_upload" onclick="openItem('param,upload,setting');">上传设置</a></li>
-                    <li><a href="javascript:void(0);" id="seoset_setting" onclick="openItem('seoset,setting,setting');">SEO设置</a></li>
-                    <li><a href="javascript:void(0);" id="email_message" onclick="openItem('email,message,setting');">消息通知</a></li>
+                    {if isset($permission['side_setting'])}<li><a href="javascript:void(0);" id="base_setting" onclick="openItem('base,setting,setting');">站点设置</a></li>{/if}
+                    {if isset($permission['side_upload'])}<li><a href="javascript:void(0);" id="param_upload" onclick="openItem('param,upload,setting');">上传设置</a></li>{/if}
+                    {if isset($permission['side_seo'])}<li><a href="javascript:void(0);" id="seoset_setting" onclick="openItem('seoset,setting,setting');">SEO设置</a></li>{/if}
+                    {if isset($permission['side_message'])}<li><a href="javascript:void(0);" id="email_message" onclick="openItem('email,message,setting');">消息通知</a></li>{/if}
                     {*
                     <li><a href="javascript:void(0);" id="system_payment" onclick="openItem('system,payment,setting');">支付方式</a></li>
                     <li><a href="javascript:void(0);" id="express_setting" onclick="openItem('express,setting,setting');">快递公司</a></li>
@@ -415,8 +415,8 @@ $(function(){
               <dl>
                 <dd>
                   <ol>
-                    <li><a href="javascript:void(0);" id="index_member" onclick="openItem('index,member,member');">会员</a></li>
-                    <li><a href="javascript:void(0);" id="index_notify" onclick="openItem('index,notify,member');">会员通知</a></li>
+                    {if isset($permission['side_member'])}<li><a href="javascript:void(0);" id="index_member" onclick="openItem('index,member,member');">会员</a></li>{/if}
+                    {if isset($permission['side_notify'])}<li><a href="javascript:void(0);" id="index_notify" onclick="openItem('index,notify,member');">会员通知</a></li>{/if}
                     {*<li><a href="javascript:void(0);" id="credits_member" onclick="openItem('credits,member,member');">积分管理</a></li>
                     <li><a href="javascript:void(0);" id="album_member" onclick="openItem('album,member,member');">会员相册</a></li>
                     <li><a href="javascript:void(0);" id="tag_member" onclick="openItem('tag,member,member');">会员标签</a></li>
@@ -431,13 +431,13 @@ $(function(){
               <dl>
                 <dd>
                   <ol>
-                    <li><a href="javascript:void(0);" id="category_basic_data" onclick="openItem('category,basic_data,service');">基础数据</a></li>
-                    <li><a href="javascript:void(0);" id="index_worker" onclick="openItem('index,worker,service');">家政从业人员</a></li>
-                    <li><a href="javascript:void(0);" id="index_yuesao" onclick="openItem('index,yuesao,service');">月嫂</a></li>
-                    <li><a href="javascript:void(0);" id="index_baomu" onclick="openItem('index,baomu,service');">保姆</a></li>
-                    <li><a href="javascript:void(0);" id="index_hugong" onclick="openItem('index,hugong,service');">护工</a></li>
-                    <li><a href="javascript:void(0);" id="base_service_setting" onclick="openItem('base,service_setting,service');">服务设置</a></li>
-                    <li><a href="javascript:void(0);" id="index_staff_booking" onclick="openItem('index,staff_booking,service');">预约单</a></li>
+                    {if isset($permission['side_basic_data'])}<li><a href="javascript:void(0);" id="category_basic_data" onclick="openItem('category,basic_data,service');">基础数据</a></li>{/if}
+                    {if isset($permission['side_worker'])}<li><a href="javascript:void(0);" id="index_worker" onclick="openItem('index,worker,service');">家政从业人员</a></li>{/if}
+                    {if isset($permission['side_yuesao'])}<li><a href="javascript:void(0);" id="index_yuesao" onclick="openItem('index,yuesao,service');">月嫂</a></li>{/if}
+                    {if isset($permission['side_baomu'])}<li><a href="javascript:void(0);" id="index_baomu" onclick="openItem('index,baomu,service');">保姆</a></li>{/if}
+                    {if isset($permission['side_hugong'])}<li><a href="javascript:void(0);" id="index_hugong" onclick="openItem('index,hugong,service');">护工</a></li>{/if}
+                    {if isset($permission['side_service_setting'])}<li><a href="javascript:void(0);" id="base_service_setting" onclick="openItem('base,service_setting,service');">服务设置</a></li>{/if}
+                    {if isset($permission['side_staff_booking'])}<li><a href="javascript:void(0);" id="index_staff_booking" onclick="openItem('index,staff_booking,service');">预约单</a></li>{/if}
 
                   </ol>
                 </dd>
@@ -449,13 +449,12 @@ $(function(){
               <dl>
                 <dd>
                   <ol>
-                    <li><a href="javascript:void(0);" id="index_yezhu" onclick="openItem('index,yezhu,wuye');">业主</a></li>
-                    <li><a href="javascript:void(0);" id="index_house" onclick="openItem('index,house,wuye');">房屋</a></li>
-                    <li><a href="javascript:void(0);" id="index_building" onclick="openItem('index,building,wuye');">建筑物</a></li>
-                    <li><a href="javascript:void(0);" id="index_resident" onclick="openItem('index,resident,wuye');">小区</a></li>
-                    <li><a href="javascript:void(0);" id="index_feetype" onclick="openItem('index,feetype,wuye');">費用管理</a></li>
-                    
-                    <li><a href="javascript:void(0);" id="index_repair" onclick="openItem('index,repair,wuye');">报修</a></li>
+                    {if isset($permission['side_yezhu'])}<li><a href="javascript:void(0);" id="index_yezhu" onclick="openItem('index,yezhu,wuye');">业主</a></li>{/if}
+                    {if isset($permission['side_house'])}<li><a href="javascript:void(0);" id="index_house" onclick="openItem('index,house,wuye');">房屋</a></li>{/if}
+                    {if isset($permission['side_building'])}<li><a href="javascript:void(0);" id="index_building" onclick="openItem('index,building,wuye');">建筑物</a></li>{/if}
+                    {if isset($permission['side_resident'])}<li><a href="javascript:void(0);" id="index_resident" onclick="openItem('index,resident,wuye');">小区</a></li>{/if}
+                    {if isset($permission['side_feetype'])}<li><a href="javascript:void(0);" id="index_feetype" onclick="openItem('index,feetype,wuye');">費用管理</a></li>{/if}
+                    {if isset($permission['side_repair'])}<li><a href="javascript:void(0);" id="index_repair" onclick="openItem('index,repair,wuye');">报修</a></li>{/if}
                   </ol>
                 </dd>
               </dl>
@@ -516,15 +515,15 @@ $(function(){
               <dl>
                 <dd>
                   <ol>
-                    <li><a href="javascript:void(0);" id="index_order" onclick="openItem('index,order,trade');">订单管理</a></li>
-                    <li><a href="javascript:void(0);" id="index_refund" onclick="openItem('index,refund,trade');">退款管理</a></li>
-                    <li><a href="javascript:void(0);" id="index_order_type" onclick="openItem('index,order_type,trade');">订单类型</a></li>
+                    {if isset($permission['side_order'])}<li><a href="javascript:void(0);" id="index_order" onclick="openItem('index,order,trade');">订单管理</a></li>{/if}
+                    {if isset($permission['side_refund'])}<li><a href="javascript:void(0);" id="index_refund" onclick="openItem('index,refund,trade');">退款管理</a></li>{/if}
+                    {if isset($permission['side_order_type'])}<li><a href="javascript:void(0);" id="index_order_type" onclick="openItem('index,order_type,trade');">订单类型</a></li>{/if}
                   </ol>
                 </dd>
               </dl>
             </li>
           </ul>
-          
+          {*
           <ul id="sort_website">
             <li>
               <dl>
@@ -535,18 +534,17 @@ $(function(){
                     <li><a href="javascript:void(0);" id="category_navigation" onclick="openItem('category,navigation,website');">导航管理</a></li>
                     <li><a href="javascript:void(0);" id="screenpic_web" onclick="openItem('screenpic,web,website');">首页管理</a></li>
                     <li><a href="javascript:void(0);" id="index_block" onclick="openItem('index,block,website');">板块管理</a></li>
-                    {*<li><a href="JavaScript:void(0);" id="index_tag" onclick="openItem('index,tag,website');">标签管理</a></li>
+                    <li><a href="JavaScript:void(0);" id="index_tag" onclick="openItem('index,tag,website');">标签管理</a></li>
                     <li><a href="JavaScript:void(0);" id="index_comment" onclick="openItem('index,comment,website');">评论管理</a></li>
                     <li><a href="javascript:void(0);" id="index_adv" onclick="openItem('index,adv,website');">广告管理</a></li>
-                    <li><a href="javascript:void(0);" id="index_recommend" onclick="openItem('index,recommend,website');">推荐位</a></li>*}
+                    <li><a href="javascript:void(0);" id="index_recommend" onclick="openItem('index,recommend,website');">推荐位</a></li>
                     
-                    {*<li><a href="javascript:void(0);" id="index_leavemsg" onclick="openItem('index,leavemsg,website');">客户留言</a></li>*}
+                    <li><a href="javascript:void(0);" id="index_leavemsg" onclick="openItem('index,leavemsg,website');">客户留言</a></li>
                   </ol>
                 </dd>
               </dl>
             </li>
           </ul>
-          
           <ul id="sort_operation">
             <li>
               <dl>
@@ -590,6 +588,7 @@ $(function(){
               </dl>
             </li>
           </ul>
+          
           <ul id="sort_weixin">
             <li>
               <dl>
@@ -602,17 +601,18 @@ $(function(){
               </dl>
             </li>
           </ul>
+          *}
           <ul id="sort_cms">
             <li>
               <dl>
                 <dd>
                   <ol>
-                    <li><a href="JavaScript:void(0);" id="index_cms_article" onclick="openItem('index,cms_article,cms');">CMS文章管理</a></li>
-                    <li><a href="JavaScript:void(0);" id="category_cms_article_class" onclick="openItem('category,cms_article_class,cms');">CMS文章分类</a></li>
-                    <li><a href="JavaScript:void(0);" id="index_cms" onclick="openItem('index,cms,cms');">CMS设置</a></li>
-                    {*<li><a href="JavaScript:void(0);" id="index_magazine" onclick="openItem('index,magazine,cms');">画报管理</a></li>
-                    <li><a href="JavaScript:void(0);" id="category_magazine" onclick="openItem('category,magazine,cms');">画报分类</a></li>
-                    <li><a href="JavaScript:void(0);" id="index_special" onclick="openItem('index,special,cms');">专题管理</a></li>*}
+                    {if isset($permission['side_cms_article'])}<li><a href="javascript:void(0);" id="index_cms_article" onclick="openItem('index,cms_article,cms');">CMS文章管理</a></li>{/if}
+                    {if isset($permission['side_cms_article_class'])}<li><a href="javascript:void(0);" id="category_cms_article_class" onclick="openItem('category,cms_article_class,cms');">CMS文章分类</a></li>{/if}
+                    {if isset($permission['side_cms'])}<li><a href="javascript:void(0);" id="index_cms" onclick="openItem('index,cms,cms');">CMS设置</a></li>{/if}
+                    {*<li><a href="javascript:void(0);" id="index_magazine" onclick="openItem('index,magazine,cms');">画报管理</a></li>
+                    <li><a href="javascript:void(0);" id="category_magazine" onclick="openItem('category,magazine,cms');">画报分类</a></li>
+                    <li><a href="javascript:void(0);" id="index_special" onclick="openItem('index,special,cms');">专题管理</a></li>*}
                     
                   </ol>
                 </dd>
@@ -624,9 +624,9 @@ $(function(){
               <dl>
                 <dd>
                   <ol>
-                    <li><a href="JavaScript:void(0);" id="index_user" onclick="openItem('index,user,authority');">管理员</a></li>
-                    <li><a href="JavaScript:void(0);" id="index_role" onclick="openItem('index,role,authority');">角色</a></li>
-                    {*<li><a href="JavaScript:void(0);" id="menu_authority" onclick="openItem('menu,authority,authority');">菜单</a></li>*}
+                    {if isset($permission['side_user'])}<li><a href="javascript:void(0);" id="index_user" onclick="openItem('index,user,authority');">用户</a></li>{/if}
+                    {if isset($permission['side_role'])}<li><a href="javascript:void(0);" id="index_role" onclick="openItem('index,role,authority');">角色</a></li>{/if}
+                    {*<li><a href="javascript:void(0);" id="menu_authority" onclick="openItem('menu,authority,authority');">菜单</a></li>*}
                   </ol>
                 </dd>
               </dl>

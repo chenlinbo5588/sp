@@ -8,16 +8,20 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 	
 	protected $_adminProfile = array() ;
 	protected $_adminUID = 0;
-	
-	
+
 	protected $_adminNewPm = 0;
+	
+	protected $_permission = array();
+	
+	
 	
 	public function __construct(){
 		parent::__construct();
 		
 		$this->form_validation->set_error_delimiters('<label class="error">','</label>');
 		$this->_initAdminLogin();
-		//$this->_checkPermission();
+		
+		$this->_checkPermission();
 		
 		$this->_adminUID = $this->_adminProfile['basic']['uid'];
 		
@@ -36,7 +40,6 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 		}
 		
 	}
-	
 	
 	/**
 	 * 更新用户站内信状态
@@ -88,30 +91,36 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 	
 	private function _checkPermission(){
         //print_r($this->_adminProfile);
-        $currentUri = $this->uri->uri_string();
-
+        
+        
         if($this->_adminProfile['basic']['group_id']){
             $roleInfo = $this->Role_Model->getFirstByKey($this->_adminProfile['basic']['group_id'],'id');
             $currentPer = $this->encrypt->decode($roleInfo['permission'],config_item('encryption_key').md5($roleInfo['name']));
-
+            
             if(trim($currentPer)){
                 $this->_permission = array_flip(explode('|',$currentPer));
             }
         }
+        
+        //print_r($this->_permission);
 
         //公共权限
         $this->_permission['admin'] = 1;
-        $this->_permission['admin/index'] = 1;
-        $this->_permission['admin/index/index'] = 1;
-        $this->_permission['admin/index/logout'] = 1;
-        $this->_permission['admin/index/nopermission'] = 1;
-        $this->_permission['admin/dashboard/welcome'] = 1;
-        $this->_permission['admin/dashboard/aboutus'] = 1;
+        $this->_permission['admin/'] = 1;
+        $this->_permission['index/index'] = 1;
+        $this->_permission['my/index'] = 1;
+        $this->_permission['my/logout'] = 1;
+        $this->_permission['my/profile'] = 1;
+        $this->_permission['my/check_newpm'] = 1;
+        $this->_permission['index/nopermission'] = 1;
+        
+        $this->_permission['dashboard/welcome'] = 1;
+        $this->_permission['dashboard/aboutus'] = 1;
 
         $this->assign('permission',$this->_permission);
         
-        if(!isset($this->_permission[$currentUri])){
-            //file_put_contents("deb.txt",$currentUri,FILE_APPEND);
+        
+        if(!isset($this->_permission[$this->_checkPermitUrl])){
             if($this->input->is_ajax_request()){
                 $this->responseJSON('没有足够的权限,请联系管理员');
             }else{

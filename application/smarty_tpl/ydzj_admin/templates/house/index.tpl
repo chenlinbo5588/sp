@@ -35,7 +35,7 @@
           <th>{#telephone#}</th>
           <th>{#wuye_expire#}</th>
           <th>{#nenghao_expire#}</th>
-          <th class="w72 align-center">操作</th>
+          <th class="align-center">操作</th>
         </tr>
       </thead>
       <tbody>

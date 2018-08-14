@@ -281,29 +281,20 @@ class Refund extends Ydzj_Admin_Controller {
 				$op =$this->input->get_post('op');
 				$this->order_service->setWeixinAppConfig(config_item('mp_xcxCswy'));
 				
-				$refundOrder = $this->order_service->getOrderInfoById($id);
 				
-				/*
-				if($refundOrder['verify_status'] != OrderVerify::$verifyOK){
-					$this->jsonOutput('订单未审核');
-					break;
-				}
-				*/
-				
-				
-				if($refundOrder['status'] != OrderStatus::$refounding){
+				if($info['status'] != OrderStatus::$refounding){
 					$this->jsonOutput('订单状态错误');
 					break;
 				}
 				
-				if($refundOrder['status'] == OrderStatus::$refounded){
+				if($info['status'] == OrderStatus::$refounded){
 					$this->jsonOutput('订单已退款完成');
 					break;
 				}
 				
 				
 				//业务处理
-				$filePath = Order_service::$orderType['nameKey'][$refundOrder['order_typename']]['refund_url'];
+				$filePath = Order_service::$orderType['nameKey'][$info['order_typename']]['refund_url'];
 				
 				if($filePath){
 					$fullPath = LIB_PATH.$filePath;
@@ -314,7 +305,7 @@ class Refund extends Ydzj_Admin_Controller {
 					
 					$message = '退款失败';
 					
-					$isOk = $this->order_service->requestWeixinRefund($refundOrder,$refundObj,$message);
+					$isOk = $this->order_service->requestWeixinRefund($info,$refundObj,$message);
 					
 					if(!$isOk){
 						$this->jsonOutput($message);

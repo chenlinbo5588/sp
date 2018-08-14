@@ -28,7 +28,7 @@ class Attachment extends Ydzj_Admin_Controller {
         if(0 === $_FILES['imgFile']['error']){
             $keyname = 'imgFile';
 		}
-        //file_put_contents("text.txt", print_r($_FILES,true));
+		
         $attachment = array(
             'filename'  => $_FILES[$keyname]['name'],
             'filesize'  => $_FILES[$keyname]['size'],

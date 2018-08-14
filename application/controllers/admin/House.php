@@ -940,6 +940,9 @@ class House extends Ydzj_Admin_Controller {
 		$id = $this->input->get_post('id');
 		$info = $this->House_Model->getFirstByKey($id);
 		
+		$this->_subNavs[] = array('url' => $this->_className.'/yezhu_change?id='.$id, 'title' => '业主入驻');
+		
+		
 		if($this->isPostRequest()){
 			
 			for($i = 0; $i < 1; $i++){

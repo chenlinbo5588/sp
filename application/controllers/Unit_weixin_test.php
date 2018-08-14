@@ -63,8 +63,6 @@ class Unit_Weixin_test extends Ydzj_Controller {
      * 其中$APPID$在最终信息推送时会替换成推送信息所属的已授权公众号的appid。
      */
     public function message(){
-        //file_put_contents("debug.txt",print_r($_GET,true));
-        //file_put_contents("debug.txt",print_r($_SERVER,true),FILE_APPEND);
         
         ///signature=ce40a74f36a702b9754b9b120623e1c749e81315&timestamp=1418015929&nonce=2097909623&encrypt_type=aes&msg_signature=0e35c960849aa61f38f73fae23bc9e667644dce9 
         

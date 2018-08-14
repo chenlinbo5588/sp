@@ -278,18 +278,15 @@ class Member extends Ydzj_Admin_Controller {
 	 */
 	public function edit(){
 		
-		$urlParam = $this->uri->uri_to_assoc();
-		$this->assign('id',$urlParam['edit']);
+		$id = $this->input->get_post('id');
 		
 		$this->load->library('Member_service');
-		$info = $this->member_service->getUserInfoById($urlParam['edit']);
+		$info = $this->member_service->getUserInfoById($id);
 		
-		//print_r($urlParam);
-		
-		if(!empty($urlParam['edit']) && $this->isPostRequest()){
+		if(!empty($id) && $this->isPostRequest()){
 			$this->assign('inpost',true);
 			
-			$this->form_validation->set_rules('member_nickname','昵称','min_length[3]|max_length[30]|is_unique_not_self['.$this->Member_Model->getTableRealName().'.nickname.uid.'.$urlParam['edit'].']');
+			$this->form_validation->set_rules('member_nickname','昵称','min_length[3]|max_length[30]|is_unique_not_self['.$this->Member_Model->getTableRealName().'.nickname.uid.'.$id.']');
 			
 			$password = $this->input->post('member_passwd');
 			$password2 =  $this->input->post('member_passwd2');
@@ -332,9 +329,8 @@ class Member extends Ydzj_Admin_Controller {
 					$updateData['password'] = $password;
 				}
 				
-				//print_r($updateData);
 				$this->load->library('Member_service');
-				$flag = $this->member_service->updateUserInfo($updateData,$urlParam['edit']);
+				$flag = $this->member_service->updateUserInfo($updateData,$id);
 				
 				if($flag >= 0){
 					if($aid && $info['aid']){
@@ -343,7 +339,7 @@ class Member extends Ydzj_Admin_Controller {
 						$this->attachment_service->deleteByFileUrl(array($info['avatar_middle'],$info['avatar_small']));
 					}
 					
-					$info = $this->member_service->getUserInfoById($urlParam['edit']);
+					$info = $this->member_service->getUserInfoById($id);
 					$this->assign('feedback','<div class="tip_success">保存成功</div>');
 				}else{
 					$this->assign('feedback','<div class="tip_error">保存失败</div>');

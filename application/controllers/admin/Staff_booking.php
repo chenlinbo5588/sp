@@ -148,7 +148,7 @@ class Staff_booking extends Ydzj_Admin_Controller {
 	/**
 	 * 批量取消预约
 	 */
-	public function batchCancel(){
+	public function batch_cancel(){
 		//@TOOD
 		//待加入微信通知
 		if($this->isPostRequest()){
@@ -187,7 +187,7 @@ class Staff_booking extends Ydzj_Admin_Controller {
 	/**
 	 * 批量恢复预约
 	 */
-	public function batchRestore(){
+	public function batch_restore(){
 		//@TOOD
 		//待加入微信通知
 		if($this->isPostRequest()){
@@ -226,7 +226,7 @@ class Staff_booking extends Ydzj_Admin_Controller {
 	/**
 	 * 更改状态
 	 */
-	public function changeState(){
+	public function change_state(){
 		
 		//@TOOD
 		//待加入微信通知
@@ -246,7 +246,7 @@ class Staff_booking extends Ydzj_Admin_Controller {
 				}
 				
 				if($returnVal < 1){
-					$this->jsonOutput('服务器发生错误,'.$op.'操作失败');
+					$this->jsonOutput($op.'操作失败,没有记录被更新');
 					break;
 				}
 				
@@ -266,7 +266,7 @@ class Staff_booking extends Ydzj_Admin_Controller {
 				)
 			));
 			
-			$this->display($this->_className.'/change_state');
+			$this->display();
 		}		
 	}
 	
@@ -328,7 +328,6 @@ class Staff_booking extends Ydzj_Admin_Controller {
 		
 		$where = array_merge($where,$moreWhere);
 		
-		
 		if($where){
 			return $this->Staff_Booking_Model->updateByCondition($updateData,array(
 				'where' => $where,
@@ -360,7 +359,7 @@ class Staff_booking extends Ydzj_Admin_Controller {
 			if($returnVal > 0){
 				$this->jsonOutput('提醒成功',array('jsReload' => true));
 			}else{
-				$this->jsonOutput('提醒失败',array('jsReload' => true));
+				$this->jsonOutput('已提醒,不能重复提醒',array('jsReload' => true));
 			}
 			
 		}else{

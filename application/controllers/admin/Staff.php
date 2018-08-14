@@ -34,9 +34,6 @@ abstract class Staff extends Ydzj_Admin_Controller {
 			array('url' => $this->_className.'/unverify','title' => '待审核'),
 			array('url' => $this->_className.'/verify','title' => '已审核'),
 			array('url' => $this->_className.'/published','title' => '已发布'),
-			
-			//@todo 待完成
-			array('url' => $this->_className.'/working','title' => '工作中'),
 			array('url' => $this->_className.'/recylebin','title' => '回收站'),
 			
 		);
@@ -189,17 +186,7 @@ abstract class Staff extends Ydzj_Admin_Controller {
 		$this->display($this->staffClass.'/index');
 		
 	}
-	/**
-	 * 工作中
-	 */
-	public function working(){
-		$this->_searchCondition(array(
-			'in_working' => 1
-		));
-		
-		$this->display($this->staffClass.'/index');
-		
-	}
+	
 	/**
 	 * 回收站
 	 */
@@ -707,6 +694,9 @@ abstract class Staff extends Ydzj_Admin_Controller {
 			$pageData['subTypeList'] = $basicData[$this->_moduleTitle]['children'][$this->_moduleTitle.'类型']['children'];
 			$pageData['gradeList'] = $basicData[$this->_moduleTitle]['children'][$this->_moduleTitle.'等级']['children'];
 		}
+		
+		//print_r($pageData);
+		
 		$this->assign($pageData);
 	}
 	

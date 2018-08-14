@@ -11,6 +11,11 @@ class Ydzj_Controller extends MY_Controller {
 	
 	public $_profile = array();
 	
+	
+	//检查权限路径
+	protected $_checkPermitUrl = '';
+	
+	
 	public function __construct(){
 		parent::__construct();
 		
@@ -28,31 +33,32 @@ class Ydzj_Controller extends MY_Controller {
      * 导航相关
      */
     protected function _navs(){
-		/*
-		$navs = $this->uri->rsegments;
-		
-		if($navs[1] == 'admin'){
-			$navs = array_slice($navs,1,3);
-		}
-		
-		//功能 url 访问路径
-	    $funcUrl = implode('/',$navs);
 	    
-	    print_r($_SERVER);
+	    //$currentUri = $_SERVER['REQUEST_URI'];
+	    $currentUri = $this->uri->uri_string();
+	    $this->_checkPermitUrl = $currentUri;
+	    
+	    
+	    /*
+	    if(preg_match("/^\/index.php/",$currentUri,$match)){
+	    	$this->_checkPermitUrl = substr($currentUri,11);
+	    }
+	    
+	    if(preg_match("/^\/index.php\/admin\//",$currentUri,$match)){
+	    	$this->_checkPermitUrl = substr($currentUri,17);
+	    }
 	    */
 	    
-	    $currentUri = $_SERVER['REQUEST_URI'];
-	    if(preg_match("/^\/index.php\/admin\//",$currentUri,$match)){
-	    	$currentUri = substr($currentUri,17);
+	    if('admin' != $this->_checkPermitUrl){
+		    if(preg_match("/^admin/",$currentUri,$match)){
+		    	$this->_checkPermitUrl = substr($currentUri,6);
+		    }
 	    }
 		
-		/*
-		if(strpos($currentUri,'?') !== false){
-			$currentUri = substr($currentUri,0,strpos($currentUri,'?'));
-		}
-		*/
+		$this->assign(array(
+			'permitUri' => strtolower($this->_checkPermitUrl)
+		));
 		
-	    $this->assign('currentUri',strtolower($currentUri));
 	}
 	
 	

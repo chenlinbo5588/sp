@@ -69,8 +69,6 @@ class Wx_Controller extends MY_Controller {
 		//微信用户
 		$weixinUser = $this->sessionInfo['weixin_user'];
 		
-		//file_put_contents('session.txt',$this->session->session_id."\n");
-		//file_put_contents('session.txt',print_r($this->session->all_userdata(),true),FILE_APPEND);
 		
 		if($weixinUser){
 			
@@ -91,8 +89,6 @@ class Wx_Controller extends MY_Controller {
 			
 			$this->postJson = array_merge($this->postJson,$weixinUser);
 			
-			//file_put_contents('session.txt',print_r($this->memberInfo,true),FILE_APPEND);
-			//file_put_contents('session.txt',print_r($this->yezhuInfo,true),FILE_APPEND);
 		}
 		
 	}

@@ -125,11 +125,13 @@
   <div id="avatarDlg"></div>
   {include file="common/ke.tpl"}
   {include file="common/fancybox.tpl"}
+  {if $editable}
   {include file="common/uploadify.tpl"}
   {include file="common/jcrop.tpl"}
+  {/if}
   <script type="text/javascript">
-  	var province_idcard = {$province_idcard}, remarkEditor, editable = "{$editable}";
-  	var cutUrl = '{admin_site_url($moduleClassName|cat:"/pic_cut")}?mod={$moduleClassName}&id={$info['id']}';
+  	var province_idcard = {$province_idcard}, remarkEditor, inEdit = "{$editable}";
+  	var cutUrl = '{admin_site_url($moduleClassName|cat:"/pic_cut")}?mod={$moduleClassName}&id={$info['id']}&resize=1';
   	
   	var uploadUrls = {
   		img :  {
@@ -152,6 +154,8 @@
 		},2000);
 	{/if}
   </script>
+  {if $editable}
   <script type="text/javascript" src="{resource_url('js/avatar_upload.js',true)}"></script>
+  {/if}
   <script type="text/javascript" src="{resource_url('js/service/worker.js',true)}"></script>
 {include file="common/main_footer.tpl"}

@@ -376,8 +376,8 @@ $config['sess_save_path'] = 'sp_sessions';
 //$config['sess_save_path'] = 'tcp://localhost:6379';
 $config['sess_match_ip'] = FALSE;
 
-//session 2 小时刷新
-$config['sess_time_to_update'] = 7200;
+//session one month 刷新
+$config['sess_time_to_update'] = 2592000;
 //重新生成后保留原session data
 $config['sess_regenerate_destroy'] = FALSE;
 

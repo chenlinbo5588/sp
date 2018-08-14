@@ -96,7 +96,7 @@
           </td>
           <td class="align-center w120">
             {if $item['inviter']}
-            <div class=""><a href="{admin_site_url('member/edit')}/{$item['inviter']}"><img src="{resource_url($inviterInfo[$item['inviter']]['avatar_small'])}" /></a></div>
+            <div class=""><a href="{admin_site_url('member/edit?id=')}{$item['inviter']}"><img src="{resource_url($inviterInfo[$item['inviter']]['avatar_small'])}" /></a></div>
             <p>{$inviterInfo[$item['inviter']]['mobile']}</p>
             {/if}
           </td>
@@ -104,7 +104,7 @@
           <td>{if 0 == $item['status']}正常{/if}</td>
           <td class="align-center">{if $item['allowtalk'] == 'N'}禁止{else}允许{/if}</td>
           <td class="align-center">{if $item['freeze'] == 'Y'}禁止{else}允许{/if}</td>
-          <td class="align-center"><a href="{admin_site_url('member/edit')}/{$item['uid']}">编辑</a> | <a href="{admin_site_url('notify/add?uid=')}{$item['uid']}">通知</a></td>
+          <td class="align-center"><a href="{admin_site_url('member/edit?id=')}{$item['uid']}">编辑</a> | <a href="{admin_site_url('notify/add?uid=')}{$item['uid']}">通知</a></td>
         </tr>
       {/foreach}
       </tbody>

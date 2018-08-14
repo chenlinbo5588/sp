@@ -20,7 +20,7 @@ function avatarUpload(pParam){
         	var jsonResp = $.parseJSON(data);
         	
         	var doCutFn = function(cutUrl,jsonResp){
-        		$.get(cutUrl , {url: jsonResp.url ,id: jsonResp.id , x: 200, y: 200 , resize: 0, ratio: 1} , function(html){
+        		$.get(cutUrl , {url: jsonResp.url ,id: jsonResp.id , x: 200, y: 200 , ratio: 1} , function(html){
             		$("#avatarDlg").html(html).dialog({
             			  title:"裁切头像",
     	  	    	      autoOpen: false,
