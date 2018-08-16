@@ -42,7 +42,7 @@ class Refund extends Ydzj_Admin_Controller {
 		$search['amount_e'] = $this->input->get_post('amount_e') ? $this->input->get_post('amount_e') : '';
 			
 		$search['mobile'] = $this->input->get_post('mobile') ? $this->input->get_post('mobile') : '';
-		$search['add_username'] = $this->input->get_post('add_username') ? $this->input->get_post('add_username') : '';
+		$search['username'] = $this->input->get_post('username') ? $this->input->get_post('username') : '';
 		$search = array_merge($search,$moreSearchVal);
 		
 		$condition = array(
@@ -73,8 +73,8 @@ class Refund extends Ydzj_Admin_Controller {
 			$condition['where']['mobile'] = $search['mobile'];
 		}
 		
-		if($search['add_username']){
-			$condition['like']['add_username'] = $search['add_username'];
+		if($search['username']){
+			$condition['where']['username'] = $search['username'];
 		}
 		
 		$list = $this->Order_Model->getList($condition);

@@ -36,6 +36,9 @@ class Article extends Ydzj_Controller {
 		}
 		
 		$this->seo($cmsArticleInfo['article_title']);
+		
+		$this->output->set_cache_header($cmsArticleInfo['gmt_modify'],3600);
+		
 		$this->assign(array(
 			'article' => $cmsArticleInfo
 		));

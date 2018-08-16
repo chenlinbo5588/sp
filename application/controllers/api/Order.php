@@ -427,9 +427,9 @@ class Order extends Wx_Controller {
 					
 					$this->postJson['order_type'] = Order_service::$orderType['nameKey'][$this->postJson['order_typename']]['id'];
 					
-					$this->postJson['uid'] = $this->yezhuInfo['uid'];
+					$this->postJson['uid'] = $this->memberInfo['uid'];
 					$this->postJson['add_username'] = $this->yezhuInfo['name'];
-					$this->postJson['username'] = $this->postJson['add_username'];
+					$this->postJson['username'] = $this->yezhuInfo['name'];
 					
 					//联系方式
 					$this->postJson['mobile'] = $this->yezhuInfo['mobile'];
@@ -439,6 +439,7 @@ class Order extends Wx_Controller {
 					
 					
 					$message = '订单创建失败';
+					
 					$this->load->model('House_Model');
 					
 					$houseInfo = $this->House_Model->getFirstByKey($this->postJson['house_id']);

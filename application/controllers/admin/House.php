@@ -52,8 +52,6 @@ class House extends Ydzj_Admin_Controller {
 			)
 		);
 		
-		
-		$search['name'] = $this->input->get_post('name');
 		$search['address'] = $this->input->get_post('address');
 		$search['resident_name'] = $this->input->get_post('resident_name');
 		$search['yezhu_name'] = $this->input->get_post('yezhu_name');
@@ -66,16 +64,15 @@ class House extends Ydzj_Admin_Controller {
 		if($search['wuye_expire_e']){
 			$condition['where']['wuye_expire <'] = strtotime($search['wuye_expire_e'])+86400;
 		}
-		if($search['name']){
-			$condition['like']['name'] = $search['name'];
-		}
 		
 		if($search['address']){
 			$condition['like']['address'] = $search['address'];
 		}
+		
 		if($search['yezhu_name']){
 			$condition['like']['yezhu_name'] = $search['yezhu_name'];
 		}
+		
 		if($search['resident_name']){
 			$resident_name = $search['resident_name'];
 			
@@ -960,18 +957,41 @@ class House extends Ydzj_Admin_Controller {
 				
 				$info = array_merge(array('yezhu_id' => $yezhuInfo['id'],'mobile' => $yezhuInfo['mobile'],'yezhu_name' => $yezhuInfo['name']),$this->addWhoHasOperated('edit'));
 				
-				$this->House_Model->update($info,array('id' => $id));
 				
-				$error = $this->House_Model->getError();
+				$memberInfo = $this->Member_Model->getFirstByKey($mobile,'mobile');
 				
-				if(QUERY_OK != $error['code']){
-					if($error['code'] == MySQL_Duplicate_CODE){
-						$this->jsonOutput($this->input->post('address').'已存在');
-					}else{
+				if($memberInfo){
+					$this->House_Model->beginTrans();
+					
+					$this->Member_Model->updateByWhere(array(
+						'username' => $yezhuInfo['name'],
+						'sex' => $yezhuInfo['sex'],
+					),array('mobile' => $mobile));
+					
+					$info['uid'] = $memberInfo['uid'];
+					
+					$this->House_Model->update($info,array('id' => $id));
+					
+					
+					if($this->House_Model->getTransStatus() === FALSE){
+						$this->House_Model->rollBackTrans();
+						
 						$this->jsonOutput('数据库错误,请稍后再次尝试');
+						
+						break;
+					}else{
+						$this->House_Model->commitTrans();
 					}
 					
-					break;
+				}else{
+					$this->House_Model->update($info,array('id' => $id));
+					
+					$error = $this->House_Model->getError();
+				
+					if(QUERY_OK != $error['code']){
+						$this->jsonOutput('数据库错误,请稍后再次尝试');
+						break;
+					}
 				}
 				
 				

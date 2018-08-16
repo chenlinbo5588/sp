@@ -139,7 +139,7 @@ class Wuye extends Wx_Controller {
       			$batchInsert = array();
       			foreach($filePaths as $key => $imgUrl){
       				$imgArray = getImgPathArray($imgUrl,array('m','b'),'image');
-      				$batchInsert[] = array_merge(array('repair_id' => $newRepairId,'uid' => $this->yezhuInfo['id']),$imgArray);
+      				$batchInsert[] = array_merge(array('repair_id' => $newRepairId,'uid' => $this->yezhuInfo['uid']),$imgArray);
       			}
       			
       			if($batchInsert){

@@ -33,17 +33,16 @@ $(document).ready(function(){
         iframe.height(h);
         iframe.width(w);
     }
+    
     pagestyle();
+    
     $(window).resize(pagestyle);
-    //turn location
-    if($.cookie('now_location_act') != null){
-        openItem($.cookie('now_location_op')+','+$.cookie('now_location_act')+','+$.cookie('now_location_nav'));
-    }else{
-        $('#mainMenu>ul').first().css('display','block');
-        //第一次进入后台时，默认定到欢迎界面
-        $('#welcome_dashboard').addClass('selected');            
-        $('#workspace').attr('src','{admin_site_url("dashboard/welcome")}');
-    }
+    
+    $('#mainMenu>ul').first().css('display','block');
+    //第一次进入后台时，默认定到欢迎界面
+    $('#welcome_dashboard').addClass('selected');            
+    $('#workspace').attr('src','{admin_site_url("dashboard/welcome")}');
+    
     $('#iframe_refresh').click(function(){
         var fr = document.frames ? document.frames("workspace") : document.getElementById("workspace").contentWindow;;
         fr.location.reload();
@@ -94,18 +93,9 @@ function openItem(args){
         first_obj = $('#sort_'+nav+'>li>dl>dd>ol>li').first().children('a');
         $(first_obj).addClass('selected');
         
-        $.cookie('now_location_nav',nav, { path: '/'});
-        $.cookie('now_location_act',act, { path: '/'});
-        $.cookie('now_location_op',op, { path: '/'});
-        
         //crumbs
         $('#crumbs').html('<span>'+$('#nav_'+nav+' > span').html()+'</span><span class="arrow">&nbsp;</span><span>'+$(first_obj).text()+'</span>'); 
     }else{
-	    //左侧菜单事件
-	    //location
-	    $.cookie('now_location_nav',nav,{ path: '/'});
-	    $.cookie('now_location_act',act,{ path: '/'});
-	    $.cookie('now_location_op',op, { path: '/'});
 	    
 	    $('#'+op+ '_' + act).addClass('selected');
 	    //crumbs

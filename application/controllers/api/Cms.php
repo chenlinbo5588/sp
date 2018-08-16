@@ -10,27 +10,6 @@ class Cms extends Wx_Controller {
     	
 	}
 	
-	
-	/**
-	 * 获得最新公告
-	 */
-	public function getTopNotify(){
-		$artileClassAssoc = $this->cms_service->getAssocDataTree();
-		$notify = $this->Cms_Article_Model->getList(array(
-			'select' => 'id,image_url,article_title',
-			'where' => array(
-				'ac_id' => $artileClassAssoc['通知公告']['id'],
-				'article_state' => CmsArticleStatus::$published
-			),
-			'order' => 'publish_time DESC',
-			'limit' => 1
-		));
-		
-
-		$notify = $this->editInformation($notify);
-		$this->jsonOutput2(RESP_SUCCESS,$notify);
-
-	}
 	/**
 	 * 获得首页信息
 	 */

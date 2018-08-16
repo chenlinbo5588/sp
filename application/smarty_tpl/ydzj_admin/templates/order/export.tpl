@@ -49,10 +49,10 @@
 	          <td class="vatop tips">选填</td>
 	        </tr>  
 			<tr class="noborder">
-	          <td colspan="2"><label for="add_username">{#customer_name#}:</label></td>
+	          <td colspan="2"><label for="username">{#customer_name#}:</label></td>
 	        </tr>
 	        <tr class="noborder">
-	          <td class="vatop rowform"><input class="txt" name="add_username" value="" type="text"></td>
+	          <td class="vatop rowform"><input class="txt" name="username" value="" type="text"></td>
 	          <td class="vatop tips">选填</td>
 	        </tr>
 	        <tr class="noborder">

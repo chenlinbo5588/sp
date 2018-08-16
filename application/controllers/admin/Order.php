@@ -45,7 +45,7 @@ class Order extends Ydzj_Admin_Controller {
 		$search['amount_e'] = $this->input->get_post('amount_e') ? $this->input->get_post('amount_e') : '';
 			
 		$search['mobile'] = $this->input->get_post('mobile') ? $this->input->get_post('mobile') : '';
-		$search['add_username'] = $this->input->get_post('add_username') ? $this->input->get_post('add_username') : '';
+		$search['username'] = $this->input->get_post('username') ? $this->input->get_post('username') : '';
 		$search = array_merge($search,$moreSearchVal);
 		
 		$condition = array(
@@ -76,8 +76,8 @@ class Order extends Ydzj_Admin_Controller {
 			$condition['where']['mobile'] = $search['mobile'];
 		}
 		
-		if($search['add_username']){
-			$condition['where']['add_username'] = $search['add_username'];
+		if($search['username']){
+			$condition['where']['username'] = $search['username'];
 		}
 		
 		$list = $this->Order_Model->getList($condition);
@@ -325,24 +325,24 @@ class Order extends Ydzj_Admin_Controller {
     		
     		try {
     			
-    			$search = $this->input->post(array('status','order_id','order_typename','add_username','mobile','order_time_s','order_time_e','old_amount_s','old_amount_e','page'));
+    			$search = $this->input->post(array('status','order_id','order_typename','username','mobile','order_time_s','order_time_e','old_amount_s','old_amount_e','page'));
+				
 				if($search['status']){
 					$condition['where_in'][] = array('key' => 'status', 'value' => $search['status']);
 				}
+				
     			if($search['order_typename']){
     				$condition['where']['order_typename'] = $search['order_typename'];
     			}
     			if($search['order_id']){
     				$condition['where']['order_id'] = $search['order_id'];
     			}
-				$MemberUid=$this->Member_Model->getById(array(
-					'where' => array(
-						'username' => $search['add_username']
-					)
-				));
-    			if($MemberUid['uid']){
-    				$condition['where']['uid'] = $MemberUid['uid'];
+    			
+    			
+    			if($search['username']){
+    				$condition['where']['username'] = $search['username'];
     			}
+    			
     			if($search['mobile']){
     				$condition['where']['mobile'] = $search['mobile'];
     			}
