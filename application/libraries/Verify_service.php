@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Verify_service extends Base_service {
 
 	protected $_verifyCodeLogModel;
-	protected $_expiredSeconds = 600;
+	protected $_expiredSeconds = 60;
 
 	public function __construct(){
 		parent::__construct();

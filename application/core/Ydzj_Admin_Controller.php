@@ -152,6 +152,8 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
         $this->_permission['dashboard/welcome'] = 1;
         $this->_permission['dashboard/aboutus'] = 1;
         
+        $this->_permission['common/pic_upload'] = 1;
+        
         //ajax autocomplete url start
         $this->_permission['house/getaddress'] = 1;
         $this->_permission['yezhu/getyezhuinfo'] = 1;

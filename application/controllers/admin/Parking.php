@@ -349,7 +349,7 @@ class Parking extends Ydzj_Admin_Controller {
 		}
 		
 		if($residentName == $name){
-			$this->form_validation->set_message('checkName',$this->_moduleTitle.'名称不能和小区名称相同');
+			$this->form_validation->set_message('checkName2',$this->_moduleTitle.'名称不能和小区名称相同');
 			return false;
 		}
 		
@@ -630,7 +630,11 @@ class Parking extends Ydzj_Admin_Controller {
 						
 						
 						if($tmpRow['expire']){
-							$insertData['expire'] = strtotime($tmpRow['expire']);
+							$ts = strtotime($tmpRow['expire']);
+							
+							if($ts){
+								$insertData['expire'] = strtotime(date('Y-m',$ts).'  last day of this month');
+							}
 						}
 						
 						$yezhuInfo = $this->Yezhu_Model->getById(array(

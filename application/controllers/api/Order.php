@@ -371,7 +371,6 @@ class Order extends Wx_Controller {
 				$this->jsonOutput2($message);
 			}
 			
-			
 		}else{
 			
 			$this->jsonOutput2(UNBINDED,$this->unBind);

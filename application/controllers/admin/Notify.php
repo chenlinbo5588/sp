@@ -9,7 +9,7 @@ class Notify extends Ydzj_Admin_Controller {
 	public function __construct(){
 		parent::__construct();
 		
-		$this->load->library('Message_service');
+		$this->load->library('Admin_pm_service');
 		
 		$this->_msgModel = array(
 			'不指定',
@@ -44,7 +44,7 @@ class Notify extends Ydzj_Admin_Controller {
 		$search['gmt_create_s'] = $this->input->get_post('gmt_create_s') ? $this->input->get_post('gmt_create_s') : '';
 		$search['gmt_create_e'] = $this->input->get_post('gmt_create_e') ? $this->input->get_post('gmt_create_e') : '';
 		
-		$groupList = $this->message_service->getAllMemberGroup();
+		$groupList = $this->admin_pm_service->getAllGroup();
 		$keyedGroupList = array();
 		
 		foreach($groupList as $group){
@@ -52,7 +52,9 @@ class Notify extends Ydzj_Admin_Controller {
 		}
 		
 		$condition = array(
-			'where' => array(),
+			'where' => array(
+				'msg_type !=' => AdminPmStatus::TRANS_PM
+			),
 			'order' => 'id DESC',
 			'pager' => array(
 				'page_size' => config_item('page_size'),
@@ -96,7 +98,7 @@ class Notify extends Ydzj_Admin_Controller {
 	
 	public function add(){
 		
-		$groupList = $this->message_service->getAllMemberGroup();
+		$groupList = $this->admin_pm_service->getAllGroup();
 		$feedback = '';
 		
 		$info = array();
@@ -171,7 +173,7 @@ class Notify extends Ydzj_Admin_Controller {
 					$data['users'] = json_encode(array());
 				}
 				
-				$this->message_service->addSitePmMessage($data);
+				$this->admin_pm_service->addSitePmMessage($data);
 				$error = $this->Site_Message_Model->getError();
 				
 				if(QUERY_OK != $error['code']){
@@ -190,6 +192,7 @@ class Notify extends Ydzj_Admin_Controller {
 		
 		$info['msg_mode'] = 0;
 		$info['send_ways'] = array('站内信');
+		$info['groups'] = array();
 		
 		if($memberInfo){
 			$info['msg_mode'] = 1;
@@ -212,7 +215,7 @@ class Notify extends Ydzj_Admin_Controller {
 	
 	public function detail(){
 		
-		$groupList = $this->message_service->getAllMemberGroup();
+		$groupList = $this->admin_pm_service->getAllGroup();
 		$id = $this->input->get_post('id');
 		$info = $this->Site_Message_Model->getFirstByKey($id);
 		

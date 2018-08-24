@@ -20,7 +20,6 @@ $entity = array(
 'verify_status' => 'tinyint',
 'goods_name' => 'varchar',
 'goods_id' => 'int',
-'goods_info' => 'text',
 'goods_tag' => 'varchar',
 'extra_info' => 'text',
 'currency' => 'varchar',

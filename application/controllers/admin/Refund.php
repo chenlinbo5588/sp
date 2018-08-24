@@ -241,13 +241,20 @@ class Refund extends Ydzj_Admin_Controller {
 		}
 		
 		$showSubmit = false;
-		
+				
 		if($info['verify_status'] == OrderVerify::$unVerify && $info['status'] == OrderStatus::$refounding){
 			$showSubmit = true;
+		}
+		
+		
+		$showExpire = false;
+		if(in_array($info['order_typename'],array('物业费','能耗费','车位费'))){
+			$showExpire = true;
 		}
 			
 		$this->assign(array(
 			'info' => $info,
+			'showExpire' => $showExpire,
 			'extraItem' => $this->order_service->extraInfoToArray($info),
 			'showSubmit' => $showSubmit,
 			'reasonList' => $this->basic_data_service->getTopChildList('退款原因'),

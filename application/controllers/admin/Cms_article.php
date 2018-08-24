@@ -649,17 +649,20 @@ class Cms_Article extends Ydzj_Admin_Controller {
 		if($id){
 			//如果在编辑页面
 			$rowsDelete = $this->Cms_Article_Model->updateByCondition(array(
-				'image_url' => '','image_url_m' => '' , 'image_url_s' => ''
+				'image_url' => ''
 			),array(
 				'where' => array(
 					'id' => $id,
 				)
 			));
-		}		
-		$fileList = getImgPathArray($imgUrl,array('b','m','s'));
+		}	
 		
 		
-		$this->attachment_service->deleteByFileUrl($fileList);
+		if($rowsDelete){
+			$fileList = getImgPathArray($imgUrl,array('b','m','s'));
+			$this->attachment_service->deleteByFileUrl($fileList);
+		}
+		
 		
 		
 		$this->jsonOutput('成功',$this->getFormHash());

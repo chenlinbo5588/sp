@@ -154,7 +154,7 @@ class House extends Ydzj_Admin_Controller {
 			}
 			
 			if($canDeleteIds){
-				$deleteRows = $this->Parking_Model->deleteByCondition(array(
+				$deleteRows = $this->House_Model->deleteByCondition(array(
 					'where_in' => array(
 						array('key' => 'id','value' => $canDeleteIds)
 					)
@@ -399,8 +399,6 @@ class House extends Ydzj_Admin_Controller {
 				}
 				
 				$updateInfo = array_merge($_POST,$this->_prepareData(),$this->addWhoHasOperated('edit'));
-				
-				print_r($updateInfo);
 				
 				foreach(array('wuye_expire','nenghao_expire') as $fieldName){
 					if($info[$fieldName] > $updateInfo[$fieldName]){
@@ -657,12 +655,12 @@ class House extends Ydzj_Admin_Controller {
 						
 						$ts1 = strtotime($tmpRow['wuye_expire']);
 						if($ts1){
-							$insertData['wuye_expire'] = $ts1;
+							$insertData['wuye_expire'] = strtotime(date('Y-m',$ts1).'  last day of this month');
 						}
 						
 						$ts2 = strtotime($tmpRow['nenghao_expire']);
 						if($ts2){
-							$insertData['nenghao_expire'] = $ts2;
+							$insertData['nenghao_expire'] = strtotime(date('Y-m',$ts2).'  last day of this month');
 						}
 						
 						if($tmpRow['mobile']){

@@ -294,7 +294,7 @@ class MY_Model extends CI_Model {
         
         foreach($param as $key => $value){
         	if(array_key_exists($key,$fields)){
-        		$data[$key] = $value;
+        		$data[$key] = trim($value);
         	}
         }
         

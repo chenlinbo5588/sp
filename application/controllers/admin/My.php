@@ -38,11 +38,18 @@ class My extends Ydzj_Admin_Controller {
 				$this->form_validation->set_rules('admin_rpassword','确认密码','required|matches[admin_password]');
 			}
 			
+			$admin_password = $this->input->post('admin_password');
+			$admin_rpassword = $this->input->post('admin_rpassword');
+			
+			if($admin_password || $admin_password){
+				$this->form_validation->set_rules('old_password','原密码','required|min_length[6]|max_length[12]|alpha_dash');
+			}
+			
 			
 			for($i = 0; $i < 1; $i++){
 				
 				if(!$this->form_validation->run()){
-					$feedback = $this->form_validation->error_string();
+					$feedback = getErrorTip($this->form_validation->error_string());
 					break;
 				}
 				

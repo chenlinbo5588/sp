@@ -93,11 +93,30 @@
           <td colspan="2"><label class="validation" for="mobile">{#mobile#}:</label></td>
         </tr>
         <tr class="noborder">
-          <td class="vatop rowform"><input type="text" value="{$info['mobile']}" name="mobile" id="mobile" class="txt"></td>
+          <td class="vatop rowform"><input type="text" value="{$info['mobile']|escape}" name="mobile" id="mobile" class="txt"></td>
           <td class="vatop tips">{form_error('mobile')}</td>
         </tr>
-        
-        
+        <tr class="noborder">
+          <td colspan="2"><label for="car_no1">{#car_no#}1:</label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform"><input type="text" value="{$info['car_no1']|escape}" name="car_no1" id="car_no1" class="txt"></td>
+          <td class="vatop tips">{form_error('car_no1')}</td>
+        </tr>
+        <tr class="noborder">
+          <td colspan="2"><label for="car_no1">{#car_no#}2:</label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform"><input type="text" value="{$info['car_no2']|escape}" name="car_no2" id="car_no2" class="txt"></td>
+          <td class="vatop tips">{form_error('car_no2')}</td>
+        </tr>
+        <tr class="noborder">
+          <td colspan="2"><label for="car_no1">{#car_no#}3:</label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform"><input type="text" value="{$info['car_no3']|escape}" name="car_no3" id="car_no3" class="txt"></td>
+          <td class="vatop tips">{form_error('car_no3')}</td>
+        </tr>
         <tr>
           <td colspan="2"><label>排序:</label></td>
         </tr>

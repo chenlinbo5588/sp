@@ -281,48 +281,46 @@ class Staff_booking extends Ydzj_Admin_Controller {
 		
 		//$where['status'] = 1;
 		$where = array();
+		$moreWhere = array();
 		
 		switch($param['op']){
 			case '取消预约':
-				$moreWhere = array('is_cancel' => 0);
+				$where = array('is_cancel' => 0);
 				$updateData['is_cancel'] = 1;
 				break;
 			case '恢复预约':
-				$moreWhere = array('is_cancel' => 1);
+				$where = array('is_cancel' => 1);
 				$updateData['is_cancel'] = 0;
 				break;
 			case '未碰面':
-				$moreWhere = array('is_cancel' => 0);
-				$where = array_merge($where,$moreWhere);
-				$moreWhere = array('meet_result' => BookingMeet::$unmeet);
+				$where = array('is_cancel' => 0);
+				//$moreWhere = array('meet_result' => BookingMeet::$unmeet);
 				$updateData['meet_result'] = BookingMeet::$unmeet;
 				break;
 			case '有意向':
-				$moreWhere = array('is_cancel' => 0);
-				$where = array_merge($where,$moreWhere);
-				$moreWhere = array('meet_result' => BookingMeet::$unmeet);
+				$where = array('is_cancel' => 0);
+				//$moreWhere = array('meet_result' => BookingMeet::$unmeet);
 				$updateData['meet_result'] = BookingMeet::$intention;
 				break;
 			case '预约完成':
-				$moreWhere = array('is_cancel' => 0);
-				$where = array_merge($where,$moreWhere);
-				$moreWhere = array('meet_result !=' => BookingMeet::$meetfail);
+				$where = array('is_cancel' => 0);
+				//$moreWhere = array('meet_result !=' => BookingMeet::$meetfail);
 				$updateData['meet_result'] = BookingMeet::$meetsuccess;
 				break;
 			case '预约失败':
-				$moreWhere = array('is_cancel' => 0);
-				$where = array_merge($where,$moreWhere);
-				$moreWhere = array('meet_result !=' => BookingMeet::$meetfail);
+				$where = array('is_cancel' => 0);
+				//$moreWhere = array('meet_result !=' => BookingMeet::$meetfail);
 				$updateData['meet_result'] = BookingMeet::$meetfail;
 				break;
 			case '提醒':
-				$moreWhere = array('is_notify' => 0);
+				$where = array('is_notify' => 0);
 				$updateData['is_notify'] = 1;
 				break;
 				
 			default:
 				break;
 		}
+		
 		$updateData = array_merge($updateData,$who);
 		$updateData['verify_time'] = $when;
 		

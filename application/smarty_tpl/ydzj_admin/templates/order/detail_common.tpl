@@ -72,15 +72,15 @@
        	{/if}
        	{if $showExpire}
        	<tr>
-   		  <td class="required">{if $info['is_refund']}原订单{/if}上次缴费到期时间: </td>
-          <td class="vatop rowform">{if $fee_old_expire}{$info['fee_old_expire']|date_format:"%Y-%m-%d"}{else}未缴费{/if}</td>      
+   		  <td class="required">{if $info['is_refund']}原订单{/if}上次{#fee_expire#}: </td>
+          <td class="vatop rowform">{if $info['fee_old_expire']}{$info['fee_old_expire']|date_format:"%Y-%m-%d"}{else}未缴费{/if}</td>      
        	</tr>
        	<tr>
-   		  <td class="required">{if $info['is_refund']}原订单{else}本次{/if}缴费开始时间: </td>
+   		  <td class="required">{if $info['is_refund']}原订单{else}本次{/if}{#fee_start#}: </td>
           <td class="vatop rowform">{$info['fee_start']|date_format:"%Y-%m-%d"}</td>      
        	</tr>
        	<tr>
-   		  <td class="required">{if $info['is_refund']}原订单{else}本次{/if}缴费到期时间: </td>
+   		  <td class="required">{if $info['is_refund']}原订单{else}本次{/if}{#fee_expire#}: </td>
           <td class="vatop rowform">{$info['fee_expire']|date_format:"%Y-%m-%d"}</td>      
        	</tr>
        	{/if}

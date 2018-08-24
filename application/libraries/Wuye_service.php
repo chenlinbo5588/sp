@@ -260,7 +260,9 @@ class Wuye_service extends Base_service {
 			'resident_id' => $info['resident_id'],
 			'goods_name' => '',
 			'year' => date('Y'),
-			'endMonth' => $endMonth,
+			'end_month' => $endMonth,
+			//缴费月数
+			'fee_month' => 0,
 			'expireTimeStamp' => 0,//原到期时间戳
 			'newStartTimeStamp' => 0,//新开始时间戳
 			'newEndTimeStamp' => 0,	//新的结束时间戳,
@@ -303,6 +305,7 @@ class Wuye_service extends Base_service {
 		
 		if($endMonth){
 			$temp['newEndTimeStamp'] = strtotime($temp['year'].'-'.str_pad($endMonth,2,'0',STR_PAD_LEFT).'  last day of this month');
+			$temp['fee_month'] = $endMonth - date('n',$temp['newStartTimeStamp']) + 1;
 		}
 		
 		return $temp;

@@ -154,10 +154,32 @@ class Yezhu extends Ydzj_Admin_Controller {
 	 * 
 	 */
 	private function _prepareData(){
-		$data['displayorder'] = $this->input->post('displayorder');
-		return array(
-			'displayorder' => $data['displayorder'] ? $data['displayorder'] : 255
-		);
+		
+		
+		$data['displayorder'] = intval($this->input->post('displayorder'));
+		
+		if(empty($data['displayorder'])){
+			$data['displayorder'] = 255;
+		}
+		
+		$carNo = array();
+		
+		for($i = 1; $i <= 3; $i++){
+			
+			$tmp = trim($this->input->post('car_no'.$i));
+			if($tmp){
+				$carNo[] = $tmp;
+			}
+		}
+		
+		if($carNo){
+			$data['car_no'] = implode(',',$carNo);
+		}else{
+			$data['car_no'] = '';
+		}
+		
+		return $data;
+		
 	}
 	
 	
@@ -247,7 +269,20 @@ class Yezhu extends Ydzj_Admin_Controller {
 		
 	}
 	
-	
+	/**
+	 * 添加校验规则
+	 */
+	private function _addRules(){
+		
+		for($i = 1; $i <= 3; $i++){
+			
+			$tmp = trim($this->input->post('car_no'.$i));
+			if($tmp){
+				$this->form_validation->set_rules('car_no'.$i,'车牌号'.$i,'required|min_length[5]|max_length[15]');
+			}
+		}
+		
+	}
 	
 	
 	/**
@@ -259,6 +294,8 @@ class Yezhu extends Ydzj_Admin_Controller {
 		if($this->isPostRequest()){
 			
 			$this->_addYezhuRules($this->basic_data_service->getTopChildList('证件类型'),$this->input->post('id_type'), 0);
+			
+			$this->_addRules();
 			
 			for($i = 0; $i < 1; $i++){
 				if(!$this->form_validation->run()){
@@ -321,6 +358,8 @@ class Yezhu extends Ydzj_Admin_Controller {
 		if($this->isPostRequest()){
 			
 			$this->_addYezhuRules($this->basic_data_service->getTopChildList('证件类型'),$this->input->post('id_type'),$info['id']);
+			$this->_addRules();
+			
 			
 			for($i = 0; $i < 1; $i++){
 				

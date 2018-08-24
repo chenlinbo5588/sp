@@ -425,7 +425,7 @@ class Order_service extends Base_service {
 				}
 				
 				//fixed 用户先选择一个月份在创建订单付款界面取消后， 重新选择缴费月份，然后付款后一笔交易成功后， 最后我的订单中继续付款前一个交易。
-				if($orderInfo['extra_info']['expireTimeStamp'] != $info[$whichField]){
+				if($orderInfo['fee_old_expire'] != $info[$whichField]){
 					$this->updateOrderStatusByIds(array($orderInfo['id']),OrderStatus::$closed,OrderStatus::$unPayed);
 					$message = '该订单缴费信息已过期';
 					break;
@@ -492,6 +492,9 @@ class Order_service extends Base_service {
 				//新的缴费开始和结束
 				$pParam['fee_start'] = $currentFeeExpire['newStartTimeStamp'];
 				$pParam['fee_expire'] = $currentFeeExpire['newEndTimeStamp'];
+				
+				//缴费月数
+				$pParam['fee_month'] = $currentFeeExpire['fee_month'];
 				
 				
 				if(ENVIRONMENT == 'development'){

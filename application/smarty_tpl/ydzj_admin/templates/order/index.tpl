@@ -30,8 +30,8 @@
           <th>{#mobile#}</th>
           <th>{#order_typename#}</th>
           <th>{#amount#}(元)</th>
-          <th>{#refund_amount#}</th>
-          <th>{#refund_cnt#}</th>
+          <th>{#fee_start#}</th>
+          <th>{#fee_expire#}</th>
           <th>{#goods_name#}</th>
           <th>{#status#}</th>
           <th>{#order_time#}</th>
@@ -50,10 +50,10 @@
           <td>{$item['mobile']}</td>
           <td>{$item['order_typename']}{if $item['is_refund']}退款{/if}</td>
           <td>{$item['amount']/100}</td>
-          <td>{$item['refund_amount']/100}</td>
-          <td>{$item['refund_cnt']}</td>
+          <td>{$item['fee_start']|date_format:"%Y-%m-%d"}</td>
+          <td>{$item['fee_expire']|date_format:"%Y-%m-%d"}</td>
           <td>{$item['goods_name']}</td>
-          <td>{$OrderStatus[$item['status']]}</td>      
+          <td>{$OrderStatus[$item['status']]}</td>
           <td>{$item['gmt_create']|date_format:"%Y-%m-%d %H:%M:%S"}</td>
           <td>{$item['time_expire']|date_format:"%Y-%m-%d %H:%M:%S"}</td>
           <td>{$item['pay_time_end']|date_format:"%Y-%m-%d %H:%M:%S"}</td>  
@@ -62,7 +62,7 @@
           	<p>
           		{if isset($permission[$moduleClassName|cat:'/detail'])}<a href="{admin_site_url($moduleClassName|cat:'/detail')}?id={$item['id']}">详情</a>{/if}&nbsp;
           		{if '已支付' == $OrderStatus[$item['status']] && $item['refund_amount'] < $item['amount']}
-          		{if isset($permission[$moduleClassName|cat:'/apply_refund'])}<a href="javascript:void(0);"  class="refundLink" data-title="申请退款" data-ajaxformid="#refundForm" data-url="{admin_site_url('refund/apply_refund')}?id={$item['id']}" ><span>申请退款</span></a>{/if}
+          		{if isset($permission['refund/apply_refund'])}<a href="javascript:void(0);"  class="refundLink" data-title="申请退款" data-ajaxformid="#refundForm" data-url="{admin_site_url('refund/apply_refund')}?id={$item['id']}" ><span>申请退款</span></a>{/if}
           		{/if}
           	</p>
           </td>

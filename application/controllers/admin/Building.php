@@ -316,7 +316,7 @@ class Building extends Ydzj_Admin_Controller {
 		}
 		
 		if($residentName == $name){
-			$this->form_validation->set_message('checkName',$this->_moduleTitle.'名称不能和小区名称相同');
+			$this->form_validation->set_message('checkName2',$this->_moduleTitle.'名称不能和小区名称相同');
 			return false;
 		}
 		

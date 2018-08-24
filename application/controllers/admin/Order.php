@@ -409,15 +409,15 @@ class Order extends Ydzj_Admin_Controller {
     		'H' => array('db_key' => 'status','width' => 10 ,'title' => '订单状态'),
     		'I' => array('db_key' => 'goods_name','width' => 35 ,'title' => '商品名称'),
     		'J' => array('db_key' => 'amount','width' => 10 ,'title' => '订单金额'),
-    		'K' => array('db_key' => 'refund_amount','width' => 10 ,'title' => '退款金额'),
-    		'L' => array('db_key' => 'refund_cnt','width' => 10 ,'title' => '退款次数'),
-    		'M' => array('db_key' => 'username','width' => 15 ,'title' => '客户姓名'),
-    		'N' => array('db_key' => 'mobile','width' => 15 ,'title' => '电话号码'),
-    		'O' => array('db_key' => 'time_start','width' => 20 ,'title' => '订单开始时间'),
-    		'P' => array('db_key' => 'time_expire','width' => 20 ,'title' => '订单过期时间'),
-    		'Q' => array('db_key' => 'pay_time_end','width' => 20 ,'title' => '订单支付完成时间'),
-    		'R' => array('db_key' => 'verify_username','width' => 10 ,'title' => '审核人'),
-    		'R' => array('db_key' => 'verify_time','width' => 20 ,'title' => '审核时间'),
+    		//'K' => array('db_key' => 'refund_amount','width' => 10 ,'title' => '退款金额'),
+    		//'L' => array('db_key' => 'refund_cnt','width' => 10 ,'title' => '退款次数'),
+    		'K' => array('db_key' => 'username','width' => 15 ,'title' => '客户姓名'),
+    		'L' => array('db_key' => 'mobile','width' => 15 ,'title' => '电话号码'),
+    		'M' => array('db_key' => 'fee_start','width' => 20 ,'title' => '缴费生效日期'),
+    		'N' => array('db_key' => 'fee_expire','width' => 20 ,'title' => '缴费过期日期'),
+    		'O' => array('db_key' => 'pay_time_end','width' => 20 ,'title' => '订单支付完成时间'),
+    		//'P' => array('db_key' => 'verify_username','width' => 10 ,'title' => '审核人'),
+    		//'Q' => array('db_key' => 'verify_time','width' => 20 ,'title' => '审核时间'),
     	);
     	
     }
@@ -470,9 +470,10 @@ class Order extends Ydzj_Admin_Controller {
         	$list = $data;
         }
         
-        $this->load->library(array('Basic_data_service'));
+        //$this->load->library(array('Basic_data_service'));
+        //$basicData = $this->basic_data_service->getBasicData();
         
-        $basicData = $this->basic_data_service->getBasicData();
+        
     	foreach($list as $rowId => $order){
     		foreach($colConfig as $colKey => $colItemConfig){
     			
@@ -484,7 +485,7 @@ class Order extends Ydzj_Admin_Controller {
     					$val = $val == 1 ? '男':'女';
     					break;
     				case '支付渠道':
-    					$val = $basicData['242']['show_name'];
+    					$val = '微信支付';
     					break;
     				case '支付方式':
     					$val = '小程序支付';
@@ -504,15 +505,10 @@ class Order extends Ydzj_Admin_Controller {
     						$val = '未审核';
     					}	
     					break;
-    				case '订单开始时间':
-    				case '订单过期时间':
-    				case '订单支付完成时间':
-    					if(strlen($val) == 14){
-							$val = substr_replace($val,'-',4,0);
-	    					$val = substr_replace($val,'-',7,0);
-	    					$val = substr_replace($val,'  ',10,0);
-	    					$val = substr_replace($val,':',14,0);
-	    					$val = substr_replace($val,':',17,0);
+    				case '缴费生效日期':
+    				case '缴费过期日期':
+    					if($val){
+    						$val = date('Y-m-d',$val);
     					}
     					break;
     				default:

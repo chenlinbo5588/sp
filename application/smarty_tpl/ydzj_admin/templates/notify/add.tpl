@@ -20,7 +20,7 @@
           <td class="vatop rowform" colspan="2">
           	  <ul class="ulListStyle1 clearfix" id="groupList">
               {foreach from=$group item=item}
-              	<li><label><input type="checkbox" value="{$item['id']}" group="ckall" name="send_group[]" {if $inDetail}{if in_array($item['id'],$info['groups']) }checked{/if}{else}{set_checkbox('send_group[]',$item['id'])}{/if}><span>{$item['name']|escape}</span></label></li>
+              	<li {if in_array($item['id'],$info['groups']) }class="selected"{/if}><label><input type="checkbox" value="{$item['id']}" group="ckall" name="send_group[]" {if $inDetail}{if in_array($item['id'],$info['groups']) }checked{/if}{else}{set_checkbox('send_group[]',$item['id'])}{/if}><span>{$item['name']|escape}</span></label></li>
               {/foreach}
               </ul>
           </td>

@@ -146,7 +146,7 @@ class Weixin_service extends Base_service {
 	/**
 	 * 记入重发队列
 	 */
-	public function queueResend($pOrderInfo,$pData,$pWeixinResp){
+	public function queueSend($pOrderInfo,$pData,$pWeixinResp){
 		
 		//发送失败
     	return $this->_weixinMessageModel->_add(array(
@@ -158,21 +158,83 @@ class Weixin_service extends Base_service {
     	
 	}
 	
+	
+	/**
+	 * 发送微信通知
+	 */
+	public function sendWeixinNotify($pData){
+		$isSendOk = false;
+		$resp = $this->_mpApi->sendTemplateMsg($pData);
+	    
+	    if($resp && !$resp['errcode']){
+	    	$isSendOk = true;
+	    }
+		
+		return $isSendOk;
+	}
+	
+	
 	/**
 	 * 公共动作
 	 */
 	public function weixinNotifyCommon($pOrderInfo,$pData){
 		
+		/*
+		$sendList = $this->_weixinMessageModel->getList(array(
+			'select' => 'id,content,retry_cnt',
+			'where' => array(
+				'status' => 0,
+				'retry_cnt <=' => 2 
+			),
+			'limit' => 10
+		));
+		
+		
+		$deleteId = array();
+		
+		foreach($sendList as $item){
+			$isSendOk = false;
+			
+			$resp = $this->sendWeixinNotify(json_decode($item['content'],true));
+			
+			if($resp && !$resp['errcode']){
+		    	$isSendOk = true;
+		    }
+	    	
+	    	if($isSendOk){
+	    		$deleteId[] = $item['id'];
+	    	}else{
+	    		$this->_weixinMessageModel->updateByWhere(array(
+		    		'retry' => $item['retry'] + 1,
+		    		'resp' => json_encode($resp),
+		    	),array('id' => $item['id']));
+	    	}
+		}
+		
+		
+		if($deleteId){
+			$this->_weixinMessageModel->deleteByCondition(array(
+				'where_in' => array(
+				
+					array('key' => 'id', 'value' => $deleteId)
+				)
+			));
+		}
+		*/
+		
+		
 		$isSendOk = false;
 		
 	    $resp = $this->_mpApi->sendTemplateMsg($pData);
+	    
+	    //file_put_contents('notify.txt',print_r($resp,true));
 	    
 	    if($resp && !$resp['errcode']){
 	    	$isSendOk = true;
 	    }
 	    
 	   	if(!$isSendOk){
-	   		$this->queueResend($pOrderInfo,$pData,$resp);
+	   		$this->queueSend($pOrderInfo,$pData,$resp);
 	   	}
 		
 		return $isSendOk;
@@ -214,6 +276,7 @@ class Weixin_service extends Base_service {
 	    	)
 	    );
 	    
+	    //return $this->queueSend($orderInfo,$data,array());
 	    
 	    return $this->weixinNotifyCommon($orderInfo,$data);
 		
@@ -266,6 +329,8 @@ class Weixin_service extends Base_service {
 	    );
 	    
 	    
+	    //return $this->queueSend($orderInfo,$data,array());
+	    
 	    return $this->weixinNotifyCommon($orderInfo,$data);
 		
 	}
@@ -310,6 +375,8 @@ class Weixin_service extends Base_service {
 	    	)
 	    );
 	    
+	    
+	    //return $this->queueSend($orderInfo,$data,array());
 	    
 	    return $this->weixinNotifyCommon($orderInfo,$data);
 	}

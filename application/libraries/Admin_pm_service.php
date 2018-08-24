@@ -29,11 +29,24 @@ class Admin_pm_service extends Base_service {
 	public function __construct(){
 		parent::__construct();
 		
-		self::$CI->load->model(array('Admin_Pm_Model','Site_Message_Model'));
+		self::$CI->load->model(array('Admin_Pm_Model','Site_Message_Model','Group_Model'));
 		
 		$this->_adminPmModel = self::$CI->Admin_Pm_Model;
 		$this->_siteMessageModel = self::$CI->Site_Message_Model;
 		
+	}
+	
+	
+	/**
+	 * 获得所有组
+	 */
+	public function getAllGroup(){
+		return self::$CI->Group_Model->getList(array(
+			'select' => 'id,name,group_data',
+			'where' => array(
+				'enable' => 1
+			)
+		));
 	}
 	
 	
@@ -338,6 +351,12 @@ class Admin_pm_service extends Base_service {
 		$accept = false;
 		$needAddIndex = array();
 		
+		$groupInfo = self::$CI->Group_Model->getFirstByKey($pUser['group_id'],'id','id,group_data');
+		$residentList = array();
+		
+		if($groupInfo){
+			$residentList = json_decode($groupInfo['group_data'],true);
+		}
 		
 		foreach($sysPmList as $key => $item){
 			$accept = false;
@@ -345,29 +364,39 @@ class Admin_pm_service extends Base_service {
 			$item['users'] = json_decode($item['users'],true);
 			$item['groups'] = json_decode($item['groups'],true);
 			
-			if(1 == $item['msg_mode']){
-				//白名单
-				if(in_array($pUser['username'],$item['users'])){
+			//交易提醒信息
+			if($item['msg_type'] == AdminPmStatus::TRANS_PM){
+				if(in_array($item['groups'][0],$residentList)){
 					$accept = true;
 				}
-				
-				if(in_array($pUser['group_id'],$item['groups'])){
-					$accept = true;
-				}
-				
-			}else if(2 == $item['msg_mode']){
-				// 黑名单
-				if(!in_array($pUser['username'],$item['users'])){
-					$accept = true;
-				}
-				
-				if(!in_array($pUser['group_id'],$item['groups'])){
-					$accept = true;
-				}
-				
-			}else{
-				$accept = true;
 			}
+			
+			if(!$accept){
+				if(1 == $item['msg_mode']){
+					//白名单
+					if(in_array($pUser['username'],$item['users'])){
+						$accept = true;
+					}
+					
+					if(in_array($pUser['group_id'],$item['groups'])){
+						$accept = true;
+					}
+					
+				}else if(2 == $item['msg_mode']){
+					// 黑名单
+					if(!in_array($pUser['username'],$item['users'])){
+						$accept = true;
+					}
+					
+					if(!in_array($pUser['group_id'],$item['groups'])){
+						$accept = true;
+					}
+					
+				}else{
+					$accept = true;
+				}
+			}
+			
 			
 			if($accept){
 				$needAddIndex[] = $key;

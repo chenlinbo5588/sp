@@ -1,5 +1,5 @@
 {include file="common/main_header_navs.tpl"}
-  {form_open_multipart(site_url($uri_string|cat:'?id='|cat:$id),'id="user_form"')}
+  {form_open_multipart(site_url($uri_string|cat:'?id='|cat:$info['uid']),'id="user_form"')}
     <table class="table tb-type2">
       <tbody>
         <tr class="noborder">
@@ -45,9 +45,6 @@
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><ul>
-              <li>
-                <label><input type="radio" value="0" {if $inpost}{set_radio('member_sex','0')}{else}{if $info['sex'] == '0'}checked{/if}{/if} name="member_sex">保密</label>
-              </li>
               <li>
                 <label><input type="radio" value="1" {if $inpost}{set_radio('member_sex','1')}{else}{if $info['sex'] == '1'}checked{/if}{/if} name="member_sex">男</label>
               </li>

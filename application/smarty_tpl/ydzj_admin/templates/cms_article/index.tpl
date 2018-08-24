@@ -56,8 +56,8 @@
           <td>{$item['id']}</td>
           <td>{$item['article_title']|escape}</td>
           <td>{$articleClassList[$item['ac_id']]['name']}</td>
-          <td>{if $item['article_origin']}<a href="{$item['article_origin']}" target="_blank">点击查看</a>{/if}</td>
-          <td>{$item['origin_address']|escape}</td>
+          <td>{$item['article_origin']|escape}</td>
+          <td>{if $item['origin_address']}<a href="{$item['origin_address']}" target="_blank">点击查看</a>{/if}</td>
           <td>{$item['author']|escape}</td>
           <td>{$item['keyword']|escape}</td>
           <td>{$item['article_tag']|escape}</td>
