@@ -4,10 +4,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Feetype extends Ydzj_Admin_Controller {
 	
+	private $_moduleTitle;
+	
 	public function __construct(){
 		parent::__construct();
 		
 		$this->load->library(array('Wuye_service','Basic_data_service'));
+		
+		
+		$this->wuye_service->setDataModule($this->_dataModule);
+		
 		
 		$this->_moduleTitle = '費用类型';
 		$this->_className = strtolower(get_class());
@@ -26,7 +32,6 @@ class Feetype extends Ydzj_Admin_Controller {
 			array('url' => $this->_className.'/export','title' => '导出'),
 		);
 		
-		$this->form_validation->set_error_delimiters('<div>','</div>');
 	}
 	
 	
@@ -49,12 +54,16 @@ class Feetype extends Ydzj_Admin_Controller {
 		);
 		
 		
-		
 		$search['name'] = $this->input->get_post('name');
+		$search['resident_name'] = $this->input->get_post('resident_name');
 		$search['year'] = $this->input->get_post('year');
 	
 		if($search['name']){
-			$condition['like']['resident_name'] = $search['name'];
+			$condition['like']['name'] = $search['name'];
+		}
+		
+		if($search['resident_name']){
+			$condition['like']['resident_name'] = $search['resident_name'];
 		}
 		
 		if($search['year']){
@@ -62,7 +71,7 @@ class Feetype extends Ydzj_Admin_Controller {
 		}
 		
 		
-		$list = $this->Feetype_Model->getList($condition);
+		$list = $this->wuye_service->search( $this->_moduleTitle, $condition);
 		
 		$this->assign('list',$list);
 		$this->assign('page',$list['pager']);
@@ -122,11 +131,35 @@ class Feetype extends Ydzj_Admin_Controller {
 		$basicData = $this->basic_data_service->getAssocBasicDataTree();
 		
 		$this->assign(array(
-			'feeTypeList' => $this->basic_data_service->getTopChildList('费用类型'),
+			'residentList' => $this->wuye_service->search('小区',array(
+    				'select' => 'id,name',
+					'order' => 'displayorder DESC'
+				),'id'),
+			'feeNameList' => $this->basic_data_service->getTopChildList('费用类型'),
+			'billingStyleList' => $this->basic_data_service->getTopChildList('计费方式'),
 		));
 	}
 	
 	
+	/**
+	 * 添加费用类型验证规则
+	 */
+	private function _addFeetypeRules(){
+		
+		$feeNameList = $this->basic_data_service->getTopChildList('费用类型');
+		
+		$billingStyleList = $this->basic_data_service->getTopChildList('计费方式');
+		
+		
+		
+		$this->form_validation->set_rules('name','费用类型','required|in_list['.implode(',',array_keys($feeNameList)).']');
+		$this->form_validation->set_rules('year','缴费年份','required|is_natural_no_zero|greater_than_equal_to[2017]|less_than[2099]');
+		
+		$this->form_validation->set_rules('price','单价','required|is_numeric');
+		
+		$this->form_validation->set_rules('billing_style','计费方式','required|in_list['.implode(',',array_keys($billingStyleList)).']');
+		
+	}
 	
 	
 	/**
@@ -137,27 +170,25 @@ class Feetype extends Ydzj_Admin_Controller {
 		
 		if($this->isPostRequest()){
 			
-				
 			for($i = 0; $i < 1; $i++){
 				
-				$this->wuye_service->addFeeTypeRules();
+				$residentList = $this->wuye_service->search('小区',array(),'id');
+				$this->form_validation->set_rules('resident_id','小区名称','required|in_list['.implode(',',array_keys($residentList)).']');
 				
-				$this->_addYearRule();
+		
+				$this->_addFeetypeRules();
 				
 				if(!$this->form_validation->run()){
 					$this->jsonOutput('数据校验失败,'.$this->form_validation->error_string(),array('errors' => $this->form_validation->error_array()));
 					break;
 				}
-	
-				$info = array_merge((array)$info,(array)$_POST,$this->_prepareData(),$this->addWhoHasOperated('add'));
 				
-				$residentInfo = $this->Resident_Model->getFirstByKey($info['resident_name'],'name','id');
-				$info['resident_id']= $residentInfo["id"];
+				$info = array_merge($_POST,$this->_prepareData(),$this->addWhoHasOperated('add'));
 				
-				$feeTypeList = $this->basic_data_service->getTopChildList('费用类型');
-				$info['fee_id'] = $feeTypeList[$info['name']]['id'];
+				$info['resident_name'] = $residentList[$info['resident_id']]['name'];
 				
-				$newid =$this->Feetype_Model->_add(array_merge($info,$_POST,$this->_prepareData(),$this->addWhoHasOperated('add')));
+				$newid =$this->Feetype_Model->_add($info);
+				
 				$error = $this->Feetype_Model->getError();
 				
 				if(QUERY_OK != $error['code']){
@@ -182,9 +213,6 @@ class Feetype extends Ydzj_Admin_Controller {
 	}
 	
 	
-	private function _addYearRule(){
-		$this->form_validation->set_rules('year','缴费年份','required|is_natural_no_zero');
-	}
 	
 	
 	/**
@@ -200,24 +228,23 @@ class Feetype extends Ydzj_Admin_Controller {
 		
 		if($this->isPostRequest()){
 			
-			$this->_addYearRule();
-			$this->wuye_service->addFeeTypeRules();
+			$residentList = $this->wuye_service->search('小区',array(),'id');
+			$this->form_validation->set_rules('resident_id','小区名称','required|in_list['.implode(',',array_keys($residentList)).']');
+				
+				
+			$this->_addFeetypeRules();
 			
 			for($i = 0; $i < 1; $i++){
-				$info = array_merge($info,$_POST,$this->_prepareData(),$this->addWhoHasOperated('edit'));
+				$info = array_merge($_POST,$this->_prepareData(),$this->addWhoHasOperated('edit'));
 				
 				if(!$this->form_validation->run()){
 					$this->jsonOutput('数据校验失败,'.$this->form_validation->error_string(),array('errors' => $this->form_validation->error_array()));
 					break;
 				}
 				
-				$residentInfo = $this->Resident_Model->getFirstByKey($info['resident_name'],'name','id');
-				$info['resident_id']= $residentInfo["id"];
+				$info['resident_name'] = $residentList[$info['resident_id']]['name'];
 				
-				$feeTypeList = $this->basic_data_service->getTopChildList('费用类型');
-				$info['fee_id'] = $feeTypeList[$info['name']]['id'];
-				
-				$this->Feetype_Model->update(array_merge($info,$_POST,$this->addWhoHasOperated('edit')),array('id' => $id));
+				$this->Feetype_Model->update(array_merge($_POST,$this->addWhoHasOperated('edit')),array('id' => $id));
 				$error = $this->Feetype_Model->getError();
 				
 				if(QUERY_OK != $error['code']){
@@ -255,8 +282,6 @@ class Feetype extends Ydzj_Admin_Controller {
 		$newValue = $this->input->get_post('value');
 		
 		
-		$this->form_validation->set_error_delimiters('','');
-		
 		for($i = 0 ; $i < 1; $i++){
 			
 			$data = array(
@@ -269,10 +294,12 @@ class Feetype extends Ydzj_Admin_Controller {
 			
 			switch($fieldName){
 				case 'name':
-					$this->form_validation->set_rules('name','费用类型名称','in_db_list['.$this->Basic_Data_Model->getTableRealName().'.show_name]');
+					$feeTypeList = $this->basic_data_service->getTopChildList('费用类型');
+					
+					$this->form_validation->set_rules('name','费用类型','in_list['.implode(',',array_keys($feeTypeList)).']');
 					break;
 				case 'price';
-					$this->form_validation->set_rules('price','每平方单价','required|is_numeric');	
+					$this->form_validation->set_rules('price','单价','required|is_numeric');	
 					break;
 				case 'displayorder';
 					$this->form_validation->set_rules('displayorder','排序',"required|is_natural|less_than[256]");
@@ -326,6 +353,33 @@ class Feetype extends Ydzj_Admin_Controller {
        		
     		for($i = 0; $i < 1; $i++){
     			
+    			$this->form_validation->set_data(array(
+	    			'resident_id' => $this->input->post('resident_id')
+	    		));
+	    		
+	    		$this->form_validation->set_rules('resident_id','所在小区','required|is_natural_no_zero');
+	    		
+	    		if(!$this->form_validation->run()){
+	    			$feedback = getErrorTip($this->form_validation->error_html());
+	    			break;
+	    		}
+	    		
+	    		//选中的小区ID
+				$residentId = $this->input->post('resident_id');
+				
+				$tempInfoList = $this->wuye_service->search('小区',array(
+					'where' => array(
+						'id' => $residentId
+					)
+				));
+				
+				if(empty($tempInfoList[0])){
+					$feedback = getErrorTip('找不到该小区信息');
+	    			break;
+				}
+				
+				$residentInfo = $tempInfoList[0];
+				
     			if(0 != $_FILES['excelFile']['error']){
     				$feedback = getErrorTip('请上传文件');
 	    			break;
@@ -350,13 +404,7 @@ class Feetype extends Ydzj_Admin_Controller {
 					
 					$result = array();
 					$successCnt = 0;
-					
-					$feeTypeList = $this->basic_data_service->getTopChildList('费用类型');
-					$provinceIdcard = config_item('province_idcard');
-					
-					//$this->basic_data_service->getTopChildList('费用类型'),
-					$residentList = $this->Resident_Model->getList(array(),'name');
-					
+				
 					$currentYear = date('Y');
 					
 					// 列从 0 开始  行从1 开始
@@ -364,18 +412,22 @@ class Feetype extends Ydzj_Admin_Controller {
 						$tmpRow = array();
 						
 						$tmpRow['classname'] = 'failed';
+						
 						$tmpRow['name'] = getCleanValue($objWorksheet->getCell('A'.$rowIndex)->getValue());
 						$tmpRow['year'] = getCleanValue($objWorksheet->getCell('B'.$rowIndex)->getValue());
 						$tmpRow['resident_name'] = getCleanValue($objWorksheet->getCell('C'.$rowIndex)->getValue());
 						$tmpRow['price'] = getCleanValue($objWorksheet->getCell('D'.$rowIndex)->getValue());
+						$tmpRow['billing_style'] = getCleanValue($objWorksheet->getCell('E'.$rowIndex)->getValue());
 						
 						$this->form_validation->reset_validation();
-						
 						$this->form_validation->set_data($tmpRow);
 						
+						$this->form_validation->set_rules('resident_name','小区名称','required|in_list['.$residentInfo['name'].']',array(
+							'in_list' => '小区名称必须为'.$residentInfo['name']
+						));
 						
-						$this->_addYearRule();
-						$this->wuye_service->addFeeTypeRules();
+						$this->_addFeeTypeRules();
+						
 						
 						if(!$this->form_validation->run()){
 							$tmpRow['message'] = $this->form_validation->error_first_html();
@@ -386,10 +438,10 @@ class Feetype extends Ydzj_Admin_Controller {
 						$insertData = array_merge(array(
 							'name' => $tmpRow['name'],
 							'year' => $tmpRow['year'],
-							'resident_id' => $residentList[$tmpRow['resident_name']]['id'],
+							'resident_id' => $residentId,
 							'resident_name' => $tmpRow['resident_name'],
 							'price' => $tmpRow['price'],
-							'fee_id' => $feeTypeList[$tmpRow['name']]['id'],					
+							'billing_style' => $tmpRow['billing_style'],
 						),$this->addWhoHasOperated('add'));
 						
 						$this->Feetype_Model->_add($insertData);
@@ -430,6 +482,14 @@ class Feetype extends Ydzj_Admin_Controller {
     		$this->display('common/import_resp');
     		
     	}else{
+    		
+    		$this->assign(array(
+	    		'residentList' => $this->wuye_service->search('小区',array(
+    				'select' => 'id,name',
+					'order' => 'displayorder DESC'
+				),'id')
+	    	));
+	    	
     		$this->display();
     	}
     	
@@ -445,14 +505,14 @@ class Feetype extends Ydzj_Admin_Controller {
     		
     		try {
     			
-    			$search = $this->input->post(array('name','resident_name','page'));
+    			$search = $this->input->post(array('type_name','resident_name','page'));
     			
     			$condition = array(
     				'order' => 'year DESC'
     			);
     			
-    			if($search['name']){
-    				$condition['where']['name'] = $search['name'];
+    			if($search['type_name']){
+    				$condition['where']['name'] = $search['type_name'];
     			}
     			
     			if($search['resident_name']){
@@ -461,7 +521,7 @@ class Feetype extends Ydzj_Admin_Controller {
     			 			
     			$search['page'] = intval($search['page']) == 0 ? 1 : intval($search['page']);
     			
-    			$dataCnt = $this->Feetype_Model->getCount($condition);
+    			$dataCnt = $this->wuye_service->getRecordCount($this->_moduleTitle,$condition);
     			
     			$perPageSize = config_item('excel_export_limit');
     			
@@ -494,7 +554,8 @@ class Feetype extends Ydzj_Admin_Controller {
     		'A' => array('db_key' => 'name','width' => 15 ,'title' => '费用类型'),
     		'B' => array('db_key' => 'year','width' => 12 ,'title' => '缴费年份'),
     		'C' => array('db_key' => 'resident_name','width' => 25 ,'title' => '小区名称'),
-    		'D' => array('db_key' => 'price','width' => 15 ,'title' => '单价/每平米'),
+    		'D' => array('db_key' => 'price','width' => 15 ,'title' => '单价'),
+    		'E' => array('db_key' => 'billing_style','width' => 20 ,'title' => '计费方式'),
     	);
 	
     }
@@ -508,7 +569,7 @@ class Feetype extends Ydzj_Admin_Controller {
     	
         $objPHPExcel = new PHPExcel();
         
-        $data = $this->Feetype_Model->getList($condition);
+        $data = $this->wuye_service->search($this->_moduleTitle,$condition);
     	
     	$colConfig = $this->_getExportConfig();
     	

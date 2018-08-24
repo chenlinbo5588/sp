@@ -35,7 +35,7 @@
           <td>{$msgMode[$item['msg_mode']]}</td>
           <td>{cutText($item['users'],80)}</td>
           <td>{time_tran($item['gmt_create'])}</td>
-          <td><a href="{admin_site_url('notify/detail')}?id={$item['id']}">查看</a></td>
+          <td>{if isset($permission['notify/detail'])}<a href="{admin_site_url('notify/detail')}?id={$item['id']}">查看</a>{/if}</td>
         </tr>
         {/foreach}
       </tbody>

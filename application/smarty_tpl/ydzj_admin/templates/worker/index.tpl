@@ -42,11 +42,14 @@
          <td>{$item['mobile']}</td>
          <td>{$item['address']|escape}</td>
          <td>
-          	<p><a href="{admin_site_url($moduleClassName|cat:'/detail')}?id={$item['id']}">详情</a> | <a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}">编辑</a></p>
           	<p>
-          		{if $item['yuesao_id']}<a href="{admin_site_url('yuesao/edit')}?id={$item['yuesao_id']}">月嫂 | </a>{else}<a href="{admin_site_url('yuesao/add')}?worker_id={$item['id']}">月嫂入驻</a> | {/if}
-          		{if $item['baomu_id']}<a href="{admin_site_url('baomu/edit')}?id={$item['baomu_id']}">保姆 | </a>{else}<a href="{admin_site_url('baomu/add')}?worker_id={$item['id']}">保姆入驻</a> | {/if}
-          		{if $item['hugong_id']}<a href="{admin_site_url('hugong/edit')}?id={$item['hugong_id']}">护工</a>{else}<a href="{admin_site_url('hugong/add')}?worker_id={$item['id']}">护工入驻</a>{/if}
+          		{if isset($permission[$moduleClassName|cat:'/detail'])}<a href="{admin_site_url($moduleClassName|cat:'/detail')}?id={$item['id']}">详情</a>{/if}&nbsp;
+          		{if isset($permission[$moduleClassName|cat:'/edit'])}<a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}">编辑</a>{/if}
+          	</p>
+          	<p>
+          		{if $item['yuesao_id']}{if isset($permission['yuesao/edit'])}<a href="{admin_site_url('yuesao/edit')}?id={$item['yuesao_id']}">月嫂</a>&nbsp;{/if}{else}{if isset($permission['yuesao/add'])}<a href="{admin_site_url('yuesao/add')}?worker_id={$item['id']}">月嫂入驻</a>&nbsp;{/if}{/if}
+          		{if $item['baomu_id']}{if isset($permission['baomu/edit'])}<a href="{admin_site_url('baomu/edit')}?id={$item['baomu_id']}">保姆</a>&nbsp;{/if}{else}{if isset($permission['baomu/add'])}<a href="{admin_site_url('baomu/add')}?worker_id={$item['id']}">保姆入驻</a>&nbsp;{/if}{/if}
+          		{if $item['hugong_id']}{if isset($permission['hugong/edit'])}<a href="{admin_site_url('hugong/edit')}?id={$item['hugong_id']}">护工</a>&nbsp;{/if}{else}{if isset($permission['hugong/add'])}<a href="{admin_site_url('hugong/add')}?worker_id={$item['id']}">护工入驻</a>&nbsp;{/if}{/if}
           	</p>
           </td>
         </tr>
@@ -56,14 +59,14 @@
     
     <div class="fixedOpBar">
     	<label><input type="checkbox" class="checkall" id="checkallBottom" name="chkVal">全选</label>&nbsp;
-         <a href="javascript:void(0);" class="btn deleteBtn" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/delete')}"><span>删除</span></a>
+         {if isset($permission[$moduleClassName|cat:'/delete'])}<a href="javascript:void(0);" class="btn deleteBtn" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/delete')}"><span>删除</span></a>{/if}
          {include file="common/pagination.tpl"}
      </div>
   </form>
   
 <script>
 $(function(){
-    bindDeleteEvent();
+    {if isset($permission[$moduleClassName|cat:'/delete'])}bindDeleteEvent();{/if}
 });
 </script>
 

@@ -26,7 +26,6 @@ $(function(){
 	);
 	
 
-
 	// 可编辑列（input）变色
 	$('.editable').hover(
 		function(){
@@ -59,9 +58,7 @@ $(function(){
 		}
 	);
 	
-	
-    
-    
+	/*
     districtSelect('bind');
     
     $.validator.addMethod("phoneChina",function(value,element,params){  
@@ -71,6 +68,8 @@ $(function(){
     		return false;
     	}
     },"必须是有效的手机号码");
+    
+    */
 });
 
 

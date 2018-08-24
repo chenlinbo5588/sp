@@ -63,8 +63,6 @@ class PayNotifyCallBack extends WxPayNotify
 			return false;
 		}
 		
-		
-		
 		//启用事务
 		$this->_ci->Order_Model->beginTrans();
 		
@@ -73,28 +71,37 @@ class PayNotifyCallBack extends WxPayNotify
 			array('order_id' => $data['out_trade_no'],'status' => OrderStatus::$unPayed)
 		);
 		
-		
 		if($affectRow > 0 ){
-			$feeInfo = $orderInfo['extra_info'];
+			
 			$updateKey = '';
-			switch($orderInfo['order_typename']){
-				case '物业费':
-					$updateKey = 'wuye_expire';
-					break;
-				case '能耗费':
-					$updateKey = 'nenghao_expire';
-					break;
-				default:
-					break;
+			
+			if('车位费' != $orderInfo['order_typename']){
+				
+				switch($orderInfo['order_typename']){
+					case '物业费':
+						$updateKey = 'wuye_expire';
+						break;
+					case '能耗费':
+						$updateKey = 'nenghao_expire';
+						break;
+					default:
+						break;
+				}
+				
+				$this->_ci->House_Model->updateByWhere(array(
+					$updateKey => $orderInfo['fee_expire'],
+				),array(
+					'id' => $orderInfo['goods_id']
+				));
+				
+			}else{
+				
+				$this->_ci->Parking_Model->updateByWhere(array(
+					'expire' => $orderInfo['fee_expire'],
+				),array(
+					'id' => $orderInfo['goods_id']
+				));
 			}
-			
-			
-			$this->_ci->House_Model->updateByWhere(array(
-				$updateKey => $feeInfo['newEndTimeStamp'],
-			),array(
-				'id' => $orderInfo['goods_id']
-			));
-			
 			
 			
 			if($this->_ci->Order_Model->getTransStatus() === FALSE){
@@ -146,7 +153,6 @@ class Order_wuye extends Wx_Controller {
 		parent::__construct();
         
         $this->load->library(array('Order_service'));
-    	$this->form_validation->set_error_delimiters('','');
     	
     	
     	

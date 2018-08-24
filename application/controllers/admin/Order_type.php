@@ -24,7 +24,6 @@ class Order_type extends Ydzj_Admin_Controller {
 			array('url' => $this->_className.'/add','title' => '添加'),
 		);
 		
-		$this->form_validation->set_error_delimiters('<div>','</div>');
 		
 	}
 	
@@ -229,7 +228,6 @@ class Order_type extends Ydzj_Admin_Controller {
 		$id = $this->input->get_post('id');
 		$newValue = $this->input->get_post('value');
 		
-		$this->form_validation->set_error_delimiters('','');
 		
 		for($i = 0 ; $i < 1; $i++){
 			

@@ -9,31 +9,34 @@
   <input type="hidden" name="gobackUrl" value="{$gobackUrl}"/>
     <table class="table tb-type2">
       <tbody>
-          <tr class="noborder">
+         <tr class="noborder">
+          <td colspan="2"><label class="validation">{#resident_name#}:</label>{form_error('resident_id')}</td>
+        </tr>
+        <tr class="noborder">
+        	<td colspan="2">
+	          	<ul class="ulListStyle1 clearfix">
+	          	{foreach from=$residentList item=item}
+	          		<li {if $info['resident_id'] == $item['id']}class="selected"{/if}><label><input type="radio" name="resident_id" value="{$item['id']}" {if $info['resident_id'] == $item['id']}checked="checked"{/if}/><span>{$item['name']|escape}</span></label></li>
+	          	{/foreach}
+	          	</ul>
+	         </td>
+        </tr>
+        <tr class="noborder">
           <td colspan="2" class="required"><label class="validation" for="type_name">{#type_name#}:</label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform">
           	<select name="name">
 	          <option value="">请选择...</option>
-	          {foreach from=$feeTypeList item=item}
+	          {foreach from=$feeNameList item=item}
 	          <option {if $info['name'] == $item['show_name']}selected{/if} value="{$item['show_name']}">{$item['show_name']}</option>
 	          {/foreach}
 	        </select>
           </td>
           <td class="vatop tips"><label id="error_fee_id"></label>{form_error('name')}</td>
         </tr>
-        <tr class="noborder">
-          <td colspan="2"><label class="validation" for="address">{#resident_name#}: </label></td>
-        </tr>
-        <tr class="noborder">
-          <td class="vatop rowform">
-          	<input type="text" value="{$info['resident_name']|escape}" name="resident_name" id="resident_name" class="txt">
-          </td>
-          <td class="vatop tips"><label id="error_resident_name"></label>{form_error('resident_name')}</td>
-        </tr>
     	<tr class="noborder">
-          <td colspan="2"><label class="validation" for="address">{#year#}: </label></td>
+          <td colspan="2"><label class="validation" for="year">{#year#}: </label></td>
         </tr>
    		<tr class="noborder">
           <td class="vatop rowform">
@@ -42,13 +45,27 @@
           <td class="vatop tips"><label id="error_fee_year"></label>{form_error('year')}</td>
         </tr>
         <tr class="noborder">
-          <td colspan="2"><label class="validation" for="address">{#price#}: </label></td>
+          <td colspan="2"><label class="validation" for="price">{#price#}: </label></td>
         </tr>
    		<tr class="noborder">
           <td class="vatop rowform">
           	<input type="text" value="{$info['price']|escape}" name="price" id="price" class="txt">
           </td>
           <td class="vatop tips"><label id="error_price"></label>{form_error('price')}</td>
+        </tr>
+        <tr class="noborder">
+          <td colspan="2"><label class="validation" for="price">{#billing_style#}: </label></td>
+        </tr>
+   		<tr class="noborder">
+          <td class="vatop rowform">
+          	<select name="billing_style">
+	          <option value="">请选择...</option>
+	          {foreach from=$billingStyleList item=item}
+	          <option {if $info['billing_style'] == $item['show_name']}selected{/if} value="{$item['show_name']}">{$item['show_name']}</option>
+	          {/foreach}
+	        </select>
+          </td>
+          <td class="vatop tips"><label id="error_fee_type"></label>{form_error('fee_type')}</td>
         </tr>
         <tr>
           <td colspan="2" class="required"><label>排序:</label></td>
@@ -69,7 +86,11 @@
     </table>
   </form>
   <script type="text/javascript">
-	var submitUrl = [new RegExp("{$uri_string}")],searchUrl = "{admin_site_url('resident/getResidentName')}";
+	var submitUrl = [new RegExp("{$uri_string}")];
+	
+	$(function(){
+		$.loadingbar({ text: "正在提交..." , urls: submitUrl , container : "#infoform" });
+		bindAjaxSubmit("#infoform");
+	});
   </script>
-  <script type="text/javascript" src="{resource_url('js/wuye/feetype.js',true)}"></script>
 {include file="common/main_footer.tpl"}

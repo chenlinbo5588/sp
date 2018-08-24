@@ -9,6 +9,9 @@ class Resident extends Ydzj_Admin_Controller {
 		
 		$this->load->library(array('Wuye_service'));
 		
+		$this->wuye_service->setDataModule($this->_dataModule);
+		
+		
 		$this->_moduleTitle = '小区';
 		$this->_className = strtolower(get_class());
 		
@@ -25,7 +28,6 @@ class Resident extends Ydzj_Admin_Controller {
 		);
 		
 		
-		$this->form_validation->set_error_delimiters('<div>','</div>');
 	}
 	
 	
@@ -48,18 +50,18 @@ class Resident extends Ydzj_Admin_Controller {
 		
 		
 		$search['name'] = $this->input->get_post('name');
-		$search['address'] = $this->input->get_post('address');
+		//$search['address'] = $this->input->get_post('address');
 		if($search['name']){
 			$condition['like']['name'] = $search['name'];
 		}
 		
+		/*
 		if($search['address']){
 			$condition['like']['address'] = $search['address'];
 		}
+		*/
 		
-		
-		$list = $this->Resident_Model->getList($condition);
-		
+		$list = $this->wuye_service->search($this->_moduleTitle,$condition);
 		
 		$this->assign(array(
 			'list' => $list,
@@ -96,22 +98,44 @@ class Resident extends Ydzj_Admin_Controller {
 		
 		if($this->isPostRequest() && !empty($ids)){
 			
-			if(!is_array($ids)){
-				$ids = (array)$ids;
+			for($i = 0; $i < 1 ; $i++){
+				if(!is_array($ids)){
+					$ids = (array)$ids;
+				}
+				
+				$canDeleteIds = array();
+				
+				foreach($ids as $id){
+					
+					$buildingCount = $this->wuye_service->getRecordCount('建筑物',array(
+						'where' => array(
+							'resident_id' => $id
+						)
+					));
+					
+					if($buildingCount){
+						continue;
+					}
+					
+					$canDeleteIds[] = $id;
+				}
+				
+				if($canDeleteIds){
+					$deleteRows = $this->Resident_Model->deleteByCondition(array(
+						'where_in' => array(
+							array('key' => 'id','value' => $canDeleteIds)
+						)
+					));
+					
+					$this->jsonOutput('成功删除'.$deleteRows.'条记录',array('deletedIds' => $canDeleteIds));
+				}else{
+					$this->jsonOutput('删除失败,小区已配置建筑信息');
+				}
+				
 			}
 			
-			/*
-			$this->Resident_Model->deleteByCondition(array(
-				'where_in' => array(
-					array('key' => 'brand_id','value' => $ids)
-				)
-			));
-			*/
-			
-			//@todo 
-			$this->jsonOutput('删除失败，待开发完善',$this->getFormHash());
 		}else{
-			$this->jsonOutput('请求非法',$this->getFormHash());
+			$this->jsonOutput('请求非法');
 			
 		}
 	}
@@ -197,15 +221,15 @@ class Resident extends Ydzj_Admin_Controller {
 			$this->_getNameRule($id);
 			$this->_getRules();
 			for($i = 0; $i < 1; $i++){
-				$info = array_merge($info,$_POST,$this->_prepareData(),$this->addWhoHasOperated('edit'));
-				$info['id'] = $id;
+				
 				
 				if(!$this->form_validation->run()){
 					$this->jsonOutput('数据校验失败,'.$this->form_validation->error_string(),array('errors' => $this->form_validation->error_array()));
 					break;
 				}
 				
-				$this->Resident_Model->update($info,array('id' => $id));
+				
+				$this->Resident_Model->update(array_merge($_POST,$this->_prepareData(),$this->addWhoHasOperated('edit')),array('id' => $id));
 				$error = $this->Resident_Model->getError();
 				
 				if(QUERY_OK != $error['code']){
@@ -237,7 +261,6 @@ class Resident extends Ydzj_Admin_Controller {
 		$id = $this->input->get_post('id');
 		$newValue = $this->input->get_post('value');
 		
-		$this->form_validation->set_error_delimiters('','');
 		
 		for($i = 0 ; $i < 1; $i++){
 			
@@ -291,22 +314,22 @@ class Resident extends Ydzj_Admin_Controller {
 		$return = array();
 		
 		if($searchKey){
-			$residentList = $this->Resident_Model->getList(array(
-				'like' => array(
+			$residentList = $this->wuye_service->search($this->_moduleTitle,array(
+				'like_after' => array(
 					'name' => $searchKey
 				),
-				'limit' => 50
+				'limit' => 20
 			));
 			
 			foreach($residentList as $feetypeItem){
 				$return[] = array(
 					'id' =>$feetypeItem['id'],
-					'label' => $feetypeItem['name'],	
+					'label' => $feetypeItem['name'],
 				);
 			}
 		}
 		
-		//echo json_encode($return);
+		
 		$this->jsonOutput2('',$return,false);
 		
 	}

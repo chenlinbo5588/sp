@@ -50,7 +50,7 @@
           <td class="nowrap">{$item['gmt_create']|date_format:"%Y-%m-%d %H:%M:%S"}</td>
           <td class="nowrap">{$item['add_username']|escape}</td>
           <td>
-          	<p><a href="{admin_site_url('cms_article_class/edit')}?id={$item['id']}">编辑</a></p>
+          	{if isset($permission[$moduleClassName|cat:'/edit'])}<a href="{admin_site_url('cms_article_class/edit')}?id={$item['id']}">编辑</a>{/if}
           </td>
         </tr>
       	{/foreach}
@@ -64,7 +64,7 @@
   </form>
   <script>
 	$(function(){
-		bindOnOffEvent();
+		{if isset($permission[$moduleClassName|cat:'/onoff'])}bindOnOffEvent();{/if}
 	});
   </script>
 {include file="common/main_footer.tpl"}

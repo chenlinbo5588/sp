@@ -104,7 +104,6 @@ class Weixin_service extends Base_service {
 		self::$CI->load->library(array('Register_service'));
 		$regData = array(
 			'username' => $param['phoneNo'],
-			'nickname' => $param['phoneNo'],
 			'mobile' => $param['phoneNo'],
 			'openid' => $weixinInfo['openid'],
 			'unionid' => $weixinInfo['unionid'] ? $weixinInfo['unionid'] : '',
@@ -115,7 +114,7 @@ class Weixin_service extends Base_service {
 		$resp = self::$CI->register_service->createMember($regData);
 		
 		if($resp['data']['uid']){
-			self::$CI->load->model('Yezhu_Model');
+			self::$CI->load->model(array('Yezhu_Model','House_Model'));
 			//更新业主表中  对应的 uid
 			
 			$yezhuInfo = self::$CI->Yezhu_Model->getFirstByKey($param['phoneNo'],'mobile');
@@ -125,12 +124,13 @@ class Weixin_service extends Base_service {
 					'username' => $yezhuInfo['name'],
 					'sex' => $yezhuInfo['sex'],
 				),array(
-					'uid' => $resp['data']['uid']
+					'uid' => $resp['data']['uid'],
 				));
-				
-				self::$CI->Yezhu_Model->updateByWhere(array('uid' => $resp['data']['uid']),array('mobile' => $param['phoneNo']));
 			}
 			
+			//自动更新没有绑定过的
+			self::$CI->Yezhu_Model->updateByWhere(array('uid' => $resp['data']['uid']),array('mobile' => $param['phoneNo']));
+			self::$CI->House_Model->updateByWhere(array('uid' => $resp['data']['uid']),array('mobile' => $param['phoneNo']));
 		}
 		
 		if(self::$memberModel->getTransStatus() === FALSE){
@@ -209,7 +209,7 @@ class Weixin_service extends Base_service {
 			       "value" => sprintf("%.2f",$orderInfo['amount']/100),
 			   ),
 			   'keyword6' => array(
-			       "value" => '缴费起止时间: 从'.date('Y年m月d日',$orderInfo['extra_info']['newStartTimeStamp']).'到'.date('Y年m月d日',$orderInfo['extra_info']['newEndTimeStamp']),
+			       "value" => '缴费起止时间: 从'.date('Y年m月d日',$orderInfo['fee_start']).'到'.date('Y年m月d日',$orderInfo['fee_expire']),
 			   ),
 	    	)
 	    );

@@ -14,7 +14,7 @@
 		        'swf'      : uploadifySwfUrl,
 		        'uploader' : pParam.uploadUrl,
 		        'method'   : 'post',//方法，服务端可以用$_POST数组获取数据
-		         
+		        'formData' : { "PHPSESSID" : "{$PHPSESSID}" },
 		        'buttonText' : pParam.buttonText,//设置按钮文本
 		        'multi'    : true,//允许同时上传多张图片
 		        'uploadLimit' : pParam.uploadLimit,//一次最多只允许上传N张图片,0表示无限制

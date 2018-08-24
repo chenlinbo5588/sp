@@ -7,7 +7,7 @@ class User extends Ydzj_Admin_Controller {
 	public function __construct(){
 		parent::__construct();
 		
-		$this->load->model(array('Adminuser_Model','Fn_Model','Role_Model'));
+		$this->load->library('Admin_service');
 		
 		$this->_moduleTitle = '用户';
 		$this->_className = strtolower(get_class());
@@ -22,7 +22,62 @@ class User extends Ydzj_Admin_Controller {
 			array('url' => $this->_className.'/add','title' => '新增'),
 		);
 		
+		
 	}
+	
+	
+	/**
+	 * 初始话
+	 */
+	private function _initPageData(){
+		
+		/*
+		$roles = array();
+		foreach($list['data'] as $user){
+			$roles[] = $user['role_id'];
+		}
+		
+		//print_r($roles);
+		if($roles){
+			$roleList = $this->Role_Model->getList(
+				array(
+					'where_in' => array(
+						array('key' => 'id','value' => $roles)
+					)
+				)
+			);
+			
+			$roleKeyList = array();
+			foreach($roleList as $role){
+				$roleKeyList[$role['id']] = $role['name'];
+			}
+			
+			$this->assign('roleList',$roleKeyList);
+			
+		}
+		*/
+		
+		
+		
+		
+		$this->assign(array(
+			'roleList' => $this->Role_Model->getList(array(
+				'where' => array(
+					'enable' => 1
+				)
+			)),
+			
+			'groupList' => $this->Group_Model->getList(array(
+				'where' => array(
+					'enable' => 1
+				)
+			))
+		));
+		
+	}
+	
+	
+	
 	
 	public function index(){
 		$currentPage = $this->input->get_post('page') ? $this->input->get_post('page') : 1;
@@ -48,77 +103,47 @@ class User extends Ydzj_Admin_Controller {
 			$condition['like']['email'] = $email;
 		}
 		
-		if($this->_adminProfile['basic']['uid'] != WEBSITE_FOUNDER){
-			$condition['where']['uid !='] = WEBSITE_FOUNDER;
-		}
-		
-		
-		
-		
-		//update status
-		if($this->isPostRequest()){
-			$switchType = $this->input->post('submit_type');
-			for($i = 0; $i < 1; $i++){
-				
-				if(!in_array($switchType,array('开启','关闭'))){
-					break;
-				}
-				
-				$ids = $this->input->post('del_id');
-				
-				if(empty($ids)){
-					break;
-				}
-				
-				$updateData = array();
-				
-				foreach($ids as $id){
-					
-					$updateData[] = array(
-						'uid' => $id,
-						'status' => $switchType
-					);
-				}
-				
-				$this->Adminuser_Model->batchUpdate($updateData,'uid');
-			}
-			
-		}
-		
-		
 		$list = $this->Adminuser_Model->getList($condition);
 		
-		
-		$roles = array();
-		foreach($list['data'] as $user){
-			$roles[] = $user['group_id'];
+		$roleIds = array();
+		$groupIds = array();
+		foreach($list['data'] as $userItem){
+			$roleIds[] = $userItem['role_id'];
+			$groupIds[] = $userItem['group_id'];
 		}
 		
-		//print_r($roles);
-		if($roles){
-			$roleList = $this->Role_Model->getList(
-				array(
-					'where_in' => array(
-						array('key' => 'id','value' => $roles)
-					)
+		
+		$roleIds = array_unique($roleIds);
+		$groupIds = array_unique($groupIds);
+		
+		$roleList = array();
+		$groupList = array();
+		
+		if($roleIds){
+			$roleList = $this->Role_Model->getList(array(
+				'select' => 'id,name',
+				'where_in' => array(
+					array('key' => 'id' , 'value' => $roleIds)
 				)
-			);
-			
-			$roleKeyList = array();
-			foreach($roleList as $role){
-				$roleKeyList[$role['id']] = $role['name'];
-			}
-			
-			$this->assign('roleList',$roleKeyList);
-			
-			//print_r($roleKeyList);
+			),'id');
 		}
 		
+		if($groupIds){
+			$groupList = $this->Group_Model->getList(array(
+				'select' => 'id,name',
+				'where_in' => array(
+					array('key' => 'id' , 'value' => $groupIds)
+				)
+			),'id');
+		}
 		
-		$this->assign('list',$list);
-		$this->assign('page',$list['pager']);
-		$this->assign('currentPage',$currentPage);
-		
+		$this->assign(array(
+			'list' => $list,
+			'page' => $list['pager'],
+			'currentPage' => $currentPage,
+			'groupList' => $groupList,
+			'roleList' => $roleList,
+		));
 		
 		
 		$this->display();
@@ -127,8 +152,10 @@ class User extends Ydzj_Admin_Controller {
 	
 	private function _getUserRules($action){
 		$this->form_validation->set_rules('username','真实名称',"required|min_length[1]|max_length[30]");
-		$this->form_validation->set_rules('status','权限组状态','required|in_list[开启,关闭]');
-		$this->form_validation->set_rules('group_id','权限组','required|is_natural');
+		$this->form_validation->set_rules('enable','状态','required|in_list[0,1]');
+		
+		$this->form_validation->set_rules('role_id','所属角色','required|is_natural_no_zero');
+		$this->form_validation->set_rules('group_id','用户组','required|is_natural_no_zero');
 		
 		
 		if($action == 'add'){
@@ -144,19 +171,93 @@ class User extends Ydzj_Admin_Controller {
 	}
 	
 	
+	/**
+	 * 删除
+	 */
+	public function delete(){
+		$id = $this->input->get_post('uid');
+		
+		if($this->isPostRequest() && !empty($id)){
+			
+			if(is_array($id)){
+				$id = $id[0];
+			}
+			
+			
+			$returnVal = $this->Adminuser_Model->deleteByCondition(array(
+				'where' => array(
+					'uid' => $id
+				)
+			));
+			
+			if($returnVal > 0){
+				$this->jsonOutput('删除成功');
+			}else{
+				$this->jsonOutput('删除失败');
+			}
+			
+		}else{
+			$this->jsonOutput('请求非法');
+		}
+		
+	}
 	
 	
 	
-	private function _prepareUserData(){
+	/**
+	 * 开启关闭
+	 */
+	private function _onoff($op){
+		
+		$ids = $this->input->post('id');
+		
+		if($this->isPostRequest() && !empty($ids)){
+			
+			if(!is_array($ids)){
+				$ids = (array)$ids;
+			}
+			
+			$returnVal = $this->admin_service->userOnOff($ids,$op,$this->addWhoHasOperated('edit'));
+			
+			if($returnVal > 0){
+				$this->jsonOutput($op.'成功');
+			}else{
+				$this->jsonOutput($op.'失败');
+			}
+			
+		}else{
+			$this->jsonOutput('请求非法');
+		}
+	}
+	
+	
+	/**
+	 * 开启
+	 */
+	public function turnon(){
+		$this->_onoff('开启');
+		
+	}
+	
+	
+	/**
+	 * 关闭
+	 */
+	public function turnoff(){
+		$this->_onoff('关闭');
+	}
+	
+	
+	
+	/**
+	 * 
+	 */
+	private function _prepareData(){
 		$info = array(
-			'email' => $this->input->post('email'),
-			'username' => $this->input->post('username'),
+			'role_id' => $this->input->post('role_id') ? $this->input->post('role_id') : 0,
 			'group_id' => $this->input->post('group_id') ? $this->input->post('group_id') : 0,
 			'password' => $this->input->post('admin_password') ? $this->input->post('admin_password') : '',
-			'status' => $this->input->post('status'),
 		);
-		
-		
 		
 		return $info;
 	}
@@ -168,74 +269,82 @@ class User extends Ydzj_Admin_Controller {
 	public function add(){
 		$feedback = '';
 		
+		$info = array();
+		
 		$action = 'add';
 		
-		$roleList = $this->Role_Model->getList();
-		
+		//
 		
 		if($this->isPostRequest()){
 			$this->form_validation->set_rules('email','登陆名','required|valid_email|is_unique['.$this->Adminuser_Model->getTableRealName().'.email]');
+			
 			$this->_getUserRules('add');
 			
 			for($i = 0; $i < 1; $i++){
 				
-				$info = $this->_prepareUserData();
+				$info = array_merge($_POST,$this->_prepareData(),$this->addWhoHasOperated('add'));
 				
 				if(!$this->form_validation->run()){
-					$feedback = getErrorTip($this->form_validation->error_first_html());
+					$this->jsonOutput('数据校验失败'.$this->form_validation->error_first_html(),array('errors' => $this->form_validation->error_array()));
 					break;
 				}
 				
 				$info['password'] = $this->_getEncodePassword($info['password'],$info['email']);
-				$info = array_merge($info,$this->addWhoHasOperated('add'));
 				
-				if(($newid = $this->Adminuser_Model->_add($info)) < 0){
-					$feedback = getErrorTip('保存失败');
+				if(($newid = $this->admin_service->saveUser($info)) < 0){
+					$this->jsonOutput('数据库错误');
 					break;
 				}
 				
-				$feedback = getSuccessTip('保存成功');
-				$action = 'edit';
-				$info = $this->Adminuser_Model->getFirstByKey($newid,'uid');
-				
+				$this->jsonOutput('保存成功,页面即将刷新',array('redirectUrl' => admin_site_url($this->_className.'/index')));
 			}
+		}else{
+			
+			$info['enable'] = 1;
+			
+			$this->assign(array(
+				'info' => $info,
+			));
+			
+			$this->_initPageData();
+			
+			$this->display();
 		}
 		
 		
-		$this->assign('action',$action);
-		$this->assign('info',$info);
-		$this->assign('feedback',$feedback);
-		$this->assign('roleList',$roleList);
-		$this->display();
+		
 	}
 	
 	
+	/**
+	 * 编辑用户
+	 */
 	public function edit(){
-		
-		$this->assign('action','edit');
 		
 		$feedback = '';
 		$id = $this->input->get_post('uid');
-		$roleList = $this->Role_Model->getList();
 		
 		$info = $this->Adminuser_Model->getFirstByKey($id,'uid');
 		
 		$this->_subNavs[] = array('url' => $this->_className.'/edit?uid='.$id,'title' => '编辑');
 		
 		if($this->isPostRequest()){
+			
 			$this->form_validation->set_rules('email','登陆名','required|valid_email|is_unique_not_self['.$this->Adminuser_Model->getTableRealName().".email.uid.{$id}]");
 			$this->_getUserRules('edit');
 			
 			for($i = 0; $i < 1; $i++){
 				
-				$info = $this->_prepareUserData();
+				$oldInfo = $info;
+				
+				
+				$info = array_merge($_POST,$this->_prepareData(),$this->addWhoHasOperated('edit'));
 				$info['uid'] = $id;
 				
 				if(!$this->form_validation->run()){
-					$feedback = $this->form_validation->error_string();
+					$this->jsonOutput('数据校验失败'.$this->form_validation->error_first_html(),array('errors' => $this->form_validation->error_array()));
 					break;
 				}
-				
 				
 				//重新设置密码
 				if(trim($info['password'])){
@@ -247,21 +356,26 @@ class User extends Ydzj_Admin_Controller {
 				
 				$info = array_merge($info,$this->addWhoHasOperated('edit'));
 				
-				if($this->Adminuser_Model->update($info,array('uid' => $id)) < 0){
-					$feedback = getErrorTip('保存失败');
+				if($this->admin_service->saveUser($info,$oldInfo) < 0){
+					$error = $this->Adminuser_Model->getError();
+					
+					$this->jsonOutput($error['message']);
+					
 					break;
 				}
 				
-				$feedback = getSuccessTip('保存成功');
-				$info = $this->Adminuser_Model->getFirstByKey($id,'uid');
+				$this->jsonOutput('保存成功');
 			}
+		}else{
+			$this->assign(array(
+				'info' => $info,
+			));
+			
+			$this->_initPageData();
+			
+			$this->display($this->_className.'/add');
 		}
 		
-		
-		$this->assign('info',$info);
-		$this->assign('feedback',$feedback);
-		$this->assign('roleList',$roleList);
-		$this->display('user/add');
 		
 	}
 	

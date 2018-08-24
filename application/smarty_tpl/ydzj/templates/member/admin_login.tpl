@@ -32,7 +32,7 @@ body {
   <div class="box">
     {form_open(site_url('member/admin_login'))}
         <input type="hidden" name="returnUrl" value="{$returnUrl}"/>
-        <span><label>帐号</label><input name="email" id="user_name" autocomplete="off" type="text" class="input-text"/></span>
+        <span><label>帐号</label><input name="email" id="user_name" autocomplete="off" type="text" value="{$smarty.post.email}" class="input-text"/></span>
 	    <span><label>密码</label><input name="password" id="password" class="input-password" autocomplete="off" type="password" /></span>
 	    <span>
 	      	<div class="code">
@@ -65,6 +65,10 @@ body {
 	    var imgCode1 = $.fn.imageCode({ wrapId: "#authImg", captchaUrl : "{site_url('captcha/index')}" });
 	    setTimeout(imgCode1.refreshImg,500);
 	    
+	    
+	    {if $feedback}
+	    showTips( '{$feedback}', 50, 3 )
+	    {/if}
 	});
 </script>
 </body>

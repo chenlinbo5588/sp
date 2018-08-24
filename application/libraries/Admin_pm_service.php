@@ -343,17 +343,28 @@ class Admin_pm_service extends Base_service {
 			$accept = false;
 			
 			$item['users'] = json_decode($item['users'],true);
+			$item['groups'] = json_decode($item['groups'],true);
 			
 			if(1 == $item['msg_mode']){
 				//白名单
 				if(in_array($pUser['username'],$item['users'])){
 					$accept = true;
 				}
+				
+				if(in_array($pUser['group_id'],$item['groups'])){
+					$accept = true;
+				}
+				
 			}else if(2 == $item['msg_mode']){
 				// 黑名单
 				if(!in_array($pUser['username'],$item['users'])){
 					$accept = true;
 				}
+				
+				if(!in_array($pUser['group_id'],$item['groups'])){
+					$accept = true;
+				}
+				
 			}else{
 				$accept = true;
 			}
@@ -429,15 +440,16 @@ class Admin_pm_service extends Base_service {
 	
 	
 	/**
-	 * 添加交易数据
+	 * 添加交易数据 站内信
 	 */
-	public function addTransMessage($pData){
+	public function addTransMessage($pData,$pGroups = array(),$pUsers = array()){
 		
 		$default = array(
 			'msg_type' => AdminPmStatus::TRANS_PM,
 			'send_ways' => json_encode(array('站内信')),
-			'groups' => '[]',
-			'users' => '[]',
+			'msg_mode' => 1,
+			'groups' => json_encode($pGroups),
+			'users' => json_encode($pUsers),
 		);
 		
 		return $this->_siteMessageModel->_add(array_merge($default,$pData));
@@ -454,7 +466,7 @@ class Admin_pm_service extends Base_service {
 		$this->addTransMessage(array(
 			'title' => '新订单 '.$pOrderInfo['order_typename'].($pOrderInfo['is_refund'] == 1 ? '退款' : '').' '.$pOrderInfo['goods_name'],
 			'content' => '<div>订单号码:<a target="workspace" href="'. $jumpUrl.'">'.$pOrderInfo['order_id'].' 点击订单查看详情</a></div>'
-		));
+		),array($pOrderInfo['resident_id']));
 	
 	}
 }

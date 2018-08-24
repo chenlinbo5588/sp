@@ -6,7 +6,7 @@ class Member extends Ydzj_Admin_Controller {
 	public function __construct(){
 		parent::__construct();
 		
-		$this->load->library(array('Member_service','Common_district_service'));
+		$this->load->library(array('Member_service'));
 		
 		
 		
@@ -41,7 +41,7 @@ class Member extends Ydzj_Admin_Controller {
 			)
 			
 		);
-		
+		/*
 		$ds = array();
 		$dkeys = array('d1','d2','d3','d4');
 		$tempK = '';
@@ -61,8 +61,9 @@ class Member extends Ydzj_Admin_Controller {
 			
 			$this->assign('ds',$this->common_district_service->prepareCityData($ds));
 		}
+		*/
 		
-		$search_map['search_field'] = array('mobile' => '手机号码','email' => '电子邮箱','username' => '真实姓名');
+		$search_map['search_field'] = array('mobile' => '手机号码','username' => '真实姓名');
 		
 		/*
 		$search_map['activity_sort'] = array(
@@ -147,7 +148,9 @@ class Member extends Ydzj_Admin_Controller {
 		
 		
 		$this->assign('search_map',$search_map);
-		$this->assign('memberDs',$this->common_district_service->getDistrictByIds($dqList));
+		
+		
+		//$this->assign('memberDs',$this->common_district_service->getDistrictByIds($dqList));
 		//$this->assign('d1',$this->common_district_service->getDistrictByPid(0));
 		
 		$this->display('member/index');
@@ -239,7 +242,6 @@ class Member extends Ydzj_Admin_Controller {
 				
 				$addParam = array(
 					'mobile' => $this->input->post('member_mobile'),
-					'nickname' => $this->input->post('member_mobile'),
 					'password' => $this->input->post('member_passwd'),
 					'qq' => $this->input->post('member_qq'),
 					'weixin' => $this->input->post('member_weixin'),
@@ -283,10 +285,11 @@ class Member extends Ydzj_Admin_Controller {
 		$this->load->library('Member_service');
 		$info = $this->member_service->getUserInfoById($id);
 		
+		$this->_subNavs[] = array('url' => $this->_className.'/edit?id='.$id, 'title' => '编辑');
+		
 		if(!empty($id) && $this->isPostRequest()){
 			$this->assign('inpost',true);
 			
-			$this->form_validation->set_rules('member_nickname','昵称','min_length[3]|max_length[30]|is_unique_not_self['.$this->Member_Model->getTableRealName().'.nickname.uid.'.$id.']');
 			
 			$password = $this->input->post('member_passwd');
 			$password2 =  $this->input->post('member_passwd2');
@@ -306,7 +309,6 @@ class Member extends Ydzj_Admin_Controller {
 				}
 				
 				$updateData = array(
-					'nickname' => $this->input->post('member_nickname'),
 					'qq' => $this->input->post('member_qq'),
 					'weixin' => $this->input->post('member_weixin'),
 					'email' => $this->input->post('member_email'),
@@ -329,7 +331,6 @@ class Member extends Ydzj_Admin_Controller {
 					$updateData['password'] = $password;
 				}
 				
-				$this->load->library('Member_service');
 				$flag = $this->member_service->updateUserInfo($updateData,$id);
 				
 				if($flag >= 0){

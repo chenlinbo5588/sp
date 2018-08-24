@@ -11,12 +11,81 @@ class Wuye extends Wx_Controller {
 	
 	
 	/**
-	 * 获得 微信用户关联  业主信息
+	 * 获得 微信用户关联  车位列表
+	 */
+	public function getYezhuParkingList(){
+		if($this->yezhuInfo){
+			
+			$d = $this->wuye_service->getParkingListByYezhu($this->yezhuInfo);
+			
+			if($d){
+				$this->jsonOutput2(RESP_SUCCESS,$d);
+			}else{
+				$this->jsonOutput2(RESP_ERROR);
+			}
+			
+		}else{
+			if($this->memberInfo){
+				$this->jsonOutput2(NONOWNER);
+			}else{
+				$this->jsonOutput2(UNBINDED,$this->unBind);
+			}
+			
+		}
+	}
+	
+	
+	/**
+	 * 获得车位详情
+	 */
+	public function getYezhuParkingDetail(){
+		
+		if($this->yezhuInfo){
+			$id = $this->input->get('id');
+			
+			for($i = 0; $i < 1; $i++){
+				
+				$data = array(
+					'id' => $id
+				);
+				
+				$this->form_validation->set_data($data);
+				$this->form_validation->set_rules('id','车位ID','required');
+				
+				if(!$this->form_validation->run()){
+					$this->jsonOutput2($this->form_validation->error_first_html());
+					break;
+				}
+				
+				$detail = $this->wuye_service->getYezhuParkingDetail($id,$this->yezhuInfo);
+	            
+	            if($detail){
+	            	$this->jsonOutput2(RESP_SUCCESS,$detail);
+	            }else{
+	            	$this->jsonOutput2(RESP_ERROR);
+	            }
+			}
+			
+		}else{
+			if($this->memberInfo){
+				$this->jsonOutput2(NONOWNER);
+			}else{
+				$this->jsonOutput2(UNBINDED,$this->unBind);
+			}
+		}
+	
+	}
+	
+	
+	
+	
+	/**
+	 * 获得 微信用户关联  物业信息
 	 */
 	public function getYezhuHouseList(){
 		if($this->yezhuInfo){
 			
-			$d = $this->wuye_service->getYezhuHouseListByYezhu($this->yezhuInfo);
+			$d = $this->wuye_service->getHouseListByYezhu($this->yezhuInfo);
 			
 			if($d){
 				$this->jsonOutput2(RESP_SUCCESS,$d);
@@ -49,7 +118,7 @@ class Wuye extends Wx_Controller {
 				);
 				
 				$this->form_validation->set_data($data);
-				$this->form_validation->set_rules('id','物业ID','required|in_db_list['.$this->House_Model->getTableRealName().'.id]');
+				$this->form_validation->set_rules('id','物业ID','required');
 				
 				if(!$this->form_validation->run()){
 					$this->jsonOutput2($this->form_validation->error_first_html());
@@ -86,7 +155,7 @@ class Wuye extends Wx_Controller {
 				
 				$condition = array(
 					'where' => array(
-						'yezhu_id' => $this->yezhuInfo['id']
+						'mobile' => $this->yezhuInfo['mobile']
 					),
 					'order' => 'id DESC',
 					'limit' => 1,
@@ -105,7 +174,7 @@ class Wuye extends Wx_Controller {
       			
       			$repairTypeList = RepairType::$typeName;
       			
-      			$repair_type = $this->postJson['repairType'];  			
+      			$repair_type = $this->postJson['repairType'];	
       			$address = $this->postJson['address'];
 				$remark = $this->postJson['remark']; 
 				$filePaths = $this->postJson['FilePaths']; 
@@ -123,14 +192,22 @@ class Wuye extends Wx_Controller {
 					break;
 				}
 				
+				$houseInfo = $this->House_Model->getFirstByKey($address,'address','id,resident_id');
+				if(empty($houseInfo)){
+					$this->jsonOutput2('物业地址不存在');
+					break;
+				}
+				
       			$repairOrder =	array (
       				'repair_type' => $repair_type,
-      				'remark'  => $remark,	
+      				'resident_id' => $houseInfo['resident_id'],
+      				'house_id' => $houseInfo['id'],
+      				'yezhu_id' => $this->yezhuInfo['id'],
+      				'yezhu_name' => $this->yezhuInfo['name'],
       				'address' => $address,
-      				'yezhu_id'	=> $this->yezhuInfo['id'],  				
-					'yezhu_name'	=> $this->yezhuInfo['name'],
+      				'remark'  => $remark,
 					'mobile'	=> $this->yezhuInfo['mobile'],
-					'add_uid'	=>  $this->yezhuInfo['id'],
+					'add_uid'	=>  $this->yezhuInfo['uid'],
 					'add_username'	=>  $this->yezhuInfo['name'],
       			);
    		
@@ -182,10 +259,10 @@ class Wuye extends Wx_Controller {
 			}else{
 				$repairStatus = -1;
 			}
-					
+			
 			$condition = array(
 				'where' => array(
-					'yezhu_id' => $this->yezhuInfo['id'],
+					'add_uid' => $this->yezhuInfo['uid'],
 					'status' => $repairStatus
 				),
 				'pager' => array(
@@ -350,7 +427,11 @@ class Wuye extends Wx_Controller {
 				
 				$this->form_validation->set_data($data);
 				
-				$this->_setCommonHouseFeeRules();
+				$this->load->model('Order_Type_Model');
+		
+				$this->form_validation->set_rules('id','物业标识','required|in_db_list['.$this->House_Model->getTableRealName().'.id]');
+				$this->form_validation->set_rules('order_typename','订单类型','in_db_list['.$this->Order_Type_Model->getTableRealName().'.name]');
+				
 				
 				if(!$this->form_validation->run()){
 					$this->jsonOutput2($this->form_validation->error_first_html());
@@ -359,7 +440,7 @@ class Wuye extends Wx_Controller {
 				
 				$houseInfo = $this->wuye_service->getYezhuHouseDetail($id,$this->yezhuInfo);
 				if($houseInfo){
-					$currentHouseFeeExpire = $this->wuye_service->getCurrentHouseFeeInfo($houseInfo['id'],$data['order_typename']);
+					$currentHouseFeeExpire = $this->wuye_service->getCurrentFeeInfo($houseInfo['id'],$data['order_typename']);
 					
 					//获得小区的费用配置
 					$residentFee = $this->wuye_service->getResidentFeeSetting($houseInfo['resident_id'],$currentHouseFeeExpire['year'],$data['order_typename']);
@@ -385,22 +466,68 @@ class Wuye extends Wx_Controller {
 		}
 	}
 	
+	
 	/**
-	 * 设置公共验证规则
+	 * 缴费,物业参数 以及缴费参数
 	 */
-	private function _setCommonHouseFeeRules(){
+	public function getYezhuParkingDetailWithFeeInfo(){
 		
-		$this->load->model('Order_Type_Model');
+		if($this->yezhuInfo){
+			$id = $this->input->get('id');
+			
+			for($i = 0; $i < 1; $i++){
+				
+				$data = array(
+					'id' => $id,
+					'order_typename' => $this->input->get('order_typename'),
+				);
+				
+				$this->form_validation->set_data($data);
+				
+				$this->load->model('Order_Type_Model');
 		
-		$this->form_validation->set_rules('id','物业标识','required|in_db_list['.$this->House_Model->getTableRealName().'.id]');
-		$this->form_validation->set_rules('order_typename','订单类型','in_db_list['.$this->Order_Type_Model->getTableRealName().'.name]');
+				$this->form_validation->set_rules('id','车位标识','required|in_db_list['.$this->Parking_Model->getTableRealName().'.id]');
+				$this->form_validation->set_rules('order_typename','订单类型','in_db_list['.$this->Order_Type_Model->getTableRealName().'.name]');
+				
+				
+				if(!$this->form_validation->run()){
+					$this->jsonOutput2($this->form_validation->error_first_html());
+					break;
+				}
+				
+				$parkingInfo = $this->wuye_service->getYezhuParkingDetail($id,$this->yezhuInfo);
+				if($parkingInfo){
+					$currentFeeExpire = $this->wuye_service->getCurrentFeeInfo($parkingInfo['id'],$data['order_typename']);
+					
+					//获得小区的费用配置
+					$residentFee = $this->wuye_service->getResidentFeeSetting($parkingInfo['resident_id'],$currentFeeExpire['year'],$data['order_typename']);
+					
+					$this->jsonOutput2(RESP_SUCCESS,array(
+						'parking' => $parkingInfo,
+						'feeYear' => $currentFeeExpire['year'],
+						'minDate' => $currentFeeExpire['newStartTimeStamp'],
+						'feeSetting' => $residentFee ? array($residentFee) : array()
+					));
+				
+				}else{
+					$this->jsonOutput2(RESP_ERROR);
+				}
+			}
+			
+		}else{
+			if($this->memberInfo){
+				$this->jsonOutput2(NONOWNER);
+			}else{
+				$this->jsonOutput2(UNBINDED,$this->unBind);
+			}
+		}
 	}
 	
 	
 	/**
 	 * 计算费用
 	 */
-	public function computeHouseFee(){
+	public function computeFee(){
 		
 		if($this->yezhuInfo){
 			
@@ -408,40 +535,57 @@ class Wuye extends Wx_Controller {
 			for($i = 0; $i < 1; $i++){
 				
 				$this->form_validation->set_data($this->postJson);
-				$this->_setCommonHouseFeeRules();
+				
+				$this->load->model('Order_Type_Model');
+				
+				if('车位费' != $this->postJson['order_typename']){
+					$this->form_validation->set_rules('id','物业标识','required|in_db_list['.$this->House_Model->getTableRealName().'.id]');
+				}else{
+					$this->form_validation->set_rules('id','车位标识','required|in_db_list['.$this->Parking_Model->getTableRealName().'.id]');
+				}
+				
+				$this->form_validation->set_rules('order_typename','订单类型','in_db_list['.$this->Order_Type_Model->getTableRealName().'.name]');
+				
 				if(!$this->form_validation->run()){
 					$this->jsonOutput2($this->form_validation->error_first_html());
 					break;
 				}
 				
 				
-				$houseInfo = $this->wuye_service->getYezhuHouseDetail($this->postJson['id'],$this->yezhuInfo);
-				if(empty($houseInfo)){
-					$this->jsonOutput2('找不到物业信息');
+				if('车位费' != $this->postJson['order_typename']){
+					$info = $this->wuye_service->getYezhuHouseDetail($this->postJson['id'],$this->yezhuInfo);
+				}else{
+					$info = $this->wuye_service->getYezhuParkingDetail($this->postJson['id'],$this->yezhuInfo);
+				}
+				
+				if(empty($info)){
+					$this->jsonOutput2('找不到记录');
 					break;
 				}
+				
 				
 				//再次验证
 				$this->form_validation->reset_validation();
 				
 				$this->form_validation->set_data($this->postJson);
 				
-				$currentHouseFeeExpire = $this->wuye_service->getCurrentHouseFeeInfo($houseInfo['id'],$this->postJson['order_typename'],$this->postJson['end_month']);
+				$currentFeeExpire = $this->wuye_service->getCurrentFeeInfo($this->postJson['id'],$this->postJson['order_typename'],$this->postJson['end_month']);
 				
-				$this->wuye_service->setFeeTimeRules($currentHouseFeeExpire['year']);
+				$this->wuye_service->setFeeTimeRules($currentFeeExpire['year']);
 				
 				if(!$this->form_validation->run()){
 					$this->jsonOutput2($this->form_validation->error_first_html());
 					break;
 				}
 				
-				//在校验  缴费的时间一定要大于已缴费的时间
-				if($currentHouseFeeExpire['expireTimeStamp'] >= $currentHouseFeeExpire['newEndTimeStamp']){
+				//再校验  缴费的时间一定要大于已缴费的时间
+				if($currentFeeExpire['expireTimeStamp'] >= $currentFeeExpire['newEndTimeStamp']){
 					$this->jsonOutput2("请选择合理的缴费时间");
 					break;
 				}
 				
-				$amount = $this->wuye_service->computeHouseFee($currentHouseFeeExpire);
+				$amount = $this->wuye_service->computeFee($currentFeeExpire);
+				
 				$this->jsonOutput2(RESP_SUCCESS,array('amount' => $amount));
 			}
 			

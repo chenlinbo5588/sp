@@ -7,7 +7,6 @@ class Register extends Wx_Controller {
 	public function __construct(){
 		parent::__construct();
 		
-		$this->form_validation->set_error_delimiters('','');
 		
 	}
 	
@@ -78,18 +77,27 @@ class Register extends Wx_Controller {
 				
 				$rt['code'] = 'failed';
 				
+				
+				
 			    $this->load->file(LIB_PATH.'Sms_api.php');
 			    
 				$smsConfig = config_item('aliyun_SMS');
 				
-				$sendResult = Sms_api::sendSms(array(
-					'phoneNo' => $this->postJson['phoneNo'],
-					'templateVar' => array(
-						'code' => $codeInfo['code']
-					),
-					'templateCode' => 'SMS_136055238',
-					'signName' => $smsConfig['signName']
-				));
+				try {
+					$sendResult = Sms_api::sendSms(array(
+						'phoneNo' => $this->postJson['phoneNo'],
+						'templateVar' => array(
+							'code' => $codeInfo['code']
+						),
+						'templateCode' => 'SMS_136055238',
+						'signName' => $smsConfig['signName']
+					));
+					
+				}catch(Exception $e){
+					$rt['message'] = $e->getMessage();
+					
+					break;
+				}
 				
 				
 				if('OK' == $sendResult->Code){

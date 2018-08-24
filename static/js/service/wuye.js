@@ -1,4 +1,7 @@
 $(function(){
+	$( ".datepicker" ).datepicker({
+    	changeYear: true
+    });
 	
 	$.loadingbar({ text: "正在提交..." , urls: submitUrl , container : "#infoform" });
 	bindAjaxSubmit("#infoform");

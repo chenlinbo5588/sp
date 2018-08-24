@@ -83,7 +83,7 @@ class Wx_Controller extends MY_Controller {
 			$this->memberInfo = $this->wuye_service->initUserInfoBySession($weixinUser,'openid');
 			
 			if($this->memberInfo){
-				$this->yezhuInfo = $this->wuye_service->getYezhuInfoById($this->memberInfo['mobile'],'mobile');
+				$this->yezhuInfo = $this->wuye_service->getYezhuInfoById($this->memberInfo['uid']);
 			}
 			
 			$this->postJson = array_merge($this->postJson,$weixinUser);

@@ -61,6 +61,7 @@ class RepairStatus {
 class Wuye_service extends Base_service {
 	
 	private $_residentModel;
+	private $_parkingModel;
 	private $_buildingModel;
 	private $_houseModel;
 	private $_yezhuModel;
@@ -68,120 +69,55 @@ class Wuye_service extends Base_service {
 	
 	
 	
-	
 	public function __construct(){
 		parent::__construct();
 		
 		self::$CI->load->model(array(
-			'Resident_Model','Building_Model','House_Model','Yezhu_Model',
+			'Resident_Model','Building_Model','House_Model','Yezhu_Model','Parking_Model',
 			'Feetype_Model','Basic_Data_Model','Repair_Model','Repair_Images_Model'
 
 		));
 		
 		$this->_residentModel = self::$CI->Resident_Model;
+		$this->_parkingModel = self::$CI->Parking_Model;
 		$this->_buildingModel = self::$CI->Building_Model;
 		$this->_houseModel = self::$CI->House_Model;
 		$this->_yezhuModel = self::$CI->Yezhu_Model;
 		$this->_feeTypeModel = self::$CI->Feetype_Model;
 		$this->_repairModel = self::$CI->Repair_Model; 
+		
+		$this->_dataModule = array(-1);
+		
+		$this->_objectMap = array(
+			'小区' => $this->_residentModel,
+			'停车位' => $this->_parkingModel,
+			'建筑物' => $this->_buildingModel,
+			'房屋' => $this->_houseModel,
+			'业主' => $this->_yezhuModel,
+			'費用类型' => $this->_feeTypeModel,
+			'报修' => $this->_repairModel,
+		);
 
-		
 	}
 	
-
-	// 小区管理
-	public function deleteResident($pId){
-		//只有悬挂的小区才能被删除
-		
-	}
-	
-	/*
-	public function saveResident($pResidentParam,$who){
-		$returnVal = false;
-		if(!isset($pResidentParam['id'])){
-			//事务
-			$returnVal = $this->_residentModel->_add(array_merge($pResidentParam,$who));
-		}else{
-			
-			$this->_residentModel->beginTrans();
-			$returnVal = $this->_residentModel->update(array_merge($pResidentParam,$who),array('id' => $pResidentParam['id']));
-			
-			
-			//修改小区名称，则自动更新对象的幢以及
-			
-			
-			if($this->_residentModel->getTransStatus() === FALSE){
-				$this->_residentModel->rollBackTrans();
-				return false;
-			}else{
-				$this->_residentModel->commitTrans();
-				return $returnVal;
-			}
-		}
-	}
-	*/
 	
 	
 	
-	public function addIDRules($idTypeList,$pIdType,$id = 0,$dbCheck = true){
-		$idRules = array('required');
-		
-		if(ENVIRONMENT == 'production'){
-			$idName = '';
-			
-			foreach($idTypeList as $idTypeItem){
-				if($idTypeItem['id'] == $pIdType || $idTypeItem['show_name'] == $pIdType){
-					$idName = $idTypeItem['show_name'];
-				}
-			}
-			
-			if('身份证' == $idName || '驾驶证' == $idName){
-				$idRules[] = 'valid_idcard';
-			}else{
-				$idRules[] = 'max_length[50]';
-			}
-		}else{
-			$idRules[] = 'max_length[50]';
-		}
-		
-		//数据库校验
-		if($dbCheck){
-			if($id){
-				$idRules[] = 'is_unique_not_self['.$this->_yezhuModel->getTableRealName().".id_no.id.{$id}]";
-			}else{
-				$idRules[] = 'is_unique['.$this->_yezhuModel->getTableRealName().".id_no]";
-			}
-		}
-		
-		self::$CI->form_validation->set_rules('id_no','证件号码',implode('|',$idRules));
-	}
+	
+	
+	
 	
 	/**
-	 * 
+	 * 获得物业列表
 	 */
-	public function addYezhuRules($idTypeList,$pIdType,$id = 0){
+	public function getOwnedResidentList($condition,$assocKey = ''){
 		
-		self::$CI->form_validation->set_rules('name','姓名','required|max_length[50]');
-		
-		$this->addIDRules($idTypeList,$pIdType,$id);
-		
-		self::$CI->form_validation->set_rules('birthday','出生年月','required|valid_date');
-		self::$CI->form_validation->set_rules('age','年龄','required|is_natural_no_zero');
-		self::$CI->form_validation->set_rules('sex','性别','required|in_list[1,2]');
-		
-		self::$CI->form_validation->set_rules('jiguan','籍贯',"required|is_natural_no_zero");
-		
-		
-		if($id){
-			self::$CI->form_validation->set_rules('mobile','手机号码','required|valid_mobile|is_unique_not_self['.$this->_yezhuModel->getTableRealName().".mobile.id.{$id}]");
-		}else{
-			self::$CI->form_validation->set_rules('mobile','手机号码','required|valid_mobile|is_unique['.$this->_yezhuModel->getTableRealName().'.mobile]');
-		}
-		
+		return $this->search('小区',$condition,$assocKey);
 		
 	}
 	
 	
+	/*
 	public function addFeeTypeRules(){
 		
 		self::$CI->form_validation->set_rules('name','费用类型名称','required|in_db_list['.self::$CI->Basic_Data_Model->getTableRealName().'.show_name]');
@@ -189,30 +125,40 @@ class Wuye_service extends Base_service {
 		self::$CI->form_validation->set_rules('price','每平方单价','required|is_numeric');
 		self::$CI->form_validation->set_rules('resident_name','小区名称','required|in_db_list['.$this->_residentModel->getTableRealName().'.name]');
 		
+		self::$CI->form_validation->set_rules('fee_type','计费方式','required|in_db_list['.self::$CI->Basic_Data_Model->getTableRealName().'.show_name]');
+		
 	}
+	*/
 	
 	
 	/**
 	 * 检查费用类型 是否存储
 	 */
-	public function checkFeetype($pHouseId,$extraStr = ''){
+	public function checkFeetype($pId,$extraStr = ''){
+		
+		//年份.费用类型名称
 		$extraInfo = explode(',',$extraStr);
 		
 		$flag = false;
 		
 		if(!empty($extraInfo[0]) && !empty($extraInfo[1])){
-			$houseInfo = $this->_houseModel->getFirstByKey($pHouseId);
-			if($houseInfo['resident_id']){
+			
+			if('物业费' == $extraInfo[1] || '能耗费' == $extraInfo[1]){
+				$info = $this->_houseModel->getFirstByKey($pId,'id','resident_id');
+			}else if('车位费' == $extraInfo[1]){
+				$info = $this->_parkingModel->getFirstByKey($pId,'id','resident_id');
+			}
+			
+			if($info['resident_id']){
 				
 				$cnt = $this->_feeTypeModel->getCount(array(
 					'where' => array(
 						'name' => $extraInfo[1],
 						'year' => $extraInfo[0],
-						'resident_id' => $houseInfo['resident_id']
+						'resident_id' => $info['resident_id']
 					)
 				));
-				
-				
+			
 				if($cnt){
 					$flag = true;
 				}
@@ -235,7 +181,7 @@ class Wuye_service extends Base_service {
 		$residentFee = array();
 		
 		$feeInfo = $this->_feeTypeModel->getList(array(
-			'select' => 'year,name,price',
+			'select' => 'year,name,price,billing_style',
 			'where' => array(
 				'year' => $year,
 				'name' => $pOrderTypename,
@@ -259,7 +205,6 @@ class Wuye_service extends Base_service {
 	 */
 	public function setFeeTimeRules($year){
 		self::$CI->form_validation->set_rules('year','缴费年份','required|is_natural_no_zero|greater_than_equal_to['.$year.']');
-		//self::$CI->form_validation->set_rules('start_month','缴费起始月份','required|is_natural_no_zero|greater_than_equal_to[1]|less_than_equal_to[12]');
 		self::$CI->form_validation->set_rules('end_month','缴费到期月份','required|is_natural_no_zero|greater_than_equal_to[1]|less_than_equal_to[12]');
 	}
 	
@@ -268,16 +213,33 @@ class Wuye_service extends Base_service {
 	 * 
 	 * @return float   
 	 */
-	public function computeHouseFee($pComputeParam){
+	public function computeFee($pComputeParam){
 		
-		$houseInfo = $this->_houseModel->getFirstByKey($pComputeParam['id']);
+		if('车位费' != $pComputeParam['orderTypeName']){
+			$info = $this->_houseModel->getFirstByKey($pComputeParam['id'],'id','resident_id,jz_area');
+		}else{
+			$info = $this->_parkingModel->getFirstByKey($pComputeParam['id'],'id','resident_id');
+		}
+		
 		//获得费用设置
-		$tempFeeSetting = $this->getResidentFeeSetting($houseInfo['resident_id'],$pComputeParam['year'],$pComputeParam['orderTypeName']);
+		$tempFeeSetting = $this->getResidentFeeSetting($info['resident_id'],$pComputeParam['year'],$pComputeParam['orderTypeName']);
 		
 		//基于按年缴费的方式
 		$monthCnt = intval(date('m',$pComputeParam['newEndTimeStamp'])) - intval(date('m',$pComputeParam['newStartTimeStamp'])) + 1;
 		
-		return number_format($monthCnt * $tempFeeSetting['price'] * $houseInfo['jz_area'],2,'.',"");
+		if('按每平方' == $tempFeeSetting['billing_style']){
+			
+			return number_format($monthCnt * $tempFeeSetting['price'] * $info['jz_area'],2,'.',"");
+			
+		}else if('按每月固定值' == $tempFeeSetting['billing_style']){
+			
+			return number_format($monthCnt * $tempFeeSetting['price'],2,'.',"");
+			
+		}else{
+			
+			return 999999.99;
+		}
+		
 	}
 	
 	
@@ -285,13 +247,20 @@ class Wuye_service extends Base_service {
 	 * 获得缴费情况
 	 * 
 	 */
-	public function getCurrentHouseFeeInfo($pHouseId,$pOrderTypename,$endMonth = 0){
+	public function getCurrentFeeInfo($pId,$pOrderTypename,$endMonth = 0){
 		
-		$houseInfo = $this->_houseModel->getFirstByKey($pHouseId);
+		if('车位费' != $pOrderTypename){
+			$info = $this->_houseModel->getFirstByKey($pId,'id','id,resident_id,address,wuye_expire,nenghao_expire');
+		}else{
+			$info = $this->_parkingModel->getFirstByKey($pId,'id','id,resident_id,name,expire');
+		}
 		
 		$temp = array(
-			'id' => $pHouseId,
+			'id' => $pId,
+			'resident_id' => $info['resident_id'],
+			'goods_name' => '',
 			'year' => date('Y'),
+			'endMonth' => $endMonth,
 			'expireTimeStamp' => 0,//原到期时间戳
 			'newStartTimeStamp' => 0,//新开始时间戳
 			'newEndTimeStamp' => 0,	//新的结束时间戳,
@@ -300,10 +269,16 @@ class Wuye_service extends Base_service {
 		
 		switch($pOrderTypename){
 			case '物业费':
-				$temp['expireTimeStamp'] = $houseInfo['wuye_expire'];
+				$temp['expireTimeStamp'] = $info['wuye_expire'];
+				$temp['goods_name'] = $info['address'];
 				break;
 			case '能耗费':
-				$temp['expireTimeStamp'] = $houseInfo['nenghao_expire'];
+				$temp['expireTimeStamp'] = $info['nenghao_expire'];
+				$temp['goods_name'] = $info['address'];
+				break;
+			case '车位费':
+				$temp['expireTimeStamp'] = $info['expire'];
+				$temp['goods_name'] = $info['name'];
 				break;
 			default:
 				break;
@@ -367,14 +342,19 @@ class Wuye_service extends Base_service {
 	 * 获得业主信息
 	 */
 	public function getYezhuInfoById($pId,$key = 'uid'){
-		$yezhuInfo = $this->_yezhuModel->getFirstByKey($pId,$key);
 		
-		//注意身份证件号码的隐藏
+		$yezhuList = $this->_yezhuModel->getList(array(
+			'where' => array(
+				$key => $pId
+			),
+			'limit' => 1
+		));
 		
-		if($yezhuInfo){
-			$yezhuInfo['id_no'] = mask_string($yezhuInfo['id_no']);
+		if($yezhuList[0]){
+			//注意身份证件号码的隐藏
+			$yezhuList[0]['id_no'] = mask_string($yezhuList[0]['id_no']);
 			
-			return $yezhuInfo;
+			return $yezhuList[0];
 		}else{
 			return array();
 		}
@@ -383,20 +363,18 @@ class Wuye_service extends Base_service {
 	
 	
 	/**
-	 * 获得业主物业类别
+	 * 获得业主物业列表
 	 */
-	public function getYezhuHouseListByYezhu($pYezhu){
+	public function getHouseListByYezhu($pYezhu){
 		
 		$yezhuHouseList = $this->_houseModel->getList(array(
 			'select' => 'id,address,jz_area,lng,lat,wuye_expire,nenghao_expire',
 			'where' => array(
-				'yezhu_id' => $pYezhu['id']
+				'uid' => $pYezhu['uid']
 			)
 		));
 		
-		
 		$list = array();
-		
 		
 		foreach($yezhuHouseList as $houseIndex => $houseInfo){
 			if($houseInfo['wuye_expire']){
@@ -419,7 +397,7 @@ class Wuye_service extends Base_service {
 	
 	
 	/**
-	 * 根据业主 获得物业
+	 * 根据业主 获得物业详情
 	 */
 	public function getYezhuHouseDetail($houseId,$pYezhu = array()){
 		
@@ -431,7 +409,7 @@ class Wuye_service extends Base_service {
 		);
 		
 		if($pYezhu){
-			$condition['where']['yezhu_id'] = $pYezhu['id'];
+			$condition['where']['uid'] = $pYezhu['uid'];
 		}
 		
 		$houseInfo = $this->_houseModel->getById($condition);
@@ -452,5 +430,65 @@ class Wuye_service extends Base_service {
 		
 	}
 	
+	
+	
+	/**
+	 * 获得业主物业
+	 */
+	public function getParkingListByYezhu($pYezhu){
+		
+		$parkingList = $this->_parkingModel->getList(array(
+			'select' => 'id,name,jz_area,lng,lat,expire',
+			'where' => array(
+				'uid' => $pYezhu['uid']
+			)
+		));
+		
+		$list = array();
+		
+		foreach($parkingList as $index => $item){
+			if($item['expire']){
+				$houseInfo['expire_date'] = date('Y-m-d',$houseInfo['expire']);
+			}
+			
+			$list[] = $item;
+		}
+		
+		
+		return array(
+			'parkingCnt' => count($list),
+			'parkingList' => $list
+		);
+	}
+	
+	
+	/**
+	 * 根据业主 获得物业
+	 */
+	public function getYezhuParkingDetail($pId,$pYezhu = array()){
+		
+		$condition = array(
+			'select' => 'id,resident_id,name,jz_area,yezhu_name,lng,lat,expire',
+			'where' => array(
+				'id' => $pId,
+			)
+		);
+		
+		if($pYezhu){
+			$condition['where']['uid'] = $pYezhu['uid'];
+		}
+		
+		$parkingInfo = $this->_parkingModel->getById($condition);
+		
+		if($parkingInfo){
+			if($parkingInfo['expire']){
+				$parkingInfo['expire_date'] = date('Y-m-d',$parkingInfo['expire']);
+			}
+			
+			return $parkingInfo;
+		}else{
+			return array();
+		}
+	}
 	
 }

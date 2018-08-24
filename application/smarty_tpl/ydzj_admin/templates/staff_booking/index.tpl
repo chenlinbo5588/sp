@@ -91,9 +91,10 @@
          <td><div>{$bookingStatus[$item['order_status']]}</div></td>
          <td>
          	{if $item['service_name'] == '保洁'}
-         		<a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}">编辑</a>
+         		{if isset($permission[$moduleClassName|cat:'/edit'])}<a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}">编辑</a>{/if}
          	{/if}
-          		<a href="{admin_site_url($moduleClassName|cat:'/detail')}?id={$item['id']}">预约单详情</a>
+         	
+          	{if isset($permission[$moduleClassName|cat:'/detail'])}<a href="{admin_site_url($moduleClassName|cat:'/detail')}?id={$item['id']}">预约单详情</a>{/if}
           	
           </td>
         </tr>
@@ -102,10 +103,10 @@
     </table>
     <div class="fixedOpBar">
     	<label><input type="checkbox" class="checkall" id="checkallBottom" name="chkVal">全选</label>&nbsp;
-       	<a href="javascript:void(0);" class="btn verifyBtn" data-title="取消预约" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/batch_cancel')}" data-ajaxformid="#verifyForm"><span>取消预约</span></a>
-       	<a href="javascript:void(0);" class="btn verifyBtn" data-title="恢复预约" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/batch_restore')}" data-ajaxformid="#verifyForm"><span>恢复预约</span></a>
-       	<a href="javascript:void(0);" class="btn verifyBtn" data-title="发送提醒" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/remind')}" data-ajaxformid="#verifyForm"><span>提醒</span></a>
-   		<a href="javascript:void(0);" class="btn verifyBtn" data-title="选择更改的状态" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/change_state')}" data-ajaxformid="#verifyForm"><span>更改状态</span></a>
+       	{if isset($permission[$moduleClassName|cat:'/batch_cancel'])}<a href="javascript:void(0);" class="btn verifyBtn" data-title="取消预约" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/batch_cancel')}" data-ajaxformid="#verifyForm"><span>取消预约</span></a>{/if}
+       	{if isset($permission[$moduleClassName|cat:'/batch_restore'])}<a href="javascript:void(0);" class="btn verifyBtn" data-title="恢复预约" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/batch_restore')}" data-ajaxformid="#verifyForm"><span>恢复预约</span></a>{/if}
+       	{if isset($permission[$moduleClassName|cat:'/remind'])}<a href="javascript:void(0);" class="btn verifyBtn" data-title="发送提醒" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/remind')}" data-ajaxformid="#verifyForm"><span>提醒</span></a>{/if}
+   		{if isset($permission[$moduleClassName|cat:'/change_state'])}<a href="javascript:void(0);" class="btn verifyBtn" data-title="选择更改的状态" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/change_state')}" data-ajaxformid="#verifyForm"><span>更改状态</span></a>{/if}
     </div>
   </form>
   <div id="verifyDlg"></div>

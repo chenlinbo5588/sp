@@ -118,44 +118,6 @@ class Staff_service extends Base_service {
 	
 	
 	/**
-	 * 添加ID 校验
-	 */
-	public function addIDRules($idTypeList,$pIdType,$id = 0,$dbCheck = true,$tableName = ''){
-		$idRules = array('required');
-		
-		if(ENVIRONMENT == 'production'){
-			$idName = '';
-			
-			foreach($idTypeList as $idTypeItem){
-				if($idTypeItem['id'] == $pIdType || $idTypeItem['show_name'] == $pIdType){
-					$idName = $idTypeItem['show_name'];
-				}
-			}
-			
-			if('身份证' == $idName || '驾驶证' == $idName){
-				$idRules[] = 'valid_idcard';
-			}else{
-				$idRules[] = 'max_length[50]';
-			}
-		}else{
-			$idRules[] = 'max_length[50]';
-		}
-		
-		//数据库校验
-		if($dbCheck){
-			if($id){
-				$idRules[] = 'is_unique_not_self['.$tableName.".id_no.id.{$id}]";
-			}else{
-				$idRules[] = 'is_unique['.$tableName.".id_no]";
-			}
-		}
-		
-		self::$CI->form_validation->set_rules('id_no','证件号码',implode('|',$idRules));
-	}
-	
-	
-	
-	/**
 	 * 
 	 */
 	public function addWorkerRules(){

@@ -14,17 +14,16 @@
       		<td class="vatop tips"><label class="errtip" id="error_msg_type"></label>{form_error('msg_type')}</td>
       	</tr>
         <tr class="noborder">
-          <td colspan="2" class="required"><label class="validation">目标组: </label><label><input type="checkbox" name="ckall" class="checkall" value="全选"/>全选</label></td>
+          <td colspan="2" class="required"><label class="validation">目标组: </label><label><input type="checkbox" name="ckall" value="全选"/>全选</label><label class="errtip" id="error_send_group"></label>{form_error('send_group[]')}</td>
         </tr>
         <tr class="noborder">
-          <td class="vatop rowform">
-          	  <ul>
+          <td class="vatop rowform" colspan="2">
+          	  <ul class="ulListStyle1 clearfix" id="groupList">
               {foreach from=$group item=item}
-              	<li><label><input type="checkbox" value="{$item['id']}" group="ckall" name="send_group[]" {if $inDetail}{if in_array($item['id'],$info['groups']) }checked{/if}{else}{set_checkbox('send_group[]',$item['id'])}{/if}  >{$item['name']|escape}</label></li>
+              	<li><label><input type="checkbox" value="{$item['id']}" group="ckall" name="send_group[]" {if $inDetail}{if in_array($item['id'],$info['groups']) }checked{/if}{else}{set_checkbox('send_group[]',$item['id'])}{/if}><span>{$item['name']|escape}</span></label></li>
               {/foreach}
               </ul>
           </td>
-          <td class="vatop tips"><label class="errtip" id="error_send_group"></label>{form_error('send_group[]')}</td>
         </tr>
         <tr class="noborder">
           <td colspan="2" class="required"><label>发送模式: </label></td>

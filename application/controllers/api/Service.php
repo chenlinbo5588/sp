@@ -8,7 +8,6 @@ class Service extends Wx_Controller {
 		parent::__construct();
         
     	$this->load->library(array('Staff_service','Cart'));
-    	$this->form_validation->set_error_delimiters('','');
     	
 	}
 	

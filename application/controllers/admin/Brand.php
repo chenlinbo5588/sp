@@ -24,7 +24,6 @@ class Brand extends Ydzj_Admin_Controller {
 			array('url' => $this->_className.'/add','title' => '添加'),
 		);
 		
-		$this->form_validation->set_error_delimiters('<div>','</div>');
 		
 	}
 	

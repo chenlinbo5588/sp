@@ -33,30 +33,5 @@
       </tfoot>
     </table>
   </form>
-<script type="text/javascript">
-//<!CDATA[
-$(function(){
-	$('#form').validate({
-		rules : {
-			image_max_size : {
-				number : true,
-				maxlength : 4
-			},
-			image_allow_ext : {
-				required : true
-			}
-		},
-		messages : {
-			image_max_size : {
-				number : '图片文件大小仅能为数字',
-				maxlength : '图片文件大小最多四位数'
-			},
-			image_allow_ext : {
-				required : '图片扩展名不能为空'
-			}
-		}
-	});
-});
-//]]>
-</script>
+
 {include file="common/main_footer.tpl"}

@@ -30,7 +30,10 @@
           <td class="align-center yes-onoff">
           	<a href="javascript:void(0);" data-url="{admin_site_url($moduleClassName|cat:'/inline_edit')}" {if $item['enable']}class="enabled"{else}class="disabled"{/if} data-id="{$item['id']}" data-fieldname="enable"><img src="{resource_url('img/transparent.gif')}"></a>
           </td>
-          <td class="align-center"><a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}">编辑</a>&nbsp;|&nbsp;<a href="javascript:void(0)" class="delete" data-url="{admin_site_url($moduleClassName|cat:'/delete')}" data-id="{$item['id']}">删除</a></td>
+          <td class="align-center">
+          	{if isset($permission[$moduleClassName|cat:'/edit'])}<a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}">编辑</a>{/if}&nbsp;
+          	{if isset($permission[$moduleClassName|cat:'/delete'])}<a href="javascript:void(0)" class="delete" data-url="{admin_site_url($moduleClassName|cat:'/delete')}" data-id="{$item['id']}">删除</a>{/if}
+          </td>
         </tr>
         {/foreach}
       </tbody>
@@ -50,11 +53,14 @@
 <script>
 $(function(){
     bindDeleteEvent();
+    
     bindOnOffEvent();
     
+    {if isset($permission['basic_data/inline_edit'])}
     $("span.editable").inline_edit({ 
     	url: "{admin_site_url($moduleClassName|cat:'/inline_edit')}"
     });
+    {/if}
 });
 </script>
 {include file="common/main_footer.tpl"}

@@ -5,9 +5,23 @@ $(function(){
 	bindAjaxSubmit("#infoform");
 	
 	$('.fancybox').fancybox();
-		
+	
 	$( "#address" ).autocomplete({
-		source: searchAddressUrl,
+		source: function( request, response ) {
+			
+			$.ajax( {
+	            url: searchAddressUrl,
+	            dataType: "json",
+	            data: {
+	              term: request.term,
+	              resident_id:$("input[name=resident_id]:checked").val(),
+	            },
+	            success: function( data ) {
+	              response( data );
+	            }
+	          } 
+			);
+        },
 		minLength: 2,
 		select: function( event, ui ) {
 			$("input[name=yezhu_name]").val(ui.item.name);

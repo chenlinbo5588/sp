@@ -23,13 +23,7 @@
       		</tr>
       </thead>
       <tbody>
-  	        <tr class="noborder">
-	          <td colspan="2"><label for="name">{#resident_name#}:</label></td>
-	        </tr>
-	        <tr class="noborder">
-	          <td class="vatop rowform"><input class="txt" name="resident_name" value="" type="text"></td>
-	          <td class="vatop tips">选填</td>
-	        </tr>  
+  	        {include file="common/resident_radio.tpl"}
 			<tr class="noborder">
 	          <td colspan="2"><label for="name">{#address#}:</label></td>
 	        </tr>
@@ -45,7 +39,7 @@
 	          <td class="vatop tips">选填</td>
 	        </tr>  
 	        <tr class="noborder">
-	          <td colspan="2"><label for="name">页码</label>
+	          <td colspan="2"><label for="page">页码</label>
 	        </tr>
 	        <tr class="noborder">
 	          <td class="vatop rowform">

@@ -6,6 +6,8 @@ class Repair extends Ydzj_Admin_Controller{
 		parent::__construct();
 		$this->load->library(array('Wuye_service','Basic_data_service','Attachment_service'));
 		
+		$this->wuye_service->setDataModule($this->_dataModule);
+		
 		$this->_moduleTitle = '报修';
 		$this->_className = strtolower(get_class());
 		
@@ -22,7 +24,6 @@ class Repair extends Ydzj_Admin_Controller{
 			array('url' => $this->_className.'/add','title' => '添加')
 		);
 		
-		$this->form_validation->set_error_delimiters('<div>','</div>');
 	}
 	
 	public function  _searchCondition($moreSearchVal = array()){
@@ -64,7 +65,7 @@ class Repair extends Ydzj_Admin_Controller{
 			$condition['where']['status !='] = $search['status != '];
 		}
 		
-		$list = $this->Repair_Model->getList($condition);
+		$list = $this->wuye_service->search($this->_moduleTitle,$condition);
 		
 		
 		$this->assign('list',$list);
@@ -79,15 +80,53 @@ class Repair extends Ydzj_Admin_Controller{
 	public function index(){
 		$this->_searchCondition(array('status != ' => RepairStatus::$deleted));
 		$this->display($this->_className.'/index');
-		
 	}
 	
 	private function _getRules(){
+		
+		
+		
 		$this->form_validation->set_rules('repair_type','报修类型','required');
-		$this->form_validation->set_rules('address','地址','required|in_db_list['.$this->House_Model->getTableRealName().'.address]');
+		$this->form_validation->set_rules('address','地址','required|callback_checkOwnerAddress');
 		$this->form_validation->set_rules('mobile','手机号码','required|valid_mobile');
 		$this->form_validation->set_rules('remark','备注','required');		
 	}
+	
+
+	/**
+	 * 自定义物业地址查询
+	 */
+	public function checkOwnerAddress($pAddress){
+		
+		$cnt = $this->wuye_service->getRecordCount('房屋',array(
+			'where' => array(
+				'address' => $pAddress
+			)
+		));
+		
+		if($cnt == 0){
+			$this->form_validation->set_message('checkOwnerAddress','找不到该物业地址');
+			return false;
+		}
+		
+		return true;
+		
+	}
+	
+	
+	/**
+	 * 
+	 */
+	private function _commonPageData(){
+		
+		$this->assign(array(
+			'residentList' => $this->wuye_service->search('小区',array(
+    				'select' => 'id,name',
+					'order' => 'displayorder DESC'
+				),'id'),
+		));
+	}
+	
 	
 	/**
 	 * 
@@ -99,46 +138,47 @@ class Repair extends Ydzj_Admin_Controller{
 			
 			for($i = 0; $i < 1; $i++){
 				
+				$residentList = $this->wuye_service->search('小区',array(),'id');
+				$this->form_validation->set_rules('resident_id','小区名称','required|in_list['.implode(',',array_keys($residentList)).']');
+				
 				$this->_getRules();
 				
-				$info = $this->_prepareData();
+				
 				if(!$this->form_validation->run()){
 					$this->jsonOutput('数据校验失败,'.$this->form_validation->error_string(),array('errors' => $this->form_validation->error_array()));
 					break;
 				}
 				
-				if(!empty($_POST['address'])){
-					$houseInfo = $this->House_Model->getById(array(
-						'where' => array(
-							'address' => $_POST['address']
-						)
-					));
-					
-					$_POST['resident_id'] = $houseInfo['resident_id'];
+				$info = array_merge($_POST,$this->_prepareData(),$this->addWhoHasOperated('add'));
+				
+				$houseInfo = $this->House_Model->getFirstByKey($info['address'],'address');
+				
+				if(empty($houseInfo)){
+					$this->jsonOutput('物业地址不存在');
+					break;
 				}
 				
-				if(!empty($_POST['yezhu_name'])){
-					$yezhuInfo = $this->Yezhu_Model->getById(array(
-						'where' => array(
-							'name' => $_POST['yezhu_name']
-						)
-					));
-					
-					if(!empty($yezhuInfo)){
-						$_POST['yezhu_id'] = $yezhuInfo['id'];
-					}
+				$info['yezhu_id'] = $houseInfo['yezhu_id'];
+				
+				if(empty($info['yezhu_name'])){
+					$info['yezhu_name'] = $houseInfo['yezhu_name'];
 				}
+				
+				$info['house_id'] = $houseInfo['id'];
+				
 				
 				if(!empty($_POST['worker_name']) && !empty($_POST['worker_mobile'])){
 					$_POST['status'] = RepairStatus::$sendOrder;
 				}
 				
-				$newId = $this->Repair_Model->_add(array_merge($_POST,$this->_prepareData(),$this->addWhoHasOperated('add')));
+				$newId = $this->Repair_Model->_add($info);
+				
 				$error = $this->Repair_Model->getError();
 				if(QUERY_OK != $error['code']){
 					$this->jsonOutput('数据库错误,请稍后再次尝试');
 					break;
 				}
+				
 				
 				if($_POST['img_file_id']){
 					$this->Repair_Images_Model->updateByCondition(array(
@@ -157,14 +197,18 @@ class Repair extends Ydzj_Admin_Controller{
 				$this->jsonOutput('保存成功,页面即将刷新',array('redirectUrl' => admin_site_url($this->_className.'/index')));
 			}
 		}else{
+			
+			$this->_commonPageData();
+			
 			$this->display();
 		}
-
 	}	
 	
 	private function _prepareData(){
 		$data['displayorder'] = $this->input->post('displayorder');
+		
 		return array(
+			'source' => '手工单',
 			'displayorder' => $data['displayorder'] ? $data['displayorder'] : 255
 		);
 	}
@@ -315,17 +359,40 @@ class Repair extends Ydzj_Admin_Controller{
 		
 		if($this->isPostRequest()){
 			
+			$residentList = $this->wuye_service->search('小区',array(),'id');
+			$this->form_validation->set_rules('resident_id','小区名称','required|in_list['.implode(',',array_keys($residentList)).']');
+				
+				
 			$this->_getRules();
 			
 			for($i = 0; $i < 1; $i++){
-				$info = array_merge($info,$_POST,$this->_prepareData(),$this->addWhoHasOperated('edit'));
+				
+				
 				
 				if(!$this->form_validation->run()){
 					$this->jsonOutput('数据校验失败,'.$this->form_validation->error_string(),array('errors' => $this->form_validation->error_array()));
 					break;
 				}
 				
-				$this->Repair_Model->update(array_merge($info,$_POST,$this->addWhoHasOperated('edit')),array('id' => $id));
+				$info = array_merge($_POST,$this->_prepareData(),$this->addWhoHasOperated('edit'));
+				
+				$houseInfo = $this->House_Model->getFirstByKey($info['address'],'address');
+				
+				if(empty($houseInfo)){
+					$this->jsonOutput('物业地址不存在');
+					break;
+				}
+				
+				$info['yezhu_id'] = $houseInfo['yezhu_id'];
+				
+				if(empty($info['yezhu_name'])){
+					$info['yezhu_name'] = $houseInfo['yezhu_name'];
+				}
+				
+				$info['house_id'] = $houseInfo['id'];
+				
+				$this->Repair_Model->update($info,array('id' => $id));
+				
 				$error = $this->Repair_Model->getError();
 				
 				if(QUERY_OK != $error['code']){
@@ -341,6 +408,9 @@ class Repair extends Ydzj_Admin_Controller{
 			
 			$this->assign('imgList',$imgList);
 			$this->assign('info',$info);
+			
+			$this->_commonPageData();
+			
 			$this->display($this->_className.'/add');
 			
 		}
@@ -354,7 +424,6 @@ class Repair extends Ydzj_Admin_Controller{
 		$id = $this->input->get_post('id');
 		$newValue = $this->input->get_post('value');
 		
-		$this->form_validation->set_error_delimiters('','');
 		
 		
 		for($i = 0 ; $i < 1; $i++){

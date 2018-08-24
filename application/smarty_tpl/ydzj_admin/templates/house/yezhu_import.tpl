@@ -16,6 +16,19 @@
         		</ol>
         	</td
         </tr>
+        {include file="common/resident_radio.tpl"}
+        <tr class="noborder">
+          <td colspan="2"><label for="name">更新缴费信息:</label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform">
+          	<ul class="ulListStyle1 clearfix">
+          		<li><label><input type="radio" name="update_fee" value="是"/><span>是</span></label></li>
+          		<li class="selected"><label><input type="radio" name="update_fee" checked="checked" value="否"/><span>否</span></label></li>
+          	</ul>
+          </td>
+          <td class="vatop tips"><div class="orange">将会覆盖原缴费到期时间，请务必谨慎操作。注意：Excel表格中的物业费、能耗费缴费到期日期必须晚于已缴费日期，否则更新不会成功。</div></td>
+        </tr>
         <tr class="noborder">
           <td colspan="2"><label class="validation">请选择待导入的Excel文件:</label></td>
         </tr>

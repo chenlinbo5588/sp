@@ -9,6 +9,18 @@
 	<input type="hidden" name="gobackUrl" value="{$gobackUrl}"/>
     <table class="table tb-type2 mgbottom">
       <tbody>
+      	<tr class="noborder">
+          <td colspan="2"><label class="validation">{#resident_name#}:</label><label class="errtip" id="error_resident_id"></label>{form_error('resident_id')}</td>
+        </tr>
+        <tr class="noborder">
+        	<td colspan="2">
+	          	<ul class="ulListStyle1 clearfix">
+	          	{foreach from=$residentList item=item}
+	          		<li {if $info['resident_id'] == $item['id']}class="selected"{/if}><label><input type="radio" name="resident_id" {if $info['resident_id'] == $item['id']}checked="checked"{/if} value="{$item['id']}"/><span>{$item['name']|escape}</span></label></li>
+	          	{/foreach}
+	          	</ul>
+	         </td>
+        </tr>
 		<tr class="noborder">
           <td colspan="2" class="required"><label class="validation" for="name">{#repair_type#}:</label></td>
         </tr>

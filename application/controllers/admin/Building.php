@@ -4,10 +4,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Building extends Ydzj_Admin_Controller {
 	
+	private $_moduleTitle;
+	
 	public function __construct(){
 		parent::__construct();
 		
 		$this->load->library(array('Wuye_service'));
+		
+		$this->wuye_service->setDataModule($this->_dataModule);
+		
 		
 		$this->_moduleTitle = '建筑物';
 		$this->_className = strtolower(get_class());
@@ -27,7 +32,6 @@ class Building extends Ydzj_Admin_Controller {
 		);
 		
 		
-		$this->form_validation->set_error_delimiters('<div>','</div>');
 	}
 	
 	
@@ -50,13 +54,14 @@ class Building extends Ydzj_Admin_Controller {
 		
 		
 		$search['name'] = $this->input->get_post('name');
-		$search['address'] = $this->input->get_post('address');
-		$search['resident_name'] = $this->input->get_post('resident_name');
+		//$search['address'] = $this->input->get_post('address');
+		//$search['resident_name'] = $this->input->get_post('resident_name');
 		
 		if($search['name']){
 			$condition['like']['name'] = $search['name'];
 		}
 		
+		/*
 		if($search['address']){
 			$condition['like']['address'] = $search['address'];
 		}
@@ -73,9 +78,10 @@ class Building extends Ydzj_Admin_Controller {
 				$condition['where']['resident_id'] = $resident['id'];
 			}
 		}
+		*/
 		
 		
-		$list = $this->Building_Model->getList($condition);
+		$list = $this->wuye_service->search($this->_moduleTitle,$condition);
 		
 		$this->assign(array(
 			'list' => $list,
@@ -93,7 +99,8 @@ class Building extends Ydzj_Admin_Controller {
 	 * 验证
 	 */
 	private function _getRules(){
-		$this->form_validation->set_rules('resident_id','小区名称','required|in_db_list['.$this->Resident_Model->getTableRealName().'.id]');
+		$this->form_validation->set_rules('name','建筑物名称','required|min_length[2]|max_length[100]');
+		
 		$this->form_validation->set_rules('address','小区地址','required|min_length[2]|max_length[200]');
 		$this->form_validation->set_rules('nickname','建筑物别名','min_length[2]|max_length[100]');
 		
@@ -118,15 +125,44 @@ class Building extends Ydzj_Admin_Controller {
 		
 		if($this->isPostRequest() && !empty($ids)){
 			
-			if(!is_array($ids)){
-				$ids = (array)$ids;
+			for($i = 0; $i < 1 ; $i++){
+				if(!is_array($ids)){
+					$ids = (array)$ids;
+				}
+				
+				$canDeleteIds = array();
+				
+				foreach($ids as $id){
+					
+					$houseCount = $this->wuye_service->getRecordCount('房屋',array(
+						'where' => array(
+							'building_id' => $id,
+						)
+					));
+					
+					if($houseCount){
+						continue;
+					}
+					
+					$canDeleteIds[] = $id;
+				}
+				
+				if($canDeleteIds){
+					$deleteRows = $this->Building_Model->deleteByCondition(array(
+						'where_in' => array(
+							array('key' => 'id','value' => $canDeleteIds)
+						)
+					));
+					
+					$this->jsonOutput('成功删除'.$deleteRows.'条记录',array('deletedIds' => $canDeleteIds));
+				}else{
+					$this->jsonOutput('删除失败,建筑物已配置房屋信息');
+				}
+				
 			}
 			
-			//@todo 
-			$this->jsonOutput('删除失败，待开发完善',$this->getFormHash());
-			
 		}else{
-			$this->jsonOutput('请求非法',$this->getFormHash());
+			$this->jsonOutput('请求非法');
 			
 		}
 	}
@@ -138,10 +174,14 @@ class Building extends Ydzj_Admin_Controller {
 	 */
 	private function _preparePageData(){
 		
-		$residentList = $this->Resident_Model->getList(array(
+		$residentList = $this->wuye_service->getOwnedResidentList(array(
 			'select' => 'id,name,address,lng,lat',
 			'order' => 'displayorder DESC'
 		),'id');
+		
+		if(empty($residentList)){
+			$residentList = array();
+		}
 		
 		$this->assign(array(
 			'residentList' => $residentList,
@@ -180,21 +220,39 @@ class Building extends Ydzj_Admin_Controller {
 	 */
 	public function add(){
 		$feedback = '';
-		//print_r($_FILES);
 		
 		$residentId = $this->input->get_post('resident_id');
 		
 		if($this->isPostRequest()){
 			
-			//注意添加规则的顺序
+			$residentList = $this->wuye_service->getOwnedResidentList(array(
+				'select' => 'id,name'
+			),'id');
+			
+			
+			$this->form_validation->set_rules('resident_id','小区名称','required|in_list['.implode(',',array_keys($residentList)).']',array(
+				'in_list' => '小区数据非法'
+			));
+			
 			$this->_getRules();
-			$this->_getNameRule();
+			
 			
 			for($i = 0; $i < 1; $i++){
 				if(!$this->form_validation->run()){
 					$this->jsonOutput('数据校验失败,'.$this->form_validation->error_string(),array('errors' => $this->form_validation->error_array()));
 					break;
 				}
+				
+				$this->form_validation->reset_validation();
+				
+				//再校验名称
+				$this->_getNameRule(0,$residentId);
+				
+				if(!$this->form_validation->run()){
+					$this->jsonOutput('数据校验失败,'.$this->form_validation->error_string(),array('errors' => $this->form_validation->error_array()));
+					break;
+				}
+				
 				
 				$newid =$this->Building_Model->_add(array_merge($_POST,$this->_prepareData(),$this->addWhoHasOperated('add')));
 				$error = $this->Building_Model->getError();
@@ -213,9 +271,6 @@ class Building extends Ydzj_Admin_Controller {
 			}
 		}else{
 			
-			if($residentId){
-				$this->assign('info', array('resident_id' => $residentId));
-			}
 			$this->_preparePageData();
 			$this->display();
 		}
@@ -230,13 +285,18 @@ class Building extends Ydzj_Admin_Controller {
 	public function checkName($name,$residentId = 0){
 		
 		if(empty($residentId)){
-			return true;	
+			return true;
 		}
 		
 		$residentInfo = $this->Resident_Model->getFirstByKey($residentId,'id','name');
 		
 		if(!preg_match("/^{$residentInfo['name']}/is",$name)){
 			$this->form_validation->set_message('checkName',$this->_moduleTitle.'名称必须包含小区名称并且以小区名称开始');
+			return false;
+		}
+		
+		if($residentInfo['name'] == $name){
+			$this->form_validation->set_message('checkName',$this->_moduleTitle.'名称不能和小区名称相同');
 			return false;
 		}
 		
@@ -249,10 +309,17 @@ class Building extends Ydzj_Admin_Controller {
 	 * 导入校验规则
 	 */
 	public function checkName2($name,$residentName){
+		
 		if(!preg_match("/^{$residentName}/is",$name)){
 			$this->form_validation->set_message('checkName2',$this->_moduleTitle.'名称必须包含小区名称并且以小区名称开始');
 			return false;
 		}
+		
+		if($residentName == $name){
+			$this->form_validation->set_message('checkName',$this->_moduleTitle.'名称不能和小区名称相同');
+			return false;
+		}
+		
 		
 		return true;
 	}
@@ -262,13 +329,12 @@ class Building extends Ydzj_Admin_Controller {
 	/**
 	 * 获取
 	 */
-	private function _getNameRule($id = 0){
+	private function _getNameRule($id = 0,$residentId = 0){
+		
 		if($id){
-			$residentInfo = $this->Building_Model->getFirstByKey($id,'id','resident_id');
-			
-			$this->form_validation->set_rules('name','建筑物名称','required|min_length[2]|max_length[200]|callback_checkName['.$residentInfo['resident_id'].']|is_unique_not_self['.$this->Building_Model->getTableRealName().".name.id.{$id}]");
+			$this->form_validation->set_rules('name','建筑物名称','required|min_length[2]|max_length[100]|callback_checkName['.$residentId.']|is_unique_not_self['.$this->Building_Model->getTableRealName().".name.id.{$id}]");
 		}else{
-			$this->form_validation->set_rules('name','建筑物名称','required|min_length[2]|max_length[200]|callback_checkName|is_unique['.$this->Building_Model->getTableRealName().".name]");
+			$this->form_validation->set_rules('name','建筑物名称','required|min_length[2]|max_length[100]|callback_checkName['.$residentId.']|is_unique['.$this->Building_Model->getTableRealName().".name]");
 		}
 		
 	}
@@ -281,9 +347,6 @@ class Building extends Ydzj_Admin_Controller {
 		
 		$feedback = '';
 		$id = $this->input->get_post('id');
-		$residentId = $this->input->get_post('resident_id');
-		
-		
 		
 		$info = $this->Building_Model->getFirstByKey($id);
 		
@@ -292,18 +355,20 @@ class Building extends Ydzj_Admin_Controller {
 		if($this->isPostRequest()){
 			
 			$this->_getRules();
-			$this->_getNameRule($id);
+			
+			$this->_getNameRule($id,$info['resident_id']);
 			
 			for($i = 0; $i < 1; $i++){
+				
 				$info = array_merge($info,$_POST,$this->_prepareData(),$this->addWhoHasOperated('edit'));
-				$info['id'] = $id;
 				
 				if(!$this->form_validation->run()){
 					$this->jsonOutput('数据校验失败,'.$this->form_validation->error_string(),array('errors' => $this->form_validation->error_array()));
 					break;
 				}
 				
-				$this->Building_Model->update(array_merge($info,$_POST,$this->addWhoHasOperated('edit')),array('id' => $id));
+				
+				$this->Building_Model->update(array_merge($_POST,$this->_prepareData(),$this->addWhoHasOperated('edit')),array('id' => $id));
 				
 				$error = $this->Building_Model->getError();
 				
@@ -341,7 +406,6 @@ class Building extends Ydzj_Admin_Controller {
 		$id = $this->input->get_post('id');
 		$newValue = $this->input->get_post('value');
 		
-		$this->form_validation->set_error_delimiters('','');
 		
 		for($i = 0 ; $i < 1; $i++){
 			
@@ -351,6 +415,13 @@ class Building extends Ydzj_Admin_Controller {
 				$fieldName => $newValue
 			);
 			
+			$buildingInfo = $this->Building_Model->getFirstByKey($id);
+			
+			if(empty($buildingInfo)){
+				$this->jsonOutput('参数错误');
+				break;
+			}
+			
 			$this->form_validation->set_data($data);
 			
 			$this->form_validation->set_rules('id','数据标识','required');
@@ -358,7 +429,7 @@ class Building extends Ydzj_Admin_Controller {
 			
 			switch($fieldName){
 				case 'name':
-					$this->_getNameRule($id);
+					$this->_getNameRule($id,$buildingInfo['resident_id']);
 					break;
 				case 'displayorder';
 					$this->form_validation->set_rules('displayorder','排序',"required|is_natural|less_than[256]");
@@ -382,9 +453,7 @@ class Building extends Ydzj_Admin_Controller {
 			
 			$this->jsonOutput($message);
 		}
-		
 	}
-	
 	
 	
 	/**
@@ -392,23 +461,20 @@ class Building extends Ydzj_Admin_Controller {
 	 */
 	public function getBuildingList(){
 		
-		
 		$residentId = $this->input->get_post('resident_id');
-		$buildingList = $this->Building_Model->getList(array(
+		
+		$buildingList = $this->wuye_service->search($this->_moduleTitle,array(
 			'select' => 'id,name,nickname',
 			'where' => array(
 				'resident_id' => $residentId
 			)
 		));
 		
-		
 		if($buildingList){
 			$this->jsonOutput('响应成功',$buildingList);
 		}else{
 			$this->jsonOutput('该小区尚未配置建筑物信息',array());
 		}
-		
-		
 		
 	}
 	
@@ -432,23 +498,20 @@ class Building extends Ydzj_Admin_Controller {
      */
     public function import(){
     	$feedback = '';
+    	
     	$this->form_validation->set_error_delimiters('','');
     	
-    	$residentList = $this->Resident_Model->getList(array(
-			'order' => 'displayorder DESC'
-		),'id');
-		
-    
     	if($this->isPostRequest()){
        		
     		for($i = 0; $i < 1; $i++){
     			
-    			if(0 != $_FILES['excelFile']['error']){
-    				$feedback = getErrorTip('请上传文件');
-	    			break;
-	    		}
+    			
+    			$this->form_validation->reset_validation();
+    			
+	    		$this->form_validation->set_data(array(
+	    			'resident_id' => $this->input->post('resident_id')
+	    		));
 	    		
-	    		$this->form_validation->reset_validation();
 	    		$this->form_validation->set_rules('resident_id','所在小区','required|is_natural_no_zero');
 	    		
 	    		if(!$this->form_validation->run()){
@@ -456,8 +519,29 @@ class Building extends Ydzj_Admin_Controller {
 	    			break;
 	    		}
 	    		
+	    		//选中的小区ID
+				$residentId = $this->input->post('resident_id');
+				
+				$tempInfoList = $this->wuye_service->search('小区',array(
+					'where' => array(
+						'id' => $residentId
+					)
+				));
+				
+				if(empty($tempInfoList[0])){
+					$feedback = getErrorTip('找不到该小区信息');
+	    			break;
+				}
+				
+				$residentInfo = $tempInfoList[0];
+	    		
+	    		
+    			if(0 != $_FILES['excelFile']['error']){
+    				$feedback = getErrorTip('请上传文件');
+	    			break;
+	    		}
+	    		
 	    		$this->_initPHPExcel();
-		        
 		        
 	    		try {
 	    			
@@ -474,9 +558,6 @@ class Building extends Ydzj_Admin_Controller {
 						$highestRow = $importMaxLimit + 1;
 					}
 					
-					//选中的小区ID
-					$residentId = $this->input->post('resident_id');
-					$residentInfo = $this->Resident_Model->getFirstByKey($residentId);
 					
 					$result = array();
 					$successCnt = 0;
@@ -486,6 +567,7 @@ class Building extends Ydzj_Admin_Controller {
 						$tmpRow = array();
 						
 						$tmpRow['classname'] = 'failed';
+						
 						$tmpRow['name'] = getCleanValue($objWorksheet->getCell('A'.$rowIndex)->getValue());
 						$tmpRow['address'] = getCleanValue($objWorksheet->getCell('B'.$rowIndex)->getValue());
 						$tmpRow['nickname'] = getCleanValue($objWorksheet->getCell('C'.$rowIndex)->getValue());
@@ -530,7 +612,6 @@ class Building extends Ydzj_Admin_Controller {
 						),$this->addWhoHasOperated('add'));
 						
 						
-						
 						$this->Building_Model->_add($insertData);
 						
 						$error = $this->Building_Model->getError();
@@ -551,7 +632,7 @@ class Building extends Ydzj_Admin_Controller {
 					
 					
 					
-					$feedback = getSuccessTip('导入完成,导入'.$successCnt.'条,失败'.(count($result) - $successCnt).'条');
+					$feedback = getSuccessTip('导入完成,成功'.$successCnt.'条,失败'.(count($result) - $successCnt).'条');
 					
 					$this->assign(array(
 						'output' => '<table class="table">'.$this->_importOutput($result).'</table>',
@@ -575,7 +656,10 @@ class Building extends Ydzj_Admin_Controller {
     	}else{
     		
     		$this->assign(array(
-	    		'residentList' => $residentList
+	    		'residentList' => $this->wuye_service->search('小区',array(
+    				'select' => 'id,name',
+					'order' => 'displayorder DESC'
+				),'id')
 	    	));
 	    	
 	    	$this->display();
@@ -624,7 +708,7 @@ class Building extends Ydzj_Admin_Controller {
     			
     			$search['page'] = intval($search['page']) == 0 ? 1 : intval($search['page']);
     			
-    			$dataCnt = $this->Building_Model->getCount($condition);
+    			$dataCnt = $this->wuye_service->getRecordCount($this->_moduleTitle,$condition);
     			
     			$perPageSize = config_item('excel_export_limit');
     			
@@ -644,6 +728,13 @@ class Building extends Ydzj_Admin_Controller {
     		
     	}else{
     		
+    		$this->assign(array(
+	    		'residentList' => $this->wuye_service->search('小区',array(
+    				'select' => 'id,name',
+					'order' => 'displayorder DESC'
+				),'id')
+	    	));
+	    	
     		$this->display();
     	}
     	
@@ -674,7 +765,7 @@ class Building extends Ydzj_Admin_Controller {
     	
         $objPHPExcel = new PHPExcel();
         
-        $data = $this->Building_Model->getList($condition);
+        $data = $this->wuye_service->search($this->_moduleTitle,$condition);
     	
     	$colConfig = $this->_getExportConfig();
     	

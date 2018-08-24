@@ -7,7 +7,7 @@ class Role extends Ydzj_Admin_Controller {
 	public function __construct(){
 		parent::__construct();
 		
-		$this->load->model(array('Adminuser_Model','Fn_Model','Role_Model'));
+		$this->load->library('Admin_service');
 		
 		$this->_moduleTitle = '角色';
 		$this->_className = strtolower(get_class());
@@ -22,19 +22,14 @@ class Role extends Ydzj_Admin_Controller {
 			array('url' => $this->_className.'/index','title' => '管理'),
 			array('url' => $this->_className.'/add','title' => '新增'),
 		);
+		
 	}
 	
 	
 	
-	private function _prepareRoleData(){
+	private function _prepareData(){
 		
-		$info = array(
-			'name' => $this->input->post('name'),
-			'permission' => $this->input->post('permission'),
-			'status' => $this->input->post('status'),
-		);
-		
-		
+		$info = array();
 		
 		if(is_array($this->input->post('permission'))){
 			$info['permission'] = array_flip($this->input->post('permission'));
@@ -42,7 +37,15 @@ class Role extends Ydzj_Admin_Controller {
 		}else{
 			$info['permission'] = array();
 		}
-			
+		
+		$expire = $this->input->post('expire');
+		
+		if(empty($expire)){
+			$info['expire'] = 0;
+		}else{
+			$info['expire'] = strtotime($info['expire']);
+		}
+		
 		
 		return $info;
 	}
@@ -53,6 +56,7 @@ class Role extends Ydzj_Admin_Controller {
 		$currentPage = $this->input->get_post('page') ? $this->input->get_post('page') : 1;
 		$keywords = $this->input->get_post('keywords');
 		$condition = array(
+			'select' => 'id,name,enable,user_cnt,add_uid,edit_uid,add_username,edit_username,gmt_create,gmt_modify',
 			'order' => 'id DESC',
 			'pager' => array(
 				'page_size' => config_item('page_size'),
@@ -110,81 +114,77 @@ class Role extends Ydzj_Admin_Controller {
 	}
 	
 	
-	private function _getRoleRules(){
+	/**
+	 * 验证规则
+	 */
+	private function _getRules(){
 		
-		$this->form_validation->set_rules('status','权限组状态','required|in_list[开启,关闭]');
+		$this->form_validation->set_rules('enable','权限组状态','required|in_list[0,1]');
 		$this->form_validation->set_rules('permission[]','权限','required');
 		
 	}
 	
 	
-	
+	/**
+	 * 
+	 */
 	public function add(){
 		$feedback = '';
 		
-		$action = 'add';
-		
 		if($this->isPostRequest()){
 			
-			$this->form_validation->set_rules('name','权限组名称','required|is_unique['.$this->Role_Model->getTableRealName().'.name]');
+			$this->form_validation->set_rules('name','角色名称','required|is_unique['.$this->Role_Model->getTableRealName().'.name]');
 			
 			
-			$this->_getRoleRules();
+			$this->_getRules();
 			
 			for($i = 0; $i < 1; $i++){
 				
-				$info = $this->_prepareRoleData();
+				$info = array_merge($_POST,$this->_prepareData(),$this->addWhoHasOperated('add'));
 				
 				if(!$this->form_validation->run()){
-					$feedback = $this->form_validation->error_string();
-					
-					if(is_array($info['permission'])){
-						$info['permission'] = array_flip($info['permission']);
-					}
-					
+					$this->jsonOutput('数据校验失败'.$this->form_validation->error_first_html(),array('errors' => $this->form_validation->error_array()));
 					break;
 				}
 				
 				$info['permission'] = $this->_getEncodePermision($this->input->post('permission'),$this->input->post('name'));
 				
-				$info = array_merge($info,$this->addWhoHasOperated('add'));
-				
 				if(($newid = $this->Role_Model->_add($info)) < 0){
-					$feedback = getErrorTip('保存失败');
+					$error = $this->Role_Model->getError();
+					$this->jsonOutput($error['message']);
 					break;
 				}
 				
-				$action = 'edit';
-				$feedback = getSuccessTip('保存成功');
-				$info = $this->_refreshRoleInfo($newid);
-				
-				
+				$this->jsonOutput('保存成功,页面即将刷新',array('redirectUrl' => admin_site_url($this->_className.'/index')));
 			}
+		}else{
+			
+			$list = $this->Fn_Model->getList(array(
+				'order' => 'displayorder ASC, id ASC'
+			));
+			
+			$fnTree = $this->phptree->makeTree($list,array(
+				'primary_key' => 'id',
+				'parent_key' => 'parent_id',
+				'expanded' => true
+			));
+			
+			$this->assign(array(
+				'fnTree' => $fnTree,
+				'info' => array('enable' => 1)
+			));
+			
+			$this->display();
+			
 		}
 		
-		
-		$list = $this->Fn_Model->getList(array(
-			'order' => 'displayorder ASC, id ASC'
-		));
-		$fnTree = $this->phptree->makeTree($list,array(
-			'primary_key' => 'id',
-			'parent_key' => 'parent_id',
-			'expanded' => true
-		));
-		
-		//print_r($fnTree);
-		$this->assign('action',$action);
-		$this->assign('info',$info);
-		$this->assign('feedback',$feedback);
-		$this->assign('fnTree',$fnTree);
-		
-		$this->display();
 	}
 	
 	
 	private function _getEncodePassword($psw,$email){
 		return $this->encrypt->encode(trim($psw),config_item('encryption_key').md5(trim($email)));
 	}
+	
 	
 	private function _getEncodePermision($permisionArray , $name){
 		
@@ -207,75 +207,150 @@ class Role extends Ydzj_Admin_Controller {
 		$info['permission'] = array_flip($info['permission']);
 		
 		
-		
 		return $info;
 	}
 	
 	
 	
+	/**
+	 * 编辑
+	 */
 	public function edit(){
 		
-		$this->assign('action','edit');
 		
 		$id = $this->input->get_post('id');
 		
 		$this->_subNavs[] = array('url' => $this->_className.'/edit?id='.$id,'title' => '编辑');
 		
 		if($this->isPostRequest()){
-			$this->assign('ispost',true);
-			$this->_getRoleRules();
 			
-			$this->form_validation->set_rules('name','权限组名称','required|is_unique_not_self['.$this->Role_Model->getTableRealName().".name.id.{$id}]");
+			$this->_getRules();
 			
+			$this->form_validation->set_rules('name','角色名称','required|is_unique_not_self['.$this->Role_Model->getTableRealName().".name.id.{$id}]");
 			
-			$info = $this->_prepareRoleData();
-			$info['id'] = $id;
+			$info = array_merge($_POST,$this->_prepareData(),$this->addWhoHasOperated('edit'));
 			
 			
 			for($i = 0; $i < 1; $i++){
 				if(!$this->form_validation->run()){
-					$feedback = $this->form_validation->error_string();
+					$this->jsonOutput('数据校验失败',array('errors' => $this->form_validation->error_array()));
 					break;
 				}
-				
-				//unset($info['id']);
 				
 				$info['permission'] = $this->_getEncodePermision($this->input->post('permission'),$info['name']);
 				
-				$info = array_merge($info,$this->addWhoHasOperated('edit'));
-				
 				if($this->Role_Model->update($info, array('id' => $id)) < 0){
-					$feedback = getErrorTip('保存失败');
+					$error = $this->Role_Model->getError();
+					$this->jsonOutput($error['message']);
+					
 					break;
 				}
 				
-				$feedback = getSuccessTip('保存成功');
-				
-				$info = $this->_refreshRoleInfo($id);
+				$this->jsonOutput('保存成功');
 			}
 		}else{
 			
-			$info = $this->_refreshRoleInfo($id);
+			$info = $this->admin_service->getRoleInfo($id);
+			
+			$list = $this->Fn_Model->getList(array(
+				'order' => 'displayorder ASC, id ASC'
+			));
+			
+			$fnTree = $this->phptree->makeTree($list,array(
+				'primary_key' => 'id',
+				'parent_key' => 'parent_id',
+				'expanded' => true
+			));
+			
+			$this->assign('info',$info);
+			
+			
+			$this->assign('fnTree',$fnTree);
+			
+			$this->display('role/add');
 		}
 		
 		
-		$list = $this->Fn_Model->getList(array(
-			'order' => 'displayorder ASC, id ASC'
-		));
 		
-		$fnTree = $this->phptree->makeTree($list,array(
-			'primary_key' => 'id',
-			'parent_key' => 'parent_id',
-			'expanded' => true
-		));
+	}
+	
+	
+	
+	
+	/**
+	 * 删除
+	 */
+	public function delete(){
+		$id = $this->input->get_post('id');
 		
+		if($this->isPostRequest() && !empty($id)){
+			
+			if(is_array($id)){
+				$id = $id[0];
+			}
+			
+			$returnVal = $this->Role_Model->deleteByCondition(array(
+				'where' => array(
+					'id' => $id,
+					'user_cnt' => 0
+				)
+			));
+			
+			if($returnVal > 0){
+				$this->jsonOutput('删除成功');
+			}else{
+				$this->jsonOutput('删除失败,只能删除成员数量为0的角色');
+			}
+			
+		}else{
+			$this->jsonOutput('请求非法');
+		}
 		
-		$this->assign('info',$info);
+	}
+	
+	
+	
+	/**
+	 * 开启关闭
+	 */
+	private function _onoff($op){
 		
-		$this->assign('feedback',$feedback);
-		$this->assign('fnTree',$fnTree);
+		$ids = $this->input->post('id');
 		
-		$this->display('role/add');
+		if($this->isPostRequest() && !empty($ids)){
+			
+			if(!is_array($ids)){
+				$ids = (array)$ids;
+			}
+			
+			$returnVal = $this->admin_service->roleOnOff($ids,$op,$this->addWhoHasOperated('edit'));
+			
+			if($returnVal > 0){
+				$this->jsonOutput($op.'成功');
+			}else{
+				$this->jsonOutput($op.'失败');
+			}
+			
+		}else{
+			$this->jsonOutput('请求非法');
+		}
+	}
+	
+	
+	/**
+	 * 开启
+	 */
+	public function turnon(){
+		$this->_onoff('开启');
+		
+	}
+	
+	
+	/**
+	 * 关闭
+	 */
+	public function turnoff(){
+		$this->_onoff('禁用');
 	}
 	
 }

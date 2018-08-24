@@ -9,7 +9,6 @@ $entity = array(
 'status' => 'tinyint',
 'mobile' => 'varchar',
 'sex' => 'tinyint',
-'nickname' => 'varchar',
 'qq' => 'varchar',
 'weixin' => 'varchar',
 'openid' => 'varchar',

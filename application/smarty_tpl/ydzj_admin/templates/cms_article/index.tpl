@@ -69,8 +69,9 @@
           <td>
           	<p>
           		<a href="{admin_site_url('cms_article/edit')}?id={$item['id']}">编辑</a>
-          		{if $article_state[$item['article_state']] == '待审核'}<a href="{admin_site_url($moduleClassName|cat:'/single_verify')}?id={$item['id']}">审核</a>{/if}
-          	
+          		{if $article_state[$item['article_state']] == '待审核'}
+          		{if isset($permission[$moduleClassName|cat:'/single_verify'])}<a href="{admin_site_url($moduleClassName|cat:'/single_verify')}?id={$item['id']}">审核</a>{/if}
+          		{/if}
           	</p>
           </td>
         </tr>
@@ -79,13 +80,12 @@
     </table>
     <div class="fixedOpBar">
     	<label><input type="checkbox" class="checkall" id="checkallBottom" name="chkVal">全选</label>&nbsp;
-    	<a href="javascript:void(0);" class="btn opBtn handleVerifyBtn" data-title="确定提交审核吗?" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/handle_verify')}"><span>提交审核</span></a>
-    	<a href="javascript:void(0);" class="btn verifyBtn" data-title="审核" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/batch_verify')}" data-ajaxformid="#verifyForm"><span>审核</span></a>
-    	<a href="javascript:void(0);" class="btn opBtn publishBtn" data-title="确定发布吗?" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/batch_published')}"><span>发布</span></a>
-        <a href="javascript:void(0);" class="btn deleteBtn" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/delete')}"><span>删除</span></a>
+    	{if isset($permission[$moduleClassName|cat:'/handle_verify'])}<a href="javascript:void(0);" class="btn opBtn handleVerifyBtn" data-title="确定提交审核吗?" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/handle_verify')}"><span>提交审核</span></a>{/if}
+    	{if isset($permission[$moduleClassName|cat:'/batch_verify'])}<a href="javascript:void(0);" class="btn verifyBtn" data-title="审核" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/batch_verify')}" data-ajaxformid="#verifyForm"><span>审核</span></a>{/if}
+    	{if isset($permission[$moduleClassName|cat:'/batch_published'])}<a href="javascript:void(0);" class="btn opBtn publishBtn" data-title="确定发布吗?" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/batch_published')}"><span>发布</span></a>{/if}
+        {if isset($permission[$moduleClassName|cat:'/delete'])}<a href="javascript:void(0);" class="btn deleteBtn" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/delete')}"><span>删除</span></a>{/if}
         {include file="common/pagination.tpl"}
     </div>
-    
   </form>
   <div id="verifyDlg"></div>
     <script type="text/javascript" src="{resource_url('js/service/staff_index.js',true)}"></script>

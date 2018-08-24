@@ -59,8 +59,8 @@
           <td><span class="editable" data-id="{$item['id']}" data-fieldname="worker_mobile">{$item['worker_mobile']|escape}</span></td>
           <td>{$item['gmt_create']|date_format:"%Y-%m-%d %H:%M"}</td>
           <td class="align-center">
-          	<a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}">编辑</a>&nbsp;|&nbsp;
-          	<a href="javascript:void(0)" class="delete" data-url="{admin_site_url($moduleClassName|cat:'/delete')}" data-id="{$item['id']}">删除</a>
+          	{if isset($permission[$moduleClassName|cat:'/edit'])}<a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}">编辑</a>{/if}&nbsp;&nbsp;
+          	{if isset($permission[$moduleClassName|cat:'/delete'])}<a href="javascript:void(0)" class="delete" data-url="{admin_site_url($moduleClassName|cat:'/delete')}" data-id="{$item['id']}">删除</a>{/if}
           </td>
         </tr>
         {/foreach}
@@ -68,10 +68,10 @@
     </table>
     <div class="fixedOpBar">
     	<label><input type="checkbox" class="checkall" id="checkallBottom" name="chkVal">全选</label>&nbsp;
-        <a href="javascript:void(0);" class="btn deleteBtn" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/delete')}"><span>删除</span></a>
-        <a href="javascript:void(0);" class="btn opBtn" data-title="确实受理吗?" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/received')}" data-ajaxformid="#verifyForm"><span>受理</span></a>
-        <a href="javascript:void(0);" class="btn verifyBtn" data-title="派遣" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/dispatch')}" data-ajaxformid="#ajaxForm"><span>派遣</span></a>
-        <a href="javascript:void(0);" class="btn verifyBtn" data-title="完成" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/complete_repair')}" data-ajaxformid="#ajaxForm"><span>完成</span></a>
+        {if isset($permission[$moduleClassName|cat:'/delete'])}<a href="javascript:void(0);" class="btn deleteBtn" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/delete')}"><span>删除</span></a>{/if}
+        {if isset($permission[$moduleClassName|cat:'/received'])}<a href="javascript:void(0);" class="btn opBtn" data-title="确实受理吗?" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/received')}" data-ajaxformid="#verifyForm"><span>受理</span></a>{/if}
+        {if isset($permission[$moduleClassName|cat:'/dispatch'])}<a href="javascript:void(0);" class="btn verifyBtn" data-title="派遣" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/dispatch')}" data-ajaxformid="#ajaxForm"><span>派遣</span></a>{/if}
+        {if isset($permission[$moduleClassName|cat:'/complete_repair'])}<a href="javascript:void(0);" class="btn verifyBtn" data-title="完成" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/complete_repair')}" data-ajaxformid="#ajaxForm"><span>完成</span></a>{/if}
         {include file="common/pagination.tpl"}
     </div>
   </form>

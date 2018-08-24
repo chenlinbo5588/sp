@@ -301,7 +301,7 @@ $(function(){
 	          <!-- Top navigation -->
 	          <div id="topnav" class="top-nav">
 	            <ul>
-	              <li class="adminid" title="您好:{$manage_profile['basic']['username']|escape}">您好&nbsp;:&nbsp;<strong>{$manage_profile['basic']['username']|escape}</strong></li>
+	              <li class="adminid" title="您好:{$manage_profile['basic']['username']|escape}">您好&nbsp;:&nbsp;<strong>{$manage_profile['basic']['username']|escape}【{$manage_profile['basic']['group_name']|escape}】</strong></li>
 	              <li><a href="{admin_site_url('my/profile')}" target="workspace" ><span>修改密码</span></a></li>
 	              <li><a href="{admin_site_url('pm/unread')}" target="workspace" ><span>消息中心</span></a></li>
 	              <li><a href="{admin_site_url('my/logout')}" title="退出"><span>退出</span></a></li>
@@ -317,7 +317,7 @@ $(function(){
 					<li><a class="link" id="nav_my" href="javascript:void(0);" onclick="openItem('my');"><span>个人中心</span></a></li>
 					{if isset($permission['nav_member'])}<li><a class="link" id="nav_member" href="javascript:void(0);" onclick="openItem('member');"><span>会员</span></a></li>{/if}
 					{if isset($permission['nav_service'])}<li><a class="link" id="nav_service" href="javascript:void(0);" onclick="openItem('service');"><span>服务</span></a></li>{/if}
-					<li><a class="link" id="nav_wuye" href="javascript:void(0);" onclick="openItem('wuye');"><span>物业</span></a></li>
+					{if isset($permission['nav_wuye'])}<li><a class="link" id="nav_wuye" href="javascript:void(0);" onclick="openItem('wuye');"><span>物业</span></a></li>{/if}
 					{*<li><a class="link" id="nav_team" href="javascript:void(0);" onclick="openItem('team');"><span>队伍</span></a></li>
 					<li><a class="link" id="nav_stadium" href="javascript:void(0);" onclick="openItem('stadium');"><span>场馆</span></a></li>
 					<li><a class="link" id="nav_game" href="javascript:void(0);" onclick="openItem('game');"><span>赛事</span></a></li>
@@ -370,7 +370,7 @@ $(function(){
               <dl>
                 <dd>
                   <ol>
-                    <li><a href="javascript:void(0);" id="unread_pm" onclick="openItem('unread,pm,my');">消息中心</a></li>
+                    {if isset($permission['side_pm'])}<li><a href="javascript:void(0);" id="unread_pm" onclick="openItem('unread,pm,my');">消息中心</a></li>{/if}
                     <li><a href="javascript:void(0);" id="profile_my" onclick="openItem('profile,my,my');">修改密码</a></li>
                   </ol>
                 </dd>
@@ -440,6 +440,7 @@ $(function(){
                 <dd>
                   <ol>
                     {if isset($permission['side_yezhu'])}<li><a href="javascript:void(0);" id="index_yezhu" onclick="openItem('index,yezhu,wuye');">业主</a></li>{/if}
+                    {if isset($permission['side_parking'])}<li><a href="javascript:void(0);" id="index_parking" onclick="openItem('index,parking,wuye');">停车位</a></li>{/if}
                     {if isset($permission['side_house'])}<li><a href="javascript:void(0);" id="index_house" onclick="openItem('index,house,wuye');">房屋</a></li>{/if}
                     {if isset($permission['side_building'])}<li><a href="javascript:void(0);" id="index_building" onclick="openItem('index,building,wuye');">建筑物</a></li>{/if}
                     {if isset($permission['side_resident'])}<li><a href="javascript:void(0);" id="index_resident" onclick="openItem('index,resident,wuye');">小区</a></li>{/if}
@@ -615,6 +616,7 @@ $(function(){
                 <dd>
                   <ol>
                     {if isset($permission['side_user'])}<li><a href="javascript:void(0);" id="index_user" onclick="openItem('index,user,authority');">用户</a></li>{/if}
+                    {if isset($permission['side_group'])}<li><a href="javascript:void(0);" id="index_group" onclick="openItem('index,group,authority');">用户组</a></li>{/if}
                     {if isset($permission['side_role'])}<li><a href="javascript:void(0);" id="index_role" onclick="openItem('index,role,authority');">角色</a></li>{/if}
                     {*<li><a href="javascript:void(0);" id="menu_authority" onclick="openItem('menu,authority,authority');">菜单</a></li>*}
                   </ol>

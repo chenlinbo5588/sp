@@ -3,6 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class MY_Input extends CI_Input {
 	private $_inApp = false;
+	private $_allowInterval = 0.3;
 
 	public function __construct(){
 		parent::__construct();
@@ -26,12 +27,22 @@ class MY_Input extends CI_Input {
 	{
 		parent::_sanitize_globals();
 		
+		if($this->is_cli_request()){
+			return;
+		}
+		
+		if($this->is_ajax_request() || strpos($_SERVER['HTTP_X_REQUESTED_WITH'],'ShockwaveFlash') !== false){
+			$this->_allowInterval = 2;
+		}
+		
+		/*
 		if(!$this->is_ajax_request() && !$this->is_cli_request()){
 			//@TODO 优化 ，需要更加安全的逻辑
 			if(strpos($_SERVER['HTTP_X_REQUESTED_WITH'],'ShockwaveFlash') === false){
 				$this->begin_protect();
 			}
 		}
+		*/
 	}
 	
 	
@@ -65,7 +76,7 @@ class MY_Input extends CI_Input {
 		}
 		
 		if($attackevasive & 1) {
-			if($nowstamp - $lastrequest < 0.3) {
+			if(($nowstamp - $lastrequest) < $this->_allowInterval) {
 				$this->securitymessage('attackevasive_1_subject', 'attackevasive_1_message');
 			}
 		}

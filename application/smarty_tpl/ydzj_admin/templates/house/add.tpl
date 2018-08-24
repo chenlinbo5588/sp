@@ -16,11 +16,15 @@
         </tr>
         <tr class="noborder">
         	<td colspan="2">
+        		{if $info['id']}
+        		{$residentList[$info['resident_id']]['name']|escape}
+        		{else}
 	          	<ul class="ulListStyle1 clearfix">
 	          	{foreach from=$residentList item=item}
 	          		<li {if $info['resident_id'] == $item['id']}class="selected"{/if}><label><input type="radio" name="resident_id" {if $info['resident_id'] == $item['id']}checked="checked"{/if} value="{$item['id']}"/><span>{$item['name']|escape}</span></label></li>
 	          	{/foreach}
 	          	</ul>
+	          	{/if}
 	         </td>
         </tr>
         <tr class="noborder">
@@ -37,7 +41,7 @@
 	         </td>
         </tr>
         <tr class="noborder">
-          <td colspan="2"><label class="validation" for="address">{#address#}: </label>{form_error('address')}</td>
+          <td colspan="2"><label class="validation" for="address">{#address#}: </label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform">
@@ -53,6 +57,24 @@
           	<input type="text" value="{$info['jz_area']|escape}" name="jz_area" id="jz_area" class="txt">
           </td>
           <td class="vatop tips"><label class="errtip"  id="error_jz_area"></label>{form_error('jz_area')}</td>
+        </tr>
+        <tr class="noborder">
+          <td colspan="2"><label for="wuye_expire">{#wuye_expire#}: </label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform">
+          	<input type="text" value="{if $info['wuye_expire']}{date('Y-m-d',$info['wuye_expire'])}{/if}" name="wuye_expire" id="wuye_expire" class="datepicker txt">
+          </td>
+          <td class="vatop tips"><label class="errtip"  id="error_wuye_expire"></label>{form_error('wuye_expire')}</td>
+        </tr>
+        <tr class="noborder">
+          <td colspan="2"><label for="wuye_expire">{#nenghao_expire#}: </label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform">
+          	<input type="text" value="{if $info['nenghao_expire']}{date('Y-m-d',$info['nenghao_expire'])}{/if}" name="nenghao_expire" id="nenghao_expire" class="datepicker txt">
+          </td>
+          <td class="vatop tips"><label class="errtip"  id="error_nenghao_expire"></label>{form_error('nenghao_expire')}</td>
         </tr>
         <tr>
           <td colspan="2" class="required"><label>排序:</label></td>

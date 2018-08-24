@@ -14,11 +14,20 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 	protected $_permission = array();
 	
 	
+	//数据可见性
+	protected $_dataModule = array();
+	
 	
 	public function __construct(){
 		parent::__construct();
 		
-		$this->form_validation->set_error_delimiters('<label class="error">','</label>');
+		
+		if($this->input->is_ajax_request()){
+			$this->form_validation->set_error_delimiters('<div>','</div>');
+		}else{
+			$this->form_validation->set_error_delimiters('<label class="error">','</label>');
+		}
+		
 		$this->_initAdminLogin();
 		
 		$this->_checkPermission();
@@ -39,6 +48,8 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 			$this->session->unset_userdata('forcePmCheck');
 		}
 		
+		$this->assign('manage_profile',$this->_adminProfile);
+		
 	}
 	
 	/**
@@ -57,8 +68,8 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 	protected function _initLibrary(){
 		parent::_initLibrary();
 		
-		$this->load->library('Admin_pm_service');
-		$this->load->model('Role_Model');
+		$this->load->library(array('Admin_pm_service'));
+		$this->load->model(array('Role_Model','Group_Model'));
 	}
 	
 	
@@ -66,6 +77,8 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 		parent::_initLanguage();
 		$this->config->set_item('language','chinese');
 	}
+	
+	
 	
 	
 	private function _initAdminLogin(){
@@ -78,13 +91,16 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 		}
 		
 		if(!$this->isLogin()){
+			
+			$this->session->unset_userdata('manage_profile');
+			
 			if($this->input->is_ajax_request()){
 				$this->responseJSON('您尚未登陆',array('url' => site_url('member/admin_login')));
 			}else{
 				redirect(site_url('member/admin_login'));
 			}
-		}else{
-			$this->assign('manage_profile',$this->_adminProfile);
+			
+			
 		}
 	}
 	
@@ -92,14 +108,31 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 	private function _checkPermission(){
         //print_r($this->_adminProfile);
         
+        if($this->_adminProfile['basic']['role_id']){
+            $roleInfo = $this->Role_Model->getFirstByKey($this->_adminProfile['basic']['role_id'],'id','id,name,permission,enable');
+            
+            if($roleInfo['enable']){
+            	$currentPer = $this->encrypt->decode($roleInfo['permission'],config_item('encryption_key').md5($roleInfo['name']));
+            
+	            if(trim($currentPer)){
+	                $this->_permission = array_flip(explode('|',$currentPer));
+	            }
+            }
+            
+        }
+        
         
         if($this->_adminProfile['basic']['group_id']){
-            $roleInfo = $this->Role_Model->getFirstByKey($this->_adminProfile['basic']['group_id'],'id');
-            $currentPer = $this->encrypt->decode($roleInfo['permission'],config_item('encryption_key').md5($roleInfo['name']));
-            
-            if(trim($currentPer)){
-                $this->_permission = array_flip(explode('|',$currentPer));
-            }
+        	$groupInfo = $this->Group_Model->getFirstByKey($this->_adminProfile['basic']['group_id'],'id','id,name,group_data,enable');
+        	
+        	if($groupInfo['enable']){
+        		$this->_adminProfile['basic']['group_name'] = $groupInfo['name'];
+        		
+        		$this->_dataModule = json_decode($groupInfo['group_data'],true);
+        	}else{
+        		//设置不可见
+        		$this->_dataModule = array(-1);
+        	}
         }
         
         //print_r($this->_permission);
@@ -118,6 +151,15 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
         
         $this->_permission['dashboard/welcome'] = 1;
         $this->_permission['dashboard/aboutus'] = 1;
+        
+        //ajax autocomplete url start
+        $this->_permission['house/getaddress'] = 1;
+        $this->_permission['yezhu/getyezhuinfo'] = 1;
+        $this->_permission['building/getbuildinglist'] = 1;
+        $this->_permission['resident/getresidentname'] = 1;
+        $this->_permission['staff_booking/getstaffmobile'] = 1;
+        
+        //ajax autocomplete url end
 
         $this->assign('permission',$this->_permission);
         
@@ -154,6 +196,5 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 	public function getAppTemplateDir(){
 		return 'ydzj_admin';
 	}
-	
 }
 

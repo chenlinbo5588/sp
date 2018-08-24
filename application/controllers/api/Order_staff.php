@@ -154,7 +154,6 @@ class Order_staff extends Wx_Controller {
 		parent::__construct();
         
         $this->load->library(array('Order_service','Staff_service'));
-    	$this->form_validation->set_error_delimiters('','');
 	}
 	
 	/**

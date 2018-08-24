@@ -93,6 +93,12 @@ class Order_service extends Base_service {
 			'idKey' => $this->toEasyUseArray($tempType,'id'),
 			'nameKey' => $this->toEasyUseArray($tempType,'name'),
 		);
+		
+		$this->_dataModule = array(-1);
+		
+		$this->_objectMap = array(
+			'订单' => $this->_orderModel
+		);
 	}
 	
 	
@@ -280,15 +286,20 @@ class Order_service extends Base_service {
 				'is_refund' => 1,
 				'amount' => $oldOrderInfo['amount'],//原订单金额
 				'refund_amount' => $pOrderParam['amount'],//退款金额
-				'uid' => $oldOrderInfo['uid'],
-				'username' => $oldOrderInfo['username'],
-				'add_uid' => empty($pOrderParam['add_uid']) == true ? $oldOrderInfo['add_uid'] : $pOrderParam['add_uid'],
-				'add_username' => empty($pOrderParam['add_username']) == true ? $oldOrderInfo['add_username'] : $pOrderParam['add_username'],
 				'mobile' => $oldOrderInfo['mobile'],
 				'goods_id' => $oldOrderInfo['goods_id'],
 				'goods_name' => $oldOrderInfo['goods_name'],
 				'status' => OrderStatus::$refounding,
 				'order_old' => $oldOrderInfo['order_id'],
+				'fee_month' => $oldOrderInfo['fee_month'],
+				'fee_old_expire' => $oldOrderInfo['fee_old_expire'],
+				'fee_start' => $oldOrderInfo['fee_start'],
+				'fee_start' => $oldOrderInfo['fee_expire'],
+				'resident_id' => $oldOrderInfo['resident_id'],
+				'uid' => $oldOrderInfo['uid'],
+				'username' => $oldOrderInfo['username'],
+				'add_uid' => empty($pOrderParam['add_uid']) == true ? $oldOrderInfo['add_uid'] : $pOrderParam['add_uid'],
+				'add_username' => empty($pOrderParam['add_username']) == true ? $oldOrderInfo['add_username'] : $pOrderParam['add_username'],
 			);
 			
 			if($pOrderParam['extra_info']){
@@ -336,6 +347,179 @@ class Order_service extends Base_service {
 		
 		return $order;
 	}
+	
+	
+	/**
+	 * 创建 物业费 、能耗费 、车位费 订单
+	 */
+	public function createWuyeOrder($keyId,$pParam,$pYezhuInfo,&$message){
+		
+		self::$CI->load->library('Wuye_service');
+		
+		$wuyeService = self::$CI->wuye_service;
+		
+		$callPayJson = array();
+		
+		$message = '订单创建失败';
+		
+		for($i = 0; $i < 1; $i++){
+			
+			if($pParam['order_id']){
+				
+				$pParam['uid'] = $pYezhuInfo['uid'];
+				
+				self::$CI->form_validation->set_data($pParam);
+				
+				$this->setOrderIdRules();
+		
+				self::$CI->form_validation->set_rules('uid','用户标识', array(
+						'required',
+						array(
+							'checkIsUserOrder_callable['.$pParam['order_id'].']',
+							array(
+								$this,'checkIsUserOrder'
+							)
+						)
+					)
+				);
+				
+				if(!self::$CI->form_validation->run()){
+					$message = self::$CI->form_validation->error_first_html();
+					break;
+				}
+			
+				$orderInfo = $this->getOrderInfoById($pParam['order_id'],'order_id');
+				
+				$whichField = '';
+				
+				if('车位费' != $orderInfo['order_typename']){
+					$info = self::$CI->House_Model->getFirstByKey($orderInfo['goods_id'],'id','wuye_expire,nenghao_expire');
+					
+					switch($orderInfo['order_typename']){
+						case '物业费':
+							$whichField = 'wuye_expire';
+							break;
+						case '能耗费':
+							$whichField = 'nenghao_expire';
+							break;
+						default:
+							break;
+					}
+				}else{
+					$whichField = 'expire';
+					
+					$info = self::$CI->Parking_Model->getFirstByKey($orderInfo['goods_id'],'id','expire');
+				}
+				
+				
+				if(empty($whichField)){
+					$message = '订单类型非法';
+					break;
+				}
+				
+				
+				if(time() >= strtotime($orderInfo['time_expire'])){
+					$this->updateOrderStatusByIds(array($orderInfo['id']),OrderStatus::$closed,OrderStatus::$unPayed);
+					$message = '订单已过期';
+					break;
+				}
+				
+				//fixed 用户先选择一个月份在创建订单付款界面取消后， 重新选择缴费月份，然后付款后一笔交易成功后， 最后我的订单中继续付款前一个交易。
+				if($orderInfo['extra_info']['expireTimeStamp'] != $info[$whichField]){
+					$this->updateOrderStatusByIds(array($orderInfo['id']),OrderStatus::$closed,OrderStatus::$unPayed);
+					$message = '该订单缴费信息已过期';
+					break;
+				}
+				
+			}else{
+				
+				self::$CI->form_validation->set_data($pParam);
+				
+				self::$CI->form_validation->set_rules('order_typename','订单类型','in_db_list['.$this->_orderTypeModel->getTableRealName().'.name]');
+				
+				self::$CI->form_validation->set_rules($keyId,'数据标识',array(
+						'required',
+						array(
+							'feetype_callable['.$pParam['year'].','.$pParam['order_typename'].']',
+							array(
+								$wuyeService,'checkFeetype'
+							)
+						)
+					),
+					array(
+						'feetype_callable' => '该小区尚未配置'.$pParam['order_typename'].'信息'
+					)
+				);
+				
+				$currentFeeExpire = $wuyeService->getCurrentFeeInfo($pParam[$keyId],$pParam['order_typename'],$pParam['end_month']);
+				
+				$wuyeService->setFeeTimeRules($currentFeeExpire['year']);
+				
+				if(!self::$CI->form_validation->run()){
+					$message = self::$CI->form_validation->error_first_html();
+					break;
+				}
+				
+				//再校验  缴费的时间一定要大于已缴费的时间,防止多笔支付更新时的问题
+				if($currentFeeExpire['expireTimeStamp'] >= $currentFeeExpire['newEndTimeStamp']){
+					$message = '缴费时间只能延长,不能回退';
+					break;
+				}
+				
+				//开始创建订单
+				$pParam['order_type'] = self::$orderType['nameKey'][$pParam['order_typename']]['id'];
+				
+				$pParam['uid'] = $pYezhuInfo['uid'];
+				$pParam['add_username'] = $pYezhuInfo['name'];
+				$pParam['username'] = $pYezhuInfo['name'];
+				
+				//联系方式
+				$pParam['mobile'] = $pYezhuInfo['mobile'];
+				
+				//异步回调
+				$pParam['notify_url'] = site_url(self::$orderType['nameKey'][$pParam['order_typename']]['order_url']);
+				
+				
+				$pParam['goods_id'] = $pParam[$keyId];
+				$pParam['goods_name'] = $currentFeeExpire['goods_name'];
+				
+				//物业对应小区标识
+				$pParam['resident_id'] = $currentFeeExpire['resident_id'];
+				
+				//原到期时间戳
+				$pParam['fee_old_expire'] = $currentFeeExpire['expireTimeStamp'];
+				
+				//新的缴费开始和结束
+				$pParam['fee_start'] = $currentFeeExpire['newStartTimeStamp'];
+				$pParam['fee_expire'] = $currentFeeExpire['newEndTimeStamp'];
+				
+				
+				if(ENVIRONMENT == 'development'){
+					//@todo 修改金额
+					$pParam['amount'] = mt_rand(1,3);
+				}else{
+					$pParam['amount'] = mt_rand(1,3);
+					//计算金额
+					//$pParam['amount'] = intval(100 * $this->wuye_service->computeFee($currentFeeExpire));
+				}
+				
+			}
+			
+			$callPayJson = $this->createWeixinOrder($pParam);
+			
+			if(empty($callPayJson)){
+				$message = $pParam['order_typename']."订单创建失败";
+				break;
+			}
+			
+			$message = RESP_SUCCESS;
+		}
+		
+		return $callPayJson;
+		
+	}
+	
+	
 	
 	
 	/**
@@ -616,19 +800,7 @@ class Order_service extends Base_service {
 		foreach($extraArray as $key => $value ){
 			$temp = array();
 			
-			if('expireTimeStamp' == $key){
-				$temp[] ="上次缴费到期时间";
-				$temp[] = $value == 0 ? '未缴费' : date('Y-m-d', $value);
-				
-			}else if('newStartTimeStamp' == $key){
-				$temp[] ="本次缴费开始时间";
-				$temp[] = date('Y-m-d', $value);
-				
-			}else if('newEndTimeStamp'  == $key){
-				$temp[] ="本次缴费到期时间";
-				$temp[] = date('Y-m-d', $value);
-				
-			}else if('reason' == $key){
+			if('reason' == $key){
 				
 				$temp[] ="退款原因";
 				$temp[] = $value;
@@ -709,8 +881,9 @@ class Order_service extends Base_service {
 		}elseif(strpos($pOrderInfo['order_typename'],'预约单') !== false){
 			$item = $this->getStaffExtraInfo($pOrderInfo['extra_info']);
 		
-  		}elseif(strpos($pOrderInfo['order_typename'],'物业费') !== false || strpos($pOrderInfo['order_typename'],'能耗费') !== false){
+  		}elseif(in_array($pOrderInfo['order_typename'],array('物业费','能耗费','车位费'))){
 			$item = $this->getWuyeOrderExtraInfo($pOrderInfo['extra_info']);
+			
 		}else{
 			//@TODO more here
 			

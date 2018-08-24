@@ -9,7 +9,9 @@ class Order extends Ydzj_Admin_Controller {
 	public function __construct(){
 		parent::__construct();
 		
-		$this->load->library(array('Order_service','Basic_data_service'));
+		$this->load->library(array('Order_service'));
+		
+		$this->order_service->setDataModule($this->_dataModule);
 		
 		$this->_moduleTitle = '订单';
 		$this->_className = strtolower(get_class());
@@ -20,7 +22,6 @@ class Order extends Ydzj_Admin_Controller {
 			'OrderStatus' => OrderStatus::$statusName,
 			'OrderVerify' => OrderVerify::$statusName,
 		));
-		
 		
 		$this->_subNavs = array(
 			array('url' => $this->_className.'/index','title' => '管理'),
@@ -80,7 +81,7 @@ class Order extends Ydzj_Admin_Controller {
 			$condition['where']['username'] = $search['username'];
 		}
 		
-		$list = $this->Order_Model->getList($condition);
+		$list = $this->order_service->search($this->_moduleTitle,$condition);
 		
 		$this->assign(array(
 			'list' => $list,
@@ -304,8 +305,15 @@ class Order extends Ydzj_Admin_Controller {
 			
 		}
 		
+		
+		$showExpire = false;
+		if(in_array($info['order_typename'],array('物业费','能耗费','车位费'))){
+			$showExpire = true;
+		}
+		
 		$this->assign(array(
 			'info' => $info,
+			'showExpire' => $showExpire,
 			'extraItem' => $this->order_service->extraInfoToArray($info)
 		));
 		
@@ -461,6 +469,8 @@ class Order extends Ydzj_Admin_Controller {
         }else{
         	$list = $data;
         }
+        
+        $this->load->library(array('Basic_data_service'));
         
         $basicData = $this->basic_data_service->getBasicData();
     	foreach($list as $rowId => $order){

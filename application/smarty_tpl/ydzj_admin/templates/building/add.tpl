@@ -16,11 +16,15 @@
         </tr>
         <tr class="noborder">
         	<td colspan="2">
+        		{if $info['id']}
+	          	{$residentList[$info['resident_id']]['name']|escape}
+	          	{else}
 	          	<ul class="ulListStyle1 clearfix">
 	          	{foreach from=$residentList item=item}
 	          		<li {if $info['resident_id'] == $item['id']}class="selected"{/if}><label><input type="radio" name="resident_id" {if $info['resident_id'] == $item['id']}checked="checked"{/if} value="{$item['id']}"/><span>{$item['name']|escape}</span></label></li>
 	          	{/foreach}
 	          	</ul>
+	          	{/if}
 	         </td>
         </tr>
       	<tr class="noborder">
@@ -119,7 +123,7 @@
 	        var checked = $(this).prop('checked');
 	        var id = $(this).val();
 	        if(checked){
-	        	$("input[name=name]").val($(this).parent().find('span').html());
+	        	//$("input[name=name]").val($(this).parent().find('span').html());
 	        	
 	        	mapPanTo(id);
 	        }

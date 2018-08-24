@@ -8,6 +8,7 @@ $entity = array(
 'yezhu_id' => 'int',
 'yezhu_name' => 'varchar',
 'mobile' => 'varchar',
+'house_id' => 'int',
 'address' => 'varchar',
 'remark' => 'varchar',
 'photos' => 'text',

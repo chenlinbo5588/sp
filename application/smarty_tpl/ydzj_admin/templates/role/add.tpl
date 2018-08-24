@@ -8,21 +8,34 @@
   	<table class="table tb-type2">
 		<tbody>
 	  		<tr class="noborder">
-	          <td class="required"><label class="validation" for="name">角色名称:</label>{form_error('name')}</td>
+	          <td class="required"><label class="validation" for="name">角色名称:</label><label id="error_name" class="errortip"></label>{form_error('name')}</td>
 	        </tr>
 	        <tr class="noborder">
-	          <td><input class="w200" type="text" id="name" value="{$info['name']|escape}" name="name" class="txt">&nbsp;<input type="submit" name="submit" value="保存" class="msbtn"/></td>
+	          <td>
+	          	<input class="w200" type="text" id="name" value="{$info['name']|escape}" name="name" class="txt">&nbsp;
+	          	<input type="submit" name="submit" value="保存" class="msbtn"/>
+	          	{if $gobackUrl}
+		    	<a href="{$gobackUrl}" class="salvebtn">返回</a>
+		    	{/if}
+	          </td>
 	        </tr>
 	        <tr class="noborder">
 	          <td class="required"><label class="validation">状态:</label>{form_error('status')}</td>
 	        </tr>
 	        <tr class="noborder">
 	          <td>
-	          	<select name="status">
-	          		<option value="开启" {if $info['status'] == '开启'}selected{/if}>开启</option>
-	          		<option value="关闭" {if $info['status'] == '关闭'}selected{/if}>关闭</option>
+	          	<select name="enable">
+	          		<option value="1" {if 1 == $info['enable']}selected{/if}>开启</option>
+	          		<option value="0" {if 0 == $info['enable']}selected{/if}>关闭</option>
 	          	</select>
 	          </td>
+	        </tr>
+	        <tr class="noborder">
+	          <td class="required"><label>到期日期:</label>{form_error('expire')}</td>
+	        </tr>
+	        <tr class="noborder">
+	          <td class="vatop rowform"><input type="text" id="expire"  value="{if $info['expire']}{date('Y-m-d',$info['expire'])}{/if}" name="expire" class="datepicker txt-short"></td>
+	          <td class="vatop tips"><label id="error_expire" class="errtip"></label>{form_error('expire')} 不填表示永不过期</td>
 	        </tr>
 	    </tbody>
   	</table>
@@ -30,7 +43,7 @@
       <thead>
       	<tr class="thead">
       		<th style="width:120px;" >模块 <label><input type="checkbox" name="limitAll" id="limitAll" />全选</label></th>
-      		<th>子模块/功能点 {form_error('permission[]')}</th>
+      		<th>子模块/功能点 {form_error('permission[]')} <label id="error_permission" class="errortip"></label></th>
       	</tr>
       </thead>
       <tbody>
@@ -58,8 +71,13 @@
       </tbody>
   </form>
 <script>
+$(function(){
 
-$(document).ready(function(){
+	$(".datepicker").datepicker();
+	$.loadingbar({ text: "正在提交..." , urls: [ new RegExp("{$uri_string}") ] , container : "#add_form" });
+  		
+  	bindAjaxSubmit("#add_form");
+  		
 	$(".top_fn input").bind("click",function(){
 		var target = $(this).parents("td").siblings("td").find("input");
 		if($(this).prop("checked")){
@@ -87,8 +105,6 @@ $(document).ready(function(){
 				moduleCheckbox.prop("checked",false);
 			}
 		}
-		
-		
 	});
 	
 

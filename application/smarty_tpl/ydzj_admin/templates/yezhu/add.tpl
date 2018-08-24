@@ -9,6 +9,18 @@
   <input type="hidden" name="gobackUrl" value="{$gobackUrl}"/>
     <table class="table tb-type2">
       <tbody>
+        <tr class="noborder">
+          <td colspan="2"><label class="validation">所在{#resident_name#}:</label><label class="errtip" id="error_resident_id"></label>{form_error('resident_id')}</td>
+        </tr>
+        <tr class="noborder">
+        	<td colspan="2">
+	          	<ul class="ulListStyle1 clearfix">
+	          	{foreach from=$residentList item=item}
+	          		<li {if $info['resident_id'] == $item['id']}class="selected"{/if}><label><input type="radio" name="resident_id" {if $info['resident_id'] == $item['id']}checked="checked"{/if} value="{$item['id']}"/><span>{$item['name']|escape}</span></label></li>
+	          	{/foreach}
+	          	</ul>
+	         </td>
+        </tr>
 		<tr class="noborder">
           <td colspan="2"><label class="validation" for="name">{#yezhu_name#}:</label></td>
         </tr>
@@ -84,6 +96,8 @@
           <td class="vatop rowform"><input type="text" value="{$info['mobile']}" name="mobile" id="mobile" class="txt"></td>
           <td class="vatop tips">{form_error('mobile')}</td>
         </tr>
+        
+        
         <tr>
           <td colspan="2"><label>排序:</label></td>
         </tr>

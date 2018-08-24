@@ -60,7 +60,7 @@
           <td>{$item['ip']}</td>
           <td>
           	{if '审核通过' == $OrderVerify[$item['verify_status']] && '退款中' == $OrderStatus[$item['status']]}
-          	<a href="{admin_site_url($moduleClassName|cat:'/refund')}?id={$item['id']}">退款</a>
+          	{if isset($permission[$moduleClassName|cat:'/refund'])}<a href="{admin_site_url($moduleClassName|cat:'/refund')}?id={$item['id']}">退款</a>{/if}
           	{/if}
           </td>
         </tr>

@@ -5,7 +5,7 @@
       <tbody>
       	<tr class="noborder">
           <td colspan="2">
-            <a class="excelDownload" href="{resource_url('example/yezhu.xls')}"><span>点击下载导入例子文件</span></a>
+            <a class="excelDownload" href="{resource_url('example/wuye.xls')}"><span>点击下载导入例子文件</span></a>
            </td>
         </tr>
         <tr class="noborder">
@@ -16,6 +16,7 @@
         		</ol>
         	</td
         </tr>
+        {include file="common/resident_radio.tpl"}
         <tr class="noborder">
           <td colspan="2"><label class="validation">请选择待导入的Excel文件:</label></td>
         </tr>

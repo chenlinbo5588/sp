@@ -13,7 +13,6 @@ class Order extends Wx_Controller {
 		$this->load->library('Order_service');
         $this->order_service->setWeixinAppConfig(config_item('mp_xcxCswy'));
 		
-    	$this->form_validation->set_error_delimiters('','');
     	
     	//print_r(Order_service::$orderType);
     	
@@ -327,6 +326,31 @@ class Order extends Wx_Controller {
 		}
 	}
 	
+	/**
+	 * 创建车位费 订单
+	 */
+	public function createParkingOrder(){
+		
+		if($this->yezhuInfo){
+			$message = '';
+			
+			$callPayJson = $this->order_service->createWuyeOrder('id',$this->postJson,$this->yezhuInfo,$message);
+			
+			if($callPayJson){
+				$this->jsonOutput2(RESP_SUCCESS,$callPayJson);
+			}else{
+				$this->jsonOutput2($message);
+			}
+			
+		}else{
+			
+			$this->jsonOutput2(UNBINDED,$this->unBind);
+		}
+		
+	}
+	
+	
+	
 	
 	
 	
@@ -336,141 +360,17 @@ class Order extends Wx_Controller {
 	public function createWuyeOrder(){
 		
 		if($this->yezhuInfo){
-			$this->load->library('Wuye_service');
 			
-			for($i = 0; $i < 1; $i++){
-				
-				if($this->postJson['order_id']){
-					
-					$this->postJson['uid'] = $this->memberInfo['uid'];
-					$this->form_validation->set_data($this->postJson);
-					
-					$this->_setIsUserOrderRules();
-					
-					if(!$this->form_validation->run()){
-						$this->jsonOutput2($this->form_validation->error_first_html());
-						break;
-					}
-					
-					
-					$orderInfo = $this->order_service->getOrderInfoById($this->postJson['order_id'],'order_id');
-					$houseInfo = $this->House_Model->getFirstByKey($orderInfo['goods_id'],'id','wuye_expire,nenghao_expire');
-					
-					$whichField = '';
-					switch($orderInfo['order_typename']){
-						case '物业费':
-							$whichField = 'wuye_expire';
-							break;
-						case '能耗费':
-							$whichField = 'nenghao_expire';
-							break;
-						default:
-							break;
-					}
-					
-					if(empty($whichField)){
-						$this->jsonOutput2('订单类型非法');
-						break;
-					}
-					
-					
-					if($this->_reqtime >= strtotime($orderInfo['time_expire'])){
-						$this->order_service->updateOrderStatusByIds(array($orderInfo['id']),OrderStatus::$closed,OrderStatus::$unPayed);
-						$this->jsonOutput2('订单已过期');
-						break;
-					}
-					
-					//fixed 用户先选择一个月份在创建订单付款界面取消后， 重新选择缴费月份，然后付款后一笔交易成功后， 最后我的订单中继续付款前一个交易。
-					if($orderInfo['extra_info']['expireTimeStamp'] != $houseInfo[$whichField]){
-						$this->order_service->updateOrderStatusByIds(array($orderInfo['id']),OrderStatus::$closed,OrderStatus::$unPayed);
-						
-						$this->jsonOutput2('该订单已过期');
-						break;
-					}
-					
-				}else{
-					
-					$this->form_validation->set_data($this->postJson);
-					
-					$this->form_validation->set_rules('order_typename','订单类型','in_db_list['.$this->Order_Type_Model->getTableRealName().'.name]');
-					$this->form_validation->set_rules('house_id','物业标识',array(
-							'required',
-							array(
-								'feetype_callable['.$this->postJson['year'].','.$this->postJson['order_typename'].']',
-								array(
-									$this->wuye_service,'checkFeetype'
-								)
-							)
-						),
-						array(
-							'feetype_callable' => '该%s尚未配置小区费用信息'
-						)
-					);
-					
-					$currentHouseFeeExpire = $this->wuye_service->getCurrentHouseFeeInfo($this->postJson['house_id'],$this->postJson['order_typename'],$this->postJson['end_month']);
-					$this->wuye_service->setFeeTimeRules($currentHouseFeeExpire['year']);
-					
-					//$this->form_validation->set_rules('amount','缴费金额','required|is_numeric|greater_than_equal_to[0]');
-					
-					if(!$this->form_validation->run()){
-						$this->jsonOutput2($this->form_validation->error_first_html());
-						break;
-					}
-					
-					//在校验  缴费的时间一定要大于已缴费的时间
-					if($currentHouseFeeExpire['expireTimeStamp'] >= $currentHouseFeeExpire['newEndTimeStamp']){
-						$this->jsonOutput2("请选择合理的缴费时间");
-						break;
-					}
-					
-					//开始创建订单
-					
-					$this->postJson['order_type'] = Order_service::$orderType['nameKey'][$this->postJson['order_typename']]['id'];
-					
-					$this->postJson['uid'] = $this->memberInfo['uid'];
-					$this->postJson['add_username'] = $this->yezhuInfo['name'];
-					$this->postJson['username'] = $this->yezhuInfo['name'];
-					
-					//联系方式
-					$this->postJson['mobile'] = $this->yezhuInfo['mobile'];
-					
-					//异步回调
-					$this->postJson['notify_url'] = site_url(Order_service::$orderType['nameKey'][$this->postJson['order_typename']]['order_url']);
-					
-					
-					$message = '订单创建失败';
-					
-					$this->load->model('House_Model');
-					
-					$houseInfo = $this->House_Model->getFirstByKey($this->postJson['house_id']);
-					
-					$this->postJson['goods_id'] = $this->postJson['house_id'];
-					$this->postJson['goods_name'] = $houseInfo['address'];
-					
-					
-					$this->postJson['extra_info'] = array_merge(array('end_month' => $this->postJson['end_month']),$currentHouseFeeExpire);
-					
-					if(ENVIRONMENT == 'development'){
-						//@todo 修改金额
-						$this->postJson['amount'] = mt_rand(1,3);
-					}else{
-						$this->postJson['amount'] = mt_rand(1,3);
-						//计算金额
-						//$this->postJson['amount'] = intval(100 * $this->wuye_service->computeHouseFee($currentHouseFeeExpire));
-					}
-				}
-				
-				
-				
-				$callPayJson = $this->order_service->createWeixinOrder($this->postJson);
-				
-				
-				if($callPayJson){
-					$this->jsonOutput2(RESP_SUCCESS,$callPayJson);
-				}else{
-					$this->jsonOutput2($this->postJson['order_typename']."订单创建失败");
-				}
+			$message = '';
+			
+			$callPayJson = $this->order_service->createWuyeOrder('house_id',$this->postJson,$this->yezhuInfo,$message);
+			
+			if($callPayJson){
+				$this->jsonOutput2(RESP_SUCCESS,$callPayJson);
+			}else{
+				$this->jsonOutput2($message);
 			}
+			
 			
 		}else{
 			
@@ -585,9 +485,9 @@ class Order extends Wx_Controller {
 						$orderInfo['extra_info_translate']['booking_time'] =$orderInfo['extra_info']['booking_time'] ;
 						
 					}else{
-						$orderInfo['extra_info_translate']['上次缴费到期时间'] = $orderInfo['extra_info']['expireTimeStamp'] == 0 ? '无缴费记录' : date('Y-m-d', $orderInfo['extra_info']['expireTimeStamp']);
-						$orderInfo['extra_info_translate']['本次缴费开始时间'] = date('Y-m-d', $orderInfo['extra_info']['newStartTimeStamp']);
-						$orderInfo['extra_info_translate']['本次缴费到期时间'] = date('Y-m-d', $orderInfo['extra_info']['newEndTimeStamp']);
+						$orderInfo['fee_old_expire'] = $orderInfo['fee_old_expire'] == 0 ? '无缴费记录' : date('Y-m-d', $orderInfo['fee_old_expire']);
+						$orderInfo['fee_start'] = date('Y-m-d', $orderInfo['fee_start']);
+						$orderInfo['fee_expire'] = date('Y-m-d', $orderInfo['fee_expire']);
 					}
 					
 					if(isset($orderInfo['extra_info']['reason'])){

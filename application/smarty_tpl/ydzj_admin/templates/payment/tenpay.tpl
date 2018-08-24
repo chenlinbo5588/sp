@@ -45,27 +45,4 @@
       </tfoot>
     </table>
   </form>
-<script>
-$(document).ready(function(){
-	$('form[name=form1]').validate({
-		rules : {
-            tenpay_account : {
-                required   : true
-            },
-            tenpay_key : {
-                required   : true
-            }
-        },
-        messages : {
-            tenpay_account  : {
-                required  : '财付通商户号不能为空'
-            },
-            tenpay_key  : {
-                required   : '财付通密钥不能为空'
-            }
-        }
-			
-	});
-});
-</script>
 {include file="common/main_footer.tpl"}

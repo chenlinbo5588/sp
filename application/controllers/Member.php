@@ -210,22 +210,6 @@ class Member extends Ydzj_Controller {
 					)
 				);
 			
-			/*
-			$this->form_validation->set_rules('nickname','昵称', array(
-						'required',
-						array(
-							'nickname_callable[nickname]',
-							array(
-								$this->Member_Model,'isUnqiueByKey'
-							)
-						)
-					),
-					array(
-						'nickname_callable' => '%s已经被占用'
-					)
-				);
-			*/
-			
 			
 			$this->form_validation->set_rules('psw','密码','required|alpha_dash|min_length[6]|max_length[12]');
 			$this->form_validation->set_rules('psw_confirm','密码确认','required|matches[psw]');

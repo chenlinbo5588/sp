@@ -7,10 +7,6 @@
 	        <tr>
 	          <th><label for="name">{#building_name#}</label></th>
 	          <td><input class="txt" name="name" id="name" value="{$smarty.get['name']|escape}" type="text"></td>
-  	          <th><label for="resident_name">{#resident_name#}</label></th>
-	          <td><input class="txt" name="resident_name" id="resident_name" value="{$smarty.get['resident_name']|escape}" type="text"></td>
-	          <th><label for="address">{#address#}</label></th>
-	          <td><input class="txt" name="address" id="address" value="{$smarty.get['address']|escape}" type="text"></td>
 	          <td><input type="submit" class="msbtn" name="tijiao" value="查询"/></td>
 	        </tr>
 	    </tbody>
@@ -45,8 +41,8 @@
           <td>{$item['max_plies']}</td>
           <td>{$item['floor_plies']}</td>
           <td>
-          	<a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}">编辑</a>&nbsp;|&nbsp;
-          	<a href="javascript:void(0)" class="delete" data-url="{admin_site_url($moduleClassName|cat:'/delete')}" data-id="{$item['id']}">删除</a>
+          	{if isset($permission[$moduleClassName|cat:'/edit'])}<a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}">编辑</a>{/if}&nbsp;&nbsp;
+          	{if isset($permission[$moduleClassName|cat:'/delete'])}<a href="javascript:void(0)" class="delete" data-url="{admin_site_url($moduleClassName|cat:'/delete')}" data-id="{$item['id']}">删除</a>{/if}
           </td>
         </tr>
         {/foreach}
@@ -54,7 +50,7 @@
     </table>
     <div class="fixedOpBar">
     	<label><input type="checkbox" class="checkall" id="checkallBottom" name="chkVal">全选</label>&nbsp;
-        <a href="javascript:void(0);" class="btn deleteBtn" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/delete')}"><span>删除</span></a>
+        {if isset($permission[$moduleClassName|cat:'/delete'])}<a href="javascript:void(0);" class="btn deleteBtn" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/delete')}"><span>删除</span></a>{/if}
         {include file="common/pagination.tpl"}
         
     </div>
@@ -62,13 +58,14 @@
   <script type="text/javascript" src="{resource_url('js/jquery.edit.js')}"></script>
 <script>
 $(function(){
-    bindDeleteEvent();
+    {if isset($permission[$moduleClassName|cat:'/delete'])}bindDeleteEvent();{/if}
     
+    {if isset($permission[$moduleClassName|cat:'/inline_edit'])}
     $("span.editable").inline_edit({ 
     	url: "{admin_site_url($moduleClassName|cat:'/inline_edit')}",
     	clickNameSpace:'inlineEdit'
     });
-	    
+	{/if}
 });
 </script>
 {include file="common/main_footer.tpl"}

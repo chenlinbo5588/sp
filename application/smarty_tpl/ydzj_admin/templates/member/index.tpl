@@ -48,7 +48,6 @@
           <th>&nbsp;</th>
           <th>{#avatar#}</th>
           <th>{#mobile#}</th>
-          <th>{#nickname#}</th>
           <th>{#username#}</th>
           <th>{#sex#}</th>
           <th>{#register_time#}</th>
@@ -73,7 +72,6 @@
             <div class=""><span class="thumb"><i></i>{if $item['avatar_small']}<img src="{base_url($item['avatar_small'])}"  data-avatar="{$item['avatar_middle']}" />{else}暂无头像{/if}</span></div>
           </td>
           <td>{$item['mobile']|escape}</td>
-          <td>{$item['nickname']|escape}</td>
           <td>{$item['username']|escape}</td>
           <td>{if 0 == $item['sex']}不祥{elseif 1 == $item['sex']}男{elseif 2 == $item['sex']}女{/if}</td>
           <td>{$item['reg_date']|date_format:"%Y-%m-%d %H:%M:%S"}</td>
@@ -104,7 +102,10 @@
           <td>{if 0 == $item['status']}正常{/if}</td>
           <td class="align-center">{if $item['allowtalk'] == 'N'}禁止{else}允许{/if}</td>
           <td class="align-center">{if $item['freeze'] == 'Y'}禁止{else}允许{/if}</td>
-          <td class="align-center"><a href="{admin_site_url('member/edit?id=')}{$item['uid']}">编辑</a> | <a href="{admin_site_url('notify/add?uid=')}{$item['uid']}">通知</a></td>
+          <td class="align-center">
+          		{if isset($permission['member/edit'])}<a href="{admin_site_url('member/edit?id=')}{$item['uid']}">编辑</a>{/if} &nbsp;
+          		{if isset($permission['notify/add'])}<a href="{admin_site_url('notify/add?uid=')}{$item['uid']}">通知</a>{/if}
+          </td>
         </tr>
       {/foreach}
       </tbody>

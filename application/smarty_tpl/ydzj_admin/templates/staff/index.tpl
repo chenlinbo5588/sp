@@ -74,10 +74,10 @@
          <td>{$item['address']|escape}</td>
          <td>
           	<p>
-          		<a href="{admin_site_url('worker/detail')}?id={$item['worker_id']}">人员信息</a> |
-          		{if $statusConfig[$item['status']] == '待审核'}<a href="{admin_site_url($moduleClassName|cat:'/single_verify')}?id={$item['id']}">审核</a> |{/if}
-          		<a href="{admin_site_url($moduleClassName|cat:'/detail')}?id={$item['id']}">详情</a> | 
-          		<a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}">编辑</a>
+          		{if isset($permission['worker/detail'])}<a href="{admin_site_url('worker/detail')}?id={$item['worker_id']}">人员信息</a>{/if} &nbsp;
+          		{if isset($permission[$moduleClassName|cat:'/single_verify'])}{if $statusConfig[$item['status']] == '待审核'}<a href="{admin_site_url($moduleClassName|cat:'/single_verify')}?id={$item['id']}">审核</a>&nbsp;{/if}{/if}
+          		{if isset($permission[$moduleClassName|cat:'/detail'])}<a href="{admin_site_url($moduleClassName|cat:'/detail')}?id={$item['id']}">详情</a>&nbsp;{/if}
+          		{if isset($permission[$moduleClassName|cat:'/edit'])}<a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}">编辑</a>&nbsp;{/if}
           	</p>
           </td>
         </tr>
@@ -86,11 +86,11 @@
     </table>
     <div class="fixedOpBar">
     	<label><input type="checkbox" class="checkall" id="checkallBottom" name="chkVal">全选</label>&nbsp;
-    	<a href="javascript:void(0);" class="btn opBtn" data-title="确定提交审核吗?" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/handle_verify')}"><span>提交审核</span></a>
-    	<a href="javascript:void(0);" class="btn verifyBtn" data-title="审核" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/batch_verify')}" data-ajaxformid="#verifyForm"><span>审核</span></a>
-        <a href="javascript:void(0);" class="btn opBtn" data-title="确定发布吗?" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/batch_published')}"><span>发布</span></a>
-        <a href="javascript:void(0);" class="btn deleteBtn" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/delete')}"><span>删除</span></a>
-        <a href="javascript:void(0);" class="btn opBtn" data-title="确定恢复吗?" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/recover')}"><span>恢复</span></a>
+    	{if isset($permission[$moduleClassName|cat:'/handle_verify'])}<a href="javascript:void(0);" class="btn opBtn" data-title="确定提交审核吗?" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/handle_verify')}"><span>提交审核</span></a>{/if}
+    	{if isset($permission[$moduleClassName|cat:'/batch_verify'])}<a href="javascript:void(0);" class="btn verifyBtn" data-title="审核" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/batch_verify')}" data-ajaxformid="#verifyForm"><span>审核</span></a>{/if}
+        {if isset($permission[$moduleClassName|cat:'/batch_published'])}<a href="javascript:void(0);" class="btn opBtn" data-title="确定发布吗?" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/batch_published')}"><span>发布</span></a>{/if}
+        {if isset($permission[$moduleClassName|cat:'/delete'])}<a href="javascript:void(0);" class="btn deleteBtn" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/delete')}"><span>删除</span></a>{/if}
+        {if isset($permission[$moduleClassName|cat:'/recover'])}<a href="javascript:void(0);" class="btn opBtn" data-title="确定恢复吗?" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/recover')}"><span>恢复</span></a>{/if}
         {include file="common/pagination.tpl"}
     </div>
   </form>

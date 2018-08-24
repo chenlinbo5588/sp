@@ -3,9 +3,6 @@
  */
 $(function(){
 	
-	//$.loadingbar({ text: "正在提交..." , urls: submitUrl , container : "#notifyForm" });
-	//bindAjaxSubmit("#notifyForm");
-	
 	KindEditor.ready(function(K) {
 		editor1 = K.create('textarea[name="content"]', {
             extraFileUploadParams:{ formhash: formhash },
@@ -40,7 +37,20 @@ $(function(){
 				break;
 		}
 		
-	})
+	});
 	
+	
+	$("input[name=ckall]").bind('click',function(){
+		
+		var checked = $(this).prop("checked");
+		
+		if(checked){
+			$("#groupList li").addClass("selected");
+			$("#groupList input[type=checkbox]").prop("checked",true);
+		}else{
+			$("#groupList li").removeClass("selected");
+			$("#groupList input[type=checkbox]").prop("checked",false);
+		}
+	});
 	
 });

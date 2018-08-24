@@ -39,7 +39,10 @@
           	<a class="btn-add-nofloat marginleft" href="{admin_site_url($moduleClassName|cat:'/add')}?pid={$item['id']}"><span>新增下级</span></a>
           </td>
           <td class="yes-onoff"><a href="javascript:void(0);" data-url="{admin_site_url($moduleClassName|cat:'/inline_edit')}" {if $item['status']}class="enabled"{else}class="disabled"{/if} data-id="{$item['id']}" data-fieldname="status"><img src="{resource_url('img/transparent.gif')}"></a></td>
-          <td class="w84"><a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}">编辑</a> | <a class="delete" data-url="{admin_site_url($moduleClassName|cat:'/delete')}" href="javascript:void(0);" data-id="{$item['id']}">删除</a></td>
+          <td class="w84">
+          	{if isset($permission[$moduleClassName|cat:'/edit'])}<a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}">编辑</a>{/if}&nbsp;
+          	{if isset($permission[$moduleClassName|cat:'/delete'])}<a class="delete" data-url="{admin_site_url($moduleClassName|cat:'/delete')}" href="javascript:void(0);" data-id="{$item['id']}">删除</a>{/if}
+          </td>
         </tr>
         {/foreach}
       </tbody>
@@ -52,7 +55,6 @@
 	  	'dataUrl' : "{admin_site_url($moduleClassName|cat:'/category')}",
 	  	'inlineUrl' : "{admin_site_url($moduleClassName|cat:'/inline_edit')}"
 	};
-	
 	
   </script>
   <script type="text/javascript" src="{resource_url('js/service/tree_event.js')}"></script>

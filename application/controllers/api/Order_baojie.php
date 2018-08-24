@@ -76,7 +76,8 @@ class PayNotifyCallBack extends WxPayNotify
 		
 		
 		$this->_ci->load->library(array('Basic_data_service'));
-		$this->_ci->load->Model('Staff_Booking_Model');
+		
+		$this->_ci->load->model('Staff_Booking_Model');
 		
 		$serviceType = $this->_ci->basic_data_service->getTopChildList('业务类型');
 		
@@ -126,7 +127,6 @@ class Order_baojie extends Wx_Controller {
 		parent::__construct();
         
         $this->load->library(array('Order_service'));
-    	$this->form_validation->set_error_delimiters('','');
 	}
 	
 	/**

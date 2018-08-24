@@ -185,9 +185,22 @@ class MY_Model extends CI_Model {
             $this->db->select($condition['select']);
         }
         
+        if($condition['like_before']){
+        	foreach($condition['like_before'] as $field => $value){
+        		$this->db->like($field, $value, 'before');
+        	}
+        }
+        
+        if($condition['like_after']){
+        	foreach($condition['like_after'] as $field => $value){
+        		$this->db->like($field, $value, 'after');
+        	}
+        }
+        
         if($condition['like']){
             $this->db->like($condition['like']);
         }
+        
         
         if($condition['where']){
             $this->db->where($condition['where']);
@@ -256,6 +269,10 @@ class MY_Model extends CI_Model {
     public function _add($param,$replace = false , $action = 'add'){
     	$data = $this->_fieldsDecorator($param,$action);
         
+        if(empty($data)){
+        	return false;
+        }
+        
         if(!$replace){
         	$this->db->insert($this->getTableRealName(), $data);
         	return $this->db->insert_id();
@@ -304,6 +321,10 @@ class MY_Model extends CI_Model {
     public function update($param, $where = null){
         $data = $this->_fieldsDecorator($param,'update');
         
+        if(empty($data)){
+        	return false;
+        }
+        
         if($data){
         	$this->db->update($this->getTableRealName(), $data, $where);
         	return $this->db->affected_rows();
@@ -332,6 +353,11 @@ class MY_Model extends CI_Model {
     	$this->_setCondition($condition);
     	
     	$data = $this->_fieldsDecorator($data,'update');
+    	
+    	if(empty($data)){
+        	return false;
+        }
+        
     	$this->db->update($this->getTableRealName(), $data);
         return $this->db->affected_rows();
     }
@@ -339,6 +365,10 @@ class MY_Model extends CI_Model {
     public function updateByWhere($data,$where = null){
     	$data = $this->_fieldsDecorator($data,'update');
     	
+    	if(empty($data)){
+        	return false;
+        }
+        
         $this->db->update($this->getTableRealName(),$data,$where);
         return $this->db->affected_rows();
     }
@@ -377,7 +407,7 @@ class MY_Model extends CI_Model {
      * 查询
      */
     public function getFirstByKey($id,$key = 'id',$fields = '*'){
-        $query = $this->db->select($fields)->get_where($this->getTableRealName(),array($key => $id));
+        $query = $this->db->select($fields)->get_where($this->getTableRealName(),array($key => $id),1);
         $data = $query->result_array();
         if($data[0]){
             return $data[0];
@@ -390,22 +420,21 @@ class MY_Model extends CI_Model {
      * 获得
      */
     public function getById($condition){
-        if($condition['where']){
-            
-            if($condition['select']){
-                $this->db->select($condition['select']);
-            }
-            
-            $this->db->where($condition['where']);
-            $query = $this->db->get($this->getTableRealName());
-            $data = $query->result_array();
-            
-            if($data[0]){
-                return $data[0];
-            }
+    	if(empty($condition)){
+    		return false;
+    	}
+    	
+    	$this->_setCondition($condition);
+        
+        $query = $this->db->get($this->getTableRealName(),1);
+        $data = $query->result_array();
+        
+        if($data[0]){
+            return $data[0];
+        }else{
+        	return false;
         }
         
-        return false;
     }
     
     

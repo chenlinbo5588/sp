@@ -507,10 +507,10 @@ function showTips( tips, height, time ){
 
     $( 'body' ).append( tipsDiv );
     $( 'div.tipsClass' ).css({
-        'top' : 200 + 'px',
+        'top' : height + 'px',
         'left' : ( windowWidth / 2 ) - ( tips.length * 13 / 2 ) + 'px',
         'position' : 'fixed',
-        'padding' : '20px 50px',
+        'padding' : '10px',
         'background': '#EAF2FB',
         'font-size' : 14 + 'px',
         'margin' : '0 auto',
@@ -752,9 +752,18 @@ function bindDeleteEvent(pSetting, customSuccessFn,customErrorFn){
 		if(check_success(json.message)){
 			showToast('success',json.message);
 			
-			for(var i = 0; i < ids.length; i++){
-				$(setting.rowPrefix + ids[i]).remove();
+			var i = 0;
+			
+			if(json.deleteIds){
+				for(i = 0; i < json.deleteIds.length; i++){
+					$(setting.rowPrefix + json.deleteIds[i]).remove();
+				}
+			}else{
+				for(i = 0; i < ids.length; i++){
+					$(setting.rowPrefix + ids[i]).remove();
+				}
 			}
+			
 		}else{
 			showToast('error',json.message);
 		}
@@ -894,7 +903,8 @@ function bindAjaxSubmit(classname,setting){
 					}
 					
 					if($("input[name='" + first + "']").size()){
-						$("input[name='" + first + "']").addClass('error').focus();
+						$("input[name='" + first + "']").addClass('error');
+						$("input[name='" + first + "']:eq(0)").focus();
 					}else if($("select[name='" + first + "']").size()){
 						$("select[name='" + first + "']").focus();
 					}else if($("textarea[name='" + first + "']").size()){
@@ -1124,22 +1134,36 @@ $(function(){
 	
 	
 	$(".ulListStyle1").each(function(){
-        var ulList = $(this);
+        
+        var customCheck = function(ulObj,inputSelect,singleCheck){
+        	$(inputSelect,ulObj).bind('click',function(){
+                var checked = $(this).prop('checked');
+                
+                if(singleCheck){
+                	$("li",ulObj).removeClass('selected');
+                }
 
-        $("input[type=radio]",ulList).bind('click',function(){
-            var checked = $(this).prop('checked');
-            $("li",ulList).removeClass('selected');
-
-            if(checked){
-                    $(this).parents('li').addClass('selected');
+                if(checked){
+                	$(this).parents('li').addClass('selected');
+                }else{
+                	$(this).parents('li').removeClass('selected');
+                }
+            });
+            
+        	/*
+            //默认勾选上
+            if($(inputSelect,ulObj).size() == 1){
+                $("li",ulObj).addClass('selected');
+                $(inputSelect + ":eq(0)",ulObj).prop('checked',true);
             }
-        });
-
-        if($("input[type=radio]",ulList).size() == 1){
-            $("li",ulList).addClass('selected');
-            $("input[type=radio]:eq(0)",ulList).prop('checked',true);
+            */
         }
+        
+        customCheck($(this),"input[type=radio]",true);
+        customCheck($(this),"input[type=checkbox]",false);
+        
 	});
+	
 	
 	
 	$("input[name=jumpPage]").keydown(function(event){

@@ -55,32 +55,5 @@
       </tfoot>
     </table>
   </form>
-<script>
-$(document).ready(function(){
-	$('form[name=form1]').validate({
-		rules : {
-            alipay_account : {
-                required   : true
-            },
-            alipay_key : {
-                required   : true
-            },
-            alipay_partner : {
-                required   : true
-            }
-        },
-        messages : {
-            alipay_account  : {
-                required  : '支付宝账号不能为空'
-            },
-            alipay_key  : {
-                required   : '交易安全校验码（key）不能为空'
-            },
-            alipay_partner  : {
-                required   : '合作者身份（partner ID）不能为空'
-            }
-        }
-	});
-});
-</script>
+
 {include file="common/main_footer.tpl"}

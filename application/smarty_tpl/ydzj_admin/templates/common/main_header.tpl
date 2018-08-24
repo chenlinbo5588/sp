@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <head>
 <title>{$SEO_title}</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -25,7 +25,6 @@ var cookiedomain = "{config_item('cookie_domain')}",
 {include file="common/jquery_ui.tpl"}
 <link rel="stylesheet" href="{resource_url('js/toast/jquery.toast.min.css')}"/>
 <script type="text/javascript" src="{resource_url('js/toast/jquery.toast.min.js')}"></script>
-<script type="text/javascript" src="{resource_url('js/jquery.validation.min.js')}"></script>
 <script type="text/javascript" src="{resource_url('js/common.js',true)}"></script>
 <script type="text/javascript" src="{resource_url('js/admincp.js',true)}"></script>
 </head>

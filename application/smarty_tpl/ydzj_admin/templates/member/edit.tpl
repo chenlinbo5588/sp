@@ -3,20 +3,13 @@
     <table class="table tb-type2">
       <tbody>
         <tr class="noborder">
-          <td colspan="2" class="required"><label>登陆账号:</label></td>
+          <td colspan="2" class="required"><label>手机号码(账号):</label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform">
             <p>{$info['mobile']}</p>
-            <p><img src="{base_url($info['avatar_middle'])}"/></p>
+            {if $info['avatar_small']}<p><img src="{base_url($info['avatar_small'])}"/></p>{/if}
           </td>
-          <td class="vatop tips"></td>
-        </tr>
-        <tr class="noborder">
-          <td colspan="2" class="required"><label class="validation" for="member_nickname">昵称:</label>{form_error('member_nickname')}</td>
-        </tr>
-        <tr class="noborder">
-          <td class="vatop rowform"><input type="text" {if $inpost}value="{set_value('member_nickname')}"{else}value="{$info['nickname']|escape}"{/if} name="member_nickname" id="member_nickname" class="txt"></td>
           <td class="vatop tips"></td>
         </tr>
         <tr>

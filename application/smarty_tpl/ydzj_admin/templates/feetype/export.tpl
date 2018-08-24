@@ -23,28 +23,38 @@
       		</tr>
       </thead>
       <tbody>
-			<tr class="noborder">
-	          <td colspan="2"><label for="name">{#type_name#}:</label></td>
-	        </tr>
-	        <tr class="noborder">
-	          <td class="vatop rowform"><input class="txt" name="name" value="" type="text"></td>
-	          <td class="vatop tips">选填</td>
-	        </tr>
-			<tr class="noborder">
-	          <td colspan="2"><label for="name">{#resident_name#}</label></th>
+      		<tr class="noborder">
+	          <td colspan="2"><label for="year">{#year#}</label></th>
 	        </tr>
 	        <tr class="noborder">
 	          <td class="vatop rowform">
-	          	<input class="txt" name="resident_name" value="" type="text">
+	          	<input class="txt" name="year" value="" id="year" type="text">
 	          </td>
 	          <td class="vatop tips">选填</td>
-	        </tr>   
+	        </tr>
+			<tr class="noborder">
+	          <td colspan="2"><label for="type_name">{#type_name#}:</label></td>
+	        </tr>
 	        <tr class="noborder">
-	          <td colspan="2"><label for="name">页码</label>
+	          <td class="vatop rowform"><input class="txt" name="type_name" id="type_name" value="" type="text"></td>
+	          <td class="vatop tips">选填</td>
+	        </tr>
+			<tr class="noborder">
+	          <td colspan="2"><label for="resident_name">{#resident_name#}</label></th>
 	        </tr>
 	        <tr class="noborder">
 	          <td class="vatop rowform">
-	          	<input class="txt" name="page" value="1" type="text">
+	          	<input class="txt" name="resident_name" value="" id="resident_name" type="text">
+	          </td>
+	          <td class="vatop tips">选填</td>
+	        </tr>
+	         
+	        <tr class="noborder">
+	          <td colspan="2"><label for="page">页码</label>
+	        </tr>
+	        <tr class="noborder">
+	          <td class="vatop rowform">
+	          	<input class="txt" name="page" id="page"  value="1" type="text">
 	          </td>
 	          <td class="vatop tips">选填 多次导出的用于接续记录</td>
 	        </tr> 

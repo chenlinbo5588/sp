@@ -5,7 +5,7 @@
       <tbody>
       	<tr class="noborder">
           <td colspan="2">
-            <a class="excelDownload" href="{resource_url('example/house.xls')}"><span>点击下载导入例子文件</span></a>
+            <a class="excelDownload" href="{resource_url('example/wuye.xls')}"><span>点击下载导入例子文件</span></a>
            </td>
         </tr>
         <tr class="noborder">
@@ -16,20 +16,7 @@
         		</ol>
         	</td
         </tr>
-        <tr class="noborder">
-          <td colspan="2"><label class="validation">{#resident_name#}:</label></td>
-        </tr>
-        <tr class="noborder">
-	         <td class="vatop rowform">
-	        	<select name="resident_id">
-	        		<option value="">请选择待目标小区</option>
-	          	{foreach from=$residentList item=item}
-	          		<option value="{$item['id']}" {if $smarty.post['resident_id'] == $item['id']}selected{/if}>{$item['name']|escape}</option>
-	          	{/foreach}
-	          	</select>
-	         </td>
-          	 <td class="vatop tips">{form_error('resident_id')}</td>
-        </tr>
+        {include file="common/resident_radio.tpl"}
         <tr class="noborder">
           <td colspan="2"><label class="validation">请选择待导入的Excel文件:</label></td>
         </tr>

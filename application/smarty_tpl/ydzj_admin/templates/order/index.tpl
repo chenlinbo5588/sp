@@ -60,9 +60,9 @@
           <td>{$item['ip']}</td>
           <td>
           	<p>
-          		<a href="{admin_site_url($moduleClassName|cat:'/detail')}?id={$item['id']}">详情</a>
+          		{if isset($permission[$moduleClassName|cat:'/detail'])}<a href="{admin_site_url($moduleClassName|cat:'/detail')}?id={$item['id']}">详情</a>{/if}&nbsp;
           		{if '已支付' == $OrderStatus[$item['status']] && $item['refund_amount'] < $item['amount']}
-          		<a href="javascript:void(0);"  class="refundLink" data-title="申请退款" data-ajaxformid="#refundForm" data-url="{admin_site_url('refund/apply_refund')}?id={$item['id']}" ><span>申请退款</span></a>
+          		{if isset($permission[$moduleClassName|cat:'/apply_refund'])}<a href="javascript:void(0);"  class="refundLink" data-title="申请退款" data-ajaxformid="#refundForm" data-url="{admin_site_url('refund/apply_refund')}?id={$item['id']}" ><span>申请退款</span></a>{/if}
           		{/if}
           	</p>
           </td>
@@ -72,8 +72,8 @@
     </table>
     <div class="fixedOpBar">
     	<label><input type="checkbox" class="checkall" id="checkallBottom" name="chkVal">全选</label>&nbsp;
-        <a href="javascript:void(0);" class="btn opBtn" data-checkbox="id[]" data-title="确认关闭未支付的订单吗?" data-url="{admin_site_url($moduleClassName|cat:'/batch_close')}" ><span>关闭</span></a>
-        <a href="javascript:void(0);" class="btn deleteBtn" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/batch_delete')}"><span>删除</span></a>
+        {if isset($permission[$moduleClassName|cat:'/batch_close'])}<a href="javascript:void(0);" class="btn opBtn" data-checkbox="id[]" data-title="确认关闭未支付的订单吗?" data-url="{admin_site_url($moduleClassName|cat:'/batch_close')}" ><span>关闭</span></a>{/if}
+        {if isset($permission[$moduleClassName|cat:'/batch_delete'])}<a href="javascript:void(0);" class="btn deleteBtn" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/batch_delete')}"><span>删除</span></a>{/if}
         {include file="common/pagination.tpl"}
     </div>
   </form>

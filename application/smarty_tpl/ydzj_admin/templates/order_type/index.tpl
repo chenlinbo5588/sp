@@ -50,13 +50,19 @@
   <script type="text/javascript" src="{resource_url('js/jquery.edit.js')}"></script>
 <script>
 $(function(){
+
+	{if isset($permission[$moduleClassName|cat:'/delete'])}
     bindDeleteEvent();
+    {/if}
+    
+    {if isset($permission[$moduleClassName|cat:'/inline_edit'])}
     bindOnOffEvent();
     
     $("span.editable").inline_edit({ 
     	url: "{admin_site_url($moduleClassName|cat:'/inline_edit')}",
     	clickNameSpace:'inlineEdit'
     });
+    {/if}
 });
 </script>
 {include file="common/main_footer.tpl"}

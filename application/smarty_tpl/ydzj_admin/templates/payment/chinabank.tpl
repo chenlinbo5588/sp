@@ -48,26 +48,5 @@
       </tfoot>
     </table>
   </form>
-<script>
-$(document).ready(function(){
-	$('form[name=form1]').validate({
-		rules : {
-            chinabank_account : {
-                required   : true
-            },
-            chinabank_key : {
-                required   : true
-            }
-        },
-        messages : {
-            chinabank_account  : {
-                required  : '网银在线商户号不能为空'
-            },
-            chinabank_key  : {
-                required   : '网银在线密钥不能为空'
-            }
-        }
-	});
-});
-</script>
+
 {include file="common/main_footer.tpl"}
