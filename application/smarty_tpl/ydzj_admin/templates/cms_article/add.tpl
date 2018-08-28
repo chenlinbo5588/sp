@@ -65,7 +65,7 @@
             
             <div class="upload"><input type='text' readonly class="txt" name='image_url' id='image_url' value="{$info['image_url']}"/><input type="button" id="uploadButton" value="浏览" /></div>
             </td>
-          <td class="vatop tips">{form_error('image_url')} 支持格式jpg或者PNG 最小尺寸 <strong class="warning">{$imageConfig['m']['width']}x{$imageConfig['m']['height']}</strong></td>
+          <td class="vatop tips">{form_error('image_url')} jpg格式 最小尺寸 <strong class="warning">{$imageConfig['m']['width']}x{$imageConfig['m']['height']}</strong></td>
 	    </tr>
 	    <tr class="noborder">
 	    	<td colspan="2"><div id="preview">{if $info['image_url']}<img src="{resource_url($info['image_url'])}" width="{$imageConfig['m']['width']}" height="{$imageConfig['m']['height']}"/><div><a href="javascript:delImg(this);">刪除</a></div>{/if}</div>

@@ -87,7 +87,32 @@ class My extends Ydzj_Admin_Controller {
 	 * 检查是否有新想消息s
 	 */
 	public function check_newpm(){
-		$this->jsonOutput('请求成功',array('newPm' => $this->_adminNewPm));
+		
+		$message = array();
+		
+		$newCnt = 0;
+		
+		foreach($this->_adminNewPm as $key => $val){
+			$newCnt += $val;
+			
+			if($val){
+				switch($key){
+					case 'site_pm':
+						$message[] = "您有新的通知消息，请注意查收";
+						break;
+					case 'trans_pm':
+						$message[] = "您有新的交易，请注意查看";
+						break;
+					case 'user_pm':
+						$message[] = "您有新的私信，请注意查收";
+						break;
+					default:
+						break;
+				}
+			}
+		}
+		
+		$this->jsonOutput('请求成功',array('newPm' => $newCnt,'tip' => implode("\n",$message)));
 	}
 	
 }

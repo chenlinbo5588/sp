@@ -296,7 +296,11 @@ class Admin_pm_service extends Base_service {
 		
 		$now = time();
 		
-		$newPmCnt = 0;
+		$newPmStat = array(
+			'site_pm' => 0,//系统消息数
+			'trans_pm' => 0,//交易消息数
+			'user_pm' => 0 //用户私信
+		);
 		
 		//获得当前最大 系统消息记录
 		$maxSysPm = $this->getAdminPmListByUid(array(
@@ -346,7 +350,7 @@ class Admin_pm_service extends Base_service {
 			'limit' => 10
 		),$pUser['uid']);
 		
-		$userPmCount = count($userPmList);
+		
 		
 		$accept = false;
 		$needAddIndex = array();
@@ -403,9 +407,18 @@ class Admin_pm_service extends Base_service {
 			}
 		}
 		
+		//需要插入用户表的消息
+		$userPm = array();
+		
 		if($needAddIndex){
 			foreach($needAddIndex as $pmIndex){
 				$sendWays = json_decode($sysPmList[$pmIndex]['send_ways'],true);
+				
+				if($item['msg_type'] == AdminPmStatus::TRANS_PM){
+					$newPmStat['trans_pm']++;
+				}else{
+					$newPmStat['site_pm']++;
+				}
 				
 				if(in_array('站内信',$sendWays)){
 					$userPm[] = array(
@@ -427,14 +440,13 @@ class Admin_pm_service extends Base_service {
 			if($userPm){
 				$this->setAdminPmTableByUid($pUser['uid']);
 				$pmInsertRows = $this->_adminPmModel->batchInsert($userPm);
-				
-				if($pmInsertRows){
-					$newPmCnt = $pmInsertRows;
-				}
 			}
 		}
 		
+		$userPmCount = count($userPmList);
+		
 		if($userPmCount){
+			
 			$latestPmId = $userPmList[$userPmCount - 1]['id'];
 			
 			self::$CI->Adminuser_Model->update(array('pm_id' => $latestPmId),array('uid' => $pUser['uid']));
@@ -445,9 +457,11 @@ class Admin_pm_service extends Base_service {
 			self::$CI->session->set_userdata(array(
 				'manage_profile' => $userProfile
 			));
+			
+			$newPmStat['user_pm'] = $userPmCount;
 		}
 		
-		return $newPmCnt + $userPmCount;
+		return $newPmStat;
 		
 	}
 	

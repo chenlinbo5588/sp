@@ -6,13 +6,13 @@
 	swfobject: null,
 	soudMp3: '',
 	pmUrl:'',
+	iconUrl:'',
 	titleTip : "【您有新想消息】，请注意查收",
 	orignalTitle: '',
 	titleChangeTimes : 0,
 	titleInterval: null,
 	pmInterval:null,
 	pmInUpdate: false,
-	useWebNotify:false,
 	init : function( initSetting ){
 		if(window.Notification){
 			if (Notification.permission == "granted") {
@@ -57,15 +57,31 @@
             loader:false
         });
     },
-    webNotify:function(){
-    	if (Notification.permission == "granted") {
-            var notification = new Notification("新消息提醒", {
-                body: '您有新的消息,请注意查收'
+    webNotify:function(message){
+    	
+    	var iconUrl = this.iconUrl;
+    	
+    	var newNotify = function(pMessage,pIcon){
+    		var notification = new Notification("新消息提醒", {
+                body: pMessage,
+                icon: pIcon
             });
             
             notification.onclick = function() {
             	window.focus();
             };
+    	}
+    	
+    	if (Notification.permission == "granted") {
+    		newNotify(message,iconUrl);
+            
+    	} else if (Notification.permission != "denied") {
+            Notification.requestPermission(function (permission) {
+            	// empty
+            	if("granted" == permission){
+            		newNotify(message,iconUrl);
+            	}
+            });
         }
     },
     updatePm:function(url){
@@ -95,20 +111,10 @@
     				if(json.data.newPm > 0){
     					that.showToast();
     					//that.playSound(1);
+    					that.titleChange();
     					
     					if(window.Notification){
-    						if (Notification.permission == "granted") {
-    				            console.log("New Message");
-    							//popNotice();
-    				        } else if (Notification.permission != "denied") {
-    				            Notification.requestPermission(function (permission) {
-    				              //popNotice();
-    				            	console.log(permission);
-    				            });
-    				        }
-    						
-    					}else{
-    						that.titleChange();
+    						that.webNotify(json.data.tip);
     					}
     				}
     			},
@@ -118,8 +124,9 @@
     		});
     	},30*1000);
     },
-    setPmUrl: function(url){
-    	this.pmUrl = url;
+    setUrl : function(urls){
+    	this.pmUrl = urls.pmUrl;
+    	this.iconUrl = urls.iconUrl;
     },
     setSound: function(mp3Url){
     	this.soudMp3 = mp3Url;

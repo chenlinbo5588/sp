@@ -58,11 +58,17 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 	 * 更新用户站内信状态
 	 */
 	protected function _pmUpdate(){
-		
 		$this->_adminNewPm = $this->admin_pm_service->refreshAdminPm($this->_adminProfile['basic']);
 		
-		if($this->_adminNewPm){
-			$this->assign('newPm',$this->_adminNewPm);
+		$newCount = 0;
+		foreach($this->_adminNewPm as $key => $val){
+			$newCount += $val;
+		}
+		
+		///$newCount = 5;
+		
+		if($newCount){
+			$this->assign('newPm',$newCount);
 		}
 	}
 	

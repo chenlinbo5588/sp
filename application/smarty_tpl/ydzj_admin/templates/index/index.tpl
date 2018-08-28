@@ -641,8 +641,8 @@ $(function(){
 <script>
 	var notify = $.myNotify.init();
 	
-	//notify.init();
-	notify.setPmUrl("{admin_site_url('pm/unread')}");
+	notify.init();
+	notify.setUrl( { pmUrl : "{admin_site_url('pm/unread')}", iconUrl : "{resource_url('img/pm.jpg')}" } );
 	notify.updatePm("{admin_site_url('my/check_newpm')}");
 	
 	{if $newPm}
