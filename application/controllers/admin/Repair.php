@@ -250,7 +250,7 @@ class Repair extends Ydzj_Admin_Controller{
 	private function _getWorkerInfo($pWorkerMobile){
 		$this->load->model('Worker_Model');
 		
-		return $this->Worker_Model->getFirstByKey($pWorkerMobile,'mobile','avatar_s');
+		return $this->Worker_Model->getFirstByKey($pWorkerMobile,'mobile','name,avatar_s');
 	}
 	
 	/**
@@ -423,6 +423,13 @@ class Repair extends Ydzj_Admin_Controller{
 				
 				$info['house_id'] = $houseInfo['id'];
 				
+				
+				$workerInfo = $this->_getWorkerInfo($info['worker_mobile']);
+				
+				if($workerInfo){
+					$info['worker_avatar'] = $workerInfo['avatar_s'];
+				}
+				
 				$this->Repair_Model->update($info,array('id' => $id));
 				
 				$error = $this->Repair_Model->getError();
@@ -456,8 +463,6 @@ class Repair extends Ydzj_Admin_Controller{
 		$id = $this->input->get_post('id');
 		$newValue = $this->input->get_post('value');
 		
-		
-		
 		for($i = 0 ; $i < 1; $i++){
 			
 			$data = array(
@@ -470,7 +475,6 @@ class Repair extends Ydzj_Admin_Controller{
 			
 			$this->form_validation->set_rules('id','数据标识','required');
 			$this->form_validation->set_rules('fieldname','字段','in_list[mobile,address,remark,worker_name,worker_mobile]');
-			
 			
 			
 			switch($fieldName){
@@ -495,10 +499,22 @@ class Repair extends Ydzj_Admin_Controller{
 			
 			$message = '修改失败';
 			
+			
+			
 			if(!$this->form_validation->run()){
 				$message = $this->form_validation->error_html();
 			}else{
-				if($this->Repair_Model->update(array($fieldName => $newValue),array('id' => $id)) < 0){
+				
+				$updateData = array($fieldName => $newValue);
+				if('worker_mobile' == $fieldName){
+					$workerInfo = $this->_getWorkerInfo($newValue);
+					if($workerInfo){
+						$updateData['worker_avatar'] = $workerInfo['avatar_s'];
+						$updateData['worker_name'] = $workerInfo['name'];
+					}
+				}
+			
+				if($this->Repair_Model->update($updateData,array('id' => $id)) < 0){
 					$message = '数据修改失败';
 				}else{
 					$message = '修改成功';

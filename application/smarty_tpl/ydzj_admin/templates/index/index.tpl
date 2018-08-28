@@ -640,6 +640,8 @@ $(function(){
 <script type="text/javascript" src="{resource_url('js/pm/pm_notify.js',true)}"></script>
 <script>
 	var notify = $.myNotify.init();
+	
+	//notify.init();
 	notify.setPmUrl("{admin_site_url('pm/unread')}");
 	notify.updatePm("{admin_site_url('my/check_newpm')}");
 	

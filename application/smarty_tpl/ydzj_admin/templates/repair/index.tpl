@@ -55,7 +55,7 @@
           <td><span class="editable" data-id="{$item['id']}" data-fieldname="mobile">{$item['mobile']}</span></td>
 		  <td><span class="editable" data-id="{$item['id']}" data-fieldname="address">{if $item['address']}{$item['address']|escape}{else}未填写{/if}</span></td>
           <td><div>{$repairStatus[$item['status']]}</div></td>
-          <td><span class="editable" data-id="{$item['id']}" data-fieldname="worker_name">{$item['worker_name']|escape}</span></td>
+          <td>{$item['worker_name']|escape}</td>
           <td><span class="editable" data-id="{$item['id']}" data-fieldname="worker_mobile">{$item['worker_mobile']|escape}</span></td>
           <td>{$item['gmt_create']|date_format:"%Y-%m-%d %H:%M"}</td>
           <td class="align-center">

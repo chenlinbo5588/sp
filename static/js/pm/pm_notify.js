@@ -13,7 +13,17 @@
 	pmInterval:null,
 	pmInUpdate: false,
 	useWebNotify:false,
-	init : function(){
+	init : function( initSetting ){
+		if(window.Notification){
+			if (Notification.permission == "granted") {
+				// empty
+	        } else if (Notification.permission != "denied") {
+	            Notification.requestPermission(function (permission) {
+	            	// empty
+	            });
+	        }
+		}
+		
 		return this;
 	},
 	initSWF: function(targetDiv,soundswf,expressswf){
@@ -34,6 +44,7 @@
 	
         return this;
     },
+    
     showToast:function(){
     	$.toast({
             position:'bottom-center',
@@ -45,6 +56,17 @@
             stack:1,
             loader:false
         });
+    },
+    webNotify:function(){
+    	if (Notification.permission == "granted") {
+            var notification = new Notification("新消息提醒", {
+                body: '您有新的消息,请注意查收'
+            });
+            
+            notification.onclick = function() {
+            	window.focus();
+            };
+        }
     },
     updatePm:function(url){
     	var that = this;
@@ -73,10 +95,22 @@
     				if(json.data.newPm > 0){
     					that.showToast();
     					//that.playSound(1);
-    					that.titleChange();
+    					
+    					if(window.Notification){
+    						if (Notification.permission == "granted") {
+    				            console.log("New Message");
+    							//popNotice();
+    				        } else if (Notification.permission != "denied") {
+    				            Notification.requestPermission(function (permission) {
+    				              //popNotice();
+    				            	console.log(permission);
+    				            });
+    				        }
+    						
+    					}else{
+    						that.titleChange();
+    					}
     				}
-    				
-    				
     			},
     			errror: function(XMLHttpRequest, textStatus, thrownError){
     				that.pmInUpdate = false;
