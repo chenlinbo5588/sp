@@ -12,6 +12,7 @@
 	titleInterval: null,
 	pmInterval:null,
 	pmInUpdate: false,
+	useWebNotify:false,
 	init : function(){
 		return this;
 	},
@@ -81,7 +82,7 @@
     				that.pmInUpdate = false;
     			}
     		});
-    	},60*1000);
+    	},30*1000);
     },
     setPmUrl: function(url){
     	this.pmUrl = url;
@@ -115,12 +116,20 @@
     			return ;
     		}
     		
+    		if (/新/.test(document.title) == false) {
+                document.title = '【你有新消息】';    
+            } else {
+                document.title = '【　　　　　】';
+            }
+    		
+    		/*
     		var s = document.title;
     		if(s == that.titleTip){
     			document.title = that.orignalTitle;
     		}else{
     			document.title = that.titleTip;
     		}
+    		*/
     		
     	},500);
     },

@@ -899,11 +899,21 @@ class House extends Ydzj_Admin_Controller {
         );
         
     	
-    	$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-        $downloadName = '房屋.xlsx';
-        $fileRealName = md5(uniqid());
+    	$format = $this->input->post('format');
+    	
+    	$fileRealName = md5(uniqid());
+    	$fileExt = '.xlsx';
+    	
+    	if('Excel2007' == $format){
+    		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+    	}else{
+    		$fileExt = '.xls';
+    		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+    	}
+    	
+    	$downloadName = $this->_moduleTitle.$fileExt;
+        $filePath = ROOTPATH.'/temp/'.$fileRealName.$fileExt;
         
-        $filePath = ROOTPATH.'/temp/'.$fileRealName.'.xlsx';
         
         $objWriter->save($filePath);
         $objPHPExcel->disconnectWorksheets(); 

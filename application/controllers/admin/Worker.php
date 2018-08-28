@@ -959,13 +959,21 @@ class Worker extends Ydzj_Admin_Controller {
             )
         );
         
+    	$format = $this->input->post('format');
     	
-    	$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-        $downloadName = $this->_moduleTitle.'.xlsx';
-        $fileRealName = md5(uniqid());
-        
-        $filePath = ROOTPATH.'/temp/'.$fileRealName.'.xlsx';
-        
+    	$fileRealName = md5(uniqid());
+    	$fileExt = '.xlsx';
+    	
+    	if('Excel2007' == $format){
+    		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+    	}else{
+    		$fileExt = '.xls';
+    		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+    	}
+    	
+    	$downloadName = $this->_moduleTitle.$fileExt;
+        $filePath = ROOTPATH.'/temp/'.$fileRealName.$fileExt;
+    	
         $objWriter->save($filePath);
         $objPHPExcel->disconnectWorksheets(); 
         
@@ -973,4 +981,39 @@ class Worker extends Ydzj_Admin_Controller {
         
         force_download($downloadName,  file_get_contents($filePath));   
     }
+    
+    
+    //ajax
+    public function getWorker(){
+    	
+    	
+    	$searchKey = $this->input->get_post('term');
+		
+		
+		$return = array();
+		
+		if($searchKey){
+			
+			$workerList = $this->Worker_Model->getList(array(
+				'select' => 'id,name,mobile',
+				'like_after' => array(
+					'mobile' => $searchKey
+				),
+				'limit' => 10
+			));
+			
+			
+			foreach($workerList as $item ){
+				$return[] = array(
+					'id' => $item['id'],
+					'label' => $item['mobile'].' '.$item['name'],
+					'value' => $item['mobile'],
+					'name'=> $item['name'],
+				);
+			}
+		}
+		
+		$this->jsonOutput2('',$return,false);
+    }
+    
 }

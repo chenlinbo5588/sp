@@ -251,29 +251,54 @@ class Wuye extends Wx_Controller {
 				$page = 1;
 			}
 			
-			$statusNameList = RepairStatus::$statusName;
-			$repairStatus = 0;
+			$statusCodeList = array_flip(RepairStatus::$statusName);
 			
-			if (in_array ($statusName, $statusNameList)) {
+			//$repairStatus = 0;
+			
+			$statusList = array();
+			
+			if(strpos($statusName,',') !== false){
+				$handleStatus = explode(',',$statusName);
+				foreach($handleStatus as $tempName){
+					if($statusCodeList[$tempName]){
+						$statusList[] = $statusCodeList[$tempName];
+					}
+				}
+			}else{
+				if($statusCodeList[$statusName]){
+					$statusList[] = $statusCodeList[$statusName];
+				}
+			}
+			
+			/*
+			if (in_array($statusName, $statusNameList)) {
 				$repairStatus = array_search($statusName,$statusNameList);
 			}else{
 				$repairStatus = -1;
 			}
+			*/
 			
-			$condition = array(
-				'where' => array(
-					'add_uid' => $this->yezhuInfo['uid'],
-					'status' => $repairStatus
-				),
-				'pager' => array(
-					'page_size' => config_item('page_size'),
-					'current_page' => $page,
-				),
-				'order' => 'id DESC'
-			);
-			
-			$repairList = $this->Repair_Model->getList($condition);
-			$this->jsonOutput2(RESP_SUCCESS,$repairList);
+			if(empty($statusList)){
+				$this->jsonOutput2(RESP_SUCCESS,array());
+			}else{
+				
+				$condition = array(
+					'where' => array(
+						'add_uid' => $this->yezhuInfo['uid'],
+					),
+					'where_in' => array(
+						array('key' => 'status','value' => $statusList)
+					),
+					'pager' => array(
+						'page_size' => config_item('page_size'),
+						'current_page' => $page,
+					),
+					'order' => 'id DESC'
+				);
+				
+				$repairList = $this->Repair_Model->getList($condition);
+				$this->jsonOutput2(RESP_SUCCESS,$repairList);
+			}
 			
 		}else{
 			if($this->memberInfo){

@@ -370,14 +370,14 @@ $config['sess_driver'] = 'database';
 //$config['sess_driver'] = 'redis';
 $config['sess_cookie_name'] = 'sid';
 
-// keep one month
-$config['sess_expiration'] = 2592000;
+// keep 3 day
+$config['sess_expiration'] = 259200;
 $config['sess_save_path'] = 'sp_sessions';
 //$config['sess_save_path'] = 'tcp://localhost:6379';
 $config['sess_match_ip'] = FALSE;
 
-//session one month 刷新
-$config['sess_time_to_update'] = 2592000;
+//session 1 day
+$config['sess_time_to_update'] = 86400;
 //重新生成后保留原session data
 $config['sess_regenerate_destroy'] = FALSE;
 

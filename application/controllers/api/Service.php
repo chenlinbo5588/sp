@@ -189,6 +189,8 @@ class Service extends Wx_Controller {
 		}
 		
 		
+		$searchKeys['where']['status'] = StaffStatus::$published;
+		
 		$data = $this->staff_service->getStaffListByCondition($serveTypeName,$searchKeys,array('other_id' => true));
 		
 		$this->jsonOutput2(RESP_SUCCESS,$data);

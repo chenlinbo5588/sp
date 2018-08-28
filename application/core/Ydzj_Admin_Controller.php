@@ -48,6 +48,8 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 			$this->session->unset_userdata('forcePmCheck');
 		}
 		
+		$this->session->set_userdata(array('lastvisit' => $this->_reqtime));
+		
 		$this->assign('manage_profile',$this->_adminProfile);
 		
 	}
@@ -90,14 +92,15 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 			$this->_adminProfile = array();
 		}
 		
-		if(!$this->isLogin()){
+		if(!$this->isAdminLogin()){
 			
 			$this->session->unset_userdata('manage_profile');
 			
 			if($this->input->is_ajax_request()){
 				$this->responseJSON('您尚未登陆',array('url' => site_url('member/admin_login')));
 			}else{
-				redirect(site_url('member/admin_login'));
+				
+				redirect(site_url('member/admin_login'),'javascript:top');
 			}
 			
 			
@@ -155,6 +158,7 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
         $this->_permission['common/pic_upload'] = 1;
         
         //ajax autocomplete url start
+        $this->_permission['worker/getworker'] = 1;
         $this->_permission['house/getaddress'] = 1;
         $this->_permission['yezhu/getyezhuinfo'] = 1;
         $this->_permission['building/getbuildinglist'] = 1;
@@ -176,7 +180,7 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
     }
     
 	
-	public function isLogin(){
+	public function isAdminLogin(){
 		if($this->_adminProfile && ($this->_reqtime - $this->session->userdata('lastvisit') < 86400)){
 			return true;
 		}

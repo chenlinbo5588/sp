@@ -166,9 +166,14 @@ class Repair extends Ydzj_Admin_Controller{
 				
 				$info['house_id'] = $houseInfo['id'];
 				
+				if(!empty($info['worker_name']) && !empty($info['worker_mobile'])){
+					$info['status'] = RepairStatus::$sendOrder;
+				}
 				
-				if(!empty($_POST['worker_name']) && !empty($_POST['worker_mobile'])){
-					$_POST['status'] = RepairStatus::$sendOrder;
+				$workerInfo = $this->_getWorkerInfo($info['worker_mobile']);
+				
+				if($workerInfo){
+					$info['worker_avatar'] = $workerInfo['avatar_s'];
 				}
 				
 				$newId = $this->Repair_Model->_add($info);
@@ -238,6 +243,16 @@ class Repair extends Ydzj_Admin_Controller{
 		}	
 	}
 	
+	
+	/**
+	 * 获得工作人员信息
+	 */
+	private function _getWorkerInfo($pWorkerMobile){
+		$this->load->model('Worker_Model');
+		
+		return $this->Worker_Model->getFirstByKey($pWorkerMobile,'mobile','avatar_s');
+	}
+	
 	/**
 	 * 派遣
 	 */
@@ -257,10 +272,19 @@ class Repair extends Ydzj_Admin_Controller{
 				}
 				
 				$ids = explode(',',$ids);
-				$returnstatusVal = $this->wuye_service->changeRepairStatus($ids,RepairStatus::$sendOrder,RepairStatus::$received,'status',array(
-					'worker_name' => $this->input->post("worker_name"),
-					'worker_mobile' => $this->input->post("worker_mobile")
-				));
+				
+				$updateData = array(
+					'worker_name' => $this->input->post('worker_name'),
+					'worker_mobile' => $this->input->post('worker_mobile')
+				);
+				
+				$workerInfo = $this->_getWorkerInfo($updateData['worker_mobile']);
+				
+				if($workerInfo){
+					$updateData['worker_avatar'] = $workerInfo['avatar_s'];
+				}
+				
+				$returnstatusVal = $this->wuye_service->changeRepairStatus($ids,RepairStatus::$sendOrder,RepairStatus::$received,'status',$updateData);
 				
 				if($returnstatusVal < 1){
 					$this->jsonOutput('派遣操作失败,无受理记录');
@@ -295,11 +319,19 @@ class Repair extends Ydzj_Admin_Controller{
 				}
 				
 				$ids = explode(',',$ids);	
-				$returnstatusVal = $this->wuye_service->changeRepairStatus($ids,RepairStatus::$accomplish,RepairStatus::$sendOrder,'status',array(
-					'worker2_name' => $this->input->post("worker_name"),
-					'worker2_mobile' => $this->input->post("worker_mobile")
-				));
 				
+				$updateData = array(
+					'worker2_name' => $this->input->post('worker_name'),
+					'worker2_mobile' => $this->input->post('worker_mobile')
+				);
+				
+				$workerInfo = $this->_getWorkerInfo($updateData['worker2_mobile']);
+				
+				if($workerInfo){
+					$updateData['worker2_avatar'] = $workerInfo['avatar_s'];
+				}
+				
+				$returnstatusVal = $this->wuye_service->changeRepairStatus($ids,RepairStatus::$accomplish,RepairStatus::$sendOrder,'status',$updateData);
 				
 				if($returnstatusVal < 1){
 					$this->jsonOutput('报修完成操作失败,没有已派单记录');
@@ -573,7 +605,7 @@ class Repair extends Ydzj_Admin_Controller{
 	 */
 	private function _getWorkerRules(){
 	
-		$this->form_validation->set_rules('worker_name','工作人员姓名','required');
+		$this->form_validation->set_rules('worker_name','工作人员姓名','required|max_length[30]');
 		$this->form_validation->set_rules('worker_mobile','工作人员电话','required|valid_mobile');
 	}
 

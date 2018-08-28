@@ -18,6 +18,8 @@
           <th class="w24"></th>
           <th>{#avatar#}</th>
           <th>{#name#}</th>
+          <th>{#worker_type#}</th>
+          <th>户口所在地</th>
           <th>{#id_type#}</th>
           <th>{#id_no#}</th>
           <th>{#sex#}</th>
@@ -31,9 +33,11 @@
       <tbody>
       	{foreach from=$list['data'] item=item}
       	<tr class="hover edit" id="row{$item['id']}">
-          <td><input type="checkbox" name="id[]" group="chkVal" value="{$item['id']}" class="checkitem"></td>
-          <td class="w60 picture"><a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}"><img class="size-100x100" src="{if $item['avatar_s']}{resource_url($item['avatar_s'])}{else if $item['avatar_b']}{resource_url($item['avatar_b'])}{else if $item['avatar_m']}{resource_url($item['avatar_m'])}{else}{resource_url('img/default.jpg')}{/if}"/></a></td>
-          <td class="name"><a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}">{$item['name']|escape}</a></td>
+         <td><input type="checkbox" name="id[]" group="chkVal" value="{$item['id']}" class="checkitem"></td>
+         <td class="w60 picture"><a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}"><img class="size-100x100" src="{if $item['avatar_s']}{resource_url($item['avatar_s'])}{else if $item['avatar_b']}{resource_url($item['avatar_b'])}{else if $item['avatar_m']}{resource_url($item['avatar_m'])}{else}{resource_url('img/default.jpg')}{/if}"/></a></td>
+         <td class="name"><a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}">{$item['name']|escape}</a></td>
+         <td>{$basicData[$item['worker_type']]['show_name']}</td>
+         <td>{$basicData[$item['jiguan']]['show_name']}</td>
          <td>{$basicData[$item['id_type']]['show_name']}</td>
          <td>{mask_string($item['id_no'])}</td>
          <td>{if $item['sex'] == 1}男{else}女{/if}</td>

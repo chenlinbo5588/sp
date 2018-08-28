@@ -640,7 +640,7 @@ class Staff_service extends Base_service {
 		
 		
 		$info = $this->_staffModel->getFirstByKey($pStaffId,'id',
-			'id,service_type,sub_type,name,show_name,id_type,jiguan,marriage,address,age,sex,birthday,shu,degree,grade,avatar,avatar_b,avatar_m,avatar_s,region,work_month,service_cnt,salary_amount,salary_detail,serv_ablity,other_id,sbt_exp,zcbaby_exp');
+			'id,service_type,sub_type,name,show_name,id_type,jiguan,marriage,address,age,sex,birthday,shu,degree,grade,avatar,avatar_b,avatar_m,avatar_s,region,work_month,service_cnt,salary_amount,salary_detail,other_id,serv_ablity,other_id,sbt_exp,zcbaby_exp');
 		
 		if($info){
 			$info['serv_ablity'] = json_decode($info['serv_ablity'],true);
@@ -675,6 +675,7 @@ class Staff_service extends Base_service {
 			$info['degree'] = $this->_basicData[$info['degree']]['show_name'];
 			$info['region'] = $this->_basicData[$info['region']]['show_name'];
 			
+			$info['other_id'] = $this->translateIdToName($info['other_id'],'证件证明');
 			
 			/*
 			$matchCnt = preg_match('/^(\d+)/is',$info['salary_detail'],$salaryMatch);
@@ -743,6 +744,26 @@ class Staff_service extends Base_service {
 		return $searchAr;
 	}
 	
+	/**
+	 * 转换ID 到 Name
+	 */
+	public function translateIdToName($pIds,$pGroupName = ''){
+		
+		$otherIds = $this->_basicAssocDataTree[$pGroupName]['children'];
+		$otherIdName = array();
+		
+		foreach($otherIds as $tmpKey => $otherVal){
+			$otherIdName[$otherVal['id']] = $otherVal['show_name'];
+		}
+		
+		$tempArray = array();
+		
+		foreach($pIds as $tempVal){
+			$tempArray[] = $otherIdName[$tempVal];
+		}
+		
+		return $tempArray;
+	}
 	
 	
 	/**
@@ -771,6 +792,8 @@ class Staff_service extends Base_service {
 		
 		
 		if($otherInfo['other_id']){
+			
+			
 			
 			$otherIds = $this->_basicAssocDataTree['证件证明']['children'];
 			$otherIdName = array();

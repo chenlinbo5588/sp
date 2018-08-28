@@ -19,14 +19,14 @@ class Ydzj_Controller extends MY_Controller {
 	public function __construct(){
 		parent::__construct();
 		
-		$this->load->library(array('Seo_service','Article_service'));
+		$this->load->library(array('Seo_service'));
 		$this->form_validation->set_error_delimiters('<label class="form_error">','</label>');
 		
 		$this->_navs();
 		
 		$this->_userKeepFresh();
 		
-		$this->_initLogin();
+		//$this->_initLogin();
 	}
 	
 	/**
@@ -87,7 +87,7 @@ class Ydzj_Controller extends MY_Controller {
 		
 	}
 	
-	
+	/*
 	private function _initLogin(){
 		
 		$this->session->set_userdata(array('lastvisit' => $this->_reqtime));
@@ -111,7 +111,7 @@ class Ydzj_Controller extends MY_Controller {
 		
 		return false;
 	}
-	
+	*/
 	
 	public function getAppTemplateDir(){
 		return 'ydzj';

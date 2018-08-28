@@ -30,6 +30,16 @@ $(function(){
     });
 	
 	
+	$( "#worker_mobile" ).autocomplete({
+		source: searchWorkerUrl,
+		minLength: 2,
+		select: function( event, ui ) {
+			$("input[name=worker_mobile]").val(ui.item.mobile);
+			$("input[name=worker_name]").val(ui.item.name);
+		}
+    });
+	
+	
 	var uploadConfig = [
 		{
 			fileId : '#fileupload',

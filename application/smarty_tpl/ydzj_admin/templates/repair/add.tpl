@@ -70,18 +70,18 @@
           </td>
         </tr>
         <tr class="noborder">
-          <td colspan="2" class="required">{#worker_name#}:</td>
-        </tr>
-        <tr class="noborder">
-          <td class="vatop rowform"><input type="text" value="{$info['worker_name']|escape}" name="worker_name" id="worker_name" class="txt"></td>
-          <td class="vatop tips"><label id="error_worker_name"></label>{form_error('worker_name')}</td>
-        </tr>
-        <tr class="noborder">
           <td colspan="2" class="required">{#worker_mobile#}:</td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input type="text" value="{$info['worker_mobile']|escape}" name="worker_mobile" id="worker_mobile" class="txt"></td>
           <td class="vatop tips"><label id="error_worker_mobile"></label>{form_error('worker_mobile')}</td>
+        </tr>
+        <tr class="noborder">
+          <td colspan="2" class="required">{#worker_name#}:</td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform"><input type="text" value="{$info['worker_name']|escape}" name="worker_name" id="worker_name" class="txt"></td>
+          <td class="vatop tips"><label id="error_worker_name"></label>{form_error('worker_name')}</td>
         </tr>
         <tr class="noborder">
           <td colspan="2" class="required"><label class="validation" for="remark">{#remark#}:</label><label id="error_remark"></label></td>
@@ -132,7 +132,7 @@
   {include file="common/uploadify.tpl"}
   {include file="common/fancybox.tpl"}
   <script type="text/javascript">
-  	var submitUrl = [new RegExp("{$uri_string}")],searchAddressUrl = "{admin_site_url('house/getAddress')}";
+  	var submitUrl = [new RegExp("{$uri_string}")],searchAddressUrl = "{admin_site_url('house/getAddress')}",searchWorkerUrl = "{admin_site_url('worker/getWorker')}";
   	
 	var uploadUrls = {
   		img :  {
