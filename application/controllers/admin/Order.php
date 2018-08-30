@@ -30,6 +30,7 @@ class Order extends Ydzj_Admin_Controller {
 			array('url' => $this->_className.'/closed','title' => '已关闭'),
 			array('url' => $this->_className.'/deleted','title' => '已删除'),
 			array('url' => $this->_className.'/export','title' => '导出'),
+			array('url' => $this->_className.'/bill','title' => '对账单'),
 		);
 		
 	}
@@ -562,4 +563,116 @@ class Order extends Ydzj_Admin_Controller {
     }
 
 	
+	/**
+	 * 对账单 下载
+	 */
+	public function bill(){
+		
+		$message = '';
+    	
+    	if($this->isPostRequest()){
+    		try {
+    			
+    			$this->form_validation->set_rules('bill_date','账单日期','required|valid_date');
+    			$this->form_validation->set_rules('bill_type','账单类型','required|in_list[ALL,SUCCESS,REFUND,RECHARGE_REFUND]');
+    			
+    			
+    			for($i = 0; $i < 1; $i++){
+    				if(!$this->form_validation->run()){
+    					$this->display();
+	    				break;
+	    			}
+	    			
+	    			$this->_billDownload($_POST);
+    			}
+    			
+    		}catch(Exception $e){
+    			//出错信息
+    			$message = $e->getMessage();
+    		}
+    		
+    	}else{
+    		$this->display();
+    	}
+		
+	}
+	
+	/**
+	 * 下载对账单
+	 */
+	private function _billDownload($param){
+		$this->_initPHPExcel();
+    	
+        $objPHPExcel = new PHPExcel();
+        
+        $list = $this->order_service->getWeixinPayBill(str_replace('-','',$param['bill_date']),$param['bill_type']);
+        
+        if($list){
+        	
+        	$lines = explode("\n",str_replace("\r\n","\n",$list));
+        	
+        	$maxColunm = 0;
+        	
+	        foreach($lines as $row => $aline){
+	        	$column = explode(',',str_replace('`','',$aline));
+	        	
+	        	
+	        	if(0 == $row){
+	        		$maxColunm = count($column);
+	        	}
+	        	
+	        	foreach($column as $colIndex => $colVal){
+	        		$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($colIndex, $row + 1,$colVal);
+	        	}
+	        }
+	        
+	        $endColName = 'A';
+	        
+	        if($maxColunm > 26){
+	        	$endColName = 'A'.chr(ord('A') + $maxColunm);
+	        }else{
+	        	$endColName = chr(ord('A') + $maxColunm);
+	        }
+	        
+	        $objPHPExcel->getActiveSheet()->getStyle('A1:'.$endColName.count($lines))->applyFromArray(
+	            array(
+	                'alignment' => array(
+	                    'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
+	                    'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+	                ),
+	                'borders' => array(
+	                    'allborders' => array(
+	                        'style' => PHPExcel_Style_Border::BORDER_THIN,
+	                        'color' => array('argb' => 'FF000000')
+	                    )
+	                )
+	            )
+	        );
+        }
+        
+        
+    	$format = $this->input->post('format');
+    	
+    	$fileRealName = md5(uniqid());
+    	$fileExt = '.xlsx';
+    	
+    	if('Excel2007' == $format){
+    		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+    	}else{
+    		$fileExt = '.xls';
+    		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+    	}
+    	
+    	$downloadName = '对账单'.$fileExt;
+        $filePath = ROOTPATH.'/temp/'.$fileRealName.$fileExt;
+        
+        
+        $objWriter->save($filePath);
+        $objPHPExcel->disconnectWorksheets(); 
+        
+        unset($objPHPExcel,$objWriter);
+        
+        force_download($downloadName,  file_get_contents($filePath));
+		
+	}
 }

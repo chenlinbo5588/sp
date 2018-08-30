@@ -140,6 +140,11 @@ class Order extends Wx_Controller {
 						'bz' => $this->postJson['remark'] ? $this->postJson['remark'] : ''
 					);
 					
+					//物业对应小区标识,如果是某个小区的业主
+					if($this->yezhuInfo){
+						$this->postJson['resident_id'] = $this->yezhuInfo['resident_id'];
+					}
+					
 					if(ENVIRONMENT == 'development'){
 						//@todo 修改金额
 						$this->postJson['amount'] = mt_rand(1,3);
@@ -287,7 +292,7 @@ class Order extends Wx_Controller {
 						$nameStr[] = $cartItem['name'];
 					}
 					
-					$this->postJson['goods_name'] = implode(',',$nameStr);
+					$this->postJson['goods_name'] = implode(' ',$nameStr);
 					
 					//附加信息
 					$this->postJson['extra_info'] = array(
@@ -295,6 +300,11 @@ class Order extends Wx_Controller {
 						'booking_time' => $this->postJson['meet_time'],
 						'address' => $this->postJson['address'],
 					);
+					
+					//物业对应小区标识,如果是某个小区的业主
+					if($this->yezhuInfo){
+						$this->postJson['resident_id'] = $this->yezhuInfo['resident_id'];
+					}
 					
 					
 					if(ENVIRONMENT == 'development'){

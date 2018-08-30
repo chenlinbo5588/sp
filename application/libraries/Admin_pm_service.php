@@ -370,7 +370,10 @@ class Admin_pm_service extends Base_service {
 			
 			//交易提醒信息
 			if($item['msg_type'] == AdminPmStatus::TRANS_PM){
-				if(in_array($item['groups'][0],$residentList)){
+				
+				if(empty($residentList)){
+					$accept = true;
+				}else if(in_array($item['groups'][0],$residentList)){
 					$accept = true;
 				}
 			}

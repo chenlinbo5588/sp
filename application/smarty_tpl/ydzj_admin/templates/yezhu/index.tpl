@@ -47,7 +47,7 @@
          <td>{$basicData[$item['jiguan']]['show_name']|escape}</td>
          <td>{$item['mobile']}</td>
          <td>{$item['car_no']}</td>
-         <td>{if $item['uid']}微信已绑定用户{$item['uid']}{else}微信未绑定{/if}</td>
+         <td>{if $item['uid']}<span data-id="{$item['uid']}">微信已绑定用户</span>{else}<span>微信未绑定</span>{/if}</td>
           <td class="align-center">
           	{if isset($permission[$moduleClassName|cat:'/edit'])}<a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}">编辑</a>{/if}&nbsp;&nbsp;
           	{if isset($permission[$moduleClassName|cat:'/delete'])}<a href="javascript:void(0)" class="delete" data-url="{admin_site_url($moduleClassName|cat:'/delete')}" data-id="{$item['id']}">删除</a>{/if}

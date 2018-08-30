@@ -59,27 +59,33 @@
     },
     webNotify:function(message){
     	
-    	var iconUrl = this.iconUrl;
+    	var that = this;
+    	var iconUrl = that.iconUrl;
     	
-    	var newNotify = function(pMessage,pIcon){
+    	var newNotify = function(pMessage,pIcon,notifyObj){
     		var notification = new Notification("新消息提醒", {
                 body: pMessage,
                 icon: pIcon
             });
             
             notification.onclick = function() {
+            	if(notifyObj.titleInterval){
+            		clearInterval(notifyObj.titleInterval);
+                	document.title = notifyObj.orignalTitle;
+            	}
+            	
             	window.focus();
             };
     	}
     	
     	if (Notification.permission == "granted") {
-    		newNotify(message,iconUrl);
+    		newNotify(message,iconUrl,that);
             
     	} else if (Notification.permission != "denied") {
             Notification.requestPermission(function (permission) {
             	// empty
             	if("granted" == permission){
-            		newNotify(message,iconUrl);
+            		newNotify(message,iconUrl,that);
             	}
             });
         }

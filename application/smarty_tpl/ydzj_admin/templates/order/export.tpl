@@ -17,11 +17,6 @@
   </table>
   {form_open(site_url($uri_string),'id="exportForm" target="exportFrame"')}
   <table class="table tb-type2">
-  	  <thead>
-    		<tr class="thead" >
-          		<th colspan="2">导出您的{$moduleTitle}数据?</th>
-      		</tr>
-      </thead>
       <tbody>
 	        <tr class="noborder">
 	          <td colspan="2"><label for="order_typename">{#status#}:</label></td>
@@ -97,5 +92,9 @@
     </table>
   </form>
   <iframe name="exportFrame" frameborder="0" height="0" width="0"></iframe>
-  <script type="text/javascript" src="{resource_url('js/service/order_index.js',true)}"></script>
+  <script>
+  	$(function(){
+  		$( ".datepicker" ).datepicker();
+  	});
+  </script>
 {include file="common/main_footer.tpl"}

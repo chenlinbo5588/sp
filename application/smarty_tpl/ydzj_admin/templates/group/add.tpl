@@ -38,6 +38,7 @@
         <tr class="noborder">
           <td class="vatop rowform" colspan="2">
           	<ul class="ulListStyle1 clearfix">
+          		<li {if in_array($item['id'],$info['group_data'])}class="selected"{/if}><label><input type="checkbox" name="group_data[]" value="0" {if in_array($item['id'],$info['group_data'])}checked="checked"{/if}/><span>其他</span></label></li>
           	{foreach from=$residentList item=item}
           		{if in_array($item['id'],$info['group_data'])}
           		<li class="selected"><label><input type="checkbox" name="group_data[]" checked="checked" value="{$item['id']}"/><span>{$item['name']|escape}</span></label></li>

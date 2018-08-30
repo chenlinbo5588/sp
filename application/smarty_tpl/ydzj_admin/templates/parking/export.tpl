@@ -17,11 +17,6 @@
   </table>
   {form_open(site_url($uri_string),'id="exportForm" target="exportFrame"')}
   <table class="table tb-type2">
-  	  <thead>
-    		<tr class="thead" >
-          		<th colspan="2">导出您的{$moduleTitle}数据?</th>
-      		</tr>
-      </thead>
       <tbody>
   	        {include file="common/resident_radio.tpl"}
 			<tr class="noborder">

@@ -486,6 +486,9 @@ class Order_service extends Base_service {
 				//物业对应小区标识
 				$pParam['resident_id'] = $currentFeeExpire['resident_id'];
 				
+				//所在项目，相当于  可以为终端设备号(门店号或收银设备ID)，PC网页或公众号内支付可以传"WEB"
+				$pParam['dev_id'] = $pParam['resident_id'];
+				
 				//原到期时间戳
 				$pParam['fee_old_expire'] = $currentFeeExpire['expireTimeStamp'];
 				
@@ -550,7 +553,7 @@ class Order_service extends Base_service {
 				
 				$input = new WxPayUnifiedOrder();
 			
-				$input->SetBody($this->_appConfig['name'].'-'.$param['order_typename']);
+				$input->SetBody($localOrder['order_typename'].'-'.$localOrder['goods_name']);
 				//$input->SetAttach("test");
 				
 				$input->SetOut_trade_no($localOrder['order_id']);
@@ -564,6 +567,10 @@ class Order_service extends Base_service {
 				
 				if($localOrder['goods_tag']){
 					$input->SetGoods_tag($localOrder['goods_tag']);
+				}
+				
+				if($localOrder['dev_id']){
+					$input->SetDevice_info($localOrder['dev_id']);
 				}
 				
 				$input->SetNotify_url($param['notify_url']);
@@ -627,6 +634,32 @@ class Order_service extends Base_service {
 	}
 	
 	
+	/**
+	 * 获取微信对账单
+	 * @param string $pDate  20180602
+	 * @param string $pType  ALL,SUCCESS,REFUND,RECHARGE_REFUND
+	 */
+	public function getWeixinPayBill($pDate,$pType){
+		
+		$file = false;
+		
+		try {
+			$input = new WxPayDownloadBill();
+			$input->SetBill_date($pDate);
+			$input->SetBill_type($pType);
+			$file = WxPayApi::downloadBill($input);
+			
+			//file_put_contents('bill.txt',print_r($resp,true));;
+			
+		}catch(WxPayException $e1){
+			log_message('error','code='.$e1->getCode().',message='.$e1->getMessage());
+		}catch(Exception $e){
+			log_message('error','code='.$e->getCode().',message='.$e->getMessage());
+		}
+		
+		return $file;
+		
+	}
 	
 	/**
 	 * 获得订单列表

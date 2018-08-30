@@ -112,7 +112,7 @@ class My extends Ydzj_Admin_Controller {
 			}
 		}
 		
-		$this->jsonOutput('请求成功',array('newPm' => $newCnt,'tip' => implode("\n",$message)));
+		$this->jsonOutput('请求成功',array('newPm' => $newCnt,'tip' =>  implode("\n",$message)));
 	}
 	
 }
