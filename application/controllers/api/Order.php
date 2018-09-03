@@ -143,6 +143,10 @@ class Order extends Wx_Controller {
 					//物业对应小区标识,如果是某个小区的业主
 					if($this->yezhuInfo){
 						$this->postJson['resident_id'] = $this->yezhuInfo['resident_id'];
+						
+						$residentInfo = $this->_residentModel->getFirstByKey($this->yezhuInfo['resident_id'],'id','name');
+						
+						$this->postJson['attach'] = $residentInfo['name'];
 					}
 					
 					if(ENVIRONMENT == 'development'){
@@ -304,6 +308,10 @@ class Order extends Wx_Controller {
 					//物业对应小区标识,如果是某个小区的业主
 					if($this->yezhuInfo){
 						$this->postJson['resident_id'] = $this->yezhuInfo['resident_id'];
+						
+						$residentInfo = $this->_residentModel->getFirstByKey($this->yezhuInfo['resident_id'],'id','name');
+						
+						$this->postJson['attach'] = $residentInfo['name'];
 					}
 					
 					

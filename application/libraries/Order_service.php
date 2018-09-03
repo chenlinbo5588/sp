@@ -486,8 +486,8 @@ class Order_service extends Base_service {
 				//物业对应小区标识
 				$pParam['resident_id'] = $currentFeeExpire['resident_id'];
 				
-				//所在项目，相当于  可以为终端设备号(门店号或收银设备ID)，PC网页或公众号内支付可以传"WEB"
-				$pParam['dev_id'] = $pParam['resident_id'];
+				//附件数据 比如  浅水湾
+				$pParam['attach'] = $currentFeeExpire['resident_name'];
 				
 				//原到期时间戳
 				$pParam['fee_old_expire'] = $currentFeeExpire['expireTimeStamp'];
@@ -571,6 +571,10 @@ class Order_service extends Base_service {
 				
 				if($localOrder['dev_id']){
 					$input->SetDevice_info($localOrder['dev_id']);
+				}
+				
+				if($param['attach']){
+					$input->SetAttach($param['attach']);
 				}
 				
 				$input->SetNotify_url($param['notify_url']);

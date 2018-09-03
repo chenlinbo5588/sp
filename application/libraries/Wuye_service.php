@@ -255,9 +255,12 @@ class Wuye_service extends Base_service {
 			$info = $this->_parkingModel->getFirstByKey($pId,'id','id,resident_id,name,expire');
 		}
 		
+		$residentInfo = $this->_residentModel->getFirstByKey($info['resident_id'],'id','name');
+		
 		$temp = array(
 			'id' => $pId,
 			'resident_id' => $info['resident_id'],
+			'resident_name' => $residentInfo['name'],
 			'goods_name' => '',
 			'year' => date('Y'),
 			'end_month' => $endMonth,

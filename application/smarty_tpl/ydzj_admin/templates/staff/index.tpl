@@ -47,6 +47,7 @@
           <th>{#sex#}</th>
           <th>{#age#}</th>
           <th>{#jiguan#}</th>
+          <th>{#salary_detail#}</th>
           <th>{#verify#}</th>
           <th>{#mobile#}</th>
           <th>{#address#}</th>
@@ -65,6 +66,7 @@
          <td>{if $item['sex'] == 1}男{else}女{/if}</td>
          <td>{$item['age']}</td>
          <td>{$jiguanList[$item['jiguan']]['show_name']}</td>
+         <td>{$item['salary_detail']}</td>
          <td>
          	<div>{$statusConfig[$item['status']]}</div>
          	<div>{$item['reason']|escape}</div>

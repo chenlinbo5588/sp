@@ -609,9 +609,18 @@ class Order extends Ydzj_Admin_Controller {
         
         if($list){
         	
+        	
+        	$this->load->config('bank');
+        	
+        	$banKList = config_item('bank');
+        	
         	$lines = explode("\n",str_replace("\r\n","\n",$list));
         	
         	$maxColunm = 0;
+        	
+        	$colConfig = array();
+        	
+        	
         	
 	        foreach($lines as $row => $aline){
 	        	$column = explode(',',str_replace('`','',$aline));
@@ -622,6 +631,15 @@ class Order extends Ydzj_Admin_Controller {
 	        	}
 	        	
 	        	foreach($column as $colIndex => $colVal){
+	        		if(0 == $row){
+	        			$colConfig[$colVal] = $colIndex;
+	        		}else{
+	        			
+	        			if($colIndex == $colConfig['付款银行']){
+	        				$colVal = $banKList[$colVal];
+	        			}
+	        		}
+	        		
 	        		$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($colIndex, $row + 1,$colVal);
 	        	}
 	        }
