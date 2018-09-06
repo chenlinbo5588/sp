@@ -59,12 +59,11 @@ class PayNotifyCallBack extends WxPayNotify
 			return false;
 		}
 		
+		
 		if($orderInfo['status'] != OrderStatus::$unPayed){
 			$msg = "订单状态错误";
 			return false;
 		}
-		
-		
 		
 		//启用事务
 		$this->_ci->Order_Model->beginTrans();

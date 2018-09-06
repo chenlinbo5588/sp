@@ -82,7 +82,7 @@ class Order extends Wx_Controller {
 					}
 					
 					
-					$orderInfo = $this->Order_Model->getFirstByKey($this->postJson['order_id'],'order_id','time_expire');
+					$orderInfo = $this->Order_Model->getFirstByKey($this->postJson['order_id'],'order_id','id,time_expire');
 					
 					if($this->_reqtime >= strtotime($orderInfo['time_expire'])){
 						$this->order_service->updateOrderStatusByIds(array($orderInfo['id']),OrderStatus::$closed,OrderStatus::$unPayed);
@@ -144,7 +144,9 @@ class Order extends Wx_Controller {
 					if($this->yezhuInfo){
 						$this->postJson['resident_id'] = $this->yezhuInfo['resident_id'];
 						
-						$residentInfo = $this->_residentModel->getFirstByKey($this->yezhuInfo['resident_id'],'id','name');
+						$this->load->model('Resident_Model');
+						
+						$residentInfo = $this->Resident_Model->getFirstByKey($this->yezhuInfo['resident_id'],'id','name');
 						
 						$this->postJson['attach'] = $residentInfo['name'];
 					}
@@ -219,7 +221,7 @@ class Order extends Wx_Controller {
 						break;
 					}
 					
-					$orderInfo = $this->Order_Model->getFirstByKey($this->postJson['order_id'],'order_id','time_expire');
+					$orderInfo = $this->Order_Model->getFirstByKey($this->postJson['order_id'],'order_id','id,time_expire');
 					
 					if($this->_reqtime >= strtotime($orderInfo['time_expire'])){
 						$this->order_service->updateOrderStatusByIds(array($orderInfo['id']),OrderStatus::$closed,OrderStatus::$unPayed);
@@ -309,7 +311,8 @@ class Order extends Wx_Controller {
 					if($this->yezhuInfo){
 						$this->postJson['resident_id'] = $this->yezhuInfo['resident_id'];
 						
-						$residentInfo = $this->_residentModel->getFirstByKey($this->yezhuInfo['resident_id'],'id','name');
+						$this->load->model('Resident_Model');
+						$residentInfo = $this->Resident_Model->getFirstByKey($this->yezhuInfo['resident_id'],'id','name');
 						
 						$this->postJson['attach'] = $residentInfo['name'];
 					}

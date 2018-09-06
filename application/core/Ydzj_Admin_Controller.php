@@ -9,7 +9,7 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
 	protected $_adminProfile = array() ;
 	protected $_adminUID = 0;
 
-	protected $_adminNewPm = 0;
+	protected $_adminNewPm = array();
 	
 	protected $_permission = array();
 	

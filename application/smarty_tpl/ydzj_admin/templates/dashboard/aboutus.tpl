@@ -31,12 +31,17 @@
       <tr class="noborder">
         <td></td>
         <td>核心开发者&nbsp;:&nbsp;</td>
-        <td class="team"><span>陈林波</span>,<span>余正博</span></td>
+        <td class="team"><span>陈林波</span>,<span>余正博</span>,<span>李刚</span></td>
       </tr>
       <tr class="noborder">
         <td></td>
         <td>设计师&nbsp;:&nbsp;</td>
         <td class="team"><span>周耀祖</span></td>
+      </tr>
+      <tr class="noborder">
+        <td></td>
+        <td>测试人员&nbsp;:&nbsp;</td>
+        <td class="team"><span>林正蔚</span></td>
       </tr>
     </tbody>
     <tfoot>
