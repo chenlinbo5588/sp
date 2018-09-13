@@ -435,6 +435,56 @@ class Wuye_service extends Base_service {
 		}
 		
 	}
+	 /**
+	  *  根据地址 获得物业
+	 */
+	public function getHouseByAddress($address,$pYezhu = array()){
+		
+		$condition = array(
+			'select' => 'id,address,jz_area,lng,lat,wuye_expire,nenghao_expire',
+			'where' => array(
+				'address' => $address,
+			)
+		);
+		
+		if($pYezhu){
+			$condition['where']['uid'] = $pYezhu['uid'];
+		}
+		
+		$houseInfo = $this->_houseModel->getById($condition);
+		
+		if($houseInfo){
+			if($houseInfo['wuye_expire']){
+				$houseInfo['wuye_expire_date'] = date('Y-m-d',$houseInfo['wuye_expire_date']);
+			}
+			
+			if($houseInfo['nenghao_expire']){
+				$houseInfo['nenghao_expire_date'] = date('Y-m-d',$houseInfo['nenghao_expire']);
+			}
+			
+			return $houseInfo;
+		}else{
+			return array();
+		}
+		
+	}
+	/**
+	  *  获得社区列表
+	 */
+	public function getResidentById(){
+		
+		$condition = array(
+			'select' => '*',
+		);	
+		$houseInfo = $this->_residentModel->getList($condition);
+		
+		if($houseInfo){
+			return $houseInfo;
+		}else{
+			return array();
+		}
+		
+	}
 	
 	
 	
