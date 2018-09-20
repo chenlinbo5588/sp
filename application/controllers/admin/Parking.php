@@ -591,10 +591,11 @@ class Parking extends Ydzj_Admin_Controller {
 						$tmpRow['classname'] = 'failed';
 						
 						$tmpRow['name'] = getCleanValue($objWorksheet->getCell('A'.$rowIndex)->getValue());
-						$tmpRow['jz_area'] = getCleanValue($objWorksheet->getCell('B'.$rowIndex)->getValue());
-						$tmpRow['mobile'] = getCleanValue($objWorksheet->getCell('F'.$rowIndex)->getValue());
+						$tmpRow['address'] = getCleanValue($objWorksheet->getCell('B'.$rowIndex)->getValue());
+						$tmpRow['jz_area'] = getCleanValue($objWorksheet->getCell('C'.$rowIndex)->getValue());
+						$tmpRow['mobile'] = getCleanValue($objWorksheet->getCell('G'.$rowIndex)->getValue());
 						
-						$tmpRow['expire'] = getCleanValue($objWorksheet->getCell('G'.$rowIndex)->getValue());
+						$tmpRow['expire'] = getCleanValue($objWorksheet->getCell('H'.$rowIndex)->getValue());
 						
 						
 						
@@ -622,6 +623,7 @@ class Parking extends Ydzj_Admin_Controller {
 						$insertData = array_merge(array(
 							'resident_id' => $residentId,
 							'name' => $tmpRow['name'],
+							'address' => $tmpRow['address'],
 							'mobile' => $tmpRow['mobile'],
 							'jz_area' => $tmpRow['jz_area'],
 							'lng' => $residentInfo['lng'],
@@ -784,10 +786,11 @@ class Parking extends Ydzj_Admin_Controller {
     private function _getExportConfig(){
     	return array(
     		'A' => array('db_key' => 'name','width' => 30 ,'title' => '车位名称'),
-    		'B' => array('db_key' => 'jz_area','width' => 15 ,'title' => '建筑面积'),
-    		'C' => array('db_key' => 'yezhu_name','width' => 15 ,'title' => '业主姓名'),
-    		'D' => array('db_key' => 'mobile','width' => 25 ,'title' => '手机号码'),
-    		'E' => array('db_key' => 'expire','width' => 25 ,'title' => '车位费到期时间'),
+    		'B' => array('db_key' => 'address','width' => 30 ,'title' => '房屋地址'),
+    		'C' => array('db_key' => 'jz_area','width' => 15 ,'title' => '建筑面积'),
+    		'D' => array('db_key' => 'yezhu_name','width' => 15 ,'title' => '业主姓名'),
+    		'E' => array('db_key' => 'mobile','width' => 25 ,'title' => '手机号码'),
+    		'F' => array('db_key' => 'expire','width' => 25 ,'title' => '车位费到期时间'),
     	);
     	
     }

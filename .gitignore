@@ -39,6 +39,7 @@ application/controllers/test/
 
 application/third_party/mpdf60/
 application/third_party/excel/
+application/third_party/excel
 application/third_party/excel2/
 
 proxy.sqlite

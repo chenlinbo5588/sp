@@ -19,6 +19,16 @@ class MY_Input extends CI_Input {
 		return $this->_fetch_from_array($_COOKIE, $prefix.$index, $xss_clean);
 	}
 	
+	public function is_flash_request(){
+		
+		if(strpos($_SERVER['HTTP_X_REQUESTED_WITH'],'ShockwaveFlash') !== false){
+			return true;
+		}
+		
+		return false;
+	}
+	
+	
 	
 	/**
 	 * 
@@ -31,7 +41,7 @@ class MY_Input extends CI_Input {
 			return;
 		}
 		
-		if($this->is_ajax_request() || strpos($_SERVER['HTTP_X_REQUESTED_WITH'],'ShockwaveFlash') !== false){
+		if($this->is_ajax_request() || $this->is_flash_request()){
 			$this->_allowInterval = 2;
 		}
 		

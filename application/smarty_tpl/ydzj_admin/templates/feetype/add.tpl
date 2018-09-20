@@ -35,6 +35,20 @@
           </td>
           <td class="vatop tips"><label id="error_fee_id"></label>{form_error('name')}</td>
         </tr>
+        <tr class="noborder">
+          <td colspan="2" class="required"><label class="validation" for="type_name">{#wuye_type#}:</label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform">
+          	<select name="wuye_type">
+	          <option value="">请选择...</option>
+	          {foreach from=$wuyeTypeList item=item}
+	          <option {if $info['wuye_type'] == $item['show_name']}selected{/if} value="{$item['show_name']}">{$item['show_name']}</option>
+	          {/foreach}
+	        </select>
+          </td>
+          <td class="vatop tips"><label id="error_fee_id"></label>{form_error('biliing_type')}</td>
+        </tr>
     	<tr class="noborder">
           <td colspan="2"><label class="validation" for="year">{#year#}: </label></td>
         </tr>

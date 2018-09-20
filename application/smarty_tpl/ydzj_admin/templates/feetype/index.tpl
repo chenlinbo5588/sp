@@ -22,10 +22,12 @@
           <th class="w24"></th>
           <th>{#displayorder#}</th>
           <th>{#resident_name#}</th>
+          <th>{#type_name#}</th>
           <th>{#year#}</th>
+          <th>{#wuye_type#}</th>
           <th>{#billing_style#}</th>
           <th>{#price#}</th>
-          <th>{#type_name#}</th>
+          <th>{#name_detail#}</th>
           <th class="align-center">操作</th>
         </tr>
       </thead>
@@ -35,10 +37,12 @@
           <td><input value="{$item['id']}" class="checkitem" group="chkVal" type="checkbox" name="id[]"></td>
           <td class="sort"><span class="editable" data-id="{$item['id']}" data-fieldname="displayorder">{$item['displayorder']}</span></td>
           <td>{$item['resident_name']|escape}</span></td>
+          <td>{$item['name']}</td>
           <td>{$item['year']|escape}</span></td>
+          <td>{$item['wuye_type']}</td>
           <td>{$item['billing_style']}</td>
           <td><span class="editable" data-id="{$item['id']}" data-fieldname="price">{$item['price']}</span></td>
-          <td class="name"><span class="editable" data-id="{$item['id']}" data-fieldname="name">{$item['name']|escape}</span></td>
+          <td class="name"><span class="editable" data-id="{$item['id']}" data-fieldname="name">{$item['name_detail']|escape}</span></td>
 		  
           <td class="align-center">
           	{if isset($permission[$moduleClassName|cat:'/edit'])}<a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}">编辑</a>{/if}&nbsp;&nbsp;

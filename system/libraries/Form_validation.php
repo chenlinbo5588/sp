@@ -142,7 +142,6 @@ class CI_Form_validation {
 
 		// Validation rules can be stored in a config file.
 		$this->_config_rules = $rules;
-
 		// Automatically load the form helper
 		$this->CI->load->helper('form');
 
@@ -272,7 +271,6 @@ class CI_Form_validation {
 		{
 			$this->validation_data = $data;
 		}
-
 		return $this;
 	}
 
@@ -419,11 +417,11 @@ class CI_Form_validation {
 	{
 		// Do we even have any data to process?  Mm?
 		$validation_array = empty($this->validation_data) ? $_POST : $this->validation_data;
+
 		if (count($validation_array) === 0)
 		{
 			return FALSE;
 		}
-
 		// Does the _field_data array containing the validation rules exist?
 		// If not, we look to see if they were assigned via a config file
 		if (count($this->_field_data) === 0)
@@ -492,7 +490,6 @@ class CI_Form_validation {
 
 		// Now we need to re-set the POST data with the new, processed data
 		$this->_reset_post_array();
-
 		return ($total_errors === 0);
 	}
 

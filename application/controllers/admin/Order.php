@@ -9,7 +9,7 @@ class Order extends Ydzj_Admin_Controller {
 	public function __construct(){
 		parent::__construct();
 		
-		$this->load->library(array('Order_service'));
+		$this->load->library(array('Order_service','Basic_data_service'));
 		
 		$this->order_service->setDataModule($this->_dataModule);
 		
@@ -25,6 +25,7 @@ class Order extends Ydzj_Admin_Controller {
 		
 		$this->_subNavs = array(
 			array('url' => $this->_className.'/index','title' => '管理'),
+			array('url' => $this->_className.'/add','title' => '新增订单'),
 			array('url' => $this->_className.'/unpay','title' => '未支付'),
 			array('url' => $this->_className.'/payed','title' => '已支付'),
 			array('url' => $this->_className.'/closed','title' => '已关闭'),
@@ -108,6 +109,47 @@ class Order extends Ydzj_Admin_Controller {
 		$this->display($this->_className.'/index');
 	}
 	
+	public function add(){
+
+		if($this->isPostRequest()){
+			$houseItem = $this->House_Model->getFirstByKey($_POST['address'],'address');
+			if(empty($_POST['end_month'])){
+				$_POST['end_month'] = 12;
+			}
+			$this->form_validation->set_rules('address','地址','required');
+			$this->form_validation->set_rules('amount','订单金额','required|is_natural');
+			$this->form_validation->set_rules('year','年份','required|less_than['.date('Y').']');
+			$this->form_validation->set_rules('end_month','终止月份','required|less_than[12]');
+			$param = array(
+				'amount' => $_POST['amount'],
+				'end_month' => $_POST['end_month'],
+				'house_id' => $houseItem['id'],
+				'order_typename' => $_POST['wuye_type'],
+				'year' => $_POST['year'],
+			);
+			$message = '';
+			$yezhuInfo = $this->Yezhu_Model->getFirstByKey($houseItem['yezhu_id'],'id');
+			
+			$this->Plan_Model->beginTrans();
+			
+			$result = $this->order_service->createWuyeOrder('house_id',$param,$yezhuInfo,$message,'Backstage');
+			
+			if($result){
+				$this->jsonOutput('创建成功');
+			}else{
+				$this->jsonOutput($message);
+			}
+			if($this->Plan_Model->getTransStatus() === FALSE){
+				$this->Plan_Model->rollBackTrans();
+				return FALSE;
+			}else{
+				$this->Plan_Model->commitTrans();
+				return TRUE;
+			}
+		}else{
+			$this->display();
+		}
+	}
 	
 	
 	/**

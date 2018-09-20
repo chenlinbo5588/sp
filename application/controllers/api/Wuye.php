@@ -530,13 +530,13 @@ class Wuye extends Wx_Controller {
 					$currentHouseFeeExpire = $this->wuye_service->getCurrentFeeInfo($houseInfo['id'],$data['order_typename']);
 					
 					//获得小区的费用配置
-					$residentFee = $this->wuye_service->getResidentFeeSetting($houseInfo['resident_id'],$currentHouseFeeExpire['year'],$data['order_typename']);
+					$residentFee = $this->wuye_service->getResidentFeeSetting($houseInfo['resident_id'],$currentHouseFeeExpire['year'],$data['order_typename'],$houseInfo['wuye_type']);
 					
 					$this->jsonOutput2(RESP_SUCCESS,array(
 						'house' => $houseInfo,
 						'feeYear' => $currentHouseFeeExpire['year'],
 						'minDate' => $currentHouseFeeExpire['newStartTimeStamp'],
-						'feeSetting' => $residentFee ? array($residentFee) : array()
+						'feeSetting' => $residentFee 
 					));
 				
 				}else{
@@ -556,6 +556,9 @@ class Wuye extends Wx_Controller {
 	
 	/**
 	 * 缴费,物业参数 以及缴费参数
+	 * 
+	 * @Deprecated
+	 * @TODO
 	 */
 	public function getYezhuParkingDetailWithFeeInfo(){
 		
@@ -607,6 +610,7 @@ class Wuye extends Wx_Controller {
 			}else{
 				$this->jsonOutput2(UNBINDED,$this->unBind);
 			}
+			
 		}
 	}
 	

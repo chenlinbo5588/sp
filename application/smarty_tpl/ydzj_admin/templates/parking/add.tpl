@@ -37,6 +37,15 @@
           <td class="vatop tips"><label class="errtip" id="error_name"></label>{form_error('name')}</td>
         </tr>
         <tr class="noborder">
+          <td colspan="2">{#address#}: </td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform">
+          	<input type="text" value="{$info['address']|escape}" name="address" id="address" class="txt">
+          </td>
+          <td class="vatop tips"><label class="errtip"  id="error_address"></label>{form_error('address')}</td>
+        </tr>
+        <tr class="noborder">
           <td colspan="2"><label class="validation" for="jz_area">{#jz_area#}: </label></td>
         </tr>
         <tr class="noborder">

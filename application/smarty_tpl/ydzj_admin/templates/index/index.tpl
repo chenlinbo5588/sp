@@ -358,8 +358,8 @@ $(function(){
               <dl>
                 <dd>
                   <ol>
-                    <li><a href="javascript:void(0);" id="welcome_dashboard" onclick="openItem('welcome,dashboard,dashboard');">欢迎页面</a></li>
-                    {*<li><a href="javascript:void(0);" id="aboutus_dashboard" onclick="openItem('aboutus,dashboard,dashboard');">关于我们</a></li>*}
+                    <li><a href="javascript:void(0);" id="welcome_dashboard" onclick="openItem('welcome,dashboard,dashboard');">控制面板</a></li>
+                    <li><a href="javascript:void(0);" id="aboutus_dashboard" onclick="openItem('aboutus,dashboard,dashboard');">关于我们</a></li>
                   </ol>
                 </dd>
               </dl>
@@ -446,6 +446,7 @@ $(function(){
                     {if isset($permission['side_resident'])}<li><a href="javascript:void(0);" id="index_resident" onclick="openItem('index,resident,wuye');">小区</a></li>{/if}
                     {if isset($permission['side_feetype'])}<li><a href="javascript:void(0);" id="index_feetype" onclick="openItem('index,feetype,wuye');">費用管理</a></li>{/if}
                     {if isset($permission['side_repair'])}<li><a href="javascript:void(0);" id="index_repair" onclick="openItem('index,repair,wuye');">报修</a></li>{/if}
+                  	{if isset($permission['side_plan'])}<li><a href="javascript:void(0);" id="index_plan" onclick="openItem('index,plan,wuye');">收费计划</a></li>{/if}
                   </ol>
                 </dd>
               </dl>

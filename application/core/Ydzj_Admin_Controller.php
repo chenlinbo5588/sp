@@ -176,11 +176,18 @@ class Ydzj_Admin_Controller extends Ydzj_Controller {
         $this->assign('permission',$this->_permission);
         
         if(!isset($this->_permission[$this->_checkPermitUrl])){
-            if($this->input->is_ajax_request()){
-                $this->responseJSON('没有足够的权限,请联系管理员');
-            }else{
-                redirect(admin_site_url('index/nopermission'));
-            }
+        	
+        	if($this->input->is_flash_request()){
+        		echo json_encode(array('error' => 1, 'msg' => '没有足够的权限,请联系管理员'));
+        		die(0);
+        	}else{
+        		if($this->input->is_ajax_request()){
+	                $this->responseJSON('没有足够的权限,请联系管理员');
+	            }else{
+	                redirect(admin_site_url('index/nopermission'));
+	            }
+        	}
+        	
         }
 
     }

@@ -39,6 +39,7 @@
           <th class="w24"></th>
           <th>{#displayorder#}</th>
           <th>{#address#}</th>
+          <th>{#wuye_type#}</th>
           <th>{#jz_area#}</th>
           <th>{#yezhu_name#}</th>
           <th>{#mobile#}</th>
@@ -54,6 +55,7 @@
           <td><input value="{$item['id']}" class="checkitem" group="chkVal" type="checkbox" name="id[]"></td>
           <td class="sort"><span class="editable" data-id="{$item['id']}" data-fieldname="displayorder">{$item['displayorder']}</span></td>
           <td class="name"><span class="editable" data-id="{$item['id']}" data-fieldname="address">{$item['address']|escape}</span></td>
+          <td>{$item['wuye_type']|escape}</td>
           <td>{$item['jz_area']|escape}</td>
           <td>{if $item['yezhu_id']}{$item['yezhu_name']}{else}暂未入驻{/if}</td>
           <td>{$item['mobile']|escape}</td>
@@ -62,6 +64,7 @@
           <td>{if $item['nenghao_expire']}{$item['nenghao_expire']|date_format:"%Y-%m-%d"}{else}无缴费记录{/if}</td>
           <td class="align-center">
           	{if isset($permission[$moduleClassName|cat:'/edit'])}<a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}">编辑</a>{/if}&nbsp;
+          	{if isset($permission[$moduleClassName|cat:'/yezhu_add'])}<a href="{admin_site_url($moduleClassName|cat:'/yezhu_add')}?id={$item['id']}">增加业主</a>{/if}&nbsp;
           	{if isset($permission[$moduleClassName|cat:'/yezhu_change'])}<a href="{admin_site_url($moduleClassName|cat:'/yezhu_change')}?id={$item['id']}">业主变更</a>{/if}&nbsp;
           	{if isset($permission[$moduleClassName|cat:'/delete'])}<a href="javascript:void(0)" class="delete" data-url="{admin_site_url($moduleClassName|cat:'/delete')}" data-id="{$item['id']}">删除</a>{/if}
           </td>
@@ -72,6 +75,7 @@
     <div class="fixedOpBar">
     	<label><input type="checkbox" class="checkall" id="checkallBottom" name="chkVal">全选</label>&nbsp;
         {if isset($permission[$moduleClassName|cat:'/delete'])}<a href="javascript:void(0);" class="btn deleteBtn" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/delete')}"><span>删除</span></a>{/if}
+        {if isset($permission[$moduleClassName|cat:'/add_plan'])}<a href="javascript:void(0);" class="btn opBtn" data-title="确实生成吗?" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/add_plan')}" data-ajaxformid="#verifyForm"><span>生成收费计划</span></a>{/if}
         {include file="common/pagination.tpl"}
         
     </div>
@@ -83,7 +87,9 @@ $(function(){
 	{if isset($permission[$moduleClassName|cat:'/delete'])}
     bindDeleteEvent();
     {/if}
-    
+	
+	
+	
      $( ".datepicker" ).datepicker({
     	changeYear: true
     });
@@ -98,4 +104,6 @@ $(function(){
 	    
 });
 </script>
+<div id="verifyDlg"></div>
+  <script type="text/javascript" src="{resource_url('js/service/house_index.js',true)}"></script>
 {include file="common/main_footer.tpl"}

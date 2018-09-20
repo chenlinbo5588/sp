@@ -31,6 +31,7 @@
           <th class="w24"></th>
           <th>{#displayorder#}</th>
           <th>{#parking_name#}</th>
+          <th>{#address#}</th>
           <th>{#jz_area#}</th>
           <th>{#yezhu_name#}</th>
           <th>{#mobile#}</th>
@@ -44,6 +45,7 @@
           <td><input value="{$item['id']}" class="checkitem" group="chkVal" type="checkbox" name="id[]"></td>
           <td class="sort"><span class="editable" data-id="{$item['id']}" data-fieldname="displayorder">{$item['displayorder']}</span></td>
           <td class="name"><span class="editable" data-id="{$item['id']}" data-fieldname="name">{$item['name']|escape}</span></td>
+          <td>{$item['address']|escape}</td>
           <td>{$item['jz_area']|escape}</td>
           <td>{if $item['yezhu_id']}{$item['yezhu_name']}{else}暂未入驻{/if}</td>
           <td>{$item['mobile']|escape}</td>

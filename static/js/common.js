@@ -998,7 +998,7 @@ function popWindowFn(btnObj,options,data){
 	
 	$.get(actionUrl, data, function(resp){
 		
-		tempDlg.html(resp).dialog({ position:btnObj ? { my : "center", at:"center", of: btnObj} : null }).dialog('open');
+		tempDlg.html(resp).dialog({ position:options.position ?  options.position : (btnObj ? { my : "center", at:"center", of: btnObj} : null) }).dialog('open');
 		//$.loadingbar({ urls: options.urls ,text:"操作中,请稍后..." ,container : '#sendorDlg' });
 		bindAjaxSubmit(options.formid);
 	});

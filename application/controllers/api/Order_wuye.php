@@ -75,7 +75,25 @@ class PayNotifyCallBack extends WxPayNotify
 			
 			$updateKey = '';
 			
-			if('车位费' != $orderInfo['order_typename']){
+			if('物业费' == $orderInfo['order_typename']){
+				$updateKey = 'wuye_expire';
+				$this->_ci->Parking_Model->updateByWhere(array(
+					'expire' => $orderInfo['fee_expire'],
+				),array(
+					'id' => $orderInfo['goods_id']
+				));
+			}else{
+				$updateKey = 'nenghao_expire';
+			}
+			$this->_ci->House_Model->updateByWhere(array(
+				$updateKey => $orderInfo['fee_expire'],
+			),array(
+				'id' => $orderInfo['goods_id']
+			));
+			
+			
+			$this->_ci->order_service->updateOrderRelation($orderInfo);
+/*			if('车位费' != $orderInfo['order_typename']){
 				
 				switch($orderInfo['order_typename']){
 					case '物业费':
@@ -101,9 +119,22 @@ class PayNotifyCallBack extends WxPayNotify
 				),array(
 					'id' => $orderInfo['goods_id']
 				));
-			}
-			
-			
+			}*/
+			//更新plan
+/*			$this->ci->Plan_Model->setTableId(date('Y'));
+			if('物业费' == $orderInfo['order_typename']){
+				$this->Plan_Model->setTableId(date('Y'));
+				$this->_ci->Plan_Model->updateByWhere(array(
+					'amount_payed' => $orderInfo['amount'],
+					'order_id' => $orderInfo['order_id'],
+					'order_status' => $orderInfo['status']
+				),array(
+					'address' => $orderInfo['goods_name'],
+					'feetype_name' => $orderInfo['order_typename'],
+				));
+			}else if('能耗费' == $orderInfo['order_typename']){
+				
+			}*/
 			if($this->_ci->Order_Model->getTransStatus() === FALSE){
 				$this->_ci->Order_Model->rollBackTrans();
 				

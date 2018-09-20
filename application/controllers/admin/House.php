@@ -7,7 +7,7 @@ class House extends Ydzj_Admin_Controller {
 	public function __construct(){
 		parent::__construct();
 		
-		$this->load->library(array('Wuye_service'));
+		$this->load->library(array('Wuye_service','Basic_data_service'));
 		
 		$this->wuye_service->setDataModule($this->_dataModule);
 		
@@ -187,15 +187,13 @@ class House extends Ydzj_Admin_Controller {
 			'select' => 'id,name,address,lng,lat',
 			'order' => 'displayorder DESC'
 		),'id');
-		
-		
 		if(empty($residentList)){
 			$residentList = array();
 		}
-		
 		$this->assign(array(
 			'residentList' => $residentList,
-			'residentJson' => json_encode($residentList)
+			'residentJson' => json_encode($residentList),
+			'wuyeTypeList' => $this->basic_data_service->getTopChildList('物业类型'),
 		));
 		
 	}
@@ -595,7 +593,7 @@ class House extends Ydzj_Admin_Controller {
 							'resident_id' => $residentId
 						)
 					),'name');
-					
+					$feetypeList = $this->wuye_service->search('费用类型',array(),'id');
 					
 					if(empty($allBuildingList)){
 						$feedback = getErrorTip('该小区尚未配置建筑物信息,请先配置建筑物');
@@ -605,7 +603,7 @@ class House extends Ydzj_Admin_Controller {
 					
 					$result = array();
 					$successCnt = 0;
-					
+					$houseList = $this->wuye_service->search('房屋',array(),'id');
 					// 列从 0 开始  行从1 开始
 					for($rowIndex = $startRow; $rowIndex <= $highestRow; $rowIndex++){
 						$tmpRow = array();
@@ -622,6 +620,7 @@ class House extends Ydzj_Admin_Controller {
 						//费用到期日期
 						$tmpRow['wuye_expire'] = getCleanValue($objWorksheet->getCell('K'.$rowIndex)->getValue());
 						$tmpRow['nenghao_expire'] = getCleanValue($objWorksheet->getCell('L'.$rowIndex)->getValue());
+						$tmpRow['wuye_type'] = getCleanValue($objWorksheet->getCell('M'.$rowIndex)->getValue());
 						
 						
 						$this->form_validation->reset_validation();
@@ -630,7 +629,8 @@ class House extends Ydzj_Admin_Controller {
 						$this->form_validation->set_rules('building_name','建筑物名称', 'required|in_list['.implode(',',array_keys($allBuildingList)).']',array(
 							'in_list' => '该小区没有该建筑物.'
 				        ));
-						
+				        $wuyeTypeList = $this->basic_data_service->getTopChildList('物业类型');
+						$this->form_validation->set_rules('wuye_type','物业类型','required|in_list['.implode(',',array_keys($wuyeTypeList)).']');
 						$this->form_validation->set_rules('address','地址','required');
 						$this->form_validation->set_rules('room_num','房间号码','min_length[1]');
 						$this->form_validation->set_rules('jz_area','建筑面积','required|is_numeric|greater_than[0]');
@@ -650,6 +650,7 @@ class House extends Ydzj_Admin_Controller {
 							'jz_area' => $tmpRow['jz_area'],
 							'lng' => $allBuildingList[$tmpRow['building_name']]['lng'],
 							'lat' => $allBuildingList[$tmpRow['building_name']]['lat'],
+							'wuye_type' => $tmpRow['wuye_type'],
 						),$this->addWhoHasOperated('add'));
 						
 						
@@ -684,9 +685,38 @@ class House extends Ydzj_Admin_Controller {
 								));
 							}
 						}
-						
-						$this->House_Model->_add($insertData);
-						
+						$judge = 0;
+						foreach($houseList as $key => $houseItem){
+							if($houseItem['address'] == $tmpRow['address']){
+								$houseId = $key;
+								$judge = 1;
+								break;
+							}
+						}
+						if(0 == $judge){
+							$this->House_Model->_add($insertData);
+							$houseList = $this->wuye_service->search('房屋',array(),'id');
+							$houseItem = $this->House_Model->getFirstByKey($tmpRow['address'],'address');
+							$houseId = $houseItem['id'];
+						}
+						$memberItem = $this->Member_Model->getFirstByKey($tmpRow['mobile'],'mobile');
+						if(!empty($memberItem)){
+							$houseYezhuOwner = array(
+								'yezhu_id' => $yezhuInfo['id'],
+								'house_id' => $houseId,
+								'resident_id' =>$residentId,
+								'uid' => $memberItem['uid'],
+							);
+						}else{
+							$houseYezhuOwner = array(
+								'yezhu_id' => $yezhuInfo['id'],
+								'house_id' => $houseId,
+								'resident_id' => $residentId,
+							);
+						}
+						$houseYezhuOwner = array_merge($houseYezhuOwner,$this->addWhoHasOperated('add'));		
+						$houseYezhuList = $this->House_Yezhu_Model->getList();
+						$this->House_Yezhu_Model->_add($houseYezhuOwner);
 						$error = $this->House_Model->getError();
 						
 						if(QUERY_OK != $error['code']){
@@ -816,6 +846,7 @@ class House extends Ydzj_Admin_Controller {
     		'E' => array('db_key' => 'car_no','width' => 15 ,'title' => '车牌号码'),
     		'F' => array('db_key' => 'wuye_expire','width' => 25 ,'title' => '物业费到期时间'),
     		'G' => array('db_key' => 'nenghao_expire','width' => 25 ,'title' => '能耗费到期时间'),
+    		'H' => array('db_key' => 'wuye_type','width' => 15 ,'title' => '物业类型'),
     	);
     	
     }
@@ -928,6 +959,7 @@ class House extends Ydzj_Admin_Controller {
 	/**
 	 * 业主变更
 	 */
+	 //未操作house_yezhu表
 	public function yezhu_change(){
 		
 		$feedback = '';
@@ -970,8 +1002,19 @@ class House extends Ydzj_Admin_Controller {
 					'mobile' => $yezhuInfo[0]['mobile'],
 					'car_no' =>  $yezhuInfo[0]['car_no'],
 				),$this->addWhoHasOperated('edit'));
-				
+				$addInfo = array_merge(array(
+					'uid' => $yezhuInfo[0]['uid'],
+					'house_id' => $id,
+					'yezhu_id' => $yezhuInfo[0]['id'],
+					'resident_id' => $info['resident_id'],
+				),$this->addWhoHasOperated('add'));
 				$this->House_Model->update($updateInfo,array('id' => $id));
+				$this->House_Yezhu_Model->deleteByCondition(array(
+					'where' => array(
+						'house_id' => $id
+					)
+				));
+				$this->House_Yezhu_Model->_add($addInfo);
 				
 				$error = $this->House_Model->getError();
 			
@@ -988,6 +1031,59 @@ class House extends Ydzj_Admin_Controller {
 			
 		}
 		
+	}
+	public function yezhu_add(){
+		$feedback = '';
+		$id = $this->input->get_post('id');
+		$info = $this->House_Model->getFirstByKey($id);
+
+		$this->_subNavs[] = array('url' => $this->_className.'/yezhu_add?id='.$id, 'title' => '增加业主');
+		if($this->isPostRequest()){
+			for($i = 0; $i < 1; $i++){
+				$this->form_validation->set_rules('mobile','手机号码','required|valid_mobile');
+					
+				
+				if(!$this->form_validation->run()){
+					$this->jsonOutput($this->form_validation->error_html(),array('errors' => $this->form_validation->error_array()));
+					break;
+				}
+				
+				$mobile = $this->input->post('mobile');
+				
+				$yezhuInfo = $this->wuye_service->search('业主',array(
+					'where' => array(
+						'resident_id' => $info['resident_id'],
+						'mobile' => $mobile
+					)
+				));
+				
+				if(empty($yezhuInfo[0])){
+					$this->jsonOutput('抱歉,该小区无此业主信息');
+					break;
+				}
+				$addInfo = array_merge(array(
+					'uid' => $yezhuInfo[0]['uid'],
+					'house_id' => $id,
+					'yezhu_id' => $yezhuInfo[0]['id'],
+					'resident_id' => $info['resident_id'],
+				),$this->addWhoHasOperated('add'));
+				$this->House_Yezhu_Model->_add($addInfo);
+				
+				$error = $this->House_Yezhu_Model->getError();
+			
+				if(QUERY_OK != $error['code']){
+					$this->jsonOutput('数据库错误,请稍后再次尝试');
+					break;
+				}
+				
+				$this->jsonOutput('操作成功');
+				
+			}
+		}else{
+			$this->assign('info',$info);
+			$this->display();
+		}
+
 	}
 	
 	

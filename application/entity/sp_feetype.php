@@ -4,8 +4,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $entity = array(
 'id' => 'int',
 'name' => 'varchar',
+'name_detail' => 'varchar',
 'year' => 'int',
 'resident_id' => 'int',
+'wuye_type' => 'varchar',
 'resident_name' => 'varchar',
 'price' => 'float',
 'displayorder' => 'int',
