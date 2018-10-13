@@ -1004,79 +1004,74 @@ class Order_service extends Base_service {
 	/**
 	 * 创建订单后更新计划表、房屋表、详情表、历史表
 	 */
-	public function updateOrderRelation($pParam,$updateOrder = true){
+	public function updateOrderRelation($pParam){
 		$this->_planModel->setTableId($pParam['year']);
 		
-		if($updateOrder){
-			$this->_orderModel->updateByWhere(array(
-				'status' => OrderStatus::$payed,
-			),array(
-				'order_id' => $pParam['order_id'],
-			));
-		}
-			
+		$this->_orderModel->updateByWhere(array(
+			'status' => OrderStatus::$payed,
+		),array(
+			'order_id' => $pParam['order_id'],
+		));
+		
 		
 		$houseItem = $this->_houseModel->getFirstByKey($pParam['goods_id'],'id');
 		
 		$feetypeItem = $this->_feetypeModel->getById(array(
 			'where' => array(
-				'resident_name' => $pParam['attach'],
+				'resident_id' => $houseItem['resident_id'],
 				'year' => $pParam['year'],
-				'name' => $pParam['order_typename'],
+				'name' => $pParam['order_typename']
 			)
 		));
-		$feeRule = json_decode($feetypeItem['fee_rule'],true);
-	
-		$payedTs = strtotime($pParam['year'].'-'.str_pad($pParam['end_month'],2,'0',STR_PAD_LEFT).' last day of this month');
 		
+		$feeRule = json_decode($feetypeItem['fee_rule'],true);
 			
 		if('物业费' == $pParam['order_typename']){
-			if($pParam['month']){
-				$this->_planDetailModel->updateByWhere(array(
-					'amount_payed' => $pParam['amount'],
-					'month_payed' => $pParam['month'],
-					'order_id' => $pParam['order_id'],
-				),array(
-					'house_id' => $pParam['goods_id'],
-					'feetype_name' => $pParam['order_typename'],
-				));
 				
-				$this->_houseModel->updateByWhere(array(
-					'wuye_expire' => $payedTs,
-				),array(
-					'id' => $pParam['goods_id'],
-				));
-				
-				$this->_parkingModel->updateByWhere(array(
-					'expire' => $payedTs
-				),array(
-					'house_id' => $pParam['goods_id'],
-				));
-				
-			}else{
-				
-				$this->_planModel->updateByWhere(array(
-					'amount_payed' => $pParam['amount']/100,
-					'order_id' => $pParam['order_id'],
-					'order_status' => OrderStatus::$payed,
-				),array(
-					'house_id' => $pParam['goods_id'],
-					'feetype_name' => $pParam['order_typename'],
-				));
-				
-				$this->_houseModel->updateByWhere(array(
-					'wuye_expire' => strtotime($pParam['year'].' last day of this year')
-				),array(
-					'id' => $pParam['goods_id'],
-				));
-				
-				$this->_parkingModel->updateByWhere(array(
-					'expire' => strtotime($pParam['year'].' last day of this year')
-				),array(
-					'house_id' => $pParam['goods_id'],
-				));
-			}
+			$this->_houseModel->updateByWhere(array(
+				'wuye_expire' => $pParam['fee_expire'],
+			),array(
+				'id' => $pParam['goods_id'],
+			));
+			
+			$this->_parkingModel->updateByWhere(array(
+				'expire' => $pParam['fee_expire']
+			),array(
+				'house_id' => $pParam['goods_id'],
+			));
+			
+			$this->_planModel->increseOrDecrease(array(
+				array('key'  => 'amount_payed', 'value' => $pParam['amount']/100),
+				array('key'  => 'order_id', 'value' => $pParam['order_id']),
+				array('key'  => 'order_status', 'value' => OrderStatus::$payed),
+				array('key'  => 'pay_time', 'value' => $pParam['pay_time']),
+			),array(
+				'house_id' => $pParam['goods_id'],
+				'feetype_name' => $pParam['order_typename']
+			));
+			
+			
+			/**
+			$this->_planDetailModel->updateByWhere(array(
+				'amount_payed' => $pParam['amount'],
+				'month_payed' => $pParam['month'],
+				'order_id' => $pParam['order_id'],
+				'order_status' => OrderStatus::$payed,
+				'pay_time' => $pParam['pay_time'],
+			),array(
+				'house_id' => $pParam['goods_id'],
+				'feetype_name' => $pParam['order_typename'],
+			));
+			*/
+			
 		}else if('能耗费' == $pParam['order_typename']){
+			
+			$this->_houseModel->updateByWhere(array(
+				'nenghao_expire' => $pParam['fee_expire'],
+			),array(
+				'id' => $pParam['goods_id'],
+			));
+			
 	 		$nenghaoDetail = array(
 	 			'house_id' => $pParam['goods_id'],
 				'address' => $pParam['goods_name'],
@@ -1094,31 +1089,27 @@ class Order_service extends Base_service {
 				'amount_plan' => $feeRule[0]['price']*12,
 				'amount_real' => $feeRule[0]['price']*12,
 				'amount_payed' => $pParam['amount']/100,
+				'order_id' => $pParam['order_id'],
+				'order_status' => OrderStatus::$payed,
+				'pay_time' => $pParam['pay_time'],
 				'month' => $pParam['end_month'],
 				'stat_date' => $pParam['fee_start'],
 				'end_date' => $pParam['fee_expire'],
-				'order_id' => $pParam['order_id'],
 			);
-			
-			
-			
 			
 			$this->_planDetailModel->setTableId($pParam['year']);
 			
 			$this->_planDetailModel->_add($nenghaoDetail);
 			
 			$this->_planModel->increseOrDecrease(array(
-				array('key'  => 'amount_payed', 'value' => "amount_payed + {$pParam['amount']}"),
+				array('key'  => 'amount_payed', 'value' => "amount_payed + {$nenghaoDetail['amount_payed']}"),
 				array('key'  => 'order_id', 'value' => $pParam['order_id']),
+				array('key'  => 'order_status', 'value' => OrderStatus::$payed),
 			),array(
-					'house_id' => $pParam['goods_id'],
-					'feetype_name' => $pParam['order_typename']));
-			
-			$this->_houseModel->updateByWhere(array(
-				'nenghao_expire' => $nenghaoDetail['end_date']
-			),array(
-				'id' => $pParam['goods_id'],
+				'house_id' => $pParam['goods_id'],
+				'feetype_name' => $pParam['order_typename']
 			));
+			
 		}
 		
 		return true;

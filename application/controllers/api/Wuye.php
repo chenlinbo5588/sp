@@ -414,7 +414,7 @@ class Wuye extends Wx_Controller {
 					break;
 				}
 				
-				$houseInfo = $this->wuye_service->getYezhuHouseDetail($id,$this->yezhuInfo);
+				$houseInfo = $this->wuye_service->getYezhuHouseDetail($id);
 				if($houseInfo){
 					$currentHouseFeeExpire = $this->wuye_service->getCurrentFeeInfo($houseInfo['id'],$data['order_typename']);
 					

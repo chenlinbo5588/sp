@@ -70,32 +70,15 @@ class PayNotifyCallBack extends WxPayNotify
 			array('ref_order' => $data['transaction_id'],'status' => OrderStatus::$payed , 'pay_time_end' => $data['time_end']),
 			array('order_id' => $data['out_trade_no'],'status' => OrderStatus::$unPayed)
 		);
+
 		
 		if($affectRow > 0 ){
 			
-			$updateKey = '';
-			
-			if('物业费' == $orderInfo['order_typename']){
-				$updateKey = 'wuye_expire';
-				$this->_ci->Parking_Model->updateByWhere(array(
-					'expire' => $orderInfo['fee_expire'],
-				),array(
-					'house_id' => $orderInfo['goods_id']
-				));
-			}else{
-				$updateKey = 'nenghao_expire';
-			}
-			$this->_ci->House_Model->updateByWhere(array(
-				$updateKey => $orderInfo['fee_expire'],
-			),array(
-				'id' => $orderInfo['goods_id']
-			));
-			
-			
 			//@TODO 可能出现跨年订单引起的问题， 创建时间 和付款时间 跨年
 			$orderInfo['year'] = date('Y',$orderInfo['gmt_create']);
+			$orderInfo['pay_time'] = time();
 			
-			$this->_ci->order_service->updateOrderRelation($orderInfo,false);
+			$this->_ci->order_service->updateOrderRelation($orderInfo);
 
 			if($this->_ci->Order_Model->getTransStatus() === FALSE){
 				$this->_ci->Order_Model->rollBackTrans();

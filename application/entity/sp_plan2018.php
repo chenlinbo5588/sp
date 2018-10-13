@@ -19,6 +19,7 @@ $entity = array(
 'mobile' => 'varchar',
 'order_id' => 'varchar',
 'order_status' => 'tinyint',
+'pay_time' => 'int',
 'add_uid' => 'int',
 'add_username' => 'varchar',
 'edit_uid' => 'int',

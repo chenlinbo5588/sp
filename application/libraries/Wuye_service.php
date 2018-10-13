@@ -192,6 +192,8 @@ class Wuye_service extends Base_service {
 		));
 	
 		$feeRule = json_decode($feetypeList[0]['fee_rule'],true);
+		
+		
 		foreach($feeRule as $key => $item){
 			//获得该物业所在小区与当前物业匹配的费用配置列表
 			if($item['feeName'] ==$pOrderTypename && $item['wuyeType'] == $wuyeType){
@@ -199,8 +201,7 @@ class Wuye_service extends Base_service {
 			}else if('普通' == $item['wuyeType'] && $item['feeName'] != $pOrderTypename){
 				$residentFee[] = $item;
 			}
-			
-		} 
+		}
 		
 
 		return $residentFee;
