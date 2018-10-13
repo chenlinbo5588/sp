@@ -137,7 +137,6 @@ class Plan extends Ydzj_Admin_Controller {
 		$currentPage = $this->input->get_post('page') ? $this->input->get_post('page') : 1;
 	
 		$condition = array(
-			
 			'order' => 'id DESC',
 			'pager' => array(
 				'page_size' => config_item('page_size'),
@@ -158,7 +157,7 @@ class Plan extends Ydzj_Admin_Controller {
 			$condition['where']['feetype_name'] = $search['feetype_name'];
 		}
 		
-		
+		$this->Plan_Detail_Model->setTableId(date('Y'));
 		$list = $this->wuye_service->search('收费计划详情', $condition);
 		$this->assign(array(
 			'residentList' => $this->wuye_service->getOwnedResidentList(array(

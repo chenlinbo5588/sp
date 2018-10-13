@@ -1027,6 +1027,7 @@ class Order_service extends Base_service {
 				$this->_planDetailModel->updateByWhere(array(
 					'amount_payed' => $pParam['amount'],
 					'month_payed' => $pParam['month'],
+					'order_id' => $pParam['order_id'],
 				),array(
 					'house_id' => $pParam['goods_id'],
 					'feetype_name' => $pParam['order_typename'],
@@ -1088,6 +1089,7 @@ class Order_service extends Base_service {
 				'month' => $pParam['end_month'],
 				'stat_date' => $pParam['fee_start'],
 				'end_date' => $pParam['fee_expire'],
+				'order_id' => $pParam['order_id'],
 			);
 			
 			

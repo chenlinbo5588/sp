@@ -171,7 +171,7 @@ class Feetype extends Ydzj_Admin_Controller {
 	 */
 	public function add(){
 		$feedback = '';
-		
+
 		if($this->isPostRequest()){
 			
 			for($i = 0; $i < 1; $i++){
@@ -184,6 +184,9 @@ class Feetype extends Ydzj_Admin_Controller {
 					if('物业费' != $item){
 						$this->form_validation->set_rules('wuyeType['.$key.']','物业类型','required|in_list[普通]');
 					}
+				}
+				if('能耗费' == $_POST['name']){
+					$this->form_validation->set_rules('generate_deatil','生成明细','differs[1]','能耗费无法生成明细');
 				}
 				if(!$this->form_validation->run()){
 					$this->jsonOutput('数据校验失败,'.$this->form_validation->error_string(),array('errors' => $this->form_validation->error_array()));

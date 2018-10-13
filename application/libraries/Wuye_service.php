@@ -194,9 +194,9 @@ class Wuye_service extends Base_service {
 		$feeRule = json_decode($feetypeList[0]['fee_rule'],true);
 		foreach($feeRule as $key => $item){
 			//获得该物业所在小区与当前物业匹配的费用配置列表
-			if($item['feeName'] == $pOrderTypename && $item['wuyeType'] == $wuyeType){
+			if($item['feeName'] ==$pOrderTypename && $item['wuyeType'] == $wuyeType){
 				$residentFee[] = $item;
-			}else if('普通' == $item['wuyeType']){
+			}else if('普通' == $item['wuyeType'] && $item['feeName'] != $pOrderTypename){
 				$residentFee[] = $item;
 			}
 			
@@ -640,7 +640,7 @@ class Wuye_service extends Base_service {
 								'fee_gname' =>  $feeTypeInfo['name'],
 								'feetype_name' => $feeTypeRule['feeName'],
 								'resident_id' => $parkingItem['resident_id'],
-								'resident_name' => $feeTypeRule['resident_name'],
+								'resident_name' => $parkingItem['resident_name'],
 								'year' => $year,
 								'jz_area' => $parkingItem['jz_area'],
 								'price' =>  $feeTypeRule['price'],
@@ -683,7 +683,9 @@ class Wuye_service extends Base_service {
 					 	$basicInfo['amount_plan'] += $detailInsert['amount_real'];
 					}
 				}
-
+				if(empty($basicInfo['amount_plan'])){
+					 $basicInfo['amount_plan'] = 0;
+				}
 				
 				$basicInfo = array(
 					'house_id' => $houseItem['id'],
