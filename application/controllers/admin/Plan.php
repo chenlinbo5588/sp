@@ -72,6 +72,7 @@ class Plan extends Ydzj_Admin_Controller {
 	
 	public function add(){
 		$data = array();
+		
 		if($this->isPostRequest()){
 
 			$this->form_validation->set_rules('resident_id','所在小区','required|is_natural_no_zero');
@@ -79,11 +80,14 @@ class Plan extends Ydzj_Admin_Controller {
     			$feedback = getErrorTip($this->form_validation->error_html());
     			break;
 	    	}
+	    	
+	    	$year = $_POST['year'];
+
 			$resident_id = $this->input->get_post('resident_id');	
-			$result = $this->wuye_service->generationPlan($resident_id,$this->addWhoHasOperated());
-			$this->Plan_Model->setTableId(date('Y'));
+			$result = $this->wuye_service->generationPlan($resident_id,$this->addWhoHasOperated(),$year);
+			$this->Plan_Model->setTableId($year);
 		
-			$this->jsonOutput('生成成功,'.$result['successCnt'].'条,生成失败'.$result['failedCnt'].'条,页面即将刷新');
+			$this->jsonOutput('生成成功,'.$result['successCnt'].'条,生成失败'.$result['failedCnt'].'条');
 		}else{
     		$this->assign(array(
 	    		'residentList' => $this->wuye_service->search('小区',array(

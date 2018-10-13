@@ -18,6 +18,16 @@
   <table class="table tb-type2">
       <tbody>
       		{include file="common/resident_radio.tpl"}
+      		
+	  	<tr class="noborder">
+          <td colspan="2"><label class="validation" for="year">{#plan_year#}: </label></td>
+        </tr>
+   		<tr class="noborder">
+          <td class="vatop rowform">
+          	<input type="text" value="{$info['year']|escape}" name="year" id="year" class="txt">
+          </td>
+          <td class="vatop tips"><label id="error_fee_year"></label>{form_error('year')}</td>
+        </tr>
       </tbody>
       	<tfoot>
       		<tr class="tfoot">

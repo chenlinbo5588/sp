@@ -379,12 +379,15 @@ class Wuye_service extends Base_service {
 		foreach($houseIdList as $key => $value){
 			$houseId[] = $value['house_id'];
 		}
-		$yezhuHouseList = $this->_houseModel->getList(array(
+		if($houseId){
+			$yezhuHouseList = $this->_houseModel->getList(array(
 			'select' => 'id,address,jz_area,lng,lat,wuye_expire,nenghao_expire',
-			'where_in' => array(
-				array('key' => 'id', 'value' => $houseId)
-			)
-		));
+				'where_in' => array(
+					array('key' => 'id', 'value' => $houseId)
+				)
+			));
+		}
+		
 		
 		$list = array();
 		
@@ -537,14 +540,14 @@ class Wuye_service extends Base_service {
 	/**
 	 * 生成费用计划
 	 */
-	public function generationPlan($residentId,$who,$moreCondition = array(),$year = 0){
+	public function generationPlan($residentId,$who,$year = 0,$moreCondition = array()){
 		$result = array(
 			'commitCnt' => 0,
 			'successCnt' => 0,
 			'failedCnt' => 0,
 			'failedInfo' => array(),
 		);
-		
+	
 		if(empty($year)){
 			$year = date('Y');
 		}
@@ -619,6 +622,8 @@ class Wuye_service extends Base_service {
 						'billing_style' => $feeTypeRule['billingStyle'],
 						'add_uid' => $who['add_uid'],
 						'add_username' => $who['add_username'],	
+						'amount_plan' => 0,
+						'amount_real' => 0,
 					);
 					if('车位费' == $feeTypeRule['feeName']){
 						$parkingList = $this->search('停车位',array(
@@ -642,7 +647,9 @@ class Wuye_service extends Base_service {
 								'wuye_type' => $feeTypeRule['wuyeType'],
 								'billing_style' => $feeTypeRule['billingStyle'],
 								'add_uid' => $who['add_uid'],
-								'add_username' => $who['add_username'],	
+								'add_username' => $who['add_username'],
+								'amount_plan' => 0,
+								'amount_real' => 0,
 							);
 							if(false !== strpos($detailInsert['billing_style'],'按面积')){						
 								$detailInsert['amount_plan'] = $detailInsert['price'] * $detailInsert['jz_area'] * 12;

@@ -9,7 +9,6 @@ class Plan_Detail_Model extends MY_Model {
 
     public function __construct(){
         parent::__construct();
-        $this->setTableId(date('Y',time()));
         self::$_tableMeta = $this->getTableMeta(); 
     }
     

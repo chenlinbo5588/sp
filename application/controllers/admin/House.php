@@ -52,10 +52,9 @@ class House extends Ydzj_Admin_Controller {
 		$search['yezhu_name'] = $this->input->get_post('yezhu_name');
 		$search['mobile'] = $this->input->get_post('mobile');
 		
-		
 		foreach(array('wuye','nenghao') as $expireName){
 			foreach(array('s','e') as $se){
-				$tempVal = $this->input->get_post($expireName.'_expire_s');
+				$tempVal = $this->input->get_post($expireName.'_expire_'.$se);
 				if(!empty($tempVal)){
 					
 					if('s' == $se){
@@ -66,7 +65,7 @@ class House extends Ydzj_Admin_Controller {
 				}
 			}
 		}
-		
+	
 		
 		if($search['address']){
 			$condition['like']['address'] = $search['address'];
