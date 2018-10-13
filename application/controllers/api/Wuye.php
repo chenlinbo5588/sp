@@ -415,6 +415,7 @@ class Wuye extends Wx_Controller {
 				}
 				
 				$houseInfo = $this->wuye_service->getYezhuHouseDetail($id);
+				
 				if($houseInfo){
 					$currentHouseFeeExpire = $this->wuye_service->getCurrentFeeInfo($houseInfo['id'],$data['order_typename']);
 					
@@ -464,11 +465,10 @@ class Wuye extends Wx_Controller {
 					break;
 				}
 				
-				$info = $this->wuye_service->getYezhuHouseDetail($this->postJson['id'],$this->yezhuInfo);
-				
+				$info = $this->wuye_service->getYezhuHouseDetail($this->postJson['id']);
 				
 				if(empty($info)){
-					$this->jsonOutput2('找不到记录');
+					$this->jsonOutput2('找不到物业记录');
 					break;
 				}
 				

@@ -146,11 +146,7 @@ class Wuye_service extends Base_service {
 
 		if(!empty($extraInfo[0]) && !empty($extraInfo[1])){
 			
-			if('物业费' == $extraInfo[1] || '能耗费' == $extraInfo[1]){
-				$info = $this->_houseModel->getFirstByKey($pId,'id','resident_id');
-			}else if('车位费' == $extraInfo[1]){
-				$info = $this->_parkingModel->getFirstByKey($pId,'id','resident_id');
-			}
+			$info = $this->_houseModel->getFirstByKey($pId,'id','resident_id');
 			
 			if($info['resident_id']){
 				
@@ -193,12 +189,9 @@ class Wuye_service extends Base_service {
 	
 		$feeRule = json_decode($feetypeList[0]['fee_rule'],true);
 		
-		
 		foreach($feeRule as $key => $item){
 			//获得该物业所在小区与当前物业匹配的费用配置列表
 			if($item['feeName'] ==$pOrderTypename && $item['wuyeType'] == $wuyeType){
-				$residentFee[] = $item;
-			}else if('普通' == $item['wuyeType'] && $item['feeName'] != $pOrderTypename){
 				$residentFee[] = $item;
 			}
 		}
@@ -225,35 +218,53 @@ class Wuye_service extends Base_service {
 	public function computeFee($pComputeParam){
 		
 		$info = $this->_houseModel->getFirstByKey($pComputeParam['id'],'id','resident_id');
+		
 		//基于按年缴费的方式
 		$monthCnt = intval(date('m',$pComputeParam['newEndTimeStamp'])) - intval(date('m',$pComputeParam['newStartTimeStamp'])) + 1;
-			
+		
+		$feeList = array(
+			'amount' => 0,
+			'amountDetail' => array()
+		);
+		
 		//获得费用设置		
 		if('能耗费' == $pComputeParam['orderTypeName']){
-			$feetypeList = $this->getResidentFeeSetting($pComputeParam['resident_id'],$pComputeParam['year'],$pComputeParam['orderTypeName']);
-			$feeList[0] = '';
-			$feeList['amount'] = $feetypeList[0]['price'] * $monthCnt;
 			
-			return $feeList;
+			$feetypeList = $this->getResidentFeeSetting($pComputeParam['resident_id'],$pComputeParam['year'],$pComputeParam['orderTypeName'],$pComputeParam['houseInfo']['wuye_type']);
+			
+			if('按面积' == $feetypeList[0]['billingStyle']){
+				$feeList['amount'] = $feetypeList[0]['price'] * $monthCnt * $pComputeParam['houseInfo']['jz_area'];
+			}else if('按每月固定值' == $feetypeList[0]['billingStyle']){
+				$feeList['amount'] = $feetypeList[0]['price'] * $monthCnt;
+			}else{
+				$feeList['amount'] = 999999999;
+			}
+			
+		}else{
+			
+			$this->_planDetailModel->setTableId($pComputeParam['year']);
+			$this->_planModel->setTableId($pComputeParam['year']);
+			
+			$feeList['amountDetail'] = $this->_planDetailModel->getList(array(
+				'select' => 'feetype_name,parking_name,jz_area,price,billing_style,amount_real',
+				'where' => array(
+					'house_id' => $pComputeParam['id'],
+					'fee_gname' => $pComputeParam['orderTypeName']
+				)
+			));
+			
+			$amountInfo = $this->_planModel->getById(array(
+				'select' => 'amount_real',
+				'where' => array(
+					'house_id' => $pComputeParam['id'],
+					'feetype_name' => $pComputeParam['orderTypeName']
+				)
+			));
+			
+			$feeList['amount'] = $amountInfo['amount_real'];
+			
 		}
 		
-		$this->_planDetailModel->setTableId($pComputeParam['year']);
-		$this->_planModel->setTableId($pComputeParam['year']);
-		$feeList = $this->_planDetailModel->getList(array(
-			'select' => 'feetype_name,parking_name,jz_area,price,billing_style,amount_real',
-			'where' => array(
-				'house_id' => $pComputeParam['id'],
-			)
-		));
-		$amountInfo = $this->_planModel->getById(array(
-			'select' => 'amount_real',
-			'where' => array(
-				'house_id' => $pComputeParam['id'],
-			)
-		));
-		$feeList['amount'] = $amountInfo['amount_real'];
-			
-
 		return $feeList;
 	}
 	
@@ -263,7 +274,7 @@ class Wuye_service extends Base_service {
 	 * 
 	 */
 	public function getCurrentFeeInfo($pId,$pOrderTypename,$endMonth = 12){
-		$info = $this->_houseModel->getFirstByKey($pId,'id','id,resident_id,address,wuye_expire,nenghao_expire');
+		$info = $this->_houseModel->getFirstByKey($pId,'id');
 		
 		$residentInfo = $this->_residentModel->getFirstByKey($info['resident_id'],'id','name');
 		
@@ -280,6 +291,7 @@ class Wuye_service extends Base_service {
 			'newEndTimeStamp' => 0,	//新的结束时间戳,
 			'orderTypeName' => $pOrderTypename,
 			'address' => $info['address'],
+			'houseInfo' => $info
 		);
 		
 		switch($pOrderTypename){

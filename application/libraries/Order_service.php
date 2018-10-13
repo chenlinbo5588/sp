@@ -1081,7 +1081,7 @@ class Order_service extends Base_service {
 				'year' => $pParam['year'],
 				'jz_area' => $houseItem['jz_area'],
 				'price' => $feeRule[0]['price'],
-				'month_payed' => $pParam['month'],
+				'month_payed' => $pParam['fee_month'],
 				'fee_gname' => $pParam['order_typename'],
 				'feetype_name' => $feeRule[0]['feeName'],
 				'wuye_type' => $feeRule[0]['wuyeType'],
@@ -1092,7 +1092,7 @@ class Order_service extends Base_service {
 				'order_id' => $pParam['order_id'],
 				'order_status' => OrderStatus::$payed,
 				'pay_time' => $pParam['pay_time'],
-				'month' => $pParam['end_month'],
+				'month' => date('m',$pParam['fee_expire']),
 				'stat_date' => $pParam['fee_start'],
 				'end_date' => $pParam['fee_expire'],
 			);

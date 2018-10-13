@@ -201,7 +201,7 @@
 		        </select>
 			</td>
 			<td>
-				<input type="text" name="cale[]" value="单价 X 建筑面积"/>
+				<input type="text" name="cale[]" value=""/>
 			</td>
 			<td>
 				<input type="button" class="dynBtn" name="deleteBtn" value="删除"/>
