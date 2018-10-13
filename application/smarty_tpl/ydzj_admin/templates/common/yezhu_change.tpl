@@ -32,3 +32,4 @@
           <td class="vatop rowform"><input type="text"  value="" name="yezhu_name" id="yezhu_name" class="txt"></td>
           <td class="vatop tips">{form_error('yezhu_name')}</td>
         </tr>
+        

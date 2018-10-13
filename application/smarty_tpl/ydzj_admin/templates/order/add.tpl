@@ -2,8 +2,6 @@
   {config_load file="order.conf"}
 
   {form_open(site_url($uri_string),'id="orderForm"')}
-
-  <input type="hidden" name="avatar_url" value=""/>
     <table class="table tb-type2 mgbottom">
       <tbody>
         <tr class="noborder">
@@ -28,25 +26,23 @@
           </td>
         </tr>
 		<tr class="noborder">
-          <td colspan="2"><label class="validation" for="name">{#amount#}:</label></td>
+          <td colspan="2"><label class="validation" for="name">{#amount#}:</label><label class="errtip" id="error_amount"></label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input type="text" value="{$info['amount']|escape}" name="amount" id="amount" class="txt"></td>
           <td class="vatop tips">{form_error('amount')}</td>
         </tr>
+        <tr class="noborder">
+          <td colspan="2" class="required"><label class="validation" for="star_time">{#start_date#}:</label><label class="errtip" id="error_start_date"></label>{form_error('start_date')}</td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform"><input type="text" value="{$search['start_date']}" name="start_date" value="" class="datepicker txt-short"/></td>
+        </tr>
 		<tr class="noborder">
-          <td colspan="2"><label class="validation" for="year">{#year#}:</label></td>
+          <td colspan="2"><label class="validation" for="year">{#end_date#}:</label><label class="errtip" id="error_end_date"></label>{form_error('end_date')}</td>
         </tr>
         <tr class="noborder">
-          <td class="vatop rowform"><input type="text" value="{$info['year']|escape}" name="year" id="year" class="txt"></td>
-          <td class="vatop tips">{form_error('year')}</td>
-        </tr>
-        <tr class="noborder">
-          <td colspan="2"><label class="validation" for="year">{#end_month#}:</label></td>
-        </tr>
-        <tr class="noborder">
-          <td class="vatop rowform"><input type="text" value="{$info['end_month']|escape}" name="end_month" id="end_month" class="txt"></td>
-          <td class="vatop tips">{form_error('end_month')}</td>
+          <td class="vatop rowform"><input type="text" value="{$search['end_date']}" name="end_date" value="" class="datepicker txt-short"/></td>
         </tr>
     <div class="fixedOpBar">
 		<input type="submit" name="tijiao" value="创建" class="msbtn"/>
@@ -59,6 +55,9 @@
 	$(function(){
 		$.loadingbar({ text: "正在提交..." , urls: submitUrl , container : "#orderForm" });
 		bindAjaxSubmit("#orderForm");
+		
+		$( ".datepicker" ).datepicker();
+	
 	});
   </script>
 {include file="common/main_footer.tpl"}

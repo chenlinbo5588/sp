@@ -70,7 +70,7 @@
 	
 	$(function(){
 		$(".popwin").bind('click',function(){
-			popWindowFn($(this),{ position: window, selector:"#detailDlg", width:'80%',height:600,title:'费用计划明细-' + $(this).attr('data-title') },{});
+			popWindowFn($(this),{ position: window, selector:"#detailDlg", width:'80%',height:'auto',title:'费用计划明细-' + $(this).attr('data-title') },{});
 		});
 	});
 	

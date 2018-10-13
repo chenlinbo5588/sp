@@ -3,7 +3,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 $entity = array(
 'id' => 'int',
+'house_id' => 'int',
 'address' => 'varchar',
+'fee_gname' => 'varchar',
 'parking_name' => 'varchar',
 'resident_id' => 'int',
 'resident_name' => 'varchar',
@@ -15,6 +17,8 @@ $entity = array(
 'billing_style' => 'varchar',
 'amount_plan' => 'float',
 'amount_real' => 'float',
+'amount_receive' => 'float',
+'month_payed' => 'int',
 'amount_payed' => 'float',
 'pay_method' => 'varchar',
 'stat_date' => 'int',

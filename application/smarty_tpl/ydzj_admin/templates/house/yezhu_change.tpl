@@ -19,6 +19,14 @@
           <td class="vatop tips">{form_error('address')}</td>
         </tr>
         {include file="common/yezhu_change.tpl"}
+        <tr>
+        <td>
+	      	<ul class="ulListStyle1 clearfix">
+			<li><label><input type="checkbox" name="change_status[]" value="add"/>同时录入家庭成员</label></li>
+			<li><label><input type="checkbox" name="change_status[]" value="delete"/>删除原家庭成员</label></li>
+ 			</ul>
+ 		</td>
+ 		</tr>
         <tr class="noborder">
           <td class="vatop rowform">
           	<input type="submit" name="tijiao" value="变更" class="msbtn"/>
@@ -27,7 +35,9 @@
 	    	{/if}
           </td>
         </tr>
+
       </tbody>
+      
     </table>
   </form>
   <script>

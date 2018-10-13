@@ -19,6 +19,13 @@
           <td class="vatop tips">{form_error('address')}</td>
         </tr>
         {include file="common/yezhu_add.tpl"}
+        
+        <tr>
+        <td>
+	      	<ul class="ulListStyle1 clearfix">
+			<li><label><input type="checkbox" name="ifdelete" value="yes"/>移除原物业</label></li>
+ 		</td>
+ 		</tr>
         <tr class="noborder">
           <td class="vatop rowform">
           	<input type="submit" name="tijiao" value="确定" class="msbtn"/>

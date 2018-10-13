@@ -609,15 +609,15 @@ class Yezhu extends Ydzj_Admin_Controller {
 						
 						$tmpRow['classname'] = 'failed';
 						
-						$tmpRow['name'] = getCleanValue($objWorksheet->getCell('D'.$rowIndex)->getValue());
-						$tmpRow['id_type'] = getCleanValue($objWorksheet->getCell('E'.$rowIndex)->getValue());
-						$tmpRow['id_no'] = getCleanValue($objWorksheet->getCell('F'.$rowIndex)->getValue());
-						$tmpRow['mobile'] = getCleanValue($objWorksheet->getCell('G'.$rowIndex)->getValue());
+						$tmpRow['name'] = getCleanValue($objWorksheet->getCell('E'.$rowIndex)->getValue());
+						$tmpRow['id_type'] = getCleanValue($objWorksheet->getCell('F'.$rowIndex)->getValue());
+						$tmpRow['id_no'] = getCleanValue($objWorksheet->getCell('G'.$rowIndex)->getValue());
+						$tmpRow['mobile'] = getCleanValue($objWorksheet->getCell('H'.$rowIndex)->getValue());
 						
 						//车牌
-						$tmpRow['car_no1'] = getCleanValue($objWorksheet->getCell('H'.$rowIndex)->getValue());
-						$tmpRow['car_no2'] = getCleanValue($objWorksheet->getCell('I'.$rowIndex)->getValue());
-						$tmpRow['car_no3'] = getCleanValue($objWorksheet->getCell('J'.$rowIndex)->getValue());
+						$tmpRow['car_no1'] = getCleanValue($objWorksheet->getCell('I'.$rowIndex)->getValue());
+						$tmpRow['car_no2'] = getCleanValue($objWorksheet->getCell('J'.$rowIndex)->getValue());
+						$tmpRow['car_no3'] = getCleanValue($objWorksheet->getCell('K'.$rowIndex)->getValue());
 						
 						$this->form_validation->reset_validation();
 						

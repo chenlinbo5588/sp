@@ -279,6 +279,7 @@ class Parking extends Ydzj_Admin_Controller {
 					$this->jsonOutput($this->form_validation->error_html(),array('errors' => $this->form_validation->error_array()));
 					break;
 				}
+
 				
 				$insertData = array_merge($_POST,$this->_prepareData(),$this->addWhoHasOperated('add'));
 				
@@ -286,7 +287,16 @@ class Parking extends Ydzj_Admin_Controller {
 				
 				$insertData['lng'] = $residentList[$residentId]['lng'];
 				$insertData['lat'] = $residentList[$residentId]['lat'];
-				
+				$houseInfo = $this->House_Model->getById(array(
+					'select' => 'id',
+					'where' => array(
+						'address' =>$_POST['address'],
+						'resident_id' => $residentId
+					)
+				));
+				if($houseInfo){
+					$insertData['house_id'] = $houseInfo['id'];
+				}
 				$newid =$this->Parking_Model->_add($insertData);
 				$error = $this->Parking_Model->getError();
 				
@@ -619,7 +629,7 @@ class Parking extends Ydzj_Admin_Controller {
 							continue;
 						}
 						
-						
+						 
 						$insertData = array_merge(array(
 							'resident_id' => $residentId,
 							'name' => $tmpRow['name'],
@@ -631,12 +641,16 @@ class Parking extends Ydzj_Admin_Controller {
 						),$this->addWhoHasOperated('add'));
 						
 						
-						if($tmpRow['expire']){
-							$ts = strtotime($tmpRow['expire']);
-							
-							if($ts){
-								$insertData['expire'] = strtotime(date('Y-m',$ts).'  last day of this month');
-							}
+						$houseInfo = $this->House_Model->getById(array(
+							'select' => 'id',
+							'where' => array(
+								'address' =>$tmpRow['address'],
+								'resident_id' => $residentId
+							)
+						));
+						
+						if($houseInfo){
+							$insertData['house_id'] = $houseInfo['id'];
 						}
 						
 						$yezhuInfo = $this->Yezhu_Model->getById(array(
@@ -661,6 +675,7 @@ class Parking extends Ydzj_Admin_Controller {
 							}
 						}
 						*/
+						
 						
 						$this->Parking_Model->_add($insertData);
 						

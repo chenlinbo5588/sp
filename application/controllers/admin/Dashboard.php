@@ -20,9 +20,11 @@ class Dashboard extends Ydzj_Admin_Controller {
 			array('url' => $this->_className.'/welcome','title' => '管理'),
 		);
 	}
-/**
- * 生成报表
- */
+	
+	
+	/**
+	 * 生成报表
+	 */
 	public function welcome(){
 		$residentId = $this->input->get_post('resident_id');
 		if(empty($residentId)){

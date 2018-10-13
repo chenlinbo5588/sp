@@ -24,10 +24,6 @@
           <th>{#resident_name#}</th>
           <th>{#type_name#}</th>
           <th>{#year#}</th>
-          <th>{#wuye_type#}</th>
-          <th>{#billing_style#}</th>
-          <th>{#price#}</th>
-          <th>{#name_detail#}</th>
           <th class="align-center">操作</th>
         </tr>
       </thead>
@@ -39,11 +35,7 @@
           <td>{$item['resident_name']|escape}</span></td>
           <td>{$item['name']}</td>
           <td>{$item['year']|escape}</span></td>
-          <td>{$item['wuye_type']}</td>
-          <td>{$item['billing_style']}</td>
-          <td><span class="editable" data-id="{$item['id']}" data-fieldname="price">{$item['price']}</span></td>
-          <td class="name"><span class="editable" data-id="{$item['id']}" data-fieldname="name">{$item['name_detail']|escape}</span></td>
-		  
+
           <td class="align-center">
           	{if isset($permission[$moduleClassName|cat:'/edit'])}<a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}">编辑</a>{/if}&nbsp;&nbsp;
           	{if isset($permission[$moduleClassName|cat:'/delete'])}<a href="javascript:void(0)" class="delete" data-url="{admin_site_url($moduleClassName|cat:'/delete')}" data-id="{$item['id']}">删除</a>{/if}

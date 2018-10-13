@@ -27,7 +27,7 @@ var cookiedomain = "{config_item('cookie_domain')}",
 <script type="text/javascript" src="{resource_url('js/toast/jquery.toast.min.js')}"></script>
 <script type="text/javascript" src="{resource_url('js/common.js',true)}"></script>
 <script type="text/javascript" src="{resource_url('js/admincp.js',true)}"></script>
-<script type="text/javascript" src="{resource_url('js/echarts.js',true)}"></script>
+
 </head>
 <body>
 <a name="top"></a>

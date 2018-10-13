@@ -53,7 +53,7 @@
           <td>{$item['fee_start']|date_format:"%Y-%m-%d"}</td>
           <td>{$item['fee_expire']|date_format:"%Y-%m-%d"}</td>
           <td>{$item['goods_name']}</td>
-          <td>{$OrderStatus[$item['status']]}</td>
+          <td {if $OrderStatus[$item['status']] == '已支付'}class="successText"{/if}>{$OrderStatus[$item['status']]}</td>
           <td>{$item['gmt_create']|date_format:"%Y-%m-%d %H:%M:%S"}</td>
           <td>{$item['time_expire']|date_format:"%Y-%m-%d %H:%M:%S"}</td>
           <td>{$item['pay_time_end']|date_format:"%Y-%m-%d %H:%M:%S"}</td>  

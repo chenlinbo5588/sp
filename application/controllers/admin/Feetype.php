@@ -29,8 +29,8 @@ class Feetype extends Ydzj_Admin_Controller {
 		$this->_subNavs = array(
 			array('url' => $this->_className.'/index','title' => '管理'),
 			array('url' => $this->_className.'/add','title' => '添加'),
-			array('url' => $this->_className.'/import','title' => '导入'),
-			array('url' => $this->_className.'/export','title' => '导出'),
+			//array('url' => $this->_className.'/import','title' => '导入'),
+			//array('url' => $this->_className.'/export','title' => '导出'),
 		);
 		
 	}
@@ -112,13 +112,13 @@ class Feetype extends Ydzj_Admin_Controller {
 	}
 	
 	
-	
 	/**
 	 * 
 	 */
 	private function _prepareData(){
 		
 		$data['displayorder'] = $this->input->post('displayorder');
+		
 		return array(
 			'displayorder' => $data['displayorder'] ? $data['displayorder'] : 255
 		);
@@ -153,14 +153,15 @@ class Feetype extends Ydzj_Admin_Controller {
 		$billingStyleList = $this->basic_data_service->getTopChildList('计费方式');
 		$wuyeTypeList = $this->basic_data_service->getTopChildList('物业类型');
 		
+		$this->form_validation->set_rules('name','费用名称','required|in_list[物业费,能耗费]');
 		
-		$this->form_validation->set_rules('name','费用类型','required|in_list['.implode(',',array_keys($feeNameList)).']');
+		$this->form_validation->set_rules('feeName[]','费用类型','required|in_list['.implode(',',array_keys($feeNameList)).']');
 		$this->form_validation->set_rules('year','缴费年份','required|is_natural_no_zero|greater_than_equal_to[2017]|less_than[2099]');
 		
-		$this->form_validation->set_rules('price','单价','required|is_numeric');
+		$this->form_validation->set_rules('price[]','单价','required|is_numeric');
 		
-		$this->form_validation->set_rules('billing_style','计费方式','required|in_list['.implode(',',array_keys($billingStyleList)).']');
-		$this->form_validation->set_rules('wuye_type','物业类型','required|in_list['.implode(',',array_keys($wuyeTypeList)).']');
+		$this->form_validation->set_rules('billingStyle[]','计费方式','required|in_list['.implode(',',array_keys($billingStyleList)).']');
+		$this->form_validation->set_rules('wuyeType[]','物业类型','required|in_list['.implode(',',array_keys($wuyeTypeList)).']');
 		
 	}
 	
@@ -177,18 +178,17 @@ class Feetype extends Ydzj_Admin_Controller {
 				
 				$residentList = $this->wuye_service->search('小区',array(),'id');
 				$this->form_validation->set_rules('resident_id','小区名称','required|in_list['.implode(',',array_keys($residentList)).']');
-
-		
-				$this->_addFeetypeRules();
-				
+ 				
 				if(!$this->form_validation->run()){
 					$this->jsonOutput('数据校验失败,'.$this->form_validation->error_string(),array('errors' => $this->form_validation->error_array()));
 					break;
 				}
-				$_POST['name_detail'] = $residentList[$_POST['resident_id']]['name'].$_POST['wuye_type'].$_POST['year'].$_POST['name'];
+				
+				$feeRule = $this->wuye_service->combinationFeeRule($_POST);
+				
 				$info = array_merge($_POST,$this->_prepareData(),$this->addWhoHasOperated('add'));
 				$info['resident_name'] = $residentList[$info['resident_id']]['name'];
-				
+				$info['fee_rule'] = json_encode($feeRule);;
 				$newid =$this->Feetype_Model->_add($info);
 				
 				$error = $this->Feetype_Model->getError();
@@ -227,27 +227,33 @@ class Feetype extends Ydzj_Admin_Controller {
 		
 		$info = $this->Feetype_Model->getFirstByKey($id);
 		$this->_subNavs[] = array('url' => $this->_className.'/edit?id='.$id, 'title' => '编辑');
-		
+		$feeRule = (json_decode($info['fee_rule'],true));
 		if($this->isPostRequest()){
 			
 			$residentList = $this->wuye_service->search('小区',array(),'id');
 			$this->form_validation->set_rules('resident_id','小区名称','required|in_list['.implode(',',array_keys($residentList)).']');
 				
-				
-			$this->_addFeetypeRules();
 			
 			for($i = 0; $i < 1; $i++){
-				$_POST['name'] = $residentList[$_POST['resident_id']]['name'].$_POST['wuye_type'].$_POST['year'].$_POST['name'];
-				$info = array_merge($_POST,$this->_prepareData(),$this->addWhoHasOperated('edit'));
 				
+				$info = array_merge($_POST,$this->_prepareData(),$this->addWhoHasOperated('edit'));
+				$this->_addFeeTypeRules();
+				foreach($_POST['feeName'] as $key =>$item){
+					if('物业费' != $item){
+						$this->form_validation->set_rules('wuyeType[]','物业类型','required|in_list[普通]');
+					}
+				}
 				if(!$this->form_validation->run()){
 					$this->jsonOutput('数据校验失败,'.$this->form_validation->error_string(),array('errors' => $this->form_validation->error_array()));
 					break;
 				}
-				
+				$feeRule = $this->wuye_service->combinationFeeRule($_POST);
+				$info = array_merge($_POST,$this->_prepareData(),$this->addWhoHasOperated('add'));
 				$info['resident_name'] = $residentList[$info['resident_id']]['name'];
+				$info['fee_rule'] = json_encode($feeRule);;
 				
-				$this->Feetype_Model->update(array_merge($_POST,$this->addWhoHasOperated('edit')),array('id' => $id));
+				$this->Feetype_Model->update($info,array('id' => $id));
+				
 				$error = $this->Feetype_Model->getError();
 				
 				if(QUERY_OK != $error['code']){
@@ -264,8 +270,9 @@ class Feetype extends Ydzj_Admin_Controller {
 			}
 		}else{
 			
-			$this->assign('info',$info);
 			
+			$this->assign('info',$info);
+			$this->assign('fee_rule',$feeRule);
 			$this->_commonPageData();
 			$this->display($this->_className.'/add');
 			
@@ -414,11 +421,13 @@ class Feetype extends Ydzj_Admin_Controller {
 						$tmpRow['name'] = getCleanValue($objWorksheet->getCell('A'.$rowIndex)->getValue());
 						$tmpRow['year'] = getCleanValue($objWorksheet->getCell('B'.$rowIndex)->getValue());
 						
-						$tmpRow['resident_name'] = $residentInfo['name'];
+						$tmpRow['resident_name'] = getCleanValue($objWorksheet->getCell('C'.$rowIndex)->getValue());
 						
-						$tmpRow['price'] = getCleanValue($objWorksheet->getCell('D'.$rowIndex)->getValue());
-						$tmpRow['billing_style'] = getCleanValue($objWorksheet->getCell('E'.$rowIndex)->getValue());
-						$tmpRow['wuye_type'] = getCleanValue($objWorksheet->getCell('F'.$rowIndex)->getValue());
+						$tmpRow['fee_rule'][0]['feeName'] = getCleanValue($objWorksheet->getCell('D'.$rowIndex)->getValue());
+						$tmpRow['fee_rule'][0]['price'] = getCleanValue($objWorksheet->getCell('D'.$rowIndex)->getValue());
+						$tmpRow['fee_rule'][0]['wuyeType'] = getCleanValue($objWorksheet->getCell('D'.$rowIndex)->getValue());
+						$tmpRow['fee_rule'][0]['billingStyle'] = getCleanValue($objWorksheet->getCell('D'.$rowIndex)->getValue());
+						$tmpRow['fee_rule'][0]['cale'] = getCleanValue($objWorksheet->getCell('D'.$rowIndex)->getValue());
 						
 						$this->form_validation->reset_validation();
 						$this->form_validation->set_data($tmpRow);
@@ -444,9 +453,9 @@ class Feetype extends Ydzj_Admin_Controller {
 							'resident_name' => $tmpRow['resident_name'],
 							'price' => $tmpRow['price'],
 							'billing_style' => $tmpRow['billing_style'],
-							'name_detail' => $tmpRow['resident_name'].$tmpRow['wuye_type'].$tmpRow['year'].$tmpRow['name'],
 							
 						),$this->addWhoHasOperated('add'));
+						
 						//print_r($residentInfo);
 						//print_r($insertData);
 						$this->Feetype_Model->_add($insertData);
@@ -562,7 +571,6 @@ class Feetype extends Ydzj_Admin_Controller {
     		'D' => array('db_key' => 'price','width' => 15 ,'title' => '单价'),
     		'E' => array('db_key' => 'wuye_type','width' => 20 ,'title' => '物业类型'),
     		'F' => array('db_key' => 'billing_style','width' => 20 ,'title' => '计费方式'),
-    		'G' => array('db_key' => 'name_detail','width' => 50 ,'title' => '详细名称'),
     	);
 	
     }

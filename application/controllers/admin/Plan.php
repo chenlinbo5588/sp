@@ -8,7 +8,6 @@ class Plan extends Ydzj_Admin_Controller {
 		
 		$this->load->library(array('Wuye_service','Basic_data_service'));
 		
-		
 		$this->wuye_service->setDataModule($this->_dataModule);
 		
 		
@@ -103,30 +102,28 @@ class Plan extends Ydzj_Admin_Controller {
 		$this->Plan_Detail_Model->setTableId(date('Y'));
 		$id = $this->input->get_post('id') ? $this->input->get_post('id') : 0;
 		
-		$planList = $this->wuye_service->search('收费计划',array(
+		$planDetail = $this->wuye_service->search('收费计划',array(
 			'where' => array('id' => $id,)
 		));
+		
 		$condition = array(
 			'order' => 'id DESC',
 		);
-		foreach($planList as $key => $item){
-			$condition['where']['address'] = $item['address'];
-			if('能耗费' == $item['feetype_name'])
-			{
-				$condition['where']['feetype_name'] = $item['feetype_name'];
-			}else if('物业费' == $item['feetype_name'])
-			{
-				$condition['where']['feetype_name'] = '物业费';
-				$wuyeList = $this->wuye_service->search( '收费计划详情', $condition);
-				$condition['where']['feetype_name'] = '车位费';
-			}			
-		}
-		$list = $this->wuye_service->search( '收费计划详情', $condition);
-		if(!empty($wuyeList)){
-			$list = array_merge_recursive($wuyeList,$list);
-		}
-
 		
+		$condition['where']['address'] = $planDetail[0]['address'];
+		
+		if('能耗费' == $planDetail[0]['feetype_name'])
+		{
+			$condition['where']['feetype_name'] = $planDetail[0]['feetype_name'];
+			
+		}else if('物业费' == $planDetail[0]['feetype_name'])
+		{
+			$condition['where_in'][] = array(
+				'key' => 'feetype_name',
+				'value' => array('物业费','车位费')
+			);
+		}
+		$list = $this->wuye_service->search('收费计划详情', $condition);
 		$this->assign('list',$list);
 		
 		$this->display();
@@ -213,21 +210,21 @@ class Plan extends Ydzj_Admin_Controller {
 		),'id');
 		foreach($planDetailList as $key => $valus){
 			$planDetailList[$key]['amount_real'] = $modify ;
-			$address[] = $planDetailList[$key]['address'];
+			$houseIdList[] = $planDetailList[$key]['house_id'];
 			
 		}
 
 		$this->Plan_Detail_Model->batchUpdate($planDetailList);
-		array_unique($address);
+		array_unique($houseIdList);
 		$planlList = $this->wuye_service->search('收费计划',array(
 			'where_in' => array(
-				array('key' => 'address', 'value' => $address)
+				array('key' => 'house_id', 'value' => $houseIdList)
 			)
 		),'id');
 		foreach($planlList as $key => $item){
 			$detailList = $this->wuye_service->search('收费计划详情',array(
 				'where' => array(
-					'address' => $item['address']
+					'house_id' => $item['house_id']
 				)
 			));
 			$wuyeMoney = 0;

@@ -22,33 +22,16 @@
 	         </td>
         </tr>
         <tr class="noborder">
-          <td colspan="2" class="required"><label class="validation" for="type_name">{#type_name#}:</label></td>
+          <td colspan="2" class="required"><label class="validation" for="name">费用名称</label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform">
-          	<select name="name">
-	          <option value="">请选择...</option>
-	          {foreach from=$feeNameList item=item}
-	          <option {if $info['name'] == $item['show_name']}selected{/if} value="{$item['show_name']}">{$item['show_name']}</option>
-	          {/foreach}
-	        </select>
+				<input type="text" value="{$info['name']|escape}" name="name" id="name" class="txt">
           </td>
+
           <td class="vatop tips"><label id="error_fee_id"></label>{form_error('name')}</td>
         </tr>
-        <tr class="noborder">
-          <td colspan="2" class="required"><label class="validation" for="type_name">{#wuye_type#}:</label></td>
-        </tr>
-        <tr class="noborder">
-          <td class="vatop rowform">
-          	<select name="wuye_type">
-	          <option value="">请选择...</option>
-	          {foreach from=$wuyeTypeList item=item}
-	          <option {if $info['wuye_type'] == $item['show_name']}selected{/if} value="{$item['show_name']}">{$item['show_name']}</option>
-	          {/foreach}
-	        </select>
-          </td>
-          <td class="vatop tips"><label id="error_fee_id"></label>{form_error('biliing_type')}</td>
-        </tr>
+        
     	<tr class="noborder">
           <td colspan="2"><label class="validation" for="year">{#year#}: </label></td>
         </tr>
@@ -59,27 +42,105 @@
           <td class="vatop tips"><label id="error_fee_year"></label>{form_error('year')}</td>
         </tr>
         <tr class="noborder">
-          <td colspan="2"><label class="validation" for="price">{#price#}: </label></td>
+          <td colspan="2"><label class="validation">费用配置: </label></td>
         </tr>
-   		<tr class="noborder">
-          <td class="vatop rowform">
-          	<input type="text" value="{$info['price']|escape}" name="price" id="price" class="txt">
-          </td>
-          <td class="vatop tips"><label id="error_price"></label>{form_error('price')}</td>
-        </tr>
-        <tr class="noborder">
-          <td colspan="2"><label class="validation" for="price">{#billing_style#}: </label></td>
-        </tr>
-   		<tr class="noborder">
-          <td class="vatop rowform">
-          	<select name="billing_style">
-	          <option value="">请选择...</option>
-	          {foreach from=$billingStyleList item=item}
-	          <option {if $info['billing_style'] == $item['show_name']}selected{/if} value="{$item['show_name']}">{$item['show_name']}</option>
-	          {/foreach}
-	        </select>
-          </td>
-          <td class="vatop tips"><label id="error_fee_type"></label>{form_error('fee_type')}</td>
+        <tr>
+        	<td colspan="2">
+        		<table id="feeConfigTable">
+        			<thead>
+        				<tr>
+        					<th>费用类型</th>
+        					<th>单价</th>
+        					<th>物业类型</th>
+        					<th>计费方式</th>
+        					<th>计算公式</th>
+        					<th>操作</th>
+        				</tr>
+        			</thead>
+        			<tbody>
+        				
+        				<tr>
+        					<td>
+        						<select name="feeName[]">
+						          <option value="">请选择...</option>
+						          {foreach from=$feeNameList item=item}
+						          <option {if $fee_rule[0]['feeName'] == $item['show_name']}selected{/if}  value="{$item['show_name']}">{$item['show_name']}</option>
+						          {/foreach}
+						        </select>
+        					</td>
+        					<td>
+        						<input type="text" name="price[]" value="{$fee_rule[0]['price']|escape}"/>
+        					</td>
+        					<td>
+        						<select name="wuyeType[]">
+						          <option value="">请选择...</option>
+						          {foreach from=$wuyeTypeList item=item}
+						          <option {if $fee_rule[0]['wuyeType'] == $item['show_name']}selected{/if} value="{$item['show_name']}">{$item['show_name']}</option>
+						          {/foreach}
+						        </select>
+        					</td>
+        					<td>
+        						<select name="billingStyle[]">
+						          <option value="">请选择...</option>
+						          {foreach from=$billingStyleList item=item}
+						          <option {if $fee_rule[0]['billingStyle'] == $item['show_name']}selected{/if} value="{$item['show_name']}">{$item['show_name']}</option>
+						          {/foreach}
+						        </select>
+        					</td>
+        					<td>
+        						<input type="text" name="cale[]" value="{$fee_rule[0]['cale']|escape}"/>
+        					</td>
+        					<td>
+        						<input type="button" class="dynBtn" name="addBtn" value="添加"/>
+        					</td>
+        					 <td class="vatop tips">{form_error('displayorder')} 当费用类型不为物业费时，物业类型只能选择普通</td>
+        				</tr>
+        				{if $fee_rule}
+						  {foreach from=$fee_rule key=key item=valus}
+						  	{if $key>0}
+		        				<tr>
+		        					<td>
+		        						<select name="feeName[]">
+								          <option value="">请选择...</option>
+								          {foreach from=$feeNameList item=item}
+								          <option {if $valus['feeName'] == $item['show_name']}selected{/if}  value="{$item['show_name']}">{$item['show_name']}</option>
+								          {/foreach}
+								        </select>
+		        					</td>
+		        					<td>
+		        						<input type="text" name="price[]" value="{$valus['price']|escape}"/>
+		        					</td>
+		        					<td>
+		        						<select name="wuyeType[]">
+								          <option value="">请选择...</option>
+								          {foreach from=$wuyeTypeList item=item}
+								          <option {if $valus['wuyeType'] == $item['show_name']}selected{/if} value="{$item['show_name']}">{$item['show_name']}</option>
+								          {/foreach}
+								        </select>
+		        					</td>
+		        					<td>
+		        						<select name="billingStyle[]">
+								          <option value="">请选择...</option>
+								          {foreach from=$billingStyleList item=item}
+								          <option {if $valus['billingStyle'] == $item['show_name']}selected{/if} value="{$item['show_name']}">{$item['show_name']}</option>
+								          {/foreach}
+								        </select>
+		        					</td>
+		        					<td>
+		        						<input type="text" name="cale[]" value="{$valus['cale']|escape}"/>
+		        					</td>
+									<td>
+										<input type="button" class="dynBtn" name="deleteBtn" value="删除"/>
+									</td>
+								</tr>
+							{/if}
+						  {/foreach}
+						{/if}
+        				
+        			</tbody>
+        		</table>
+        		
+        	</td>
         </tr>
         <tr>
           <td colspan="2" class="required"><label>排序:</label></td>
@@ -88,6 +149,14 @@
           <td class="vatop rowform"><input type="text" value="{if $info['displayorder']}{$info['displayorder']}{else}255{/if}" name="displayorder" id="displayorder" class="txt"></td>
           <td class="vatop tips">{form_error('displayorder')} 数字范围为0~255，数字越小越靠前</td>
         </tr>
+        <tr>
+        <td>
+	      	<ul class="ulListStyle1 clearfix">
+			<li {if $info['generate_plan'] == 1}class="selected"{/if}><label><input type="checkbox" name="generate_plan" value="1" {if $info['generate_plan'] == 1} checked="checked"{/if}/>生成计划</label></li>
+			<li {if $info['generate_deatil'] == 1}class="selected"{/if}><label><input type="checkbox" name="generate_deatil" value="1" {if $info['generate_deatil'] == 1} checked="checked"{/if}/>生成明细</label></li>
+ 			</ul>
+ 		</td>
+ 		</tr>
         <tr class="noborder">
           <td class="vatop rowform">
           	<input type="submit" name="tijiao" value="保存" class="msbtn"/>
@@ -99,12 +168,48 @@
       </tbody>
     </table>
   </form>
+  
+
+  
+  <script type="x-template" id="templateRow">
+		<tr>
+			<td>
+				<select name="feeName[]">
+		          <option value="">请选择...</option>
+		          {foreach from=$feeNameList item=item}
+		          <option value="{$item['show_name']}">{$item['show_name']}</option>
+		          {/foreach}
+		        </select>
+			</td>
+			<td>
+				<input type="text" name="price[]" value=""/>
+			</td>
+			<td>
+				<select name="wuyeType[]">
+		          <option value="">请选择...</option>
+		          {foreach from=$wuyeTypeList item=item}
+		          <option value="{$item['show_name']}">{$item['show_name']}</option>
+		          {/foreach}
+		        </select>
+			</td>
+			<td>
+				<select name="billingStyle[]">
+		          <option value="">请选择...</option>
+		          {foreach from=$billingStyleList item=item}
+		          <option value="{$item['show_name']}">{$item['show_name']}</option>
+		          {/foreach}
+		        </select>
+			</td>
+			<td>
+				<input type="text" name="cale[]" value="单价 X 建筑面积"/>
+			</td>
+			<td>
+				<input type="button" class="dynBtn" name="deleteBtn" value="删除"/>
+			</td>
+		</tr>
+  </script>
   <script type="text/javascript">
 	var submitUrl = [new RegExp("{$uri_string}")];
-	
-	$(function(){
-		$.loadingbar({ text: "正在提交..." , urls: submitUrl , container : "#infoform" });
-		bindAjaxSubmit("#infoform");
-	});
   </script>
+  <script type="text/javascript" src="{resource_url('js/service/feetype_add.js',true)}"></script>
 {include file="common/main_footer.tpl"}
