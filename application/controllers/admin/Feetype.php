@@ -165,7 +165,7 @@ class Feetype extends Ydzj_Admin_Controller {
 		
 	}
 	
-	
+
 	/**
 	 * 
 	 */
@@ -185,19 +185,20 @@ class Feetype extends Ydzj_Admin_Controller {
 						$this->form_validation->set_rules('wuyeType['.$key.']','物业类型','required|in_list[普通]');
 					}
 				}
-				if('能耗费' == $_POST['name']){
-					$this->form_validation->set_rules('generate_deatil','生成明细','differs[1]','能耗费无法生成明细');
-				}
+
 				if(!$this->form_validation->run()){
 					$this->jsonOutput('数据校验失败,'.$this->form_validation->error_string(),array('errors' => $this->form_validation->error_array()));
 					break;
 				}
-				
+				if($this->_validaterules($_POST)){
+					break;
+				}
 				$feeRule = $this->wuye_service->combinationFeeRule($_POST);
 				
 				$info = array_merge($_POST,$this->_prepareData(),$this->addWhoHasOperated('add'));
 				$info['resident_name'] = $residentList[$info['resident_id']]['name'];
 				$info['fee_rule'] = json_encode($feeRule);;
+				
 				$newid =$this->Feetype_Model->_add($info);
 				
 				$error = $this->Feetype_Model->getError();
@@ -256,11 +257,17 @@ class Feetype extends Ydzj_Admin_Controller {
 					$this->jsonOutput('数据校验失败,'.$this->form_validation->error_string(),array('errors' => $this->form_validation->error_array()));
 					break;
 				}
+
+				if($this->_validaterules($_POST)){
+					break;
+				}
 				$feeRule = $this->wuye_service->combinationFeeRule($_POST);
 				$info = array_merge($_POST,$this->_prepareData(),$this->addWhoHasOperated('add'));
 				$info['resident_name'] = $residentList[$info['resident_id']]['name'];
 				$info['fee_rule'] = json_encode($feeRule);;
-				
+				if(empty($info['generate_deatil'])){
+					$info['generate_deatil'] = 0;						
+				}
 				$this->Feetype_Model->update($info,array('id' => $id));
 				
 				$error = $this->Feetype_Model->getError();
@@ -288,7 +295,26 @@ class Feetype extends Ydzj_Admin_Controller {
 		}
 		
 	}
-	
+	private function _validaterules($validaterules){
+		
+		$nameList = array();
+		foreach($validaterules['feeName'] as $key => $value){
+			$onlyName = $validaterules['feeName'][$key].$validaterules['wuyeType'][$key];
+
+			if(in_array($onlyName,$nameList)){
+				$judgement = true;
+				$this->jsonOutput('同一个类型不能重复设置');
+				break;
+			}else{
+				$nameList[] = $onlyName;
+			}
+		}
+		if('能耗费' == $_POST['name'] && 1 == $_POST['generate_deatil']){
+			$this->jsonOutput('能耗费不能生成明细');
+			$judgement = true;
+		}
+		return $judgement;
+	}
 	
 	
 	/**
