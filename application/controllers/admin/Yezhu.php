@@ -588,7 +588,12 @@ class Yezhu extends Ydzj_Admin_Controller {
 					if(($highestRow + 1) > $importMaxLimit){
 						$highestRow = $importMaxLimit + 1;
 					}
-					
+					$allBuildingList = $this->wuye_service->search('建筑物',array(
+						'select' => 'id,resident_id,name,lng,lat',
+						'where' => array(
+							'resident_id' => $residentId
+						)
+					),'name');
 					
 					
 					
@@ -608,6 +613,7 @@ class Yezhu extends Ydzj_Admin_Controller {
 						$tmpRow = array();
 						
 						$tmpRow['classname'] = 'failed';
+						$tmpRow['building_name'] = getCleanValue($objWorksheet->getCell('A'.$rowIndex)->getValue());
 						
 						$tmpRow['name'] = getCleanValue($objWorksheet->getCell('E'.$rowIndex)->getValue());
 						$tmpRow['id_type'] = getCleanValue($objWorksheet->getCell('F'.$rowIndex)->getValue());
@@ -620,6 +626,13 @@ class Yezhu extends Ydzj_Admin_Controller {
 						$tmpRow['car_no3'] = getCleanValue($objWorksheet->getCell('K'.$rowIndex)->getValue());
 						
 						$this->form_validation->reset_validation();
+						$realResident = $this->wuye_service->search('建筑物',array(
+							'select' => 'resident_id',
+							'where' => array(
+							'name' => $tmpRow['building_name']
+						) 
+						));
+						
 						
 						if(('身份证' == $tmpRow['id_type'] || '驾驶证' == $tmpRow['id_type']) && strlen($tmpRow['id_no']) >= 15){
 							$sex = intval(substr($tmpRow['id_no'],-2,1));
@@ -638,6 +651,7 @@ class Yezhu extends Ydzj_Admin_Controller {
 						
 						$this->wuye_service->addIDRules($idTypeList,$tmpRow['id_type'],0,false);
 						
+						
 						$this->form_validation->set_rules('name','姓名','required|max_length[50]');
 						$this->form_validation->set_rules('birthday','出生年月','required|valid_date');
 						$this->form_validation->set_rules('age','年龄','required|is_natural_no_zero');
@@ -645,7 +659,9 @@ class Yezhu extends Ydzj_Admin_Controller {
 						$this->form_validation->set_rules('mobile','手机号码','required|valid_mobile');
 						//设置籍贯
 						$this->form_validation->set_rules('jiguan','籍贯','required|in_list['.implode(',',array_values($provinceIdcard)).']');
-						
+						$this->form_validation->set_rules('building_name','建筑物名称', 'required|in_list['.implode(',',array_keys($allBuildingList)).']',array(
+							'in_list' => '该小区没有该建筑物.'
+				        ));
 						
 						if(!$this->form_validation->run()){
 							$tmpRow['message'] = $this->form_validation->error_first_html();
@@ -662,7 +678,7 @@ class Yezhu extends Ydzj_Admin_Controller {
 						}
 						
 						$insertData = array(
-							'resident_id' => $residentInfo['id'],
+							'resident_id' => $residentId,
 							'name' => $tmpRow['name'],
 							'mobile' => $tmpRow['mobile'],
 							'id_type' => $idTypeList[$tmpRow['id_type']]['id'],
