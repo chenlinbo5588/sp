@@ -360,7 +360,7 @@ class Order_service extends Base_service {
 	/**
 	 * 创建 物业费 、能耗费 、车位费 订单
 	 */
-	public function createWuyeOrder($keyId,$pParam,$pYezhuInfo,&$message,$from = 'wx'){
+	public function createWuyeOrder($keyId,$pParam,$memberInfo,&$message,$from = 'wx'){
 		
 
 		self::$CI->load->library('Wuye_service');
@@ -376,7 +376,7 @@ class Order_service extends Base_service {
 			
 			if($pParam['order_id']){
 				
-				$pParam['uid'] = $pYezhuInfo['uid'];
+				$pParam['uid'] = $memberInfo['uid'];
 
 				self::$CI->form_validation->set_data($pParam);
 				
@@ -402,31 +402,23 @@ class Order_service extends Base_service {
 				
 				$whichField = '';
 				
-				if('车位费' != $orderInfo['order_typename']){
-					$info = self::$CI->House_Model->getFirstByKey($orderInfo['goods_id'],'id','wuye_expire,nenghao_expire');
-					
-					switch($orderInfo['order_typename']){
-						case '物业费':
-							$whichField = 'wuye_expire';
-							break;
-						case '能耗费':
-							$whichField = 'nenghao_expire';
-							break;
-						default:
-							break;
-					}
-				}else{
-					$whichField = 'expire';
-					
-					$info = self::$CI->Parking_Model->getFirstByKey($orderInfo['goods_id'],'id','expire');
-				}
+				$info = self::$CI->House_Model->getFirstByKey($orderInfo['goods_id'],'id','wuye_expire,nenghao_expire');
 				
+				switch($orderInfo['order_typename']){
+					case '物业费':
+						$whichField = 'wuye_expire';
+						break;
+					case '能耗费':
+						$whichField = 'nenghao_expire';
+						break;
+					default:
+						break;
+				}
 				
 				if(empty($whichField)){
 					$message = '订单类型非法';
 					break;
 				}
-				
 				
 				if(time() >= strtotime($orderInfo['time_expire'])){
 					$this->updateOrderStatusByIds(array($orderInfo['id']),OrderStatus::$closed,OrderStatus::$unPayed);
@@ -447,7 +439,7 @@ class Order_service extends Base_service {
 				self::$CI->form_validation->set_rules('order_typename','订单类型','in_db_list['.$this->_orderTypeModel->getTableRealName().'.name]');
 				
 				
-			if(empty($param['id']) && !empty($param['address'])){
+				if(empty($param['id']) && !empty($param['address'])){
 					$tempHouseInfo = $wuyeService->search('房屋',array(
 						'select' => 'id',
 						'where' => array(
@@ -456,7 +448,7 @@ class Order_service extends Base_service {
 					));
 					
 					if($tempHouseInfo[0]){
-						$param['id'] = $tempHouseInfo[0]['id'];
+						$param[$keyId] = $tempHouseInfo[0]['id'];
 					}
 				}
 				
@@ -492,15 +484,31 @@ class Order_service extends Base_service {
 
 				//开始创建订单
 				
-				
 				$pParam['order_type'] = self::$orderType['nameKey'][$pParam['order_typename']]['id'];
 				
-				$pParam['uid'] = $pYezhuInfo['uid'];
-				$pParam['add_username'] = $pYezhuInfo['name'];
-				$pParam['username'] = $pYezhuInfo['name'];
+				$pParam['uid'] = $memberInfo['uid'];
+				
+				$yezhuInfo = self::$CI->Yezhu_Model->getById(array(
+					'where' => array(
+						'resident_id' => $currentFeeExpire['resident_id'],
+						'mobile' => $memberInfo['mobile']
+					)
+				));
+				
+				if($yezhuInfo){
+					$pParam['add_username'] = $yezhuInfo['name'];
+					$pParam['username'] = $pParam['add_username'];
+					
+				}else{
+					$pParam['add_username'] = $memberInfo['username'];
+					$pParam['username'] = $memberInfo['username'];
+					
+				}
+				
+				
 				
 				//联系方式
-				$pParam['mobile'] = $pYezhuInfo['mobile'];
+				$pParam['mobile'] = $memberInfo['mobile'];
 				
 				//异步回调
 				$pParam['notify_url'] = site_url(self::$orderType['nameKey'][$pParam['order_typename']]['order_url']);

@@ -202,6 +202,9 @@ class Order extends Ydzj_Admin_Controller {
 				
 				$message = '';
 				$yezhuInfo = $this->Yezhu_Model->getFirstByKey($houseItem[0]['yezhu_id'],'id');
+				
+				
+				
 				$this->Plan_Model->beginTrans();
 				
 				$result = $this->order_service->createWuyeOrder('house_id',$param,$yezhuInfo,$message,'Backstage');

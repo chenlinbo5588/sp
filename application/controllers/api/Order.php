@@ -347,56 +347,32 @@ class Order extends Wx_Controller {
 		}
 	}
 	
-	/**
-	 * 创建车位费 订单
-	 */
-	public function createParkingOrder(){
-		
-		if($this->yezhuInfo){
-			$message = '';
-			
-			$callPayJson = $this->order_service->createWuyeOrder('id',$this->postJson,$this->yezhuInfo,$message);
-			
-			if($callPayJson){
-				$this->jsonOutput2(RESP_SUCCESS,$callPayJson);
-			}else{
-				$this->jsonOutput2($message);
-			}
-			
-		}else{
-			
-			$this->jsonOutput2(UNBINDED,$this->unBind);
-		}
-		
-	}
-	
-	
-	
-	
 	
 	
 	/**
 	 * 创建物业费、能耗费 订单
 	 */
 	public function createWuyeOrder(){
-		
-		if($this->yezhuInfo){
-			
+		if($this->memberInfo){
 			$message = '';
 			
-			$callPayJson = $this->order_service->createWuyeOrder('house_id',$this->postJson,$this->yezhuInfo,$message);
+			if('物业费' == $this->postJson['order_typename']){
+				$this->postJson['end_month'] = 12;
+			}
+			
+			$callPayJson = $this->order_service->createWuyeOrder('house_id',$this->postJson,$this->memberInfo,$message);
 			
 			if($callPayJson){
+				
 				$this->jsonOutput2(RESP_SUCCESS,$callPayJson);
+				
 			}else{
 				$this->jsonOutput2($message);
 			}
 			
 		}else{
-			
 			$this->jsonOutput2(UNBINDED,$this->unBind);
 		}
-		
 	}
 	
 	
