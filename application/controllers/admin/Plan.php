@@ -83,9 +83,8 @@ class Plan extends Ydzj_Admin_Controller {
 	    	
 	    	$year = $_POST['year'];
 
-			$resident_id = $this->input->get_post('resident_id');	
+			$resident_id = $this->input->get_post('resident_id');
 			$result = $this->wuye_service->generationPlan($resident_id,$this->addWhoHasOperated(),$year);
-			$this->Plan_Model->setTableId($year);
 		
 			$this->jsonOutput('生成成功,'.$result['successCnt'].'条,生成失败'.$result['failedCnt'].'条');
 		}else{

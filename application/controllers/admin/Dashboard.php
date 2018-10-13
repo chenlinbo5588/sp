@@ -188,7 +188,6 @@ class Dashboard extends Ydzj_Admin_Controller {
 					}
 				}
 			}
-			print_r($realReportList);
 			$this->Payment_Report_Year_Model->_add($realReportList['物业费']);
 			$this->Payment_Report_Year_Model->_add($realReportList['能耗费']);
 		}

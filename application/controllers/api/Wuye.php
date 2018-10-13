@@ -10,176 +10,65 @@ class Wuye extends Wx_Controller {
 	}
 	
 	
-	/**
-	 * 获得 微信用户关联  车位列表
-	 */
-	public function getYezhuParkingList(){
-		if($this->yezhuInfo){
-			
-			$d = $this->wuye_service->getParkingListByYezhu($this->yezhuInfo);
-			
-			if($d){
-				$this->jsonOutput2(RESP_SUCCESS,$d);
-			}else{
-				$this->jsonOutput2(RESP_ERROR);
-			}
-			
-		}else{
-			if($this->memberInfo){
-				$this->jsonOutput2(NONOWNER);
-			}else{
-				$this->jsonOutput2(UNBINDED,$this->unBind);
-			}
-			
-		}
-	}
-	
-	
-	/**
-	 * 获得车位详情
-	 */
-	public function getYezhuParkingDetail(){
-		
-		if($this->yezhuInfo){
-			$id = $this->input->get('id');
-			
-			for($i = 0; $i < 1; $i++){
-				
-				$data = array(
-					'id' => $id
-				);
-				
-				$this->form_validation->set_data($data);
-				$this->form_validation->set_rules('id','车位ID','required');
-				
-				if(!$this->form_validation->run()){
-					$this->jsonOutput2($this->form_validation->error_first_html());
-					break;
-				}
-				
-				$detail = $this->wuye_service->getYezhuParkingDetail($id,$this->yezhuInfo);
-				
-				
-				
-	            
-	            if($detail){
-	            	$this->jsonOutput2(RESP_SUCCESS,$detail);
-	            }else{
-	            	$this->jsonOutput2(RESP_ERROR);
-	            }
-			}
-			
-		}else{
-			if($this->memberInfo){
-				$this->jsonOutput2(NONOWNER);
-			}else{
-				$this->jsonOutput2(UNBINDED,$this->unBind);
-			}
-		}
-	
-	}
-	
-	
-	
 	
 	/**
 	 * 获得 微信用户关联  物业信息
 	 */
 	public function getYezhuHouseList(){
-		if($this->yezhuInfo){
+		
+		if($this->memberInfo){
 			
-			$d = $this->wuye_service->getHouseListByYezhu($this->yezhuInfo);
-			
-			if($d){
+			if($this->yezhuInfo){
+				$d = $this->wuye_service->getHouseListByYezhu($this->yezhuInfo);
 				$this->jsonOutput2(RESP_SUCCESS,$d);
 			}else{
-				$this->jsonOutput2(RESP_ERROR);
+				$this->jsonOutput2(RESP_SUCCESS,array());
 			}
 			
 		}else{
-			if($this->memberInfo){
-				$this->jsonOutput2(NONOWNER);
-			}else{
-				$this->jsonOutput2(UNBINDED,$this->unBind);
-			}
-			
+			$this->jsonOutput2(UNBINDED,$this->unBind);
 		}
+		
+		
 	}
 	 /**
 	  *  搜索房屋信息
 	 */
 	public function searchHouse(){
-		if($this->yezhuInfo){
-			$address = $this->postJson['address'];
-			
-			$this->form_validation->set_data(array(
-					'address' => $this->postJson['address']
-				));
-			
-			$this->form_validation->set_rules('address','房屋名称','required');
-			
-			if(!$this->form_validation->run()){
-					$this->jsonOutput2($this->form_validation->error_first_html());
-					break;
-			}
-			
-			$house = $this->wuye_service->getHouseByAddress($address,$this->yezhuInfo);
-			if($house){
-				$this->jsonOutput2(RESP_SUCCESS,$house);
-			}else{
-				$this->jsonOutput2(RESP_ERROR);
-			}
-			
-			
-		}else{
-			if($this->memberInfo){
-				$this->jsonOutput2(NONOWNER);
-			}else{
-				$this->jsonOutput2(UNBINDED,$this->unBind);
-			}
-			
-		}
-	}
-	
-	/**
-	 * 获得房屋详情
-	 */
-	public function getYezhuHouseDetail(){
 		
-		if($this->yezhuInfo){
-			$id = $this->input->get('id');
+		if($this->memberInfo){
 			
 			for($i = 0; $i < 1; $i++){
+				$address = $this->postJson['address'];
+		
+				$this->form_validation->set_data(array(
+						'address' => $this->postJson['address']
+					));
 				
-				$data = array(
-					'id' => $id
-				);
-				
-				$this->form_validation->set_data($data);
-				$this->form_validation->set_rules('id','物业ID','required');
+				$this->form_validation->set_rules('address','房屋名称','required');
 				
 				if(!$this->form_validation->run()){
 					$this->jsonOutput2($this->form_validation->error_first_html());
 					break;
 				}
 				
-				$houseInfo = $this->wuye_service->getYezhuHouseDetail($id,$this->yezhuInfo);
-	            if($houseInfo){
-	            	$this->jsonOutput2(RESP_SUCCESS,$houseInfo);
-	            }else{
-	            	$this->jsonOutput2(RESP_ERROR);
-	            }
+				$house = $this->wuye_service->getHouseByAddress($address,$this->yezhuInfo);
+				
+				if($house){
+					$this->jsonOutput2(RESP_SUCCESS,$house);
+				}else{
+					$this->jsonOutput2(RESP_ERROR);
+				}
+				
 			}
 			
 		}else{
-			if($this->memberInfo){
-				$this->jsonOutput2(NONOWNER);
-			}else{
-				$this->jsonOutput2(UNBINDED,$this->unBind);
-			}
+			$this->jsonOutput2(UNBINDED,$this->unBind);
 		}
-	
+
 	}
+
+
 	 /**
 	  *  获取社区列表
 	 */
@@ -442,7 +331,7 @@ class Wuye extends Wx_Controller {
 		
 	}
 	/**
-	 * 获取业主信息
+	 * 获取业主信息 报修
 	 */
 	public function getYezhuDetail(){
 		
@@ -502,7 +391,7 @@ class Wuye extends Wx_Controller {
 	 */
 	public function getYezhuHouseDetailWithFeeInfo(){
 		
-		if($this->yezhuInfo){
+		if($this->memberInfo){
 			$id = $this->input->get('id');
 			
 			for($i = 0; $i < 1; $i++){
@@ -545,11 +434,8 @@ class Wuye extends Wx_Controller {
 			}
 			
 		}else{
-			if($this->memberInfo){
-				$this->jsonOutput2(NONOWNER);
-			}else{
-				$this->jsonOutput2(UNBINDED,$this->unBind);
-			}
+			
+			$this->jsonOutput2(UNBINDED,$this->unBind);
 		}
 	}
 	
@@ -562,8 +448,7 @@ class Wuye extends Wx_Controller {
 	 */
 	public function computeFee(){
 		
-		if($this->yezhuInfo){
-			
+		if($this->memberInfo){
 			
 			for($i = 0; $i < 1; $i++){
 				
@@ -615,11 +500,7 @@ class Wuye extends Wx_Controller {
 			}
 			
 		}else{
-			if($this->memberInfo){
-				$this->jsonOutput2(NONOWNER);
-			}else{
-				$this->jsonOutput2(UNBINDED,$this->unBind);
-			}
+			$this->jsonOutput2(UNBINDED,$this->unBind);
 		}
 	}
 	

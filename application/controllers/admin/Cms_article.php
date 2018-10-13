@@ -106,12 +106,6 @@ class Cms_Article extends Ydzj_Admin_Controller {
 	
 	public function index(){
 		
-		/*
-		print_r(Cms_service::$classData );
-		print_r(Cms_service::$classDataTree );
-		print_r(Cms_service::$classAssocDataTree );
-		*/
-		
 		$this->_searchCondition(array(
 			'article_state != ' => CmsArticleStatus::$recylebin
 		));
