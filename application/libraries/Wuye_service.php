@@ -143,7 +143,7 @@ class Wuye_service extends Base_service {
 		$extraInfo = explode(',',$extraStr);
 		
 		$flag = false;
-
+		
 		if(!empty($extraInfo[0]) && !empty($extraInfo[1])){
 			
 			$info = $this->_houseModel->getFirstByKey($pId,'id','resident_id');
@@ -662,7 +662,7 @@ class Wuye_service extends Base_service {
 								'fee_gname' =>  $feeTypeInfo['name'],
 								'feetype_name' => $feeTypeRule['feeName'],
 								'resident_id' => $parkingItem['resident_id'],
-								'resident_name' => $parkingItem['resident_name'],
+								'resident_name' => $feeTypeInfo['resident_name'],
 								'year' => $year,
 								'jz_area' => $parkingItem['jz_area'],
 								'price' =>  $feeTypeRule['price'],
