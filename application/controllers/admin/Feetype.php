@@ -180,11 +180,6 @@ class Feetype extends Ydzj_Admin_Controller {
 				$this->form_validation->set_rules('resident_id','小区名称','required|in_list['.implode(',',array_keys($residentList)).']');
  				
 				$this->_addFeeTypeRules();
-				foreach($_POST['feeName'] as $key =>$item){
-					if('物业费' != $item){
-						$this->form_validation->set_rules('wuyeType['.$key.']','物业类型','required|in_list[普通]');
-					}
-				}
 
 				if(!$this->form_validation->run()){
 					$this->jsonOutput('数据校验失败,'.$this->form_validation->error_string(),array('errors' => $this->form_validation->error_array()));
@@ -248,11 +243,7 @@ class Feetype extends Ydzj_Admin_Controller {
 				
 				$info = array_merge($_POST,$this->_prepareData(),$this->addWhoHasOperated('edit'));
 				$this->_addFeeTypeRules();
-				foreach($_POST['feeName'] as $key =>$item){
-					if('物业费' != $item){
-						$this->form_validation->set_rules('wuyeType['.$key.']','物业类型','required|in_list[普通]');
-					}
-				}
+				
 				if(!$this->form_validation->run()){
 					$this->jsonOutput('数据校验失败,'.$this->form_validation->error_string(),array('errors' => $this->form_validation->error_array()));
 					break;
