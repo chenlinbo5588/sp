@@ -375,32 +375,41 @@ class Wuye_service extends Base_service {
 	 * 获得业主物业列表
 	 */
 	public function getHouseListByYezhu($pYezhu){
-		$houseIdList = $this->_hosueYezhuModel->getList(array('where' => array('uid' => $pYezhu['uid'])));
+		$houseIdList = $this->_hosueYezhuModel->getList(array(
+			'select' => 'house_id',
+			'where' => array('uid' => $pYezhu['uid'])
+		));
+
+		
+		$houseId = array();
+		$yezhuHouseList = array();
+		$list = array();
+		
 		foreach($houseIdList as $key => $value){
 			$houseId[] = $value['house_id'];
 		}
+		
 		if($houseId){
 			$yezhuHouseList = $this->_houseModel->getList(array(
-			'select' => 'id,address,jz_area,lng,lat,wuye_expire,nenghao_expire',
+				'select' => 'id,address,jz_area,lng,lat,wuye_expire,nenghao_expire',
 				'where_in' => array(
 					array('key' => 'id', 'value' => $houseId)
 				)
 			));
-		}
-		
-		
-		$list = array();
-		
-		foreach($yezhuHouseList as $houseIndex => $houseInfo){
-			if($houseInfo['wuye_expire']){
-				$houseInfo['wuye_expire_date'] = date('Y-m-d',$houseInfo['wuye_expire_date']);
+			
+			
+			foreach($yezhuHouseList as $houseIndex => $houseInfo){
+				if($houseInfo['wuye_expire']){
+					$houseInfo['wuye_expire_date'] = date('Y-m-d',$houseInfo['wuye_expire_date']);
+				}
+				
+				if($houseInfo['nenghao_expire']){
+					$houseInfo['nenghao_expire_date'] = date('Y-m-d',$houseInfo['nenghao_expire']);
+				}
+				
+				$list[] = $houseInfo;
 			}
 			
-			if($houseInfo['nenghao_expire']){
-				$houseInfo['nenghao_expire_date'] = date('Y-m-d',$houseInfo['nenghao_expire']);
-			}
-			
-			$list[] = $houseInfo;
 		}
 		
 		
