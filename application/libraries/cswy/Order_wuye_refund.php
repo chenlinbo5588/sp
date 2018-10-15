@@ -28,36 +28,8 @@ class Order_wuye_refund extends Weixin_refund {
 			$this->_ci->load->library(array('Wuye_service'));
 			
 			
-			if('车位费' != $pRefundOrder['order_typename']){
-				
-				$updateFiled = 'wuye_expire';
-				
-				
-				switch($pRefundOrder['order_typename']){
-					case '物业费':
-						$updateFiled = 'wuye_expire';
-						break;
-					case '能耗费':
-						$updateFiled = 'nenghao_expire';
-						break;
-					default:
-						return false;
-						break;
-				}
-				
-				
-				//还原缴费时间
-				$this->_ci->House_Model->updateByWhere(array(
-					$updateFiled => $pRefundOrder['fee_old_expire'],
-				),array('id' => $pRefundOrder['goods_id']));
-				
-			}else{
-				
-				$this->_ci->Parking_Model->updateByWhere(array(
-					'expire' => $pRefundOrder['fee_old_expire'],
-				),array('id' => $pRefundOrder['goods_id']));
-				
-			}
+			$this->_ci->order_service->updateOrderRefundRelation($pRefundOrder);
+			
 			
 			//更新退款统计信息
 			$affectRow = $this->updateOrderRefundStat($pRefundOrder['order_old'],$refundResp['refund_fee']);

@@ -1001,11 +1001,66 @@ class Order_service extends Base_service {
 		
 		
 	}
+	
+	
+	/**
+	 * 退款 相关数据回滚
+	 */
+	public function updateOrderRefundRelation($pParam){
+		
+		$payYear = date('Y',$pParam['fee_start']);
+		
+		$this->_planModel->setTableId($pParam['year']);
+		$this->_planDetailModel->setTableId($pParam['year']);
+		
+		if('物业费' == $pParam['order_typename']){
+			
+			//@TODO 如果用户在付款后 和退款前 更新了该物业绑定的车位 ,可能会引起BUG
+			$this->_parkingModel->updateByWhere(array(
+				'expire' => $pParam['fee_old_expire'],
+			),array('house_id' => $pParam['goods_id']));
+			
+			
+			$this->_houseModel->updateByWhere(array(
+				'wuye_expire' => $pParam['fee_old_expire'],
+			),array('id' => $pParam['goods_id']));
+			
+		}else if('能耗费' == $pParam['order_typename']){
+			
+			$this->_houseModel->updateByWhere(array(
+				'nenghao_expire' => $pParam['fee_old_expire'],
+			),array('id' => $pParam['goods_id']));
+		}
+		
+		//计划明细 修改为已退款
+		$this->_planDetailModel->updateByWhere(array(
+			'order_status' => OrderStatus::$refounded,
+		),array(
+			'order_id' => $pParam['order_old']
+		));
+		
+		//计划记录  修改为已退款
+		$this->_planModel->updateByWhere(array(
+			'order_status' => OrderStatus::$refounded,
+		),array(
+			'order_id' => $pParam['order_old']
+		));
+		
+	}
+	
+	
+	
 	/**
 	 * 创建订单后更新计划表、房屋表、详情表、历史表
 	 */
 	public function updateOrderRelation($pParam){
+		
+		if(empty($pParam['year'])){
+			$pParam['year'] = date('Y',$pParam['fee_expire']);
+		}
+		
 		$this->_planModel->setTableId($pParam['year']);
+		$this->_planDetailModel->setTableId($pParam['year']);
 		
 		$this->_orderModel->updateByWhere(array(
 			'status' => OrderStatus::$payed,
@@ -1050,19 +1105,15 @@ class Order_service extends Base_service {
 				'feetype_name' => $pParam['order_typename']
 			));
 			
-			
-			/**
-			$this->_planDetailModel->updateByWhere(array(
-				'amount_payed' => $pParam['amount'],
-				'month_payed' => $pParam['month'],
-				'order_id' => $pParam['order_id'],
-				'order_status' => OrderStatus::$payed,
-				'pay_time' => $pParam['pay_time'],
+			$this->_planDetailModel->increseOrDecrease(array(
+				array('key'  => 'amount_payed', 'value' => 'amount_real'),
+				array('key'  => 'order_id', 'value' => $pParam['order_id']),
+				array('key'  => 'order_status', 'value' => OrderStatus::$payed),
+				array('key'  => 'pay_time', 'value' => $pParam['pay_time']),
 			),array(
 				'house_id' => $pParam['goods_id'],
-				'feetype_name' => $pParam['order_typename'],
+				'fee_gname' => $pParam['order_typename']
 			));
-			*/
 			
 		}else if('能耗费' == $pParam['order_typename']){
 			
@@ -1097,7 +1148,7 @@ class Order_service extends Base_service {
 				'end_date' => $pParam['fee_expire'],
 			);
 			
-			$this->_planDetailModel->setTableId($pParam['year']);
+			
 			
 			$this->_planDetailModel->_add($nenghaoDetail);
 			
