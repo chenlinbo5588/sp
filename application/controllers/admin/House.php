@@ -120,6 +120,8 @@ class House extends Ydzj_Admin_Controller {
 		
 		$this->form_validation->set_rules('longitude','经度','is_numeric');
 		$this->form_validation->set_rules('latitude','纬度','is_numeric');
+		$this->form_validation->set_rules('mobile[]','手机号码','required|valid_mobile');
+		$this->form_validation->set_rules('name[]','姓名','required');
 	}
 	
 	
@@ -309,6 +311,17 @@ class House extends Ydzj_Admin_Controller {
 					$insertData['lng'] = $buildingInfo['lng'];
 					$insertData['lat'] = $buildingInfo['lat'];
 				}
+				if($_POST['mobile'][0]){
+					$yezhuInfo = $this->wuye_service->search('业主',array('where' => array('mobile' => $_POST['mobile'][0])));
+					$insertData['yezhu_name'] = $yezhuInfo[0]['name'];
+					$insertData['yezhu_id'] = $yezhuInfo[0]['id'];
+					$insertData['mobile'] = $yezhuInfo[0]['mobile'];
+					$insertData['uid'] = $yezhuInfo[0]['uid'];
+					$insertData['car_no'] = $yezhuInfo[0]['car_no'];
+				}
+				if($this->_yezhuAdd($_POST,'add')){
+					break;
+				}
 				
 				$newid =$this->House_Model->_add($insertData);
 				$error = $this->House_Model->getError();
@@ -380,6 +393,32 @@ class House extends Ydzj_Admin_Controller {
 		
 		$info = $this->House_Model->getFirstByKey($id);
 		
+		$residentidInfo =  $this->wuye_service->search('房屋',array(
+			'select' => 'resident_id', 
+			'where' => array(
+				'id' => $id
+			)
+		));
+		$residentId = $residentidInfo[0]['resident_id'];
+		$yezhuHouseList = $this->wuye_service->search('房屋业主',array(
+			'select' => 'yezhu_id', 
+			'where' => array(
+				'house_id' => $id,
+				'resident_id' =>$residentId
+			)
+		));
+		foreach ($yezhuHouseList as $key =>$item){
+			$yezhuId[] = $item['yezhu_id'];
+		}
+		if($yezhuId){
+			$yezhuList = $this->wuye_service->search('业主',array(
+				'select' =>'name,mobile',
+				'where_in' =>array(
+					array('key' => 'id' ,'value' => $yezhuId,),
+				)
+			));
+		}
+		
 		$this->_subNavs[] = array('url' => $this->_className.'/edit?id='.$id, 'title' => '编辑');
 		
 		if($this->isPostRequest()){
@@ -403,10 +442,19 @@ class House extends Ydzj_Admin_Controller {
 						break;
 					}
 				}
-				
-				
+				$_POST['resident_id'] = $residentId;
+				if($this->_yezhuAdd($_POST,'edid')){
+					break;
+				}
+				if($_POST['mobile'][0]){
+					$yezhuInfo = $this->wuye_service->search('业主',array('where' => array('mobile' => $_POST['mobile'][0])));
+					$updateInfo['yezhu_name'] = $yezhuInfo[0]['name'];
+					$updateInfo['yezhu_id'] = $yezhuInfo[0]['id'];
+					$updateInfo['mobile'] = $yezhuInfo[0]['mobile'];
+					$updateInfo['uid'] = $yezhuInfo[0]['uid'];
+					$updateInfo['car_no'] = $yezhuInfo[0]['car_no'];
+				}
 				$this->House_Model->update($updateInfo,array('id' => $id));
-				
 				$error = $this->House_Model->getError();
 				
 				if(QUERY_OK != $error['code']){
@@ -429,7 +477,7 @@ class House extends Ydzj_Admin_Controller {
 					'resident_id' => $info['resident_id']
 				)
 			));
-			
+			$this->assign('yezhuList',$yezhuList);
 			$this->assign(array(
 				'buildingList' => $buildingList
 			));
@@ -1208,5 +1256,52 @@ class House extends Ydzj_Admin_Controller {
 			
 		}
 	}
+	
+    private function _yezhuAdd($data,$from = null){
+    	foreach($data['mobile'] as $key =>$item){
+    		$yezhuInfo = $this->wuye_service->search('业主',array(
+				'where' => array(
+					'mobile' => $item,
+					'resident_id' => $data['resident_id']
+				)
+			));
+			$yezhuList[] = $yezhuInfo[0];;
+			if(empty($yezhuList[$key])){
+				$this->jsonOutput('抱歉,该小区无此业主信息');
+				return true;
+			}
+    	}
+    	
+    	$this->House_Yezhu_Model->beginTrans();
+    	
+    	$this->House_Yezhu_Model->deleteByCondition(array(
+			'where' => array(
+				'house_id' => $data['id']
+			)
+		));
+		
+    	foreach($yezhuList  as $key => $item){
+    		$insert = array(
+    			'resident_id' => $item['resident_id'],
+    			'yezhu_id' => $item['id'],
+    			'uid' => $item['uid'],
+    			'house_id' => $data['id']
+    		);
+    		$insertData[] = array_merge($insert,$this->_prepareData(),$this->addWhoHasOperated('add'));
+    	}
+    	
+    	$this->House_Yezhu_Model->batchInsert($insertData);
+    	
+    	if($this->House_Yezhu_Model->getTransStatus() === FALSE){
+			$this->House_Yezhu_Model->rollBackTrans();
+			
+			log_message('error','业主添加错误' );
+			
+			return false;
+		}else{
+			return $this->House_Yezhu_Model->commitTrans();
+		}
+    }
+    
 	
 }

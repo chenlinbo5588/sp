@@ -683,7 +683,7 @@ class Wuye_service extends Base_service {
 						 	$basicInfo['amount_plan'] += $detailInsert['amount_plan'];
 						 	$wuyeDetailItem[] = $detailInsert;
 						}
-					}else if($houseItem['wuye_type'] == $feeTypeRule['wuyeType'] && 1 == $feeTypeInfo['generate_deatil']){
+					}else if($houseItem['wuye_type'] == $feeTypeRule['wuyeType'] ){
 						if(false !== strpos($detailInsert['billing_style'],'按面积')){						
 							$detailInsert['amount_plan'] = $detailInsert['price'] * $detailInsert['jz_area'] * 12;
 						}else if('按每月固定值' == $detailInsert['billing_style']){
@@ -691,19 +691,12 @@ class Wuye_service extends Base_service {
 						}
 						$detailInsert['amount_real'] = $detailInsert['amount_plan'];
 					 	$basicInfo['amount_plan'] += $detailInsert['amount_plan'];
+					 	if(1 == $feeTypeInfo['generate_deatil']){
+					 		$wuyeDetailItem[] = $detailInsert;
+					 	}
 					 	
-					 	$wuyeDetailItem[] = $detailInsert;
 					}
 					
-					if(1 != $feeTypeInfo['generate_deatil']){
-						if(false !== strpos($detailInsert['billing_style'],'按面积')){						
-							$detailInsert['amount_plan'] = $detailInsert['price'] * $detailInsert['jz_area'] * 12;
-						}else if('按每月固定值' == $detailInsert['billing_style']){
-							$detailInsert['amount_plan'] = $detailInsert['price'] * 12;
-						}
-						$detailInsert['amount_real'] = $detailInsert['amount_plan'];
-					 	$basicInfo['amount_plan'] += $detailInsert['amount_real'];
-					}
 				}
 				if(empty($basicInfo['amount_plan'])){
 					 $basicInfo['amount_plan'] = 0;

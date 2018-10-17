@@ -39,10 +39,20 @@ $(function(){
     
     $(".verifyBtn").bind('click',function(){
     	var ids = getIDS($(this));
+    	var year = $.trim($("input[name=year]").val());
+    	
+    	if(/^\d+$/.test(year)){
+    		year = parseInt(year);
+    	}else{
+    		year = (new Date()).getFullYear();
+    	}
+    	
+    	
+    	console.log($(this));
     	if(ids.length == 0){
   			showToast('error','请选勾选.');
   		}else{
-  			popWindowFn($(this),{ selector : "#verifyDlg", width:500, height: 'auto',title : $(this).attr('data-title'),formid: $(this).attr('data-ajaxformid'), urls : [] }, {  opName: '审核', event_id: 0, id: ids} );
+  			popWindowFn($(this),{ selector : "#verifyDlg", width:500, height: 'auto',title : $(this).attr('data-title'),formid: $(this).attr('data-ajaxformid'), urls : [] }, {  opName: '审核', event_id: 0, id: ids, year: year} );
   		}
     	
     });

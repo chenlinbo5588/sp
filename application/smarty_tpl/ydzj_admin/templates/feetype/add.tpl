@@ -45,57 +45,57 @@
           <td colspan="2"><label class="validation">费用配置: </label></td>
         </tr>
         <tr>
-        	<td colspan="2">
-        		<table id="feeConfigTable">
-        			<thead>
-        				<tr>
-        					<th>费用类型</th>
-        					<th>单价</th>
-        					<th>物业类型</th>
-        					<th>计费方式</th>
-        					<th>计算公式</th>
-        					<th>操作</th>
-        				</tr>
-        			</thead>
-        			<tbody>
-        				
-        				<tr>
-        					<td>
-        						<select name="feeName[]">
+	    	<td colspan="2">
+	    		<table id="feeConfigTable">
+	    			<thead>
+	    				<tr>
+	    					<th>费用类型</th>
+	    					<th>单价</th>
+	    					<th>物业类型</th>
+	    					<th>计费方式</th>
+	    					<th>计算公式</th>
+	    					<th>操作</th>
+	    				</tr>
+	    			</thead>
+	    			<tbody>
+	    				
+	    				<tr>
+	    					<td>
+	    						<select name="feeName[]">
 						          <option value="">请选择...</option>
 						          {foreach from=$feeNameList item=item}
 						          <option {if $fee_rule[0]['feeName'] == $item['show_name']}selected{/if}  value="{$item['show_name']}">{$item['show_name']}</option>
 						          {/foreach}
 						        </select>
-        					</td>
-        					<td>
-        						<input type="text" name="price[]" value="{$fee_rule[0]['price']|escape}"/>
-        					</td>
-        					<td>
-        						<select name="wuyeType[]">
+	    					</td>
+	    					<td>
+	    						<input type="text" name="price[]" value="{$fee_rule[0]['price']|escape}"/>
+	    					</td>
+	    					<td>
+	    						<select name="wuyeType[]">
 						          <option value="">请选择...</option>
 						          {foreach from=$wuyeTypeList item=item}
 						          <option {if $fee_rule[0]['wuyeType'] == $item['show_name']}selected{/if} value="{$item['show_name']}">{$item['show_name']}</option>
 						          {/foreach}
 						        </select>
-        					</td>
-        					<td>
-        						<select name="billingStyle[]">
+	    					</td>
+	    					<td>
+	    						<select name="billingStyle[]">
 						          <option value="">请选择...</option>
 						          {foreach from=$billingStyleList item=item}
 						          <option {if $fee_rule[0]['billingStyle'] == $item['show_name']}selected{/if} value="{$item['show_name']}">{$item['show_name']}</option>
 						          {/foreach}
 						        </select>
-        					</td>
-        					<td>
-        						<input type="text" name="cale[]" value="{$fee_rule[0]['cale']|escape}"/>
-        					</td>
-        					<td>
-        						<input type="button" class="dynBtn" name="addBtn" value="添加"/>
-        					</td>
-        					 <td class="vatop tips">{form_error('displayorder')} 当费用类型不为物业费时，物业类型只能选择普通</td>
-        				</tr>
-        				{if $fee_rule}
+	    					</td>
+	    					<td>
+	    						<input type="text" name="cale[]" value="{$fee_rule[0]['cale']|escape}"/>
+	    					</td>
+	    					<td>
+	    						<input type="button" class="dynBtn" name="addBtn" value="添加"/>
+	    					</td>
+	    					 <td class="vatop tips">{form_error('displayorder')} 当费用类型不为物业费时，物业类型只能选择普通</td>
+	    				</tr>
+	    				{if $fee_rule}
 						  {foreach from=$fee_rule key=key item=valus}
 						  	{if $key>0}
 		        				<tr>
@@ -126,6 +126,7 @@
 								          {/foreach}
 								        </select>
 		        					</td>
+		        					
 		        					<td>
 		        						<input type="text" name="cale[]" value="{$valus['cale']|escape}"/>
 		        					</td>
@@ -136,12 +137,11 @@
 							{/if}
 						  {/foreach}
 						{/if}
-        				
-        			</tbody>
-        		</table>
-        		
-        	</td>
-        </tr>
+					</tbody>
+	 			</table>
+
+	     	 </td>
+     	</tr>
         <tr>
           <td colspan="2" class="required"><label>排序:</label></td>
         </tr>
@@ -149,14 +149,17 @@
           <td class="vatop rowform"><input type="text" value="{if $info['displayorder']}{$info['displayorder']}{else}255{/if}" name="displayorder" id="displayorder" class="txt"></td>
           <td class="vatop tips">{form_error('displayorder')} 数字范围为0~255，数字越小越靠前</td>
         </tr>
-        <tr>
-        <td>
-	      	<ul class="ulListStyle1 clearfix">
-			<li {if $info['generate_plan'] == 1}class="selected"{/if}><label><input type="checkbox" name="generate_plan" value="1" {if $info['generate_plan'] == 1} checked="checked"{/if}/>生成计划</label></li>
-			<li {if $info['generate_deatil'] == 1}class="selected"{/if}><label><input type="checkbox" name="generate_deatil" value="1" {if $info['generate_deatil'] == 1} checked="checked"{/if}/>生成明细</label></li>
- 			</ul>
- 		</td>
- 		</tr>
+         <td class="vatop tips">{form_error('ulListStyle1')} 用来判断是否生成收费计划，是否生成收费计划明细</td>
+		<tr>
+			<td>
+				<ul class="ulListStyle1 clearfix">
+ 					<li {if $info['generate_plan'] == 1}class="selected"{/if}><label><input type="checkbox" name="generate_plan" value="1" {if $info['generate_plan'] == 1} checked="checked"{/if}/>生成计划</label></li>
+					<li {if $info['generate_deatil'] == 1}class="selected"{/if}><label><input type="checkbox" name="generate_deatil" value="1" {if $info['generate_deatil'] == 1} checked="checked"{/if}/>生成明细</label></li>
+   				</ul>
+  			</td>
+		 </tr>
+        
+        
         <tr class="noborder">
           <td class="vatop rowform">
           	<input type="submit" name="tijiao" value="保存" class="msbtn"/>
@@ -165,6 +168,7 @@
 	    	{/if}
           </td>
         </tr>
+        
       </tbody>
     </table>
   </form>

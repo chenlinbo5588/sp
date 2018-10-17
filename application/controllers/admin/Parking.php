@@ -280,23 +280,41 @@ class Parking extends Ydzj_Admin_Controller {
 					break;
 				}
 
-				
 				$insertData = array_merge($_POST,$this->_prepareData(),$this->addWhoHasOperated('add'));
 				
-				$insertData['resident_id'] = $residentId;
-				
-				$insertData['lng'] = $residentList[$residentId]['lng'];
-				$insertData['lat'] = $residentList[$residentId]['lat'];
 				$houseInfo = $this->House_Model->getById(array(
-					'select' => 'id',
+					'select' => 'yezhu_id,yezhu_name,uid,mobile',
 					'where' => array(
 						'address' =>$_POST['address'],
 						'resident_id' => $residentId
 					)
 				));
-				if($houseInfo){
-					$insertData['house_id'] = $houseInfo['id'];
+				
+				if(empty($houseInfo)){
+					$this->jsonOutput('物业地址不存在');
+					break;
 				}
+				
+				$yezhuList = $this->wuye_service->search('房屋',array(
+					'select' => 'yezhu_id,yezhu_name,uid,mobile',
+					'where' => array(
+						'address' => $insertData['address'],
+					)
+				));
+				
+				
+				if(!empty($yezhuList)){
+					$insertData['yezhu_id'] = $yezhuList[0]['yezhu_id'];
+					$insertData['yezhu_name'] = $yezhuList[0]['yezhu_name'];
+					$insertData['mobile'] = $yezhuList[0]['mobile'];
+					$insertData['uid'] = $yezhuList[0]['uid'];
+				}
+				
+				$insertData['resident_id'] = $residentId;
+				$insertData['lng'] = $residentList[$residentId]['lng'];
+				$insertData['lat'] = $residentList[$residentId]['lat'];
+				$insertData['house_id'] = $houseInfo['id'];
+				
 				$newid =$this->Parking_Model->_add($insertData);
 				$error = $this->Parking_Model->getError();
 				

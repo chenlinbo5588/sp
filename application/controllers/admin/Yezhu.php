@@ -355,6 +355,36 @@ class Yezhu extends Ydzj_Admin_Controller {
 		
 		$this->_subNavs[] = array('url' => $this->_className.'/edit?id='.$id, 'title' => '编辑');
 		
+		$yezhuHouseList = $this->wuye_service->search('房屋业主',array(
+			'select' => 'house_id', 
+			'where' => array(
+				'yezhu_id' => $id,
+			)
+		));
+		foreach ($yezhuHouseList as $key =>$item){
+			$houseId[] = $item['house_id'];
+		}
+		if($houseId){
+			$yezhuList = $this->wuye_service->search('房屋业主',array(
+				'select' => 'yezhu_id', 
+				'where_in' => array(
+					array('key' => 'house_id' , 'value' => $houseId)
+				)
+			));
+		}
+		foreach ($yezhuList as $key =>$item){
+			$yezhuId[] = $item['yezhu_id'];
+		}
+		
+		if($yezhuId){
+			$familyList = $this->wuye_service->search('业主',array(
+				'select' =>'name,mobile',
+				'where_in' =>array(
+					array('key' => 'id' ,'value' => $yezhuId)
+				)
+			));
+		}
+		
 		if($this->isPostRequest()){
 			
 			$this->_addYezhuRules($this->basic_data_service->getTopChildList('证件类型'),$this->input->post('id_type'),$info['id']);
@@ -444,7 +474,8 @@ class Yezhu extends Ydzj_Admin_Controller {
 		}else{
 			
 			$this->assign('info',$info);
-			
+			$this->assign('familyList',$familyList);
+
 			$this->_commonPageData();
 			$this->display($this->_className.'/add');
 			
@@ -988,38 +1019,44 @@ class Yezhu extends Ydzj_Admin_Controller {
 		
 		$residentId = intval($this->input->get_post('resident_id'));
 		
-		$return = array();
+		if(empty($residentId)){
+			$this->jsonOutput('请先选择小区');
+
+		}else{
 		
-		if($searchKey){
+			$return = array();
 			
-			$yezhuList = $this->wuye_service->search('业主',array(
-				'select' => 'id,resident_id,name,mobile',
-				'where' => array(
-					'resident_id' => $residentId
-				),
-				'like_after' => array(
-					'mobile' => $searchKey
-				),
-				'limit' => 10
-			));
-			
-			/*
-			$residentList =$this->wuye_service->search('小区',array(
-				'select' => 'id,name'
-			),'id');
-			*/
-			
-			foreach($yezhuList as $yuezhuItem ){
-				$return[] = array(
-					'id' => $yuezhuItem['id'],
-					'label' => $yuezhuItem['mobile'].' '.$yuezhuItem['name'],
-					'value' => $yuezhuItem['mobile'],
-					'name'=> $yuezhuItem['name'],
-				);
+			if($searchKey){
+				
+				$yezhuList = $this->wuye_service->search('业主',array(
+					'select' => 'id,resident_id,name,mobile',
+					'where' => array(
+						'resident_id' => $residentId
+					),
+					'like_after' => array(
+						'mobile' => $searchKey
+					),
+					'limit' => 10
+				));
+				
+				/*
+				$residentList =$this->wuye_service->search('小区',array(
+					'select' => 'id,name'
+				),'id');
+				*/
+				
+				foreach($yezhuList as $yuezhuItem ){
+					$return[] = array(
+						'id' => $yuezhuItem['id'],
+						'label' => $yuezhuItem['mobile'].' '.$yuezhuItem['name'],
+						'value' => $yuezhuItem['mobile'],
+						'name'=> $yuezhuItem['name'],
+					);
+				}
 			}
+			
+			$this->jsonOutput2('',$return,false);
+			
 		}
-		
-		$this->jsonOutput2('',$return,false);
-		
 	}
 }

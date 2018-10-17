@@ -5,9 +5,13 @@
 	 <table class="tb-type1 noborder search" >
 	    <tbody>
 	        <tr>
-	          <th><label for="name">{#address#}</label></th>
+	          <th><label for="address">{#address#}</label></th>
 	          <td><input class="txt" name="address" value="{$smarty.get['address']|escape}" type="text"></td>
-	           <td>{#type_name#}:</td>
+  	          <th><label for="resident_name">{#resident_name#}</label></th>
+	          <td><input class="txt" name="resident_name" value="{$smarty.get['resident_name']|escape}" type="text"></td>
+  	          <th><label for="year">{#year#}</label></th>
+	          <td><input class="txt" name="year" value="{$smarty.get['year']|escape}" type="text"></td>
+	          <td>{#type_name#}:</td>
 	          <td>
 	          	<select name="feetype_name" id="id_type">
 		          <option value="">请选择...</option>

@@ -37,7 +37,7 @@
           <td class="vatop tips"><label class="errtip" id="error_name"></label>{form_error('name')}</td>
         </tr>
         <tr class="noborder">
-          <td colspan="2">{#address#}: </td>
+          <td colspan="2"><label class="validation" for="name">{#address#}: </label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform">

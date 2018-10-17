@@ -21,7 +21,7 @@
         		{else}
 	          	<ul class="ulListStyle1 clearfix">
 	          	{foreach from=$residentList item=item}
-	          		<li {if $info['resident_id'] == $item['id']}class="selected"{/if}><label><input type="radio" name="resident_id" {if $info['resident_id'] == $item['id']}checked="checked"{/if} value="{$item['id']}"/><span>{$item['name']|escape}</span></label></li>
+	          		<li {if $info['resident_id'] == $item['id'] || 1 == count($residentList) }class="selected"{/if}><label><input type="radio" name="resident_id" {if $info['resident_id'] == $item['id'] || count($residentList) == 1}checked="checked"{/if} value="{$item['id']}"/><span>{$item['name']|escape}</span></label></li>
 	          	{/foreach}
 	          	</ul>
 	          	{/if}
@@ -90,6 +90,49 @@
           </td>
           <td class="vatop tips"><label class="errtip"  id="error_nenghao_expire"></label>{form_error('nenghao_expire')}</td>
         </tr>
+        <tr class="noborder">
+          <td colspan="2"><label class="validation">家庭成员: </label></td>
+        </tr>
+        <tr>
+	    	<td colspan="2">
+	    		<table id="familyConfigTable">
+	    			<thead>
+	    				<tr>
+	    					<th>联系电话</th>
+	    					<th>姓名</th>
+	    				</tr>
+	    			</thead>
+	    			<tbody>
+	    				<tr>
+	    					<td>
+								<input type="text" {if !empty($info['mobile'])} value={$info['mobile']}{/if}  name="mobile[]"  class="txt mobile">
+	    					</td>
+	    					<td>
+	    						<input type="text"  {if !empty($info['yezhu_name'])} value={$info['yezhu_name']}{/if} name="name[]" class="txt"></td>
+	    					<td>
+	    						<input type="button" class="dynBtn" name="addBtn" value="添加"/>
+	    					</td>
+	    				</tr>
+	    				{if $yezhuList}
+						  {foreach from=$yezhuList key=key item=valus}
+						  	{if $yezhuList[$key]['mobile'] != $info['mobile']}
+        				<tr>
+	    					<td>
+								<input type="text" value={$valus['mobile']}  name="mobile[]"  class="txt">
+	    					</td>
+	    					<td >
+	    						<input type="text"  value={$valus['name']}  name="name[]" class="txt">
+	    					</td>
+							<td>
+								<input type="button" class="dynBtn" name="deleteBtn" value="删除"/>
+							</td>
+						</tr>
+							{/if}
+						  {/foreach}
+						{/if}
+					</tbody>
+				</table>
+			</td>
         <tr>
           <td colspan="2" class="required"><label>排序:</label></td>
         </tr>
@@ -97,6 +140,7 @@
           <td class="vatop rowform"><input type="text" value="{if $info['displayorder']}{$info['displayorder']}{else}255{/if}" name="displayorder" id="displayorder" class="txt"></td>
           <td class="vatop tips">{form_error('displayorder')} 数字范围为0~255，数字越小越靠前</td>
         </tr>
+        
         <tr class="noborder">
           <td class="vatop rowform">
           	<input type="submit" name="tijiao" value="保存" class="msbtn"/>
@@ -108,24 +152,43 @@
       </tbody>
     </table>
   </form>
+	<script type="x-template" id="templateRow">
+		<tr>
+			<td>
+				<input type="text" value=""  name="mobile[]"  class="txt mobile">
+			</td>
+			<td>
+				<input type="text"  value="" name="name[]" class="txt">
+			</td>
+			<td>
+				<input type="button" class="dynBtn" name="deleteBtn" value="删除"/>
+			</td>
+		</tr>
+  </script>
+  
   <div id="container" style="float:left;width:74%;height:600px;"></div>
   {include file="common/map_loc.tpl"}
   {include file="common/gaode_map.tpl"}
+  
   <script type="text/javascript">
 	var map,initZoom = 16, submitUrl = [new RegExp("{$uri_string}")],residentJson = {$residentJson};
-	
 	{if $info['lng'] && $info['lat']}
 	var centerData = [{$info['lng']},{$info['lat']}];
 	{/if}
+	
+	var searchYezhuUrl = "{admin_site_url('yezhu/getYezhuInfo?resident_id=')}{$info['resident_id']}";
 	
 	function mapPanTo(id){
 		map.panTo(new AMap.LngLat(residentJson[id]['lng'],residentJson[id]['lat']));
 	}
 	
+	
+	
 	$(function(){
 		$("input[name=resident_id]").bind('click',function(){
 	        var checked = $(this).prop('checked');
 	        var id = $(this).val();
+	        
 	        if(checked){
 	        	$.getJSON("{admin_site_url('building/getBuildingList')}?t=" + Math.random(),{ resident_id : id }, function(resp){
 	        		
@@ -148,7 +211,6 @@
 	        }
 	    });
 	    
-	    
 	    {if empty($info['id'])}
 	    $("select[name=building_id]").bind("change",function(){
 	    	var addresVal = $("#address").val();
@@ -156,7 +218,10 @@
 	    	$("#address").val($(this).find("option:selected").html());
 	    });
 	    {/if}
+	    
+	    
 	});
   </script>
+  <script type="text/javascript" src="{resource_url('js/service/house_family.js',true)}"></script>
   <script type="text/javascript" src="{resource_url('js/service/wuye.js',true)}"></script>
 {include file="common/main_footer.tpl"}

@@ -3,10 +3,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Plan extends Ydzj_Admin_Controller {
 	
+	private $_yearRange = array(
+		'minYear' => 2018,
+		'maxYear' => 2028
+	);
+	
+	
 	public function __construct(){
 		parent::__construct();
 		
-		$this->load->library(array('Wuye_service','Basic_data_service'));
+		$this->load->library(array('Wuye_service','Basic_data_service','Order_service'));
 		
 		$this->wuye_service->setDataModule($this->_dataModule);
 		
@@ -30,7 +36,7 @@ class Plan extends Ydzj_Admin_Controller {
 		
 	}
 	public function index(){
-		$this->Plan_Model->setTableId(date('Y'));
+		
 		$currentPage = $this->input->get_post('page') ? $this->input->get_post('page') : 1;
 	
 		$condition = array(
@@ -54,7 +60,22 @@ class Plan extends Ydzj_Admin_Controller {
 		if($search['feetype_name']){
 			$condition['where']['feetype_name'] = $search['feetype_name'];
 		}
+		$search['resident_name'] = $this->input->get_post('resident_name');
+		if($search['resident_name']){
+			$condition['where']['resident_name'] = $search['resident_name'];
+		}
 		
+		$search['year'] = $this->input->get_post('year');
+		if($search['year']){
+			if($search['year'] < $this->_yearRange['minYear'] || $search['year'] > $this->_yearRange['maxYear']){
+				$search['year'] = date('Y');
+			}
+			
+		}else{
+			$search['year'] = date('Y');
+		}
+		
+		$this->Plan_Model->setTableId($search['year']);
 		
 		$list = $this->wuye_service->search( $this->_moduleTitle, $condition);
 		$this->assign(array(
@@ -74,19 +95,23 @@ class Plan extends Ydzj_Admin_Controller {
 		$data = array();
 		
 		if($this->isPostRequest()){
-
-			$this->form_validation->set_rules('resident_id','所在小区','required|is_natural_no_zero');
-			if(!$this->form_validation->run()){
-    			$feedback = getErrorTip($this->form_validation->error_html());
-    			break;
-	    	}
-	    	
-	    	$year = $_POST['year'];
-
-			$resident_id = $this->input->get_post('resident_id');
-			$result = $this->wuye_service->generationPlan($resident_id,$this->addWhoHasOperated(),$year);
-		
-			$this->jsonOutput('生成成功,'.$result['successCnt'].'条,生成失败'.$result['failedCnt'].'条');
+			for($i = 0; $i < 1; $i++){
+				
+				$this->form_validation->set_rules('resident_id','所在小区','required|is_natural_no_zero');
+				$this->form_validation->set_rules('year','生成计划年份','required|greater_than_equal_to['.date('Y').']');
+				
+				if(!$this->form_validation->run()){
+					$this->jsonOutput($this->form_validation->error_html(),array('errors' => $this->form_validation->error_array()));
+					break;
+				}
+		    	
+		    	$year = $_POST['year'];
+	
+				$resident_id = $this->input->get_post('resident_id');
+				$result = $this->wuye_service->generationPlan($resident_id,$this->addWhoHasOperated(),$year);
+				
+				$this->jsonOutput('生成成功,'.$result['successCnt'].'条,生成失败'.$result['failedCnt'].'条');
+			}
 		}else{
     		$this->assign(array(
 	    		'residentList' => $this->wuye_service->search('小区',array(
@@ -133,6 +158,7 @@ class Plan extends Ydzj_Admin_Controller {
 		
 	}
 	public function detail_list(){
+		
 		$currentPage = $this->input->get_post('page') ? $this->input->get_post('page') : 1;
 	
 		$condition = array(
@@ -155,8 +181,24 @@ class Plan extends Ydzj_Admin_Controller {
 		if($search['feetype_name']){
 			$condition['where']['feetype_name'] = $search['feetype_name'];
 		}
+		$search['resident_name'] = $this->input->get_post('resident_name');
+		if($search['resident_name']){
+			$condition['where']['resident_name'] = $search['resident_name'];
+		}
 		
-		$this->Plan_Detail_Model->setTableId(date('Y'));
+		$year = $this->input->get_post('year');
+		if(!empty($year)){
+			
+			if($year < $this->_yearRange['minYear'] || $year > $this->_yearRange['maxYear']){
+				$year = date('Y');
+			}
+			
+		}else{
+			$year = date('Y');
+		}
+		
+		$this->Plan_Detail_Model->setTableId($year);
+		
 		$list = $this->wuye_service->search('收费计划详情', $condition);
 		$this->assign(array(
 			'residentList' => $this->wuye_service->getOwnedResidentList(array(
@@ -173,7 +215,9 @@ class Plan extends Ydzj_Admin_Controller {
 	}
 	public function edit_money(){
 		$id = $this->input->get_post('id');
-		
+		$year = $this->input->get_post('year');
+
+
 		$modify_money = $this->input->get_post('modify_money');
 		if($this->isPostRequest()){
 			
@@ -185,7 +229,7 @@ class Plan extends Ydzj_Admin_Controller {
 				}
 				$id = explode(',',$id);
 				
-				if(!$this->changeMoney($id,$modify_money)){
+				if(!$this->changeMoney($id,$modify_money,$year)){
 					$this->jsonOutput('操作失败,没有记录被更新');
 					break;
 				}else{
@@ -196,14 +240,16 @@ class Plan extends Ydzj_Admin_Controller {
 		}else{
 			
 			$this->assign('id',implode(',',$this->input->get_post('id')));
-
 			$this->display();
 		}		
 	}
 	
-	private function changeMoney($ids,$modify){
-		$this->Plan_Model->setTableId(date('Y'));
-		$this->Plan_Detail_Model->setTableId(date('Y'));
+	private function changeMoney($ids,$modify,$year = 0){
+		if(0 == $year){
+			$year = date('Y');
+		}
+		$this->Plan_Model->setTableId($year);
+		$this->Plan_Detail_Model->setTableId($year);
 		$this->Plan_Model->beginTrans();
 		$planDetailList = $this->wuye_service->search('收费计划详情',array(
 			'where_in' => array(
@@ -260,7 +306,8 @@ class Plan extends Ydzj_Admin_Controller {
 		$id = $this->input->get_post('id');
 		$newValue = $this->input->get_post('value');
 		
-		
+		$year = $this->input->get_post('year');
+
 		for($i = 0 ; $i < 1; $i++){
 			
 			$this->form_validation->set_rules('value','实收金额','required|is_numeric');	
@@ -270,7 +317,7 @@ class Plan extends Ydzj_Admin_Controller {
 			if(!$this->form_validation->run()){
 				$message = $this->form_validation->error_html();
 			}else{
-				if(!$this->changeMoney($id,$newValue)){
+				if(!$this->changeMoney($id,$newValue,$year)){
 					$message = '数据修改失败';
 				}else{
 					$message = '修改成功';
@@ -435,7 +482,7 @@ class Plan extends Ydzj_Admin_Controller {
 							$val = $basicData[$val]['show_name'];
 							break;
 						case '订单状态':
-							$val = $val == 0 ? '未支付':'已支付';
+							$val = OrderStatus::$statusName[$val];
 							break;
 						default:
 							break;

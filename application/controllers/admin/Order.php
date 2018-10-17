@@ -174,7 +174,7 @@ class Order extends Ydzj_Admin_Controller {
 				
 				
 				$houseItem = $this->order_service->search('房屋',array(
-					'select' => 'id,yezhu_id',
+					'select' => 'id,yezhu_id,yezhu_name,uid',
 					'where' => array(
 						'address' => $this->input->post('address')
 					)
@@ -198,28 +198,36 @@ class Order extends Ydzj_Admin_Controller {
 					'order_typename' => $_POST['wuye_type'],
 					'year' => date('Y',$edateTs),
 					'month' => date('m',$edateTs) - date('m',$sdateTs) + 1,
+					'pay_time' => time(),
 				);
 				
 				$message = '';
-				$yezhuInfo = $this->Yezhu_Model->getFirstByKey($houseItem[0]['yezhu_id'],'id');
 				
+				$memberInfo = $this->Member_Model->getFirstByKey($houseItem[0]['uid'],'uid');
 				
+				if(empty($memberInfo)){
+					$memberInfo = array('uid' => 0 , 'username' => $houseItem[0]['yezhu_name']);
+				}
 				
 				$this->Plan_Model->beginTrans();
 				
-				$result = $this->order_service->createWuyeOrder('house_id',$param,$yezhuInfo,$message,'Backstage');
+				$result = $this->order_service->createWuyeOrder('house_id',$param,$memberInfo,$message,'Backstage');
 				
-				if($result){
-					$this->jsonOutput('创建成功');
-				}else{
-					$this->jsonOutput($message);
-				}
+				
 				if($this->Plan_Model->getTransStatus() === FALSE){
 					$this->Plan_Model->rollBackTrans();
+					
+					$this->jsonOutput('创建失败');
+					
 					return FALSE;
 				}else{
-					$this->Plan_Model->commitTrans();
-					return TRUE;
+					$flag = $this->Plan_Model->commitTrans();
+					
+					if($flag){
+						$this->jsonOutput('创建成功');
+					}else{
+						$this->jsonOutput('创建失败');
+					}
 				}
 			}
 		}else{

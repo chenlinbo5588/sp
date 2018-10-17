@@ -1,4 +1,4 @@
-{include file="common/main_header_navs.tpl"}
+ {include file="common/main_header_navs.tpl"}
   {config_load file="wuye.conf"}
   {form_open(site_url($uri_string),'id="formSearch" method="get"')}
   	 <input type="hidden" name="page" value="{$currentPage}"/>
@@ -64,9 +64,8 @@
           <td>{if $item['nenghao_expire']}{$item['nenghao_expire']|date_format:"%Y-%m-%d"}{else}无缴费记录{/if}</td>
           <td class="align-center">
           	{if isset($permission[$moduleClassName|cat:'/edit'])}<a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}">编辑</a>{/if}&nbsp;
-          	{if isset($permission[$moduleClassName|cat:'/yezhu_add'])}<a href="{admin_site_url($moduleClassName|cat:'/yezhu_add')}?id={$item['id']}">增加业主</a>{/if}&nbsp;
+          	<!--{if isset($permission[$moduleClassName|cat:'/yezhu_add'])}<a href="{admin_site_url($moduleClassName|cat:'/yezhu_add')}?id={$item['id']}">增加业主</a>{/if}&nbsp;-->
           	{if isset($permission[$moduleClassName|cat:'/yezhu_change'])}<a href="{admin_site_url($moduleClassName|cat:'/yezhu_change')}?id={$item['id']}">业主变更</a>{/if}&nbsp;
-          	{if isset($permission[$moduleClassName|cat:'/delete_yezhu'])}<a href="javascript:void(0)" class="delete" data-url="{admin_site_url($moduleClassName|cat:'/delete_yezhu')}" data-id="{$item['id']}">删除业主</a>{/if}
           </td>
         </tr>
         {/foreach}
@@ -76,7 +75,6 @@
     	<label><input type="checkbox" class="checkall" id="checkallBottom" name="chkVal">全选</label>&nbsp;
         {if isset($permission[$moduleClassName|cat:'/delete'])}<a href="javascript:void(0);" class="btn deleteBtn" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/delete')}"><span>删除</span></a>{/if}
         {if isset($permission[$moduleClassName|cat:'/delete_yezhu'])}<a href="javascript:void(0);" class="btn deleteYezhu" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/delete_yezhu')}"><span>删除业主</span></a>{/if}
-        {if isset($permission[$moduleClassName|cat:'/add_plan'])}<a href="javascript:void(0);" class="btn opBtn" data-title="确实生成吗?" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/add_plan')}" data-ajaxformid="#verifyForm"><span>生成收费计划</span></a>{/if}
         {include file="common/pagination.tpl"}
         
     </div>

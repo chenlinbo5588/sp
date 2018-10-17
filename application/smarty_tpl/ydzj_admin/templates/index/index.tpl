@@ -41,7 +41,7 @@ $(document).ready(function(){
     $('#mainMenu>ul').first().css('display','block');
     //第一次进入后台时，默认定到欢迎界面
     $('#welcome_dashboard').addClass('selected');            
-    $('#workspace').attr('src','{admin_site_url("dashboard/welcome")}');
+    $('#workspace').attr('src','{admin_site_url("dashboard/aboutus")}');
     
     $('#iframe_refresh').click(function(){
         var fr = document.frames ? document.frames("workspace") : document.getElementById("workspace").contentWindow;;
@@ -358,7 +358,7 @@ $(function(){
               <dl>
                 <dd>
                   <ol>
-                    <li><a href="javascript:void(0);" id="welcome_dashboard" onclick="openItem('welcome,dashboard,dashboard');">控制面板</a></li>
+                    <!--<li><a href="javascript:void(0);" id="welcome_dashboard" onclick="openItem('welcome,dashboard,dashboard');">控制面板</a></li>-->
                     <li><a href="javascript:void(0);" id="aboutus_dashboard" onclick="openItem('aboutus,dashboard,dashboard');">关于我们</a></li>
                   </ol>
                 </dd>

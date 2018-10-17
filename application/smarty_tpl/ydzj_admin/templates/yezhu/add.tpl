@@ -117,6 +117,34 @@
           <td class="vatop rowform"><input type="text" value="{$info['car_no3']|escape}" name="car_no3" id="car_no3" class="txt"></td>
           <td class="vatop tips">{form_error('car_no3')}</td>
         </tr>
+        <tr class="noborder">
+          <td colspan="2">家庭成员: </td>
+        </tr>
+        <tr>
+	    	<td colspan="2">
+	    		<table id="familyConfigTable">
+	    			<thead>
+	    				<tr>
+	    					<th>联系电话</th>
+	    					<th>姓名</th>
+	    				</tr>
+	    			</thead>
+	    			<tbody>
+	    				{if $familyList}
+						  {foreach from=$familyList key=key item=valus}
+        				<tr>
+	    					<td>
+								<input type="text" readonly value={$valus['mobile']}  name="mobile[]"  class="txt">
+	    					</td>
+	    					<td >
+	    						<input type="text" readonly value={$valus['name']}  name="name[]" class="txt">
+	    					</td>
+						</tr>
+						  {/foreach}
+						{/if}
+					</tbody>
+				</table>
+			</td>
         <tr>
           <td colspan="2"><label>排序:</label></td>
         </tr>
