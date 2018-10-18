@@ -283,7 +283,7 @@ class Parking extends Ydzj_Admin_Controller {
 				$insertData = array_merge($_POST,$this->_prepareData(),$this->addWhoHasOperated('add'));
 				
 				$houseInfo = $this->House_Model->getById(array(
-					'select' => 'yezhu_id,yezhu_name,uid,mobile',
+					'select' => 'id,yezhu_id,yezhu_name,uid,mobile',
 					'where' => array(
 						'address' =>$_POST['address'],
 						'resident_id' => $residentId
@@ -296,7 +296,7 @@ class Parking extends Ydzj_Admin_Controller {
 				}
 				
 				$yezhuList = $this->wuye_service->search('房屋',array(
-					'select' => 'yezhu_id,yezhu_name,uid,mobile',
+					'select' => 'id,yezhu_id,yezhu_name,uid,mobile',
 					'where' => array(
 						'address' => $insertData['address'],
 					)

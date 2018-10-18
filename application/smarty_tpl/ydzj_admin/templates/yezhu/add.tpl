@@ -133,12 +133,8 @@
 	    				{if $familyList}
 						  {foreach from=$familyList key=key item=valus}
         				<tr>
-	    					<td>
-								<input type="text" readonly value={$valus['mobile']}  name="mobile[]"  class="txt">
-	    					</td>
-	    					<td >
-	    						<input type="text" readonly value={$valus['name']}  name="name[]" class="txt">
-	    					</td>
+	    					<td>{$valus['mobile']|escape}</td>
+	    					<td>{$valus['name']|escape}</td>
 						</tr>
 						  {/foreach}
 						{/if}

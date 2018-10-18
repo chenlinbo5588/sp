@@ -723,19 +723,20 @@ class Wuye_service extends Base_service {
 				
 			if(count($wuyeTotalItem) > 100){
 				$this->_planModel->beginTrans();
-				$result['commitCnt'] += 100;
+				$result['commitCnt'] += count($wuyeTotalItem);
 				$this->_planDetailModel->batchInsert($wuyeDetailItem);
 				$this->_planModel->batchInsert($wuyeTotalItem);
 				
 				if($this->_planModel->getTransStatus() === FALSE){
 					$this->_planModel->rollBackTrans();
-					$result['failedCnt'] += 100;
+					$result['failedCnt'] += count($wuyeTotalItem);
 					log_message('error','批量出错' );
 					
 				}else{
 					$this->_planModel->commitTrans();
+					$result['successCnt'] += count($wuyeTotalItem);
 				}
-				$result['successCnt'] += 100;
+				
 				
 				$wuyeDetailItem = array();
 				$wuyeTotalItem = array();

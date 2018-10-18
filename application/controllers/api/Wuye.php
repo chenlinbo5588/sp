@@ -18,8 +18,22 @@ class Wuye extends Wx_Controller {
 		
 		if($this->memberInfo){
 			
+			/*
+			$orderList = $this->Order_Model->getList(array(
+				'select' => 'goods_id,goods_name',
+				'where' => array(
+					'uid' => $this->memberInfo['uid']
+				),
+				'where_in' => array(
+					array('key' => 'order_type','value' => array(1,2))
+				),
+				'limit' => 1
+			));
+			*/
+			
 			if($this->yezhuInfo){
 				$d = $this->wuye_service->getHouseListByYezhu($this->yezhuInfo);
+				
 				$this->jsonOutput2(RESP_SUCCESS,$d);
 			}else{
 				$this->jsonOutput2(RESP_SUCCESS,array());

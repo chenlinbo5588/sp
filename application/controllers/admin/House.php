@@ -319,7 +319,9 @@ class House extends Ydzj_Admin_Controller {
 					$insertData['uid'] = $yezhuInfo[0]['uid'];
 					$insertData['car_no'] = $yezhuInfo[0]['car_no'];
 				}
-				if($this->_yezhuAdd($_POST,'add')){
+				
+				if(!$this->_yezhuAdd($_POST,'add')){
+					$this->jsonOutput('抱歉,该小区无此业主信息');
 					break;
 				}
 				
@@ -443,9 +445,12 @@ class House extends Ydzj_Admin_Controller {
 					}
 				}
 				$_POST['resident_id'] = $residentId;
-				if($this->_yezhuAdd($_POST,'edid')){
+				if(!$this->_yezhuAdd($_POST,'edid')){
+					$this->jsonOutput('家庭成员添加错误');
 					break;
 				}
+				
+				
 				if($_POST['mobile'][0]){
 					$yezhuInfo = $this->wuye_service->search('业主',array('where' => array('mobile' => $_POST['mobile'][0])));
 					$updateInfo['yezhu_name'] = $yezhuInfo[0]['name'];
@@ -454,7 +459,11 @@ class House extends Ydzj_Admin_Controller {
 					$updateInfo['uid'] = $yezhuInfo[0]['uid'];
 					$updateInfo['car_no'] = $yezhuInfo[0]['car_no'];
 				}
+				
+				
 				$this->House_Model->update($updateInfo,array('id' => $id));
+				
+				
 				$error = $this->House_Model->getError();
 				
 				if(QUERY_OK != $error['code']){
@@ -1267,13 +1276,11 @@ class House extends Ydzj_Admin_Controller {
 			));
 			$yezhuList[] = $yezhuInfo[0];;
 			if(empty($yezhuList[$key])){
-				$this->jsonOutput('抱歉,该小区无此业主信息');
-				return true;
+				return false;
 			}
     	}
     	
     	$this->House_Yezhu_Model->beginTrans();
-    	
     	$this->House_Yezhu_Model->deleteByCondition(array(
 			'where' => array(
 				'house_id' => $data['id']
@@ -1290,7 +1297,7 @@ class House extends Ydzj_Admin_Controller {
     		$insertData[] = array_merge($insert,$this->_prepareData(),$this->addWhoHasOperated('add'));
     	}
     	
-    	$this->House_Yezhu_Model->batchInsert($insertData);
+    	$rows = $this->House_Yezhu_Model->batchInsert($insertData);
     	
     	if($this->House_Yezhu_Model->getTransStatus() === FALSE){
 			$this->House_Yezhu_Model->rollBackTrans();
