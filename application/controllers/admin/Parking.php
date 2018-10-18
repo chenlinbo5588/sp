@@ -309,12 +309,12 @@ class Parking extends Ydzj_Admin_Controller {
 					$insertData['mobile'] = $yezhuList[0]['mobile'];
 					$insertData['uid'] = $yezhuList[0]['uid'];
 				}
-				
+	
 				$insertData['resident_id'] = $residentId;
 				$insertData['lng'] = $residentList[$residentId]['lng'];
 				$insertData['lat'] = $residentList[$residentId]['lat'];
 				$insertData['house_id'] = $houseInfo['id'];
-				
+				 
 				$newid =$this->Parking_Model->_add($insertData);
 				$error = $this->Parking_Model->getError();
 				
@@ -434,6 +434,20 @@ class Parking extends Ydzj_Admin_Controller {
 					break;
 				}
 				
+				
+				$yezhuList = $this->wuye_service->search('房屋',array(
+					'select' => 'yezhu_id,yezhu_name,uid,mobile',
+					'where' => array(
+						'address' => $updateInfo['address'],
+						'resident_id' => $info['resident_id'],
+					)
+				));
+				if(!empty($yezhuList)){
+					$updateInfo['yezhu_id'] = $yezhuList[0]['yezhu_id'];
+					$updateInfo['yezhu_name'] = $yezhuList[0]['yezhu_name'];
+					$updateInfo['mobile'] = $yezhuList[0]['mobile'];
+					$updateInfo['uid'] = $yezhuList[0]['uid'];
+				}
 				
 				$this->Parking_Model->update($updateInfo,array('id' => $id));
 				

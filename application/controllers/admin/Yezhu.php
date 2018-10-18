@@ -372,9 +372,12 @@ class Yezhu extends Ydzj_Admin_Controller {
 				)
 			));
 		}
-		foreach ($yezhuList as $key =>$item){
-			$yezhuId[] = $item['yezhu_id'];
+		if($yezhuList){
+			foreach ($yezhuList as $key =>$item){
+				$yezhuId[] = $item['yezhu_id'];
+			}
 		}
+
 		
 		if($yezhuId){
 			$familyList = $this->wuye_service->search('业主',array(

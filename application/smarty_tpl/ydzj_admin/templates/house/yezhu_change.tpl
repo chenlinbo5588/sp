@@ -22,8 +22,9 @@
         <tr>
         <td>
 	      	<ul class="ulListStyle1 clearfix">
+	      	<li><label><input type="checkbox" name="change_status[]" value="delete"/>删除原家庭成员</label></li>
 			<li><label><input type="checkbox" name="change_status[]" value="add"/>同时录入家庭成员</label></li>
-			<li><label><input type="checkbox" name="change_status[]" value="delete"/>删除原家庭成员</label></li>
+			
  			</ul>
  		</td>
  		</tr>
