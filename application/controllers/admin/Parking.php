@@ -636,31 +636,20 @@ class Parking extends Ydzj_Admin_Controller {
 						$tmpRow['address'] = getCleanValue($objWorksheet->getCell('B'.$rowIndex)->getValue());
 						$tmpRow['jz_area'] = getCleanValue($objWorksheet->getCell('C'.$rowIndex)->getValue());
 						$tmpRow['mobile'] = getCleanValue($objWorksheet->getCell('G'.$rowIndex)->getValue());
-						
-						$tmpRow['expire'] = getCleanValue($objWorksheet->getCell('H'.$rowIndex)->getValue());
-						
-						
-						
+							
 						$this->form_validation->reset_validation();
 						$this->form_validation->set_data($tmpRow);
 						
 						$this->form_validation->set_rules('name','车位名称','required|min_length[2]|max_length[200]|callback_checkName2['.$residentInfo['name'].']');
 						$this->form_validation->set_rules('jz_area','建筑面积','required|is_numeric|greater_than[0]');
 						$this->form_validation->set_rules('mobile','手机号码','required|valid_mobile');
-						
-						
-						if($tmpRow['expire']){
-							$this->form_validation->set_rules('expire','缴费到期日期','required|valid_date');
-						}
-						
-						
+					
 						if(!$this->form_validation->run()){
 							//print_r($this->form_validation->error_array());
 							$tmpRow['message'] = $this->form_validation->error_first_html();
 							$result[] = $tmpRow;
 							continue;
 						}
-						
 						 
 						$insertData = array_merge(array(
 							'resident_id' => $residentId,
@@ -674,7 +663,7 @@ class Parking extends Ydzj_Admin_Controller {
 						
 						
 						$houseInfo = $this->House_Model->getById(array(
-							'select' => 'id',
+							'select' => 'id,wuye_expire',
 							'where' => array(
 								'address' =>$tmpRow['address'],
 								'resident_id' => $residentId
@@ -683,6 +672,7 @@ class Parking extends Ydzj_Admin_Controller {
 						
 						if($houseInfo){
 							$insertData['house_id'] = $houseInfo['id'];
+							$insertData['expire'] = $houseInfo['wuye_expire'];
 						}
 						
 						$yezhuInfo = $this->Yezhu_Model->getById(array(

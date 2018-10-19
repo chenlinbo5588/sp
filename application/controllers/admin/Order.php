@@ -5,13 +5,18 @@ class Order extends Ydzj_Admin_Controller {
 	
 	public $_moduleTitle;
 	public $_className;
+	public $payMethod;
 	
 	public function __construct(){
 		parent::__construct();
 		
+		$this->payMethod  = config_item('payment');
+		
 		$this->load->library(array('Wuye_service','Order_service','Basic_data_service'));
 		
 		$this->order_service->setDataModule($this->_dataModule);
+		
+    	
 		
 		$this->_moduleTitle = '订单';
 		$this->_className = strtolower(get_class());
@@ -146,7 +151,7 @@ class Order extends Ydzj_Admin_Controller {
 	
 	
 	public function add(){
-
+		$payMethodList =  $this->payMethod['method']['手工单'];
 		$year = date('Y',$_POST['star_time']);
 		if($this->isPostRequest()){
 			
@@ -157,15 +162,6 @@ class Order extends Ydzj_Admin_Controller {
 				$this->form_validation->set_rules('start_date','缴费开始日期','required|valid_date');
 				$this->form_validation->set_rules('end_date','缴费结束日期','required|valid_date|callback_checkDate['.$_POST['start_date'].']');
 				
-				/*
-				$starTime = strtotime($_POST['star_time']);
-				$starYear = date('Y',$starTime);
-				$starMonth = date('m',$starTime);
-				$endTime = strtotime($_POST['end_time']);
-				$endYear = date('Y',$endTime);
-				$endMonth = date('m',$endTime);
-				$month = ($endYear - $starYear) *12 + $endMonth - $starMonth;
-				*/
 				
 				if(!$this->form_validation->run()){			
 					$this->jsonOutput('数据校验失败',array('errors' =>$this->form_validation->error_array()));
@@ -199,6 +195,8 @@ class Order extends Ydzj_Admin_Controller {
 					'year' => date('Y',$edateTs),
 					'month' => date('m',$edateTs) - date('m',$sdateTs) + 1,
 					'pay_time' => time(),
+					'pay_channel' => $this->payMethod['channel']['手工单'],
+					'pay_method' => $_POST['pay_method'],
 				);
 				
 				$message = '';
@@ -208,12 +206,11 @@ class Order extends Ydzj_Admin_Controller {
 				if(empty($memberInfo)){
 					$memberInfo = array('uid' => 0 , 'username' => $houseItem[0]['yezhu_name']);
 				}
-				
+				$this->order_service->setWeixinAppConfig(config_item('mp_xcxCswy'));
 				$this->Plan_Model->beginTrans();
 				
 				$result = $this->order_service->createWuyeOrder('house_id',$param,$memberInfo,$message,'Backstage');
-				
-				
+
 				if($this->Plan_Model->getTransStatus() === FALSE){
 					$this->Plan_Model->rollBackTrans();
 					
@@ -229,8 +226,10 @@ class Order extends Ydzj_Admin_Controller {
 						$this->jsonOutput('创建失败');
 					}
 				}
+				$this->jsonOutput($message);
 			}
 		}else{
+			$this->assign('payMethodList',$payMethodList);
 			$this->display();
 		}
 	}
@@ -438,10 +437,16 @@ class Order extends Ydzj_Admin_Controller {
 			$showExpire = true;
 		}
 		
+		$payChannelList = $this->payMethod['channel'];
+		$payMethodList = $this->payMethod['method'];
+		$payChannelList = array_flip($payChannelList);
+		$payMethodList = array_flip($payMethodList[$payChannelList[$info['pay_channel']]]);	
 		$this->assign(array(
 			'info' => $info,
 			'showExpire' => $showExpire,
-			'extraItem' => $this->order_service->extraInfoToArray($info)
+			'extraItem' => $this->order_service->extraInfoToArray($info),
+			'payChanne' => $payChannelList[$info['pay_channel']],
+			'payMethod' => $payMethodList['pay_method'] 
 		));
 		
 		
@@ -600,7 +605,11 @@ class Order extends Ydzj_Admin_Controller {
         //$this->load->library(array('Basic_data_service'));
         //$basicData = $this->basic_data_service->getBasicData();
         
-        
+		$payChannelList = $this->payMethod['channel'];
+		$payMethodList = $this->payMethod['method'];
+		$payChannelList = array_flip($payChannelList);
+		$payMethodList = array_flip($payMethodList);
+
     	foreach($list as $rowId => $order){
     		foreach($colConfig as $colKey => $colItemConfig){
     			
@@ -612,10 +621,17 @@ class Order extends Ydzj_Admin_Controller {
     					$val = $val == 1 ? '男':'女';
     					break;
     				case '支付渠道':
-    					$val = '微信支付';
+    					$val =  $payChannelList[$val];
     					break;
     				case '支付方式':
-    					$val = '小程序支付';
+						foreach($this->payMethod['method'] as $key => $item){
+							foreach($this->payMethod['method'][$key] as $keys => $valus){
+								if($valus == $val){
+									$val = $keys;
+								}
+							}
+
+						}
     					break;
     				case '订单状态':
     					$val = OrderStatus::$statusName[$val];
@@ -730,8 +746,8 @@ class Order extends Ydzj_Admin_Controller {
 		$this->_initPHPExcel();
     	
         $objPHPExcel = new PHPExcel();
-        
         $list = $this->order_service->getWeixinPayBill(str_replace('-','',$param['bill_date']),$param['bill_type']);
+        
         
         if($list){
         	

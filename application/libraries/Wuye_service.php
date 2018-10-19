@@ -72,8 +72,7 @@ class Wuye_service extends Base_service {
 		self::$CI->load->model(array(
 			'Resident_Model','Building_Model','House_Model','Yezhu_Model','Parking_Model',
 			'Feetype_Model','Basic_Data_Model','Repair_Model','Repair_Images_Model','Plan_Detail_Model',
-			'Plan_Model','House_Yezhu_Model','Payment_Report_Date_Model','Payment_Report_Week_Model',
-			'Payment_Report_Month_Model','Payment_Report_Year_Model','Order_Model'
+			'Plan_Model','House_Yezhu_Model','Order_Model','Member_Model'
 		));
 		
 		$this->_residentModel = self::$CI->Resident_Model;

@@ -211,7 +211,7 @@ class Order_service extends Base_service {
 			//file_put_contents('weixinRefund.txt',print_r($refundResp,true));
 			
 			if(!$this->checkWeixinRespSuccess($refundResp)){
-				$message = $refundResp['return_msg'];
+				$message = $refundResp['err_code_des'];
 				return false;
 			}
 			
@@ -559,7 +559,7 @@ class Order_service extends Base_service {
 			
 			$message = RESP_SUCCESS;
 		}
-		
+
 		return $callPayJson;
 		
 	}

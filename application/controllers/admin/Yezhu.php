@@ -726,7 +726,14 @@ class Yezhu extends Ydzj_Admin_Controller {
 							'car_no2' => $tmpRow['car_no2'],
 							'car_no3' => $tmpRow['car_no3'],
 						);
-							
+						$uidInfo = $this->Member_Model->getList(array(
+							'where' => array(
+								'mobile' => $tmpRow['mobile'],
+							)
+						));
+						if($uidInfo){
+							$insertData['uid'] = $uidInfo[0]['uid'];
+						}	
 						$this->Yezhu_Model->_add(array_merge($insertData,$this->addWhoHasOperated('add')));
 						
 						$error = $this->Yezhu_Model->getError();

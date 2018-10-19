@@ -25,8 +25,22 @@
 	        </select>
           </td>
         </tr>
+        <tr class="noborder">
+          <td colspan="2"><label class="validation">{#pay_method#}:</label><label class="errtip" ></label>{form_error('pay_method')}</td>
+        </tr>
+        <tr class="noborder">
+        	<td colspan="2">
+        		<select name="pay_method">
+        			<option value="">请选择</option>
+        			{foreach from=$payMethodList key=key item=item}
+        			<option value="{$item}">{$key}</option>
+        			{/foreach}
+        		</select>
+	         </td>
+        </tr>
 		<tr class="noborder">
           <td colspan="2"><label class="validation" for="name">{#amount#}:</label><label class="errtip" id="error_amount"></label></td>
+        </tr>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input type="text" value="{$info['amount']|escape}" name="amount" id="amount" class="txt"></td>

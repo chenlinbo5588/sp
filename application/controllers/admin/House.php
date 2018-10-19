@@ -336,32 +336,29 @@ class House extends Ydzj_Admin_Controller {
 					$insertData['uid'] = $yezhuInfo[0]['uid'];
 					$insertData['car_no'] = $yezhuInfo[0]['car_no'];
 				}
-	
-				if(!$this->_yezhuAdd($_POST,'add')){
-					$this->jsonOutput('抱歉,该小区无此业主信息');
+				$message = '';
+				$insertYezhuList = $this->_checkYezhu($_POST,$message);
+				if($message){
+					$this->jsonOutput($message);
 					break;
 				}
-
 				
+				$this->House_Model->beginTrans();
 				$newid =$this->House_Model->_add($insertData);
 				$_POST['id'] = $newid;
-				if(!$this->_yezhuAdd($_POST)){
-					$this->jsonOutput('抱歉,该小区无此业主信息');
-					break;
-				}
-				$error = $this->House_Model->getError();
-				
-				if(QUERY_OK != $error['code']){
-					if($error['code'] == MySQL_Duplicate_CODE){
-						$this->jsonOutput($this->input->post('address').'已被占用');
-					}else{
-						$this->jsonOutput('数据库错误,请稍后再次尝试');
-					}
-					
-					break;
-				}
 
-				$this->jsonOutput('保存成功,页面即将刷新',array('redirectUrl' => admin_site_url($this->_className.'/index')));
+				$this->_addHouseYezhu($insertYezhuList,$newid);
+				$error = $this->House_Model->getError();
+				$message = $this->_getMessage($error);
+				if($this->House_Model->getTransStatus() === FALSE){
+					$this->House_Model->rollBackTrans();
+					
+					$this->jsonOutput($message);
+				}else{
+					$flag = $this->House_Model->commitTrans();
+					$this->jsonOutput('保存成功,页面即将刷新',array('redirectUrl' => admin_site_url($this->_className.'/index')));
+				}				
+
 			}
 		}else{
 			$this->_preparePageData();
@@ -473,12 +470,12 @@ class House extends Ydzj_Admin_Controller {
 				
 				
 				$_POST['resident_id'] = $residentId;
-
-				if(!$this->_yezhuAdd($_POST)){
-					$this->jsonOutput('抱歉,该小区无此业主信息');
+				$message = '';
+				$insertYezhuList = $this->_checkYezhu($_POST,$message);
+				if($message){
+					$this->jsonOutput($message);
 					break;
 				}
-				
 				
 				if($_POST['mobile'][0]){
 					$yezhuInfo = $this->wuye_service->search('业主',array('where' => array('mobile' => $_POST['mobile'][0])));
@@ -488,24 +485,20 @@ class House extends Ydzj_Admin_Controller {
 					$updateInfo['uid'] = $yezhuInfo[0]['uid'];
 					$updateInfo['car_no'] = $yezhuInfo[0]['car_no'];
 				}
-				
+				$this->House_Model->beginTrans();
+				$this->_addHouseYezhu($insertYezhuList,$id);
 				
 				$this->House_Model->update($updateInfo,array('id' => $id));
 				
-				
-				$error = $this->House_Model->getError();
-				
-				if(QUERY_OK != $error['code']){
-					if($error['code'] == MySQL_Duplicate_CODE){
-						$this->jsonOutput($this->input->post('address').'已存在');
-					}else{
-						$this->jsonOutput('数据库错误,请稍后再次尝试');
-					}
+				if($this->House_Model->getTransStatus() === FALSE){
+					$this->House_Model->rollBackTrans();
 					
-					break;
+					$this->jsonOutput('保存失败');
+				}else{
+					$flag = $this->House_Model->commitTrans();
+					$this->jsonOutput('保存成功');
 				}
 				
-				$this->jsonOutput('保存成功');
 			}
 		}else{
 			
@@ -1074,7 +1067,6 @@ class House extends Ydzj_Admin_Controller {
 					$this->jsonOutput('抱歉,该小区无此业主信息');
 					break;
 				}
-				$this->House_Model->beginTrans();
 				$updateInfo = array_merge(array(
 					'uid' => $yezhuInfo[0]['uid'],
 					'yezhu_id' => $yezhuInfo[0]['id'],
@@ -1082,7 +1074,6 @@ class House extends Ydzj_Admin_Controller {
 					'mobile' => $yezhuInfo[0]['mobile'],
 					'car_no' =>  $yezhuInfo[0]['car_no'],
 				),$this->addWhoHasOperated('edit'));
-				$this->House_Model->update($updateInfo,array('id' => $id));
 				
 				$parkingUpdateInfo = array_merge(array(
 					'uid' => $yezhuInfo[0]['uid'],
@@ -1090,35 +1081,32 @@ class House extends Ydzj_Admin_Controller {
 					'yezhu_id' => $yezhuInfo[0]['id'],
 					'mobile' => $yezhuInfo[0]['mobile'],
 				),$this->addWhoHasOperated('edit'));
-				$this->Parking_Model->update($parkingUpdateInfo,array('house_id' => $id));
 				
 				$addInfo = array_merge(array(
 					'uid' => $yezhuInfo[0]['uid'],
 					'house_id' => $id,
 					'yezhu_id' => $yezhuInfo[0]['id'],
 					'resident_id' => $info['resident_id'],
-				),$this->addWhoHasOperated('add'));				
+				),$this->addWhoHasOperated('add'));					
 				
-				if(!$this->House_Model->deleteAndAdd($yezhuInfo[0]['id'],$info['resident_id'],$id,$changeStatus,$this->addWhoHasOperated('add'))){
-					$this->House_Model->_add($addInfo);
+				$this->House_Model->beginTrans();
+
+				$this->House_Model->update($updateInfo,array('id' => $id));
+				
+				$this->Parking_Model->update($parkingUpdateInfo,array('house_id' => $id));
+				
+				if(!$this->House_Yezhu_Model->deleteAndAdd($yezhuInfo[0]['id'],$info['resident_id'],$id,$changeStatus,$this->addWhoHasOperated('add'))){
+					$this->House_Yezhu_Model->_add($addInfo);
 				}
 		    	if($this->House_Model->getTransStatus() === FALSE){
 					$this->House_Model->rollBackTrans();
 					
 					log_message('error','业主添加错误' );
 					
-					return false;
 				}else{
-					return $this->House_Yezhu_Model->commitTrans();
+				 	$this->House_Yezhu_Model->commitTrans();
+				 	$this->jsonOutput('更改成功');
 				}
-				$error = $this->House_Model->getError();
-			
-				if(QUERY_OK != $error['code']){
-					$this->jsonOutput('数据库错误,请稍后再次尝试');
-					break;
-				}
-				
-				$this->jsonOutput('操作成功');
 			}
 		}else{
 			$this->assign('info',$info);
@@ -1184,7 +1172,7 @@ class House extends Ydzj_Admin_Controller {
 		}
 	}
 	
-    private function _yezhuAdd($data,$from = null){
+    private function _checkYezhu($data,&$message){
     	
     	$flag = true;
     	
@@ -1197,45 +1185,33 @@ class House extends Ydzj_Admin_Controller {
 			));
 			$yezhuList[] = $yezhuInfo[0];;
 			if(empty($yezhuList[$key])){
-				$flag = false;
+				$message = '抱歉,该小区无此业主信息';
 				break;
 			}
+			
     	}
-    	
-    	
-    	if($flag){
-    		$this->House_Yezhu_Model->beginTrans();
+    	return $yezhuList;
+    }
+    
+    private function _addHouseYezhu($yezhuList,$houseId){
 
-	    	$this->House_Yezhu_Model->deleteByCondition(array(
-				'where' => array(
-					'house_id' => $data['id']
-				)
-			));
-	
-	    	foreach($yezhuList  as $key => $item){
-	    		$insert = array(
-	    			'resident_id' => $item['resident_id'],
-	    			'yezhu_id' => $item['id'],
-	    			'uid' => $item['uid'],
-	    			'house_id' => $data['id']
-	    		);
-	    		$insertData[] = array_merge($insert,$this->_prepareData(),$this->addWhoHasOperated('add'));
-	    	}
-	    	
-	    	$this->House_Yezhu_Model->batchInsert($insertData);
-	    	
-	    	if($this->House_Yezhu_Model->getTransStatus() === FALSE){
-				$this->House_Yezhu_Model->rollBackTrans();
-				
-				log_message('error','业主添加错误' );
-				
-				$flag = false;
-			}else{
-				$flag = $this->House_Yezhu_Model->commitTrans();
-			}
+    	$this->House_Yezhu_Model->deleteByCondition(array(
+			'where' => array(
+				'house_id' => $houseId
+			)
+		));
+
+    	foreach($yezhuList  as $key => $item){
+    		$insert = array(
+    			'resident_id' => $item['resident_id'],
+    			'yezhu_id' => $item['id'],
+    			'uid' => $item['uid'],
+    			'house_id' => $houseId
+    		);
+    		$insertData[] = array_merge($insert,$this->_prepareData(),$this->addWhoHasOperated('add'));
     	}
     	
-    	return $flag;
+    	$this->House_Yezhu_Model->batchInsert($insertData);
 
     }
 	
@@ -1255,5 +1231,17 @@ class House extends Ydzj_Admin_Controller {
 			}
 		}
 		return $judgement;
+	}
+	
+	private function _getMessage($error){
+		if(QUERY_OK != $error['code']){
+			if($error['code'] == MySQL_Duplicate_CODE){
+				$message = ($this->input->post('address').'已被占用');
+			}else{
+				$message = ('数据库错误,请稍后再次尝试');
+			}
+			
+			return $message;
+		}
 	}
 }

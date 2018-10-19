@@ -20,11 +20,11 @@
        	</tr>
        	<tr>
    		  <td class="required">{#pay_channel#}: </td>
-          <td class="vatop rowform">微信支付</td>      
+          <td class="vatop rowform">{$payChanne}</td>      
        	</tr>
        	<tr>
    		  <td class="required">{#pay_method#}: </td>
-          <td class="vatop rowform">小程序支付</td>      
+          <td class="vatop rowform">{$payMethod}</td>      
        	</tr>
       	<tr>
    		  <td class="required">{#goods_name#}: </td>
