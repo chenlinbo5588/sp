@@ -574,7 +574,6 @@ class Wuye_service extends Base_service {
 		}
 		
 		
-		
 		$feetypeList = $this->search('費用类型',array(
 			'where' => array(
 				'resident_id' => $residentId,
@@ -645,6 +644,8 @@ class Wuye_service extends Base_service {
 						'add_username' => $who['add_username'],	
 						'amount_plan' => 0,
 						'amount_real' => 0,
+						'stat_date' => strtotime($year.'-01-01'),
+						'end_date' => strtotime($year.'-12-31'),
 					);
 					if('车位费' == $feeTypeRule['feeName']){
 						$parkingList = $this->search('停车位',array(
@@ -671,6 +672,8 @@ class Wuye_service extends Base_service {
 								'add_username' => $who['add_username'],
 								'amount_plan' => 0,
 								'amount_real' => 0,
+								'stat_date' => strtotime($year.'-01-01'),
+								'end_date' => strtotime($year.'-12-31'),
 							);
 							if(false !== strpos($detailInsert['billing_style'],'按面积')){						
 								$detailInsert['amount_plan'] = $detailInsert['price'] * $detailInsert['jz_area'] * 12;

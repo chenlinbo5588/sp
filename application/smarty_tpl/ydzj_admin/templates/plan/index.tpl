@@ -36,7 +36,6 @@
           <th>{#pay_method#}</th>
           <th>{#order_id#}</th>
 
-
         </tr>
       </thead>
       <tbody>
@@ -44,7 +43,7 @@
       	<tr class="hover edit" id="row{$item['id']}">
           <td><a class="popwin" href="javascript:void(0);" 
           data-title="{$item['address']|escape}"
-          data-url="{admin_site_url($moduleClassName|cat:'/detail?id='|cat:$item['id'])}">{$item['address']|escape}</a>
+          data-url="{admin_site_url($moduleClassName|cat:'/detail?id='|cat:$item['id']|cat:'&year='|cat:$item['year'])}">{$item['address']|escape}</a>
           </td>
           <td>{$residentList[$item['resident_id']]['name']|escape}</td>
           <td>{$item['feetype_name']|escape}</td>

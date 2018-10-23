@@ -28,6 +28,7 @@
       <thead>
         <tr class="thead">
           <th class="w24">选择</th>
+          <th>{#plan_year#}</th>
           <th>{#resident_name#}</th>
           <th>{#address#}</th>
           <th>{#type_name#}</th>
@@ -49,6 +50,7 @@
       	{foreach from=$list['data'] item=item}
       	  <tr class="hover edit" id="row{$item['id']}">
           <td><input value="{$item['id']}" class="checkitem" group="chkVal" type="checkbox" name="id[]"></td>
+          <td>{$item['year']|escape}</td>
           <td>{$residentList[$item['resident_id']]['name']|escape}</td>
           <td>{$item['address']|escape}</td> 
           <td>{$item['feetype_name']|escape}</td>

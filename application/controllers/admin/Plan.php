@@ -129,10 +129,11 @@ class Plan extends Ydzj_Admin_Controller {
 	}
 	
 	public function detail(){
-		$this->Plan_Model->setTableId(date('Y'));
-		$this->Plan_Detail_Model->setTableId(date('Y'));
+
 		$id = $this->input->get_post('id') ? $this->input->get_post('id') : 0;
-		
+		$year = $this->input->get_post('year');
+		$this->Plan_Model->setTableId($year);
+		$this->Plan_Detail_Model->setTableId($year);		
 		$planDetail = $this->wuye_service->search('收费计划',array(
 			'where' => array('id' => $id,)
 		));
