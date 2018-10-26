@@ -629,6 +629,7 @@ class Wuye_service extends Base_service {
 				foreach($feeTypeInfo['fee_rule'] as $key => $feeTypeRule){
 					$detailInsert = array(
 						'house_id' => $houseItem['id'],
+						'uid' => $houseItem['uid'],
 						'address' => $houseItem['address'],
 						'parking_name' => null,
 						'fee_gname' =>  $feeTypeInfo['name'],//组名
@@ -653,38 +654,41 @@ class Wuye_service extends Base_service {
 								'house_id' => $houseItem['id'],
 							)
 						),'id');
-						
-						foreach($parkingList as $key => $parkingItem){
-							$detailInsert = array(
-								'house_id' => $houseItem['id'],
-								'address' => $parkingItem['address'],
-								'parking_name' => $parkingItem['name'],
-								'fee_gname' =>  $feeTypeInfo['name'],
-								'feetype_name' => $feeTypeRule['feeName'],
-								'resident_id' => $parkingItem['resident_id'],
-								'resident_name' => $feeTypeInfo['resident_name'],
-								'year' => $year,
-								'jz_area' => $parkingItem['jz_area'],
-								'price' =>  $feeTypeRule['price'],
-								'wuye_type' => $feeTypeRule['wuyeType'],
-								'billing_style' => $feeTypeRule['billingStyle'],
-								'add_uid' => $who['add_uid'],
-								'add_username' => $who['add_username'],
-								'amount_plan' => 0,
-								'amount_real' => 0,
-								'stat_date' => strtotime($year.'-01-01'),
-								'end_date' => strtotime($year.'-12-31'),
-							);
-							if(false !== strpos($detailInsert['billing_style'],'按面积')){						
-								$detailInsert['amount_plan'] = $detailInsert['price'] * $detailInsert['jz_area'] * 12;
-							}else if('按每月固定值' == $detailInsert['billing_style']){
-								$detailInsert['amount_plan'] = $detailInsert['price'] * 12;
+						if($parkingList){
+							foreach($parkingList as $key => $parkingItem){
+								$detailInsert = array(
+									'house_id' => $houseItem['id'],
+									'uid' => $houseItem['uid'],
+									'address' => $parkingItem['address'],
+									'parking_name' => $parkingItem['name'],
+									'fee_gname' =>  $feeTypeInfo['name'],
+									'feetype_name' => $feeTypeRule['feeName'],
+									'resident_id' => $parkingItem['resident_id'],
+									'resident_name' => $feeTypeInfo['resident_name'],
+									'year' => $year,
+									'jz_area' => $parkingItem['jz_area'],
+									'price' =>  $feeTypeRule['price'],
+									'wuye_type' => $feeTypeRule['wuyeType'],
+									'billing_style' => $feeTypeRule['billingStyle'],
+									'add_uid' => $who['add_uid'],
+									'add_username' => $who['add_username'],
+									'amount_plan' => 0,
+									'amount_real' => 0,
+									'stat_date' => strtotime($year.'-01-01'),
+									'end_date' => strtotime($year.'-12-31'),
+								);
+								if(false !== strpos($detailInsert['billing_style'],'按面积')){						
+									$detailInsert['amount_plan'] = $detailInsert['price'] * $detailInsert['jz_area'] * 12;
+								}else if('按每月固定值' == $detailInsert['billing_style']){
+									$detailInsert['amount_plan'] = $detailInsert['price'] * 12;
+								}
+								$detailInsert['amount_real'] = $detailInsert['amount_plan'];
+							 	
+							 	$basicInfo['amount_plan'] += $detailInsert['amount_plan'];
+							 	$wuyeDetailItem[] = $detailInsert;
 							}
-							$detailInsert['amount_real'] = $detailInsert['amount_plan'];
-						 	
-						 	$basicInfo['amount_plan'] += $detailInsert['amount_plan'];
-						 	$wuyeDetailItem[] = $detailInsert;
 						}
+						
 					}else if($houseItem['wuye_type'] == $feeTypeRule['wuyeType'] ){
 						if(false !== strpos($detailInsert['billing_style'],'按面积')){						
 							$detailInsert['amount_plan'] = $detailInsert['price'] * $detailInsert['jz_area'] * 12;
@@ -696,7 +700,6 @@ class Wuye_service extends Base_service {
 					 	if(1 == $feeTypeInfo['generate_deatil']){
 					 		$wuyeDetailItem[] = $detailInsert;
 					 	}
-					 	
 					}
 					
 				}
@@ -706,6 +709,7 @@ class Wuye_service extends Base_service {
 				
 				$basicInfo = array(
 					'house_id' => $houseItem['id'],
+					'uid' => $houseItem['uid'],
 					'address' => $houseItem['address'],
 					'resident_id' => $houseItem['resident_id'],
 					'resident_name' => $feeTypeInfo['resident_name'],

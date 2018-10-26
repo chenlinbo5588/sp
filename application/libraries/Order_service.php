@@ -4,38 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 require_once(WEIXIN_PAY_PATH.'WxPay.Api.php');
 
 
-/**
- * 订单状态
- */
-class OrderStatus
-{
-	public static $deleted = 0;
-	
-	//未支付
-	public static $unPayed = 1;
-	
-	//已支付
-	public static $payed = 2;
-	
-	//退款中
-	public static $refounding = 3;
-	
-	//退款完成
-	public static $refounded = 4;
-	
-	//关闭
-	public static $closed = 5;
-	
-	
-	public static $statusName = array(
-		'已删除',
-		'未支付',
-		'已支付',
-		'退款中',
-		'退款完成',
-		'已关闭',
-	);
-}
+
 
 
 class OrderVerify {
@@ -71,7 +40,7 @@ class Order_service extends Base_service {
 	public function __construct(){
 		parent::__construct();
 		
-		self::$CI->load->library(array('Weixin_service','Wuye_service'));
+		self::$CI->load->library(array('Weixin_service','Wuye_service','constant/OrderStatus','constant/Utype'));
 		
 		
 		self::$CI->load->model(array(
@@ -1067,10 +1036,25 @@ class Order_service extends Base_service {
 		),array(
 			'order_id' => $pParam['order_id'],
 		));
-		
+
 		
 		$houseItem = $this->_houseModel->getFirstByKey($pParam['goods_id'],'id');
 		
+		if(empty($pParam['utype'])){
+			if($pParam['uid'] == $houseItem['uid'])
+			{
+				$pParam['utype'] = Utype::$seifpaid;
+			}else{
+				$houseYezhu = $this->_houseYezhuModel->getList(array('where' => array('house_id' => $pParam['goods_id'],'uid' => $pParam['uid'])));
+				if($houseYezhu){
+					$pParam['utype'] =Utype::$housepaid;
+				}else{
+					$pParam['utype'] = Utype::$otherpaid;
+				}
+				
+			}
+
+		}
 		$feetypeItem = $this->_feetypeModel->getById(array(
 			'where' => array(
 				'resident_id' => $houseItem['resident_id'],
@@ -1100,6 +1084,8 @@ class Order_service extends Base_service {
 				array('key'  => 'order_id', 'value' => $pParam['order_id']),
 				array('key'  => 'order_status', 'value' => OrderStatus::$payed),
 				array('key'  => 'pay_time', 'value' => $pParam['pay_time']),
+				array('key'  => 'uid2', 'value' => $pParam['uid']),
+				array('key'  => 'utype', 'value' => $pParam['utype']),
 			),array(
 				'house_id' => $pParam['goods_id'],
 				'feetype_name' => $pParam['order_typename']
@@ -1110,6 +1096,8 @@ class Order_service extends Base_service {
 				array('key'  => 'order_id', 'value' => $pParam['order_id']),
 				array('key'  => 'order_status', 'value' => OrderStatus::$payed),
 				array('key'  => 'pay_time', 'value' => $pParam['pay_time']),
+				array('key'  => 'uid2', 'value' => $pParam['uid']),
+				array('key'  => 'utype', 'value' => $pParam['utype']),
 			),array(
 				'house_id' => $pParam['goods_id'],
 				'fee_gname' => $pParam['order_typename']
@@ -1146,6 +1134,8 @@ class Order_service extends Base_service {
 				'month' => date('m',$pParam['fee_expire']),
 				'stat_date' => $pParam['fee_start'],
 				'end_date' => $pParam['fee_expire'],
+				'uid2' => $pParam['uid'],
+				'utype' => $pParam['utype'],
 			);
 			
 			
@@ -1156,6 +1146,8 @@ class Order_service extends Base_service {
 				array('key'  => 'amount_payed', 'value' => "amount_payed + {$nenghaoDetail['amount_payed']}"),
 				array('key'  => 'order_id', 'value' => $pParam['order_id']),
 				array('key'  => 'order_status', 'value' => OrderStatus::$payed),
+				array('key'  => 'uid2', 'value' => $pParam['uid']),
+				array('key'  => 'utype', 'value' => $pParam['utype']),
 			),array(
 				'house_id' => $pParam['goods_id'],
 				'feetype_name' => $pParam['order_typename']

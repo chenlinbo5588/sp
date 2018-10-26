@@ -313,6 +313,7 @@ $(function(){
 	          <nav id="nav" class="main-nav">
 	            <ul>
 	                <li><a class="link actived" id="nav_dashboard" href="javascript:void(0);" onclick="openItem('dashboard');"><span>控制台</span></a></li>
+
 					{if isset($permission['nav_setting'])}<li><a class="link" id="nav_setting" href="javascript:void(0);" onclick="openItem('setting');"><span>设置</span></a></li>{/if}
 					<li><a class="link" id="nav_my" href="javascript:void(0);" onclick="openItem('my');"><span>个人中心</span></a></li>
 					{if isset($permission['nav_member'])}<li><a class="link" id="nav_member" href="javascript:void(0);" onclick="openItem('member');"><span>会员</span></a></li>{/if}
@@ -323,6 +324,7 @@ $(function(){
 					<li><a class="link" id="nav_game" href="javascript:void(0);" onclick="openItem('game');"><span>赛事</span></a></li>
 					<li><a class="link" id="nav_goods" href="javascript:void(0);" onclick="openItem('goods');"><span>商品</span></a></li>*}
 					{if isset($permission['nav_trade'])}<li><a class="link" id="nav_trade" href="javascript:void(0);" onclick="openItem('trade');"><span>交易</span></a></li>{/if}
+	                <li><a class="link" id="nav_report" href="javascript:void(0);" onclick="openItem('report');"><span>报表</span></a></li>
 					{*<li><a class="link" id="nav_website" href="javascript:void(0);" onclick="openItem('website');"><span>网站</span></a></li>
 					<li><a class="link" id="nav_operation" href="javascript:void(0);" onclick="openItem('operation');"><span>运营</span></a></li>
 					<li><a class="link" id="nav_stat" href="javascript:void(0);" onclick="openItem('stat');"><span>统计</span></a></li>
@@ -360,6 +362,18 @@ $(function(){
                   <ol>
                     <!--<li><a href="javascript:void(0);" id="welcome_dashboard" onclick="openItem('welcome,dashboard,dashboard');">控制面板</a></li>-->
                     <li><a href="javascript:void(0);" id="aboutus_dashboard" onclick="openItem('aboutus,dashboard,dashboard');">关于我们</a></li>
+                  </ol>
+                </dd>
+              </dl>
+            </li>
+          </ul>
+          <ul id="sort_report">
+            <li>
+              <dl>
+                <dd>
+                  <ol>
+                    <li><a href="javascript:void(0);" id="day_report" onclick="openItem('day,report,report');">汇总查询</a></li>
+                    <li><a href="javascript:void(0);" id="visual_visual" onclick="openItem('visual,visual,report');">可视化报表</a></li>
                   </ol>
                 </dd>
               </dl>

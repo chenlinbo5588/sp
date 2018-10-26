@@ -191,6 +191,8 @@ class Order extends Ydzj_Admin_Controller {
 					'amount' => $_POST['amount'],
 					'end_month' => date('m',$edateTs),
 					'house_id' => $houseItem[0]['id'],
+					'uid2' => $houseItem[0]['uid'],
+					'utype' => Utype::$handwork,
 					'order_typename' => $_POST['wuye_type'],
 					'year' => date('Y',$edateTs),
 					'month' => date('m',$edateTs) - date('m',$sdateTs) + 1,

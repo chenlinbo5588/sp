@@ -118,6 +118,16 @@ class Tools extends MY_Controller {
         		continue;
         	}
         	
+        	
+        	if(preg_match('/^sp_plan\d+$/i',$table,$match)){
+        		continue;
+        	}
+        	
+        	if(preg_match('/^sp_plan_detail\d+$/i',$table,$match)){
+        		continue;
+        	}
+        	
+        	
         	if(preg_match('/^sp_push_chat\d+$/i',$table,$match)){
         		continue;
         	}

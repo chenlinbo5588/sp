@@ -1,9 +1,9 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Payment_Report_Date_Model extends MY_Model {
+class Report_Day_Model extends MY_Model {
     
-    public $_tableName = 'payment_report_date';
+    public $_tableName = 'report_day';
     public static $_tableMeta = null;
 
 
