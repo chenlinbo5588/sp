@@ -46,7 +46,7 @@ class Autodata extends Ydzj_Controller {
     private function _getDayTimestamp($pDate){
     	$temp = substr($pDate,0,4).'-'.substr($pDate,4,2).'-'.substr($pDate,6,2);
     	
-    	return strtotime($temp);
+    	return $temp;
     }
     
     
