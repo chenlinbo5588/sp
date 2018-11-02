@@ -6,6 +6,8 @@
   {else}
   {form_open(site_url($uri_string),'id="infoform"')}
   {/if}
+</body>
+
   <input type="hidden" name="gobackUrl" value="{$gobackUrl}"/>
     <table class="table tb-type2">
       <tbody>
@@ -122,6 +124,7 @@
         </tr>
         <tr>
 	    	<td colspan="2">
+	    	{if $familyList}
 	    		<table id="familyConfigTable">
 	    			<thead>
 	    				<tr>
@@ -130,17 +133,57 @@
 	    				</tr>
 	    			</thead>
 	    			<tbody>
-	    				{if $familyList}
 						  {foreach from=$familyList key=key item=valus}
         				<tr>
 	    					<td>{$valus['mobile']|escape}</td>
 	    					<td>{$valus['name']|escape}</td>
 						</tr>
 						  {/foreach}
-						{/if}
 					</tbody>
 				</table>
+			{/if}
 			</td>
+        </tr>
+        <tr>
+			<td>
+	    	{if $houseList}
+	    		<table id="houseConfigTable">
+	    			<thead>
+	    				<tr>
+	    					<th>物业地址</th>
+	    				</tr>
+	    			</thead>
+	    			<tbody>
+						  {foreach from=$houseList key=key item=valus}
+        				<tr>
+	    					<td>{$valus['address']|escape}</td>
+						</tr>
+						  {/foreach}
+					</tbody>
+				</table>
+			{/if}
+			</td>
+			</tr>
+        	<tr>
+			<td>
+	    	{if $parkibgList}
+	    		<table id="parkingConfigTable">
+	    			<thead>
+	    				<tr>
+	    					<th>车位名称</th>
+	    				</tr>
+	    			</thead>
+	    			<tbody>
+						  {foreach from=$parkibgList key=key item=valus}
+        				<tr>
+	    					<td>{$valus['name']|escape}</td>
+						</tr>
+						  {/foreach}
+					</tbody>
+				</table>
+			{/if}
+			</td>
+			</tr>
         <tr>
           <td colspan="2"><label>排序:</label></td>
         </tr>
@@ -158,7 +201,11 @@
         </tr>
       </tbody>
     </table>
+
+
+
   </form>
+  <script type="text/javascript" src="{resource_url('js/navigation.js',true)}">   </script>
   <script type="text/javascript">
   	var province_idcard = {$province_idcard},submitUrl = [new RegExp("{$uri_string}")];
   </script>

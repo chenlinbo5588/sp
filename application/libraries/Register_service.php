@@ -49,6 +49,19 @@ class Register_service extends Base_service {
 		
 		return $count;
 	}
+	/**
+	 * 登录时自动创建一个会员
+	 */
+	public function getMember($param){
+		$regData = array(
+			'username' => date('YmdHms'),
+			'mobile' => date('YmdHms'),
+			'openid' => $param['weixin_user']['openid'],
+			'unionid' => $param['weixin_user']['unionid'] ? $param['weixin_user']['unionid'] : '',
+			'channel' => 1,   //小程序注册进入的
+		);
+		$resp = $this->createMember($regData);
+	}
 	
 	
 	/**

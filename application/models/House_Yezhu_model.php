@@ -52,7 +52,6 @@ class House_Yezhu_Model extends MY_Model {
 				$addList[$item['yezhu_id']]['house_id'] = $houseId;
 				$addList[$item['yezhu_id']]['yezhu_id'] = $item['yezhu_id'];
 				$addList[$item['yezhu_id']]['resident_id'] = $item['resident_id'];
-				$addList[$item['yezhu_id']]['uid'] = $item['uid'];
 				$addList[$item['yezhu_id']] = array_merge($addList[$item['yezhu_id']],$who);
 			}
 			foreach($changeStatus as $key =>$item){

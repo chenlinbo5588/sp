@@ -371,6 +371,19 @@ class Yezhu extends Ydzj_Admin_Controller {
 					array('key' => 'house_id' , 'value' => $houseId)
 				)
 			));
+			
+			$houseList = $this->wuye_service->search('房屋',array(
+				'select' => 'address', 
+				'where_in' => array(
+					array('key' => 'id' , 'value' => $houseId)
+				)
+			));
+			$parkibgList = $this->wuye_service->search('停车位',array(
+				'select' => 'name', 
+				'where_in' => array(
+					array('key' => 'house_id' , 'value' => $houseId)
+				)
+			));
 		}
 		if($yezhuList){
 			foreach ($yezhuList as $key =>$item){
@@ -476,9 +489,12 @@ class Yezhu extends Ydzj_Admin_Controller {
 			}
 		}else{
 			
-			$this->assign('info',$info);
-			$this->assign('familyList',$familyList);
-
+			$this->assign(array(
+				'info' => $info,
+				'familyList' => $familyList,
+				'houseList' => $houseList,
+				'parkibgList' => $parkibgList,
+			));
 			$this->_commonPageData();
 			$this->display($this->_className.'/add');
 			

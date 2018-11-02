@@ -1045,7 +1045,7 @@ class Order_service extends Base_service {
 			{
 				$pParam['utype'] = Utype::$seifpaid;
 			}else{
-				$houseYezhu = $this->_houseYezhuModel->getList(array('where' => array('house_id' => $pParam['goods_id'],'uid' => $pParam['uid'])));
+				$houseYezhu = $this->_houseYezhuModel->getList(array('where' => array('house_id' => $pParam['goods_id'])));
 				if($houseYezhu){
 					$pParam['utype'] =Utype::$housepaid;
 				}else{

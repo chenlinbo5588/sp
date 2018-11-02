@@ -120,8 +120,7 @@ class House extends Ydzj_Admin_Controller {
 		
 		$this->form_validation->set_rules('longitude','经度','is_numeric');
 		$this->form_validation->set_rules('latitude','纬度','is_numeric');
-		$this->form_validation->set_rules('mobile[]','手机号码','required|valid_mobile');
-		$this->form_validation->set_rules('name[]','姓名','required');
+		$this->form_validation->set_rules('mobile[]','手机号码','valid_mobile');
 	}
 	
 	
@@ -300,13 +299,13 @@ class House extends Ydzj_Admin_Controller {
 			$this->form_validation->set_rules('resident_id','小区名称','required|in_list['.implode(',',array_keys($residentList)).']',array(
 				'in_list' => '小区数据非法'
 			));
-			
+			$this->form_validation->set_rules('month','起缴月份','required|less_than[12]|greater_than[1]');
 			
 			//注意验证规则顺序
 			
 			$this->_getRules();
 			$this->_getAddressRule(0,$buildingId);
-			
+			$month = $this->input->get_post('month');
 			for($i = 0; $i < 1; $i++){
 				if(!$this->form_validation->run()){
 					$this->jsonOutput($this->form_validation->error_html(),array('errors' => $this->form_validation->error_array()));
@@ -335,7 +334,10 @@ class House extends Ydzj_Admin_Controller {
 					$insertData['mobile'] = $yezhuInfo[0]['mobile'];
 					$insertData['uid'] = $yezhuInfo[0]['uid'];
 					$insertData['car_no'] = $yezhuInfo[0]['car_no'];
+				}else{
+					$insertData['mobile'] = null;
 				}
+				
 				$message = '';
 				$insertYezhuList = $this->_checkYezhu($_POST,$message);
 				if($message){
@@ -346,8 +348,15 @@ class House extends Ydzj_Admin_Controller {
 				$this->House_Model->beginTrans();
 				$newid =$this->House_Model->_add($insertData);
 				$_POST['id'] = $newid;
-
-				$this->_addHouseYezhu($insertYezhuList,$newid);
+				if($insertYezhuList){
+					$this->_addHouseYezhu($insertYezhuList,$newid);
+				}
+				$houseInfo  = $this->House_Model->getById(array(
+					'where' => array(
+						'id' => $newid
+					)
+				));
+				$this->wuye_service->generationPlan($buildingInfo['resident_id'],$this->addWhoHasOperated('add'),date('Y'),$month,$houseInfo);
 				$error = $this->House_Model->getError();
 				$message = $this->_getMessage($error);
 				if($this->House_Model->getTransStatus() === FALSE){
@@ -445,7 +454,6 @@ class House extends Ydzj_Admin_Controller {
 		if($this->isPostRequest()){
 			
 			$this->_getRules();
-			
 			$this->_getAddressRule($id,$this->input->post('building_id'));
 			
 			for($i = 0; $i < 1; $i++){
@@ -484,10 +492,15 @@ class House extends Ydzj_Admin_Controller {
 					$updateInfo['mobile'] = $yezhuInfo[0]['mobile'];
 					$updateInfo['uid'] = $yezhuInfo[0]['uid'];
 					$updateInfo['car_no'] = $yezhuInfo[0]['car_no'];
+				}else{
+					$updateInfo['mobile'] = '';
 				}
 				$this->House_Model->beginTrans();
-				$this->_addHouseYezhu($insertYezhuList,$id);
-				
+
+				if($insertYezhuList){
+					$this->_addHouseYezhu($insertYezhuList,$id);
+				}
+
 				$this->House_Model->update($updateInfo,array('id' => $id));
 				
 				if($this->House_Model->getTransStatus() === FALSE){
@@ -801,7 +814,6 @@ class House extends Ydzj_Admin_Controller {
 								'yezhu_id' => $yezhuInfo['id'],
 								'house_id' => $newHouseId,
 								'resident_id' =>$residentId,
-								'uid' => $yezhuInfo['uid'],
 							),$this->addWhoHasOperated('add')));
 						}
 						
@@ -1083,7 +1095,6 @@ class House extends Ydzj_Admin_Controller {
 				),$this->addWhoHasOperated('edit'));
 				
 				$addInfo = array_merge(array(
-					'uid' => $yezhuInfo[0]['uid'],
 					'house_id' => $id,
 					'yezhu_id' => $yezhuInfo[0]['id'],
 					'resident_id' => $info['resident_id'],
@@ -1095,6 +1106,7 @@ class House extends Ydzj_Admin_Controller {
 				
 				$this->Parking_Model->update($parkingUpdateInfo,array('house_id' => $id));
 				
+
 				if(!$this->House_Yezhu_Model->deleteAndAdd($yezhuInfo[0]['id'],$info['resident_id'],$id,$changeStatus,$this->addWhoHasOperated('add'))){
 					$this->House_Yezhu_Model->_add($addInfo);
 				}
@@ -1173,28 +1185,29 @@ class House extends Ydzj_Admin_Controller {
 	}
 	
     private function _checkYezhu($data,&$message){
-    	
-    	$flag = true;
-    	
-    	foreach($data['mobile'] as $key =>$item){
-    		$yezhuInfo = $this->wuye_service->search('业主',array(
-				'where' => array(
-					'mobile' => $item,
-					'resident_id' => $data['resident_id']
-				)
-			));
-			$yezhuList[] = $yezhuInfo[0];;
-			if(empty($yezhuList[$key])){
-				$message = '抱歉,该小区无此业主信息';
-				break;
-			}
-			
+
+    	if(!empty($data['mobile'][0])){
+	    	foreach($data['mobile'] as $key =>$item){
+	    		$yezhuInfo = $this->wuye_service->search('业主',array(
+					'where' => array(
+						'mobile' => $item,
+						'resident_id' => $data['resident_id']
+					)
+				));
+				$yezhuList[] = $yezhuInfo[0];;
+				if(empty($yezhuList[$key])){
+					$message = '抱歉,该小区无此业主信息';
+
+					break;
+				}
+				
+	    	}
+	    	return $yezhuList;
     	}
-    	return $yezhuList;
+		return false;
     }
     
     private function _addHouseYezhu($yezhuList,$houseId){
-
     	$this->House_Yezhu_Model->deleteByCondition(array(
 			'where' => array(
 				'house_id' => $houseId
@@ -1205,7 +1218,6 @@ class House extends Ydzj_Admin_Controller {
     		$insert = array(
     			'resident_id' => $item['resident_id'],
     			'yezhu_id' => $item['id'],
-    			'uid' => $item['uid'],
     			'house_id' => $houseId
     		);
     		$insertData[] = array_merge($insert,$this->_prepareData(),$this->addWhoHasOperated('add'));

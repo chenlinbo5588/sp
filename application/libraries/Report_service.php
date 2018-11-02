@@ -8,7 +8,7 @@ class Report_service extends Base_service {
 		
 		self::$CI->load->model(array('Report_Day_Model','Report_Week_Model',
 				'Report_Month_Model','Report_Year_Model','Resident_Model','Plan_Model'
-				,'Plan_Detail_Model','House_Model','House_Yezhu_Model','Order_Model'));
+				,'Plan_Detail_Model','House_Model','Order_Model'));
 		
 		$this->_reportDateModel = self::$CI->Report_Day_Model;
 		$this->_reportWeekModel = self::$CI->Report_Week_Model;
@@ -18,7 +18,6 @@ class Report_service extends Base_service {
 		$this->_planModel = self::$CI->Plan_Model;
 		$this->_planDetailModel = self::$CI->Plan_Detail_Model;
 		$this->_houseModel = self::$CI->House_Model;
-		$this->_houseYezhuModel = self::$CI->House_Yezhu_Model;
 		$this->_orderModel = self::$CI->Order_Model;
 		
 		

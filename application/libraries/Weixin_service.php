@@ -109,11 +109,11 @@ class Weixin_service extends Base_service {
 			'unionid' => $weixinInfo['unionid'] ? $weixinInfo['unionid'] : '',
 			'channel' => 1,   //小程序注册进入的
 		);
-		
+		$member = self::$memberModel->getFirstByKey($regData['openid'],'openid');
 		self::$memberModel->beginTrans();
-		$resp = self::$CI->register_service->createMember($regData);
+		self::$memberModel->update($regData,array('uid' => $member['uid']));
 		
-		if($resp['data']['uid']){
+		if($member['uid']){
 			self::$CI->load->model(array('Yezhu_Model','House_Model'));
 			//更新业主表中  对应的 uid
 			
@@ -124,13 +124,13 @@ class Weixin_service extends Base_service {
 					'username' => $yezhuInfo['name'],
 					'sex' => $yezhuInfo['sex'],
 				),array(
-					'uid' => $resp['data']['uid'],
+					'uid' =>$member['uid'],
 				));
 			}
 			
 			//自动更新没有绑定过的
-			self::$CI->Yezhu_Model->updateByWhere(array('uid' => $resp['data']['uid']),array('mobile' => $param['phoneNo']));
-			self::$CI->House_Model->updateByWhere(array('uid' => $resp['data']['uid']),array('mobile' => $param['phoneNo']));
+			self::$CI->Yezhu_Model->updateByWhere(array('uid' => $member['uid']),array('mobile' => $param['phoneNo']));
+			self::$CI->House_Model->updateByWhere(array('uid' => $member['uid']),array('mobile' => $param['phoneNo']));
 		}
 		
 		if(self::$memberModel->getTransStatus() === FALSE){
@@ -138,7 +138,7 @@ class Weixin_service extends Base_service {
 			return false;
 		}else{
 			self::$memberModel->commitTrans();
-			return $resp['data']['uid'];
+			return $member['uid'];
 		}
 	}
 	

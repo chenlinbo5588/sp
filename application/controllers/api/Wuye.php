@@ -36,7 +36,10 @@ class Wuye extends Wx_Controller {
 				
 				$this->jsonOutput2(RESP_SUCCESS,$d);
 			}else{
-				$this->jsonOutput2(RESP_SUCCESS,array());
+				$this->jsonOutput2(RESP_SUCCESS,array(
+					'houseCnt' => 0,
+					'houseList' => array(),
+				));
 			}
 			
 		}else{

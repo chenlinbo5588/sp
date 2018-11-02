@@ -29,7 +29,7 @@ class Wx_Controller extends MY_Controller {
 	public function __construct(){
 		parent::__construct();
 		
-		$this->load->library(array('Seo_service','Weixin_service','Wuye_service'));
+		$this->load->library(array('Weixin_service','Wuye_service','Register_service'));
 		$this->form_validation->set_error_delimiters('','');
 		
 		

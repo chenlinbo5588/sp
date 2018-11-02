@@ -40,10 +40,8 @@
           <td colspan="2"><label class="validation" for="name">{#address#}: </label></td>
         </tr>
         <tr class="noborder">
-          <td class="vatop rowform">
-          	<input type="text" value="{$info['address']|escape}" name="address" id="address" class="txt">
-          </td>
-          <td class="vatop tips"><label class="errtip"  id="error_address"></label>{form_error('address')}</td>
+          <td class="vatop rowform"><input type="text" value="{$info['address']|escape}" name="address" id="address" class="txt"></td>
+          <td class="vatop tips"><label id="error_address"></label>{form_error('address')}</td>
         </tr>
         <tr class="noborder">
           <td colspan="2"><label class="validation" for="jz_area">{#jz_area#}: </label></td>
@@ -54,15 +52,17 @@
           </td>
           <td class="vatop tips"><label class="errtip"  id="error_jz_area"></label>{form_error('jz_area')}</td>
         </tr>
-        <tr class="noborder">
-          <td colspan="2"><label for="jz_area">{#fee_expire#}: </label></td>
-        </tr>
-        <tr class="noborder">
-          <td class="vatop rowform">
-          	<input type="text" value="{if $info['expire']}{date('Y-m-d',$info['expire'])}{/if}" name="expire" id="expire" class="datepicker txt">
-          </td>
-          <td class="vatop tips"><label class="errtip"  id="error_expire"></label>{form_error('expire')}</td>
-        </tr>
+        {if !$info['id']}
+            <tr class="noborder">
+		      <td colspan="2"><label class="validation" for="jz_area">缴费起算月份: </label></td>
+		    </tr>
+		    <tr class="noborder">
+		      <td class="vatop rowform">
+		      	<input type="text"  name="month" id="month" class="txt">
+		      </td>
+		      <td class="vatop tips"><label class="errtip"  id="error_month"></label>{form_error('month')}</td>
+		    </tr> 
+        {/if}
         <tr>
           <td colspan="2" class="required"><label>排序:</label></td>
         </tr>
@@ -81,8 +81,9 @@
       </tbody>
     </table>
   </form>
+
   <script type="text/javascript">
-	var submitUrl = [new RegExp("{$uri_string}")];
+	var submitUrl = [new RegExp("{$uri_string}")],searchAddressUrl = "{admin_site_url('house/getAddress')}";
 	
 	$(function(){
 		$.loadingbar({ text: "正在提交..." , urls: submitUrl , container : "#infoform" });
@@ -92,8 +93,24 @@
 		$( ".datepicker" ).datepicker({
 	    	changeYear: true
 	    });
-    
-    
+	    $( "#address" ).autocomplete({
+			source: function( request, response ) {
+				
+				$.ajax( {
+		            url: searchAddressUrl,
+		            dataType: "json",
+		            data: {
+		              term: request.term,
+		              resident_id:$("input[name=resident_id]:checked").val(),
+		            },
+		            success: function( data ) {
+		              response( data );
+		            }
+		          } 
+				);
+	        },
+			minLength: 2,
+	    });
 	});
   </script>
 {include file="common/main_footer.tpl"}

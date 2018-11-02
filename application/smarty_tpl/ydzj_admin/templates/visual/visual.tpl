@@ -27,7 +27,7 @@
 		</tr>
 	</table>
     <div id="top" style="height:400px;"></div>
-      <script type="text/javascript" src="{resource_url('js/echarts.js')}"></script>
+      <script type="text/javascript" src="{resource_url('js/echarts.min.js')}"></script>
     <script type="text/javascript">
         // 基于准备好的dom，初始化echarts实例
         var myChart = echarts.init(document.getElementById('top'));

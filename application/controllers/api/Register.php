@@ -142,7 +142,7 @@ class Register extends Wx_Controller {
 				$this->form_validation->set_data($this->postJson);
 				
 				//校验重复性, 不允许 多个号码  与一个微信号码 关联
-				$this->form_validation->set_rules('openid','微信用户号','required|is_unique['.$this->Member_Model->getTableRealName().'.openid]');
+				//$this->form_validation->set_rules('openid','微信用户号','required|is_unique['.$this->Member_Model->getTableRealName().'.openid]');
 				
 				$this->form_validation->set_rules('phoneNo','手机号码',array(
 						'required',
@@ -205,6 +205,7 @@ class Register extends Wx_Controller {
 			if($this->verify_service->isAuthCodeValidate($this->postJson['phoneNo'],$this->postJson['code'])){
 				$this->jsonOutput2(RESP_SUCCESS);
 			}else{
+				//$this->jsonOutput2(RESP_SUCCESS);
 				$this->jsonOutput2('验证码错误');
 			}
 		}else{

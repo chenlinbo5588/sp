@@ -192,26 +192,7 @@ class Parking extends Ydzj_Admin_Controller {
 	}
 	
 	
-	/**
-	 * 
-	 */
-	private function _prepareData(){
-		$info['displayorder'] = intval($this->input->post('displayorder'));
-		
-		$expire = $this->input->post('expire');
-		
-		if(empty($expire)){
-			$info['expire'] = 0;
-		}else{
-			$info['expire'] = strtotime($expire);
-			if($info['expire']){
-				$info['expire'] = strtotime(date('Y-m',$info['expire']).'  last day of this month');
-			}
-		}
-		
-		return $info;
-		
-	}
+
 	
 	
 	/**
@@ -267,20 +248,21 @@ class Parking extends Ydzj_Admin_Controller {
 			$this->form_validation->set_rules('resident_id','小区名称','required|in_list['.implode(',',array_keys($residentList)).']',array(
 				'in_list' => '小区数据非法'
 			));
-			
+			$this->form_validation->set_rules('month','起缴月份','required|less_than[12]|greater_than[1]');
 			
 			//注意验证规则顺序
 			$this->_getRules();
 			
 			$this->_getNameRule(0,$residentId);
 			
+			$month = $this->input->get_post('month');
 			for($i = 0; $i < 1; $i++){
 				if(!$this->form_validation->run()){
 					$this->jsonOutput($this->form_validation->error_html(),array('errors' => $this->form_validation->error_array()));
 					break;
 				}
 
-				$insertData = array_merge($_POST,$this->_prepareData(),$this->addWhoHasOperated('add'));
+				$insertData = array_merge($_POST,$this->addWhoHasOperated('add'));
 				
 				$houseInfo = $this->House_Model->getById(array(
 					'select' => 'id,yezhu_id,yezhu_name,uid,mobile',
@@ -316,6 +298,10 @@ class Parking extends Ydzj_Admin_Controller {
 				$insertData['house_id'] = $houseInfo['id'];
 				 
 				$newid =$this->Parking_Model->_add($insertData);
+				$who = $this->addWhoHasOperated('add');
+				
+				$this->wuye_service->creatParkingPlan($residentId,$insertData,$newid,$month,$who);
+				
 				$error = $this->Parking_Model->getError();
 				
 				if(QUERY_OK != $error['code']){
@@ -411,6 +397,7 @@ class Parking extends Ydzj_Admin_Controller {
 		$id = $this->input->get_post('id');
 		
 		$info = $this->Parking_Model->getFirstByKey($id);
+		$oldHouseId = $info['house_id'];
 		
 		$this->_subNavs[] = array('url' => $this->_className.'/edit?id='.$id, 'title' => '编辑');
 		
@@ -427,43 +414,38 @@ class Parking extends Ydzj_Admin_Controller {
 					break;
 				}
 				
-				$updateInfo = array_merge($info,$_POST,$this->_prepareData(),$this->addWhoHasOperated('edit'));
-				
-				if($info['expire'] > $updateInfo['expire']){
-					$this->jsonOutput('缴费日期只能延长,不能回退');
-					break;
-				}
-				
-				
+				$updateInfo = array_merge($info,$_POST,$this->addWhoHasOperated('edit'));
+
+
 				$yezhuList = $this->wuye_service->search('房屋',array(
-					'select' => 'yezhu_id,yezhu_name,uid,mobile',
+					'select' => 'id,yezhu_id,yezhu_name,uid,mobile',
 					'where' => array(
 						'address' => $updateInfo['address'],
 						'resident_id' => $info['resident_id'],
 					)
 				));
-				if(!empty($yezhuList)){
-					$updateInfo['yezhu_id'] = $yezhuList[0]['yezhu_id'];
-					$updateInfo['yezhu_name'] = $yezhuList[0]['yezhu_name'];
-					$updateInfo['mobile'] = $yezhuList[0]['mobile'];
-					$updateInfo['uid'] = $yezhuList[0]['uid'];
-				}
-				
-				$this->Parking_Model->update($updateInfo,array('id' => $id));
-				
-				$error = $this->Parking_Model->getError();
-				
-				if(QUERY_OK != $error['code']){
-					if($error['code'] == MySQL_Duplicate_CODE){
-						$this->jsonOutput($this->input->post('name').'已存在');
-					}else{
-						$this->jsonOutput('数据库错误,请稍后再次尝试');
-					}
-					
+				if(empty($yezhuList[0])){
+					$this->jsonOutput('物业地址不存在');
 					break;
 				}
+				$newHouseId = $yezhuList[0]['id'];
+				$updateInfo['house_id'] = $yezhuList[0]['id'];
+				$updateInfo['yezhu_id'] = $yezhuList[0]['yezhu_id'];
+				$updateInfo['yezhu_name'] = $yezhuList[0]['yezhu_name'];
+				$updateInfo['mobile'] = $yezhuList[0]['mobile'];
+				$updateInfo['uid'] = $yezhuList[0]['uid'];
 				
-				$this->jsonOutput('保存成功');
+				$this->Plan_Model->beginTrans();
+				$this->Parking_Model->update($updateInfo,array('id' => $id));
+				$this->wuye_service->transferAssets($oldHouseId,$newHouseId,$updateInfo,$id);
+				if($this->Plan_Model->getTransStatus() === FALSE){
+					$this->Plan_Model->rollBackTrans();
+					
+					$this->jsonOutput('保存失败');
+				}else{
+					$flag = $this->Plan_Model->commitTrans();
+					$this->jsonOutput('保存成功');
+				}
 			}
 		}else{
 			

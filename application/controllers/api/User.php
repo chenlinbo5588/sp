@@ -24,13 +24,18 @@ class User extends Wx_Controller {
 				$this->session->set_userdata(array(
 					'weixin_user' =>  $weixinUser
 				));
-				
+				if(!$this->memberInfo){
+					$this->register_service->getMember($this->sessionInfo);
+				}
+
 				$bindInfo = $this->weixin_service->checkUserBind($weixinUser);
 				
 				$this->initMemberInfo();
 				
 				if($this->memberInfo){
-					$bindInfo['mobile'] = $this->memberInfo['mobile'];
+					if(11 == strlen($this->memberInfo['mobile'])){
+						$bindInfo['mobile'] = $this->memberInfo['mobile'];
+					}
 				}
 				
 				$bindInfo['site_tel'] = $this->_getSiteSetting('site_tel');
