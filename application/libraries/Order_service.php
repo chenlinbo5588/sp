@@ -56,6 +56,7 @@ class Order_service extends Base_service {
 		$this->_houseYezhuModel = self::$CI->House_Yezhu_Model;
 		$this->_parkingModel = self::$CI->Parking_Model;
 		$this->_yezhuModel = self::$CI->Yezhu_Model;
+		$this->_residentModel = self::$CI->Resident_Model;
 		
 		$this->_weixinServiceObj = self::$CI->weixin_service;
 		$this->_wuyeServiecObj = self::$CI->wuye_service;
