@@ -53,7 +53,7 @@ class Order_service extends Base_service {
 		$this->_feetypeModel = self::$CI->Feetype_Model;
 		$this->_planModel = self::$CI->Plan_Model;
 		$this->_planDetailModel = self::$CI->Plan_Detail_Model;
-		
+		$this->_houseYezhuModel = self::$CI->House_Yezhu_Model;
 		$this->_parkingModel = self::$CI->Parking_Model;
 		
 		

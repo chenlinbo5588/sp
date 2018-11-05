@@ -186,15 +186,17 @@ class Wuye_service extends Base_service {
 				'name' => $pOrderTypename,
 			)
 		));
-	
-		$feeRule = json_decode($feetypeList[0]['fee_rule'],true);
+		if($feetypeList){
+			$feeRule = json_decode($feetypeList[0]['fee_rule'],true);
 		
-		foreach($feeRule as $key => $item){
-			//获得该物业所在小区与当前物业匹配的费用配置列表
-			if($item['feeName'] ==$pOrderTypename && $item['wuyeType'] == $wuyeType){
-				$residentFee[] = $item;
+			foreach($feeRule as $key => $item){
+				//获得该物业所在小区与当前物业匹配的费用配置列表
+				if($item['feeName'] ==$pOrderTypename && $item['wuyeType'] == $wuyeType){
+					$residentFee[] = $item;
+				}
 			}
 		}
+		
 		
 
 		return $residentFee;
