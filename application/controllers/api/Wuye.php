@@ -507,11 +507,14 @@ class Wuye extends Wx_Controller {
 					break;
 				}
 				
-				//再校验  缴费的时间一定要大于已缴费的时间
-				if($currentFeeExpire['expireTimeStamp'] >= $currentFeeExpire['newEndTimeStamp']){
-					$this->jsonOutput2("请选择合理的缴费时间");
-					break;
+				if($this->postJson['order_typename'] == '能耗费'){
+					//再校验  缴费的时间一定要大于已缴费的时间
+					if($currentFeeExpire['expireTimeStamp'] >= $currentFeeExpire['newEndTimeStamp']){
+						$this->jsonOutput2("请选择合理的缴费时间");
+						break;
+					}
 				}
+
 				
 				$amountList = $this->wuye_service->computeFee($currentFeeExpire);
 
