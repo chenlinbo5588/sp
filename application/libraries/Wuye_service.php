@@ -248,7 +248,7 @@ class Wuye_service extends Base_service {
 			$this->_planModel->setTableId($pComputeParam['year']);
 			
 			$feeList['amountDetail'] = $this->_planDetailModel->getList(array(
-				'select' => 'feetype_name,parking_name,jz_area,price,billing_style,amount_real,order_status',
+				'select' => 'feetype_name,parking_name,jz_area,price,billing_style,amount_real,order_status,momth',
 				'where' => array(
 					'house_id' => $pComputeParam['id'],
 					'fee_gname' => $pComputeParam['orderTypeName']

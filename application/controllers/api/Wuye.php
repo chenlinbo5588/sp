@@ -70,10 +70,11 @@ class Wuye extends Wx_Controller {
 				}
 				
 				$house = $this->wuye_service->getHouseByAddress($address,$this->yezhuInfo);
-				if(!$house['yezhu_name']){
-					$house['yezhu_name'] = '暂无业主';
-				}
+
 				if($house){
+					if(!$house['yezhu_name']){
+						$house['yezhu_name'] = '暂无业主';
+					}
 					$this->jsonOutput2(RESP_SUCCESS,$house);
 				}else{
 					$this->jsonOutput2(RESP_ERROR);
