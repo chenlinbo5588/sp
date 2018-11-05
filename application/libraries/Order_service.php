@@ -505,9 +505,9 @@ class Order_service extends Base_service {
 				
 				if(ENVIRONMENT == 'development'){
 					//@todo 修改金额
-					$pParam['amount'] = mt_rand(1,3);
+					$pParam['amount'] = mt_rand(1,10);
 				}else{
-					$pParam['amount'] = mt_rand(1,3);
+					$pParam['amount'] = mt_rand(1,10);
 					//计算金额
 					//$pParam['amount'] = intval(100 * $this->wuye_service->computeFee($currentFeeExpire));
 				}
@@ -1041,16 +1041,28 @@ class Order_service extends Base_service {
 		$houseItem = $this->_houseModel->getFirstByKey($pParam['goods_id'],'id');
 		
 		if(empty($pParam['utype'])){
+			$yezhuinfo = $this->_yezhuModel->getById(array(
+				'where' => array(
+					'uid' => $pParam['uid'],
+				)
+			));
 			if($pParam['uid'] == $houseItem['uid'])
 			{
 				$pParam['utype'] = Utype::$seifpaid;
 			}else{
-				$houseYezhu = $this->_houseYezhuModel->getList(array('where' => array('house_id' => $pParam['goods_id'])));
-				if($houseYezhu){
-					$pParam['utype'] =Utype::$housepaid;
+				if($yezhuinfo){
+					$houseYezhu = $this->_houseYezhuModel->getList(array('where' => array('house_id' => $pParam['goods_id']),'yezhu_id' => $yezhuinfo['id']));
+					if($houseYezhu){
+						$pParam['utype'] =Utype::$housepaid;
+					}else{
+						$pParam['utype'] = Utype::$otherpaid;
+					}
 				}else{
 					$pParam['utype'] = Utype::$otherpaid;
 				}
+				
+				
+
 				
 			}
 
@@ -1110,12 +1122,12 @@ class Order_service extends Base_service {
 			),array(
 				'id' => $pParam['goods_id'],
 			));
-			
+			$residentInfo = $this->_residentModel->getById(array('select' => 'name','where' =>array('id' => $pParam['resident_id'])));
 	 		$nenghaoDetail = array(
 	 			'house_id' => $pParam['goods_id'],
 				'address' => $pParam['goods_name'],
 				'resident_id' => $pParam['resident_id'],
-				'resident_name' => $pParam['resident_name'],
+				'resident_name' => $residentInfo['name'],
 				'wuye_type' => $feeRule[0]['wuyeType'],
 				'year' => $pParam['year'],
 				'jz_area' => $houseItem['jz_area'],
@@ -1125,8 +1137,8 @@ class Order_service extends Base_service {
 				'feetype_name' => $feeRule[0]['feeName'],
 				'wuye_type' => $feeRule[0]['wuyeType'],
 				'billing_style' => $feeRule[0]['billingStyle'],
-				'amount_plan' => $feeRule[0]['price']*12,
-				'amount_real' => $feeRule[0]['price']*12,
+				'amount_plan' => $feeRule[0]['price']*$houseItem['jz_area']*12,
+				'amount_real' => $feeRule[0]['price']*$houseItem['jz_area']*12,
 				'amount_payed' => $pParam['amount']/100,
 				'order_id' => $pParam['order_id'],
 				'order_status' => OrderStatus::$payed,
@@ -1146,6 +1158,7 @@ class Order_service extends Base_service {
 				array('key'  => 'amount_payed', 'value' => "amount_payed + {$nenghaoDetail['amount_payed']}"),
 				array('key'  => 'order_id', 'value' => $pParam['order_id']),
 				array('key'  => 'order_status', 'value' => OrderStatus::$payed),
+				array('key'  => 'pay_time' , 'value' => $pParam['pay_time']),
 				array('key'  => 'uid2', 'value' => $pParam['uid']),
 				array('key'  => 'utype', 'value' => $pParam['utype']),
 			),array(

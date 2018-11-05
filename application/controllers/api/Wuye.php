@@ -70,7 +70,9 @@ class Wuye extends Wx_Controller {
 				}
 				
 				$house = $this->wuye_service->getHouseByAddress($address,$this->yezhuInfo);
-				
+				if(!$house['yezhu_name']){
+					$house['yezhu_name'] = '暂无业主';
+				}
 				if($house){
 					$this->jsonOutput2(RESP_SUCCESS,$house);
 				}else{
@@ -170,7 +172,7 @@ class Wuye extends Wx_Controller {
       				'repair_type' => $repair_type,
       				'resident_id' => $houseInfo['resident_id'],
       				'house_id' => $houseInfo['id'],
-      				'yezhu_id' => $this->yezhuInfo['id'],
+      				'yezhu_id' => $this->$houseInfo['yezhu_id'],
       				'yezhu_name' => $this->yezhuInfo['name'],
       				'address' => $address,
       				'remark'  => $remark,

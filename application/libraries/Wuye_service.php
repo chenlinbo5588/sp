@@ -398,9 +398,15 @@ class Wuye_service extends Base_service {
 	 * 获得业主物业列表
 	 */
 	public function getHouseListByYezhu($pYezhu){
+		$yezhuList = $this->_yezhuModel->getList(array('select' => 'id','where' => array('uid' => $pYezhu['uid'])));
+		foreach($yezhuList as $key => $value){
+			$yezhuId[] = $value['id'];
+		}
 		$houseIdList = $this->_hosueYezhuModel->getList(array(
 			'select' => 'house_id',
-			'where' => array('yezhu_id' => $pYezhu['id'])
+			'where_in' => array(
+				array('key' => 'yezhu_id', 'value' => $yezhuId)
+			)
 		));
 
 		
@@ -855,7 +861,7 @@ class Wuye_service extends Base_service {
 			'amount_real' => $planList['amount_real'] + $detailInsert['amount_real'],
 			'amount_plan' => $planList['amount_plan'] + $detailInsert['amount_plan'],
 		);
-		$this->_planModel->update($updateInfo,array('house_id' => $planList['house_id']));
+		$this->_planModel->update($updateInfo,array('house_id' => $planList['house_id'],'feetype_name' => '物业费'));
 
 	 }
 	 
@@ -871,12 +877,12 @@ class Wuye_service extends Base_service {
 			$this->_planModel->update(array(
 				'amount_plan' => $oldHosuePlan['amount_plan'] - $parkingPlan['amount_plan'],
 				'amount_real' => $oldHosuePlan['amount_real'] - $parkingPlan['amount_real'],
-				'amount_payed' => $oldHosuePlan['amount_payed'] - $parkingPlan['amount_payed'],
+				//'amount_payed' => $oldHosuePlan['amount_payed'] - $parkingPlan['amount_payed'],
 			),array('house_id' => $oldHouseId , 'feetype_name' => '物业费'));
 			$this->_planModel->update(array(
 				'amount_plan' => $newHosuePlan['amount_plan'] + $parkingPlan['amount_plan'],
 				'amount_real' => $newHosuePlan['amount_real'] + $parkingPlan['amount_real'],
-				'amount_payed' => $newHosuePlan['amount_payed'] + $parkingPlan['amount_payed'],
+				//'amount_payed' => $newHosuePlan['amount_payed'] + $parkingPlan['amount_payed'],
 			),array('house_id' => $newHouseId , 'feetype_name' => '物业费'));
 		}
 		$this->_planDetailModel->update(array(

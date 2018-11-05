@@ -448,7 +448,7 @@ class Order extends Ydzj_Admin_Controller {
 			'showExpire' => $showExpire,
 			'extraItem' => $this->order_service->extraInfoToArray($info),
 			'payChanne' => $payChannelList[$info['pay_channel']],
-			'payMethod' => $payMethodList['pay_method'] 
+			'payMethod' => $payMethodList[$info['pay_method']]
 		));
 		
 		

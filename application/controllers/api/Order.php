@@ -139,14 +139,14 @@ class Order extends Wx_Controller {
 						'booking_time' => $this->postJson['visit_time'],
 						'bz' => $this->postJson['remark'] ? $this->postJson['remark'] : ''
 					);
-					
+					$houseInfo = $this->House_Model->getFirstByKey($this->postJson['address'],'address','id,resident_id');
 					//物业对应小区标识,如果是某个小区的业主
-					if($this->yezhuInfo){
-						$this->postJson['resident_id'] = $this->yezhuInfo['resident_id'];
+					if($houseInfo){
+						$this->postJson['resident_id'] = $this->$houseInfo['resident_id'];
 						
 						$this->load->model('Resident_Model');
 						
-						$residentInfo = $this->Resident_Model->getFirstByKey($this->yezhuInfo['resident_id'],'id','name');
+						$residentInfo = $this->Resident_Model->getFirstByKey($houseInfo['resident_id'],'id','name');
 						
 						$this->postJson['attach'] = $residentInfo['name'];
 					}
@@ -307,12 +307,14 @@ class Order extends Wx_Controller {
 						'address' => $this->postJson['address'],
 					);
 					
+					$houseInfo = $this->House_Model->getFirstByKey($this->postJson['address'],'address','id,resident_id');
 					//物业对应小区标识,如果是某个小区的业主
-					if($this->yezhuInfo){
-						$this->postJson['resident_id'] = $this->yezhuInfo['resident_id'];
+					if($houseInfo){
+						$this->postJson['resident_id'] = $this->$houseInfo['resident_id'];
 						
 						$this->load->model('Resident_Model');
-						$residentInfo = $this->Resident_Model->getFirstByKey($this->yezhuInfo['resident_id'],'id','name');
+						
+						$residentInfo = $this->Resident_Model->getFirstByKey($houseInfo['resident_id'],'id','name');
 						
 						$this->postJson['attach'] = $residentInfo['name'];
 					}
