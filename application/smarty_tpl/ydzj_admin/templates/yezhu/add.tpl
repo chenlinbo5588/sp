@@ -205,7 +205,6 @@
 
 
   </form>
-  <script type="text/javascript" src="{resource_url('js/navigation.js',true)}">   </script>
   <script type="text/javascript">
   	var province_idcard = {$province_idcard},submitUrl = [new RegExp("{$uri_string}")];
   </script>
