@@ -299,7 +299,7 @@ class House extends Ydzj_Admin_Controller {
 			$this->form_validation->set_rules('resident_id','小区名称','required|in_list['.implode(',',array_keys($residentList)).']',array(
 				'in_list' => '小区数据非法'
 			));
-			$this->form_validation->set_rules('month','起缴月份','required|less_than[12]|greater_than[1]');
+			$this->form_validation->set_rules('month','起缴月份','required|less_than[12]|greater_than_equal_to[1]');
 			
 			//注意验证规则顺序
 			

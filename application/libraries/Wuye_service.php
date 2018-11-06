@@ -248,7 +248,7 @@ class Wuye_service extends Base_service {
 			$this->_planModel->setTableId($pComputeParam['year']);
 			
 			$feeList['amountDetail'] = $this->_planDetailModel->getList(array(
-				'select' => 'feetype_name,parking_name,jz_area,price,billing_style,amount_real,order_status,momth',
+				'select' => 'feetype_name,parking_name,jz_area,price,billing_style,amount_real,order_status,month',
 				'where' => array(
 					'house_id' => $pComputeParam['id'],
 					'fee_gname' => $pComputeParam['orderTypeName']
@@ -270,6 +270,13 @@ class Wuye_service extends Base_service {
 					$feeList['amountDetail'][$key]['order_status'] = OrderStatus::$statusName[$item['order_status']];
 					$feeList['amout_payed'] += $item['amount_real'];
 				}
+			}
+			
+			if(!$feeList['amout_unpayed']){
+				$feeList['amout_unpayed'] = 0;
+			}
+			if(!$feeList['amout_payed']){
+				$feeList['amout_payed'] = 0;
 			}
 			$feeList['amount'] = $amountInfo['amount_real'];
 			
