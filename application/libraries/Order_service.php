@@ -452,11 +452,7 @@ class Order_service extends Base_service {
 					if($pParam['order_type'] == '能耗费'){
 						$message = '缴费时间只能延长,不能回退';
 						break;
-					}else{
-						$message = '本年度物业费已交清';
-						break;
-					}
-					
+					} 
 				}
 
 				//开始创建订单

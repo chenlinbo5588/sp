@@ -1116,7 +1116,7 @@ class House extends Ydzj_Admin_Controller {
 					log_message('error','业主添加错误' );
 					
 				}else{
-				 	$this->House_Yezhu_Model->commitTrans();
+				 	$this->House_Model->commitTrans();
 				 	$this->jsonOutput('更改成功');
 				}
 			}
