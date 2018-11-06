@@ -446,15 +446,22 @@ class Order_service extends Base_service {
 					break;
 				}
 				
+				$pParam['order_type'] = self::$orderType['nameKey'][$pParam['order_typename']]['id'];
 				//再校验  缴费的时间一定要大于已缴费的时间,防止多笔支付更新时的问题
 				if($currentFeeExpire['expireTimeStamp'] >= $currentFeeExpire['newEndTimeStamp']){
-					$message = '缴费时间只能延长,不能回退';
-					break;
+					if($pParam['order_type'] == '能耗费'){
+						$message = '缴费时间只能延长,不能回退';
+						break;
+					}else{
+						$message = '本年度物业费已交清';
+						break;
+					}
+					
 				}
 
 				//开始创建订单
 				
-				$pParam['order_type'] = self::$orderType['nameKey'][$pParam['order_typename']]['id'];
+				
 				
 				$pParam['uid'] = $memberInfo['uid'];
 				
