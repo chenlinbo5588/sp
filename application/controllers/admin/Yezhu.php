@@ -683,32 +683,43 @@ class Yezhu extends Ydzj_Admin_Controller {
 						) 
 						));
 						
-						
-						if(('身份证' == $tmpRow['id_type'] || '驾驶证' == $tmpRow['id_type']) && strlen($tmpRow['id_no']) >= 15){
-							$sex = intval(substr($tmpRow['id_no'],-2,1));
-							$tmpRow['sex'] = $sex % 2 == 0 ? '2' : '1';
-							
-							$birthday = substr($tmpRow['id_no'],6,8);
-							$tmpRow['birthday'] = substr($birthday,0,4). '-'.substr($birthday,4,2).'-' .substr($birthday,6,2);
-							
-							$tmpRow['age'] = $currentYear - intval(substr($birthday,0,4));
-							$provinceName = $provinceIdcard[substr($tmpRow['id_no'],0,3)."000"];
-							
-							$tmpRow['jiguan'] = $provinceName;
+						if($tmpRow['id_no']){
+							if(('身份证' == $tmpRow['id_type'] || '驾驶证' == $tmpRow['id_type']) && strlen($tmpRow['id_no']) >= 15){
+								$sex = intval(substr($tmpRow['id_no'],-2,1));
+								$tmpRow['sex'] = $sex % 2 == 0 ? '2' : '1';
+								
+								$birthday = substr($tmpRow['id_no'],6,8);
+								$tmpRow['birthday'] = substr($birthday,0,4). '-'.substr($birthday,4,2).'-' .substr($birthday,6,2);
+								
+								$tmpRow['age'] = $currentYear - intval(substr($birthday,0,4));
+								$provinceName = $provinceIdcard[substr($tmpRow['id_no'],0,3)."000"];
+								
+								$tmpRow['jiguan'] = $provinceName;
+							}
+							$this->wuye_service->addIDRules($idTypeList,$tmpRow['id_type'],0,false);
+							$this->form_validation->set_rules('birthday','出生年月','required|valid_date');
+							$this->form_validation->set_rules('age','年龄','required|is_natural_no_zero');
+							$this->form_validation->set_rules('sex','性别','required|in_list[1,2]');
+							$this->form_validation->set_rules('jiguan','籍贯','required|in_list['.implode(',',array_values($provinceIdcard)).']');
+							$idNoInfo = array(
+								'id_no' => $tmpRow['id_no'],
+								'sex' => $tmpRow['sex'],
+								'age' => $tmpRow['age'],
+								'birthday' => $tmpRow['birthday'],
+								'jiguan' => $jiguanList[$provinceName]['id'],							
+							);
 						}
+						
 						
 						$this->form_validation->set_data($tmpRow);
 						
-						$this->wuye_service->addIDRules($idTypeList,$tmpRow['id_type'],0,false);
 						
 						
 						$this->form_validation->set_rules('name','姓名','required|max_length[50]');
-						$this->form_validation->set_rules('birthday','出生年月','required|valid_date');
-						$this->form_validation->set_rules('age','年龄','required|is_natural_no_zero');
-						$this->form_validation->set_rules('sex','性别','required|in_list[1,2]');
+	
 						$this->form_validation->set_rules('mobile','手机号码','required|valid_mobile');
 						//设置籍贯
-						$this->form_validation->set_rules('jiguan','籍贯','required|in_list['.implode(',',array_values($provinceIdcard)).']');
+						
 						$this->form_validation->set_rules('building_name','建筑物名称', 'required|in_list['.implode(',',array_keys($allBuildingList)).']',array(
 							'in_list' => '该小区没有该建筑物.'
 				        ));
@@ -732,16 +743,16 @@ class Yezhu extends Ydzj_Admin_Controller {
 							'name' => $tmpRow['name'],
 							'mobile' => $tmpRow['mobile'],
 							'id_type' => $idTypeList[$tmpRow['id_type']]['id'],
-							'id_no' => $tmpRow['id_no'],
-							'sex' => $tmpRow['sex'],
-							'age' => $tmpRow['age'],
-							'birthday' => $tmpRow['birthday'],
-							'jiguan' => $jiguanList[$provinceName]['id'],
 							'car_no' => implode(',',$carNo),
 							'car_no1' => $tmpRow['car_no1'],
 							'car_no2' => $tmpRow['car_no2'],
 							'car_no3' => $tmpRow['car_no3'],
 						);
+						if($idNoInfo){
+							$insertData = array_merge($insertData,$idNoInfo);
+						}else{
+							$insertData['birthday'] =  date('Y-m-d', time());
+						}
 						$uidInfo = $this->Member_Model->getList(array(
 							'where' => array(
 								'mobile' => $tmpRow['mobile'],
