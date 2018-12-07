@@ -501,9 +501,7 @@ class Order_service extends Base_service {
 				$pParam['fee_expire'] = $currentFeeExpire['newEndTimeStamp'];
 				
 				//缴费月数
-				$pParam['year'] = $currentFeeExpire['year'];
 				$pParam['fee_month'] = $currentFeeExpire['fee_month'];
-
 				
 				if(ENVIRONMENT == 'development'){
 					//@todo 修改金额
@@ -1025,10 +1023,9 @@ class Order_service extends Base_service {
 	 */
 	public function updateOrderRelation($pParam){
 		$houseItem = $this->_houseModel->getFirstByKey($pParam['goods_id'],'id');
-		if(empty($pParam['year'])){
-			$pParam['year'] = $this->_wuyeServiecObj->getFeeYearByHouseId($houseItem);
-			print_r(aaa);
-		}
+
+		$pParam['year'] = $this->_wuyeServiecObj->getFeeYearByHouseId($houseItem);
+		
 		
 		
 		$this->_orderModel->updateByWhere(array(

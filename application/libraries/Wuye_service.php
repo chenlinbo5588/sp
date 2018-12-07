@@ -675,9 +675,9 @@ class Wuye_service extends Base_service {
 									);
 									$day = intval(($detailInsert['end_date'] - $detailInsert['stat_date'])/86400);
 									if(false !== strpos($detailInsert['billing_style'],'按面积')){						
-										$detailInsert['amount_plan'] = $detailInsert['price'] * $detailInsert['jz_area'] * $day / 30;
+										$detailInsert['amount_plan'] = $detailInsert['price'] * $detailInsert['jz_area'] * $day  * 12 /365;
 									}else if('按每月固定值' == $detailInsert['billing_style']){
-										$detailInsert['amount_plan'] = $detailInsert['price'] *  $day / 30;
+										$detailInsert['amount_plan'] = $detailInsert['price'] *  $day  * 12 /365;
 									}
 									$detailInsert['amount_real'] = $detailInsert['amount_plan'];
 								 	
@@ -690,9 +690,9 @@ class Wuye_service extends Base_service {
 					}else if($houseinfo['wuye_type'] == $feeTypeRule['wuyeType'] ){
 						$day = ($detailInsert['end_date'] - $detailInsert['stat_date'])/86400;
 						if(false !== strpos($detailInsert['billing_style'],'按面积')){						
-							$detailInsert['amount_plan'] = $detailInsert['price'] * $detailInsert['jz_area'] * $day / 30;
+							$detailInsert['amount_plan'] = $detailInsert['price'] * $detailInsert['jz_area'] * $day  * 12 /365;
 						}else if('按每月固定值' == $detailInsert['billing_style']){
-							$detailInsert['amount_plan'] = $detailInsert['price'] * $day / 30;
+							$detailInsert['amount_plan'] = $detailInsert['price'] * $day  * 12 /365 ;
 						}
 						$detailInsert['amount_real'] = $detailInsert['amount_plan'];
 					 	$basicInfo['amount_plan'] += $detailInsert['amount_plan'];
@@ -816,9 +816,9 @@ class Wuye_service extends Base_service {
 									);
 									$day = intval(($detailInsert['end_date'] - $detailInsert['stat_date'])/86400);
 									if(false !== strpos($detailInsert['billing_style'],'按面积')){						
-										$detailInsert['amount_plan'] = $detailInsert['price'] * $detailInsert['jz_area'] * $day / 30;
+										$detailInsert['amount_plan'] = $detailInsert['price'] * $detailInsert['jz_area'] * $day  * 12 /365;
 									}else if('按每月固定值' == $detailInsert['billing_style']){
-										$detailInsert['amount_plan'] = $detailInsert['price'] *  $day / 30;
+										$detailInsert['amount_plan'] = $detailInsert['price'] *  $day  * 12 /365;
 									}
 									$detailInsert['amount_real'] = $detailInsert['amount_plan'];
 								 	
@@ -831,9 +831,9 @@ class Wuye_service extends Base_service {
 					}else if($houseinfo['wuye_type'] == $feeTypeRule['wuyeType'] ){
 						$day = ($detailInsert['end_date'] - $detailInsert['stat_date'])/86400;
 						if(false !== strpos($detailInsert['billing_style'],'按面积')){						
-							$detailInsert['amount_plan'] = $detailInsert['price'] * $detailInsert['jz_area'] * $day / 30;
+							$detailInsert['amount_plan'] = $detailInsert['price'] * $detailInsert['jz_area'] * $day  * 12 /365;
 						}else if('按每月固定值' == $detailInsert['billing_style']){
-							$detailInsert['amount_plan'] = $detailInsert['price'] * $day / 30;
+							$detailInsert['amount_plan'] = $detailInsert['price'] * $day  * 12 /365;
 						}
 						$detailInsert['amount_real'] = $detailInsert['amount_plan'];
 					 	$basicInfo['amount_plan'] += $detailInsert['amount_plan'];
@@ -929,9 +929,9 @@ class Wuye_service extends Base_service {
 				);
 				$day = intval(($detailInsert['end_date'] - $detailInsert['stat_date'])/86400);
 				if(false !== strpos($detailInsert['billing_style'],'按面积')){						
-					$detailInsert['amount_plan'] = $detailInsert['price'] * $detailInsert['jz_area'] * $day / 30;
+					$detailInsert['amount_plan'] = $detailInsert['price'] * $detailInsert['jz_area'] * $day  * 12 /365;
 				}else if('按每月固定值' == $detailInsert['billing_style']){
-					$detailInsert['amount_plan'] = $detailInsert['price'] * $day / 30;
+					$detailInsert['amount_plan'] = $detailInsert['price'] * $day * 12 /365;
 				}
 				$detailInsert['amount_real'] = $detailInsert['amount_plan'];
 			}
@@ -1009,18 +1009,13 @@ class Wuye_service extends Base_service {
 	 
 	 public function getFeeYearByHouseId($houseInfo){
 		$year = date('Y',$houseInfo['wuye_expire']);
-/*		$planDetailInfo = $this->search('收费计划详情',array(
-			'where' => array(
-				'house_id' => 2752,
-				'year' => $year
-			)
-		));*/
 		$planDetailInfo = $this->_planDetailModel->getList(array(
 			'where' => array(
 				'house_id' => $houseInfo['id'],
 				'year' => $year
 			)
 		));
+		$judge = false;
 		if($planDetailInfo){
 			foreach($planDetailInfo as $key => $item){
 				if($item['order_status'] == 1){
