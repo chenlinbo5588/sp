@@ -40,7 +40,6 @@ class Article extends Ydzj_Admin_Controller {
 		}
 		
 		
-		//print_r($condition);
 		$list = $this->Article_Model->getList($condition);
 		
 		$this->assign('articleClassList',$treelist);

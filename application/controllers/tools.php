@@ -50,7 +50,6 @@ class Tools extends MY_Controller {
 			
 			
 		}
-		print_r($list);
 		
 	}
 	

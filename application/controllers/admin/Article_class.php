@@ -17,7 +17,6 @@ class Article_Class extends Ydzj_Admin_Controller {
 		$deep = 0;
 		
 		
-		//print_r($list);
 		$parentId = 0;
 		foreach($treelist as $item){
 			if($id == $item['ac_id']){
@@ -221,7 +220,6 @@ class Article_Class extends Ydzj_Admin_Controller {
 			}
 		}
 		
-		//print_r($subIds);
 		if(in_array($pid,$subIds)){
 			$this->form_validation->set_message('checkpid','父级不能选择自己和自己的下级分类');
 			return false;

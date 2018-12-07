@@ -72,17 +72,6 @@
           </td>
           <td class="vatop tips"><label class="errtip"  id="error_jz_area"></label>{form_error('jz_area')}</td>
         </tr>
-        {if !$info['id']}
-            <tr class="noborder">
-		      <td colspan="2"><label class="validation" for="jz_area">缴费起算月份: </label></td>
-		    </tr>
-		    <tr class="noborder">
-		      <td class="vatop rowform">
-		      	<input type="text"  name="month" id="month" class="txt">
-		      </td>
-		      <td class="vatop tips"><label class="errtip"  id="error_month"></label>{form_error('month')}</td>
-		    </tr> 
-        {/if}
         <tr class="noborder">
           <td colspan="2"><label for="wuye_expire">{#wuye_expire#}: </label></td>
         </tr>

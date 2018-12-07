@@ -7,7 +7,7 @@ class House extends Ydzj_Admin_Controller {
 	public function __construct(){
 		parent::__construct();
 		
-		$this->load->library(array('Wuye_service','Basic_data_service'));
+		$this->load->library(array('Wuye_service','Order_service','Basic_data_service'));
 		
 		$this->wuye_service->setDataModule($this->_dataModule);
 		
@@ -228,10 +228,6 @@ class House extends Ydzj_Admin_Controller {
 				$info[$fieldName] = 0;
 			}else{
 				$info[$fieldName] = strtotime($expire);
-				
-				if($info[$fieldName]){
-					$info[$fieldName] = strtotime(date('Y-m',$info[$fieldName]).'  last day of this month');
-				}
 			}
 		}
 		
@@ -299,13 +295,11 @@ class House extends Ydzj_Admin_Controller {
 			$this->form_validation->set_rules('resident_id','小区名称','required|in_list['.implode(',',array_keys($residentList)).']',array(
 				'in_list' => '小区数据非法'
 			));
-			$this->form_validation->set_rules('month','起缴月份','required|less_than[12]|greater_than_equal_to[1]');
 			
 			//注意验证规则顺序
 			
 			$this->_getRules();
 			$this->_getAddressRule(0,$buildingId);
-			$month = $this->input->get_post('month');
 			for($i = 0; $i < 1; $i++){
 				if(!$this->form_validation->run()){
 					$this->jsonOutput($this->form_validation->error_html(),array('errors' => $this->form_validation->error_array()));
@@ -347,16 +341,6 @@ class House extends Ydzj_Admin_Controller {
 				
 				$this->House_Model->beginTrans();
 				$newid =$this->House_Model->_add($insertData);
-				$_POST['id'] = $newid;
-				if($insertYezhuList){
-					$this->_addHouseYezhu($insertYezhuList,$newid);
-				}
-				$houseInfo  = $this->House_Model->getById(array(
-					'where' => array(
-						'id' => $newid
-					)
-				));
-				$this->wuye_service->generationPlan($buildingInfo['resident_id'],$this->addWhoHasOperated('add'),date('Y'),$month,$houseInfo);
 				$error = $this->House_Model->getError();
 				$message = $this->_getMessage($error);
 				if($this->House_Model->getTransStatus() === FALSE){
@@ -1256,4 +1240,146 @@ class House extends Ydzj_Admin_Controller {
 			return $message;
 		}
 	}
+	public function checkEndDay($startTime,$endTime){
+		if($startTime >= $endTime){
+			$this->form_validation->set_message('checkEndDay',$this->_moduleTitle.'缴费结束日期必须大于缴费开始日期');
+			return false;
+		}
+		
+		return true;
+		
+	}
+	
+	public function pay_house(){
+		$this->payMethod = config_item('payment');
+		$message = null;
+		$payMethodList =  $this->payMethod['method']['手工单'];
+		$id =  $this->input->get_post('id');
+		$houseInfo = $this->wuye_service->search('房屋',array('where' => array('id' => $id)));
+		if($this->isPostRequest()){
+			for($i = 0; $i < 1; $i++){
+				$this->form_validation->set_rules('address','地址','required');
+				$this->form_validation->set_rules('amount_payed','实收金额','required|is_numeric|greater_than[0]');
+				$this->form_validation->set_rules('start_date','缴费开始日期','required|valid_date|callback_checkEndDay['.$this->input->post('end_date').']');
+				$this->form_validation->set_rules('end_date','缴费结束日期','required|valid_date');
+				$this->form_validation->set_rules('pay_method','支付方式','required');
+				
+				if(!$this->form_validation->run()){
+					$this->jsonOutput($this->form_validation->error_first_html(),array('errors' => $this->form_validation->error_array()));
+					break;
+				}
+
+				$houseItem = $this->wuye_service->search('房屋',array(
+					'select' => 'id,yezhu_id,yezhu_name,uid,address',
+					'where' => array(
+						'address' => $_POST['address']
+					)
+				));
+				$sdateTs = strtotime($this->input->post('start_date'));
+				$edateTs = strtotime($this->input->post('end_date'));
+				
+				$param = array(
+					'amount' => $_POST['amount_payed'],
+					'end_month' => date('m',$edateTs),
+					'address' => $houseItem[0]['address'],
+					'house_id' => $houseItem[0]['id'],
+					'uid2' => $houseItem[0]['uid'],
+					'utype' => Utype::$handwork,
+					'order_typename' => $_POST['wuye_type'],
+					'year' => date('Y',$edateTs),
+					'month' => date('m',$edateTs) - date('m',$sdateTs) + 1 +(date('Y',$edateTs) - date('Y',$sdateTs))*12,
+					'pay_time' => time(),
+					'pay_channel' => $this->payMethod['channel']['手工单'],
+					'pay_method' => $_POST['pay_method'],
+				);
+				$message = '';
+				
+				$memberInfo = $this->Member_Model->getFirstByKey($houseInfo[0]['uid'],'uid');
+				if(empty($memberInfo)){
+					$memberInfo = array('uid' => 0 , 'username' => $houseInfo[0]['yezhu_name']);
+				}
+				$this->order_service->setWeixinAppConfig(config_item('mp_xcxCswy'));
+				$this->Plan_Model->beginTrans();
+				
+				$result = $this->order_service->createWuyeOrder('house_id',$param,$memberInfo,$message,'Backstage');
+				
+				if($this->Plan_Model->getTransStatus() === FALSE){
+					$this->Plan_Model->rollBackTrans();
+					
+					$this->jsonOutput('缴费失败');
+					
+					break;
+				}else{
+					$flag = $this->Plan_Model->commitTrans();
+					
+					if($flag){
+						$this->jsonOutput('缴费成功');
+					}else{
+						$this->jsonOutput('缴费失败');
+
+					}
+				}
+			}
+		}else{
+			$who = $this->addWhoHasOperated('add');
+			$who['uid'] = $who['add_uid'];
+			$who['username'] = $who['add_username'];			
+			$year = date('Y',$houseInfo[0]['wuye_expire']);
+			$judge = false;
+			$planDetailInfo = $this->wuye_service->search('收费计划详情',array(
+				'where' => array(
+					'house_id' => $id,
+					'year' => $year,
+				)
+			));
+			if($planDetailInfo){
+				foreach($planDetailInfo as $key => $item){
+					if($item['order_status'] == OrderStatus::$unPayed && 0 == $item['attorn'] ){
+						$judge = true;
+						$amountPayed += $item['amount_real'];
+					}
+				}
+				
+			}
+			if(!$judge){
+				$year = $year + 1;
+			}
+			$info = $this->wuye_service->search('收费计划',array(
+				'where' => array(
+					'house_id' => $id,
+					'year' => $year
+				)
+			));
+			if($judge){
+				$info[0]['amount_real'] = $amountPayed;
+			}
+			if($houseInfo[0]['wuye_expire'] > time()){
+				$this->display();
+			}else if(empty($info)){
+				$this->wuye_service->greatOnePlanByYear($houseInfo[0],$who,$message);
+				$info = $this->wuye_service->search('收费计划',array(
+					'where' => array(
+						'house_id' => $id,
+						'year' => $year
+					)
+				));
+			}
+			
+			$planDetailInfo = $this->wuye_service->search('收费计划详情',array(
+				'where' => array(
+					'house_id' => $id,
+					'year' => $year,
+					'feetype_name' => '物业费',
+				)
+			));
+			$info = $info[0];
+			
+			$this->assign('planDetailInfo',$planDetailInfo[0]);
+			$this->assign('payMethodList',$payMethodList);
+			$this->assign('houseInfo',$houseInfo[0]);
+			$this->assign('info',$info);
+			$this->display();				
+		}
+	}
+
 }

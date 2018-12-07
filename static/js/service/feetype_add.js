@@ -23,4 +23,25 @@ $(function(){
 		}
 	});
 	
+	$("body").delegate(".changType","change",function(){
+		
+		var feeName = $(this).val();
+		
+		var wuyeTypeSelect = $(this).parent().siblings().find(".wuyeType");
+		
+		wuyeTypeSelect.html('');
+		
+		var option = [];
+		if(feeName == '物业费'){
+			for(var typeName in wuyeTypeJson){
+				option.push( "<option value='"+typeName+"'>" + typeName + "</option>");
+			}
+		}
+		if(feeName == '车位费'){
+			for(var typeName in parkingTypeJson){
+				option.push( "<option value='"+typeName+"'>" + typeName + "</option>");
+			}
+		}
+		wuyeTypeSelect.html(option.join(''));
+	});
 });

@@ -139,6 +139,7 @@ class Feetype extends Ydzj_Admin_Controller {
 			'feeNameList' => $this->basic_data_service->getTopChildList('费用类型'),
 			'billingStyleList' => $this->basic_data_service->getTopChildList('计费方式'),
 			'wuyeTypeList' => $this->basic_data_service->getTopChildList('物业类型'),
+			'parkingTypeList' => $this->basic_data_service->getTopChildList('车位类型'),
 		));
 	}
 	
@@ -152,7 +153,8 @@ class Feetype extends Ydzj_Admin_Controller {
 		
 		$billingStyleList = $this->basic_data_service->getTopChildList('计费方式');
 		$wuyeTypeList = $this->basic_data_service->getTopChildList('物业类型');
-		
+		$parkingTypeList = $this->basic_data_service->getTopChildList('车位类型');
+		$wuyeTypeList = array_merge($wuyeTypeList,$parkingTypeList); 
 		$this->form_validation->set_rules('name','费用名称','required|in_list[物业费,能耗费]');
 		
 		$this->form_validation->set_rules('feeName[]','费用类型','required|in_list['.implode(',',array_keys($feeNameList)).']');
@@ -256,9 +258,6 @@ class Feetype extends Ydzj_Admin_Controller {
 				$info = array_merge($_POST,$this->_prepareData(),$this->addWhoHasOperated('add'));
 				$info['resident_name'] = $residentList[$info['resident_id']]['name'];
 				$info['fee_rule'] = json_encode($feeRule);;
-				if(empty($info['generate_deatil'])){
-					$info['generate_deatil'] = 0;						
-				}
 				$this->Feetype_Model->update($info,array('id' => $id));
 				
 				$error = $this->Feetype_Model->getError();
@@ -300,7 +299,7 @@ class Feetype extends Ydzj_Admin_Controller {
 				$nameList[] = $onlyName;
 			}
 		}
-		if('能耗费' == $_POST['name'] && 1 == $_POST['generate_deatil']){
+		if('能耗费' == $_POST['name'] ){
 			$this->jsonOutput('能耗费不能生成明细');
 			$judgement = true;
 		}

@@ -37,7 +37,21 @@
           <td class="vatop tips"><label class="errtip" id="error_name"></label>{form_error('name')}</td>
         </tr>
         <tr class="noborder">
-          <td colspan="2"><label class="validation" for="name">{#address#}: </label></td>
+          <td colspan="2" class="required"><label class="validation" for="type_name">{#parking_type#}:</label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform">
+          	<select name="parking_type">
+	          <option value="">请选择...</option>
+	          {foreach from=$parkingTypeList item=item}
+	          <option {if $info['parking_type'] == $item['show_name']}selected{/if} value="{$item['show_name']}">{$item['show_name']}</option>
+	          {/foreach}
+	        </select>
+          </td>
+          <td class="vatop tips"><label id="error_fee_id"></label>{form_error('parking_type	')}</td>
+        </tr>
+        <tr class="noborder">
+          <td colspan="2"><label class="validation" for="address">{#address#}: </label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input type="text" value="{$info['address']|escape}" name="address" id="address" class="txt"></td>
@@ -53,15 +67,15 @@
           <td class="vatop tips"><label class="errtip"  id="error_jz_area"></label>{form_error('jz_area')}</td>
         </tr>
         {if !$info['id']}
-            <tr class="noborder">
-		      <td colspan="2"><label class="validation" for="jz_area">缴费起算月份: </label></td>
-		    </tr>
-		    <tr class="noborder">
-		      <td class="vatop rowform">
-		      	<input type="text"  name="month" id="month" class="txt">
-		      </td>
-		      <td class="vatop tips"><label class="errtip"  id="error_month"></label>{form_error('month')}</td>
-		    </tr> 
+			 <tr class="noborder">
+	          <td colspan="2"><label class="validation" for="parking_expire">{#parking_expire#}: </label></td>
+	        </tr>
+	        <tr class="noborder">
+	          <td class="vatop rowform">
+	          	<input type="text" value="{if $info['expire']}{date('Y-m-d',$info['expire'])}{/if}" name="expire" id="expire" class="datepicker txt">
+	          </td>
+	          <td class="vatop tips"><label class="errtip"  id="error_expire"></label>{form_error('expire')}</td>
+	        </tr>
         {/if}
         <tr>
           <td colspan="2" class="required"><label>排序:</label></td>

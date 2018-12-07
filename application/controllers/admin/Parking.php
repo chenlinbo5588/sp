@@ -7,7 +7,7 @@ class Parking extends Ydzj_Admin_Controller {
 	public function __construct(){
 		parent::__construct();
 		
-		$this->load->library(array('Wuye_service'));
+		$this->load->library(array('Wuye_service','Basic_data_service'));
 		
 		$this->wuye_service->setDataModule($this->_dataModule);
 		
@@ -186,7 +186,8 @@ class Parking extends Ydzj_Admin_Controller {
 		
 		
 		$this->assign(array(
-			'residentList' => $residentList
+			'residentList' => $residentList,
+			'parkingTypeList' => $this->basic_data_service->getTopChildList('车位类型'),
 		));
 		
 	}
@@ -236,7 +237,6 @@ class Parking extends Ydzj_Admin_Controller {
 	 */
 	public function add(){
 		$feedback = '';
-		
 		if($this->isPostRequest()){
 			
 			$residentId = $this->input->get_post('resident_id');
@@ -248,14 +248,14 @@ class Parking extends Ydzj_Admin_Controller {
 			$this->form_validation->set_rules('resident_id','小区名称','required|in_list['.implode(',',array_keys($residentList)).']',array(
 				'in_list' => '小区数据非法'
 			));
-			$this->form_validation->set_rules('month','起缴月份','required|less_than[12]|greater_than_equal_to[1]');
+			$this->form_validation->set_rules('expire','车位费开始时间','required');
+			$this->form_validation->set_rules('parking_type','车位类型','required');
 			
 			//注意验证规则顺序
 			$this->_getRules();
 			
 			$this->_getNameRule(0,$residentId);
 			
-			$month = $this->input->get_post('month');
 			for($i = 0; $i < 1; $i++){
 				if(!$this->form_validation->run()){
 					$this->jsonOutput($this->form_validation->error_html(),array('errors' => $this->form_validation->error_array()));
@@ -296,11 +296,28 @@ class Parking extends Ydzj_Admin_Controller {
 				$insertData['lng'] = $residentList[$residentId]['lng'];
 				$insertData['lat'] = $residentList[$residentId]['lat'];
 				$insertData['house_id'] = $houseInfo['id'];
-				 
+				$insertData['expire'] = strtotime($insertData['expire']);
+				$this->Plan_Model->beginTrans();
 				$newid =$this->Parking_Model->_add($insertData);
 				$who = $this->addWhoHasOperated('add');
-				
-				$this->wuye_service->creatParkingPlan($residentId,$insertData,$newid,$month,$who);
+				$year = date('Y',time())+1;
+				$info = $this->wuye_service->search('收费计划',array(
+					'where' => array(
+						'house_id' => $houseInfo['id'],
+						'year' => $year
+					)
+				));
+				if($info){
+					$this->wuye_service->creatParkingPlan($residentId,$insertData,$newid,$who);
+				}
+				if($this->Plan_Model->getTransStatus() === FALSE){
+					$this->Plan_Model->rollBackTrans();
+					
+					$this->jsonOutput('保存失败');
+				}else{
+					$flag = $this->Plan_Model->commitTrans();
+					$this->jsonOutput('保存成功');
+				}
 				
 				$error = $this->Parking_Model->getError();
 				
@@ -403,8 +420,10 @@ class Parking extends Ydzj_Admin_Controller {
 		
 		if($this->isPostRequest()){
 			
-			$this->_getRules();
 			
+			
+			$this->_getRules();
+			$this->form_validation->set_rules('parking_type','车位类型','required');
 			$this->_getNameRule($id,$info['resident_id']);
 			
 			for($i = 0; $i < 1; $i++){
@@ -434,10 +453,10 @@ class Parking extends Ydzj_Admin_Controller {
 				$updateInfo['yezhu_name'] = $yezhuList[0]['yezhu_name'];
 				$updateInfo['mobile'] = $yezhuList[0]['mobile'];
 				$updateInfo['uid'] = $yezhuList[0]['uid'];
-				
+				$who = $this->addWhoHasOperated('add');
 				$this->Plan_Model->beginTrans();
 				$this->Parking_Model->update($updateInfo,array('id' => $id));
-				$this->wuye_service->transferAssets($oldHouseId,$newHouseId,$updateInfo,$id);
+				$this->wuye_service->transferAssets($oldHouseId,$newHouseId,$id,$who);
 				if($this->Plan_Model->getTransStatus() === FALSE){
 					$this->Plan_Model->rollBackTrans();
 					
@@ -607,7 +626,7 @@ class Parking extends Ydzj_Admin_Controller {
 					
 					$result = array();
 					$successCnt = 0;
-					
+					$parkingTypeList = $this->basic_data_service->getTopChildList('车位类型'); 
 					// 列从 0 开始  行从1 开始
 					for($rowIndex = $startRow; $rowIndex <= $highestRow; $rowIndex++){
 						$tmpRow = array();
@@ -615,26 +634,30 @@ class Parking extends Ydzj_Admin_Controller {
 						$tmpRow['classname'] = 'failed';
 						
 						$tmpRow['name'] = getCleanValue($objWorksheet->getCell('A'.$rowIndex)->getValue());
-						$tmpRow['address'] = getCleanValue($objWorksheet->getCell('B'.$rowIndex)->getValue());
-						$tmpRow['jz_area'] = getCleanValue($objWorksheet->getCell('C'.$rowIndex)->getValue());
-						$tmpRow['mobile'] = getCleanValue($objWorksheet->getCell('G'.$rowIndex)->getValue());
+						$tmpRow['parking_type'] = getCleanValue($objWorksheet->getCell('B'.$rowIndex)->getValue());
+						$tmpRow['address'] = getCleanValue($objWorksheet->getCell('C'.$rowIndex)->getValue());
+						$tmpRow['jz_area'] = getCleanValue($objWorksheet->getCell('D'.$rowIndex)->getValue());
+						$tmpRow['mobile'] = getCleanValue($objWorksheet->getCell('H'.$rowIndex)->getValue());
 							
 						$this->form_validation->reset_validation();
 						$this->form_validation->set_data($tmpRow);
-						
+						if(empty($tmpRow['parking_type'])){
+							$tmpRow['parking_type'] = '普通车位';
+						}
 						$this->form_validation->set_rules('name','车位名称','required|min_length[2]|max_length[200]|callback_checkName2['.$residentInfo['name'].']');
 						$this->form_validation->set_rules('jz_area','建筑面积','required|is_numeric|greater_than[0]');
 						$this->form_validation->set_rules('mobile','手机号码','required|valid_mobile');
-					
+						$this->form_validation->set_rules('parking_type','车位类型','required|in_list['.implode(',',array_keys($parkingTypeList)).']');
 						if(!$this->form_validation->run()){
 							//print_r($this->form_validation->error_array());
 							$tmpRow['message'] = $this->form_validation->error_first_html();
 							$result[] = $tmpRow;
 							continue;
 						}
-						 
+						
 						$insertData = array_merge(array(
 							'resident_id' => $residentId,
+							'parking_type' => $tmpRow['parking_type'],
 							'name' => $tmpRow['name'],
 							'address' => $tmpRow['address'],
 							'mobile' => $tmpRow['mobile'],

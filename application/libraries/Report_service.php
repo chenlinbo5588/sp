@@ -139,8 +139,6 @@ class Report_service extends Base_service {
 		$nenghaoReportList = array();
 		$wuyeMoney = 0;
 		$nenghaoMoney = 0;
-		$this->_planModel->setTableId($param['year']);
-		$this->_planDetailModel->setTableId($param['year']);
 		
 		$temp = $this->_planDetailModel->sumByCondition(array(
 			'field' => 'amount_payed',

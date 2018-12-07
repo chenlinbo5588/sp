@@ -56,20 +56,20 @@ class Wuye extends Wx_Controller {
 		if($this->memberInfo){
 			
 			for($i = 0; $i < 1; $i++){
-				$address = $this->postJson['address'];
+				$houseId = $this->postJson['house_id'];
 		
 				$this->form_validation->set_data(array(
-						'address' => $this->postJson['address']
+						'house_id' => $this->postJson['house_id']
 					));
 				
-				$this->form_validation->set_rules('address','房屋名称','required');
+				$this->form_validation->set_rules('house_id','房屋ID','required');
 				
 				if(!$this->form_validation->run()){
 					$this->jsonOutput2($this->form_validation->error_first_html());
 					break;
 				}
 				
-				$house = $this->wuye_service->getHouseByAddress($address,$this->yezhuInfo);
+				$house = $this->wuye_service->getHouseById($houseId,$this->yezhuInfo);
 
 				if($house){
 					if(!$house['yezhu_name']){
@@ -433,12 +433,14 @@ class Wuye extends Wx_Controller {
 					$this->jsonOutput2($this->form_validation->error_first_html());
 					break;
 				}
-				
 				$houseInfo = $this->wuye_service->getYezhuHouseDetail($id);
-				
+				$this->load->model('Plan_Model');
+				$year = $this->wuye_service->getFeeYearByHouseId($houseInfo);
+				if(empty($this->Plan_Model->getList(array('where' => array('house_id' => $id ,'year' => $year))))){
+					$this->wuye_service->greatOnePlanByYear($houseInfo,$this->memberInfo);
+				}
 				if($houseInfo){
 					$currentHouseFeeExpire = $this->wuye_service->getCurrentFeeInfo($houseInfo['id'],$data['order_typename']);
-					
 					//获得小区的费用配置
 					$residentFee = $this->wuye_service->getResidentFeeSetting($houseInfo['resident_id'],$currentHouseFeeExpire['year'],$data['order_typename'],$houseInfo['wuye_type']);
 					
@@ -526,5 +528,51 @@ class Wuye extends Wx_Controller {
 			$this->jsonOutput2(UNBINDED,$this->unBind);
 		}
 	}
+	
+	/**
+	 * 获得小区
+	 */
+	 public function getAllResident(){
+	 	$this->load->model('Resident_Model');
+	 	$residentList = $this->Resident_Model->getList(array('select' => 'name,id'));
+	 	$this->jsonOutput2(RESP_SUCCESS,array('residentList' => $residentList));
+	 }
+ 	/**
+	 * 获得建筑物
+	 */
+ 	 public function getBuildingFromResident(){
+ 	 	if($this->postJson['resident_id']){
+ 	 		$this->load->model('Building_Model');
+		 	$buildingList = $this->Building_Model->getList(array(
+				'select' => 'name,id',
+				'where' => array(
+					'resident_id' => $this->postJson['resident_id']
+				),
+				'order' => 'displayorder DESC'
+			));
+		 	$this->jsonOutput2(RESP_SUCCESS,array('buildingList' => $buildingList));
+ 	 	}else{
+ 	 		$this->jsonOutput2('请选择小区');
+ 	 	}
+	 }
+  	/**
+	 * 获得房屋
+	 */
+ 	 public function getHouseFromBuilding(){
+ 	 	if($this->postJson['building_id']){
+ 	 		$this->load->model('House_Model');
+		 	$houseList = $this->House_Model->getList(array(
+				'select' => 'address,id',
+				'where' => array(
+					'building_id' => $this->postJson['building_id'],
+				),
+				'order' => 'address DESC'
+			));
+			//$houseList = $this->wuye_service->handleAddress($houseList);
+		 	$this->jsonOutput2(RESP_SUCCESS,array('houseList' => $houseList));
+ 	 	}else{
+ 	 		$this->jsonOutput2('请选择建筑物');
+ 	 	}
+	 }
 	
 }

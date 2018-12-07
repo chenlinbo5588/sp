@@ -26,6 +26,7 @@ $entity = array(
 'end_date' => 'int',
 'order_id' => 'varchar',
 'order_status' => 'tinyint',
+'attorn' => 'tinyint',
 'pay_time' => 'int',
 'month' => 'int',
 'uid' => 'int',

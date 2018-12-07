@@ -17,7 +17,7 @@
 		          <option value="">请选择...</option>
 		          <option value="物业费" {if $search['feetype_name'] == "物业费"}selected{/if}>物业费</option>
 		          <option value="车位费" {if $search['feetype_name'] == "车位费"}selected{/if}>车位费</option>
-		          <option value="能耗费" {if $search['feetype_name'] == "能耗费"}selected{/if}>能耗费</option>
+		      
 		        </select>
 	          </td>
 	          <td><input type="submit" class="msbtn" name="tijiao" value="查询"/></td>
@@ -62,9 +62,9 @@
           <td>{$item['amount_plan']|escape}</td>
           <td><span class="editable" data-id="{$item['id']}" data-year="{$item['year']}" data-fieldname="really_plan_money">{$item['amount_real']|escape}</span></td>
           <td>{$item['amount_payed']|escape}</td>
-          <td>{$item['pay_method']|escape}</td>
+           <td>{$payMethod['method'][$payMethod['channel'][substr($item['pay_method'],0,1)]][$item['pay_method']]|escape}</td>
           <td>{$item['month']|escape}</td> 
-          <td>{$item['stat_date']|escape|date_format:"%Y-%m-%d %H:%M"}</td> 
+          <td>{date('Y-m-d H:m',$item['stat_date'])}</td> 
           <td>{$item['end_date']|escape|date_format:"%Y-%m-%d %H:%M"}</td> 
         </tr>
         {/foreach}

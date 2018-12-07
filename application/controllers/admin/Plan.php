@@ -15,7 +15,7 @@ class Plan extends Ydzj_Admin_Controller {
 		$this->load->library(array('Wuye_service','Basic_data_service','Order_service'));
 		
 		$this->wuye_service->setDataModule($this->_dataModule);
-		
+		$this->payMethod = config_item('payment');
 		
 		$this->_moduleTitle = '收费计划';
 		$this->_className = strtolower(get_class());
@@ -30,7 +30,7 @@ class Plan extends Ydzj_Admin_Controller {
 		$this->_subNavs = array(
 			array('url' => $this->_className.'/index','title' => '汇总'),
 			array('url' => $this->_className.'/detail_list','title' => '明细'),
-			array('url' => $this->_className.'/add','title' => '生成收费计划'),
+			//array('url' => $this->_className.'/add','title' => '生成收费计划'),
 			array('url' => $this->_className.'/export','title' => '导出'),
 		);
 		
@@ -49,8 +49,6 @@ class Plan extends Ydzj_Admin_Controller {
 				'form_id' => '#formSearch'
 			)
 		);
-
-		
 		$search['address'] = $this->input->get_post('address');
 		if($search['address']){
 			$condition['like']['address'] = $search['address'];
@@ -70,12 +68,15 @@ class Plan extends Ydzj_Admin_Controller {
 			if($search['year'] < $this->_yearRange['minYear'] || $search['year'] > $this->_yearRange['maxYear']){
 				$search['year'] = date('Y');
 			}
-			
+			$condition['where']['year'] = $search['year'];
 		}else{
 			$search['year'] = date('Y');
 		}
-		
-		$this->Plan_Model->setTableId($search['year']);
+		$payMethod = $this->payMethod;
+		foreach($payMethod['method'] as $key => $item){
+			$payMethod['method'][$key] = array_flip($payMethod['method'][$key]);
+		}
+		$payMethod['channel'] = array_flip($payMethod['channel']);
 		
 		$list = $this->wuye_service->search( $this->_moduleTitle, $condition);
 		$this->assign(array(
@@ -86,6 +87,7 @@ class Plan extends Ydzj_Admin_Controller {
 			'page' => $list['pager'],
 			'search' => $search,
 			'currentPage' => $currentPage,
+			'payMethod' => $payMethod
 		));
 		
 		$this->display();
@@ -131,9 +133,7 @@ class Plan extends Ydzj_Admin_Controller {
 	public function detail(){
 
 		$id = $this->input->get_post('id') ? $this->input->get_post('id') : 0;
-		$year = $this->input->get_post('year');
-		$this->Plan_Model->setTableId($year);
-		$this->Plan_Detail_Model->setTableId($year);		
+		$year = $this->input->get_post('year');	
 		$planDetail = $this->wuye_service->search('收费计划',array(
 			'where' => array('id' => $id,)
 		));
@@ -155,6 +155,7 @@ class Plan extends Ydzj_Admin_Controller {
 				'value' => array('物业费','车位费')
 			);
 		}
+		$condition['where']['year'] = $planDetail[0]['year'];
 		$list = $this->wuye_service->search('收费计划详情', $condition);
 		$this->assign('list',$list);
 		
@@ -189,19 +190,22 @@ class Plan extends Ydzj_Admin_Controller {
 		if($search['resident_name']){
 			$condition['where']['resident_name'] = $search['resident_name'];
 		}
-		
+		$payMethod = $this->payMethod;
+		foreach($payMethod['method'] as $key => $item){
+			$payMethod['method'][$key] = array_flip($payMethod['method'][$key]);
+		}
+		$payMethod['channel'] = array_flip($payMethod['channel']);
 		$year = $this->input->get_post('year');
 		if(!empty($year)){
 			
 			if($year < $this->_yearRange['minYear'] || $year > $this->_yearRange['maxYear']){
 				$year = date('Y');
 			}
-			
+			$condition['where']['year'] = $search['year'];
 		}else{
 			$year = date('Y');
 		}
 		
-		$this->Plan_Detail_Model->setTableId($year);
 		
 		$list = $this->wuye_service->search('收费计划详情', $condition);
 		$this->assign(array(
@@ -211,7 +215,8 @@ class Plan extends Ydzj_Admin_Controller {
 			'list' => $list,
 			'page' => $list['pager'],
 			'search' => $search,
-			'currentPage' => $currentPage
+			'currentPage' => $currentPage,
+			'payMethod' => $payMethod
 			
 		));
 		
@@ -252,8 +257,6 @@ class Plan extends Ydzj_Admin_Controller {
 		if(0 == $year){
 			$year = date('Y');
 		}
-		$this->Plan_Model->setTableId($year);
-		$this->Plan_Detail_Model->setTableId($year);
 		$this->Plan_Model->beginTrans();
 		$planDetailList = $this->wuye_service->search('收费计划详情',array(
 			'where_in' => array(
@@ -431,8 +434,6 @@ class Plan extends Ydzj_Admin_Controller {
     	$this->_initPHPExcel();
     	
         $objPHPExcel = new PHPExcel();
-		$this->Plan_Model->setTableId(date('Y'));
-		$this->Plan_Detail_Model->setTableId(date('Y'));
         if('plan' == $choose){
         	$data = $this->wuye_service->search('收费计划',$condition);
         	$colConfig = $this->_getPlanExportConfig();

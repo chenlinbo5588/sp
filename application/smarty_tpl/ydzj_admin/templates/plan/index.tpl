@@ -11,14 +11,7 @@
 	          <td><input class="txt" name="resident_name" value="{$smarty.get['resident_name']|escape}" type="text"></td>
   	          <th><label for="year">{#year#}</label></th>
 	          <td><input class="txt" name="year" value="{$smarty.get['year']|escape}" type="text"></td>
-	          <td>{#type_name#}:</td>
-	          <td>
-	          	<select name="feetype_name" id="id_type">
-		          <option value="">请选择...</option>
-		          <option value="物业费" {if $search['feetype_name'] == "物业费"}selected{/if}>物业费</option>
-		          <option value="能耗费" {if $search['feetype_name'] == "能耗费"}selected{/if}>能耗费</option>
-		        </select>
-	          </td>
+	          
 	          <td><input type="submit" class="msbtn" name="tijiao" value="查询"/></td>
 	        </tr>
 	    </tbody>
@@ -51,7 +44,7 @@
           <td>{$item['amount_plan']|escape}</td>
           <td>{$item['amount_real']|escape}</td>
           <td>{$item['amount_payed']|escape}</td>
-          <td>{$item['pay_method']|escape}</td>
+          <td>{$payMethod['method'][$payMethod['channel'][substr($item['pay_method'],0,1)]][$item['pay_method']]|escape}</td>
           <td>{$item['order_id']|escape}</td> 
         </tr>
         {/foreach}

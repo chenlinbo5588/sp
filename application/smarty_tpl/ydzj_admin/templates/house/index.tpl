@@ -16,7 +16,7 @@
 	    		<input type="text" autocomplete="off"  value="{$search['wuye_expire_s']}" name="wuye_expire_s" id="wuye_expire_s"  class="datepicker txt-short"/>
 	    		-
 	    		<input type="text" autocomplete="off"  value="{$search['wuye_expire_e']}" name="wuye_expire_e" id="wuye_expire_e" class="datepicker txt-short"/>
-          		</td>
+          		</td>	
           		<td>{#nenghao_expire#}:</td>
 	    	   <td>
 	    		<input type="text" autocomplete="off"  value="{$search['nenghao_expire_s']}" name="nenghao_expire_s" id="nenghao_expire_s"  class="datepicker txt-short"/>
@@ -66,6 +66,7 @@
           	{if isset($permission[$moduleClassName|cat:'/edit'])}<a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}">编辑</a>{/if}&nbsp;
           	<!--{if isset($permission[$moduleClassName|cat:'/yezhu_add'])}<a href="{admin_site_url($moduleClassName|cat:'/yezhu_add')}?id={$item['id']}">增加业主</a>{/if}&nbsp;-->
           	{if isset($permission[$moduleClassName|cat:'/yezhu_change'])}<a href="{admin_site_url($moduleClassName|cat:'/yezhu_change')}?id={$item['id']}">业主变更</a>{/if}&nbsp;
+          	{if isset($permission[$moduleClassName|cat:'/pay_house'])}<a href="{admin_site_url($moduleClassName|cat:'/pay_house')}?id={$item['id']}">缴费</a>{/if}&nbsp;
           </td>
         </tr>
         {/foreach}
@@ -93,7 +94,7 @@ $(function(){
 		}
     })
     {/if}
-	
+
 	
 	
      $( ".datepicker" ).datepicker({

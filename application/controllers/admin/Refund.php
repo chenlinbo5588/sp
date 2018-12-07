@@ -304,7 +304,6 @@ class Refund extends Ydzj_Admin_Controller {
 				
 				//业务处理
 				$filePath = Order_service::$orderType['nameKey'][$info['order_typename']]['refund_url'];
-				
 				if($filePath){
 					$fullPath = LIB_PATH.$filePath;
 					$this->load->file($fullPath);
@@ -320,6 +319,15 @@ class Refund extends Ydzj_Admin_Controller {
 						$this->jsonOutput($message);
 						break;
 					}
+				}
+				if($this->order_service->refundPlanEdit($info)){
+					$isOk = $this->order_service->requestWeixinRefund($info,$refundObj,$message);
+					
+					if(!$isOk){
+						$this->jsonOutput($message);
+						break;
+					}
+					$message = '退款失败';
 				}
 				
 				

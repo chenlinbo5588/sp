@@ -7,6 +7,7 @@ $entity = array(
 'house_id' => 'int',
 'address' => 'varchar',
 'name' => 'varchar',
+'parking_type' => 'varchar',
 'jz_area' => 'float',
 'lng' => 'varchar',
 'lat' => 'varchar',

@@ -30,7 +30,7 @@ class Order extends Ydzj_Admin_Controller {
 		
 		$this->_subNavs = array(
 			array('url' => $this->_className.'/index','title' => '管理'),
-			array('url' => $this->_className.'/add','title' => '添加手工单'),
+			//array('url' => $this->_className.'/add','title' => '添加手工单'),
 			array('url' => $this->_className.'/unpay','title' => '未支付'),
 			array('url' => $this->_className.'/payed','title' => '已支付'),
 			array('url' => $this->_className.'/closed','title' => '已关闭'),

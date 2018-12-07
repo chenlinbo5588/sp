@@ -61,7 +61,7 @@
 	    				
 	    				<tr>
 	    					<td>
-	    						<select name="feeName[]">
+	    						<select name="feeName[]" class="changType">
 						          <option value="">请选择...</option>
 						          {foreach from=$feeNameList item=item}
 						          <option {if $fee_rule[0]['feeName'] == $item['show_name']}selected{/if}  value="{$item['show_name']}">{$item['show_name']}</option>
@@ -71,14 +71,20 @@
 	    					<td>
 	    						<input type="text" name="price[]" value="{$fee_rule[0]['price']|escape}"/>
 	    					</td>
-	    					<td>
-	    						<select name="wuyeType[]">
-						          <option value="">请选择...</option>
-						          {foreach from=$wuyeTypeList item=item}
-						          <option {if $fee_rule[0]['wuyeType'] == $item['show_name']}selected{/if} value="{$item['show_name']}">{$item['show_name']}</option>
-						          {/foreach}
-						        </select>
-	    					</td>
+	        					<td>
+	        						<select name="wuyeType[]" class="wuyeType">
+							          <option value="">请选择...</option>
+							          {if $fee_rule[0]['feeName'] == '物业费'}
+							          {foreach from=$wuyeTypeList item=item}
+							          <option {if $fee_rule[0]['wuyeType'] == $item['show_name']}selected{/if} value="{$item['show_name']}">{$item['show_name']}</option>
+							          {/foreach}
+							          {else if $fee_rule[0]['feeName'] == '车位费'}
+							          {foreach from=$parkingTypeList item=item}
+							          <option {if $fee_rule[0]['wuyeType'] == $item['show_name']}selected{/if} value="{$item['show_name']}">{$item['show_name']}</option>
+							          {/foreach}
+							          {/if}
+							        </select>
+	        					</td>
 	    					<td>
 	    						<select name="billingStyle[]">
 						          <option value="">请选择...</option>
@@ -93,14 +99,14 @@
 	    					<td>
 	    						<input type="button" class="dynBtn" name="addBtn" value="添加"/>
 	    					</td>
-	    					 <td class="vatop tips">{form_error('displayorder')} 当费用类型不为物业费时，物业类型只能选择普通</td>
+	    					 <td class="vatop tips">{form_error('displayorder')} </td>
 	    				</tr>
 	    				{if $fee_rule}
 						  {foreach from=$fee_rule key=key item=valus}
 						  	{if $key>0}
 		        				<tr>
 		        					<td>
-		        						<select name="feeName[]">
+		        						<select name="feeName[]" class="changType">
 								          <option value="">请选择...</option>
 								          {foreach from=$feeNameList item=item}
 								          <option {if $valus['feeName'] == $item['show_name']}selected{/if}  value="{$item['show_name']}">{$item['show_name']}</option>
@@ -111,11 +117,17 @@
 		        						<input type="text" name="price[]" value="{$valus['price']|escape}"/>
 		        					</td>
 		        					<td>
-		        						<select name="wuyeType[]">
+		        						<select name="wuyeType[]" class="wuyeType">
 								          <option value="">请选择...</option>
+								          {if $valus['feeName'] == '物业费'}
 								          {foreach from=$wuyeTypeList item=item}
 								          <option {if $valus['wuyeType'] == $item['show_name']}selected{/if} value="{$item['show_name']}">{$item['show_name']}</option>
 								          {/foreach}
+								          {else if $valus['feeName'] == '车位费'}
+								          {foreach from=$parkingTypeList item=item}
+								          <option {if $valus['wuyeType'] == $item['show_name']}selected{/if} value="{$item['show_name']}">{$item['show_name']}</option>
+								          {/foreach}
+								          {/if}
 								        </select>
 		        					</td>
 		        					<td>
@@ -149,15 +161,7 @@
           <td class="vatop rowform"><input type="text" value="{if $info['displayorder']}{$info['displayorder']}{else}255{/if}" name="displayorder" id="displayorder" class="txt"></td>
           <td class="vatop tips">{form_error('displayorder')} 数字范围为0~255，数字越小越靠前</td>
         </tr>
-         <td class="vatop tips">{form_error('ulListStyle1')} 用来判断是否生成收费计划，是否生成收费计划明细</td>
-		<tr>
-			<td>
-				<ul class="ulListStyle1 clearfix">
- 					<li {if $info['generate_plan'] == 1}class="selected"{/if}><label><input type="checkbox" name="generate_plan" value="1" {if $info['generate_plan'] == 1} checked="checked"{/if}/>生成计划</label></li>
-					<li {if $info['generate_deatil'] == 1}class="selected"{/if}><label><input type="checkbox" name="generate_deatil" value="1" {if $info['generate_deatil'] == 1} checked="checked"{/if}/>生成明细</label></li>
-   				</ul>
-  			</td>
-		 </tr>
+
         
         
         <tr class="noborder">
@@ -178,7 +182,7 @@
   <script type="x-template" id="templateRow">
 		<tr>
 			<td>
-				<select name="feeName[]">
+				<select name="feeName[]" class="changType">
 		          <option value="">请选择...</option>
 		          {foreach from=$feeNameList item=item}
 		          <option value="{$item['show_name']}">{$item['show_name']}</option>
@@ -189,7 +193,7 @@
 				<input type="text" name="price[]" value=""/>
 			</td>
 			<td>
-				<select name="wuyeType[]">
+				<select name="wuyeType[]" class="wuyeType">
 		          <option value="">请选择...</option>
 		          {foreach from=$wuyeTypeList item=item}
 		          <option value="{$item['show_name']}">{$item['show_name']}</option>
@@ -214,6 +218,9 @@
   </script>
   <script type="text/javascript">
 	var submitUrl = [new RegExp("{$uri_string}")];
+	
+	var wuyeTypeJson = {json_encode($wuyeTypeList)};
+	var parkingTypeJson = {json_encode($parkingTypeList)};
   </script>
   <script type="text/javascript" src="{resource_url('js/service/feetype_add.js',true)}"></script>
 {include file="common/main_footer.tpl"}

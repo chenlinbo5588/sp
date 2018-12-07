@@ -118,7 +118,6 @@ class Order_service extends Base_service {
 		}else{
 			$order['extra_info'] = json_encode(array());
 		}
-		
 		$newid = $this->_orderModel->_add($order);
 		$error = $this->_orderModel->getError();
 		
@@ -440,7 +439,7 @@ class Order_service extends Base_service {
 				//获得缴费情况
 				$currentFeeExpire = $wuyeService->getCurrentFeeInfo($pParam[$keyId],$pParam['order_typename'],$pParam['end_month']);
 
-				$wuyeService->setFeeTimeRules($currentFeeExpire['year']);
+				//$wuyeService->setFeeTimeRules($currentFeeExpire['year']);
 				if(!self::$CI->form_validation->run()){			
 					$message = self::$CI->form_validation->error_first_html();
 					break;
@@ -494,7 +493,6 @@ class Order_service extends Base_service {
 				$pParam['resident_name'] = $currentFeeExpire['resident_name'];
 				//附件数据 比如  浅水湾
 				$pParam['attach'] = $currentFeeExpire['resident_name'];
-				
 				//原到期时间戳
 				$pParam['fee_old_expire'] = $currentFeeExpire['expireTimeStamp'];
 				
@@ -517,9 +515,10 @@ class Order_service extends Base_service {
 				}
 				
 			}
-			if('wx' == $from){
+			
+			if(strtolower('wx') == strtolower($from)){
 				$callPayJson = $this->createWeixinOrder($pParam);
-			}else if('Backstage' == $from){		
+			}else if(strtolower('Backstage') == strtolower($from)){		
 				$localOrder = $this->createBussOrder($pParam);
 				$callPayJson = $this->updateOrderRelation($localOrder);
 				$message = '新建成功';
@@ -983,8 +982,6 @@ class Order_service extends Base_service {
 		
 		$payYear = date('Y',$pParam['fee_start']);
 		
-		$this->_planModel->setTableId($pParam['year']);
-		$this->_planDetailModel->setTableId($pParam['year']);
 		
 		if('物业费' == $pParam['order_typename']){
 			
@@ -1032,8 +1029,6 @@ class Order_service extends Base_service {
 			$pParam['year'] = date('Y',$pParam['fee_expire']);
 		}
 		
-		$this->_planModel->setTableId($pParam['year']);
-		$this->_planDetailModel->setTableId($pParam['year']);
 		
 		$this->_orderModel->updateByWhere(array(
 			'status' => OrderStatus::$payed,
@@ -1041,7 +1036,6 @@ class Order_service extends Base_service {
 			'order_id' => $pParam['order_id'],
 		));
 
-		
 		$houseItem = $this->_houseModel->getFirstByKey($pParam['goods_id'],'id');
 		
 		if(empty($pParam['utype'])){
@@ -1080,7 +1074,7 @@ class Order_service extends Base_service {
 		));
 		
 		$feeRule = json_decode($feetypeItem['fee_rule'],true);
-			
+		
 		if('物业费' == $pParam['order_typename']){
 				
 			$this->_houseModel->updateByWhere(array(
@@ -1094,7 +1088,6 @@ class Order_service extends Base_service {
 			),array(
 				'house_id' => $pParam['goods_id'],
 			));
-			
 			$this->_planModel->increseOrDecrease(array(
 				array('key'  => 'amount_payed', 'value' => $pParam['amount']/100),
 				array('key'  => 'order_id', 'value' => $pParam['order_id']),
@@ -1102,9 +1095,10 @@ class Order_service extends Base_service {
 				array('key'  => 'pay_time', 'value' => $pParam['pay_time']),
 				array('key'  => 'uid2', 'value' => $pParam['uid']),
 				array('key'  => 'utype', 'value' => $pParam['utype']),
+				array('key'  => 'pay_method', 'value' => $pParam['pay_method']),
 			),array(
 				'house_id' => $pParam['goods_id'],
-				'feetype_name' => $pParam['order_typename']
+				'year' => $pParam['year']
 			));
 			
 			$this->_planDetailModel->increseOrDecrease(array(
@@ -1114,12 +1108,13 @@ class Order_service extends Base_service {
 				array('key'  => 'pay_time', 'value' => $pParam['pay_time']),
 				array('key'  => 'uid2', 'value' => $pParam['uid']),
 				array('key'  => 'utype', 'value' => $pParam['utype']),
+				array('key'  => 'pay_method', 'value' => $pParam['pay_method']),
 			),array(
 				'house_id' => $pParam['goods_id'],
-				'fee_gname' => $pParam['order_typename']
+				'year' => $pParam['year']
 			));
 			
-		}else if('能耗费' == $pParam['order_typename']){
+		}/*else if('能耗费' == $pParam['order_typename']){
 			
 			$this->_houseModel->updateByWhere(array(
 				'nenghao_expire' => $pParam['fee_expire'],
@@ -1170,10 +1165,14 @@ class Order_service extends Base_service {
 				'feetype_name' => $pParam['order_typename']
 			));
 			
-		}
+		}*/
 		
 		return true;
 	}
 	
-	
+	public function refundPlanEdit($pParm){
+		return true;
+		
+		
+	}
 }
