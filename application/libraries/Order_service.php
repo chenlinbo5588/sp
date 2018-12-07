@@ -501,7 +501,7 @@ class Order_service extends Base_service {
 				$pParam['fee_expire'] = $currentFeeExpire['newEndTimeStamp'];
 				
 				//缴费月数
-
+				$pParam['year'] = $currentFeeExpire['year'];
 				$pParam['fee_month'] = $currentFeeExpire['fee_month'];
 
 				
@@ -1024,9 +1024,10 @@ class Order_service extends Base_service {
 	 * 创建订单后更新计划表、房屋表、详情表、历史表
 	 */
 	public function updateOrderRelation($pParam){
-		
+		$houseItem = $this->_houseModel->getFirstByKey($pParam['goods_id'],'id');
 		if(empty($pParam['year'])){
-			$pParam['year'] = date('Y',$pParam['fee_expire']);
+			$pParam['year'] = $this->_wuyeServiecObj->getFeeYearByHouseId($houseItem);
+			print_r(aaa);
 		}
 		
 		
@@ -1036,7 +1037,7 @@ class Order_service extends Base_service {
 			'order_id' => $pParam['order_id'],
 		));
 
-		$houseItem = $this->_houseModel->getFirstByKey($pParam['goods_id'],'id');
+		
 		
 		if(empty($pParam['utype'])){
 			$yezhuinfo = $this->_yezhuModel->getById(array(
@@ -1058,10 +1059,7 @@ class Order_service extends Base_service {
 				}else{
 					$pParam['utype'] = Utype::$otherpaid;
 				}
-				
-				
-
-				
+			
 			}
 
 		}
