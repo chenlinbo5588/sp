@@ -20,7 +20,7 @@ class Cms extends Wx_Controller {
 				'name' => '通知公告'
 			)
 		));
-		if($notifyArticleClassInfo == 1){
+		if($notifyArticleClassInfo[0]['status'] ==1){
 			$notify = $this->Cms_Article_Model->getList(array(
 				'select' => 'id,image_url,article_title,publish_time,jump_url',
 				'where' => array(
@@ -51,29 +51,29 @@ class Cms extends Wx_Controller {
 		$news = $this->editInformation($news);
 		$servicesArticleClassInfo = $this->Cms_Article_Class_Model->getList(array(
 			'where' => array(
-				'name' => '新闻资讯'
+				'name' => '生活服务'
 			)
 		));
 		if($servicesArticleClassInfo[0]['status'] == 1){
-			$services = $this->Cms_Article_Model->getList(array(
-				'select' => 'id,image_url,article_title,publish_time,jump_url',
-				'where' => array(
-					'ac_id' => $artileClassAssoc['生活服务']['id'],
-					'article_state' => CmsArticleStatus::$published
-				),
-				'order' => 'publish_time DESC',
-				'limit' => 5
-			));
-		}
+		$services = $this->Cms_Article_Model->getList(array(
+			'select' => 'id,image_url,article_title,publish_time,jump_url',
+			'where' => array(
+				'ac_id' => $artileClassAssoc['生活服务']['id'],
+				'article_state' => CmsArticleStatus::$published
+			),
+			'order' => 'publish_time DESC',
+			'limit' => 5
+		));
+		}		
 		$services = $this->editInformation($services);
 		
 		$artileList = array(
 			'announce' => $notify,'catagroy'=> array(
-				array('title' => '新闻资讯'),
+				//array('title' => '新闻资讯'),
 				array('title' => '生活服务'),
 			),
 			'artileList' => array(
-				'新闻资讯' => $news,
+				//'新闻资讯' => $news,
 				'生活服务' => $services,
 			)			
 		);
