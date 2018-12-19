@@ -335,10 +335,70 @@ class Plan extends Ydzj_Admin_Controller {
 		
 		}
 	}
+
+	public function delete(){
+		$ids = $this->input->post('id');
+		
+		if($this->isPostRequest()){
+
+			$canDeleteIds = array();
+			
+			$planList = $this->wuye_service->search($this->_moduleTitle,
+				array(
+					'select' => 'id,address,year,order_status',
+					'where_in' => array(
+					array('key' => 'id', 'value' => $ids)
+				)
+			));
+			$judge = true;
+			if($planList[0]['order_status'] == OrderStatus::$payed){
+				$judge = false;
+			}
+			$planDetailList = $this->wuye_service->search('收费计划详情',array(
+				'select' => 'id,order_status',
+				'where' => array(
+					'address' => $planList[0]['address'],
+					'year' => $planList[0]['year']
+				)
+			));
+			foreach($planDetailList as $key => $item){
+				if($item['order_status'] == OrderStatus::$payed){
+					$judge = false;
+				}
+				$canDeleteIds[] = $item['id'];
+			}
+			if($judge){
+				if($canDeleteIds){
+					$deleteRowsDetail = $this->Plan_Detail_Model->deleteByCondition(array(
+						'where_in' => array(
+							array('key' => 'id','value' => $canDeleteIds)
+						)
+					));
+				}
+				$deleteRows = $this->Plan_Model->deleteByCondition(array(
+					'where' => array(
+						'id' => $planList[0]['id'],
+					)
+				));
+				$deleteRows += $deleteRowsDetail;
+				if($deleteRows){
+					$this->jsonOutput('成功删除'.$deleteRows.'条记录',array('deletedIds' => $canDeleteIds));
+				}else{
+					$this->jsonOutput('删除操作成功');
+				}
+			}else{
+				$this->jsonOutput('已有支付记录，暂不能被删除');
+			}
+		}else{
+			$this->jsonOutput('请求非法',$this->getFormHash());
+			
+		}
+		
+	}
 	/**
 	 * 导出exl表
 	 */
-  	 public function export(){
+	public function export(){
   
     	$message = '';
     	

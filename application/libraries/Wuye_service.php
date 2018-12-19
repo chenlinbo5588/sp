@@ -261,7 +261,7 @@ class Wuye_service extends Base_service {
 				)
 			));
 			foreach($feeList['amountDetail'] as $key =>$item){
-				if($item['order_status'] == OrderStatus::$unPayed){
+				if($item['order_status'] == OrderStatus::$unPayed  || $item['order_status'] == OrderStatus::$refounded){
 					$feeList['amountDetail'][$key]['order_status'] = OrderStatus::$statusName[$item['order_status']];
 					$feeList['amout_unpayed'] += $item['amount_real'];
 				}else if($item['order_status'] == OrderStatus::$payed){

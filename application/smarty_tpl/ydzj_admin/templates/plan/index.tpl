@@ -28,7 +28,7 @@
           <th>{#amount_payed#}</th>
           <th>{#pay_method#}</th>
           <th>{#order_id#}</th>
-
+		  <th class="align-center">操作</th>
         </tr>
       </thead>
       <tbody>
@@ -46,6 +46,9 @@
           <td>{$item['amount_payed']|escape}</td>
           <td>{$payMethod['method'][$payMethod['channel'][substr($item['pay_method'],0,1)]][$item['pay_method']]|escape}</td>
           <td>{$item['order_id']|escape}</td> 
+          <td class="align-center">
+          	{if isset($permission[$moduleClassName|cat:'/delete'])}<a href="javascript:void(0)" class="delete" data-url="{admin_site_url($moduleClassName|cat:'/delete')}" data-id="{$item['id']}">删除</a>{/if}
+          </td>
         </tr>
         {/foreach}
       </tbody>
@@ -65,6 +68,7 @@
 	};
 	
 	$(function(){
+		{if isset($permission[$moduleClassName|cat:'/delete'])}bindDeleteEvent();{/if}
 		$(".popwin").bind('click',function(){
 			popWindowFn($(this),{ position: window, selector:"#detailDlg", width:'80%',height:'auto',title:'费用计划明细-' + $(this).attr('data-title') },{});
 		});

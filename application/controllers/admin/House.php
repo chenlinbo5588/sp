@@ -333,6 +333,7 @@ class House extends Ydzj_Admin_Controller {
 				}
 				
 				$message = '';
+				
 				$insertYezhuList = $this->_checkYezhu($_POST,$message);
 				if($message){
 					$this->jsonOutput($message);
@@ -341,6 +342,9 @@ class House extends Ydzj_Admin_Controller {
 				
 				$this->House_Model->beginTrans();
 				$newid =$this->House_Model->_add($insertData);
+				if($insertYezhuList){
+					$this->_addHouseYezhu($insertYezhuList,$newid);
+				}
 				$error = $this->House_Model->getError();
 				$message = $this->_getMessage($error);
 				if($this->House_Model->getTransStatus() === FALSE){
