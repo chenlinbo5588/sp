@@ -544,7 +544,7 @@ class Wuye extends Wx_Controller {
  	 	if($this->postJson['resident_id']){
  	 		$this->load->model('Building_Model');
 		 	$buildingList = $this->Building_Model->getList(array(
-				'select' => 'name,id',
+				'select' => 'name,id,resident_id',
 				'where' => array(
 					'resident_id' => $this->postJson['resident_id']
 				),
