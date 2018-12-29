@@ -1037,7 +1037,7 @@ class Wuye_service extends Base_service {
  		if('address' == $param){
  			$pattern='/幢|号楼|栋/'; 
  		}else{
- 			$pattern='/\d+'.$residentList[$List['resident_id']].'/';
+ 			$pattern='/'.$residentList[$List[0]['resident_id']]['name'].'/';
  		}
 		foreach($List as $key => $item){
 			$room=preg_split ($pattern, $item[$param]);

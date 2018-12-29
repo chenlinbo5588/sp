@@ -548,7 +548,6 @@ class Wuye extends Wx_Controller {
 				'where' => array(
 					'resident_id' => $this->postJson['resident_id']
 				),
-				'order' => 'displayorder DESC'
 			));
 			$buildingList = $this->wuye_service->sotringHouse($buildingList,'name');
 		 	$this->jsonOutput2(RESP_SUCCESS,array('buildingList' => $buildingList));
