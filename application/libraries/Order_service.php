@@ -507,7 +507,7 @@ class Order_service extends Base_service {
 					//@todo 修改金额
 					$pParam['amount'] = mt_rand(1,10);
 				}else{
-					$feeList = $this->wuye_service->computeFee($currentFeeExpire);
+					$feeList = $this->_wuyeServiecObj->computeFee($currentFeeExpire);
 					$pParam['amount'] = intval(100 * $feeList['amount']);
 				}
 				
