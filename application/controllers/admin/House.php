@@ -65,7 +65,6 @@ class House extends Ydzj_Admin_Controller {
 				}
 			}
 		}
-	
 		
 		if($search['address']){
 			$condition['like']['address'] = $search['address'];
@@ -718,7 +717,7 @@ class House extends Ydzj_Admin_Controller {
 				        
 						$this->form_validation->set_rules('wuye_type','物业类型','required|in_list['.implode(',',array_keys($wuyeTypeList)).']');
 						$this->form_validation->set_rules('address','地址','required');
-						$this->form_validation->set_rules('room_num','房间号码','min_length[1]');
+						$this->form_validation->set_rules('room_num','房间号码','min_length[1]|numeric');
 						$this->form_validation->set_rules('jz_area','建筑面积','required|is_numeric|greater_than[0]');
 						
 						

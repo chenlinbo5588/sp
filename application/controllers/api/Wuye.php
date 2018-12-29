@@ -568,7 +568,7 @@ class Wuye extends Wx_Controller {
 				),
 				'order' => 'address DESC'
 			));
-			//$houseList = $this->wuye_service->handleAddress($houseList);
+			$houseList = $this->wuye_service->sotringHouse($houseList);
 		 	$this->jsonOutput2(RESP_SUCCESS,array('houseList' => $houseList));
  	 	}else{
  	 		$this->jsonOutput2('请选择建筑物');

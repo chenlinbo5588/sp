@@ -1029,5 +1029,20 @@ class Wuye_service extends Base_service {
 		return $year;
 	 }
 	 
+	 /**
+	  * 房屋排序
+	  */
+	 public function sotringHouse($houseList){
+			foreach($houseList as $key => $item){
+				$pattern='/幢|号楼|栋/'; 
+				$room=preg_split ($pattern, $item['address']);
+				$houseList[$key]['room']=sprintf("%04d",$room['1']);
+				
+			}
+			$arr1 = array_column($houseList,'room');
+		 	if(array_multisort($arr1,$houseList)){
+		 		return $houseList;
+		 	}
+	 }
 	
 }
