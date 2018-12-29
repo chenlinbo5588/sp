@@ -1033,16 +1033,16 @@ class Wuye_service extends Base_service {
 	  * 房屋排序
 	  */
 	 public function sotringHouse($List,$param){
-	 	$residentList = $this->search('小区',array(),'id');
+	 	$residentList = $this->_residentModel->getList(array('select' => 'name,id'));
+	 	$residentList = array_column($residentList,NULL,'id');
  		if('address' == $param){
  			$pattern='/幢|号楼|栋/'; 
  		}else{
  			$pattern='/'.$residentList[$List[0]['resident_id']]['name'].'/';
  		}
 		foreach($List as $key => $item){
-			$room=preg_split ($pattern, $item[$param]);
+			$room=preg_split($pattern, $item[$param]);
 			$List[$key]['room']=sprintf("%04d",$room['1']);
-			
 		}
 		$arr1 = array_column($List,'room');
 	 	if(array_multisort($arr1,$List)){
