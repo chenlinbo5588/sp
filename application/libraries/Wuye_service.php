@@ -773,7 +773,7 @@ class Wuye_service extends Base_service {
 						'add_username' => $who['username'],	
 						'amount_plan' => 0,
 						'amount_real' => 0,
-						'month' => 0,
+						'month' => 12,
 						'stat_date' => $houseinfo['wuye_expire'],
 					);
 					$date = date('Y',$houseinfo['wuye_expire']) +1 . '-' . date('m-d H:i:s',$houseinfo['wuye_expire']);//一年后日期
@@ -810,7 +810,7 @@ class Wuye_service extends Base_service {
 										'amount_plan' => 0,
 										'amount_real' => 0,
 										'amount_real' => 0,
-										'month' => 0,
+										'month' => 12,
 										'stat_date' => $parkingItem['expire'],
 										'end_date' => $endDate,
 									);
@@ -928,6 +928,10 @@ class Wuye_service extends Base_service {
 					'end_date' => $planDetailInfo[0]['end_date'],
 				);
 				$day = intval(($detailInsert['end_date'] - $detailInsert['stat_date'])/86400);
+				$date1 = explode('-',date($detailInsert['end_date']));
+				$date2 = explode('-',date($detailInsert['end_date']));
+				$detailInsert['month'] = abs($date1[0] - $date2[0]) * 12 + abs($date1[1] - $date2[1]);
+				
 				if(false !== strpos($detailInsert['billing_style'],'按面积')){						
 					$detailInsert['amount_plan'] = $detailInsert['price'] * $detailInsert['jz_area'] * $day  * 12 /365;
 				}else if('按每月固定值' == $detailInsert['billing_style']){

@@ -1376,7 +1376,7 @@ class House extends Ydzj_Admin_Controller {
 				)
 			));
 			$info = $info[0];
-			
+			$this->_subNavs[] = array('url' => $this->_className.'/pay_house?id='.$id, 'title' => '缴费');
 			$this->assign('planDetailInfo',$planDetailInfo[0]);
 			$this->assign('payMethodList',$payMethodList);
 			$this->assign('houseInfo',$houseInfo[0]);
