@@ -268,12 +268,17 @@ class Plan extends Ydzj_Admin_Controller {
 			$houseIdList[] = $planDetailList[$key]['house_id'];
 			
 		}
-
 		$this->Plan_Detail_Model->batchUpdate($planDetailList);
 		array_unique($houseIdList);
 		$planlList = $this->wuye_service->search('收费计划',array(
 			'where_in' => array(
 				array('key' => 'house_id', 'value' => $houseIdList)
+			)
+		),'address');
+		$planOldList = $planlList;
+		$houselList = $this->wuye_service->search('房屋',array(
+			'where_in' => array(
+				array('key' => 'id', 'value' => $houseIdList)
 			)
 		),'id');
 		foreach($planlList as $key => $item){
@@ -295,8 +300,31 @@ class Plan extends Ydzj_Admin_Controller {
 			
 		}
 		//print_r($planlList);
-		$this->Plan_Model->batchUpdate($planlList);
-		
+		$this->Plan_Model->batchUpdate($planlList,'id');
+		$plannewList = $this->wuye_service->search('收费计划',array(
+			'where_in' => array(
+				array('key' => 'house_id', 'value' => $houseIdList)
+			)
+		),'address');
+		foreach($houselList as $key => $item){
+			$address  = $item['address'];
+			if(date('Y') == $year){
+				$updateInfo[] = array(
+					'address' => $address,
+					'amount_recrive_count' => $item['amount_recrive_count'] + $plannewList[$address]['amount_real'] - $planOldList[$address]['amount_real'],
+					'amount_arrears_count' => $item['amount_arrears_count'] - $plannewList[$address]['amount_real'] + $planOldList[$address]['amount_real'],
+					'amount_recrive_now' => $plannewList[$address]['amount_real'],
+					'amount_arrears_now' => -$plannewList[$address]['amount_real'],
+				);	
+			}else{
+				$updateInfo[] = array(
+					'address' => $address,
+					'amount_recrive_count' => $item['amount_recrive_count'] + $plannewList[$address]['amount_real'] - $planOldList[$address]['amount_real'],
+					'amount_arrears_count' => $item['amount_arrears_count'] - $plannewList[$address]['amount_real'] + $planOldList[$address]['amount_real'],
+				);
+			}	
+		}
+		$this->House_Model->batchUpdate($updateInfo,'address');
 		if($this->Plan_Model->getTransStatus() === FALSE){
 			$this->Plan_Model->rollBackTrans();
 			return false;

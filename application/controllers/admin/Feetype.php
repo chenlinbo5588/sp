@@ -194,9 +194,14 @@ class Feetype extends Ydzj_Admin_Controller {
 				
 				$info = array_merge($_POST,$this->_prepareData(),$this->addWhoHasOperated('add'));
 				$info['resident_name'] = $residentList[$info['resident_id']]['name'];
-				$info['fee_rule'] = json_encode($feeRule);;
-				
+				$year = $info['year'];
+				$info['fee_rule'] = json_encode($feeRule);
 				$newid =$this->Feetype_Model->_add($info);
+				$message = null;
+				$who = $this->addWhoHasOperated('add');
+				if($year >= date('Y')){
+					$this->wuye_service->greatAllPlan($info['resident_id'],$year,$who,$message);
+				} 	
 				
 				$error = $this->Feetype_Model->getError();
 				

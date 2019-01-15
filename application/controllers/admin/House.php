@@ -95,7 +95,6 @@ class House extends Ydzj_Admin_Controller {
 		}
 		
 		$list = $this->wuye_service->search($this->_moduleTitle,$condition);
-		
 		$this->assign(array(
 			'list' => $list,
 			'page' => $list['pager'],
@@ -1282,21 +1281,20 @@ class House extends Ydzj_Admin_Controller {
 				$edateTs = strtotime($this->input->post('end_date'));
 				
 				$param = array(
-					'amount' => $_POST['amount_payed'],
+					'amount' => $_POST['amount_payed'] * 100,
 					'end_month' => date('m',$edateTs),
 					'address' => $houseItem[0]['address'],
 					'house_id' => $houseItem[0]['id'],
 					'uid2' => $houseItem[0]['uid'],
 					'utype' => Utype::$handwork,
 					'order_typename' => $_POST['wuye_type'],
-					'year' => date('Y',$edateTs),
+					'year' => date('Y',$sdateTs),
 					'month' => date('m',$edateTs) - date('m',$sdateTs) + 1 +(date('Y',$edateTs) - date('Y',$sdateTs))*12,
 					'pay_time' => time(),
 					'pay_channel' => $this->payMethod['channel']['手工单'],
 					'pay_method' => $_POST['pay_method'],
 				);
 				$message = '';
-				
 				$memberInfo = $this->Member_Model->getFirstByKey($houseInfo[0]['uid'],'uid');
 				if(empty($memberInfo)){
 					$memberInfo = array('uid' => 0 , 'username' => $houseInfo[0]['yezhu_name']);
@@ -1305,7 +1303,6 @@ class House extends Ydzj_Admin_Controller {
 				$this->Plan_Model->beginTrans();
 				
 				$result = $this->order_service->createWuyeOrder('house_id',$param,$memberInfo,$message,'Backstage');
-				
 				if($this->Plan_Model->getTransStatus() === FALSE){
 					$this->Plan_Model->rollBackTrans();
 					
@@ -1329,37 +1326,33 @@ class House extends Ydzj_Admin_Controller {
 			$who['username'] = $who['add_username'];			
 			$year = date('Y',$houseInfo[0]['wuye_expire']);
 			$judge = false;
-			$planDetailInfo = $this->wuye_service->search('收费计划详情',array(
+			$planList = $this->wuye_service->search('收费计划',array(
 				'where' => array(
 					'house_id' => $id,
-					'year' => $year,
-				)
+				),
+				'order' => 'year'
+				
 			));
-			if($planDetailInfo){
-				foreach($planDetailInfo as $key => $item){
-					if($item['order_status'] == OrderStatus::$unPayed && 0 == $item['attorn'] ){
+			foreach($planList as $key => $item){
+				$planDetailList = $this->wuye_service->search('收费计划详情',array(
+					'where' => array(
+						'house_id' => $item['house_id'],
+						'year' => $item['year']
+					)
+				));
+				$year = $item['year'];
+				foreach($planDetailList as $keys => $value){
+					if($value['order_status'] == OrderStatus::$unPayed){
 						$judge = true;
-						$amountPayed += $item['amount_real'];
 					}
 				}
-				
+				if($judge){
+					break;
+				}
 			}
 			if(!$judge){
-				$year = $year + 1;
-			}
-			$info = $this->wuye_service->search('收费计划',array(
-				'where' => array(
-					'house_id' => $id,
-					'year' => $year
-				)
-			));
-			if($judge){
-				$info[0]['amount_real'] = $amountPayed;
-			}
-			if($houseInfo[0]['wuye_expire'] > time()){
 				$this->display();
-			}else if(empty($info)){
-				$this->wuye_service->greatOnePlanByYear($houseInfo[0],$who,$message);
+			}else{
 				$info = $this->wuye_service->search('收费计划',array(
 					'where' => array(
 						'house_id' => $id,
@@ -1367,14 +1360,19 @@ class House extends Ydzj_Admin_Controller {
 					)
 				));
 			}
-			
 			$planDetailInfo = $this->wuye_service->search('收费计划详情',array(
 				'where' => array(
 					'house_id' => $id,
 					'year' => $year,
-					'feetype_name' => '物业费',
 				)
 			));
+			$info[0]['amount_real'] = 0;
+			foreach($planDetailInfo as $key => $item){
+				if(OrderStatus::$unPayed == $item['order_status']){
+					$info[0]['amount_real'] += $item['amount_real'];
+				}
+				 
+			}
 			$info = $info[0];
 			$this->_subNavs[] = array('url' => $this->_className.'/pay_house?id='.$id, 'title' => '缴费');
 			$this->assign('planDetailInfo',$planDetailInfo[0]);

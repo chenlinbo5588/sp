@@ -141,7 +141,6 @@ class Wuye_service extends Base_service {
 		
 		//年份.费用类型名称
 		$extraInfo = explode(',',$extraStr);
-		
 		$flag = false;
 		
 		if(!empty($extraInfo[0]) && !empty($extraInfo[1])){
@@ -249,7 +248,8 @@ class Wuye_service extends Base_service {
 				'select' => 'feetype_name,parking_name,jz_area,price,billing_style,amount_real,order_status,month',
 				'where' => array(
 					'house_id' => $pComputeParam['id'],
-					'fee_gname' => $pComputeParam['orderTypeName']
+					'fee_gname' => $pComputeParam['orderTypeName'],
+					'year' => $pComputeParam['year'],
 				)
 			));
 			
@@ -257,7 +257,8 @@ class Wuye_service extends Base_service {
 				'select' => 'amount_real',
 				'where' => array(
 					'house_id' => $pComputeParam['id'],
-					'feetype_name' => $pComputeParam['orderTypeName']
+					'feetype_name' => $pComputeParam['orderTypeName'],
+					'year' => $pComputeParam['year'],
 				)
 			));
 			foreach($feeList['amountDetail'] as $key =>$item){
@@ -741,6 +742,188 @@ class Wuye_service extends Base_service {
 			return false;
 		}
 	}
+	
+	/**
+	 * 批量生成收费记录
+	 */
+	 public function greatAllPlan($residengId,$year,$who,&$message){
+	 	$houseList = $this->_houseModel->getList(array(
+	 		'where' => array(
+	 			'resident_id' => $residengId
+	 		)
+	 	));
+		$feetypeList = $this->_feeTypeModel->getList(array(
+			'where' => array(
+				'resident_id' => $residengId,
+				'year' => $year,
+				'name' => '物业费',
+			)
+		),'name');
+		if($feetypeList){
+			$feeTypeInfo = $feetypeList['物业费'];
+			$feeTypeInfo['fee_rule'] = (json_decode($feeTypeInfo['fee_rule'],true));
+			foreach($houseList as $key => $houseinfo){
+				$start_date = date('m-d',$houseinfo['wuye_expire']);
+				$start_date = strtotime($year.'-'.$start_date);
+				foreach($feeTypeInfo['fee_rule'] as $key => $feeTypeRule){
+					$detailInsert = array(
+						'house_id' => $houseinfo['id'],
+						'uid' => $houseinfo['uid'],
+						'address' => $houseinfo['address'],
+						'parking_name' => null,
+						'parking_id' => 0,
+						'fee_gname' =>  $feeTypeInfo['name'],//组名
+						'feetype_name' => $feeTypeRule['feeName'],//明细名
+						'resident_id' => $houseinfo['resident_id'],
+						'resident_name' => $feeTypeInfo['resident_name'],
+						'year' => $year,
+						'jz_area' => $houseinfo['jz_area'],
+						'price' =>  $feeTypeRule['price'],
+						'wuye_type' => $feeTypeRule['wuyeType'],
+						'billing_style' => $feeTypeRule['billingStyle'],
+						'add_uid' => $who['add_uid'],
+						'add_username' => $who['add_username'],	
+						'amount_plan' => 0,
+						'amount_real' => 0,
+						'month' => 12,
+						'stat_date' => $start_date,
+					);
+					$date = $year +1 . '-' . date('m-d H:i:s',$houseinfo['wuye_expire']);//一年后日期
+					$endDate = strtotime($date);
+					$detailInsert['end_date'] = $endDate;
+					if('车位费' == $feeTypeRule['feeName']){
+						$parkingList = $this->_parkingModel->getList(array(
+							'where' => array(
+								'resident_id' => $houseinfo['resident_id'],
+								'house_id' => $houseinfo['id'],
+							)
+						),'id');
+						
+						if($parkingList){
+							foreach($parkingList as $key => $parkingItem){
+								if($parkingItem['expire'] < $endDate && $parkingItem['parking_type'] == $feeTypeRule['wuyeType']){
+									$detailInsert = array(
+										'house_id' => $houseinfo['id'],
+										'uid' => $houseinfo['uid'],
+										'address' => $parkingItem['address'],
+										'parking_name' => $parkingItem['name'],
+										'parking_id' => $parkingItem['id'],
+										'fee_gname' =>  $feeTypeInfo['name'],
+										'feetype_name' => $feeTypeRule['feeName'],
+										'resident_id' => $parkingItem['resident_id'],
+										'resident_name' => $feeTypeInfo['resident_name'],
+										'year' => $year,
+										'jz_area' => $parkingItem['jz_area'],
+										'price' =>  $feeTypeRule['price'],
+										'wuye_type' => $feeTypeRule['wuyeType'],
+										'billing_style' => $feeTypeRule['billingStyle'],
+										'add_uid' => $who['add_uid'],
+										'add_username' => $who['add_username'],	
+										'amount_plan' => 0,
+										'amount_real' => 0,
+										'amount_real' => 0,
+										'month' => 12,
+										'stat_date' => $start_date,
+										'end_date' => $endDate,
+									);
+									$day = intval(($detailInsert['end_date'] - $detailInsert['stat_date'])/86400);
+									if(false !== strpos($detailInsert['billing_style'],'按面积')){						
+										$detailInsert['amount_plan'] = $detailInsert['price'] * $detailInsert['jz_area'] * $day  * 12 /365;
+									}else if('按每月固定值' == $detailInsert['billing_style']){
+										$detailInsert['amount_plan'] = $detailInsert['price'] *  $day  * 12 /365;
+									}
+									$detailInsert['amount_real'] = $detailInsert['amount_plan'];
+								 	
+								 	$basicInfo['amount_plan'] += $detailInsert['amount_plan'];								
+								 	$wuyeDetailItem[] = $detailInsert;
+								}
+							}
+						}
+					}else if($houseinfo['wuye_type'] == $feeTypeRule['wuyeType'] ){
+						$day = ($detailInsert['end_date'] - $detailInsert['stat_date'])/86400;
+						if(false !== strpos($detailInsert['billing_style'],'按面积')){						
+							$detailInsert['amount_plan'] = $detailInsert['price'] * $detailInsert['jz_area'] * $day  * 12 /365;
+						}else if('按每月固定值' == $detailInsert['billing_style']){
+							$detailInsert['amount_plan'] = $detailInsert['price'] *  $day  * 12 /365;
+						}
+						$detailInsert['amount_real'] = $detailInsert['amount_plan'];
+					 	$basicInfo['amount_plan'] += $detailInsert['amount_plan'];
+				 		$wuyeDetailItem[] = $detailInsert;
+
+					}
+					
+				}
+				if(empty($basicInfo['amount_plan'])){
+					 $basicInfo['amount_plan'] = 0;
+				}
+				
+				$basicInfo = array(
+					'house_id' => $houseinfo['id'],
+					'uid' => $houseinfo['uid'],
+					'address' => $houseinfo['address'],
+					'resident_id' => $houseinfo['resident_id'],
+					'resident_name' => $feeTypeInfo['resident_name'],
+					'year' => $year,
+					'add_uid' => $who['add_uid'],
+					'add_username' => $who['add_username'],
+					'feetype_name' => $feeTypeInfo['name'],
+					'amount_plan' => $basicInfo['amount_plan'],
+					'amount_real' => $basicInfo['amount_plan'],	
+				);
+				
+				
+				$wuyeTotalItem[] = $basicInfo;
+				if(date('Y') == $wuyeTotalItem[0]['year']){
+					$updateInfo = array(
+						'address' => $houseinfo['address'],
+						'amount_recrive_count' => $houseinfo['amount_recrive_count'] + $basicInfo['amount_real'],
+						'amount_arrears_count' => $houseinfo['amount_arrears_count'] - $basicInfo['amount_real'],
+						'amount_recrive_now' => $basicInfo['amount_real'],
+						'amount_arrears_now' => -$basicInfo['amount_real'],
+					);	
+				}else{
+					$updateInfo = array(
+						'address' => $houseinfo['address'],
+						'amount_recrive_count' => $houseinfo['amount_recrive_count'] + $basicInfo['amount_real'],
+						'amount_arrears_count' => $houseinfo['amount_arrears_count'] - $basicInfo['amount_real'],
+					);
+				}
+				$updateList[] = $updateInfo;
+				$basicInfo['amount_plan'] = 0;
+				if(100 <= count($wuyeTotalItem)){
+					$this->_planModel->beginTrans();
+					$this->_planDetailModel->batchInsert($wuyeDetailItem);
+					$this->_planModel->batchInsert($wuyeTotalItem);
+					$this->_houseModel->batchUpdate($updateList,'address');
+					if($this->_planModel->getTransStatus() === FALSE){
+						$this->_planModel->rollBackTrans();
+						log_message('error','批量出错');
+					}else{
+						$this->_planModel->commitTrans();
+					}
+					$wuyeTotalItem = null;
+					$wuyeDetailItem = null;
+				}
+			}
+			if(0 < count($wuyeTotalItem)){
+				$this->_planModel->beginTrans();
+				$this->_planDetailModel->batchInsert($wuyeDetailItem);
+				$this->_planModel->batchInsert($wuyeTotalItem);
+				$this->_houseModel->batchUpdate($updateList,'address');
+				if($this->_planModel->getTransStatus() === FALSE){
+					$this->_planModel->rollBackTrans();
+					log_message('error','批量出错');
+				}else{
+					$this->_planModel->commitTrans();
+				}
+			}
+		}else{
+			$message ='费用类型未设置';
+			return false;
+		}		
+	}
+	
+	
 	public function greatOnePlanByYear($houseinfo,$who,&$message = null){
 		$year = date('Y',$houseinfo['wuye_expire']) + 1;
 		$feetypeList = $this->_feeTypeModel->getList(array(
@@ -833,7 +1016,7 @@ class Wuye_service extends Base_service {
 						if(false !== strpos($detailInsert['billing_style'],'按面积')){						
 							$detailInsert['amount_plan'] = $detailInsert['price'] * $detailInsert['jz_area'] * $day  * 12 /365;
 						}else if('按每月固定值' == $detailInsert['billing_style']){
-							$detailInsert['amount_plan'] = $detailInsert['price'] * $day  * 12 /365;
+							$detailInsert['amount_plan'] = $detailInsert['price'] *  $day  * 12 /365;
 						}
 						$detailInsert['amount_real'] = $detailInsert['amount_plan'];
 					 	$basicInfo['amount_plan'] += $detailInsert['amount_plan'];
@@ -885,15 +1068,8 @@ class Wuye_service extends Base_service {
 	/**
 	 * 创建一条车位收费记录
 	 */
-	 public function creatParkingPlan($residentId,$insertData,$parkingId,$who){
-		$year = date('Y',time())+1;
-		$feetypeList = $this->search('費用类型',array(
-			'where' => array(
-				'resident_id' => $residentId,
-				'year' => $year,
-				'name' => '物业费'
-			)
-		));
+	 public function creatParkingPlan($residentId,$insertData,$parkingId,$who,$year){
+		$feetypeList = $this->_feeTypeModel->getList(array('where' => array('resident_id' => $residentId,'year' => $year,'name' => '物业费')));
 		$planDetailInfo = $this->search('收费计划详情',array(
 			'where' => array(
 				'house_id' => $insertData['house_id'],
@@ -928,7 +1104,7 @@ class Wuye_service extends Base_service {
 					'end_date' => $planDetailInfo[0]['end_date'],
 				);
 				$day = intval(($detailInsert['end_date'] - $detailInsert['stat_date'])/86400);
-				$date1 = explode('-',date($detailInsert['end_date']));
+				$date1 = explode('-',date($detailInsert['stat_date']));
 				$date2 = explode('-',date($detailInsert['end_date']));
 				$detailInsert['month'] = abs($date1[0] - $date2[0]) * 12 + abs($date1[1] - $date2[1]);
 				
@@ -947,13 +1123,36 @@ class Wuye_service extends Base_service {
 			'amount_plan' => $planList['amount_plan'] + $detailInsert['amount_plan'],
 		);
 		$this->_planModel->update($updateInfo,array('id' => $planList['id']));
+		$HosueInfo = $this->search('房屋',array(
+			'where' => array(
+				'id' => $insertData['house_id'],
+			)
+		));
+		if($year == date('Y')){
+			$this->_houseModel->update(array(
+				'amount_recrive_count' => $HosueInfo[0]['amount_recrive_count'] + $detailInsert['amount_real'],
+				'amount_arrears_count' => $HosueInfo[0]['amount_arrears_count'] - $detailInsert['amount_real'],
+				'amount_recrive_now' => $HosueInfo[0]['amount_recrive_now'] + $detailInsert['amount_real'],
+				'amount_arrears_now' => $HosueInfo[0]['amount_arrears_now'] - $detailInsert['amount_real'],
+			),array('id' => $HosueInfo[0]['id']));
+		}else{
+			$this->_houseModel->update(array(
+				'amount_recrive_count' => $HosueInfo[0]['amount_recrive_count'] + $detailInsert['amount_real'],
+				'amount_arrears_count' => $HosueInfo[0]['amount_arrears_count'] - $detailInsert['amount_real'],
+			),array('id' => $HosueInfo[0]['id']));
+		}
 	 }
 	 
 	 /**
 	  * 转让车位
 	  */
 	 public function transferAssets($oldHouseId,$newHouseId,$parkingId,$who){
-	 	$year = date('Y',time()) + 1;  
+		$parkingInfo =$this->search('停车位',array(
+				'where' => array(
+				'id' =>$parkingId,
+			)
+		));
+	 	$year = date('Y',$parkingInfo[0]['expire']);
 		$oldHosuePlan = $this->search('收费计划',array(
 			'where' => array(
 				'house_id' => $oldHouseId,
@@ -966,11 +1165,13 @@ class Wuye_service extends Base_service {
 				'year' => $year
 			)
 		));
-		$parkingInfo =$this->search('停车位',array(
-				'where' => array(
-				'id' =>$parkingId,
+		$oldHosueInfo = $this->search('房屋',array(
+			'where' => array(
+				'id' => $oldHouseId,
 			)
 		));
+
+
 		if($oldHosuePlan){
 			$parkingPlan = $this->search('收费计划详情',array(
 				'where' => array(
@@ -987,13 +1188,25 @@ class Wuye_service extends Base_service {
 					'amount_real' => $oldHosuePlan[0]['amount_real'] - $parkingPlan[0]['amount_real'],
 					//'amount_payed' => $oldHosuePlan[0]['amount_payed'] - $parkingPlan[0]['amount_payed'],
 				),array('house_id' => $oldHouseId , 'feetype_name' => '物业费'));
+				if($year == date('Y')){
+					$this->_houseModel->update(array(
+						'amount_recrive_count' => $oldHosueInfo[0]['amount_recrive_count'] - $parkingPlan[0]['amount_real'],
+						'amount_arrears_count' => $oldHosueInfo[0]['amount_arrears_count'] + $parkingPlan[0]['amount_real'],
+						'amount_recrive_now' => $oldHosueInfo[0]['amount_recrive_now'] - $parkingPlan[0]['amount_real'],
+						'amount_arrears_now' => $oldHosueInfo[0]['amount_arrears_now'] + $parkingPlan[0]['amount_real'],
+					),array('id' => $oldHouseId));
+				}else{
+					$this->_houseModel->update(array(
+						'amount_recrive_count' => $oldHosueInfo[0]['amount_recrive_count'] - $parkingPlan[0]['amount_real'],
+						'amount_arrears_count' => $oldHosueInfo[0]['amount_arrears_count'] + $parkingPlan[0]['amount_real'],
+					),array('id' => $oldHouseId));
+				}
 				$this->_planDetailModel->update(array(
 					'attorn' => 1,
 				),array('id' => $parkingPlan[0]['id']));
 					
 				}
 		}
-		
 		if($newHosuePlan){
 			$parkingExpire = $parkingInfo[0]['expire'];
 			$newHouseInfo = $this->search('房屋',array(
@@ -1004,7 +1217,7 @@ class Wuye_service extends Base_service {
 			$houseExpire = (date('Y',$newHouseInfo[0]['wuye_expire']) +1) . '-' . date('m-d H:i:s',$newHouseInfo[0]['wuye_expire']);
 			$houseExpire = strtotime($houseExpire);	
 			if($parkingExpire < $houseExpire){
-				$this->creatParkingPlan($newHouseInfo[0]['resident_id'],$parkingInfo[0],$parkingInfo[0]['id'],$who);
+				$this->creatParkingPlan($newHouseInfo[0]['resident_id'],$parkingInfo[0],$parkingInfo[0]['id'],$who,$year);
 			}
 			
 		}
@@ -1012,24 +1225,30 @@ class Wuye_service extends Base_service {
 	 }
 	 
 	 public function getFeeYearByHouseId($houseInfo){
-		$year = date('Y',$houseInfo['wuye_expire']);
-		$planDetailInfo = $this->_planDetailModel->getList(array(
-			'where' => array(
-				'house_id' => $houseInfo['id'],
-				'year' => $year
-			)
-		));
-		$judge = false;
-		if($planDetailInfo){
-			foreach($planDetailInfo as $key => $item){
-				if($item['order_status'] == 1){
-					$judge = true;
+			$planList = $this->_planModel->getList(array(
+				'where' => array(
+					'house_id' => $houseInfo['id'],
+				),
+				'order' => 'year'
+				
+			));
+			foreach($planList as $key => $item){
+				$planDetailList = $this->_planDetailModel->getList(array(
+					'where' => array(
+						'house_id' => $item['house_id'],
+						'year' => $item['year']
+					)
+				));
+				$year = $item['year'];
+				foreach($planDetailList as $keys => $value){
+					if($value['order_status'] == OrderStatus::$unPayed){
+						$judge = true;
+					}
+				}
+				if($judge){
+					break;
 				}
 			}
-		}
-		if(!$judge){
-			$year = $year + 1;
-		}
 		return $year;
 	 }
 	 

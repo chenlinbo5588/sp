@@ -39,13 +39,13 @@
           <th class="w24"></th>
           <th>{#displayorder#}</th>
           <th>{#address#}</th>
-          <th>{#wuye_type#}</th>
-          <th>{#jz_area#}</th>
-          <th>{#yezhu_name#}</th>
-          <th>{#mobile#}</th>
+          <th>{#wuye_type#}<br>{#jz_area#}</th>
+          <th>{#yezhu_name#}<br>{#mobile#}</th>
           <th>{#car_no#}</th>
           <th>{#wuye_expire#}</th>
           <th>{#nenghao_expire#}</th>
+          <th>{#amount_recrive_count#}<br>{#amount_arrears_count#}</th>
+          <th>{#amount_recrive_now#}<br>{#amount_arrears_now#}</th>
           <th class="align-center">操作</th>
         </tr>
       </thead>
@@ -55,13 +55,13 @@
           <td><input value="{$item['id']}" class="checkitem" group="chkVal" type="checkbox" name="id[]"></td>
           <td class="sort"><span class="editable" data-id="{$item['id']}" data-fieldname="displayorder">{$item['displayorder']}</span></td>
           <td class="name"><span class="editable" data-id="{$item['id']}" data-fieldname="address">{$item['address']|escape}</span></td>
-          <td>{$item['wuye_type']|escape}</td>
-          <td>{$item['jz_area']|escape}</td>
-          <td>{if $item['yezhu_id']}{$item['yezhu_name']}{else}暂未入驻{/if}</td>
-          <td>{$item['mobile']|escape}</td>
+          <td>{$item['wuye_type']|escape}<br>{$item['jz_area']|escape}</td>
+          <td>{if $item['yezhu_id']}{$item['yezhu_name']}{else}暂未入驻{/if}<br>{$item['mobile']|escape}</td>
           <td>{$item['car_no']|escape}</td>
           <td>{if $item['wuye_expire']}{$item['wuye_expire']|date_format:"%Y-%m-%d"}{else}无缴费记录{/if}</td>
           <td>{if $item['nenghao_expire']}{$item['nenghao_expire']|date_format:"%Y-%m-%d"}{else}无缴费记录{/if}</td>
+          <td>{$item['amount_recrive_count']|escape}<br>{$item['amount_arrears_count']|escape}</td>
+          <td>{$item['amount_recrive_now']|escape}<br>{$item['amount_arrears_now']|escape}</td>
           <td class="align-center">
           	{if isset($permission[$moduleClassName|cat:'/edit'])}<a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}">编辑</a>{/if}&nbsp;
           	<!--{if isset($permission[$moduleClassName|cat:'/yezhu_add'])}<a href="{admin_site_url($moduleClassName|cat:'/yezhu_add')}?id={$item['id']}">增加业主</a>{/if}&nbsp;-->
