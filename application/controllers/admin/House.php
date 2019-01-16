@@ -717,15 +717,13 @@ class House extends Ydzj_Admin_Controller {
 						$this->form_validation->set_rules('address','地址','required');
 						$this->form_validation->set_rules('room_num','房间号码','min_length[1]|numeric');
 						$this->form_validation->set_rules('jz_area','建筑面积','required|is_numeric|greater_than[0]');
-						
-						if($tmpRow['house_status']){
-							if($tmpRow['house_status'] == '空置'){
-								$tmpRow['house_status'] = 1;
-							}else{
-								$tmpRow['house_status'] = 2;
-							}
+						$this->form_validation->set_rules('house_status','房屋状态','in_list[空置,正常]');
+						if($tmpRow['house_status'] == '空置'){
+							$tmpRow['house_status'] = 1;
+						}else{
+							$tmpRow['house_status'] = 2;
 						}	
-						$this->form_validation->set_rules('house_status','房屋状态','in_list[1,2]');
+						
 						
 						if(!$this->form_validation->run()){
 							
