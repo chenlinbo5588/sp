@@ -42,6 +42,15 @@
           <td class="vatop rowform"><input type="text" value="{$info['total_num']}" name="total_num" id="total_num" class="txt"></td>
           <td class="vatop tips"><label class="errtip" id="error_total_num"></label>{form_error('total_num')}</td>
         </tr>
+        
+        <tr class="noborder">
+          <td colspan="2"><label class="validation" for="vacant_discount">{#vacant_discount#}: </label>{form_error('vacant_discount')}</td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform"><input type="text" value="{$info['vacant_discount']}" name="vacant_discount" id="vacant_discount" class="txt"></td>
+          <td class="vatop tips"><label class="errtip" id="error_total_num"></label>{form_error('vacant_discount')} 输入1~100的整数，80代表八折,100表示不打折</td>
+        </tr>
+  
         <tr>
           <td colspan="2"><label>排序:</label></td>
         </tr>

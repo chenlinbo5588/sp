@@ -82,7 +82,7 @@ class Resident extends Ydzj_Admin_Controller {
 		$this->form_validation->set_rules('address','小区地址','required|min_length[2]|max_length[200]');
 		$this->form_validation->set_rules('yezhu_num','入驻业主数量','required|is_natural');
 		$this->form_validation->set_rules('total_num','总套数','required|is_natural');
-		
+		$this->form_validation->set_rules('vacant_discount','空置房折扣率','required|greater_than[1]|less_than[100]');
 		$this->form_validation->set_rules('lng','经度','required|is_numeric');
 		$this->form_validation->set_rules('lat','纬度','required|is_numeric');
 	}

@@ -751,7 +751,8 @@ class Wuye_service extends Base_service {
 	 		'where' => array(
 	 			'resident_id' => $residengId
 	 		)
-	 	));
+	 	));	 	
+	 	$residentInfo = $this->_residentModel->getFirstByKey($residengId,'id');
 		$feetypeList = $this->_feeTypeModel->getList(array(
 			'where' => array(
 				'resident_id' => $residengId,
@@ -834,7 +835,8 @@ class Wuye_service extends Base_service {
 									}
 									$detailInsert['amount_real'] = $detailInsert['amount_plan'];
 								 	
-								 	$basicInfo['amount_plan'] += $detailInsert['amount_plan'];								
+								 	$basicInfo['amount_plan'] += $detailInsert['amount_plan'];
+								 	$basicInfo['amount_real'] += $detailInsert['amount_real'];								
 								 	$wuyeDetailItem[] = $detailInsert;
 								}
 							}
@@ -846,8 +848,14 @@ class Wuye_service extends Base_service {
 						}else if('按每月固定值' == $detailInsert['billing_style']){
 							$detailInsert['amount_plan'] = $detailInsert['price'] *  $day  * 12 /365;
 						}
-						$detailInsert['amount_real'] = $detailInsert['amount_plan'];
+						if(1 == $houseinfo['house_status']){
+							$detailInsert['amount_real'] = $detailInsert['amount_plan'] * $residentInfo['vacant_discount'] / 100;
+						}else{
+							$detailInsert['amount_real'] = $detailInsert['amount_plan'];
+						}
+						
 					 	$basicInfo['amount_plan'] += $detailInsert['amount_plan'];
+					 	$basicInfo['amount_real'] += $detailInsert['amount_real'];
 				 		$wuyeDetailItem[] = $detailInsert;
 
 					}
@@ -855,6 +863,7 @@ class Wuye_service extends Base_service {
 				}
 				if(empty($basicInfo['amount_plan'])){
 					 $basicInfo['amount_plan'] = 0;
+					 $basicInfo['amount_real'] = 0;
 				}
 				
 				$basicInfo = array(
@@ -868,7 +877,7 @@ class Wuye_service extends Base_service {
 					'add_username' => $who['add_username'],
 					'feetype_name' => $feeTypeInfo['name'],
 					'amount_plan' => $basicInfo['amount_plan'],
-					'amount_real' => $basicInfo['amount_plan'],	
+					'amount_real' => $basicInfo['amount_real'],	
 				);
 				
 				
@@ -890,6 +899,7 @@ class Wuye_service extends Base_service {
 				}
 				$updateList[] = $updateInfo;
 				$basicInfo['amount_plan'] = 0;
+				$basicInfo['amount_real'] = 0;
 				if(100 <= count($wuyeTotalItem)){
 					$this->_planModel->beginTrans();
 					$this->_planDetailModel->batchInsert($wuyeDetailItem);

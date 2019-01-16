@@ -670,7 +670,6 @@ class House extends Ydzj_Admin_Controller {
 							'resident_id' => $residentId
 						)
 					),'name');
-					$feetypeList = $this->wuye_service->search('费用类型',array(),'id');
 					
 					if(empty($allBuildingList)){
 						$feedback = getErrorTip('该小区尚未配置建筑物信息,请先配置建筑物');
@@ -705,7 +704,7 @@ class House extends Ydzj_Admin_Controller {
 						//费用到期日期
 						$tmpRow['wuye_expire'] = getCleanValue($objWorksheet->getCell('L'.$rowIndex)->getValue());
 						$tmpRow['nenghao_expire'] = getCleanValue($objWorksheet->getCell('M'.$rowIndex)->getValue());
-						
+						$tmpRow['house_status'] = getCleanValue($objWorksheet->getCell('N'.$rowIndex)->getValue());
 						$this->form_validation->reset_validation();
 						$this->form_validation->set_data($tmpRow);
 						
@@ -719,6 +718,14 @@ class House extends Ydzj_Admin_Controller {
 						$this->form_validation->set_rules('room_num','房间号码','min_length[1]|numeric');
 						$this->form_validation->set_rules('jz_area','建筑面积','required|is_numeric|greater_than[0]');
 						
+						if($tmpRow['house_status']){
+							if($tmpRow['house_status'] == '空置'){
+								$tmpRow['house_status'] = 1;
+							}else{
+								$tmpRow['house_status'] = 2;
+							}
+						}	
+						$this->form_validation->set_rules('house_status','房屋状态','in_list[1,2]');
 						
 						if(!$this->form_validation->run()){
 							
@@ -735,6 +742,7 @@ class House extends Ydzj_Admin_Controller {
 							'lng' => $allBuildingList[$tmpRow['building_name']]['lng'],
 							'lat' => $allBuildingList[$tmpRow['building_name']]['lat'],
 							'wuye_type' => $tmpRow['wuye_type'],
+							'house_status' => $tmpRow['house_status'],
 						),$this->addWhoHasOperated('add'));
 						
 						
@@ -780,12 +788,15 @@ class House extends Ydzj_Admin_Controller {
 						if(QUERY_OK != $error['code']){
 							$tmpRow['message'] = '数据库错误';
 							if($error['code'] == MySQL_Duplicate_CODE){
-								$tmpRow['message'] = '房屋已经存在';
-								
-								if($insertedHouseList[$insertData['address']]){
-									$newHouseId = $insertedHouseList[$insertData['address']];
+								$tmpRow['message'] = '房屋已经存在';										
+								$affectRow = $this->Yezhu_Model->update(array_merge($insertData,$this->addWhoHasOperated('edit')),array(
+									'address' => $insertData['address'],
+								));	
+								if($affectRow){
+									$tmpRow['message'] .= ',自动更新记录';			
+									$tmpRow['classname'] = 'ok';
+									$successCnt++;
 								}
-								
 							}
 						}else{
 							$insertedHouseList[$insertData['address']] = $newHouseId;

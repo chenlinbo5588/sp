@@ -20,6 +20,7 @@
           <th class="">小区地址</th>
           <th class="">{#yezhu_num#}</th>
           <th class="">{#total_num#}</th>
+          <th class="">{#vacant_discount#}</th>
           <th class="align-center">操作</th>
         </tr>
       </thead>
@@ -32,6 +33,7 @@
           <td>{$item['address']|escape}</td>
           <td>{$item['yezhu_num']}</td>
           <td>{$item['total_num']}</td>
+          <td>{$item['vacant_discount']/10}折</td>
           <td class="align-center">
           	{if isset($permission[$moduleClassName|cat:'/edit'])}<a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}">编辑</a>{/if}&nbsp;
           	{if isset($permission[$moduleClassName|cat:'/delete'])}<a href="javascript:void(0)" class="delete" data-url="{admin_site_url($moduleClassName|cat:'/delete')}" data-id="{$item['id']}">删除</a>{/if}

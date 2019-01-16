@@ -711,7 +711,16 @@ class Parking extends Ydzj_Admin_Controller {
 						if(QUERY_OK != $error['code']){
 							$tmpRow['message'] = '数据库错误';
 							if($error['code'] == MySQL_Duplicate_CODE){
-								$tmpRow['message'] = '车位已经存在';
+								$tmpRow['message'] = '车位已经存在';										
+								$affectRow = $this->Yezhu_Model->update(array_merge($insertData,$this->addWhoHasOperated('edit')),array(
+									'resident_id' => $residentInfo['id'],
+									'name' => $insertData['name']
+								));	
+								if($affectRow){
+									$tmpRow['message'] .= ',自动更新记录';			
+									$tmpRow['classname'] = 'ok';
+									$successCnt++;
+								}
 							}
 						}else{
 							$tmpRow['message'] = '导入成功';

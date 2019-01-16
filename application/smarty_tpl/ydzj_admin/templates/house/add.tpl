@@ -73,6 +73,18 @@
           <td class="vatop tips"><label class="errtip"  id="error_jz_area"></label>{form_error('jz_area')}</td>
         </tr>
         <tr class="noborder">
+          <td colspan="2"><label class="validation" for="house_status">{#house_status#}:</label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform">
+          	<select name="house_status">
+          		<option value="2" {if $info['house_status'] == 2}selected{/if}>正常</option>
+          		<option value="1" {if $info['house_status'] == 1}selected{/if}>空置</option>
+          	</select>
+          </td>
+          <td class="vatop tips">{form_error('house_status')}</td>
+        </tr>
+        <tr class="noborder">
           <td colspan="2"><label for="wuye_expire">{#wuye_expire#}: </label></td>
         </tr>
         <tr class="noborder">
