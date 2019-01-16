@@ -743,7 +743,6 @@ class House extends Ydzj_Admin_Controller {
 							'house_status' => $tmpRow['house_status'],
 						),$this->addWhoHasOperated('add'));
 						
-						
 						$ts1 = strtotime($tmpRow['wuye_expire']);
 						if($ts1){
 							$insertData['wuye_expire'] = strtotime(date('Y-m',$ts1).'  last day of this month');
@@ -787,7 +786,7 @@ class House extends Ydzj_Admin_Controller {
 							$tmpRow['message'] = '数据库错误';
 							if($error['code'] == MySQL_Duplicate_CODE){
 								$tmpRow['message'] = '房屋已经存在';										
-								$affectRow = $this->Yezhu_Model->update(array_merge($insertData,$this->addWhoHasOperated('edit')),array(
+								$affectRow = $this->House_Model->update(array_merge($insertData,$this->addWhoHasOperated('edit')),array(
 									'address' => $insertData['address'],
 								));	
 								if($affectRow){
