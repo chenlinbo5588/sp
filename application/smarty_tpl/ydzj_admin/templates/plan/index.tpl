@@ -11,12 +11,19 @@
 	          <td><input class="txt" name="resident_name" value="{$smarty.get['resident_name']|escape}" type="text"></td>
   	          <th><label for="year">{#year#}</label></th>
 	          <td><input class="txt" name="year" value="{$smarty.get['year']|escape}" type="text"></td>
-	          
+          	  <th><label for="charge_status">{#charge_status#}</label></th>
+	          <td>
+	          	<select name="charge_status">
+		          	<option value="">不限</option>
+	        		<option value="1" {if $search['charge_status'] == 1}selected{/if}>未缴清</option>
+	          		<option value="2" {if $search['charge_status'] == 2}selected{/if}>已缴清</option>
+		        </select>
+	          </td>	
 	          <td><input type="submit" class="msbtn" name="tijiao" value="查询"/></td>
 	        </tr>
 	    </tbody>
 	  </table>
-    <table class="table tb-type2">
+    <table class="table tb-type2 mgbottom">
       <thead>
         <tr class="thead">
           <th>{#address#}</th>

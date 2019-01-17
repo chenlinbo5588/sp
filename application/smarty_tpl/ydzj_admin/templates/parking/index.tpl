@@ -21,11 +21,20 @@
 		        <td><input class="txt" name="yezhu_name" value="{$smarty.get['yezhu_name']|escape}" type="text"></td>
 		        <th><label for="name">{#mobile#}</label></th>
 		        <td><input class="txt" name="mobile" value="{$smarty.get['mobile']|escape}" type="text"></td>
+		        <th><label for="parking_type">{#parking_type#}</label></th>
+		        <td>
+	          	<select name="parking_type">
+		          <option value="">请选择...</option>
+		          {foreach from=$parkingTypeList key=key item=item}
+		          <option {if $search['parking_type'] == $key}selected{/if} value="{$item['show_name']}">{$item['show_name']}</option>
+		          {/foreach}
+		        </select>
+	            </td>	
 		        <td colspan="2"><input type="submit" class="msbtn" name="tijiao" value="查询"/></td>
 	        </tr>
 	    </tbody>
 	  </table>
-    <table class="table tb-type2">
+    <table class="table tb-type2 mgbottom">
       <thead>
         <tr class="thead">
           <th class="w24"></th>
@@ -46,11 +55,11 @@
           <td><input value="{$item['id']}" class="checkitem" group="chkVal" type="checkbox" name="id[]"></td>
           <td class="sort"><span class="editable" data-id="{$item['id']}" data-fieldname="displayorder">{$item['displayorder']}</span></td>
           <td class="name"><span class="editable" data-id="{$item['id']}" data-fieldname="name">{$item['name']|escape}</span></td>
-          <td>{$item['wuye_type']|escape}</td>
-          <td>{$item['address']|escape}</td>
+          <td>{$item['parking_type']|escape}</td>
+          <td><a href="{admin_site_url(house|cat:'/index')}?address={$item['address']}">{$item['address']|escape}</td>
           <td>{$item['jz_area']|escape}</td>
-          <td>{if $item['yezhu_id']}{$item['yezhu_name']}{else}暂未入驻{/if}</td>
-          <td>{$item['mobile']|escape}</td>
+          <td><a href="{admin_site_url(yezhu|cat:'/index')}?name={$item['yezhu_name']}">{if $item['yezhu_id']}{$item['yezhu_name']}{else}暂未入驻{/if}</td>
+          <td><a href="{admin_site_url(yezhu|cat:'/index')}?mobile={$item['mobile']}">{$item['mobile']|escape}</td>
           <td>{if $item['expire']}{$item['expire']|date_format:"%Y-%m-%d"}{else}无缴费记录{/if}</td>
           <td class="align-center">
           	{if isset($permission[$moduleClassName|cat:'/edit'])}<a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}">编辑</a>{/if}&nbsp;

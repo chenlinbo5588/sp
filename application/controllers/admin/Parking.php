@@ -53,7 +53,7 @@ class Parking extends Ydzj_Admin_Controller {
 		$search['mobile'] = $this->input->get_post('mobile');
 		$search['expire_s'] = $this->input->get_post('expire_s') ? $this->input->get_post('expire_s') : '';
 		$search['expire_e'] = $this->input->get_post('expire_e') ? $this->input->get_post('expire_e') : '';
-		
+		$search['parking_type'] = $this->input->get_post('parking_type');
 		if($search['expire_s']){
 			$condition['where']['expire >='] = strtotime($search['expire_s']);
 		}
@@ -72,7 +72,9 @@ class Parking extends Ydzj_Admin_Controller {
 		if($search['mobile']){
 			$condition['where']['mobile'] = $search['mobile'];
 		}
-		
+		if($search['parking_type']){
+			$condition['where']['parking_type'] = $search['parking_type'];
+		}
 		
 		if($search['resident_name']){
 			$resident_name = $search['resident_name'];
@@ -96,7 +98,8 @@ class Parking extends Ydzj_Admin_Controller {
 			'list' => $list,
 			'page' => $list['pager'],
 			'search' => $search,
-			'currentPage' => $currentPage
+			'currentPage' => $currentPage,
+			'parkingTypeList' => $this->basic_data_service->getTopChildList('车位类型'),
 		));
 		
 		

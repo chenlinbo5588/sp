@@ -11,7 +11,7 @@
 	        </tr>
 	    </tbody>
 	  </table>
-    <table class="table tb-type2">
+    <table class="table tb-type2 mgbottom">
       <thead>
         <tr class="thead">
           <th class="w24"></th>

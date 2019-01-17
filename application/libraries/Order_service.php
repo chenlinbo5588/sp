@@ -1072,9 +1072,9 @@ class Order_service extends Base_service {
 			if($pParam['year'] == date('Y')){
 				$this->_houseModel->updateByWhere(array(
 					'wuye_expire' => $pParam['fee_expire'],
-					'amount_recrive_count' => $houseItem['amount_recrive_count'] - $pParam['amount']/100,
+					//'amount_recrive_count' => $houseItem['amount_recrive_count'] - $pParam['amount']/100,
 					'amount_arrears_count' => $houseItem['amount_arrears_count'] + $pParam['amount']/100,
-					'amount_recrive_now' => $houseItem['amount_recrive_now'] - $pParam['amount']/100,
+					//'amount_recrive_now' => $houseItem['amount_recrive_now'] - $pParam['amount']/100,
 					'amount_arrears_now' => $houseItem['amount_arrears_now'] + $pParam['amount']/100,
 				),array(
 					'id' => $pParam['goods_id'],
@@ -1082,7 +1082,7 @@ class Order_service extends Base_service {
 			}else{
 				$this->_houseModel->updateByWhere(array(
 					'wuye_expire' => $pParam['fee_expire'],
-					'amount_recrive_count' => $houseItem['amount_recrive_count'] - $pParam['amount']/100,
+					//'amount_recrive_count' => $houseItem['amount_recrive_count'] - $pParam['amount']/100,
 					'amount_arrears_count' => $houseItem['amount_arrears_count'] + $pParam['amount']/100,
 				),array(
 					'id' => $pParam['goods_id'],
@@ -1099,6 +1099,11 @@ class Order_service extends Base_service {
 				'house_id' => $pParam['goods_id'],
 				'year' => $pParam['year']
 			)));
+			if($planInfo[0]['amount_real'] == $pParam['amount']/100 + $planInfo[0]['amount_payed']){
+				$pParam['charge_status'] = 1;
+			}else{
+				$pParam['charge_status'] = 2;
+			}
 			$this->_planModel->updateByWhere(array(
 				'amount_payed' => $pParam['amount']/100 + $planInfo[0]['amount_payed'],
 				'order_id' => $pParam['order_id'],
@@ -1107,6 +1112,7 @@ class Order_service extends Base_service {
 				'uid2' => $pParam['uid'],
 				'utype' => $pParam['utype'],
 				'pay_method' => $pParam['pay_method'],
+				'charge_status' => $pParam['charge_status']
 			),array(
 				'house_id' => $pParam['goods_id'],
 				'year' => $pParam['year']

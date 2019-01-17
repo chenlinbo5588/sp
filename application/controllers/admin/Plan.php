@@ -62,6 +62,14 @@ class Plan extends Ydzj_Admin_Controller {
 		if($search['resident_name']){
 			$condition['where']['resident_name'] = $search['resident_name'];
 		}
+		$search['house_id'] = $this->input->get_post('house_id');
+		if($search['house_id']){
+			$condition['where']['house_id'] = $search['house_id'];
+		}
+		$search['charge_status'] = $this->input->get_post('charge_status');
+		if($search['charge_status']){
+			$condition['where']['charge_status'] = $search['charge_status'];
+		}
 		
 		$search['year'] = $this->input->get_post('year');
 		if($search['year']){
@@ -271,6 +279,7 @@ class Plan extends Ydzj_Admin_Controller {
 		$this->Plan_Detail_Model->batchUpdate($planDetailList);
 		array_unique($houseIdList);
 		$planlList = $this->wuye_service->search('收费计划',array(
+			'where' => array('year' => $year),
 			'where_in' => array(
 				array('key' => 'house_id', 'value' => $houseIdList)
 			)
@@ -284,7 +293,8 @@ class Plan extends Ydzj_Admin_Controller {
 		foreach($planlList as $key => $item){
 			$detailList = $this->wuye_service->search('收费计划详情',array(
 				'where' => array(
-					'house_id' => $item['house_id']
+					'house_id' => $item['house_id'],
+					'year' => $year
 				)
 			));
 			$wuyeMoney = 0;

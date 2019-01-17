@@ -51,6 +51,7 @@ class House extends Ydzj_Admin_Controller {
 		$search['resident_name'] = $this->input->get_post('resident_name');
 		$search['yezhu_name'] = $this->input->get_post('yezhu_name');
 		$search['mobile'] = $this->input->get_post('mobile');
+		$search['wuye_type'] = $this->input->get_post('wuye_type');
 		
 		foreach(array('wuye','nenghao') as $expireName){
 			foreach(array('s','e') as $se){
@@ -77,7 +78,9 @@ class House extends Ydzj_Admin_Controller {
 		if($search['mobile']){
 			$condition['where']['mobile'] = $search['mobile'];
 		}
-		
+		if($search['wuye_type']){
+			$condition['where']['wuye_type'] = $search['wuye_type'];
+		}
 		if($search['resident_name']){
 			$resident_name = $search['resident_name'];
 			
@@ -99,7 +102,8 @@ class House extends Ydzj_Admin_Controller {
 			'list' => $list,
 			'page' => $list['pager'],
 			'search' => $search,
-			'currentPage' => $currentPage
+			'currentPage' => $currentPage,
+			'wuyeTypeList' => $this->basic_data_service->getTopChildList('物业类型'),
 		));
 		
 		
