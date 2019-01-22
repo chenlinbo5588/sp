@@ -1147,10 +1147,12 @@ class House extends Ydzj_Admin_Controller {
 				
 				$this->Parking_Model->update($parkingUpdateInfo,array('house_id' => $id));
 				
-
-				if(!($this->House_Yezhu_Model->deleteAndAdd($yezhuInfo[0]['id'],$info['resident_id'],$id,$changeStatus,$this->addWhoHasOperated('add')))){
-					$this->House_Yezhu_Model->_add($addInfo);
+				if($changeStatus){
+					if(!($this->House_Yezhu_Model->deleteAndAdd($yezhuInfo[0]['id'],$info['resident_id'],$id,$changeStatus,$this->addWhoHasOperated('add')))){
+						$this->House_Yezhu_Model->_add($addInfo);
+					}
 				}
+
 		    	if($this->House_Model->getTransStatus() === FALSE){
 					$this->House_Model->rollBackTrans();
 					

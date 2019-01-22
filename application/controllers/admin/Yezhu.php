@@ -762,22 +762,40 @@ class Yezhu extends Ydzj_Admin_Controller {
 							$insertData['uid'] = $uidInfo[0]['uid'];
 						}	
 						$this->Yezhu_Model->_add(array_merge($insertData,$this->addWhoHasOperated('add')));
-						
+
+
 						$error = $this->Yezhu_Model->getError();
 						
 						if(QUERY_OK != $error['code']){
 							$tmpRow['message'] = '数据库错误';
 							if($error['code'] == MySQL_Duplicate_CODE){
-								$tmpRow['message'] = '业主已经存在';										
+								$tmpRow['message'] = '业主已经存在';
+								$yezhuInfo = $this->Yezhu_Model->getFirstByKey($insertData['mobile'],'mobile');
+								$houseUpdate = array(
+									'yezhu_id' => $yezhuInfo['id'],
+									'yezhu_name' => $insertData['name'],
+									'mobile' => $insertData['mobile'],
+									'car_no' => $insertData['car_no'],
+								);
+								if($uidInfo){
+									$houseUpdate['uid'] = $uidInfo[0]['uid'];
+								}										
+								$this->House_Model->update(array_merge($houseUpdate,$this->addWhoHasOperated('edit')),array(
+									'resident_id' => $residentInfo['id'],
+									'mobile' => $insertData['mobile']
+								));
+								$this->Parking_Model->update(array_merge($houseUpdate,$this->addWhoHasOperated('edit')),array(
+									'resident_id' => $residentInfo['id'],
+									'mobile' => $insertData['mobile']
+								));
 								$affectRow = $this->Yezhu_Model->update(array_merge($insertData,$this->addWhoHasOperated('edit')),array(
 									'resident_id' => $residentInfo['id'],
 									'mobile' => $insertData['mobile']
 								));	
-								if($affectRow){
-									$tmpRow['message'] .= ',自动更新记录';			
-									$tmpRow['classname'] = 'ok';
-									$successCnt++;
-								}
+								$tmpRow['message'] .= ',自动更新记录';			
+								$tmpRow['classname'] = 'ok';
+								$successCnt++;
+								
 							}
 						}else{
 							$tmpRow['message'] = '导入成功';
