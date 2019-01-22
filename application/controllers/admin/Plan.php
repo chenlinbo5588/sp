@@ -262,15 +262,16 @@ class Plan extends Ydzj_Admin_Controller {
 	}
 	
 	private function changeMoney($ids,$modify,$year = 0){
-		if(0 == $year){
-			$year = date('Y');
-		}
+
 		$this->Plan_Model->beginTrans();
 		$planDetailList = $this->wuye_service->search('收费计划详情',array(
 			'where_in' => array(
 				array('key' => 'id', 'value' => $ids)
 			)
 		),'id');
+		if(0 == $year){
+			$year = $planDetailList[$ids]['year'];
+		}
 		foreach($planDetailList as $key => $valus){
 			$planDetailList[$key]['amount_real'] = $modify ;
 			$houseIdList[] = $planDetailList[$key]['house_id'];
@@ -352,7 +353,6 @@ class Plan extends Ydzj_Admin_Controller {
 		$newValue = $this->input->get_post('value');
 		
 		$year = $this->input->get_post('year');
-
 		for($i = 0 ; $i < 1; $i++){
 			
 			$this->form_validation->set_rules('value','实收金额','required|is_numeric');	

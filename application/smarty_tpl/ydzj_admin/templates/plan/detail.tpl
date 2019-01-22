@@ -16,6 +16,7 @@
 	        <tr class="thead">  
 	          <th>{#jz_area#}</th>
 	          <th>{#price#}</th>
+	          <th>{#year#}</th>
 	          <th>{#billing_style#}</th>
 	          <th>{#month#}</th>
 	          <th>{#amount_plan#}</th>
@@ -25,6 +26,7 @@
 	        <tr>  
 	          <td>{$item['jz_area']|escape}</td>
 	          <td>{$item['price']|escape}</td>
+	          <td>{$item['year']|escape}</td>
 	          <td>{$item['billing_style']|escape}</td>
 	          <td>{$item['month']|escape}</td>
 	          <td>{$item['amount_plan']|escape}</td>

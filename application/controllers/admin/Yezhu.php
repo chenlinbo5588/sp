@@ -791,7 +791,7 @@ class Yezhu extends Ydzj_Admin_Controller {
 								$affectRow = $this->Yezhu_Model->update(array_merge($insertData,$this->addWhoHasOperated('edit')),array(
 									'resident_id' => $residentInfo['id'],
 									'mobile' => $insertData['mobile']
-								));	
+								));
 								$tmpRow['message'] .= ',自动更新记录';			
 								$tmpRow['classname'] = 'ok';
 								$successCnt++;

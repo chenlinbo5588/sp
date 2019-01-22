@@ -66,17 +66,15 @@
           </td>
           <td class="vatop tips"><label class="errtip"  id="error_jz_area"></label>{form_error('jz_area')}</td>
         </tr>
-        {if !$info['id']}
-			 <tr class="noborder">
-	          <td colspan="2"><label class="validation" for="parking_expire">{#parking_expire#}: </label></td>
-	        </tr>
-	        <tr class="noborder">
-	          <td class="vatop rowform">
-	          	<input type="text" value="{if $info['expire']}{date('Y-m-d',$info['expire'])}{/if}" name="expire" id="expire" class="datepicker txt">
-	          </td>
-	          <td class="vatop tips"><label class="errtip"  id="error_expire"></label>{form_error('expire')}</td>
-	        </tr>
-        {/if}
+		 <tr class="noborder">
+          <td colspan="2"><label class="validation" for="parking_expire">{#parking_expire#}: </label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform">
+          	<input type="text" value="{if $info['expire']}{date('Y-m-d',$info['expire'])}{/if}" name="expire" id="expire" class="datepicker txt">
+          </td>
+          <td class="vatop tips"><label class="errtip"  id="error_expire"></label>{form_error('expire')}</td>
+        </tr>
         <tr>
           <td colspan="2" class="required"><label>排序:</label></td>
         </tr>
