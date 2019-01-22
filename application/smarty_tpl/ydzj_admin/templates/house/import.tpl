@@ -17,6 +17,18 @@
         	</td
         </tr>
         {include file="common/resident_radio.tpl"}
+        
+   		 <!--<tr class="noborder">
+          <td colspan="2">是否生成收费计划:</td>
+        </tr>
+        <tr class="noborder">
+        	<td colspan="2">
+	          	<ul class="ulListStyle1 clearfix">
+          		<li><label><input type="radio" name="create_plan" value="1"/><span>生成收费计划</span></label></li>
+	          	</ul>
+	         </td>
+        </tr>
+        -->
         <tr class="noborder">
           <td colspan="2"><label class="validation">请选择待导入的Excel文件:</label></td>
         </tr>

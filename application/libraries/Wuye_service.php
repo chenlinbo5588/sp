@@ -597,151 +597,6 @@ class Wuye_service extends Base_service {
 		}	
 		return $feeRule;	
 	}
-	/**
-	 * 根据房屋ID生成房屋收费记录
-	 */
-	public function greatOnePlan($houseinfo,$who,&$message = null){
-		$year = date('Y',time())+1;
-		$feetypeList = $this->_feeTypeModel->getList(array(
-			'where' => array(
-				'resident_id' => $houseinfo['resident_id'],
-				'year' => $year,
-				'name' => '物业费',
-			)
-		),'name');
-		if($feetypeList){
-			foreach($feetypeList as $key => $feeTypeInfo){
-				$feeTypeInfo['fee_rule'] = (json_decode($feeTypeInfo['fee_rule'],true));
-				foreach($feeTypeInfo['fee_rule'] as $key => $feeTypeRule){
-					$detailInsert = array(
-						'house_id' => $houseinfo['id'],
-						'uid' => $houseinfo['uid'],
-						'address' => $houseinfo['address'],
-						'parking_name' => null,
-						'parking_id' => 0,
-						'fee_gname' =>  $feeTypeInfo['name'],//组名
-						'feetype_name' => $feeTypeRule['feeName'],//明细名
-						'resident_id' => $houseinfo['resident_id'],
-						'resident_name' => $feeTypeInfo['resident_name'],
-						'year' => $year,
-						'jz_area' => $houseinfo['jz_area'],
-						'price' =>  $feeTypeRule['price'],
-						'wuye_type' => $feeTypeRule['wuyeType'],
-						'billing_style' => $feeTypeRule['billingStyle'],
-						'add_uid' => $who['uid'],
-						'add_username' => $who['username'],	
-						'amount_plan' => 0,
-						'amount_real' => 0,
-						'month' => 0,
-						'stat_date' => $houseinfo['wuye_expire'],
-					);
-					$diffYear = date('Y',time()) - date('Y',$houseinfo['wuye_expire']);
-					$date = date('Y',$houseinfo['wuye_expire']) + $diffYear+1 . '-' . date('m-d H:i:s',$houseinfo['wuye_expire']);//一年后日期
-					$endDate = strtotime($date);
-					$detailInsert['end_date'] = $endDate;
-					if('车位费' == $feeTypeRule['feeName']){
-						$parkingList = $this->_parkingModel->getList(array(
-							'where' => array(
-								'resident_id' => $houseinfo['resident_id'],
-								'house_id' => $houseinfo['id'],
-							)
-						),'id');
-						
-						if($parkingList){
-							foreach($parkingList as $key => $parkingItem){
-								if($parkingItem['expire'] < $endDate && $parkingItem['parking_type'] == $feeTypeRule['wuyeType']){
-									$detailInsert = array(
-										'house_id' => $houseinfo['id'],
-										'uid' => $houseinfo['uid'],
-										'address' => $parkingItem['address'],
-										'parking_name' => $parkingItem['name'],
-										'parking_id' => $parkingItem['id'],
-										'fee_gname' =>  $feeTypeInfo['name'],
-										'feetype_name' => $feeTypeRule['feeName'],
-										'resident_id' => $parkingItem['resident_id'],
-										'resident_name' => $feeTypeInfo['resident_name'],
-										'year' => $year,
-										'jz_area' => $parkingItem['jz_area'],
-										'price' =>  $feeTypeRule['price'],
-										'wuye_type' => $feeTypeRule['wuyeType'],
-										'billing_style' => $feeTypeRule['billingStyle'],
-										'add_uid' => $who['uid'],
-										'add_username' => $who['username'],	
-										'amount_plan' => 0,
-										'amount_real' => 0,
-										'amount_real' => 0,
-										'month' => 0,
-										'stat_date' => $parkingItem['expire'],
-										'end_date' => $endDate,
-									);
-									$day = intval(($detailInsert['end_date'] - $detailInsert['stat_date'])/86400);
-									if(false !== strpos($detailInsert['billing_style'],'按面积')){						
-										$detailInsert['amount_plan'] = $detailInsert['price'] * $detailInsert['jz_area'] * $day  * 12 /365;
-									}else if('按每月固定值' == $detailInsert['billing_style']){
-										$detailInsert['amount_plan'] = $detailInsert['price'] *  $day  * 12 /365;
-									}
-									$detailInsert['amount_real'] = $detailInsert['amount_plan'];
-								 	
-								 	$basicInfo['amount_plan'] += $detailInsert['amount_plan'];
-								
-								 	$wuyeDetailItem[] = $detailInsert;
-								}
-							}
-						}
-					}else if($houseinfo['wuye_type'] == $feeTypeRule['wuyeType'] ){
-						$day = ($detailInsert['end_date'] - $detailInsert['stat_date'])/86400;
-						if(false !== strpos($detailInsert['billing_style'],'按面积')){						
-							$detailInsert['amount_plan'] = $detailInsert['price'] * $detailInsert['jz_area'] * $day  * 12 /365;
-						}else if('按每月固定值' == $detailInsert['billing_style']){
-							$detailInsert['amount_plan'] = $detailInsert['price'] * $day  * 12 /365 ;
-						}
-						$detailInsert['amount_real'] = $detailInsert['amount_plan'];
-					 	$basicInfo['amount_plan'] += $detailInsert['amount_plan'];
-				 		$wuyeDetailItem[] = $detailInsert;
-
-					}
-					
-				}
-				if(empty($basicInfo['amount_plan'])){
-					 $basicInfo['amount_plan'] = 0;
-				}
-				
-				$basicInfo = array(
-					'house_id' => $houseinfo['id'],
-					'uid' => $houseinfo['uid'],
-					'address' => $houseinfo['address'],
-					'resident_id' => $houseinfo['resident_id'],
-					'resident_name' => $feeTypeInfo['resident_name'],
-					'year' => $year,
-					'add_uid' => $who['uid'],
-					'add_username' => $who['add_username'],
-					'feetype_name' => $feeTypeInfo['name'],
-					'amount_plan' => $basicInfo['amount_plan'],
-					'amount_real' => $basicInfo['amount_plan'],	
-				);
-				
-				
-				$wuyeTotalItem[] = $basicInfo;
-				$basicInfo['amount_plan'] = 0;
-			}
-			
-			$this->_planModel->beginTrans();
-			$this->_planDetailModel->batchInsert($wuyeDetailItem);
-			$this->_planModel->batchInsert($wuyeTotalItem);
-		
-			if($this->_planModel->getTransStatus() === FALSE){
-				$this->_planModel->rollBackTrans();
-				log_message('error','批量出错');
-				return false;
-			}else{
-				$this->_planModel->commitTrans();
-				return true;
-			}
-		}else{
-			$message ='费用类型未设置';
-			return false;
-		}
-	}
 	
 	/**
 	 * 批量生成收费记录
@@ -934,8 +789,11 @@ class Wuye_service extends Base_service {
 	}
 	
 	
-	public function greatOnePlanByYear($houseinfo,$who,&$message = null){
-		$year = date('Y',$houseinfo['wuye_expire']) + 1;
+	public function greatOnePlanByYear($houseinfo,$who,&$message = null,$year=0){
+		if(!$year){
+			$year = date('Y',$houseinfo['wuye_expire']) + 1;
+		}
+		$residentInfo = $this->_residentModel->getFirstByKey($houseinfo['resident_id'],'id');
 		$feetypeList = $this->_feeTypeModel->getList(array(
 			'where' => array(
 				'resident_id' => $houseinfo['resident_id'],
@@ -943,6 +801,7 @@ class Wuye_service extends Base_service {
 				'name' => '物业费',
 			)
 		),'name');
+		
 		if($feetypeList){
 			foreach($feetypeList as $key => $feeTypeInfo){
 				$feeTypeInfo['fee_rule'] = (json_decode($feeTypeInfo['fee_rule'],true));
@@ -1028,8 +887,13 @@ class Wuye_service extends Base_service {
 						}else if('按每月固定值' == $detailInsert['billing_style']){
 							$detailInsert['amount_plan'] = $detailInsert['price'] *  $day  * 12 /365;
 						}
-						$detailInsert['amount_real'] = $detailInsert['amount_plan'];
+						if(1 == $houseinfo['house_status']){
+							$detailInsert['amount_real'] = $detailInsert['amount_plan'] * $residentInfo['vacant_discount'] / 100;
+						}else{
+							$detailInsert['amount_real'] = $detailInsert['amount_plan'];
+						}
 					 	$basicInfo['amount_plan'] += $detailInsert['amount_plan'];
+					 	$basicInfo['amount_real'] += $detailInsert['amount_real'];
 				 		$wuyeDetailItem[] = $detailInsert;
 
 					}
@@ -1050,7 +914,14 @@ class Wuye_service extends Base_service {
 					'add_username' => $who['add_username'],
 					'feetype_name' => $feeTypeInfo['name'],
 					'amount_plan' => $basicInfo['amount_plan'],
-					'amount_real' => $basicInfo['amount_plan'],	
+					'amount_real' => $basicInfo['amount_real'],	
+				);
+				$updateInfo[] = array(
+					'address' => $houseinfo['address'],
+					'amount_recrive_count' => $houseinfo['amount_recrive_count'] + $basicInfo['amount_real'],
+					'amount_arrears_count' => $houseinfo['amount_arrears_count'] - $basicInfo['amount_real'],
+					'amount_recrive_now' => $basicInfo['amount_real'],
+					'amount_arrears_now' => -$basicInfo['amount_real'],
 				);
 				
 				
@@ -1061,7 +932,8 @@ class Wuye_service extends Base_service {
 			$this->_planModel->beginTrans();
 			$this->_planDetailModel->batchInsert($wuyeDetailItem);
 			$this->_planModel->batchInsert($wuyeTotalItem);
-		
+			$this->_houseModel->batchUpdate($updateInfo,'address');
+			$message='成功生成';
 			if($this->_planModel->getTransStatus() === FALSE){
 				$this->_planModel->rollBackTrans();
 				log_message('error','批量出错');

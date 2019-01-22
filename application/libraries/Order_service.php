@@ -118,9 +118,11 @@ class Order_service extends Base_service {
 		}else{
 			$order['extra_info'] = json_encode(array());
 		}
-		$newid = $this->_orderModel->_add($order);
-		$error = $this->_orderModel->getError();
 		
+		$newid = $this->_orderModel->_add($order);
+		//print_r($newid);
+		$error = $this->_orderModel->getError();
+		//print_r($error);
 		if(QUERY_OK != $error['code']){
 			return false;
 		}else{
@@ -514,11 +516,9 @@ class Order_service extends Base_service {
 				}
 				
 			}
-			
 			if(strtolower('wx') == strtolower($from)){
 				$callPayJson = $this->createWeixinOrder($pParam);
-			}else if(strtolower('Backstage') == strtolower($from)){
-						
+			}else if(strtolower('Backstage') == strtolower($from)){			
 				$localOrder = $this->createBussOrder($pParam);
 				$callPayJson = $this->updateOrderRelation($localOrder);
 				$message = '新建成功';

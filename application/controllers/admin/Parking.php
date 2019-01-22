@@ -839,11 +839,14 @@ class Parking extends Ydzj_Admin_Controller {
     private function _getExportConfig(){
     	return array(
     		'A' => array('db_key' => 'name','width' => 30 ,'title' => '车位名称'),
-    		'B' => array('db_key' => 'address','width' => 30 ,'title' => '房屋地址'),
-    		'C' => array('db_key' => 'jz_area','width' => 15 ,'title' => '建筑面积'),
-    		'D' => array('db_key' => 'yezhu_name','width' => 15 ,'title' => '业主姓名'),
-    		'E' => array('db_key' => 'mobile','width' => 25 ,'title' => '手机号码'),
-    		'F' => array('db_key' => 'expire','width' => 25 ,'title' => '车位费到期时间'),
+    		'B' => array('db_key' => 'parking_type','width' => 15 ,'title' => '车位类型'),
+    		'C' => array('db_key' => 'address','width' => 30 ,'title' => '房屋地址'),
+    		'D' => array('db_key' => 'jz_area','width' => 15 ,'title' => '建筑面积'),
+    		'E' => array('db_key' => 'yezhu_name','width' => 15 ,'title' => '业主姓名'),
+    		'F' => array('db_key' => 'id_type','width' => 0 ,'title' => '证件类型'),
+    		'G' => array('db_key' => 'id_no','width' => 0 ,'title' => '证件号码'),
+    		'H' => array('db_key' => 'mobile','width' => 25 ,'title' => '手机号码'),
+    		'I' => array('db_key' => 'expire','width' => 25 ,'title' => '车位费到期时间'),
     	);
     	
     }

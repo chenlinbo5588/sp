@@ -85,6 +85,7 @@
     	<label><input type="checkbox" class="checkall" id="checkallBottom" name="chkVal">全选</label>&nbsp;
         {if isset($permission[$moduleClassName|cat:'/delete'])}<a href="javascript:void(0);" class="btn deleteBtn" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/delete')}"><span>删除</span></a>{/if}
         {if isset($permission[$moduleClassName|cat:'/delete_yezhu'])}<a href="javascript:void(0);" class="btn deleteYezhu" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/delete_yezhu')}"><span>删除业主</span></a>{/if}
+        {if isset($permission[$moduleClassName|cat:'/create_plan'])}<a href="javascript:void(0);" class="btn verifyBtn" data-title="生成收费计划" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/create_plan')}" data-ajaxformid="#ajaxForm"><span>生成收费计划</span></a>{/if}
         {include file="common/pagination.tpl"}
         
     </div>
@@ -120,6 +121,9 @@ $(function(){
 	    
 });
 </script>
+  <script>
+  	var submitUrl = [new RegExp("{admin_site_url($moduleClassName|cat:'/create_plan')}"),new RegExp("{admin_site_url($moduleClassName|cat:'/choise_year')}")];
+  </script>
 <div id="verifyDlg"></div>
   <script type="text/javascript" src="{resource_url('js/service/house_index.js',true)}"></script>
 {include file="common/main_footer.tpl"}

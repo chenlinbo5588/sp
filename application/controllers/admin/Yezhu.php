@@ -904,18 +904,24 @@ class Yezhu extends Ydzj_Admin_Controller {
      */
     private function _getExportConfig(){
     	return array(
-    		'A' => array('db_key' => 'resident_id','width' => 15 ,'title' => '小区名称'),
-    		'B' => array('db_key' => 'name','width' => 15 ,'title' => '姓名'),
-    		'C' => array('db_key' => 'id_type','width' => 12 ,'title' => '证件类型'),
-    		'D' => array('db_key' => 'id_no','width' => 25 ,'title' => '证件号码'),
-    		'E' => array('db_key' => 'mobile','width' => 15 ,'title' => '手机号码'),
-    		'F' => array('db_key' => 'sex','width' => 8 ,'title' => '性别'),
-    		'G' => array('db_key' => 'age','width' => 8 ,'title' => '年龄'),
-    		'H' => array('db_key' => 'birthday','width' => 15 ,'title' => '出生日期'),
-    		'I' => array('db_key' => 'jiguan','width' => 20 ,'title' => '籍贯'),
-    		'J' => array('db_key' => 'car_no1','width' => 15 ,'title' => '车牌号码1'),
-    		'K' => array('db_key' => 'car_no2','width' => 15 ,'title' => '车牌号码2'),
-    		'L' => array('db_key' => 'car_no3','width' => 15 ,'title' => '车牌号码3'),
+    	    'A' => array('db_key' => 'building_id','width' => 0 ,'title' => '建筑物名称'),
+    		'B' => array('db_key' => 'address','width' => 0 ,'title' => '房间号码'),
+    		'C' => array('db_key' => 'wuye_type','width' => 0 ,'title' => '物业类型'),
+    		'D' => array('db_key' => 'jz_area','width' => 0 ,'title' => '建筑面积'),
+    		'E' => array('db_key' => 'name','width' => 15 ,'title' => '业主姓名'),
+    		'F' => array('db_key' => 'id_type','width' => 25 ,'title' => '证件类型'),
+    		'G' => array('db_key' => 'id_no','width' => 25 ,'title' => '证件号码'),
+    		'H' => array('db_key' => 'mobile','width' => 25 ,'title' => '联系方式'),
+    		'I' => array('db_key' => 'car_no1','width' => 15 ,'title' => '车牌号码1'),
+    		'J' => array('db_key' => 'car_no2','width' => 15 ,'title' => '车牌号码2'),
+    		'K' => array('db_key' => 'car_no3','width' => 15 ,'title' => '车牌号码3'),
+    		'L' => array('db_key' => 'wuye_expire','width' => 0 ,'title' => '物业费到期时间'),
+    		'M' => array('db_key' => 'nenghao_expire','width' => 0 ,'title' => '能耗费到期时间'),
+    		'N' => array('db_key' => 'house_status','width' => 0 ,'title' => '房屋状态'),
+    		'O' => array('db_key' => 'sex','width' => 8 ,'title' => '性别'),
+    		'P' => array('db_key' => 'age','width' => 8 ,'title' => '年龄'),
+    		'Q' => array('db_key' => 'birthday','width' => 15 ,'title' => '出生日期'),
+    		'R' => array('db_key' => 'jiguan','width' => 20 ,'title' => '籍贯'),
     	);
     	
     }

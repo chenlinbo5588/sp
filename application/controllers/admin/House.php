@@ -46,7 +46,7 @@ class House extends Ydzj_Admin_Controller {
 				'form_id' => '#formSearch'
 			)
 		);
-		
+
 		$search['address'] = $this->input->get_post('address');
 		$search['resident_name'] = $this->input->get_post('resident_name');
 		$search['yezhu_name'] = $this->input->get_post('yezhu_name');
@@ -631,7 +631,7 @@ class House extends Ydzj_Admin_Controller {
 	    			$feedback = getErrorTip($this->form_validation->error_html());
 	    			break;
 	    		}
-	    		
+	    		//$createPlan = $this->input->post('create_plan');
 	    		//选中的小区ID
 				$residentId = $this->input->post('resident_id');
 				$tempInfoList = $this->wuye_service->search('小区',array(
@@ -690,7 +690,7 @@ class House extends Ydzj_Admin_Controller {
 					//已经插入过
 					$insertedHouseList = array();
 					
-					
+					$who = $this->addWhoHasOperated('add');
 					// 列从 0 开始  行从1 开始
 					for($rowIndex = $startRow; $rowIndex <= $highestRow; $rowIndex++){
 						$tmpRow = array();
@@ -801,11 +801,14 @@ class House extends Ydzj_Admin_Controller {
 							}
 						}else{
 							$insertedHouseList[$insertData['address']] = $newHouseId;
-							
 							$tmpRow['message'] = '导入成功';
 							$tmpRow['classname'] = 'ok';
 							$successCnt++;
+							
+							//$houseInfo = $this->House_Model->getFirstByKey($newHouseId,'id','',date('Y'));
+							//$this->wuye_service->greatOnePlanByYear($houseInfo,$who);
 						}
+
 						
 						if($newHouseId && $yezhuInfo){
 							$this->House_Yezhu_Model->_add(array_merge(array(
@@ -863,7 +866,7 @@ class House extends Ydzj_Admin_Controller {
    public function export(){
     	
     	$message = '';
-    	
+
     	if($this->isPostRequest()){
     		
     		try {
@@ -924,14 +927,24 @@ class House extends Ydzj_Admin_Controller {
      */
     private function _getExportConfig(){
     	return array(
-    		'A' => array('db_key' => 'address','width' => 30 ,'title' => '地址'),
-    		'B' => array('db_key' => 'jz_area','width' => 15 ,'title' => '建筑面积'),
+    		'A' => array('db_key' => 'building_id','width' => 30 ,'title' => '建筑物名称'),
+    		'B' => array('db_key' => 'address','width' => 15 ,'title' => '房间号码'),
     		'C' => array('db_key' => 'wuye_type','width' => 15 ,'title' => '物业类型'),
-    		'D' => array('db_key' => 'yezhu_name','width' => 15 ,'title' => '业主姓名'),
-    		'E' => array('db_key' => 'mobile','width' => 25 ,'title' => '联系方式'),
-    		'F' => array('db_key' => 'car_no','width' => 15 ,'title' => '车牌号码'),
-    		'G' => array('db_key' => 'wuye_expire','width' => 25 ,'title' => '物业费到期时间'),
-    		'H' => array('db_key' => 'nenghao_expire','width' => 25 ,'title' => '能耗费到期时间'),	
+    		'D' => array('db_key' => 'jz_area','width' => 15 ,'title' => '建筑面积'),
+    		'E' => array('db_key' => 'yezhu_name','width' => 15 ,'title' => '业主姓名'),
+    		'F' => array('db_key' => 'id_type','width' => 25 ,'title' => '证件类型'),
+    		'G' => array('db_key' => 'id_no','width' => 25 ,'title' => '证件号码'),
+    		'H' => array('db_key' => 'mobile','width' => 25 ,'title' => '联系方式'),
+    		'I' => array('db_key' => 'car_no1','width' => 15 ,'title' => '车牌号码1'),
+    		'J' => array('db_key' => 'car_no2','width' => 15 ,'title' => '车牌号码2'),
+    		'K' => array('db_key' => 'car_no3','width' => 15 ,'title' => '车牌号码3'),
+    		'L' => array('db_key' => 'wuye_expire','width' => 25 ,'title' => '物业费到期时间'),
+    		'M' => array('db_key' => 'nenghao_expire','width' => 25 ,'title' => '能耗费到期时间'),
+    		'N' => array('db_key' => 'house_status','width' => 25 ,'title' => '房屋状态'),	
+    		'O' => array('db_key' => 'amount_recrive_count','width' => 10 ,'title' => '累计应收金额'),	
+    		'P' => array('db_key' => 'amount_arrears_count','width' => 25 ,'title' => '累计欠款'),	
+    		'Q' => array('db_key' => 'amount_recrive_now','width' => 25 ,'title' => '本年度应收金额'),	
+    		'R' => array('db_key' => 'amount_arrears_now','width' => 25 ,'title' => '本年度欠款金额'),	
     	);
     	
     }
@@ -945,8 +958,19 @@ class House extends Ydzj_Admin_Controller {
     	
         $objPHPExcel = new PHPExcel();
           
-        $data = $this->wuye_service->search($this->_moduleTitle,$condition);
-
+        $houseList = $this->wuye_service->search($this->_moduleTitle,$condition);
+  
+		$yezhuList = $this->wuye_service->search('业主','','id');
+		$buildingList = $this->wuye_service->search('建筑物','','id');
+		foreach($houseList as $key => $item){
+			if($item['yezhu_id']){
+				$data[] = array_merge($yezhuList[$item['yezhu_id']],$houseList[$key]);
+			}else{
+				$data[] = $item ;
+			}
+			
+		}
+		
     	$colConfig = $this->_getExportConfig();
     	
     	foreach($colConfig as $colKey => $colItemConfig){
@@ -981,10 +1005,29 @@ class House extends Ydzj_Admin_Controller {
         }else{
         	$list = $data;
         }
-              
+         $basicData = $this->basic_data_service->getBasicData();      
     	foreach($list as $rowId => $house){
     		foreach($colConfig as $colKey => $colItemConfig){
-    			$val = $house[$colItemConfig['db_key']];
+    			$val = $house[$colItemConfig['db_key']];	
+    			switch($colItemConfig['title']){
+    				case'建筑物名称':
+    					$val = $buildingList[$house[$colItemConfig['db_key']]]['name'];
+    					break;
+    				case'房间号码':
+    					$room=preg_split('/幢|号楼|栋/',$val);
+    					$val = $room[1];
+    					break;
+    				case '房屋状态':
+    					$val = $val == 1 ? '空置':'正常';
+    					break;
+    			
+    				case '证件类型':
+    					$val = $basicData[$val]['show_name'];
+    					break;
+    				default:
+    					break;
+    			}
+    			
     			if('wuye_expire' == $colItemConfig['db_key'] || 'nenghao_expire' == $colItemConfig['db_key']){
     				if(!empty($val)){
 						$val = date('Y-m-d',$val);
@@ -992,7 +1035,7 @@ class House extends Ydzj_Admin_Controller {
 						$val = '无缴费记录';
 					}
     			}
-
+				
     						
     			$objPHPExcel->getActiveSheet()->getCell($colKey.($rowId + 2))->setValueExplicit($val, PHPExcel_Cell_DataType::TYPE_STRING2);
     		}
@@ -1315,22 +1358,27 @@ class House extends Ydzj_Admin_Controller {
 				$this->Plan_Model->beginTrans();
 				
 				$result = $this->order_service->createWuyeOrder('house_id',$param,$memberInfo,$message,'Backstage');
-				if($this->Plan_Model->getTransStatus() === FALSE){
-					$this->Plan_Model->rollBackTrans();
-					
-					$this->jsonOutput('缴费失败');
-					
-					break;
+				if($message != RESP_SUCCESS){
+					$this->jsonOutput($message);
 				}else{
-					$flag = $this->Plan_Model->commitTrans();
-					
-					if($flag){
-						$this->jsonOutput('缴费成功');
-					}else{
+					if($this->Plan_Model->getTransStatus() === FALSE){
+						$this->Plan_Model->rollBackTrans();
+						
 						$this->jsonOutput('缴费失败');
-
+						
+						break;
+					}else{
+						$flag = $this->Plan_Model->commitTrans();
+						
+						if($flag){
+							$this->jsonOutput('缴费成功');
+						}else{
+							$this->jsonOutput('缴费失败');
+	
+						}
 					}
 				}
+
 			}
 		}else{
 			$who = $this->addWhoHasOperated('add');
@@ -1393,6 +1441,46 @@ class House extends Ydzj_Admin_Controller {
 			$this->assign('info',$info);
 			$this->display();				
 		}
+	}
+	public function create_plan(){
+		$year = date("Y");
+		$id=$this->input->get_post('id');
+		if($this->isPostRequest()){
+			$who = $this->addWhoHasOperated('add');
+			$who['uid'] = $who['add_uid'];
+			$who['username'] = $who['add_username'];	
+			$idAr = explode(',',$id);
+			$year = $this->input->get_post('year');
+			$planList = $this->wuye_service->search('收费计划',array(
+				'where' => array('year' => $year),
+				'where_in' => array(
+					array('key' => 'house_id','value' => $idAr)
+				)
+			),'house_id');
+			foreach($idAr as $key => $item){
+				if(!in_array($item,array_keys($planList))){
+					$ids[] = $item;
+				}
+			}
+			
+			$houseList = $this->wuye_service->search('房屋',array(
+				'where_in' => array(
+					array('key' => 'id','value' => $ids)
+				)
+			));
+			$message = null;
+			foreach($houseList as $key => $item){
+				$this->wuye_service->greatOnePlanByYear($item,$who,$message,$year);
+			}
+			if('成功生成' == $message){
+				$this->jsonOutput('生成成功,页面即将刷新',array('redirectUrl' => admin_site_url($this->_className.'/index')));
+			}
+		}else{
+			$this->assign('id',implode(',',$this->input->get_post('id')));
+			$this->assign('year',$year);
+			$this->display();
+		}
+
 	}
 
 }
