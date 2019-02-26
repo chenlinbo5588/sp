@@ -39,13 +39,13 @@
           <td><input value="{$item['id']}" class="checkitem" group="chkVal" type="checkbox" name="id[]"></td>
           <td class="sort"><span class="editable" data-id="{$item['id']}" data-fieldname="displayorder">{$item['displayorder']}</span></td>
           <td>{$residentList[$item['resident_id']]['name']|escape}</td>
-          <td class="name"><span class="editable" data-id="{$item['id']}" data-fieldname="name">{$item['name']|escape}</span></td>
+          <td class="name"><span class="editable" data-id="{$item['id']}" data-fieldname="name">{mask_name($item['name'])|escape}</span></td>
           <td>{$basicData[$item['id_type']]['show_name']|escape}</span></td>
           <td>{mask_string($item['id_no'])|escape}</span></td>
           <td>{if $item['sex'] == 1}男{else}女{/if}</td>
          <td>{$item['age']}</td>
          <td>{$basicData[$item['jiguan']]['show_name']|escape}</td>
-         <td>{$item['mobile']}</td>
+         <td>{mask_mobile($item['mobile'])}</td>
          <td>{$item['car_no']}</td>
          <td>{if $item['uid']}<span data-id="{$item['uid']}">微信已绑定用户</span>{else}<span>微信未绑定</span>{/if}</td>
           <td class="align-center">

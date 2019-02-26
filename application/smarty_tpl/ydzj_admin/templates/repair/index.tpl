@@ -51,8 +51,8 @@
       	<tr class="hover edit" id="row{$item['id']}">
           <td><input value="{$item['id']}" class="checkitem" group="chkVal" type="checkbox" name="id[]"></td>
           <td><div>{$repairType[$item['repair_type']]}</div></td>
-          <td>{$item['yezhu_name']}</td>
-          <td><span class="editable" data-id="{$item['id']}" data-fieldname="mobile">{$item['mobile']}</span></td>
+          <td>{mask_name($item['yezhu_name'])}</td>
+          <td><span class="editable" data-id="{$item['id']}" data-fieldname="mobile">{mask_mobile($item['mobile'])}</span></td>
 		  <td><span class="editable" data-id="{$item['id']}" data-fieldname="address">{if $item['address']}{$item['address']|escape}{else}未填写{/if}</span></td>
           <td><div>{$repairStatus[$item['status']]}</div></td>
           <td>{$item['worker_name']|escape}</td>

@@ -74,6 +74,8 @@ class Wuye extends Wx_Controller {
 				if($house){
 					if(!$house['yezhu_name']){
 						$house['yezhu_name'] = '暂无业主';
+					}else{
+						$house['yezhu_name'] = mask_name($house['yezhu_name']);
 					}
 					$this->jsonOutput2(RESP_SUCCESS,$house);
 				}else{
@@ -358,7 +360,7 @@ class Wuye extends Wx_Controller {
 		if($this->yezhuInfo){
 			
 			$detail =array(
-				'mobile'=>$this->yezhuInfo['mobile'],
+				'mobile'=>mask_mobile($this->yezhuInfo['mobile']),
 				'name' =>$this->yezhuInfo['name'],
 				'repairTypeList' => RepairType::$typeName
 			);
@@ -388,7 +390,7 @@ class Wuye extends Wx_Controller {
 		if($this->memberInfo){
 			
 			$detail =array(
-				'mobile'=>$this->memberInfo['mobile'],
+				'mobile'=>mask_mobile($this->memberInfo['mobile']),
 				'name' =>$this->memberInfo['username'],
 			);
 			

@@ -34,7 +34,7 @@ class User extends Wx_Controller {
 				
 				if($this->memberInfo){
 					if(11 == strlen($this->memberInfo['mobile'])){
-						$bindInfo['mobile'] = $this->memberInfo['mobile'];
+						$bindInfo['mobile'] = mask_mobile($this->memberInfo['mobile']);
 					}
 				}
 				

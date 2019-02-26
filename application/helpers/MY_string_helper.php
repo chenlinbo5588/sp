@@ -34,8 +34,23 @@ function mask_string($no,$start = 6, $end = 4, $mask = '*'){
 	if(strlen($no) >= ($start + $end)){
 		$startStr = substr($no,0,$start);
 		$endStr = substr($no,-$end,$end);
-		
 		return $startStr.str_repeat($mask,strlen($no) - ($start + $end)).$endStr;
+	}else{
+		return $no;
+	}
+	
+	
+}
+function mask_name($no,$start = 3, $end = 3, $mask = '*'){
+	
+	
+	if(strlen($no) > ($start + $end)){
+		$startStr = substr($no,0,$start);
+		$endStr = substr($no,-$end,$end);
+		return $startStr.str_repeat($mask,(strlen($no) - ($start + $end))/3).$endStr;
+	}else if(strlen($no) == ($start + $end)){
+		$startStr = substr($no,0,$start);
+		return $startStr.str_repeat($mask,(strlen($no) - ($start))/3);
 	}else{
 		return $no;
 	}

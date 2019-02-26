@@ -58,8 +58,8 @@
           <td>{$item['parking_type']|escape}</td>
           <td><a href="{admin_site_url(house|cat:'/index')}?address={$item['address']}">{$item['address']|escape}</td>
           <td>{$item['jz_area']|escape}</td>
-          <td><a href="{admin_site_url(yezhu|cat:'/index')}?name={$item['yezhu_name']}">{if $item['yezhu_id']}{$item['yezhu_name']}{else}暂未入驻{/if}</td>
-          <td><a href="{admin_site_url(yezhu|cat:'/index')}?mobile={$item['mobile']}">{$item['mobile']|escape}</td>
+          <td><a href="{admin_site_url(yezhu|cat:'/index')}?name={$item['yezhu_name']}">{if $item['yezhu_id']}{mask_name($item['yezhu_name'])}{else}暂未入驻{/if}</td>
+          <td><a href="{admin_site_url(yezhu|cat:'/index')}?mobile={$item['mobile']}">{mask_mobile($item['mobile'])|escape}</td>
           <td>{if $item['expire']}{$item['expire']|date_format:"%Y-%m-%d"}{else}无缴费记录{/if}</td>
           <td class="align-center">
           	{if isset($permission[$moduleClassName|cat:'/edit'])}<a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}">编辑</a>{/if}&nbsp;
