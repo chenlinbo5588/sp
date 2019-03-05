@@ -170,12 +170,11 @@ class Wuye extends Wx_Controller {
 					$this->jsonOutput2('物业地址不存在');
 					break;
 				}
-				
       			$repairOrder =	array (
       				'repair_type' => $repair_type,
       				'resident_id' => $houseInfo['resident_id'],
       				'house_id' => $houseInfo['id'],
-      				'yezhu_id' => $this->$houseInfo['yezhu_id'],
+      				'yezhu_id' => $this->yezhuInfo['id'],
       				'yezhu_name' => $this->yezhuInfo['name'],
       				'address' => $address,
       				'remark'  => $remark,
@@ -270,6 +269,14 @@ class Wuye extends Wx_Controller {
 				);
 				
 				$repairList = $this->Repair_Model->getList($condition);
+				foreach($repairList['data'] as $key => $item){
+					if($item['mobile']){
+						$repairList['data'][$key]['mobile'] = mask_mobile($item['mobile']);
+					}
+					if($item['yezhu_name']){
+						$repairList['data'][$key]['yezhu_name'] = mask_name($item['yezhu_name']);
+					}
+				}
 				$this->jsonOutput2(RESP_SUCCESS,$repairList);
 			}
 			
@@ -361,7 +368,7 @@ class Wuye extends Wx_Controller {
 			
 			$detail =array(
 				'mobile'=>mask_mobile($this->yezhuInfo['mobile']),
-				'name' =>$this->yezhuInfo['name'],
+				'name' =>mask_name($this->yezhuInfo['name']),
 				'repairTypeList' => RepairType::$typeName
 			);
 			
@@ -391,7 +398,7 @@ class Wuye extends Wx_Controller {
 			
 			$detail =array(
 				'mobile'=>mask_mobile($this->memberInfo['mobile']),
-				'name' =>$this->memberInfo['username'],
+				'name' =>mask_name($this->memberInfo['username']),
 			);
 			
 			if($detail){
@@ -442,6 +449,9 @@ class Wuye extends Wx_Controller {
 					$this->wuye_service->greatOnePlanByYear($houseInfo,$this->memberInfo);
 				}
 				if($houseInfo){
+					if($houseInfo['yezhu_name']){
+						$houseInfo['yezhu_name'] = mask_name($houseInfo['yezhu_name']);
+					}
 					$currentHouseFeeExpire = $this->wuye_service->getCurrentFeeInfo($houseInfo['id'],$data['order_typename']);
 					//获得小区的费用配置
 					$residentFee = $this->wuye_service->getResidentFeeSetting($houseInfo['resident_id'],$currentHouseFeeExpire['year'],$data['order_typename'],$houseInfo['wuye_type']);
@@ -563,13 +573,19 @@ class Wuye extends Wx_Controller {
  	 public function getHouseFromBuilding(){
  	 	if($this->postJson['building_id']){
  	 		$this->load->model('House_Model');
-		 	$houseList = $this->House_Model->getList(array(
-				'select' => 'address,id',
+ 	 		$condition = array(
+				'select' => 'address,id,mobile',
 				'where' => array(
 					'building_id' => $this->postJson['building_id'],
 				),
 				'order' => 'address DESC'
-			));
+			);
+		 	$temporaryHouseList = $this->House_Model->getList($condition);
+			foreach($temporaryHouseList as $key => $item){
+				if($item['mobile']){
+					$houseList[] =  $item;
+				}
+			}
 			$houseList = $this->wuye_service->sotringHouse($houseList,'address');
 		 	$this->jsonOutput2(RESP_SUCCESS,array('houseList' => $houseList));
  	 	}else{

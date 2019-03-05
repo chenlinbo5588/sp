@@ -19,17 +19,13 @@ class User extends Wx_Controller {
 			
 			$this->weixin_service->setConfig($xcxConfig);
 			$weixinUser = $this->weixin_service->getWeixinUserByCode($code);
-			
 			if($weixinUser){
 				$this->session->set_userdata(array(
 					'weixin_user' =>  $weixinUser
 				));
-				if(!$this->memberInfo){
-					$this->register_service->getMember($this->sessionInfo);
-				}
-
-				$bindInfo = $this->weixin_service->checkUserBind($weixinUser);
 				
+				$bindInfo = $this->weixin_service->checkUserBind($weixinUser);
+
 				$this->initMemberInfo();
 				
 				if($this->memberInfo){

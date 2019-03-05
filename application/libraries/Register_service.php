@@ -52,7 +52,7 @@ class Register_service extends Base_service {
 	/**
 	 * 登录时自动创建一个会员
 	 */
-	public function getMember($param){
+	public function setNewMember($param){
 		$regData = array(
 			'username' => date('YmdHms'),
 			'mobile' => date('YmdHms'),
@@ -61,6 +61,7 @@ class Register_service extends Base_service {
 			'channel' => 1,   //小程序注册进入的
 		);
 		$resp = $this->createMember($regData);
+		return $resp;
 	}
 	
 	

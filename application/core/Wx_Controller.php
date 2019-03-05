@@ -84,6 +84,14 @@ class Wx_Controller extends MY_Controller {
 			
 			if($this->memberInfo){
 				$this->yezhuInfo = $this->wuye_service->getYezhuInfoById($this->memberInfo['uid']);
+			}else{
+				$data = $this->register_service->setNewMember($this->sessionInfo);
+				if('success' == $data['code']){
+					$this->memberInfo = $this->wuye_service->initUserInfoBySession($weixinUser,'openid');
+					$this->yezhuInfo = $this->wuye_service->getYezhuInfoById($this->memberInfo['uid']);
+				}else{
+					log_message('error',"新增会员出错,错误信息weixinUser:".$weixinUser);
+				}
 			}
 			
 			$this->postJson = array_merge($this->postJson,$weixinUser);

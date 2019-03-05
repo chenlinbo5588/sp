@@ -441,7 +441,7 @@ class Wuye_service extends Base_service {
 			
 			foreach($yezhuHouseList as $houseIndex => $houseInfo){
 				if($houseInfo['wuye_expire']){
-					$houseInfo['wuye_expire_date'] = date('Y-m-d',$houseInfo['wuye_expire_date']);
+					$houseInfo['wuye_expire_date'] = date('Y-m-d',$houseInfo['wuye_expire']);
 				}
 				
 				if($houseInfo['nenghao_expire']){
@@ -484,7 +484,7 @@ class Wuye_service extends Base_service {
 		
 		if($houseInfo){
 			if($houseInfo['wuye_expire']){
-				$houseInfo['wuye_expire_date'] = date('Y-m-d',$houseInfo['wuye_expire_date']);
+				$houseInfo['wuye_expire_date'] = date('Y-m-d',$houseInfo['wuye_expire']);
 			}
 			
 			if($houseInfo['nenghao_expire']){

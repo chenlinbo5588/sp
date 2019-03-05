@@ -31,31 +31,24 @@ if ( ! function_exists('mask_mobile'))
 function mask_string($no,$start = 6, $end = 4, $mask = '*'){
 	
 	
-	if(strlen($no) >= ($start + $end)){
-		$startStr = substr($no,0,$start);
-		$endStr = substr($no,-$end,$end);
-		return $startStr.str_repeat($mask,strlen($no) - ($start + $end)).$endStr;
+	if(mb_strlen($no) > ($start + $end)){
+		$startStr = mb_substr($no,0,$start);
+		$endStr = mb_substr($no,-$end,$end);
+		return $startStr.str_repeat($mask,(mb_strlen($no) - ($start + $end))).$endStr;
+	}else if(mb_strlen($no) == ($start + $end)){
+		$startStr = mb_substr($no,0,$start);
+		return $startStr.str_repeat($mask,(mb_strlen($no) - $start));
 	}else{
 		return $no;
 	}
 	
 	
 }
-function mask_name($no,$start = 3, $end = 3, $mask = '*'){
-	
-	
-	if(strlen($no) > ($start + $end)){
-		$startStr = substr($no,0,$start);
-		$endStr = substr($no,-$end,$end);
-		return $startStr.str_repeat($mask,(strlen($no) - ($start + $end))/3).$endStr;
-	}else if(strlen($no) == ($start + $end)){
-		$startStr = substr($no,0,$start);
-		return $startStr.str_repeat($mask,(strlen($no) - ($start))/3);
-	}else{
-		return $no;
-	}
-	
-	
+/**
+ * 中文名字隐藏信息
+ */
+function mask_name($no,$start = 1, $end = 1, $mask = '*'){
+	return mask_string($no,$start,$end,$mask);
 }
 
 
