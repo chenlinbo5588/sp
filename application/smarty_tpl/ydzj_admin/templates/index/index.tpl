@@ -319,6 +319,7 @@ $(function(){
 					{if isset($permission['nav_member'])}<li><a class="link" id="nav_member" href="javascript:void(0);" onclick="openItem('member');"><span>会员</span></a></li>{/if}
 					{if isset($permission['nav_service'])}<li><a class="link" id="nav_service" href="javascript:void(0);" onclick="openItem('service');"><span>服务</span></a></li>{/if}
 					{if isset($permission['nav_wuye'])}<li><a class="link" id="nav_wuye" href="javascript:void(0);" onclick="openItem('wuye');"><span>物业</span></a></li>{/if}
+					{if isset($permission['nav_user'])}<li><a class="link" id="nav_user" href="javascript:void(0);" onclick="openItem('user');"><span>用户</span></a></li>{/if}
 					{*<li><a class="link" id="nav_team" href="javascript:void(0);" onclick="openItem('team');"><span>队伍</span></a></li>
 					<li><a class="link" id="nav_stadium" href="javascript:void(0);" onclick="openItem('stadium');"><span>场馆</span></a></li>
 					<li><a class="link" id="nav_game" href="javascript:void(0);" onclick="openItem('game');"><span>赛事</span></a></li>
@@ -461,6 +462,19 @@ $(function(){
                     {if isset($permission['side_feetype'])}<li><a href="javascript:void(0);" id="index_feetype" onclick="openItem('index,feetype,wuye');">費用管理</a></li>{/if}
                     {if isset($permission['side_repair'])}<li><a href="javascript:void(0);" id="index_repair" onclick="openItem('index,repair,wuye');">报修</a></li>{/if}
                   	{if isset($permission['side_plan'])}<li><a href="javascript:void(0);" id="index_plan" onclick="openItem('index,plan,wuye');">收费计划</a></li>{/if}
+                  </ol>
+                </dd>
+              </dl>
+            </li>
+          </ul>
+          
+          <ul id="sort_user">
+            <li>
+              <dl>
+                <dd>
+                  <ol>
+                    {if isset($permission['side_tdkcuser'])}<li><a href="javascript:void(0);" id="index_tdkcuser" onclick="openItem('index,tdkcuser,user');">用户</a></li>{/if}
+                    {if isset($permission['side_company'])}<li><a href="javascript:void(0);" id="index_company" onclick="openItem('index,company,user');">公司</a></li>{/if}
                   </ol>
                 </dd>
               </dl>
