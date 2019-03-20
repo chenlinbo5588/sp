@@ -15,5 +15,6 @@ $entity = array(
 'edit_uid' => 'int',
 'edit_username' => 'varchar',
 'gmt_create' => 'int',
-'gmt_modify' => 'int'
+'gmt_modify' => 'int',
+'vacant_discount' => 'int'
 );

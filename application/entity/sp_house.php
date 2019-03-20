@@ -27,5 +27,10 @@ $entity = array(
 'edit_uid' => 'int',
 'edit_username' => 'varchar',
 'gmt_create' => 'int',
-'gmt_modify' => 'int'
+'gmt_modify' => 'int',
+'house_status' => 'tinyint',
+'amount_recrive_count' => 'float',
+'amount_arrears_count' => 'float',
+'amount_recrive_now' => 'float',
+'amount_arrears_now' => 'float'
 );

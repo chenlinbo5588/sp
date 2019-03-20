@@ -95,7 +95,6 @@ class Register extends Wx_Controller {
 					
 				}catch(Exception $e){
 					$rt['message'] = $e->getMessage();
-					
 					break;
 				}
 				

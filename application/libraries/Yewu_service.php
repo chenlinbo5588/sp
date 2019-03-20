@@ -26,9 +26,9 @@ class Yewu_service extends Base_service {
 		parent::__construct();
 		
 		self::$CI->load->model(array(
-			'Resident_Model','Building_Model','User_Model'
+			'Resident_Model','Building_Model','User_Model','Yewu_Model'
 		));
-		
+		self::$CI->load->library(array('Basic_data_service'));
 		$this->_residentModel = self::$CI->Resident_Model;
 		$this->_userModel = self::$CI->User_Model;
 
@@ -42,7 +42,7 @@ class Yewu_service extends Base_service {
 	}
 	public function getUserInfoById($pId,$key = 'uid'){
 		
-		$uesrList = $this->$this->_userModel->getList(array(
+		$uesrList = $this->_userModel->getList(array(
 			'where' => array(
 				$key => $pId
 			),
