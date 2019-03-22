@@ -2,23 +2,25 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 
-class Company extends Ydzj_Admin_Controller {
+class Yewu extends Ydzj_Admin_Controller {
 	
 	public function __construct(){
 		parent::__construct();
 		
-		$this->load->library(array('Basic_data_service','User_service'));
+		$this->load->library(array('Basic_data_service','User_service','Yewu_service'));
 		
 		$this->basic_data_service->setDataModule($this->_dataModule);
 		
-		$this->_moduleTitle = '公司';
+		$this->_moduleTitle = '业务';
 		$this->_className = strtolower(get_class());
 		
 		
 		$this->assign(array(
 			'moduleTitle' => $this->_moduleTitle,
 			'moduleClassName' => $this->_className,
-			'userType' => UserType::$typeName,
+			'workCategory' => $this->basic_data_service->getTopChildList('工作类别'),
+			'serviceArea' => $this->basic_data_service->getTopChildList('服务区域'),
+			'basicData' => $this->basic_data_service->getBasicDataList(),
 		));
 		
 		
@@ -29,14 +31,12 @@ class Company extends Ydzj_Admin_Controller {
 		
 	}
 	
-	
 	/**
 	 * 
 	 */
 	public function index(){
 	
 		$currentPage = $this->input->get_post('page') ? $this->input->get_post('page') : 1;
-		
 		$condition = array(
 			'order' => 'id DESC',
 			'pager' => array(
@@ -46,16 +46,46 @@ class Company extends Ydzj_Admin_Controller {
 				'form_id' => '#formSearch'
 			)
 		);
-		$search['name'] = $this->input->get_post('name');
+		$search['yewu_name'] = $this->input->get_post('yewu_name');
+		$search['real_name'] = $this->input->get_post('real_name');
+		$search['worker_name'] = $this->input->get_post('worker_name');
+		$search['worker_mobile'] = $this->input->get_post('worker_mobile');
+		$search['user_name'] = $this->input->get_post('user_name');
+		$search['user_mobile'] = $this->input->get_post('user_mobile');
+		$search['work_category'] = $this->input->get_post('work_category');
+		$search['service_area'] = $this->input->get_post('service_area');
 		
-		if($search['name']){
-			$condition['like']['name'] = $search['name'];
+		if($search['yewu_name']){
+			$condition['like']['yewu_name'] = $search['yewu_name'];
 		}
-		$list = $this->Company_Model->getList($condition);
+		if($search['real_name']){
+			$condition['like']['real_name'] = $search['real_name'];
+		}
+		if($search['worker_name']){
+			$condition['like']['worker_name'] = $search['worker_name'];
+		}
+		if($search['worker_mobile']){
+			$condition['like']['worker_mobile'] = $search['worker_mobile'];
+		}
+		if($search['user_name']){
+			$condition['like']['user_name'] = $search['user_name'];
+		}
+		if($search['user_mobile']){
+			$condition['like']['user_mobile'] = $search['user_mobile'];
+		}
+		if($search['work_category']){
+			$condition['where']['work_category'] = $search['work_category'];
+		}
+		if($search['service_area']){
+			$condition['where']['service_area'] = $search['service_area'];
+		}
+		
+		$list = $this->Yewu_Model->getList($condition);
 		$this->assign(array(
 			'basicData' => $this->basic_data_service->getBasicData(),
 			'list' => $list,
 			'page' => $list['pager'],
+			'search' => $search,
 			'currentPage' => $currentPage
 			
 		));
@@ -65,7 +95,7 @@ class Company extends Ydzj_Admin_Controller {
 	}
 	public function edit(){
 		$id = $this->input->get_post('id');
-		$info = $this->Company_Model->getFirstByKey($id);
+		$info = $this->Yewu_Model->getFirstByKey($id);
 		$this->_subNavs[] = array('url' => $this->_className.'/edit?id='.$id, 'title' => '编辑');
 		if($this->isPostRequest()){
 			for($i = 0; $i < 1; $i++){		
@@ -75,7 +105,7 @@ class Company extends Ydzj_Admin_Controller {
 				}*/
 				
 				$updateData = array_merge($_POST,$this->addWhoHasOperated('edit'));
-				$returnVal = $this->Company_Model->update($updateData,array('id' => $id));
+				$returnVal = $this->Yewu_Model->update($updateData,array('id' => $id));
 				
 				if($returnVal < 0){
 					$this->jsonOutput('保存失败',$this->getFormHash());
@@ -101,7 +131,7 @@ class Company extends Ydzj_Admin_Controller {
 			for($i = 0; $i < 1; $i++){
 
 				$insertData = array_merge($_POST,$this->addWhoHasOperated('add'));
-				$newid =$this->Company_Model->_add($insertData);
+				$newid =$this->Yewu_Model->_add($insertData);
 				if($newid){
 					$this->jsonOutput('保存成功,页面即将刷新',array('redirectUrl' => admin_site_url($this->_className.'/index')));
 				}
@@ -114,23 +144,13 @@ class Company extends Ydzj_Admin_Controller {
 		}
 	}
 	
-	public function getEditRules(){
-		$this->form_validation->set_rules('staff_name','服务人员姓名','required');
-		$this->form_validation->set_rules('staff_sex','性别','required');
-		$this->form_validation->set_rules('staff_mobile','手机号码','required|valid_mobile');
+	private function _setRule(){
+		//缺少公司用户组的验证
+		$this->form_validation->set_rules('mobile','手机号码','required|valid_mobile');
+		$this->form_validation->set_rules('name','姓名','required');
+		$this->form_validation->set_rules('user_type','用户类型','required');
 	}
 	
-	public function detail(){
-		$id = $this->input->get_post('id');
-		$info = $this->Company_Model->getFirstByKey($id);
-		$compangMemberList = $this->Company_Member_Model->getList(array('where' => array('company_id' => $id)));
-
-		$this->_subNavs[] = array('url' => $this->_className.'/detail?id='.$id, 'title' => '详情');
-		$this->assign('info',$info);
-		$this->assign('compangMemberList',$compangMemberList);
-		$this->display();
-			
-	}
 	public function delete(){
 		$ids = $this->input->post('id');
 		
@@ -140,15 +160,9 @@ class Company extends Ydzj_Admin_Controller {
 				$ids = (array)$ids;
 			}
 			
-			
-			$deleteRows = $this->Company_Model->deleteByCondition(array(
+			$deleteRows = $this->Yewu_Model->deleteByCondition(array(
 				'where_in' => array(
 					array('key' => 'id','value' => $ids)
-				)
-			));
-			$this->Company_Member_Model->deleteByCondition(array(
-				'whrer_in' => array(
-					array('key' => 'company_id','value' => $ids)
 				)
 			));
 			
@@ -158,6 +172,13 @@ class Company extends Ydzj_Admin_Controller {
 			
 		}
 	}
+	
+	
+	public function groupTransfer(){
+		
+		
+	}
+	
 	
 	
 }

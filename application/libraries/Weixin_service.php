@@ -114,23 +114,12 @@ class Weixin_service extends Base_service {
 		self::$memberModel->update($regData,array('uid' => $member['uid']));
 		
 		if($member['uid']){
-			self::$CI->load->model(array('Yezhu_Model','House_Model'));
+			self::$CI->load->model(array('User_Model'));
 			//更新业主表中  对应的 uid
 			
-			$yezhuInfo = self::$CI->Yezhu_Model->getFirstByKey($param['phoneNo'],'mobile');
-			
-			if($yezhuInfo){
-				self::$memberModel->updateByWhere(array(
-					'username' => $yezhuInfo['name'],
-					'sex' => $yezhuInfo['sex'],
-				),array(
-					'uid' =>$member['uid'],
-				));
-			}
 			
 			//自动更新没有绑定过的
-			self::$CI->Yezhu_Model->updateByWhere(array('uid' => $member['uid']),array('mobile' => $param['phoneNo']));
-			self::$CI->House_Model->updateByWhere(array('uid' => $member['uid']),array('mobile' => $param['phoneNo']));
+			self::$CI->User_Model->updateByWhere(array('uid' => $member['uid']),array('mobile' => $param['phoneNo']));
 		}
 		
 		if(self::$memberModel->getTransStatus() === FALSE){

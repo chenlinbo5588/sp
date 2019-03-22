@@ -45,12 +45,26 @@ class TdkcUser extends Ydzj_Admin_Controller {
 				'form_id' => '#formSearch'
 			)
 		);
+		$search['name'] = $this->input->get_post('name');
+		$search['mobile'] = $this->input->get_post('mobile');
+		$search['user_type'] = $this->input->get_post('user_type');
+		
+		if($search['name']){
+			$condition['like']['name'] = $search['name'];
+		}
+		if($search['mobile']){
+			$condition['like']['mobile'] = $search['mobile'];
+		}
+		if($search['user_type']){
+			$condition['where']['user_type'] = $search['user_type'];
+		}
 		
 		$list = $this->User_Model->getList($condition);
 		$this->assign(array(
 			'basicData' => $this->basic_data_service->getBasicData(),
 			'list' => $list,
 			'page' => $list['pager'],
+			'search' => $search,
 			'currentPage' => $currentPage
 			
 		));
@@ -102,11 +116,6 @@ class TdkcUser extends Ydzj_Admin_Controller {
 		}
 	}
 	
-	public function getEditRules(){
-		$this->form_validation->set_rules('staff_name','服务人员姓名','required');
-		$this->form_validation->set_rules('staff_sex','性别','required');
-		$this->form_validation->set_rules('staff_mobile','手机号码','required|valid_mobile');
-	}
 	
 	public function set_worker(){
 		$ids = $this->input->post('id');
@@ -117,18 +126,22 @@ class TdkcUser extends Ydzj_Admin_Controller {
 				if(!is_array($ids)){
 					$ids = (array)$ids;
 				}
-				
+				$userList = $this->User_Model->getList(array('where_in'=>array(array('key' => 'id', 'value' => $ids))));
 				$who = $this->addWhoHasOperated('edit');
 				
-				$returnstatusVal = $this->User_Model->updateByCondition(
-					array(
-						'user_type' => 2,
-						'password' => 123456,
-						'edit_uid' => $who['edit_uid'],
-    					'edit_username' => $who['edit_username'],
-					),
-					array('where_in' => array(array('key' => 'id', 'value' => $ids)))
-				);
+				foreach($userList as $key => $item){
+					$password = $this->encrypt->encode(trim('123456'),config_item('encryption_key').md5(trim($item['mobile'])));
+					$returnstatusVal = $this->User_Model->updateByCondition(
+						array(
+							'user_type' => 2,
+							'password' => $password,
+							'edit_uid' => $who['edit_uid'],
+	    					'edit_username' => $who['edit_username'],
+						),
+						array('where_in' => array(array('key' => 'id', 'value' => $ids)))
+					);
+				}
+				
 				
 				if($returnstatusVal < 1){
 					$this->jsonOutput('工作人员设置失败失败,没有已派单记录');
@@ -203,5 +216,43 @@ class TdkcUser extends Ydzj_Admin_Controller {
 		}
 	}
 	
-	
+	public function inline_edit(){
+		$fieldName = $this->input->get_post('fieldname');
+		$id = $this->input->get_post('id');
+		$newValue = $this->input->get_post('value');
+		
+		
+		for($i = 0 ; $i < 1; $i++){
+			
+			$data = array(
+				'id' => $id,
+				'fieldname' => $fieldName,
+				$fieldName => $newValue
+			);
+			
+			$this->form_validation->set_data($data);
+			
+			$this->form_validation->set_rules('id','数据标识','required');
+
+			$message = '修改失败';
+			
+			
+			if(!$this->form_validation->run()){
+				$message = $this->form_validation->error_html();
+			}else{
+				
+				if($this->User_Model->update(array($fieldName => $newValue),array('id' => $id)) < 0){
+					$message = '数据修改失败';
+				}else{
+					$message = '修改成功';
+				}
+			}
+			
+			
+			$this->jsonOutput($message);
+			
+		}
+		
+		
+	}
 }

@@ -21,10 +21,7 @@ class User extends Ydzj_Controller {
 	public function info()
 	{	
 		
-		
 		$this->display('user/info');
-		//$this->member_service->
-		
 		
 		
 	}

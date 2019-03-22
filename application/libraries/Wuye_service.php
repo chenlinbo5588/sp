@@ -72,7 +72,7 @@ class Wuye_service extends Base_service {
 		self::$CI->load->model(array(
 			'Resident_Model','Building_Model','House_Model','Yezhu_Model','Parking_Model',
 			'Feetype_Model','Basic_Data_Model','Repair_Model','Repair_Images_Model','Plan_Detail_Model',
-			'Plan_Model','House_Yezhu_Model','Order_Model','Member_Model'
+			'Plan_Model','House_Yezhu_Model','Order_Model','Member_Model','User_Model'
 		));
 		self::$CI->load->library(array('constant/OrderStatus','constant/Utype'));
 		
@@ -86,6 +86,7 @@ class Wuye_service extends Base_service {
 		$this->_planDetailModel = self::$CI->Plan_Detail_Model;
 		$this->_planModel = self::$CI->Plan_Model;
 		$this->_hosueYezhuModel = self::$CI->House_Yezhu_Model;   
+		$this->_userModel = self::$CI->User_Model;   
 		$this->_dataModule = array(-1);
 		
 		$this->_objectMap = array(
@@ -98,7 +99,8 @@ class Wuye_service extends Base_service {
 			'报修' => $this->_repairModel,
 			'收费计划' => $this->_planModel,
 			'收费计划详情' => $this->_planDetailModel,
-			'房屋业主' => $this->_hosueYezhuModel
+			'房屋业主' => $this->_hosueYezhuModel,
+			'用户' => $this->_userModel
 		);
 
 	}

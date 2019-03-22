@@ -39,7 +39,8 @@ class User_service extends Base_service {
 		parent::__construct();
 		
 		self::$CI->load->model(array(
-			'User_Model','User_Extend_Model','Company_Model',
+			'User_Model','User_Extend_Model','Company_Model','Yewu_Model','Work_Group_Model','Worker_Member_Model',
+			'Company_Member_Model',
 		));
 		
 		$this->_residentModel = self::$CI->Resident_Model;

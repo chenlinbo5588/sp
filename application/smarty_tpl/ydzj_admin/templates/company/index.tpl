@@ -5,12 +5,8 @@
 	 <table class="tb-type1 noborder search" >
 	    <tbody>
 	        <tr>
-	          <th><label for="name">{#resident_name#}</label></th>
-	          <td><input class="txt" name="resident_name" value="{$smarty.get['resident_name']|escape}" type="text"></td>
-	          <th><label for="name">{#yezhu_name#}</label></th>
+	          <th><label for="name">{#company_name#}</label></th>
 	          <td><input class="txt" name="name" value="{$smarty.get['name']|escape}" type="text"></td>
-	          <th><label for="name">{#mobile#}</label></th>
-	          <td><input class="txt" name="mobile" value="{$smarty.get['mobile']|escape}" type="text"></td>
 	          <td><input type="submit" class="msbtn" name="tijiao" value="查询"/></td>
 	        </tr>
 	    </tbody>
@@ -24,7 +20,7 @@
           <th>{#corporation#}</th>
           <th>{#contact_number#}</th>
           <th>启用{#status#}</th>
-          <th class="w72 align-center">操作</th>
+          <th class="align-center">操作</th>
         </tr>
       </thead>
       <tbody>
@@ -37,8 +33,9 @@
           <td>{($item['contact_number'])|escape}</td>
           <td>{if $item['status']==1}启用{else}未启用{/if}</td>
           <td class="align-center">
-          	{if isset($permission[$moduleClassName|cat:'/edit'])}<a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}">编辑</a>{/if}&nbsp;&nbsp;
-          	{if isset($permission[$moduleClassName|cat:'/delete'])}<a href="javascript:void(0)" class="delete" data-url="{admin_site_url($moduleClassName|cat:'/delete')}" data-id="{$item['id']}">删除</a>{/if}
+          	{if isset($permission[$moduleClassName|cat:'/edit'])}<a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}">编辑</a>{/if}&nbsp;
+          	{if isset($permission[$moduleClassName|cat:'/detail'])}<a href="{admin_site_url($moduleClassName|cat:'/detail')}?id={$item['id']}">详情</a>{/if}&nbsp;
+          	{if isset($permission[$moduleClassName|cat:'/delete'])}<a href="javascript:void(0)" class="delete" data-url="{admin_site_url($moduleClassName|cat:'/delete')}" data-id="{$item['id']}">删除</a>{/if}&nbsp;
           </td>
         </tr>
         {/foreach}

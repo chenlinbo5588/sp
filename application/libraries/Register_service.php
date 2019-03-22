@@ -53,9 +53,11 @@ class Register_service extends Base_service {
 	 * 登录时自动创建一个会员
 	 */
 	public function setNewMember($param){
+		list($msec, $sec) = explode(' ', microtime());
+		$msectime = (float)sprintf('%.0f', floatval($msec) * 1000);
 		$regData = array(
-			'username' => date('YmdHms'),
-			'mobile' => date('YmdHms'),
+			'username' => date('YmdHms').$msectime,
+			'mobile' => date('YmdHms').$msectime,
 			'openid' => $param['weixin_user']['openid'],
 			'unionid' => $param['weixin_user']['unionid'] ? $param['weixin_user']['unionid'] : '',
 			'channel' => 1,   //小程序注册进入的

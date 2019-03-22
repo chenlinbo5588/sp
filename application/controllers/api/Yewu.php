@@ -6,13 +6,15 @@ class Yewu extends Wx_Tdkc_Controller {
 	public function __construct(){
 		parent::__construct();
     	
-    	$this->load->library('Yewu_service');
+    	$this->load->library('Yewu_service','Admin_pm_service');
+
 	}
-	
+
 	public function setYewu(){
 		if($this->userInfo){
 			
 			$workCategoryList = WorkCategory::$typeName;
+			$address = $this->postJson['address'];
 			$mobile = $this->postJson['mobile'];
 			$workCategory = $this->postJson['work_category']; 
 			$realName = $this->postJson['real_name']; 
@@ -34,6 +36,9 @@ class Yewu extends Wx_Tdkc_Controller {
 				break;
 			}*/
 			
+			$groupInfo = $this->yewu_service->getGroupInfo($serviceArea);
+			//$companyInfo = $this->Company_Model->getFirstByKey($companyName,'name');
+			 
 			$yewuInfo = array(
   				'mobile' => $mobile,
   				'work_category' => $workCategory,
@@ -43,16 +48,26 @@ class Yewu extends Wx_Tdkc_Controller {
   				'user_id' => $this->userInfo['uid'],
 				'add_uid'	=>  $this->userInfo['uid'],
 				'add_username'	=>  $this->userInfo['name'],
-				'company_name' => $companyName,
+				'group_id' => $groupInfo['id'],
+				//'company_name' => $companyName,
+				//'company_id' = $companyInfo['id'],
 			);
-			
+
+
 			$newYewuId = $this->Yewu_Model->_add($yewuInfo);
+			
 			if($newYewuId){
+				$this->admin_pm_service->addYewuMessage($yewuInfo,$newYewuId);
 				$this->jsonOutput2(RESP_SUCCESS);
 			}
 			
 		}
 	}
+	public function getyewu(){
+		
+		$this->jsonOutput2(RESP_SUCCESS);
+	}
+	
 	
 	public function getYewuList(){
 		$id = $this->userInfo['uid'];
@@ -78,18 +93,24 @@ class Yewu extends Wx_Tdkc_Controller {
 	
 	public function getUserType(){
 		
-		
 		$type = array(
 			'type' => $this->userInfo['user_type'],
 		);
 		
-		
 		$this->jsonOutput2(RESP_SUCCESS,$type);
-	
-
 		
 	}
+	/**
+	 * 获得业务类型
+	 */
+	public function getYewuWorkCategory(){
+		if($this->userInfo){
+			$workCategory = $this->basic_data_service->getTopChildList('工作类别');
+			 if(is_array($workCategory)){
+			 	$this->jsonOutput2(RESP_SUCCESS,$workCategory);
+			 }
+			
+		}
+	}
 
-	
-	
 }

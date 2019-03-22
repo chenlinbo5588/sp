@@ -63,7 +63,6 @@ class Pm extends Ydzj_Admin_Controller {
 			)
 		);
 		
-		
 		$list = $this->admin_pm_service->getAdminPmListByUid($condition,$this->_adminUID);
 		
 		$this->assign(array(

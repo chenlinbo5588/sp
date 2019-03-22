@@ -428,6 +428,7 @@ class Admin_pm_service extends Base_service {
 						'uid' => $pUser['uid'],
 						'site_msgid' => $sysPmList[$pmIndex]['id'],
 						'msg_type' => $sysPmList[$pmIndex]['msg_type'],
+						'from_id' => $sysPmList[$pmIndex]['from_id'],
 						'title' => str_replace('{username}',$pUser['username'],$sysPmList[$pmIndex]['title']),
 						'content' => str_replace('{username}',$pUser['username'],$sysPmList[$pmIndex]['content']),
 					);
@@ -515,4 +516,31 @@ class Admin_pm_service extends Base_service {
 		),array($pOrderInfo['resident_id']));
 	
 	}
+	/**
+	 * 业务站内信
+	 */
+	public function addYewuMessage($yewuInfo,$id){
+		
+		$jumpUrl  = admin_site_url('yewu/edit?id='.$id);
+		$this->addMessage(array(
+			'title' => '新业务 '.$yewuInfo['service_area'].$yewuInfo['yewu_name'],
+			'content' => '<div>业务描述:<a target="workspace" href="'. $jumpUrl.'">'.$yewuInfo['yewu_describe'].' 点击描述查看详情</a></div>',
+			'form_id' => $yewuInfo['user_id'],
+		));
+	
+	}
+	public function addMessage($pData,$pGroups = array(),$pUsers =  array()){
+		
+		$default = array(
+			'msg_type' => 3,
+			'send_ways' => json_encode(array('站内信')),
+			'msg_mode' => 3,
+			'groups' => json_encode($pGroups),
+			'users' => json_encode($pUsers),
+		);
+		
+		return $this->_siteMessageModel->_add(array_merge($default,$pData));
+		
+	}
+	
 }

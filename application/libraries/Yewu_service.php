@@ -26,18 +26,13 @@ class Yewu_service extends Base_service {
 		parent::__construct();
 		
 		self::$CI->load->model(array(
-			'Resident_Model','Building_Model','User_Model','Yewu_Model'
+			'User_Model','Yewu_Model','Work_Group_Model',
 		));
-		self::$CI->load->library(array('Basic_data_service'));
-		$this->_residentModel = self::$CI->Resident_Model;
+		self::$CI->load->library(array('Basic_data_service','Admin_pm_service'));
 		$this->_userModel = self::$CI->User_Model;
+		$this->_workGroupModel = self::$CI->Work_Group_Model;
 
-		$this->_dataModule = array(-1);
 		
-		$this->_objectMap = array(
-			'小区' => $this->_residentModel,
-			'停车位' => $this->_parkingModel,
-		);
 
 	}
 	public function getUserInfoById($pId,$key = 'uid'){
@@ -68,8 +63,18 @@ class Yewu_service extends Base_service {
 		
 	}
 	
+	public function getGroupInfo($serviceArea){
+		$groupList = $this->_workGroupModel->getList();
+		foreach($groupList as $key => $item){
+			if(is_array(json_decode($item['service_area'],true))){
+				if(in_array($serviceArea,json_decode($item['service_area'],true))){
+					return $groupList[$key];
+				}
+			}
+		
+		}
+		return array('id' =>0);
+		
+	}
 	
-
-	
-
 }

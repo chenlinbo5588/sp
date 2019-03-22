@@ -556,4 +556,6 @@ require_once(APPPATH.'core'.DIRECTORY_SEPARATOR.'MyYdzj_Controller.php');
 require_once(APPPATH.'core'.DIRECTORY_SEPARATOR.'Ydzj_Admin_Controller.php');
 
 require_once(APPPATH.'core'.DIRECTORY_SEPARATOR.'Wx_Controller.php');
+
 require_once(APPPATH.'core'.DIRECTORY_SEPARATOR.'Wx_Tdkc_Controller.php');
+

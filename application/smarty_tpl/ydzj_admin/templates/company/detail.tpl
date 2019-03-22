@@ -37,11 +37,35 @@
           <td colspan="2" class="required"><label class="validation" for="mobile">{#business_license#}</label></td>
         </tr>
         <tr class="noborder">
-            <td class="w120 picture"><a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}"><img class="size-100x100" src="{if $item['business_license']}{resource_url($item['business_license'])}{else}{resource_url('img/default.jpg')}{/if}"/></a></td>
+                    <td class="w120 picture"><a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}"><img class="size-100x100" src="{if $item['business_license']}{resource_url($item['business_license'])}{else}{resource_url('img/default.jpg')}{/if}"/></a></td>
         </tr>
         <tr class="noborder">
+          <td colspan="2">公司成员: </td>
+        </tr>
+        <tr>
+	    	<td colspan="2">
+		    	{if $compangMemberList}
+		    		<table id="compangMemberTable">
+		    			<thead>
+		    				<tr>
+		    					<th>联系电话</th>
+		    					<th>姓名</th>
+		    				</tr>
+		    			</thead>
+		    			<tbody>
+							  {foreach from=$compangMemberList key=key item=valus}
+	        				<tr>
+		    					<td>{$valus['user_mobile']|escape}</td>
+		    					<td>{$valus['user_name']|escape}</td>
+							</tr>
+							  {/foreach}
+						</tbody>
+					</table>
+				{/if}
+			 </td>
+		</tr>
+        <tr class="noborder">
           <td class="vatop rowform">
-          	<input type="submit" name="tijiao" value="保存" class="msbtn"/>
           	{if $gobackUrl}
 	    	<a href="{$gobackUrl}" class="salvebtn">返回</a>
 	    	{/if}

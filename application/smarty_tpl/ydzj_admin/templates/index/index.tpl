@@ -475,6 +475,8 @@ $(function(){
                   <ol>
                     {if isset($permission['side_tdkcuser'])}<li><a href="javascript:void(0);" id="index_tdkcuser" onclick="openItem('index,tdkcuser,user');">用户</a></li>{/if}
                     {if isset($permission['side_company'])}<li><a href="javascript:void(0);" id="index_company" onclick="openItem('index,company,user');">公司</a></li>{/if}
+                    {if isset($permission['side_yewu'])}<li><a href="javascript:void(0);" id="index_yewu" onclick="openItem('index,yewu,user');">业务</a></li>{/if}
+                  	{if isset($permission['side_work_group'])}<li><a href="javascript:void(0);" id="index_work_group" onclick="openItem('index,work_group,user');">工作组</a></li>{/if}
                   </ol>
                 </dd>
               </dl>

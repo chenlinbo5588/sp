@@ -272,7 +272,6 @@ class MY_Model extends CI_Model {
         if(empty($data)){
         	return false;
         }
-        
         if(!$replace){
         	$this->db->insert($this->getTableRealName(), $data);
         	return $this->db->insert_id();
