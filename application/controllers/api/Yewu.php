@@ -72,7 +72,6 @@ class Yewu extends Wx_Tdkc_Controller {
 	public function getYewuList(){
 		$id = $this->userInfo['uid'];
 		if($this->userInfo){
-			
 			$data = $this->Yewu_Model->getList(array(
 								'where' => array(
 									'user_id' => $id 
@@ -80,7 +79,8 @@ class Yewu extends Wx_Tdkc_Controller {
 							));
 			foreach($data  as $key => $item){
 				$data[$key]['time'] =date("Y-m-d H:i",$data[$key]['gmt_create']) ;
-				
+				$data[$key]['mobile'] =mask_mobile($data[$key]['mobile']);
+				$data[$key]['real_name'] =mask_name($data[$key]['real_name']);
 			}
 			$yewuList = array(
 				'data' =>$data ,
@@ -96,10 +96,29 @@ class Yewu extends Wx_Tdkc_Controller {
 		$type = array(
 			'type' => $this->userInfo['user_type'],
 		);
-		
 		$this->jsonOutput2(RESP_SUCCESS,$type);
 		
+
+		
 	}
+	
+
+	
+	
+	public function accessAll(){
+		$id = $this->postJson['id'];
+		echo urlencode("www.nbxinn.com");
+		$data =$this->Yewu_Model->getFirstByKey($id,'id');
+
+		if($data){
+			$mobileName =array(
+				'name' =>$data['real_name'],
+				'mobile' => $data['mobile'],
+			);
+			$this->jsonOutput2(RESP_SUCCESS,$mobileName);
+		}
+	}
+
 	/**
 	 * 获得业务类型
 	 */
@@ -112,5 +131,34 @@ class Yewu extends Wx_Tdkc_Controller {
 			
 		}
 	}
+
+
+	public function getopenid(){
+		
+		
+	 	$code =$this->postJson['code'];
+		echo $code;
+		$url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wxba86a9496e907b03&secret=9f65076ccd3368ec24fd6b729f9a28e1&code=".$code."&grant_type=authorization_code";
+		$openArr=json_decode($this->gettoken($url),true);
+		
+		print_r ($openArr);
+	}
+	
+	
+	public function gettoken($url){
+	  
+	    $ch = curl_init();
+	    curl_setopt($ch, CURLOPT_URL, $url);
+	    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	    curl_setopt($ch, CURLOPT_HEADER, 0);
+	    curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.22 (KHTML, like Gecko) Chrome/25.0.1364.172 Safari/537.22");
+	    curl_setopt($ch, CURLOPT_ENCODING ,'gzip'); //加入gzip解析
+	    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+	    $output = curl_exec($ch);
+		
+	
+	    curl_close($ch);
+	    return $output;
+	  }
 
 }
