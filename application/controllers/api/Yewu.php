@@ -55,7 +55,6 @@ class Yewu extends Wx_Tdkc_Controller {
 
 
 			$newYewuId = $this->Yewu_Model->_add($yewuInfo);
-			
 			if($newYewuId){
 				$this->admin_pm_service->addYewuMessage($yewuInfo,$newYewuId);
 				$this->jsonOutput2(RESP_SUCCESS);
@@ -64,7 +63,6 @@ class Yewu extends Wx_Tdkc_Controller {
 		}
 	}
 	public function getyewu(){
-		
 		$this->jsonOutput2(RESP_SUCCESS);
 	}
 	
@@ -97,9 +95,6 @@ class Yewu extends Wx_Tdkc_Controller {
 			'type' => $this->userInfo['user_type'],
 		);
 		$this->jsonOutput2(RESP_SUCCESS,$type);
-		
-
-		
 	}
 	
 
@@ -135,12 +130,10 @@ class Yewu extends Wx_Tdkc_Controller {
 
 	public function getopenid(){
 		
-		
 	 	$code =$this->postJson['code'];
 		echo $code;
 		$url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wxba86a9496e907b03&secret=9f65076ccd3368ec24fd6b729f9a28e1&code=".$code."&grant_type=authorization_code";
 		$openArr=json_decode($this->gettoken($url),true);
-		
 		print_r ($openArr);
 	}
 	
