@@ -30,9 +30,9 @@ class Yewu_service extends Base_service {
 		));
 		self::$CI->load->library(array('Basic_data_service','Admin_pm_service'));
 		$this->_userModel = self::$CI->User_Model;
+		$this->_yewuModel = self::$CI->Yewu_Model;
 		$this->_workGroupModel = self::$CI->Work_Group_Model;
-
-		
+		$this->_yewuTransferModel = self::$CI->Yewu_Transfer_Model;
 
 	}
 	public function getUserInfoById($pId,$key = 'uid'){
@@ -76,17 +76,19 @@ class Yewu_service extends Base_service {
 		return array('id' =>0);
 		
 	}
+
+	
 	public function changeTansfer($param,$user,$fromFroupInfo){
-		$this->Yewu_Model->beginTrans();
-		if(1 == $param['opinion']){
-			$this->Yewu_Transfer_Model->updateByCondition(
+		$this->_yewuModel->beginTrans();
+		if('同意' == $param['opinion']){
+			$this->_yewuTransferModel->updateByCondition(
 				array('status' => 2,),
 				array('where' => array(
 					'yewu_id' => $param['yewu_id'],
 					'status' => 1,
 					'group_id_to' => $param['group_id'],
 				)));
-			 	$this->Yewu_Model->updateByCondition(
+			 	$this->_yewuModel->updateByCondition(
 					array(
 						'status' => 2,
 						'edit_uid' => $user['uid'],
@@ -96,16 +98,15 @@ class Yewu_service extends Base_service {
 					),
 					array('where' => array('id' => $param['yewu_id']))
 				);
-
-		}else if(2 == $param['opinion']){
-			$this->Yewu_Transfer_Model->updateByCondition(
+		}else if('不同意' == $param['opinion']){
+			$this->_yewuTransferModel->updateByCondition(
 				array('status' => 3,),
 				array('where' => array(
 					'yewu_id' => $param['yewu_id'],
 					'status' => 1,
 					'group_id_to' => $param['group_id'],
 				)));
-			 	$this->Yewu_Model->updateByCondition(
+			 	$this->_yewuModel->updateByCondition(
 					array(
 						'worker_id' => $fromFroupInfo['group_leaderid'],
 						'worker_name' => $fromFroupInfo['group_leader_name'],
@@ -120,12 +121,12 @@ class Yewu_service extends Base_service {
 					array('where' => array('id' => $this->postJson['yewu_id']))
 				);
 		}
-		if($this->Yewu_Model->getTransStatus() === FALSE){
-			$this->Yewu_Model->rollBackTrans();
-			return true;
-		}else{
-			$this->Yewu_Model->commitTrans();
+		if($this->_yewuModel->getTransStatus() === FALSE){
+			$this->_yewuModel->rollBackTrans();
 			return false;
+		}else{
+			$this->_yewuModel->commitTrans();
+			return true;
 		}
 	}
 }

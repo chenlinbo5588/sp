@@ -141,7 +141,7 @@ class Yewu extends Wx_Tdkc_Controller {
 		if($this->userInfo && 3 == $this->userInfo['user_type']){
 			$groupId = $this->postJson['group_id'];
 			$groupInfo = $this->Work_Group_Model->getFirstByKey($groupId,'id');
-			$yewuId = $mobile = $this->postJson['id'];
+			$yewuId = $this->postJson['yewu_id'];
 			$yewuInfo = $this->Yewu_Model->getFirstByKey($yewuId,'id');
 			if($groupId && $yewuId){		
 				$this->Yewu_Model->beginTrans();
@@ -159,7 +159,8 @@ class Yewu extends Wx_Tdkc_Controller {
 					),
 					array('where' => array('id' => $yewuId))
 				);
-				$this->Yewu_Transfer_Model->add(array(
+				
+				$this->Yewu_Transfer_Model->_add(array(
 					'yewu_id' => $yewuId,
 					'group_id_from' => $this->userInfo['group_id'],
 					'group_name_from' => $this->userInfo['group_name'],
@@ -178,6 +179,7 @@ class Yewu extends Wx_Tdkc_Controller {
 					$this->jsonOutput2(RESP_SUCCESS);
 				}
 			}
+			$this->jsonOutput2(RESP_ERROR,array('message' => '请选择业务和移交小组'));
 		}else{
 			$this->jsonOutput2(UNBINDED,$this->unBind);
 		}
@@ -186,8 +188,7 @@ class Yewu extends Wx_Tdkc_Controller {
 	public function transferHandle(){
 		if($this->userInfo && 3 == $this->userInfo['user_type']){
 			$yewuInfo = $this->Yewu_Model->getFirstByKey($this->postJson['yewu_id'],'id');
-			$groupInfo = $this->Work_Group_Model->getFirstByKey($this->postJson['group_id'],'id');
-			
+			$groupInfo = $this->Work_Group_Model->getFirstByKey($this->postJson['group_id'],'id');		
 			$thansferInfo = $this->Yewu_Transfer_Model->getList(array('where' => array(
 				'yewu_id' => $this->postJson['yewu_id'],
 				'status' => 1,

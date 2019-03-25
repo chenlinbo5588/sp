@@ -57,6 +57,7 @@
           <th>{#initial_group#}</th>
           <th>{#current_group#}</th>
           <th>{#company_name#}</th>
+          <th>业务{#status#}</th>
           <th>{#handle_date#}</th>
           <th>{#money#}</th>
           <th>{#order_id#}</th>
@@ -79,6 +80,7 @@
           <td class="initial_group">{$item['initial_group']|escape}</td>
           <td class="current_group">{$item['current_group']|escape}</td>
           <td class="company_name"><a href="{admin_site_url(company|cat:'/index')}?id={$item['company_id']}">{$item['company_name']|escape}</td>
+          <td class="status">{$item['status']|escape}</td>
           <td class="handle_date">{$item['handle_date']|escape}</td>
           <td class="money">{$item['money']|escape}</td>
           <td class="order_id">{$item['order_id']|escape}</td>
