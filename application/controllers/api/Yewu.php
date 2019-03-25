@@ -127,6 +127,80 @@ class Yewu extends Wx_Tdkc_Controller {
 			
 		}
 	}
+	public function getAllGroupList(){
+		if($this->userInfo){
+			$this->jsonOutput2(RESP_SUCCESS,$this->Work_Group_Model->getList());
+		}
+	}
+	
+
+	/**
+	 * 业务转让申请
+	 */
+	public function transferApply(){
+		if($this->userInfo && 3 == $this->userInfo['user_type']){
+			$groupId = $this->postJson['group_id'];
+			$groupInfo = $this->Work_Group_Model->getFirstByKey($groupId,'id');
+			$yewuId = $mobile = $this->postJson['id'];
+			$yewuInfo = $this->Yewu_Model->getFirstByKey($yewuId,'id');
+			if($groupId && $yewuId){		
+				$this->Yewu_Model->beginTrans();
+			 	$this->Yewu_Model->updateByCondition(
+					array(
+						'worker_id' => $groupInfo['group_leaderid'],
+						'worker_name' => $groupInfo['group_leader_name'],
+						'worker_mobile' => $groupInfo['group_leader_mobile'],
+						'current_group' => $groupInfo['id'],
+						'status' => 10,
+						'edit_uid' => $this->userInfo['uid'],
+						'edit_username' => $this->userInfo['name'],
+						'gmt_modify' => time(),
+						
+					),
+					array('where' => array('id' => $yewuId))
+				);
+				$this->Yewu_Transfer_Model->add(array(
+					'yewu_id' => $yewuId,
+					'group_id_from' => $this->userInfo['group_id'],
+					'group_name_from' => $this->userInfo['group_name'],
+					'group_id_to' => $groupInfo['id'],
+					'group_name_to' => $groupInfo['group_name'],
+					'status' => 1,
+					'add_uid' => $this->userInfo['uid'],
+					'add_username' => $this->userInfo['name'],
+					'gmt_create' => time(),
+				));
+				if($this->Yewu_Model->getTransStatus() === FALSE){
+					$this->Yewu_Model->rollBackTrans();
+					$this->jsonOutput2(RESP_ERROR);
+				}else{
+					$this->Yewu_Model->commitTrans();
+					$this->jsonOutput2(RESP_SUCCESS);
+				}
+			}
+		}else{
+			$this->jsonOutput2(UNBINDED,$this->unBind);
+		}
+	}
+	
+	public function transferHandle(){
+		if($this->userInfo && 3 == $this->userInfo['user_type']){
+			$yewuInfo = $this->Yewu_Model->getFirstByKey($this->postJson['yewu_id'],'id');
+			$groupInfo = $this->Work_Group_Model->getFirstByKey($this->postJson['group_id'],'id');
+			
+			$thansferInfo = $this->Yewu_Transfer_Model->getList(array('where' => array(
+				'yewu_id' => $this->postJson['yewu_id'],
+				'status' => 1,
+				'group_id_to' => $this->postJson['group_id'],
+			)));
+			$fromGroupInfo = $this->Yewu_Model->getFirstByKey($thansferInfo['group_id_from'],'id');
+			if($thansferInfo && $yewuInfo && $yewuInfo){
+				if($this->yewu_service->changeTansfer($this->postJson,$this->userInfo,$fromGroupInfo)){
+					$this->jsonOutput2(RESP_SUCCESS);
+				}
+			}
+		}
+	}
 
 
 	public function getopenid(){

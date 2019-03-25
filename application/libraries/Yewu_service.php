@@ -26,7 +26,7 @@ class Yewu_service extends Base_service {
 		parent::__construct();
 		
 		self::$CI->load->model(array(
-			'User_Model','Yewu_Model','Work_Group_Model',
+			'User_Model','Yewu_Model','Work_Group_Model','Yewu_Transfer_Model',
 		));
 		self::$CI->load->library(array('Basic_data_service','Admin_pm_service'));
 		$this->_userModel = self::$CI->User_Model;
@@ -76,5 +76,56 @@ class Yewu_service extends Base_service {
 		return array('id' =>0);
 		
 	}
-	
+	public function changeTansfer($param,$user,$fromFroupInfo){
+		$this->Yewu_Model->beginTrans();
+		if(1 == $param['opinion']){
+			$this->Yewu_Transfer_Model->updateByCondition(
+				array('status' => 2,),
+				array('where' => array(
+					'yewu_id' => $param['yewu_id'],
+					'status' => 1,
+					'group_id_to' => $param['group_id'],
+				)));
+			 	$this->Yewu_Model->updateByCondition(
+					array(
+						'status' => 2,
+						'edit_uid' => $user['uid'],
+						'edit_username' => $user['name'],
+						'gmt_modify' => time(),
+						
+					),
+					array('where' => array('id' => $param['yewu_id']))
+				);
+
+		}else if(2 == $param['opinion']){
+			$this->Yewu_Transfer_Model->updateByCondition(
+				array('status' => 3,),
+				array('where' => array(
+					'yewu_id' => $param['yewu_id'],
+					'status' => 1,
+					'group_id_to' => $param['group_id'],
+				)));
+			 	$this->Yewu_Model->updateByCondition(
+					array(
+						'worker_id' => $fromFroupInfo['group_leaderid'],
+						'worker_name' => $fromFroupInfo['group_leader_name'],
+						'worker_mobile' => $fromFroupInfo['group_leader_mobile'],
+						'current_group' => $fromFroupInfo['id'],
+						'status' => 2,
+						'edit_uid' => $user['uid'],
+						'edit_username' => $user['name'],
+						'gmt_modify' => time(),
+						
+					),
+					array('where' => array('id' => $this->postJson['yewu_id']))
+				);
+		}
+		if($this->Yewu_Model->getTransStatus() === FALSE){
+			$this->Yewu_Model->rollBackTrans();
+			return true;
+		}else{
+			$this->Yewu_Model->commitTrans();
+			return false;
+		}
+	}
 }
