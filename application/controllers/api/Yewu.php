@@ -1,3 +1,4 @@
+
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -130,11 +131,12 @@ class Yewu extends Wx_Tdkc_Controller {
 
 	public function getopenid(){
 		
-	 	$code =$this->postJson['code'];
-		echo $code;
+	 	$code = $_GET["code"];
+
 		$url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wxba86a9496e907b03&secret=9f65076ccd3368ec24fd6b729f9a28e1&code=".$code."&grant_type=authorization_code";
 		$openArr=json_decode($this->gettoken($url),true);
-		print_r ($openArr);
+
+		$this->display("yewu/yewu");
 	}
 	
 	
@@ -155,3 +157,4 @@ class Yewu extends Wx_Tdkc_Controller {
 	  }
 
 }
+
