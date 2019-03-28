@@ -37,7 +37,7 @@ class Yewu extends Wx_Tdkc_Controller {
 				break;
 			}*/
 			
-			$groupInfo = $this->yewu_service->getGroupInfo($serviceArea);
+			 //$groupInfo = $this->yewu_service->getGroupInfo($serviceArea);
 			//$companyInfo = $this->Company_Model->getFirstByKey($companyName,'name');
 			 
 			$yewuInfo = array(
@@ -49,7 +49,7 @@ class Yewu extends Wx_Tdkc_Controller {
   				'user_id' => $this->userInfo['id'],
 				'add_uid'	=>  $this->userInfo['id'],
 				'add_username'	=>  $this->userInfo['name'],
-				'group_id' => $groupInfo['id'],
+				//'group_id' => $groupInfo['id'],
 				//'company_name' => $companyName,
 				//'company_id' = $companyInfo['id'],
 			);
@@ -112,7 +112,7 @@ class Yewu extends Wx_Tdkc_Controller {
 	
 	public function accessAll(){
 		$id = $this->postJson['id'];
-		echo urlencode("www.nbxinn.com");
+		
 		$data =$this->Yewu_Model->getFirstByKey($id,'id');
 
 		if($data){

@@ -99,7 +99,7 @@ class Weixin_service extends Base_service {
 	/**
 	 * 绑定手机号码
 	 */
-	public function bindMobile($param,$weixinInfo){
+		public function bindMobile($param,$weixinInfo){
 		
 		self::$CI->load->library(array('Register_service'));
 		$regData = array(
@@ -135,6 +135,7 @@ class Weixin_service extends Base_service {
 			return $member['user_id'];
 		}
 	}
+
 	
 	
 	/**

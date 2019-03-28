@@ -10,6 +10,7 @@ $entity = array(
 'send_ways' => 'varchar',
 'groups' => 'text',
 'users' => 'text',
+'from_id' => 'int',
 'gmt_create' => 'int',
 'gmt_modify' => 'int'
 );
