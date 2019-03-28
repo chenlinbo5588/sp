@@ -26,12 +26,14 @@ class Yewu_service extends Base_service {
 		parent::__construct();
 		
 		self::$CI->load->model(array(
-			'User_Model','Yewu_Model','Work_Group_Model','Yewu_Transfer_Model','Evaluate_Model','User_Extend_Model'
+			'User_Model','Yewu_Model','Work_Group_Model','Yewu_Transfer_Model','Evaluate_Model','User_Extend_Model',
+			'Company_Model'
 		));
 		self::$CI->load->library(array('Basic_data_service','Admin_pm_service'));
 		$this->_userModel = self::$CI->User_Model;
 		$this->_yewuModel = self::$CI->Yewu_Model;
 		$this->_workGroupModel = self::$CI->Work_Group_Model;
+		$this->_companyModel = self::$CI->Company_Model;
 		$this->_yewuTransferModel = self::$CI->Yewu_Transfer_Model;
 		$this->_userExtendModel = self::$CI->User_Extend_Model;
 
@@ -151,4 +153,13 @@ class Yewu_service extends Base_service {
 		}
 		return $result;
 	}
+	public function addCompany($companyInfo,$userInfo){
+		$insertData = $companyInfo;
+		$insertData['add_uid'] = $userInfo['id'];
+		$insertData['add_name'] = $userInfo['name'];
+		$insertData['gmt_create'] = time();
+		$result = $this->_companyModel->_add($insertData);
+		return $result;	
+	}
+	
 }

@@ -119,10 +119,10 @@ class Weixin_service extends Base_service {
 			//更新业主表中  对应的 uid
 			$user = $this->_userModel->getFirstByKey($regData['mobile'],'mobile');
 			if($user){
-				self::$userExtendModel->updateByWhere(array('user_id' => $user['id']),array('uid' => $regData['openid']));
+				self::$userExtendModel->updateByWhere(array('user_id' => $user['id'],'mobile' => $regData['mobile']),array('uid' => $regData['openid']));
 			}else{
 				$newId = $this->_userModel->_add($regData);
-				self::$userExtendModel->updateByWhere(array('user_id' => $newId),array('uid' => $regData['openid']));
+				self::$userExtendModel->updateByWhere(array('user_id' => $newId,'mobile' => $regData['mobile']),array('uid' => $regData['openid']));
 			}
 
 		}

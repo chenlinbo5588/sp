@@ -72,9 +72,11 @@ class Yewu extends Wx_Tdkc_Controller {
 
 		if($this->userInfo){
 			$id = $this->userInfo['uid'];
+			$status = $this->postJson['status'];
 			$data = $this->Yewu_Model->getList(array(
 								'where' => array(
-									'user_id' => $id 
+									'user_id' => $id, 
+									'status' => $status
 								)
 							));
 			foreach($data  as $key => $item){
@@ -272,11 +274,14 @@ class Yewu extends Wx_Tdkc_Controller {
 	  		
 	  	}
 	  }
-	  public function setInvoice(){
+	  public function setCompany(){
 	  	if($this->userInfo){
-	  		if($this->userInfo['company_id']){
-	  			
-	  		}
+			$result = $this->yewu_service->addCompany($this->postJson,$this->userInfo);
+  			if($result){
+  				$this->jsonOutput2(RESP_SUCCESS);
+  			}else{
+  				$this->jsonOutput2(RESP_ERROR);
+  			}
 	  	}
 	  }
 

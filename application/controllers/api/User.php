@@ -27,7 +27,7 @@ class User extends Wx_Tdkc_Controller {
 				$bindInfo = $this->weixin_service->checkUserBind($weixinUser);
 
 				$this->initMemberInfo();
-				
+				print_r($this->memberInfo);
 				if($this->memberInfo){
 					if(11 == strlen($this->memberInfo['mobile'])){
 						$bindInfo['mobile'] = mask_mobile($this->memberInfo['mobile']);
