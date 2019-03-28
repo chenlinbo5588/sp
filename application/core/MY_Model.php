@@ -119,7 +119,6 @@ class MY_Model extends CI_Model {
                 $this->db->where_not_in($val['key'],$val['value']);
             }
         }
-        
         return $this->db->count_all_results($this->getTableRealName());
     }
     

@@ -7,7 +7,8 @@ class Base_service {
 	public static $memberModel = null;
 	public static $adminUserModel = null;
 	public static $settingModel = null;
-	
+	public static $userExtendModel = null;
+	public static $userModel = null;
 	
 	protected $_dataModule;
 	
@@ -16,15 +17,16 @@ class Base_service {
 	public static function initStaticVars(){
 		
 		self::$CI = & get_instance();
-		self::$CI->load->model(array('Member_Model','Adminuser_Model','Setting_Model'));
+		self::$CI->load->model(array('Member_Model','Adminuser_Model','Setting_Model','User_Extend_Model','User_Model'));
 		
 		self::$CI->load->library('form_validation');
 		
 		self::$memberModel = self::$CI->Member_Model;
 		self::$adminUserModel = self::$CI->Adminuser_Model;
-		
 		self::$settingModel = self::$CI->Setting_Model;
+		self::$userExtendModel = self::$CI->User_Extend_Model;
 		
+		self::$userModel = User_Model;
 		
 	}
 	

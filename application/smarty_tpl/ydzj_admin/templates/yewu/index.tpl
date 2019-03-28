@@ -82,7 +82,7 @@
           <td class="company_name"><a href="{admin_site_url(company|cat:'/index')}?id={$item['company_id']}">{$item['company_name']|escape}</td>
           <td class="status">{$item['status']|escape}</td>
           <td class="handle_date">{$item['handle_date']|escape}</td>
-          <td class="money">{$item['money']|escape}</td>
+          <td class="money">{$item['receivable_money']|escape}</td>
           <td class="order_id">{$item['order_id']|escape}</td>
           <td class="align-center">
           	{if isset($permission[$moduleClassName|cat:'/edit'])}<a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}">编辑</a>{/if}&nbsp;&nbsp;

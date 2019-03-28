@@ -56,13 +56,13 @@ class Register_service extends Base_service {
 		list($msec, $sec) = explode(' ', microtime());
 		$msectime = (float)sprintf('%.0f', floatval($msec) * 1000);
 		$regData = array(
-			'username' => date('YmdHms').$msectime,
+			'name' => date('YmdHms').$msectime,
 			'mobile' => date('YmdHms').$msectime,
-			'openid' => $param['weixin_user']['openid'],
-			'unionid' => $param['weixin_user']['unionid'] ? $param['weixin_user']['unionid'] : '',
+			'uid' => $param['weixin_user']['openid'],
+			//'unionid' => $param['weixin_user']['unionid'] ? $param['weixin_user']['unionid'] : '',
 			'channel' => 1,   //小程序注册进入的
 		);
-		$resp = $this->createMember($regData);
+		$resp = $this->createUser($regData);
 		return $resp;
 	}
 	
@@ -70,13 +70,13 @@ class Register_service extends Base_service {
 	/**
 	 * 创建会员
 	 */
-	public function createMember($regParam){
+	public function createUser($regParam){
 		$return = $this->formatArrayReturn();
 		
 		$regParam['reg_ip'] = self::$CI->input->ip_address();
 		$regParam['reg_date'] = self::$CI->input->server('REQUEST_TIME');
 				
-		$uid = self::$memberModel->_add($regParam);
+		$uid = self::$userExtendModel->_add($regParam);
 		
 		if($uid > 0){
 			$return = $this->successRetun(array('uid' => $uid));

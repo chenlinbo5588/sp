@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Register extends Wx_Controller {
+class Register extends Wx_Tdkc_Controller {
 	
 	
 	public function __construct(){
@@ -168,11 +168,9 @@ class Register extends Wx_Controller {
 					break;
 				}
 				
-				
 				//$this->register_service->getIpLimit($this->input->ip_address());
 				
 				$uid = $this->weixin_service->bindMobile($this->postJson,$this->sessionInfo['weixin_user']);
-				
 				if(!$uid){
 					$rt['message'] = '绑定失败';
 					break;

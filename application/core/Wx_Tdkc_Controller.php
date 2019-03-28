@@ -68,7 +68,6 @@ class Wx_Tdkc_Controller extends MY_Controller {
 		
 		//微信用户
 		$weixinUser = $this->sessionInfo['weixin_user'];
-		
 		if($weixinUser){
 			
 			/*
@@ -80,15 +79,14 @@ class Wx_Tdkc_Controller extends MY_Controller {
 			}
 			*/
 			
-			$this->memberInfo = $this->yewu_service->initUserInfoBySession($weixinUser,'openid');
-			
+			$this->memberInfo = $this->yewu_service->initUserInfoBySession($weixinUser,'uid');
 			if($this->memberInfo){
 				$this->userInfo = $this->yewu_service->getUserInfoById($this->memberInfo['uid']);
 			}else{
 				$data = $this->register_service->setNewMember($this->sessionInfo);
 				if('success' == $data['code']){
-					$this->memberInfo = $this->yewu_service->initUserInfoBySession($weixinUser,'openid');
-					$this->userInfo = $this->yewu_service->getUserInfoById($this->memberInfo['uid']);
+					$this->memberInfo = $this->yewu_service->initUserInfoBySession($weixinUser,'uid');
+					$this->userInfo = $this->yewu_service->getUserInfoById($this->memberInfo['user_id']);
 				}else{
 					log_message('error',"新增会员出错,错误信息weixinUser:".$weixinUser);
 				}

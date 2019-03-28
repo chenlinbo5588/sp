@@ -15,12 +15,12 @@ class Weixin_service extends Base_service {
 		
 		self::$CI->load->library(array('Weixin_mp_api'));
 		
-		self::$CI->load->model('Weixin_Message_Model');
+		self::$CI->load->model('Weixin_Message_Model','User_Model');
 		
 		$this->_mpApi = self::$CI->weixin_mp_api;
 		
 		$this->_weixinMessageModel = self::$CI->Weixin_Message_Model;
-		
+		$this->_userModel = self::$CI->User_Model;
 	}
 	
 	
@@ -103,31 +103,36 @@ class Weixin_service extends Base_service {
 		
 		self::$CI->load->library(array('Register_service'));
 		$regData = array(
-			'username' => $param['phoneNo'],
+			'name' => $param['name'],
 			'mobile' => $param['phoneNo'],
 			'openid' => $weixinInfo['openid'],
 			'unionid' => $weixinInfo['unionid'] ? $weixinInfo['unionid'] : '',
+			'user_type' => 1, //默认新绑定的用户为普通用户
 			'channel' => 1,   //小程序注册进入的
 		);
-		$member = self::$memberModel->getFirstByKey($regData['openid'],'openid');
-		self::$memberModel->beginTrans();
-		self::$memberModel->update($regData,array('uid' => $member['uid']));
+		$member = self::$userExtendModel->getFirstByKey($regData['openid'],'uid');
 		
-		if($member['uid']){
-			self::$CI->load->model(array('User_Model'));
+		self::$userExtendModel->beginTrans();
+		self::$userExtendModel->update($regData,array('id' => $member['id']));
+		
+		if($member){
 			//更新业主表中  对应的 uid
-			
-			
-			//自动更新没有绑定过的
-			self::$CI->User_Model->updateByWhere(array('uid' => $member['uid']),array('mobile' => $param['phoneNo']));
+			$user = $this->_userModel->getFirstByKey($regData['mobile'],'mobile');
+			if($user){
+				self::$userExtendModel->updateByWhere(array('user_id' => $user['id']),array('uid' => $regData['openid']));
+			}else{
+				$newId = $this->_userModel->_add($regData);
+				self::$userExtendModel->updateByWhere(array('user_id' => $newId),array('uid' => $regData['openid']));
+			}
+
 		}
 		
-		if(self::$memberModel->getTransStatus() === FALSE){
-			self::$memberModel->rollBackTrans();
+		if(self::$userExtendModel->getTransStatus() === FALSE){
+			self::$userExtendModel->rollBackTrans();
 			return false;
 		}else{
-			self::$memberModel->commitTrans();
-			return $member['uid'];
+			self::$userExtendModel->commitTrans();
+			return $member['user_id'];
 		}
 	}
 	

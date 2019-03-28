@@ -47,7 +47,7 @@
           	<select name="user_type">
 	          <option value="">请选择...</option>
 	          {foreach from=$userType key=key item=item}
-	          <option {if $info['user_type'] == $item}selected{/if} value="{$key}">{$item}</option>
+	          <option {if $info['user_type'] == $key}selected{/if} value="{$key}">{$item}</option>
 	          {/foreach}
 	        </select>
           </td>

@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class User extends Wx_Controller {
+class User extends Wx_Tdkc_Controller {
 	
 	public function __construct(){
 		parent::__construct();
@@ -45,6 +45,20 @@ class User extends Wx_Controller {
 			
 		}else{
 			$this->jsonOutput2('参数错误');
+		}
+	}
+	
+	public function getUserInfo(){
+		if($this->userInfo){
+			$userId = $this->postJson('uesr_id');
+			if($userId){
+				$userInfo = $this->User_Model->getList(array(
+					'select' => 'id,mobile,name,company_name,group_name,user_type',
+					'where' => array('id' => $userId),
+				));
+				if($userInfo)
+					$this->jsonOutput2(RESP_SUCCESS,$userInfo);
+			}
 		}
 	}
 

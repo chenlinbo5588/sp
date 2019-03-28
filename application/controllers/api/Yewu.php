@@ -69,8 +69,9 @@ class Yewu extends Wx_Tdkc_Controller {
 	
 	
 	public function getYewuList(){
-		$id = $this->userInfo['uid'];
+
 		if($this->userInfo){
+			$id = $this->userInfo['uid'];
 			$data = $this->Yewu_Model->getList(array(
 								'where' => array(
 									'user_id' => $id 
@@ -179,7 +180,7 @@ class Yewu extends Wx_Tdkc_Controller {
 					$this->jsonOutput2(RESP_SUCCESS);
 				}
 			}
-			$this->jsonOutput2(RESP_ERROR,array('message' => '请选择业务和移交小组'));
+			$this->jsonOutput2(RESP_ERROR,array('status' => '请选择业务和移交小组'));
 		}else{
 			$this->jsonOutput2(UNBINDED,$this->unBind);
 		}
@@ -202,7 +203,6 @@ class Yewu extends Wx_Tdkc_Controller {
 			}
 		}
 	}
-
 
 	public function getopenid(){
 		
@@ -229,6 +229,55 @@ class Yewu extends Wx_Tdkc_Controller {
 	
 	    curl_close($ch);
 	    return $output;
+	  }
+	  
+	  public function setYewuMoney(){
+	  	if($this->userInfo){
+	  		$yewuId = $this->postJson['yewu_id'];
+	  		$money = $this->postJson['money'];
+	  		if($yewuId && $money){
+	  			$result = $this->yewu_service->setYewuMoney($yewuId,$money,$this->userInfo);
+	  			if($result){
+	  				$this->jsonOutput2(RESP_SUCCESS);
+	  			}else{
+	  				$this->jsonOutput2(RESP_ERROR);
+	  			}
+	  		}
+	  	}
+	  }
+	  
+	  public function setEvaluate(){
+	  	if($this->userInfo){
+	  		$yewuId = $this->postJson['yewu_id'];
+	  		$yewuInfo = $this->Yewu_Model->getFirstByKey($yewuId,'id');
+	  		$score = $this->postJson['score'];
+	  		$content = $this->postJson['content'];
+	  		if($yewuInfo && $score){
+	  			$result = $this->Evaluate_Model->_add(array(
+	  				'yewu_id' => $yewuId,
+	  				'worker_id' => $yewuInfo['worker_id'],
+	  				'worker_name' => $yewuInfo['worker_name'],
+	  				'score' => $score,
+	  				'content' => $content,
+					'add_uid' => $this->userInfo['uid'],
+					'add_username' => $this->userInfo['name'],
+					'gmt_create' => time(),
+	  			));
+	  			if($result){
+	  				$this->jsonOutput2(RESP_SUCCESS);
+	  			}else{
+	  				$this->jsonOutput2(RESP_ERROR);
+	  			}
+	  		}
+	  		
+	  	}
+	  }
+	  public function setInvoice(){
+	  	if($this->userInfo){
+	  		if($this->userInfo['company_id']){
+	  			
+	  		}
+	  	}
 	  }
 
 }

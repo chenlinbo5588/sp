@@ -26,13 +26,14 @@ class Yewu_service extends Base_service {
 		parent::__construct();
 		
 		self::$CI->load->model(array(
-			'User_Model','Yewu_Model','Work_Group_Model','Yewu_Transfer_Model',
+			'User_Model','Yewu_Model','Work_Group_Model','Yewu_Transfer_Model','Evaluate_Model','User_Extend_Model'
 		));
 		self::$CI->load->library(array('Basic_data_service','Admin_pm_service'));
 		$this->_userModel = self::$CI->User_Model;
 		$this->_yewuModel = self::$CI->Yewu_Model;
 		$this->_workGroupModel = self::$CI->Work_Group_Model;
 		$this->_yewuTransferModel = self::$CI->Yewu_Transfer_Model;
+		$this->_userExtendModel = self::$CI->User_Extend_Model;
 
 	}
 	public function getUserInfoById($pId,$key = 'uid'){
@@ -55,11 +56,10 @@ class Yewu_service extends Base_service {
 	 * 根据会话 初始话 相关数据
 	 * 
 	 */
-	public function initUserInfoBySession($pSession,$idKey = 'openid'){
+	public function initUserInfoBySession($pSession,$idKey = 'uid'){
 		
-		$idVal = $pSession[$idKey];
-		
-		return self::$memberModel->getFirstByKey($idVal,$idKey);
+		$idVal = $pSession['openid'];
+		return $this->_userExtendModel->getFirstByKey($idVal,$idKey);
 		
 	}
 	
@@ -118,7 +118,7 @@ class Yewu_service extends Base_service {
 						'gmt_modify' => time(),
 						
 					),
-					array('where' => array('id' => $this->postJson['yewu_id']))
+					array('where' => array('id' => $param['yewu_id']))
 				);
 		}
 		if($this->_yewuModel->getTransStatus() === FALSE){
@@ -128,5 +128,27 @@ class Yewu_service extends Base_service {
 			$this->_yewuModel->commitTrans();
 			return true;
 		}
+	}
+	
+	public function setYewuMoney($yewuId,$money,$user){
+		if($money<5000){
+			$result = $this->_yewuModel->updateByCondition(array(
+				'plan_money' => $money,
+				'receivable_money' => $money,
+				'status' => 4,
+				'edit_uid' => $user['uid'],
+				'edit_username' => $user['name'],
+				'gmt_modify' => time(),
+			),array('where' => array('id' => $yewuId)));
+		}else{
+			$result = $this->_yewuModel->updateByCondition(array(
+				'planmoney' => $money,
+				'status' => 3,
+				'edit_uid' => $user['uid'],
+				'edit_username' => $user['name'],
+				'gmt_modify' => time(),
+			),array('where' => array('id' => $yewuId)));	
+		}
+		return $result;
 	}
 }
