@@ -8,6 +8,7 @@ $entity = array(
 'contact_number' => 'varchar',
 'business_license' => 'varchar',
 'status' => 'tinyint',
+'user_id' => 'int',
 'add_uid' => 'int',
 'add_username' => 'varchar',
 'edit_uid' => 'int',

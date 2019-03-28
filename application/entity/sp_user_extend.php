@@ -7,6 +7,7 @@ $entity = array(
 'user_id' => 'int',
 'user_from' => 'int',
 'name' => 'varchar',
+'mobile' => 'varchar',
 'sex' => 'int',
 'portrait' => 'varchar',
 'region' => 'varchar',
