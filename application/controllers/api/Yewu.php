@@ -46,8 +46,8 @@ class Yewu extends Wx_Tdkc_Controller {
   				'real_name' => $realName,
   				'yewu_describe' => $yewuDescribe,
   				'service_area' => $serviceAreaList[$serviceArea]['id'],
-  				'user_id' => $this->userInfo['uid'],
-				'add_uid'	=>  $this->userInfo['uid'],
+  				'user_id' => $this->userInfo['id'],
+				'add_uid'	=>  $this->userInfo['id'],
 				'add_username'	=>  $this->userInfo['name'],
 				'group_id' => $groupInfo['id'],
 				//'company_name' => $companyName,
@@ -71,14 +71,13 @@ class Yewu extends Wx_Tdkc_Controller {
 	public function getYewuList(){
 
 		if($this->userInfo){
-			$id = $this->userInfo['uid'];
+			$id = $this->userInfo['id'];
+			$ids[] = $id;
 			$status = $this->postJson['status'];
-			if($status){
-				$data = $this->Yewu_Model->getList(array(
-					'where' => array(
-						'user_id' => $id, 
-						'status' => $status
-					)));
+			$condition['where_in'][] = array('key' => 'status', 'value' => $status);
+			$condition['where_in'][] = array('key' => 'user_id', 'value' => $ids);
+			if(is_array($status)){
+				$data = $this->Yewu_Model->getList($condition);
 			}else{
 				$data = $this->Yewu_Model->getList(array(
 					'where' => array(
@@ -162,7 +161,7 @@ class Yewu extends Wx_Tdkc_Controller {
 						'worker_mobile' => $groupInfo['group_leader_mobile'],
 						'current_group' => $groupInfo['id'],
 						'status' => 10,
-						'edit_uid' => $this->userInfo['uid'],
+						'edit_uid' => $this->userInfo['id'],
 						'edit_username' => $this->userInfo['name'],
 						'gmt_modify' => time(),
 						
@@ -177,7 +176,7 @@ class Yewu extends Wx_Tdkc_Controller {
 					'group_id_to' => $groupInfo['id'],
 					'group_name_to' => $groupInfo['group_name'],
 					'status' => 1,
-					'add_uid' => $this->userInfo['uid'],
+					'add_uid' => $this->userInfo['id'],
 					'add_username' => $this->userInfo['name'],
 					'gmt_create' => time(),
 				));
@@ -268,7 +267,7 @@ class Yewu extends Wx_Tdkc_Controller {
 	  				'worker_name' => $yewuInfo['worker_name'],
 	  				'score' => $score,
 	  				'content' => $content,
-					'add_uid' => $this->userInfo['uid'],
+					'add_uid' => $this->userInfo['id'],
 					'add_username' => $this->userInfo['name'],
 					'gmt_create' => time(),
 	  			));

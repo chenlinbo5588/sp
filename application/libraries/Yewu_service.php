@@ -38,7 +38,7 @@ class Yewu_service extends Base_service {
 		$this->_userExtendModel = self::$CI->User_Extend_Model;
 
 	}
-	public function getUserInfoById($pId,$key = 'uid'){
+	public function getUserInfoById($pId,$key = 'id'){
 		
 		$uesrList = $this->_userModel->getList(array(
 			'where' => array(
