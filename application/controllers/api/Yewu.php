@@ -73,12 +73,19 @@ class Yewu extends Wx_Tdkc_Controller {
 		if($this->userInfo){
 			$id = $this->userInfo['uid'];
 			$status = $this->postJson['status'];
-			$data = $this->Yewu_Model->getList(array(
-								'where' => array(
-									'user_id' => $id, 
-									'status' => $status
-								)
-							));
+			if($status){
+				$data = $this->Yewu_Model->getList(array(
+					'where' => array(
+						'user_id' => $id, 
+						'status' => $status
+					)));
+			}else{
+				$data = $this->Yewu_Model->getList(array(
+					'where' => array(
+						'user_id' => $id, 
+				)));
+			}
+
 			foreach($data  as $key => $item){
 				$data[$key]['time'] =date("Y-m-d H:i",$data[$key]['gmt_create']) ;
 				$data[$key]['mobile'] =mask_mobile($data[$key]['mobile']);
