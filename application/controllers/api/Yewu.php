@@ -7,7 +7,7 @@ class Yewu extends Wx_Tdkc_Controller {
 	public function __construct(){
 		parent::__construct();
     	
-    	$this->load->library('Yewu_service','Admin_pm_service');
+    	$this->load->library('Yewu_service','Admin_pm_service','Basic_data_service');
 
 	}
 
@@ -37,7 +37,7 @@ class Yewu extends Wx_Tdkc_Controller {
 				break;
 			}*/
 			
-			 //$groupInfo = $this->yewu_service->getGroupInfo($serviceArea);
+			//$groupInfo = $this->yewu_service->getGroupInfo($serviceArea);
 			//$companyInfo = $this->Company_Model->getFirstByKey($companyName,'name');
 			 
 			$yewuInfo = array(
@@ -50,8 +50,8 @@ class Yewu extends Wx_Tdkc_Controller {
 				'add_uid'	=>  $this->userInfo['id'],
 				'add_username'	=>  $this->userInfo['name'],
 				//'group_id' => $groupInfo['id'],
-				//'company_name' => $companyName,
-				//'company_id' = $companyInfo['id'],
+				'company_name' => $companyName,
+				//'company_id' => $companyInfo['id'],
 			);
 
 
@@ -290,6 +290,19 @@ class Yewu extends Wx_Tdkc_Controller {
   			}
 	  	}
 	  }
+	  
+	  public function getarea(){
+	  	if($this->userInfo){
+			$area = $this->basic_data_service->getTopChildList('服务区域');
+			
+			if($area){
+				$data = array(
+				'data' =>$area ,
+			);
+				$this->jsonOutput2(RESP_SUCCESS,$data);
+			}
+	  	}
 
+	}
 }
 

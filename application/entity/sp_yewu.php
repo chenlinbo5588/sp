@@ -18,6 +18,7 @@ $entity = array(
 'service_area' => 'varchar',
 'group_id' => 'int',
 'current_group' => 'int',
+'company_name' => 'varchar',
 'company_id' => 'int',
 'has_expire' => 'tinyint',
 'handle_date' => 'int',
