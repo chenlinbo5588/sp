@@ -130,6 +130,7 @@ class Yewu extends Wx_Tdkc_Controller {
 	public function getYewuWorkCategory(){
 		if($this->userInfo){
 			$workCategory = $this->basic_data_service->getTopChildList('工作类别');
+			$workCategory = array_values($workCategory);
 			 if(is_array($workCategory)){
 			 	$this->jsonOutput2(RESP_SUCCESS,$workCategory);
 			 }
@@ -291,10 +292,13 @@ class Yewu extends Wx_Tdkc_Controller {
 	  	}
 	  }
 	  
+	  /**
+	   * 获得服务区域
+	   */
 	  public function getarea(){
 	  	if($this->userInfo){
 			$area = $this->basic_data_service->getTopChildList('服务区域');
-			
+			$area = array_values($area);
 			if($area){
 				$data = array(
 				'data' =>$area ,
