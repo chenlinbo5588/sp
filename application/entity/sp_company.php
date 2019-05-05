@@ -6,6 +6,7 @@ $entity = array(
 'name' => 'varchar',
 'corporation' => 'varchar',
 'contact_number' => 'varchar',
+'companyAddress' => 'varchar',
 'business_license' => 'varchar',
 'status' => 'tinyint',
 'user_id' => 'int',
@@ -14,5 +15,8 @@ $entity = array(
 'edit_uid' => 'int',
 'edit_username' => 'varchar',
 'gmt_create' => 'int',
-'gmt_modify' => 'int'
+'gmt_modify' => 'int',
+'telephone' => 'varchar',
+'bankAccount' => 'varchar',
+'bankName' => 'varchar'
 );

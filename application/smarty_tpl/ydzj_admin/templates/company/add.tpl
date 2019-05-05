@@ -53,8 +53,17 @@
 
 
   </form>
-  <script type="text/javascript">
-  	var province_idcard = {$province_idcard},submitUrl = [new RegExp("{$uri_string}")];
-  </script>
   <script type="text/javascript" src="{resource_url('js/service/yezhu.js',true)}"></script>
+  <script type="text/javascript">
+	submitUrl = [new RegExp("{$uri_string}")];
+  </script>
+  <script>
+	  $(function(){
+		  	$( ".datepicker" ).datepicker();
+			
+			$.loadingbar({ text: "正在提交..." , urls: submitUrl , container : "#infoform" });
+			bindAjaxSubmit("#infoform");
+			
+		});
+	</script>
 {include file="common/main_footer.tpl"}

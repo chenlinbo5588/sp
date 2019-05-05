@@ -59,13 +59,13 @@ class Yewu extends Wx_Tdkc_Controller {
 			if($newYewuId){
 				$this->admin_pm_service->addYewuMessage($yewuInfo,$newYewuId);
 				$this->jsonOutput2(RESP_SUCCESS);
+			}else{
+				$this->jsonOutput2(RESP_ERROR);
 			}
 			
 		}
 	}
-	public function getyewu(){
-		$this->jsonOutput2(RESP_SUCCESS);
-	}
+
 	
 	
 	public function getYewuList(){
@@ -95,6 +95,8 @@ class Yewu extends Wx_Tdkc_Controller {
 			);
 			if($yewuList){
 				$this->jsonOutput2(RESP_SUCCESS,$yewuList);
+			}else{
+				$this->jsonOutput2(RESP_ERROR);
 			}
 		}
 	}
@@ -121,6 +123,8 @@ class Yewu extends Wx_Tdkc_Controller {
 				'mobile' => $data['mobile'],
 			);
 			$this->jsonOutput2(RESP_SUCCESS,$mobileName);
+		}else{
+			$this->jsonOutput2(RESP_ERROR);
 		}
 	}
 
@@ -133,6 +137,8 @@ class Yewu extends Wx_Tdkc_Controller {
 			$workCategory = array_values($workCategory);
 			 if(is_array($workCategory)){
 			 	$this->jsonOutput2(RESP_SUCCESS,$workCategory);
+			 }else{
+			 	$this->jsonOutput2(RESP_ERROR);
 			 }
 			
 		}
@@ -254,7 +260,9 @@ class Yewu extends Wx_Tdkc_Controller {
 	  		}
 	  	}
 	  }
-	  
+	  /**
+	   * 评价
+	   */
 	  public function setEvaluate(){
 	  	if($this->userInfo){
 	  		$yewuId = $this->postJson['yewu_id'];
@@ -304,9 +312,59 @@ class Yewu extends Wx_Tdkc_Controller {
 				'data' =>$area ,
 			);
 				$this->jsonOutput2(RESP_SUCCESS,$data);
+			}else{
+				$this->jsonOutput2(RESP_ERROR);
 			}
-	  	}
+	  	}else{
+			$this->jsonOutput2(UNBINDED,$this->unBind);
+		}
 
+	}
+	/**
+	 * 获得业务过程
+	 */
+	public function getYewuDetail(){
+	  	if($this->userInfo){
+			$id = $this->postJson['id'];
+			$yewuDetailList = $this->Yewu_Detail_Model->getList(array('where' => array('yewu_id' => $id)));
+			$OperationList = Operation::$typeName;
+			foreach($yewuDetailList as $key => $item){
+				$yewuDetailList[$key]['operation'] = $OperationList[$item['operation']];
+			}
+			$this->jsonOutput2(RESP_SUCCESS,array('yewuDetailList' => $yewuDetailList));
+	  	}else{
+			$this->jsonOutput2(UNBINDED,$this->unBind);
+		}
+	}
+	
+	/**
+	 * 根据id获得业务
+	 */
+	public function getYewuById(){
+	  	if($this->userInfo){
+			$id = $this->postJson['id'];
+			$yewuInfo = $this->Yewu_Model->getFirstByKey($id,'id');
+			$this->jsonOutput2(RESP_SUCCESS,array('yewuInfo' => $yewuInfo));
+	  	}else{
+			$this->jsonOutput2(UNBINDED,$this->unBind);
+		}
+	}
+	
+	/**
+	 * 进行下一阶段
+	 */
+	public function nextStage(){
+	  	if($this->userInfo){
+			$status = $this->postJson['status'];
+			$yewuID = $this->postJson['yeuw_id'];
+			if($this->wuye_service->addYewuDetail($this->userInfo,$status,$yewuID)){
+				$this->jsonOutput2(RESP_SUCCESS);
+			}else{
+				$this->jsonOutput2(RESP_ERROR);
+			}
+	  	}else{
+			$this->jsonOutput2(UNBINDED,$this->unBind);
+		}
 	}
 }
 

@@ -1,15 +1,32 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-class WorkCategory{
-	//房产确权
-	public static $houseRight = 1;
+class operation{
+	//提交
+	public static $submit = 1;
 	
-	//土地测量
-	public static $landSurvey = 2;
+	//受理
+	public static $accept = 2;
+	
+	//审核
+	public static $examine = 3;
+	
+	//完成
+	public static $complete = 4;
+	
+	//结款
+	public static $payment = 5;
+	
+	//开票
+	public static $invoice = 6;
+	
 	
 	public static $typeName = array(
-		1 => '房产确权',
-		2 => '土地测量',
+		1 => '提交',
+		2 => '受理',
+		3 => '审核',
+		4 => '完成',
+		5 => '结款',
+		6 => '开票',
 	);
 }
 
@@ -18,9 +35,6 @@ class WorkCategory{
  * 物业核心服务
  */
 class Yewu_service extends Base_service {
-	
-	
-	
 	
 	public function __construct(){
 		parent::__construct();
@@ -160,6 +174,19 @@ class Yewu_service extends Base_service {
 		$insertData['gmt_create'] = time();
 		$result = $this->_companyModel->_add($insertData);
 		return $result;	
+	}
+	
+	public function addYewuDetail($userInfo,$operation,$yewu_id){
+		$addInfo = array(
+			'yewu_id' => $yewu_id,
+			'operation' => $operation,
+			'time' => time(),
+			'name' => $userInfo['name'],
+			'mobile' => $userInfo['mobile'],
+		);
+		$result =  $thus->Yewu_Detail_Model->_add($addInfo);
+		return $result;
+		
 	}
 	
 }
