@@ -54,6 +54,7 @@ class Yewu extends Wx_Tdkc_Controller {
   				'user_name' => $this->userInfo['name'],
 				'add_uid'	=>  $this->userInfo['id'],
 				'add_username'	=>  $this->userInfo['name'],
+				'status' => Operation::$submit,
 				//'group_id' => $groupInfo['id'],
 				'company_name' => $company_name,
 				//'company_id' => $companyInfo['id'],
@@ -362,7 +363,7 @@ class Yewu extends Wx_Tdkc_Controller {
 	public function getYewuDetail(){
 	  	if($this->userInfo){
 			$id = $this->postJson['id'];
-			$yewuDetailList = $this->Yewu_Detail_Model->getList(array('where' => array('yewu_id' => $id)));
+			$yewuDetailList = $this->Yewu_Detail_Model->getList(array('order' => 'operation','where' => array('yewu_id' => $id)));
 			$OperationList = Operation::$typeName;
 			foreach($yewuDetailList as $key => $item){
 				$yewuDetailList[$key]['operation'] = $OperationList[$item['operation']];
@@ -381,7 +382,9 @@ class Yewu extends Wx_Tdkc_Controller {
 	public function getYewuById(){
 	  	if($this->userInfo){
 			$id = $this->postJson['id'];
+			$workCategory = $this->basic_data_service->getTopChildList('工作类别');
 			$yewuInfo = $this->Yewu_Model->getFirstByKey($id,'id');
+			$yewuInfo['work_category'] = $workCategory[$yewuInfo['work_category']]['show_name'];
 			$this->jsonOutput2(RESP_SUCCESS,array('yewuInfo' => $yewuInfo));
 	  	}else{
 			$this->jsonOutput2(UNBINDED,$this->unBind);
@@ -413,7 +416,7 @@ class Yewu extends Wx_Tdkc_Controller {
 	 */
 	public function yewuAcceptance(){
 	  	if($this->userInfo){
-			$yewuID = $this->postJson['yeuw_id'];
+			$yewuID = $this->postJson['yewu_id'];
 			$workCategory = $this->postJson['work_category'];
 			if($yewuID){
 				$result = $this->Yewu_Model->updateByCondition(
@@ -425,7 +428,7 @@ class Yewu extends Wx_Tdkc_Controller {
 					),
 					array('where' => array('id' => $yewuID))
 				);
-				$this->yewu_service->addYewuDetail($this->userInfo,Operation::$accept,$yewuID);
+				//$this->yewu_service->addYewuDetail($this->userInfo,Operation::$accept,$yewuID);
 				if($result){
 					$this->jsonOutput2(RESP_SUCCESS);
 				}
