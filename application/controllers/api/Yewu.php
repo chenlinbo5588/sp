@@ -46,15 +46,15 @@ class Yewu extends Wx_Tdkc_Controller {
 			 
 			$yewuInfo = array(
   				'mobile' => $mobile,
-  				'work_category' => $workCategory,
-  				'real_name' => $realName,
-  				'yewu_describe' => $yewuDescribe,
-  				'service_area' => $serviceAreaList[$serviceArea]['id'],
+  				'work_category' => $work_category,
+  				'real_name' => $real_name,
+  				'yewu_describe' => $yewu_describe,
+  				'service_area' => $serviceAreaList[$service_area]['id'],
   				'user_id' => $this->userInfo['id'],
 				'add_uid'	=>  $this->userInfo['id'],
 				'add_username'	=>  $this->userInfo['name'],
 				//'group_id' => $groupInfo['id'],
-				'company_name' => $companyName,
+				'company_name' => $company_name,
 				//'company_id' => $companyInfo['id'],
 			);
 
@@ -442,11 +442,13 @@ class Yewu extends Wx_Tdkc_Controller {
 					),
 					array('where' => array('id' => $yewuID))
 				);
-				$this->yewu_service->addYewuDetail($this->userInfo,Operation::$accept,$yewuID);
+				
 			}
 	  	}else{
 			$this->jsonOutput2(UNBINDED,$this->unBind);
 		}
 	}
+	
+	
 }
 
