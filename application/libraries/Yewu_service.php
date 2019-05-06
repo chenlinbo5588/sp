@@ -1,6 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-class operation{
+class Operation{
 	//提交
 	public static $submit = 1;
 	
@@ -41,7 +41,7 @@ class Yewu_service extends Base_service {
 		
 		self::$CI->load->model(array(
 			'User_Model','Yewu_Model','Work_Group_Model','Yewu_Transfer_Model','Evaluate_Model','User_Extend_Model',
-			'Company_Model'
+			'Company_Model','Yewu_Detail_Model'
 		));
 		self::$CI->load->library(array('Basic_data_service','Admin_pm_service'));
 		$this->_userModel = self::$CI->User_Model;
@@ -50,6 +50,7 @@ class Yewu_service extends Base_service {
 		$this->_companyModel = self::$CI->Company_Model;
 		$this->_yewuTransferModel = self::$CI->Yewu_Transfer_Model;
 		$this->_userExtendModel = self::$CI->User_Extend_Model;
+		$this->_yewuDetailModel = self::$CI->Yewu_Detail_Model;
 
 	}
 	public function getUserInfoById($pId,$key = 'id'){
@@ -184,7 +185,7 @@ class Yewu_service extends Base_service {
 			'name' => $userInfo['name'],
 			'mobile' => $userInfo['mobile'],
 		);
-		$result =  $thus->Yewu_Detail_Model->_add($addInfo);
+		$result = $this->_yewuDetailModel->_add($addInfo);
 		return $result;
 		
 	}
