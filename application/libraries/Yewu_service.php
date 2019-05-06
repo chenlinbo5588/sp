@@ -1,32 +1,36 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 class Operation{
-	//提交
+	//发起业务
 	public static $submit = 1;
 	
-	//受理
+	//业务受理
 	public static $accept = 2;
 	
-	//审核
+	//作业中
 	public static $examine = 3;
 	
-	//完成
-	public static $complete = 4;
+	//审核
+	public static $examine = 4;
+	
+	//已完成
+	public static $complete = 5;
 	
 	//结款
-	public static $payment = 5;
+	public static $payment = 6;
 	
 	//开票
-	public static $invoice = 6;
+	public static $invoice = 7;
 	
 	
 	public static $typeName = array(
-		1 => '提交',
-		2 => '受理',
-		3 => '审核',
-		4 => '完成',
-		5 => '结款',
-		6 => '开票',
+		1 => '发起业务',
+		2 => '业务受理',
+		3 => '作业中',
+		4 => '审核',
+		5 => '已完成',
+		6 => '结款',
+		7 => '开票',
 	);
 }
 

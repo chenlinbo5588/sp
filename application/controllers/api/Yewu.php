@@ -367,6 +367,11 @@ class Yewu extends Wx_Tdkc_Controller {
 			$OperationList = Operation::$typeName;
 			foreach($yewuDetailList as $key => $item){
 				$yewuDetailList[$key]['operation'] = $OperationList[$item['operation']];
+				if('发起业务' == $yewuDetailList[$key]['operation']){
+					$yewuDetailList[$key]['identity'] = '申请人';
+				}elseif('业务受理' == $yewuDetailList[$key]['operation']){
+					$yewuDetailList[$key]['identity'] = '作业人员';
+				}
 			}
 			$this->jsonOutput2(RESP_SUCCESS,array('yewuDetailList' => $yewuDetailList));
 	  	}else{
