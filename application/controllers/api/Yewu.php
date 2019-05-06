@@ -51,6 +51,7 @@ class Yewu extends Wx_Tdkc_Controller {
   				'yewu_describe' => $yewu_describe,
   				'service_area' => $serviceAreaList[$service_area]['id'],
   				'user_id' => $this->userInfo['id'],
+  				'user_name' => $this->userInfo['name'],
 				'add_uid'	=>  $this->userInfo['id'],
 				'add_username'	=>  $this->userInfo['name'],
 				//'group_id' => $groupInfo['id'],
@@ -413,35 +414,21 @@ class Yewu extends Wx_Tdkc_Controller {
 	public function yewuAcceptance(){
 	  	if($this->userInfo){
 			$yewuID = $this->postJson['yeuw_id'];
+			$workCategory = $this->postJson['work_category'];
 			if($yewuID){
-				$this->Yewu_Model->updateByCondition(
+				$result = $this->Yewu_Model->updateByCondition(
 					array(
 						'status' => Operation::$accept,
 						'worker_name' => $this->userInfo['name'],
-						'worker_mobile' => $this->userInfo['mobile'],	
+						'worker_mobile' => $this->userInfo['mobile'],
+						'work_category' => $workCategory,	
 					),
 					array('where' => array('id' => $yewuID))
 				);
 				$this->yewu_service->addYewuDetail($this->userInfo,Operation::$accept,$yewuID);
-			}
-	  	}else{
-			$this->jsonOutput2(UNBINDED,$this->unBind);
-		}
-	}
-	
-	
-	
-	public function setWorkCategory(){
-	  	if($this->userInfo){
-			$yewuID = $this->postJson['yeuw_id'];
-			$workCategory = $this->postJson['work_category'];
-			if($yewuID){
-				$this->Yewu_Model->updateByCondition(
-					array(
-						'work_category' => $workCategory
-					),
-					array('where' => array('id' => $yewuID))
-				);
+				if($result){
+					$this->jsonOutput2(RESP_SUCCESS);
+				}
 				
 			}
 	  	}else{
