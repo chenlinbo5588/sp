@@ -429,5 +429,24 @@ class Yewu extends Wx_Tdkc_Controller {
 		}
 	}
 	
+	
+	
+	public function setWorkCategory(){
+	  	if($this->userInfo){
+			$yewuID = $this->postJson['yeuw_id'];
+			$workCategory = $this->postJson['work_category'];
+			if($yewuID){
+				$this->Yewu_Model->updateByCondition(
+					array(
+						'work_category' => $workCategory
+					),
+					array('where' => array('id' => $yewuID))
+				);
+				$this->yewu_service->addYewuDetail($this->userInfo,Operation::$accept,$yewuID);
+			}
+	  	}else{
+			$this->jsonOutput2(UNBINDED,$this->unBind);
+		}
+	}
 }
 
