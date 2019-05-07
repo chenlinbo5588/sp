@@ -260,7 +260,7 @@ class Weixin_service extends Base_service {
 			       "value" => date('Y-m-d H:i:s'),
 			   ),
 			   'keyword4' => array(
-			       "value" => $orderInfo['goods_name'],
+			       "value" => $orderInfo['yewu_name'],
 			   ),
 			   'keyword5' => array(
 			       "value" => sprintf("%.2f",$orderInfo['amount']/100),
@@ -297,7 +297,7 @@ class Weixin_service extends Base_service {
 			       "value" => $orderInfo['order_id'],
 			   ),
 			   'keyword2' => array(
-			       "value" => $orderInfo['goods_name'],
+			       "value" => $orderInfo['yewu_name'],
 			   ),
 			   'keyword3' => array(
 			       "value" => $orderInfo['extra_info']['booking_time'],
@@ -356,7 +356,7 @@ class Weixin_service extends Base_service {
 			       "value" => date('Y-m-d H:i:s'),
 			   ),
 			   'keyword3' => array(
-			       "value" => $orderInfo['goods_name'],
+			       "value" => $orderInfo['yewu_name'],
 			   ),
 			   'keyword4' => array(
 			       "value" => sprintf("%.2f",$orderInfo['amount']/100),

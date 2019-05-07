@@ -235,7 +235,7 @@ class Order_service extends Base_service {
 				//检查一下是否有退款中的退款订单
 				$tempOrder = $this->_orderModel->getList(array(
 					'where' => array(
-						'goods_id' => $oldOrderInfo['goods_id'],
+						'yewu_id' => $oldOrderInfo['yewu_id'],
 						'order_old' => $oldOrderInfo['order_id'],
 						'status' => OrderStatus::$refounding
 					),
@@ -266,8 +266,8 @@ class Order_service extends Base_service {
 				'amount' => $oldOrderInfo['amount'],//原订单金额
 				'refund_amount' => $pOrderParam['amount'],//退款金额
 				'mobile' => $oldOrderInfo['mobile'],
-				'goods_id' => $oldOrderInfo['goods_id'],
-				'goods_name' => $oldOrderInfo['goods_name'],
+				'yewu_id' => $oldOrderInfo['yewu_id'],
+				'yewu_name' => $oldOrderInfo['yewu_name'],
 				'status' => OrderStatus::$refounding,
 				'order_old' => $oldOrderInfo['order_id'],
 				'fee_month' => $oldOrderInfo['fee_month'],
@@ -331,7 +331,7 @@ class Order_service extends Base_service {
 	/**
 	 * 创建 物业费 、能耗费 、车位费 订单
 	 */
-	public function createWuyeOrder($keyId,$pParam,$memberInfo,&$message,$from = 'wx'){
+	public function createOrder($keyId,$pParam,$memberInfo,&$message,$from = 'wx'){
 		
 
 		self::$CI->load->library('Wuye_service');
@@ -373,23 +373,9 @@ class Order_service extends Base_service {
 				
 				$whichField = '';
 				
-				$info = self::$CI->House_Model->getFirstByKey($orderInfo['goods_id'],'id','wuye_expire,nenghao_expire');
+				$info = self::$CI->House_Model->getFirstByKey($orderInfo['yewu_id'],'id','wuye_expire,nenghao_expire');
 				
-				switch($orderInfo['order_typename']){
-					case '物业费':
-						$whichField = 'wuye_expire';
-						break;
-					case '能耗费':
-						$whichField = 'nenghao_expire';
-						break;
-					default:
-						break;
-				}
-				
-				if(empty($whichField)){
-					$message = '订单类型非法';
-					break;
-				}
+
 				
 				if(time() >= strtotime($orderInfo['time_expire'])){
 					$this->updateOrderStatusByIds(array($orderInfo['id']),OrderStatus::$closed,OrderStatus::$unPayed);
@@ -406,123 +392,21 @@ class Order_service extends Base_service {
 				
 			}else{
 				self::$CI->form_validation->set_data($pParam);
-				
-				self::$CI->form_validation->set_rules('order_typename','订单类型','in_db_list['.$this->_orderTypeModel->getTableRealName().'.name]');
-				
-				
-				if(empty($param['id']) && !empty($param['address'])){
-					$tempHouseInfo = $wuyeService->search('房屋',array(
-						'select' => 'id',
-						'where' => array(
-							'address' => $param['address']
-						)
-					));
-					
-					if($tempHouseInfo[0]){
-						$param[$keyId] = $tempHouseInfo[0]['id'];
-					}
-				}
-				
-				
-     			self::$CI->form_validation->set_rules($keyId,'数据标识',array(
-						'required',
-						array(
-							'feetype_callable['.$pParam['year'].','.$pParam['order_typename'].']',
-							array(
-								$wuyeService,'checkFeetype'
-							)
-						)
-					),
-					array(
-						'feetype_callable' => '该小区尚未配置'.$pParam['order_typename'].'信息'
-					)
-				);
-				
-				//获得缴费情况
-				$currentFeeExpire = $wuyeService->getCurrentFeeInfo($pParam[$keyId],$pParam['order_typename'],$pParam['end_month']);
-
-				$wuyeService->setFeeTimeRules($currentFeeExpire['year']);
-				if(!self::$CI->form_validation->run()){			
-					$message = self::$CI->form_validation->error_first_html();
-					break;
-				}
-				
-				$pParam['order_type'] = self::$orderType['nameKey'][$pParam['order_typename']]['id'];
-				//再校验  缴费的时间一定要大于已缴费的时间,防止多笔支付更新时的问题
-				if($currentFeeExpire['expireTimeStamp'] >= $currentFeeExpire['newEndTimeStamp']){
-					if($pParam['order_type'] == '能耗费'){
-						$message = '缴费时间只能延长,不能回退';
-						break;
-					} 
-				}
-
-				//开始创建订单
-				
-				
-				
+										
+			//开始创建订单		
 				$pParam['uid'] = $memberInfo['uid'];
-				
-				$yezhuInfo = self::$CI->Yezhu_Model->getById(array(
-					'where' => array(
-						'resident_id' => $currentFeeExpire['resident_id'],
-						'mobile' => $memberInfo['mobile']
-					)
-				));
-				
-				if($yezhuInfo){
-					$pParam['add_username'] = $yezhuInfo['name'];
-					$pParam['username'] = $pParam['add_username'];
-					
-				}else{
-					$pParam['add_username'] = $memberInfo['username'];
-					$pParam['username'] = $memberInfo['username'];
-					
-				}
-				
-				
-				
+				$pParam['add_username'] = $memberInfo['name'];
+				$pParam['name'] = $memberInfo['name'];					
+
 				//联系方式
 				$pParam['mobile'] = $memberInfo['mobile'];
-				
-				//异步回调
-				$pParam['notify_url'] = site_url(self::$orderType['nameKey'][$pParam['order_typename']]['order_url']);
-				
-				$pParam['goods_id'] = $pParam[$keyId];
-				$pParam['goods_name'] = $currentFeeExpire['address'];
-				
-				//物业对应小区标识
-				$pParam['resident_id'] = $currentFeeExpire['resident_id'];
-				$pParam['resident_name'] = $currentFeeExpire['resident_name'];
-				//附件数据 比如  浅水湾
-				$pParam['attach'] = $currentFeeExpire['resident_name'];
-				//原到期时间戳
-				$pParam['fee_old_expire'] = $currentFeeExpire['expireTimeStamp'];
-				
-				//新的缴费开始和结束
-				$pParam['fee_start'] = $currentFeeExpire['newStartTimeStamp'];
-				$pParam['fee_expire'] = $currentFeeExpire['newEndTimeStamp'];
-				
-				//缴费月数
-				$pParam['fee_month'] = $currentFeeExpire['fee_month'];
-				if(strtolower('wx') == strtolower($from)){	
-					if(ENVIRONMENT == 'development'){
-						//@todo 修改金额
-						$feeList = $this->_wuyeServiecObj->computeFee($currentFeeExpire);
-						$pParam['amount'] = intval(100 * $feeList['amout_unpayed']);
-					}else{
-						$feeList = $this->_wuyeServiecObj->computeFee($currentFeeExpire);
-						$pParam['amount'] = intval(100 * $feeList['amout_unpayed']);
-					}
-				}
+							
+				$pParam['yewu_id'] = $pParam[$keyId];
 				
 			}
-			if(strtolower('wx') == strtolower($from)){
-				$callPayJson = $this->createWeixinOrder($pParam);
-			}else if(strtolower('Backstage') == strtolower($from)){			
-				$localOrder = $this->createBussOrder($pParam);
-				$callPayJson = $this->updateOrderRelation($localOrder);
-				$message = '新建成功';
-			}
+
+			$callPayJson = $this->createWeixinOrder($pParam);
+
 
 			if(empty($callPayJson)){
 				$message = $pParam['order_typename']."订单创建失败";
@@ -564,7 +448,7 @@ class Order_service extends Base_service {
 				
 				$input = new WxPayUnifiedOrder();
 			
-				$input->SetBody($localOrder['order_typename'].'-'.$localOrder['goods_name']);
+				$input->SetBody($localOrder['yewu_name']);
 				//$input->SetAttach("test");
 				
 				$input->SetOut_trade_no($localOrder['order_id']);
@@ -592,8 +476,8 @@ class Order_service extends Base_service {
 				
 				$input->SetTrade_type("JSAPI");
 				
-				if($localOrder['goods_id']){
-					$input->SetProduct_id($localOrder['goods_id']);
+				if($localOrder['yewu_id']){
+					$input->SetProduct_id($localOrder['yewu_id']);
 				}
 				
 				$input->SetOpenid($param['openid']);
@@ -988,18 +872,18 @@ class Order_service extends Base_service {
 			//@TODO 如果用户在付款后 和退款前 更新了该物业绑定的车位 ,可能会引起BUG
 			$this->_parkingModel->updateByWhere(array(
 				'expire' => $pParam['fee_old_expire'],
-			),array('house_id' => $pParam['goods_id']));
+			),array('house_id' => $pParam['yewu_id']));
 			
 			
 			$this->_houseModel->updateByWhere(array(
 				'wuye_expire' => $pParam['fee_old_expire'],
-			),array('id' => $pParam['goods_id']));
+			),array('id' => $pParam['yewu_id']));
 			
 		}else if('能耗费' == $pParam['order_typename']){
 			
 			$this->_houseModel->updateByWhere(array(
 				'nenghao_expire' => $pParam['fee_old_expire'],
-			),array('id' => $pParam['goods_id']));
+			),array('id' => $pParam['yewu_id']));
 		}
 		
 		//计划明细 修改为已退款
@@ -1024,7 +908,7 @@ class Order_service extends Base_service {
 	 * 创建订单后更新计划表、房屋表、详情表、历史表
 	 */
 	public function updateOrderRelation($pParam){
-		$houseItem = $this->_houseModel->getFirstByKey($pParam['goods_id'],'id');
+		$houseItem = $this->_houseModel->getFirstByKey($pParam['yewu_id'],'id');
 
 		$pParam['year'] = $this->_wuyeServiecObj->getFeeYearByHouseId($houseItem);
 
@@ -1046,7 +930,7 @@ class Order_service extends Base_service {
 				$pParam['utype'] = Utype::$seifpaid;
 			}else{
 				if($yezhuinfo){
-					$houseYezhu = $this->_houseYezhuModel->getList(array('where' => array('house_id' => $pParam['goods_id']),'yezhu_id' => $yezhuinfo['id']));
+					$houseYezhu = $this->_houseYezhuModel->getList(array('where' => array('house_id' => $pParam['yewu_id']),'yezhu_id' => $yezhuinfo['id']));
 					if($houseYezhu){
 						$pParam['utype'] =Utype::$housepaid;
 					}else{
@@ -1077,7 +961,7 @@ class Order_service extends Base_service {
 					//'amount_recrive_now' => $houseItem['amount_recrive_now'] - $pParam['amount']/100,
 					'amount_arrears_now' => $houseItem['amount_arrears_now'] + $pParam['amount']/100,
 				),array(
-					'id' => $pParam['goods_id'],
+					'id' => $pParam['yewu_id'],
 				));
 			}else{
 				$this->_houseModel->updateByWhere(array(
@@ -1085,7 +969,7 @@ class Order_service extends Base_service {
 					//'amount_recrive_count' => $houseItem['amount_recrive_count'] - $pParam['amount']/100,
 					'amount_arrears_count' => $houseItem['amount_arrears_count'] + $pParam['amount']/100,
 				),array(
-					'id' => $pParam['goods_id'],
+					'id' => $pParam['yewu_id'],
 				));				
 			}
 
@@ -1093,10 +977,10 @@ class Order_service extends Base_service {
 			$this->_parkingModel->updateByWhere(array(
 				'expire' => $pParam['fee_expire']
 			),array(
-				'house_id' => $pParam['goods_id'],
+				'house_id' => $pParam['yewu_id'],
 			));
 			$planInfo = $this->_planModel->getList(array('where' => array(
-				'house_id' => $pParam['goods_id'],
+				'house_id' => $pParam['yewu_id'],
 				'year' => $pParam['year']
 			)));
 			if($planInfo[0]['amount_real'] == $pParam['amount']/100 + $planInfo[0]['amount_payed']){
@@ -1114,7 +998,7 @@ class Order_service extends Base_service {
 				'pay_method' => $pParam['pay_method'],
 				'charge_status' => $pParam['charge_status']
 			),array(
-				'house_id' => $pParam['goods_id'],
+				'house_id' => $pParam['yewu_id'],
 				'year' => $pParam['year']
 			));
 		
@@ -1127,7 +1011,7 @@ class Order_service extends Base_service {
 				array('key'  => 'utype', 'value' => $pParam['utype']),
 				array('key'  => 'pay_method', 'value' => $pParam['pay_method']),
 			),array(
-				'house_id' => $pParam['goods_id'],
+				'house_id' => $pParam['yewu_id'],
 				'year' => $pParam['year']
 			));
 			
@@ -1136,11 +1020,11 @@ class Order_service extends Base_service {
 			$this->_houseModel->updateByWhere(array(
 				'nenghao_expire' => $pParam['fee_expire'],
 			),array(
-				'id' => $pParam['goods_id'],
+				'id' => $pParam['yewu_id'],
 			));
 			$residentInfo = $this->_residentModel->getById(array('select' => 'name','where' =>array('id' => $pParam['resident_id'])));
 	 		$nenghaoDetail = array(
-	 			'house_id' => $pParam['goods_id'],
+	 			'house_id' => $pParam['yewu_id'],
 				'address' => $pParam['goods_name'],
 				'resident_id' => $pParam['resident_id'],
 				'resident_name' => $residentInfo['name'],
@@ -1178,7 +1062,7 @@ class Order_service extends Base_service {
 				array('key'  => 'uid2', 'value' => $pParam['uid']),
 				array('key'  => 'utype', 'value' => $pParam['utype']),
 			),array(
-				'house_id' => $pParam['goods_id'],
+				'house_id' => $pParam['yewu_id'],
 				'feetype_name' => $pParam['order_typename']
 			));
 			
@@ -1187,9 +1071,5 @@ class Order_service extends Base_service {
 		return true;
 	}
 	
-	public function refundPlanEdit($pParm){
-		return true;
-		
-		
-	}
+
 }

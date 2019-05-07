@@ -1,6 +1,56 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+class RepairType{
+	//管道报修
+	public static $pipeline  = 1;
+	
+	//电路报修
+	public static $circuit = 2;
+	
+	//电器报修
+	public static $wiring = 3;
+	
+	//网络报修
+	public static $network = 4;
+	
+	//其他报修
+	public static $others = 5;	
+		
+	public static $typeName = array(
+		1 => '管道维修',
+		2 => '电路报修',
+		3 => '电器报修',
+		4 => '网络报修',
+		5 => '其他报修'
+	);
+}
+
+
+class RepairStatus {
+	//未受理
+	public static $unReceived  = 1;
+	
+	//已受理
+	public static $received = 2;
+	
+	//已派单
+	public static $sendOrder = 3;
+	
+	//已完成
+	public static $accomplish = 4;
+	
+	//已删除
+	public static $deleted = 5;
+		
+	public static $statusName = array(
+		1 => '未受理',
+		2 => '已受理',
+		3 => '已派单',
+		4 => '已完成',
+		5 => '已删除'
+	);
+}
 
 /**
  * 物业核心服务
@@ -20,12 +70,23 @@ class Wuye_service extends Base_service {
 		parent::__construct();
 		
 		self::$CI->load->model(array(
-			'Resident_Model',
+			'Resident_Model','Building_Model','House_Model','Yezhu_Model','Parking_Model',
+			'Feetype_Model','Basic_Data_Model','Repair_Model','Repair_Images_Model','Plan_Detail_Model',
+			'Plan_Model','House_Yezhu_Model','Order_Model','Member_Model','User_Model'
 		));
 		self::$CI->load->library(array('constant/OrderStatus','constant/Utype'));
 		
 		$this->_residentModel = self::$CI->Resident_Model;
-
+		$this->_parkingModel = self::$CI->Parking_Model;
+		$this->_buildingModel = self::$CI->Building_Model;
+		$this->_houseModel = self::$CI->House_Model;
+		$this->_yezhuModel = self::$CI->Yezhu_Model;
+		$this->_feeTypeModel = self::$CI->Feetype_Model;
+		$this->_repairModel = self::$CI->Repair_Model;
+		$this->_planDetailModel = self::$CI->Plan_Detail_Model;
+		$this->_planModel = self::$CI->Plan_Model;
+		$this->_hosueYezhuModel = self::$CI->House_Yezhu_Model;   
+		$this->_userModel = self::$CI->User_Model;   
 		$this->_dataModule = array(-1);
 		
 		$this->_objectMap = array(

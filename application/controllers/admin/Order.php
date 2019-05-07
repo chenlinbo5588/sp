@@ -541,7 +541,7 @@ class Order extends Ydzj_Admin_Controller {
     		'F' => array('db_key' => 'pay_channel','width' => 10 ,'title' => '支付渠道'),
     		'G' => array('db_key' => 'pay_method','width' => 15 ,'title' => '支付方式'),
     		'H' => array('db_key' => 'status','width' => 10 ,'title' => '订单状态'),
-    		'I' => array('db_key' => 'goods_name','width' => 35 ,'title' => '商品名称'),
+    		'I' => array('db_key' => 'yewu_name','width' => 35 ,'title' => '商品名称'),
     		'J' => array('db_key' => 'amount','width' => 10 ,'title' => '订单金额'),
     		//'K' => array('db_key' => 'refund_amount','width' => 10 ,'title' => '退款金额'),
     		//'L' => array('db_key' => 'refund_cnt','width' => 10 ,'title' => '退款次数'),
