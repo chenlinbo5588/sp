@@ -369,7 +369,7 @@ class Yewu extends Wx_Tdkc_Controller {
 				$yewuDetailList[$key]['operation'] = $OperationList[$item['operation']];
 				if('发起业务' == $yewuDetailList[$key]['operation']){
 					$yewuDetailList[$key]['identity'] = '申请人';
-				}elseif('业务受理' == $yewuDetailList[$key]['operation']){
+				}else{
 					$yewuDetailList[$key]['identity'] = '作业人员';
 				}
 			}
@@ -387,9 +387,9 @@ class Yewu extends Wx_Tdkc_Controller {
 	public function getYewuById(){
 	  	if($this->userInfo){
 			$id = $this->postJson['id'];
-			$workCategory = $this->basic_data_service->getTopChildList('工作类别');
+			$basicData = $this->basic_data_service->getBasicDataList();
 			$yewuInfo = $this->Yewu_Model->getFirstByKey($id,'id');
-			$yewuInfo['work_category'] = $workCategory[$yewuInfo['work_category']]['show_name'];
+			$yewuInfo['work_category'] = $basicData[$yewuInfo['work_category']]['show_name'];
 			$this->jsonOutput2(RESP_SUCCESS,array('yewuInfo' => $yewuInfo));
 	  	}else{
 			$this->jsonOutput2(UNBINDED,$this->unBind);
@@ -404,9 +404,9 @@ class Yewu extends Wx_Tdkc_Controller {
 	 */
 	public function nextStage(){
 	  	if($this->userInfo){
-			$status = $this->postJson['status'];
-			$yewuID = $this->postJson['yeuw_id'];
-			if($this->wuye_service->addYewuDetail($this->userInfo,$status,$yewuID)){
+			$yewuId = $this->postJson['yeuw_id'];
+			$yewuInfo = $this->Yewu_Model->getFirstByKey($yewuId);
+			if($this->wuye_service->addYewuDetail($this->userInfo,$yewuInfo['status']+1,$yewuId)){
 				$this->jsonOutput2(RESP_SUCCESS);
 			}else{
 				$this->jsonOutput2(RESP_ERROR);
@@ -423,6 +423,7 @@ class Yewu extends Wx_Tdkc_Controller {
 	  	if($this->userInfo){
 			$yewuID = $this->postJson['yewu_id'];
 			$workCategory = $this->postJson['work_category'];
+			print_r($workCategory);
 			if($yewuID){
 				$result = $this->Yewu_Model->updateByCondition(
 					array(
@@ -433,7 +434,7 @@ class Yewu extends Wx_Tdkc_Controller {
 					),
 					array('where' => array('id' => $yewuID))
 				);
-				//$this->yewu_service->addYewuDetail($this->userInfo,Operation::$accept,$yewuID);
+				$this->yewu_service->addYewuDetail($this->userInfo,Operation::$accept,$yewuID);
 				if($result){
 					$this->jsonOutput2(RESP_SUCCESS);
 				}
