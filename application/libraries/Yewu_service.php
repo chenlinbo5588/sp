@@ -8,7 +8,7 @@ class Operation{
 	public static $accept = 2;
 	
 	//作业中
-	public static $examine = 3;
+	public static $operation = 3;
 	
 	//审核
 	public static $examine = 4;
