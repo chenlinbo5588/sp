@@ -92,11 +92,12 @@ class Yewu extends Wx_Tdkc_Controller {
 						'user_id' => $id, 
 				)));
 			}
-
+			$basicData = $this->basic_data_service->getBasicDataList();
 			foreach($data  as $key => $item){
 				$data[$key]['time'] =date("Y-m-d H:i",$data[$key]['gmt_create']) ;
 				$data[$key]['mobile'] =mask_mobile($data[$key]['mobile']);
 				$data[$key]['real_name'] =mask_name($data[$key]['real_name']);
+				$data[$key]['work_category'] = $basicData[$item['work_category']]['show_name'];
 			}
 			$yewuList = array(
 				'data' =>$data ,
@@ -404,9 +405,19 @@ class Yewu extends Wx_Tdkc_Controller {
 	 */
 	public function nextStage(){
 	  	if($this->userInfo){
-			$yewuId = $this->postJson['yeuw_id'];
+			$yewuId = $this->postJson['yewu_id'];
 			$yewuInfo = $this->Yewu_Model->getFirstByKey($yewuId);
-			if($this->wuye_service->addYewuDetail($this->userInfo,$yewuInfo['status']+1,$yewuId)){
+			$status = $yewuInfo['status'] + 1;
+			print_r($status);
+			$this->Yewu_Model->updateByCondition(
+				array(
+					'status' => $status,
+					'worker_name' => $this->userInfo['name'],
+					'worker_mobile' => $this->userInfo['mobile'],	
+				),
+				array('where' => array('id' => $yewuId))
+			);
+			if($this->yewu_service->addYewuDetail($this->userInfo,$status,$yewuId)){
 				$this->jsonOutput2(RESP_SUCCESS);
 			}else{
 				$this->jsonOutput2(RESP_ERROR);
@@ -423,7 +434,7 @@ class Yewu extends Wx_Tdkc_Controller {
 	  	if($this->userInfo){
 			$yewuID = $this->postJson['yewu_id'];
 			$workCategory = $this->postJson['work_category'];
-			print_r($workCategory);
+			
 			if($yewuID){
 				$result = $this->Yewu_Model->updateByCondition(
 					array(

@@ -9,12 +9,12 @@ class Operation{
 	
 	//作业中
 	public static $operation = 3;
-	
-	//审核
-	public static $examine = 4;
-	
+		
 	//已完成
-	public static $complete = 5;
+	public static $complete = 4;
+	
+		//审核
+	public static $examine = 5;
 	
 	//结款
 	public static $payment = 6;
@@ -27,8 +27,8 @@ class Operation{
 		1 => '发起业务',
 		2 => '业务受理',
 		3 => '作业中',
-		4 => '审核',
-		5 => '已完成',
+		4 => '已完成',
+		5 => '审核',
 		6 => '结款',
 		7 => '开票',
 	);
