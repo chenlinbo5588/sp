@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 class Operation{
-	//发起业务
+	//发起业务,未受理
 	public static $submit = 1;
 	
 	//业务受理
@@ -203,9 +203,9 @@ class Yewu_service extends Base_service {
 		$condition['where_in'][] = array('key' => 'status', 'value' => $status);
 		$condition['where_in'][] = array('key' => 'user_id', 'value' => $ids);
 		if(is_array($status)){
-			$data = $this->Yewu_Model->getList($condition);
+			$data = $this->_yewuModel->getList($condition);
 		}else{
-			$data = $this->Yewu_Model->getList(array(
+			$data = $this->_yewuModel->getList(array(
 				'where' => array(
 					'user_id' => $id, 
 			)));
@@ -219,7 +219,7 @@ class Yewu_service extends Base_service {
 			$data[$key]['user_mobile'] =mask_mobile($data[$key]['user_mobile']);
 			$data[$key]['work_category'] = $basicData[$item['work_category']]['show_name'];
 			if($data[$key]['status'] == Operation::$transfer){
-				$transfer = $this->Yewu_Transfer_Model->getList(array('yewu_id' => $item['id'],'status' => '1'));
+				$transfer = $this->_yewuTransferModel->getList(array('yewu_id' => $item['id'],'status' => '1'));
 			}
 			if($transfer){
 				$data[$key]['group_name_from'] = $transfer[0]['group_name_from'];

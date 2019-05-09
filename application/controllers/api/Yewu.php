@@ -160,43 +160,45 @@ class Yewu extends Wx_Tdkc_Controller {
 			$groupInfo = $this->Work_Group_Model->getFirstByKey($groupId,'id');
 			$yewuId = $this->postJson['yewu_id'];
 			$yewuInfo = $this->Yewu_Model->getFirstByKey($yewuId,'id');
-			if($groupId && $yewuId){		
-				$this->Yewu_Model->beginTrans();
-			 	$this->Yewu_Model->updateByCondition(
-					array(
-						'worker_id' => $groupInfo['group_leaderid'],
-						'worker_name' => $groupInfo['group_leader_name'],
-						'worker_mobile' => $groupInfo['group_leader_mobile'],
-						'current_group' => $groupInfo['id'],
-						'status' => 10,
-						'edit_uid' => $this->userInfo['id'],
-						'edit_username' => $this->userInfo['name'],
-						'gmt_modify' => time(),
-						
-					),
-					array('where' => array('id' => $yewuId))
-				);
-				
-				$this->Yewu_Transfer_Model->_add(array(
-					'yewu_id' => $yewuId,
-					'group_id_from' => $this->userInfo['group_id'],
-					'group_name_from' => $this->userInfo['group_name'],
-					'group_id_to' => $groupInfo['id'],
-					'group_name_to' => $groupInfo['group_name'],
-					'status' => 1,
-					'add_uid' => $this->userInfo['id'],
-					'add_username' => $this->userInfo['name'],
-					'gmt_create' => time(),
-				));
-				if($this->Yewu_Model->getTransStatus() === FALSE){
-					$this->Yewu_Model->rollBackTrans();
-					$this->jsonOutput2(RESP_ERROR);
+			if($yewuInfo['status'] == Operation::$submit);{
+				if($groupId && $yewuId){		
+					$this->Yewu_Model->beginTrans();
+				 	$this->Yewu_Model->updateByCondition(
+						array(
+							'worker_id' => $groupInfo['group_leaderid'],
+							'worker_name' => $groupInfo['group_leader_name'],
+							'worker_mobile' => $groupInfo['group_leader_mobile'],
+							'current_group' => $groupInfo['id'],
+							'status' => 10,
+							'edit_uid' => $this->userInfo['id'],
+							'edit_username' => $this->userInfo['name'],
+							'gmt_modify' => time(),
+							
+						),
+						array('where' => array('id' => $yewuId))
+					);
+					
+					$this->Yewu_Transfer_Model->_add(array(
+						'yewu_id' => $yewuId,
+						'group_id_from' => $this->userInfo['group_id'],
+						'group_name_from' => $this->userInfo['group_name'],
+						'group_id_to' => $groupInfo['id'],
+						'group_name_to' => $groupInfo['group_name'],
+						'status' => 1,
+						'add_uid' => $this->userInfo['id'],
+						'add_username' => $this->userInfo['name'],
+						'gmt_create' => time(),
+					));
+					if($this->Yewu_Model->getTransStatus() === FALSE){
+						$this->Yewu_Model->rollBackTrans();
+						$this->jsonOutput2(RESP_ERROR);
+					}else{
+						$this->Yewu_Model->commitTrans();
+						$this->jsonOutput2(RESP_SUCCESS);
+					}
 				}else{
-					$this->Yewu_Model->commitTrans();
-					$this->jsonOutput2(RESP_SUCCESS);
+					$this->jsonOutput2(RESP_ERROR,array('status' => '请选择业务和移交小组'));
 				}
-			}else{
-				$this->jsonOutput2(RESP_ERROR,array('status' => '请选择业务和移交小组'));
 			}
 		}else{
 			$this->jsonOutput2(UNBINDED,$this->unBind);
