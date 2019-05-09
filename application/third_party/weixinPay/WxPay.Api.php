@@ -34,7 +34,7 @@ class WxPayApi
 		}else if(!$inputObj->IsTrade_typeSet()) {
 			throw new WxPayException("缺少统一支付接口必填参数trade_type！");
 		}
-		
+
 		//关联参数
 		if($inputObj->GetTrade_type() == "JSAPI" && !$inputObj->IsOpenidSet()){
 			throw new WxPayException("统一支付接口中，缺少必填参数openid！trade_type为JSAPI时，openid为必填参数！");
@@ -523,6 +523,7 @@ class WxPayApi
 	 */
 	private static function postXmlCurl($xml, $url, $useCert = false, $second = 30)
 	{		
+		print_r($url);	
 		$ch = curl_init();
 		$curlVersion = curl_version();
 		$ua = "WXPaySDK/0.9 (".PHP_OS.") PHP/".PHP_VERSION." CURL/".$curlVersion['version']." ".WxPayConfig::MCHID;
@@ -558,7 +559,9 @@ class WxPayApi
 		curl_setopt($ch, CURLOPT_POST, TRUE);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $xml);
 		//运行curl
+		print_r($ch);
 		$data = curl_exec($ch);
+		print_r($data);
 		//返回结果
 		if($data){
 			curl_close($ch);

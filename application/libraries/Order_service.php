@@ -45,7 +45,7 @@ class Order_service extends Base_service {
 		
 		self::$CI->load->model(array(
 			'Order_Model','Order_Type_Model','House_Model','Feetype_Model','Plan_Model',
-			'Plan_Detail_Model','Parking_Model'
+			'Plan_Detail_Model','Parking_Model','Yewu_Model'
 		));
 		
 		$this->_orderModel = self::$CI->Order_Model;
@@ -57,6 +57,7 @@ class Order_service extends Base_service {
 		$this->_parkingModel = self::$CI->Parking_Model;
 		$this->_yezhuModel = self::$CI->Yezhu_Model;
 		$this->_residentModel = self::$CI->Resident_Model;
+		$this->_yewuModel = self::$CI->Yewu_Model;
 		
 		$this->_weixinServiceObj = self::$CI->weixin_service;
 		$this->_wuyeServiecObj = self::$CI->wuye_service;
@@ -394,8 +395,12 @@ class Order_service extends Base_service {
 				self::$CI->form_validation->set_data($pParam);
 										
 			//开始创建订单
-			
-				$yewuInfo = $this->_yewuModel->getFirstByKey();	
+				$pParam['amount'] = $pParam['amount'] * 100;
+				$yewuInfo = $this->_yewuModel->getFirstByKey($pParam['yewu_id']);
+				$pParam['yewu_name'] = 	$yewuInfo['name'];
+				if(!$pParam['yewu_name']){
+					$pParam['yewu_name'] = '土地勘测';
+				}
 				$pParam['uid'] = $memberInfo['uid'];
 				$pParam['add_username'] = $memberInfo['name'];
 				$pParam['name'] = $memberInfo['name'];					
@@ -481,7 +486,7 @@ class Order_service extends Base_service {
 				}
 				
 				$input->SetOpenid($param['openid']);
-				print_r($input);
+				
 				$weixinOrder = WxPayApi::unifiedOrder($input);
 
 				if($this->checkWeixinRespSuccess($weixinOrder)){

@@ -408,7 +408,6 @@ class Yewu extends Wx_Tdkc_Controller {
 			$yewuId = $this->postJson['yewu_id'];
 			$yewuInfo = $this->Yewu_Model->getFirstByKey($yewuId);
 			$status = $yewuInfo['status'] + 1;
-			print_r($status);
 			$this->Yewu_Model->updateByCondition(
 				array(
 					'status' => $status,
