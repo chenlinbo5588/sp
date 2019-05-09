@@ -393,7 +393,9 @@ class Order_service extends Base_service {
 			}else{
 				self::$CI->form_validation->set_data($pParam);
 										
-			//开始创建订单		
+			//开始创建订单
+			
+				$yewuInfo = $this->_yewuModel->getFirstByKey();	
 				$pParam['uid'] = $memberInfo['uid'];
 				$pParam['add_username'] = $memberInfo['name'];
 				$pParam['name'] = $memberInfo['name'];					
@@ -404,7 +406,7 @@ class Order_service extends Base_service {
 				$pParam['yewu_id'] = $pParam[$keyId];
 				
 			}
-
+			
 			$callPayJson = $this->createWeixinOrder($pParam);
 
 
@@ -434,7 +436,7 @@ class Order_service extends Base_service {
 		}else{
 			$localOrder = $this->createBussOrder($param);
 		}
-		
+
 		if(empty($localOrder)){
 			return false;
 		}
@@ -445,9 +447,7 @@ class Order_service extends Base_service {
 			
 		}else{
 			try {
-				
 				$input = new WxPayUnifiedOrder();
-			
 				$input->SetBody($localOrder['yewu_name']);
 				//$input->SetAttach("test");
 				
@@ -481,9 +481,9 @@ class Order_service extends Base_service {
 				}
 				
 				$input->SetOpenid($param['openid']);
-				
+				print_r($input);
 				$weixinOrder = WxPayApi::unifiedOrder($input);
-				
+
 				if($this->checkWeixinRespSuccess($weixinOrder)){
 					
 					//将 prepay_id 保存起来, 用来在用户取消订单后，后续可以再次进行下发 换起支付的参数
@@ -502,7 +502,6 @@ class Order_service extends Base_service {
 			}catch(Exception $e){
 				log_message('error','code='.$e->getCode().',message='.$e->getMessage());
 			}
-			
 			
 			return false;
 		}

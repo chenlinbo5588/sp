@@ -5,7 +5,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 
 
-class Order extends Wx_Controller {
+class Order extends Wx_Tdkc_Controller {
 	
 	public function __construct(){
 		parent::__construct();
@@ -30,8 +30,6 @@ class Order extends Wx_Controller {
 	public function createOrder(){
 		if($this->userInfo){
 			$message = '';
-			
-
 			
 			$callPayJson = $this->order_service->createOrder('yewu_id',$this->postJson,$this->userInfo,$message);
 			

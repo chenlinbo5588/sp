@@ -88,7 +88,7 @@ class Order extends Ydzj_Admin_Controller {
 			$condition['where']['username'] = $search['username'];
 		}
 		
-		$list = $this->order_service->search($this->_moduleTitle,$condition);
+		$list = $this->Order_Model->getList($condition);
 		
 		$this->assign(array(
 			'list' => $list,

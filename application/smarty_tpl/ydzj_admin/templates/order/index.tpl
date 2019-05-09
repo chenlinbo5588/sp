@@ -30,9 +30,7 @@
           <th>{#mobile#}</th>
           <th>{#order_typename#}</th>
           <th>{#amount#}(元)</th>
-          <th>{#fee_start#}</th>
-          <th>{#fee_expire#}</th>
-          <th>{#goods_name#}</th>
+          <th>{#yewu_name#}</th>
           <th>{#status#}</th>
           <th>{#order_time#}</th>
           <th>{#time_expire#}</th>        
@@ -50,9 +48,7 @@
           <td>{mask_string($item['mobile'],4,4)}</td>
           <td>{$item['order_typename']}{if $item['is_refund']}退款{/if}</td>
           <td>{$item['amount']/100}</td>
-          <td>{$item['fee_start']|date_format:"%Y-%m-%d"}</td>
-          <td>{$item['fee_expire']|date_format:"%Y-%m-%d"}</td>
-          <td>{$item['goods_name']}</td>
+          <td>{$item['yewu_name']}</td>
           <td {if $OrderStatus[$item['status']] == '已支付'}class="successText"{/if}>{$OrderStatus[$item['status']]}</td>
           <td>{$item['gmt_create']|date_format:"%Y-%m-%d %H:%M:%S"}</td>
           <td>{$item['time_expire']|date_format:"%Y-%m-%d %H:%M:%S"}</td>
