@@ -18,13 +18,7 @@ class Yewu extends Wx_Tdkc_Controller {
 			
 
 			extract($this->postJson,EXTR_OVERWRITE);
-/*			$address = $this->postJson['address'];
-			$mobile = $this->postJson['mobile'];
-			$workCategory = $this->postJson['work_category']; 
-			$realName = $this->postJson['real_name']; 
-			$yewuDescribe = $this->postJson['yewu_describe']; 
-			$serviceArea = $this->postJson['service_area'];
-			$companyName = $this->postJson['company_name'];*/
+
 			
 			//getBasicData
 			$serviceAreaList = $this->basic_data_service->getTopChildList('服务区域');
@@ -41,7 +35,7 @@ class Yewu extends Wx_Tdkc_Controller {
 				break;
 			}*/
 			
-			//$groupInfo = $this->yewu_service->getGroupInfo($serviceArea);
+			$groupInfo = $this->yewu_service->getGroupInfo($service_area);
 			//$companyInfo = $this->Company_Model->getFirstByKey($companyName,'name');
 			 
 			$yewuInfo = array(
@@ -56,7 +50,7 @@ class Yewu extends Wx_Tdkc_Controller {
 				'add_uid'	=>  $this->userInfo['id'],
 				'add_username'	=>  $this->userInfo['name'],
 				'status' => Operation::$submit,
-				//'group_id' => $groupInfo['id'],
+				'group_id' => $groupInfo['id'],
 				'company_name' => $company_name,
 				//'company_id' => $companyInfo['id'],
 			);
@@ -98,8 +92,8 @@ class Yewu extends Wx_Tdkc_Controller {
 				$data[$key]['time'] =date("Y-m-d H:i",$data[$key]['gmt_create']) ;
 				$data[$key]['mobile'] =mask_mobile($data[$key]['mobile']);
 				$data[$key]['real_name'] =mask_name($data[$key]['real_name']);
-				$data[$key]['user_name'] =mask_mobile($data[$key]['user_name']);
-				$data[$key]['user_mobile'] =mask_name($data[$key]['user_mobile']);
+				$data[$key]['user_name'] =mask_name($data[$key]['user_name']);
+				$data[$key]['user_mobile'] =mask_mobile($data[$key]['user_mobile']);
 				$data[$key]['work_category'] = $basicData[$item['work_category']]['show_name'];
 			}
 			$yewuList = array(
@@ -168,7 +162,7 @@ class Yewu extends Wx_Tdkc_Controller {
 	
 	public function getAllGroupList(){
 		if($this->userInfo){
-			$this->jsonOutput2(RESP_SUCCESS,$this->Work_Group_Model->getList());
+			$this->jsonOutput2(RESP_SUCCESS,array('groupList' => $this->Work_Group_Model->getList()));
 		}
 	}
 	
@@ -412,20 +406,23 @@ class Yewu extends Wx_Tdkc_Controller {
 	  	if($this->userInfo){
 			$yewuId = $this->postJson['yewu_id'];
 			$yewuInfo = $this->Yewu_Model->getFirstByKey($yewuId);
-			$status = $yewuInfo['status'] + 1;
-			$this->Yewu_Model->updateByCondition(
-				array(
-					'status' => $status,
-					'worker_name' => $this->userInfo['name'],
-					'worker_mobile' => $this->userInfo['mobile'],	
-				),
-				array('where' => array('id' => $yewuId))
-			);
-			if($this->yewu_service->addYewuDetail($this->userInfo,$status,$yewuId)){
-				$this->jsonOutput2(RESP_SUCCESS);
-			}else{
-				$this->jsonOutput2(RESP_ERROR);
+			if($yewuInfo['status'] > Operation::$submit){
+				$status = $yewuInfo['status'] + 1;
+				$this->Yewu_Model->updateByCondition(
+					array(
+						'status' => $status,
+						'worker_name' => $this->userInfo['name'],
+						'worker_mobile' => $this->userInfo['mobile'],	
+					),
+					array('where' => array('id' => $yewuId))
+				);
+				if($this->yewu_service->addYewuDetail($this->userInfo,$status,$yewuId)){
+					$this->jsonOutput2(RESP_SUCCESS);
+				}else{
+					$this->jsonOutput2(RESP_ERROR);
+				}
 			}
+			
 	  	}else{
 			$this->jsonOutput2(UNBINDED,$this->unBind);
 		}
@@ -459,7 +456,20 @@ class Yewu extends Wx_Tdkc_Controller {
 			$this->jsonOutput2(UNBINDED,$this->unBind);
 		}
 	}
-	
+	/**
+	 * 设置公司发票信息
+	 */
+	public function setInvoice(){
+		if($this->userInfo){
+			extract($this->postJson,EXTR_OVERWRITE);
+			if($invoice_company && $invoice_no){
+				$this->I
+			}
+		}else{
+			$this->jsonOutput2(UNBINDED,$this->unBind);
+		}
+
+	}
 	
 }
 

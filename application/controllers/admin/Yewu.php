@@ -21,6 +21,7 @@ class Yewu extends Ydzj_Admin_Controller {
 			'workCategory' => $this->basic_data_service->getTopChildList('工作类别'),
 			'serviceArea' => $this->basic_data_service->getTopChildList('服务区域'),
 			'basicData' => $this->basic_data_service->getBasicDataList(),
+			'operation' => Operation::$typeName,
 		));
 		
 		
