@@ -22,6 +22,8 @@ class Operation{
 	//开票
 	public static $invoice = 7;
 	
+	//转让中
+	public static $transfer = 10;
 	
 	public static $typeName = array(
 		1 => '发起业务',
@@ -31,6 +33,7 @@ class Operation{
 		5 => '审核',
 		6 => '结款',
 		7 => '开票',
+		10 => '转让中',
 	);
 }
 
@@ -45,7 +48,7 @@ class Yewu_service extends Base_service {
 		
 		self::$CI->load->model(array(
 			'User_Model','Yewu_Model','Work_Group_Model','Yewu_Transfer_Model','Evaluate_Model','User_Extend_Model',
-			'Company_Model','Yewu_Detail_Model'
+			'Company_Model','Yewu_Detail_Model','Invoice_Model'
 		));
 		self::$CI->load->library(array('Basic_data_service','Admin_pm_service'));
 		$this->_userModel = self::$CI->User_Model;
@@ -194,4 +197,35 @@ class Yewu_service extends Base_service {
 		
 	}
 	
+	
+	public function getYewuList($id,$status){
+		$ids[] = $id;
+		$condition['where_in'][] = array('key' => 'status', 'value' => $status);
+		$condition['where_in'][] = array('key' => 'user_id', 'value' => $ids);
+		if(is_array($status)){
+			$data = $this->Yewu_Model->getList($condition);
+		}else{
+			$data = $this->Yewu_Model->getList(array(
+				'where' => array(
+					'user_id' => $id, 
+			)));
+		}
+		$basicData = $this->basic_data_service->getBasicDataList();
+		foreach($data  as $key => $item){
+			$data[$key]['time'] =date("Y-m-d H:i",$data[$key]['gmt_create']) ;
+			$data[$key]['mobile'] =mask_mobile($data[$key]['mobile']);
+			$data[$key]['real_name'] =mask_name($data[$key]['real_name']);
+			$data[$key]['user_name'] =mask_name($data[$key]['user_name']);
+			$data[$key]['user_mobile'] =mask_mobile($data[$key]['user_mobile']);
+			$data[$key]['work_category'] = $basicData[$item['work_category']]['show_name'];
+			if($data[$key]['status'] == Operation::$transfer){
+				$transfer = $this->Yewu_Transfer_Model->getList(array('yewu_id' => $item['id'],'status' => '1'));
+			}
+			if($transfer){
+				$data[$key]['group_name_from'] = $transfer[0]['group_name_from'];
+				$data[$key]['group_name_to'] = $transfer[0]['group_name_to'];
+			}
+		}
+		return $data;
+	}
 }

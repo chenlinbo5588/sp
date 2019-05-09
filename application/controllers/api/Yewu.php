@@ -75,27 +75,9 @@ class Yewu extends Wx_Tdkc_Controller {
 
 		if($this->userInfo){
 			$id = $this->userInfo['id'];
-			$ids[] = $id;
-			$status = $this->postJson['status'];
-			$condition['where_in'][] = array('key' => 'status', 'value' => $status);
-			$condition['where_in'][] = array('key' => 'user_id', 'value' => $ids);
-			if(is_array($status)){
-				$data = $this->Yewu_Model->getList($condition);
-			}else{
-				$data = $this->Yewu_Model->getList(array(
-					'where' => array(
-						'user_id' => $id, 
-				)));
-			}
-			$basicData = $this->basic_data_service->getBasicDataList();
-			foreach($data  as $key => $item){
-				$data[$key]['time'] =date("Y-m-d H:i",$data[$key]['gmt_create']) ;
-				$data[$key]['mobile'] =mask_mobile($data[$key]['mobile']);
-				$data[$key]['real_name'] =mask_name($data[$key]['real_name']);
-				$data[$key]['user_name'] =mask_name($data[$key]['user_name']);
-				$data[$key]['user_mobile'] =mask_mobile($data[$key]['user_mobile']);
-				$data[$key]['work_category'] = $basicData[$item['work_category']]['show_name'];
-			}
+			$status = $this->postJson['status'];			
+			$data = $this->yewu_service->getYewuList($id,$status);
+			
 			$yewuList = array(
 				'data' =>$data ,
 			);
@@ -213,8 +195,9 @@ class Yewu extends Wx_Tdkc_Controller {
 					$this->Yewu_Model->commitTrans();
 					$this->jsonOutput2(RESP_SUCCESS);
 				}
+			}else{
+				$this->jsonOutput2(RESP_ERROR,array('status' => '请选择业务和移交小组'));
 			}
-			$this->jsonOutput2(RESP_ERROR,array('status' => '请选择业务和移交小组'));
 		}else{
 			$this->jsonOutput2(UNBINDED,$this->unBind);
 		}
@@ -367,6 +350,8 @@ class Yewu extends Wx_Tdkc_Controller {
 			$OperationList = Operation::$typeName;
 			foreach($yewuDetailList as $key => $item){
 				$yewuDetailList[$key]['operation'] = $OperationList[$item['operation']];
+				$yewuDetailList[$key]['name'] = mask_name($item['name']);
+				$yewuDetailList[$key]['mobile'] = mask_mobile($item['mobile']);
 				if('发起业务' == $yewuDetailList[$key]['operation']){
 					$yewuDetailList[$key]['identity'] = '申请人';
 				}else{
@@ -463,13 +448,21 @@ class Yewu extends Wx_Tdkc_Controller {
 		if($this->userInfo){
 			extract($this->postJson,EXTR_OVERWRITE);
 			if($invoice_company && $invoice_no){
-				$this->I
+				$this->Invoice_Model->_add(array(
+					'invoice_company' => $invoice_company,
+					'invoice_no' => $invoice_no,
+					'address' => $address,
+					'mobile' => $mobile,
+					'deposit_bank' => $deposit_bank,
+					'deposit_account' => $deposit_account,
+				));
+			}else{
+				$this->jsonOutput2('请填写公司名称和税号');
 			}
 		}else{
 			$this->jsonOutput2(UNBINDED,$this->unBind);
 		}
 
 	}
-	
 }
 
