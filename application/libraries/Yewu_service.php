@@ -58,6 +58,7 @@ class Yewu_service extends Base_service {
 		$this->_yewuTransferModel = self::$CI->Yewu_Transfer_Model;
 		$this->_userExtendModel = self::$CI->User_Extend_Model;
 		$this->_yewuDetailModel = self::$CI->Yewu_Detail_Model;
+		$this->_basicDataServiecObj = self::$CI->basic_data_service;
 
 	}
 	public function getUserInfoById($pId,$key = 'id'){
@@ -210,7 +211,7 @@ class Yewu_service extends Base_service {
 					'user_id' => $id, 
 			)));
 		}
-		$basicData = $this->basic_data_service->getBasicDataList();
+		$basicData = $this->_basicDataServiecObj->getBasicDataList();
 		foreach($data  as $key => $item){
 			$data[$key]['time'] =date("Y-m-d H:i",$data[$key]['gmt_create']) ;
 			$data[$key]['mobile'] =mask_mobile($data[$key]['mobile']);
