@@ -52,6 +52,7 @@ class Yewu extends Wx_Tdkc_Controller {
   				'service_area' => $serviceAreaList[$service_area]['id'],
   				'user_id' => $this->userInfo['id'],
   				'user_name' => $this->userInfo['name'],
+  				'user_mobile' => $this->userInfo['mobile'],
 				'add_uid'	=>  $this->userInfo['id'],
 				'add_username'	=>  $this->userInfo['name'],
 				'status' => Operation::$submit,
@@ -97,6 +98,8 @@ class Yewu extends Wx_Tdkc_Controller {
 				$data[$key]['time'] =date("Y-m-d H:i",$data[$key]['gmt_create']) ;
 				$data[$key]['mobile'] =mask_mobile($data[$key]['mobile']);
 				$data[$key]['real_name'] =mask_name($data[$key]['real_name']);
+				$data[$key]['user_name'] =mask_mobile($data[$key]['user_name']);
+				$data[$key]['user_mobile'] =mask_name($data[$key]['user_mobile']);
 				$data[$key]['work_category'] = $basicData[$item['work_category']]['show_name'];
 			}
 			$yewuList = array(
@@ -132,6 +135,8 @@ class Yewu extends Wx_Tdkc_Controller {
 			$mobileName =array(
 				'name' =>$data['real_name'],
 				'mobile' => $data['mobile'],
+				'user_name' => $data['user_name'],
+				'user_mobile' => $data['user_mobile'],
 			);
 			$this->jsonOutput2(RESP_SUCCESS,$mobileName);
 		}else{

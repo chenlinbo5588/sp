@@ -30,7 +30,6 @@
           <th>{#mobile#}</th>
           <th>{#order_typename#}</th>
           <th>{#amount#}(元)</th>
-          <th>{#yewu_name#}</th>
           <th>{#status#}</th>
           <th>{#order_time#}</th>
           <th>{#time_expire#}</th>        
@@ -44,11 +43,10 @@
       	<tr class="hover edit" id="row{$item['id']}">
           <td><input type="checkbox" name="id[]" group="chkVal" value="{$item['id']}" class="checkitem"></td>
           <td><a href="{admin_site_url($moduleClassName|cat:'/detail')}?id={$item['id']}">{$item['order_id']}</a></td>
-          <td>{mask_name($item['username'])}</td>
+          <td>{mask_name($item['add_username'])}</td>
           <td>{mask_string($item['mobile'],4,4)}</td>
-          <td>{$item['order_typename']}{if $item['is_refund']}退款{/if}</td>
+          <td>{$item['yewu_name']}{if $item['is_refund']}退款{/if}</td>
           <td>{$item['amount']/100}</td>
-          <td>{$item['yewu_name']}</td>
           <td {if $OrderStatus[$item['status']] == '已支付'}class="successText"{/if}>{$OrderStatus[$item['status']]}</td>
           <td>{$item['gmt_create']|date_format:"%Y-%m-%d %H:%M:%S"}</td>
           <td>{$item['time_expire']|date_format:"%Y-%m-%d %H:%M:%S"}</td>
