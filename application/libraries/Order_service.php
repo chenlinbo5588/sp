@@ -414,7 +414,7 @@ class Order_service extends Base_service {
 			
 			$callPayJson = $this->createWeixinOrder($pParam);
 
-
+		
 			if(empty($callPayJson)){
 				$message = $pParam['order_typename']."订单创建失败";
 				break;
@@ -445,13 +445,14 @@ class Order_service extends Base_service {
 		if(empty($localOrder)){
 			return false;
 		}
-		
+			
 		if($param['order_id']){
 			//已有订单重新签发
 			return $this->genPaymentParam($localOrder['prepay_id']);
 			
 		}else{
 			try {
+					
 				$input = new WxPayUnifiedOrder();
 				$input->SetBody($localOrder['yewu_name']);
 				//$input->SetAttach("test");
@@ -486,9 +487,9 @@ class Order_service extends Base_service {
 				}
 				
 				$input->SetOpenid($param['openid']);
-				
+					
 				$weixinOrder = WxPayApi::unifiedOrder($input);
-
+			
 				if($this->checkWeixinRespSuccess($weixinOrder)){
 					
 					//将 prepay_id 保存起来, 用来在用户取消订单后，后续可以再次进行下发 换起支付的参数
