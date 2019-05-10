@@ -34,8 +34,9 @@ class Yewu extends Wx_Tdkc_Controller {
 				$this->jsonOutput2($this->form_validation->error_first_html());
 				break;
 			}*/
+		
+			$groupInfo = $this->yewu_service->getGroupInfo($serviceAreaList[$service_area]['id']);
 			
-			$groupInfo = $this->yewu_service->getGroupInfo($service_area);
 			//$companyInfo = $this->Company_Model->getFirstByKey($companyName,'name');
 			 
 			$yewuInfo = array(
@@ -217,13 +218,39 @@ class Yewu extends Wx_Tdkc_Controller {
 				'group_id_to' => $this->postJson['group_id'],
 			)));
 			$fromGroupInfo = $this->Yewu_Model->getFirstByKey($thansferInfo['group_id_from'],'id');
-			if($thansferInfo && $yewuInfo && $yewuInfo){
+			if($thansferInfo && $yewuInfo && $fromGroupInfo){
 				if($this->yewu_service->changeTansfer($this->postJson,$this->userInfo,$fromGroupInfo)){
 					$this->jsonOutput2(RESP_SUCCESS);
 				}
 			}
 		}
 	}
+	
+	
+	/**
+	 * 撤销转让
+	 */
+	 public function revokeTransfer(){
+		if($this->userInfo && 3 == $this->userInfo['user_type']){
+			$groupInfo = $this->Work_Group_Model->getFirstByKey($this->postJson['group_id'],'id');		
+			$thansferInfo = $this->Yewu_Transfer_Model->getList(array('where' => array(
+				'yewu_id' => $this->postJson['yewu_id'],
+				'status' => 1,
+				'group_id_from' => $this->postJson['group_id'],
+			)));
+			$fromGroupInfo = $this->Yewu_Model->getFirstByKey($thansferInfo['group_id_from'],'id');
+			if($thansferInfo && $fromGroupInfo){
+				$this->Yewu_Model->updateByCondition(
+					array(
+						'status' => Operation::$submit,
+						'current_group' => $fromGroupInfo['id']
+					),
+					array('where' => array('id' => $this->postJson['yewu_id']))
+				);
+				$this->Yewu_Transfer_Model->delete(array('where' => array('id' => $thansferInfo['id'])));
+			}
+		}
+	 }
 	
 	
 	
@@ -352,8 +379,6 @@ class Yewu extends Wx_Tdkc_Controller {
 			$OperationList = Operation::$typeName;
 			foreach($yewuDetailList as $key => $item){
 				$yewuDetailList[$key]['operation'] = $OperationList[$item['operation']];
-				$yewuDetailList[$key]['name'] = mask_name($item['name']);
-				$yewuDetailList[$key]['mobile'] = mask_mobile($item['mobile']);
 				if('发起业务' == $yewuDetailList[$key]['operation']){
 					$yewuDetailList[$key]['identity'] = '申请人';
 				}else{
@@ -377,7 +402,11 @@ class Yewu extends Wx_Tdkc_Controller {
 			$basicData = $this->basic_data_service->getBasicDataList();
 			$yewuInfo = $this->Yewu_Model->getFirstByKey($id,'id');
 			$yewuInfo['work_category'] = $basicData[$yewuInfo['work_category']]['show_name'];
-			$this->jsonOutput2(RESP_SUCCESS,array('yewuInfo' => $yewuInfo));
+			$yewuInfo['user_name'] = mask_name($yewuInfo['user_name']);
+			$yewuInfo['user_mobile'] = mask_name($yewuInfo['user_mobile']);
+			$yewuInfo['plan_money'] = $yewuInfo['plan_money'] / 100;
+			$yewuInfo['receivable_money'] = $yewuInfo['receivable_money'] / 100;
+ 			$this->jsonOutput2(RESP_SUCCESS,array('yewuInfo' => $yewuInfo));
 	  	}else{
 			$this->jsonOutput2(UNBINDED,$this->unBind);
 		}
@@ -415,6 +444,8 @@ class Yewu extends Wx_Tdkc_Controller {
 		}
 	}
 	
+
+
 	/**
 	 * 业务受理
 	 */
@@ -424,9 +455,12 @@ class Yewu extends Wx_Tdkc_Controller {
 			$workCategory = $this->postJson['work_category'];
 			
 			if($yewuID){
+				
+				$acceptNumber = 'tdkc'.date('Ymdhms').rand(1000,9999);
 				$result = $this->Yewu_Model->updateByCondition(
 					array(
 						'status' => Operation::$accept,
+						'accept_number' => $acceptNumber,
 						'worker_name' => $this->userInfo['name'],
 						'worker_mobile' => $this->userInfo['mobile'],
 						'work_category' => $workCategory,	
@@ -443,6 +477,9 @@ class Yewu extends Wx_Tdkc_Controller {
 			$this->jsonOutput2(UNBINDED,$this->unBind);
 		}
 	}
+
+
+
 	/**
 	 * 设置公司发票信息
 	 */
@@ -451,6 +488,7 @@ class Yewu extends Wx_Tdkc_Controller {
 			extract($this->postJson,EXTR_OVERWRITE);
 			if($invoice_company && $invoice_no){
 				$this->Invoice_Model->_add(array(
+					'user_id' => $this->userInfo['id'],
 					'invoice_company' => $invoice_company,
 					'invoice_no' => $invoice_no,
 					'address' => $address,
@@ -458,6 +496,7 @@ class Yewu extends Wx_Tdkc_Controller {
 					'deposit_bank' => $deposit_bank,
 					'deposit_account' => $deposit_account,
 				));
+				$this->jsonOutput2(RESP_SUCCESS);
 			}else{
 				$this->jsonOutput2('请填写公司名称和税号');
 			}
@@ -466,5 +505,44 @@ class Yewu extends Wx_Tdkc_Controller {
 		}
 
 	}
+	
+	
+	public function getInvoiceList(){
+		if($this->userInfo){
+			
+			$invoiceList = $this->Invoice_Model->getFirstByKey($this->userInfo['id'],'user_id');
+			$this->jsonOutput2(RESP_SUCCESS,array('invoiceList' => $invoiceList));
+		}else{
+			$this->jsonOutput2(UNBINDED,$this->unBind);
+		}
+	}
+	
+	
+	/**
+	 * 撤销申请
+	 */
+	public function  revokeYewu(){
+		if($this->userInfo){
+			$yewuId = $this->postJson['yewu_id'];
+			$yewuInfo = $this->Yewu_Model->getFirstByKey($yewuId,'yewu_id');
+			if($yewuInfo['status'] == Operation::$submit){
+				$this->Yewu_Model->updateByCondition(
+					array(
+						'status' => Operation::$revoke,
+					),
+					array('where' => array('id' => $yewuId))
+				);
+			}else{
+				$this->jsonOutput2('只有在受理之前才能撤销申请');
+			}
+		}else{
+			$this->jsonOutput2(UNBINDED,$this->unBind);
+		}
+	}
+	
+
+	 
+	 
+	
 }
 

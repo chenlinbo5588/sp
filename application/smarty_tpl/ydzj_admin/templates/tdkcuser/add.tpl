@@ -143,13 +143,35 @@
   <script type="text/javascript">
 	submitUrl = [new RegExp("{$uri_string}")];
   </script>
-  <script>
-	  $(function(){
-		  	$( ".datepicker" ).datepicker();
-			
-			$.loadingbar({ text: "正在提交..." , urls: submitUrl , container : "#infoform" });
-			bindAjaxSubmit("#infoform");
-			
-		});
-	</script>
+  <script type="text/javascript">
+	var submitUrl = [new RegExp("{$uri_string}")],searchAddressUrl = "{admin_site_url('house/getAddress')}";
+	
+	$(function(){
+		$.loadingbar({ text: "正在提交..." , urls: submitUrl , container : "#infoform" });
+		
+		bindAjaxSubmit("#infoform");
+		
+		$( ".datepicker" ).datepicker({
+	    	changeYear: true
+	    });
+	    $( "#address" ).autocomplete({
+			source: function( request, response ) {
+				
+				$.ajax( {
+		            url: searchAddressUrl,
+		            dataType: "json",
+		            data: {
+		              term: request.term,
+		              resident_id:$("input[name=resident_id]:checked").val(),
+		            },
+		            success: function( data ) {
+		              response( data );
+		            }
+		          } 
+				);
+	        },
+			minLength: 2,
+	    });
+	});
+  </script>
 {include file="common/main_footer.tpl"}

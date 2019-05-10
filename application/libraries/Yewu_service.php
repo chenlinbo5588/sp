@@ -25,6 +25,9 @@ class Operation{
 	//转让中
 	public static $transfer = 10;
 	
+	//已撤销
+	public static $revoke = 20;
+	
 	public static $typeName = array(
 		1 => '发起业务',
 		2 => '业务受理',
@@ -34,6 +37,7 @@ class Operation{
 		6 => '结款',
 		7 => '开票',
 		10 => '转让中',
+		20 => '已撤销',
 	);
 }
 
@@ -90,7 +94,7 @@ class Yewu_service extends Base_service {
 	
 	public function getGroupInfo($serviceArea){
 		$groupList = $this->_workGroupModel->getList();
-		foreach($groupList as $key => $item){
+		foreach($groupList as $key => $item){	
 			if(is_array(json_decode($item['service_area'],true))){
 				if(in_array($serviceArea,json_decode($item['service_area'],true))){
 					return $groupList[$key];
@@ -156,11 +160,10 @@ class Yewu_service extends Base_service {
 	}
 	
 	public function setYewuMoney($yewuId,$money,$user){
-		if($money<5000){
+		if($money < 5000){
 			$result = $this->_yewuModel->updateByCondition(array(
-				'plan_money' => $money,
-				'receivable_money' => $money,
-				'status' => 4,
+				'plan_money' => $money * 100,
+				'receivable_money' => $money * 100,
 				'edit_uid' => $user['uid'],
 				'edit_username' => $user['name'],
 				'gmt_modify' => time(),
@@ -168,7 +171,7 @@ class Yewu_service extends Base_service {
 		}else{
 			$result = $this->_yewuModel->updateByCondition(array(
 				'planmoney' => $money,
-				'status' => 3,
+				'status' => 5,
 				'edit_uid' => $user['uid'],
 				'edit_username' => $user['name'],
 				'gmt_modify' => time(),
@@ -176,6 +179,9 @@ class Yewu_service extends Base_service {
 		}
 		return $result;
 	}
+	
+	
+	
 	public function addCompany($companyInfo,$userInfo){
 		$insertData = $companyInfo;
 		$insertData['add_uid'] = $userInfo['id'];
@@ -184,6 +190,7 @@ class Yewu_service extends Base_service {
 		$result = $this->_companyModel->_add($insertData);
 		return $result;	
 	}
+	
 	
 	public function addYewuDetail($userInfo,$operation,$yewu_id){
 		$addInfo = array(
