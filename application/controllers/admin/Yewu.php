@@ -55,6 +55,8 @@ class Yewu extends Ydzj_Admin_Controller {
 		$search['user_mobile'] = $this->input->get_post('user_mobile');
 		$search['work_category'] = $this->input->get_post('work_category');
 		$search['service_area'] = $this->input->get_post('service_area');
+		$search['status'] = $this->input->get_post('status');
+		
 		
 		if($search['yewu_name']){
 			$condition['like']['yewu_name'] = $search['yewu_name'];
@@ -79,6 +81,9 @@ class Yewu extends Ydzj_Admin_Controller {
 		}
 		if($search['service_area']){
 			$condition['where']['service_area'] = $search['service_area'];
+		}
+		if($search['status']){
+			$condition['where']['status'] = $search['status'];
 		}
 		
 		$list = $this->Yewu_Model->getList($condition);
@@ -147,9 +152,14 @@ class Yewu extends Ydzj_Admin_Controller {
 	
 	private function _setRule(){
 		//缺少公司用户组的验证
+		
+		$workCategory = $this->basic_data_service->getTopChildList('工作类别');
+		$serviceArea = $this->basic_data_service->getTopChildList('服务区域');
 		$this->form_validation->set_rules('mobile','手机号码','required|valid_mobile');
 		$this->form_validation->set_rules('name','姓名','required');
-		$this->form_validation->set_rules('user_type','用户类型','required');
+		$this->form_validation->set_rules('work_category','业务类型','required|in_list['.implode(',',array_keys($workCategory)).']',array(
+				'in_list' => '业务类型'
+		));
 	}
 	
 	public function delete(){

@@ -189,9 +189,11 @@ class TdkcUser extends Ydzj_Admin_Controller {
 	
 	private function _setRule(){
 		//缺少公司用户组的验证
+
 		$this->form_validation->set_rules('mobile','手机号码','required|valid_mobile');
 		$this->form_validation->set_rules('name','姓名','required');
 		$this->form_validation->set_rules('user_type','用户类型','required');
+		$this->form_validation->set_rules('company_name','公司名称','required');
 	}
 	
 	public function delete(){

@@ -11,7 +11,7 @@
 	          <td><input class="txt" name="real_name" value="{$smarty.get['real_name']|escape}" type="text"></td>
   	          <th>{#work_category#}:</th>
 	          <td>
-	          	<select name="work_category" id="id_type">
+	          	<select name="work_category">
 		          <option value="">请选择...</option>
 		          {foreach from=$workCategory key=key item=item}
 		          <option value="{$item['id']}" {if $search['work_category'] == $item['id']}selected{/if}>{$key}</option>
@@ -20,10 +20,19 @@
 	          </td>
 	          <th>{#service_area#}:</th>
 	          <td>
-	          	<select name="service_area" id="id_type">
+	          	<select name="service_area">
 		          <option value="">请选择...</option>
 		          {foreach from=$serviceArea key=key item=item}
 		          <option value="{$item['id']}" {if $search['service_area'] == $item['id']}selected{/if}>{$key}</option>
+	              {/foreach}
+		        </select>
+	          </td>
+   	       <th>业务{#status#}:</th>
+	          <td>
+	          	<select name="status">
+		          <option value="">请选择...</option>
+		          {foreach from=$operation key=key item=item}
+		          <option value="{$key}" {if $search['status'] == $key}selected{/if}>{$item}</option>
 	              {/foreach}
 		        </select>
 	          </td>
@@ -86,7 +95,7 @@
           <td class="order_id">{$item['order_id']|escape}</td>
           <td class="align-center">
           	{if isset($permission[$moduleClassName|cat:'/edit'])}<a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}">编辑</a>{/if}&nbsp;&nbsp;
-          	{if isset($permission[$moduleClassName|cat:'/delete'])}<a href="javascript:void(0)" class="deleteBtn" data-url="{admin_site_url($moduleClassName|cat:'/delete')}" data-id="{$item['id']}">删除</a>{/if}
+          	{if isset($permission[$moduleClassName|cat:'/delete'])}<a href="javascript:void(0)" class="deleteBtn" data-url="{admin_site_url($moduleClassName|cat:'/delete')}" data-id="{$item['id']}">撤销</a>{/if}
           </td>
         </tr>
         {/foreach}
@@ -94,8 +103,7 @@
     </table>
     <div class="fixedOpBar">
     	<label><input type="checkbox" class="checkall" id="checkallBottom" name="chkVal">全选</label>&nbsp;
-        <a href="javascript:void(0);" class="btn deleteBtn" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/delete')}"><span>删除</span></a>
-        {if isset($permission[$moduleClassName|cat:'/set_worker'])}<a href="javascript:void(0);" class="btn opBtn" data-title="确定要设置为工作人员吗工作人员默认登录密码为：123456?" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/set_worker')}" data-ajaxformid="#verifyForm"><span>设置工作人员</span></a>{/if}
+        <a href="javascript:void(0);" class="btn deleteBtn" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/delete')}"><span>撤销</span></a>
         {include file="common/pagination.tpl"}
     </div>
   </form>

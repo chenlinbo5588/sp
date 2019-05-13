@@ -162,7 +162,7 @@ class Yewu extends Wx_Tdkc_Controller {
 			$yewuId = $this->postJson['yewu_id'];
 			$yewuInfo = $this->Yewu_Model->getFirstByKey($yewuId,'id');
 			if($yewuInfo['status'] == Operation::$submit);{
-				if($groupId && $yewuId){		
+				if($groupInfo && $yewuInfo){		
 					$this->Yewu_Model->beginTrans();
 				 	$this->Yewu_Model->updateByCondition(
 						array(
@@ -492,20 +492,35 @@ class Yewu extends Wx_Tdkc_Controller {
 	public function setInvoice(){
 		if($this->userInfo){
 			extract($this->postJson,EXTR_OVERWRITE);
-			if($invoice_company && $invoice_no){
-				$this->Invoice_Model->_add(array(
-					'user_id' => $this->userInfo['id'],
-					'invoice_company' => $invoice_company,
-					'invoice_no' => $invoice_no,
-					'address' => $address,
-					'mobile' => $mobile,
-					'deposit_bank' => $deposit_bank,
-					'deposit_account' => $deposit_account,
-					'type' => $type
-				));
-				$this->jsonOutput2(RESP_SUCCESS);
-			}else{
-				$this->jsonOutput2('请填写公司名称和税号');
+			
+			for($i = 0;$i < 1; $i++){
+				//getBasicData
+				$this->form_validation->set_data($this->postJson);
+				$this->form_validation->set_rules('type','类型','required|in_list[1,2]');
+				if(!$type){
+					break;
+				}
+				$this->_ordinaryInvoiceRule;
+				if($type == 2){
+					$this->_specialInvoiceRule;
+				}
+			
+			
+				if($invoice_company && $invoice_no){
+					$result = $this->Invoice_Model->_add(array(
+						'user_id' => $this->userInfo['id'],
+						'invoice_company' => $invoice_company,
+						'invoice_no' => $invoice_no,
+						'address' => $address,
+						'mobile' => $mobile,
+						'deposit_bank' => $deposit_bank,
+						'deposit_account' => $deposit_account,
+						'type' => $type
+					));
+					$this->jsonOutput2(RESP_SUCCESS);
+				}else{
+					$this->jsonOutput2('请填写公司名称和税号');
+				}
 			}
 		}else{
 			$this->jsonOutput2(UNBINDED,$this->unBind);
@@ -516,22 +531,74 @@ class Yewu extends Wx_Tdkc_Controller {
 	
 	public function getInvoiceList(){
 		if($this->userInfo){
-			$invoiceList = $this->Invoice_Model->getFirstByKey($this->userInfo['id'],'user_id');
+			$invoiceList = $this->Invoice_Model->getList(array('where' => array('user_id' => $this->userInfo['id'])));
 			$this->jsonOutput2(RESP_SUCCESS,array('invoiceList' => $invoiceList));
 		}else{
 			$this->jsonOutput2(UNBINDED,$this->unBind);
 		}
 	}
-	
-/*	public function editInvoice(){
+	public function getInvoiceList(){
 		if($this->userInfo){
 			$id = $this->postJson['id'];
-			$invoiceList = $this->Invoice_Model->getFirstByKey($this->userInfo['id'],'user_id');
-			$this->jsonOutput2(RESP_SUCCESS,array('invoiceList' => $invoiceList));
+			$invoiceInfo = $this->Invoice_Model->getFirstByKey($id);
+			$this->jsonOutput2(RESP_SUCCESS,array('invoiceInfo' => $invoiceInfo));
 		}else{
 			$this->jsonOutput2(UNBINDED,$this->unBind);
 		}
-	}*/
+	}
+	
+	public function editInvoice(){
+		if($this->userInfo){
+			$id = $this->postJson['id'];
+			extract($this->postJson,EXTR_OVERWRITE);
+			for($i = 0;$i < 1; $i++){
+				//getBasicData
+				$this->form_validation->set_data($this->postJson);
+				$this->form_validation->set_rules('type','类型','required|in_list[1,2]');
+				if(!$type){
+					break;
+				}
+				$this->_ordinaryInvoiceRule;
+				if($type == 2){
+					$this->_specialInvoiceRule;
+				}
+
+
+	  			
+	  			if(!$this->form_validation->run()){
+					$this->jsonOutput2($this->form_validation->error_first_html());
+					break;
+				}
+				$this->Invoice_Model->_add(array(
+					'user_id' => $this->userInfo['id'],
+					'invoice_company' => $invoice_company,
+					'invoice_no' => $invoice_no,
+					'address' => $address,
+					'mobile' => $mobile,
+					'deposit_bank' => $deposit_bank,
+					'deposit_account' => $deposit_account,
+					'type' => $type
+				));
+				
+				
+			}
+		}else{
+			$this->jsonOutput2(UNBINDED,$this->unBind);
+		}
+	}
+	
+	private function _ordinaryInvoiceRule(){
+		$this->form_validation->set_rules('invoice_company','公司名称','required');
+		$this->form_validation->set_rules('invoice_no','税号','required');
+	}
+	
+	private function _specialInvoiceRule(){
+		$this->form_validation->set_rules('address','地址','required');
+		$this->form_validation->set_rules('mobile','电话','required|valid_mobile');
+		$this->form_validation->set_rules('deposit_bank','开户行','required');
+		$this->form_validation->set_rules('deposit_account','开户账号','required');
+	}
+	
 	
 	/**
 	 * 撤销申请
