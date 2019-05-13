@@ -31,7 +31,7 @@
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input type="text" value="{$info['company_name']|escape}" name="company_name" id="company_name" class="txt"></td>
-
+          <td class="vatop tips"><label id="error_company_name"></label>{form_error('company_name')}</td>
         </tr>
         <tr class="noborder">
           <td colspan="2" class="required">{#group_name#}</label></td>
@@ -144,25 +144,22 @@
 	submitUrl = [new RegExp("{$uri_string}")];
   </script>
   <script type="text/javascript">
-	var submitUrl = [new RegExp("{$uri_string}")],searchAddressUrl = "{admin_site_url('house/getAddress')}";
+	var submitUrl = [new RegExp("{$uri_string}")],searchCompanyUrl = "{admin_site_url('company/getCompany')}";
 	
 	$(function(){
 		$.loadingbar({ text: "正在提交..." , urls: submitUrl , container : "#infoform" });
 		
 		bindAjaxSubmit("#infoform");
 		
-		$( ".datepicker" ).datepicker({
-	    	changeYear: true
-	    });
-	    $( "#address" ).autocomplete({
+	    $( "#company_name" ).autocomplete({
 			source: function( request, response ) {
 				
 				$.ajax( {
-		            url: searchAddressUrl,
+		            url: searchCompanyUrl,
 		            dataType: "json",
 		            data: {
 		              term: request.term,
-		              resident_id:$("input[name=resident_id]:checked").val(),
+		              id:$("input[name=id]:checked").val(),
 		            },
 		            success: function( data ) {
 		              response( data );

@@ -15,56 +15,56 @@ class Yewu extends Wx_Tdkc_Controller {
 
 	public function setYewu(){
 		if($this->userInfo){
-			
-
 			extract($this->postJson,EXTR_OVERWRITE);
-
+			for($i = 0;$i < 1; $i++){
+				//getBasicData
+				$serviceAreaList = $this->basic_data_service->getTopChildList('服务区域');
+				
+				$this->form_validation->set_data($this->postJson);
+	
+	  			$this->form_validation->set_rules('mobile','手机号码','required|valid_mobile');
+	  			$this->form_validation->set_rules('real_name','办证使用名字','required');
+	  			$this->form_validation->set_rules('yewu_describe','业务描述','max_length[255]');
+	  			$this->form_validation->set_rules('service_area','服务区域','required|in_list['.implode(',',array_keys($serviceAreaList)).']');
+	  			
+	  			if(!$this->form_validation->run()){
+					$this->jsonOutput2($this->form_validation->error_first_html());
+					break;
+				}
 			
-			//getBasicData
-			$serviceAreaList = $this->basic_data_service->getTopChildList('服务区域');
-			
-			/*$this->form_validation->set_data($this->postJson);
-
-  			$this->form_validation->set_rules('mobile','手机号码','required|valid_mobile');
-  			$this->form_validation->set_rules('real_name','办证使用名字','required');
-  			$this->form_validation->set_rules('yewu_describe','业务描述','max_length[255]');
-  			$this->form_validation->set_rules('service_area','服务区域','required|in_list['.implode(',',array_keys($serviceAreaList)).']');
-  			
-  			if(!$this->form_validation->run()){
-				$this->jsonOutput2($this->form_validation->error_first_html());
-				break;
-			}*/
-		
-			$groupInfo = $this->yewu_service->getGroupInfo($serviceAreaList[$service_area]['id']);
-			
-			//$companyInfo = $this->Company_Model->getFirstByKey($companyName,'name');
-			 
-			$yewuInfo = array(
-  				'mobile' => $mobile,
-  				'work_category' => $work_category,
-  				'real_name' => $real_name,
-  				'yewu_describe' => $yewu_describe,
-  				'service_area' => $serviceAreaList[$service_area]['id'],
-  				'user_id' => $this->userInfo['id'],
-  				'user_name' => $this->userInfo['name'],
-  				'user_mobile' => $this->userInfo['mobile'],
-				'add_uid'	=>  $this->userInfo['id'],
-				'add_username'	=>  $this->userInfo['name'],
-				'status' => Operation::$submit,
-				'group_id' => $groupInfo['id'],
-				'company_name' => $company_name,
-				//'company_id' => $companyInfo['id'],
-			);
-
-
-			$newYewuId = $this->Yewu_Model->_add($yewuInfo);
-			if($newYewuId){
-				$this->yewu_service->addYewuDetail($this->userInfo,Operation::$submit,$newYewuId);
-				$this->admin_pm_service->addYewuMessage($yewuInfo,$newYewuId);
-				$this->jsonOutput2(RESP_SUCCESS);
-			}else{
+				$groupInfo = $this->yewu_service->getGroupInfo($serviceAreaList[$service_area]['id']);
+				
+				$companyInfo = $this->Company_Model->getFirstByKey($companyName,'name');
+				 
+				$yewuInfo = array(
+	  				'mobile' => $mobile,
+	  				'work_category' => $work_category,
+	  				'real_name' => $real_name,
+	  				'yewu_describe' => $yewu_describe,
+	  				'service_area' => $serviceAreaList[$service_area]['id'],
+	  				'user_id' => $this->userInfo['id'],
+	  				'user_name' => $this->userInfo['name'],
+	  				'user_mobile' => $this->userInfo['mobile'],
+					'add_uid'	=>  $this->userInfo['id'],
+					'add_username'	=>  $this->userInfo['name'],
+					'status' => Operation::$submit,
+					'group_id' => $groupInfo['id'],
+					'company_name' => $company_name,
+					'company_id' => $companyInfo['id'],
+				);
+	
+	
+				$newYewuId = $this->Yewu_Model->_add($yewuInfo);
+				if($newYewuId){
+					$this->yewu_service->addYewuDetail($this->userInfo,Operation::$submit,$newYewuId);
+					$this->admin_pm_service->addYewuMessage($yewuInfo,$newYewuId);
+					$this->jsonOutput2(RESP_SUCCESS);
+					break;
+				}
+				
 				$this->jsonOutput2(RESP_ERROR);
 			}
+			$this->jsonOutput2(UNBINDED,$this->unBind);
 			
 		}
 	}
@@ -303,20 +303,22 @@ class Yewu extends Wx_Tdkc_Controller {
 	  
 	  
 	  /**
-	   * 评价
+	   * 设置评价
 	   */
 	  public function setEvaluate(){
 	  	if($this->userInfo){
 	  		$yewuId = $this->postJson['yewu_id'];
 	  		$yewuInfo = $this->Yewu_Model->getFirstByKey($yewuId,'id');
-	  		$score = $this->postJson['score'];
+	  		$workEfficiency = $this->postJson['work_efficiency'];
+	  		$serviceAttitude = $this->postJson['service_attitude'];
 	  		$content = $this->postJson['content'];
-	  		if($yewuInfo && $score){
+	  		if($yewuInfo){
 	  			$result = $this->Evaluate_Model->_add(array(
 	  				'yewu_id' => $yewuId,
 	  				'worker_id' => $yewuInfo['worker_id'],
 	  				'worker_name' => $yewuInfo['worker_name'],
-	  				'score' => $score,
+	  				'work_efficiency' => $workEfficiency,
+	  				'service_attitude' => $serviceAttitude,
 	  				'content' => $content,
 					'add_uid' => $this->userInfo['id'],
 					'add_username' => $this->userInfo['name'],
@@ -330,6 +332,10 @@ class Yewu extends Wx_Tdkc_Controller {
 	  		}
 	  		
 	  	}
+	  }
+	  
+	  public function getEvaluate(){
+	  	
 	  }
 	  
 	  
@@ -495,6 +501,7 @@ class Yewu extends Wx_Tdkc_Controller {
 					'mobile' => $mobile,
 					'deposit_bank' => $deposit_bank,
 					'deposit_account' => $deposit_account,
+					'type' => $type
 				));
 				$this->jsonOutput2(RESP_SUCCESS);
 			}else{
@@ -509,7 +516,6 @@ class Yewu extends Wx_Tdkc_Controller {
 	
 	public function getInvoiceList(){
 		if($this->userInfo){
-			
 			$invoiceList = $this->Invoice_Model->getFirstByKey($this->userInfo['id'],'user_id');
 			$this->jsonOutput2(RESP_SUCCESS,array('invoiceList' => $invoiceList));
 		}else{
@@ -517,6 +523,15 @@ class Yewu extends Wx_Tdkc_Controller {
 		}
 	}
 	
+/*	public function editInvoice(){
+		if($this->userInfo){
+			$id = $this->postJson['id'];
+			$invoiceList = $this->Invoice_Model->getFirstByKey($this->userInfo['id'],'user_id');
+			$this->jsonOutput2(RESP_SUCCESS,array('invoiceList' => $invoiceList));
+		}else{
+			$this->jsonOutput2(UNBINDED,$this->unBind);
+		}
+	}*/
 	
 	/**
 	 * 撤销申请
@@ -524,14 +539,15 @@ class Yewu extends Wx_Tdkc_Controller {
 	public function  revokeYewu(){
 		if($this->userInfo){
 			$yewuId = $this->postJson['yewu_id'];
-			$yewuInfo = $this->Yewu_Model->getFirstByKey($yewuId,'yewu_id');
-			if($yewuInfo['status'] == Operation::$submit){
+			$yewuInfo = $this->Yewu_Model->getFirstByKey($yewuId);
+			if($yewuInfo['status'] == Operation::$submit || $yewuInfo['status'] == Operation::$transfer){
 				$this->Yewu_Model->updateByCondition(
 					array(
 						'status' => Operation::$revoke,
 					),
 					array('where' => array('id' => $yewuId))
 				);
+				$this->jsonOutput2(RESP_SUCCESS);
 			}else{
 				$this->jsonOutput2('只有在受理之前才能撤销申请');
 			}
@@ -540,8 +556,6 @@ class Yewu extends Wx_Tdkc_Controller {
 		}
 	}
 	
-
-	 
 	 
 	
 }

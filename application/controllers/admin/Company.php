@@ -159,5 +159,46 @@ class Company extends Ydzj_Admin_Controller {
 		}
 	}
 	
+	/**
+	 * @param 自动完成
+	 * 获得房屋地址
+	 */
+	public function getCompany(){
+		
+		$searchKey = $this->input->get_post('term');
+		$companyId = $this->input->get_post('id');
+		
+		$return = array();
+		
+		if($searchKey){
+			
+			$condition = array(
+				'like_after' => array(
+					'name' => $searchKey
+				),
+				'limit' => 20
+			);
+			
+			if($companyId){
+				$condition['where']['id'] = intval($companyId);
+			}
+			
+			$companyList = $this->Company_Model->getList($condition);
+
+			foreach($companyList as $companyItem ){
+				$return[] = array(
+					'id' => $companyItem['id'],
+					'label' => $companyItem['name'],
+					'value' => $companyItem['name'],
+				);
+			}
+
+		}
+		
+		$this->jsonOutput2('',$return,false);
+		
+	}
+	
+	
 	
 }

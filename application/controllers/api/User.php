@@ -32,7 +32,7 @@ class User extends Wx_Tdkc_Controller {
 						$bindInfo['mobile'] = mask_mobile($this->memberInfo['mobile']);
 					}
 				}
-				$bindInfo['uese_type'] = $this->userInfo['user_type'];
+				$bindInfo['user_type'] = $this->userInfo['user_type'];
 				$bindInfo['site_tel'] = $this->_getSiteSetting('site_tel');
 				$bindInfo['default_address'] = $this->_getSiteSetting('service_default_address');
 				
