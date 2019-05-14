@@ -66,6 +66,7 @@ $lang['form_validation_greater_than']		= '{field}必须是大于{param}的数字
 $lang['form_validation_greater_than_equal_to']	= '{field}必须是大于等于{param}的数字';
 $lang['form_validation_error_message_not_set']	= 'Unable to access an error message corresponding to your field name {field}.';
 $lang['form_validation_in_list']		= '{field}必须为{param}其中之一';
+$lang['form_validation_in_list_unstrict']		= '{field}必须为{param}其中之一';
 
 
 //custome method

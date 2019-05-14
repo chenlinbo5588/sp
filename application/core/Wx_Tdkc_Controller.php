@@ -16,7 +16,7 @@ class Wx_Tdkc_Controller extends MY_Controller {
 	
 	public $memberInfo = array();
 	
-	public $yezhuInfo = array();
+	public $userInfo = array();
 	
 	public $yezhuHouseList = array();
 	
@@ -50,7 +50,7 @@ class Wx_Tdkc_Controller extends MY_Controller {
 		
 		
 		$this->initMemberInfo();
-		
+
 		$mpConfig = config_item('mp_xcxTdkc');
 		
         $this->weixin_service->setConfig($mpConfig);

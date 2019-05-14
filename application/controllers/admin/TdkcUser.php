@@ -76,12 +76,11 @@ class TdkcUser extends Ydzj_Admin_Controller {
 		$companyList = $this->Company_Model->getList(array('select' => 'id,name'),'name');
 		$id = $this->input->get_post('id');
 		$info = $this->User_Model->getFirstByKey($id);
+		$groupList = $this->Work_Group_Model->getList(array('select' => 'id,group_name'),'group_name');
 		$userExtend = $this->User_Extend_Model->getList(array('where' => array('user_id' => $id)));
 		$this->_subNavs[] = array('url' => $this->_className.'/edit?id='.$id, 'title' => '编辑');
 		
 		if($this->isPostRequest()){
-			
-			
 			
 			for($i = 0; $i < 1; $i++){
 				$this->_setRule();		
@@ -108,7 +107,7 @@ class TdkcUser extends Ydzj_Admin_Controller {
 				
 			}
 		}else{
-		
+			$this->assign('groupList',$groupList);
 			$this->assign('info',$info);
 			$this->assign('userExtend',$userExtend);
 			$this->display($this->_className.'/add');
@@ -158,7 +157,7 @@ class TdkcUser extends Ydzj_Admin_Controller {
 	
 	public function add(){
 		$companyList = $this->Company_Model->getList(array('select' => 'id,name'),'name');
-		//$groupList = $this->Worker_Group_Model->getList(array('select' => 'id,group_name'),'group_name');
+		$groupList = $this->Work_Group_Model->getList(array('select' => 'id,group_name'),'group_name');
 		if($this->isPostRequest()){
 			$this->_setRule();
 			for($i = 0; $i < 1; $i++){
@@ -172,7 +171,7 @@ class TdkcUser extends Ydzj_Admin_Controller {
 					$insertData['company_id'] = $companyList[$insertData['company_name']]['id'];
 				}
 				if($insertData['group_name']){
-					//$insertData['group_id'] = $companyList[$insertData['group_name']]['id'];
+					$insertData['group_id'] = $companyList[$insertData['group_name']]['id'];
 				}
 				$newid =$this->User_Model->_add($insertData);
 				if($newid){
@@ -182,7 +181,7 @@ class TdkcUser extends Ydzj_Admin_Controller {
 				
 			}
 		}else{
-			
+			$this->assign('groupList',$groupList);
 			$this->display();
 		}
 	}
@@ -193,7 +192,6 @@ class TdkcUser extends Ydzj_Admin_Controller {
 		$this->form_validation->set_rules('mobile','手机号码','required|valid_mobile');
 		$this->form_validation->set_rules('name','姓名','required');
 		$this->form_validation->set_rules('user_type','用户类型','required');
-		$this->form_validation->set_rules('company_name','公司名称','required');
 	}
 	
 	public function delete(){

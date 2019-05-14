@@ -13,7 +13,7 @@ class Operation{
 	//已完成
 	public static $complete = 4;
 	
-		//审核
+	//审核
 	public static $examine = 5;
 	
 	//结款
@@ -171,7 +171,7 @@ class Yewu_service extends Base_service {
 		}else{
 			$result = $this->_yewuModel->updateByCondition(array(
 				'planmoney' => $money,
-				'status' => 5,
+				//'status' => 5,
 				'edit_uid' => $user['uid'],
 				'edit_username' => $user['name'],
 				'gmt_modify' => time(),
@@ -206,18 +206,26 @@ class Yewu_service extends Base_service {
 	}
 	
 	
-	public function getYewuList($id,$status){
+	public function getYewuList($id,$status,$groupId){
 		$ids[] = $id;
 		$condition['where_in'][] = array('key' => 'status', 'value' => $status);
-		$condition['where_in'][] = array('key' => 'user_id', 'value' => $ids);
-		if(is_array($status)){
-			$data = $this->_yewuModel->getList($condition);
-		}else{
+		if($groupId){
 			$data = $this->_yewuModel->getList(array(
 				'where' => array(
-					'user_id' => $id, 
+					'group_id' => $groupId, 
 			)));
+		}else{
+			$condition['where_in'][] = array('key' => 'user_id', 'value' => $ids);
+			if(is_array($status)){
+				$data = $this->_yewuModel->getList($condition);
+			}else{
+				$data = $this->_yewuModel->getList(array(
+					'where' => array(
+						'user_id' => $id, 
+				)));
+			}
 		}
+		
 		$basicData = $this->_basicDataServiecObj->getBasicDataList();
 		foreach($data  as $key => $item){
 			$data[$key]['time'] =date("Y-m-d H:i",$data[$key]['gmt_create']) ;
@@ -236,4 +244,5 @@ class Yewu_service extends Base_service {
 		}
 		return $data;
 	}
+	
 }

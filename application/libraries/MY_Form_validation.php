@@ -17,6 +17,13 @@ class MY_Form_validation extends CI_Form_validation {
 		return $query->num_rows() === 1;
     }
     
+    
+	public function in_list_unstrict($value, $list)
+	{
+		return in_array($value, explode(',', $list), false);
+	} 
+    
+    
     /**
      * sp_member.nickname.uid.182
      */

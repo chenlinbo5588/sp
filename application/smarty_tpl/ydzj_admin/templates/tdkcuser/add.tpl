@@ -37,7 +37,14 @@
           <td colspan="2" class="required">{#group_name#}</label></td>
         </tr>
         <tr class="noborder">
-          <td class="vatop rowform"><input type="text" value="{$info['group_name']|escape}" name="group_name" id="group_name" class="txt"></td>
+          <td class="vatop rowform">
+          	<select name="group_name">
+	          <option value="">请选择...</option>
+	          {foreach from=$groupList key=key item=item}
+	          <option {if $info['group_name'] == $key}selected{/if} value="{$key}">{$key}</option>
+	          {/foreach}
+	        </select>
+          </td>
         </tr>
         <tr class="noborder">
           <td colspan="2" class="required"><label class="validation" for="user_type">{#user_type#}</label></td>

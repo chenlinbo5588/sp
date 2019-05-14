@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $entity = array(
 'id' => 'int',
 'user_id' => 'int',
-'type' => 'tinyint',
+'type' => 'int',
 'invoice_company' => 'varchar',
 'invoice_no' => 'varchar',
 'address' => 'varchar',

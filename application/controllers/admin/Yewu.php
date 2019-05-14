@@ -170,16 +170,19 @@ class Yewu extends Ydzj_Admin_Controller {
 			if(!is_array($ids)){
 				$ids = (array)$ids;
 			}
-			
-			$deleteRows = $this->Yewu_Model->deleteByCondition(array(
-				'where_in' => array(
-					array('key' => 'id','value' => $ids)
-				)
+			$deleteRows = $this->Yewu_Model->updateByCondition(
+					array(
+						'status' => Operation::$revoke,
+					),
+					array(
+						'where_in' => array(array('key' => 'id','value' => $ids)
+					)
 			));
 			
-			$this->jsonOutput('删除成功',array('jsReload' => true));
+			
+			$this->jsonOutput('撤销成功',array('jsReload' => true));
 		}else{
-			$this->jsonOutput('请求非法',$this->getFormHash());
+			$this->jsonOutput('撤销成功',$this->getFormHash());
 			
 		}
 	}
