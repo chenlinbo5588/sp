@@ -26,7 +26,7 @@ class Order_service extends Base_service {
 
 	
 	private $_weixinServiceObj;
-	private $_wuyeServiecObj;
+	private $_yewuServiecObj;
 	
 	private $_orderModel;
 	private $_appConfig;
@@ -40,7 +40,7 @@ class Order_service extends Base_service {
 	public function __construct(){
 		parent::__construct();
 		
-		self::$CI->load->library(array('Weixin_service','Wuye_service','constant/OrderStatus','constant/Utype'));
+		self::$CI->load->library(array('Weixin_service','Yewu_service','constant/OrderStatus','constant/Utype'));
 		
 		
 		self::$CI->load->model(array(
@@ -51,7 +51,7 @@ class Order_service extends Base_service {
 		$this->_yewuModel = self::$CI->Yewu_Model;
 		
 		$this->_weixinServiceObj = self::$CI->weixin_service;
-		$this->_wuyeServiecObj = self::$CI->wuye_service;
+		$this->_yewuServiecObj = self::$CI->yewu_service;
 		
 		$this->_paymentConfig = config_item('payment');
 		
@@ -400,13 +400,21 @@ class Order_service extends Base_service {
 			}
 			
 			$callPayJson = $this->createWeixinOrder($pParam);
-			//$this->
+			
 		
 			if(empty($callPayJson)){
 				$message = $pParam['yewu_name']."订单创建失败";
 				break;
 			}
-			
+			$this->_yewuModel->updateByCondition(
+				array(
+					'status' => Operation::$payment,
+					'order_id' => $callPayJson,
+				),
+				array(
+					'where' => array( 'id' => $pParam['yewu_id'])
+				)
+			);
 			$message = RESP_SUCCESS;
 		}
 
@@ -432,8 +440,6 @@ class Order_service extends Base_service {
 		if(empty($localOrder)){
 			return false;
 		}
-		//暂时屏蔽
-		return true;
 			
 		if($param['order_id']){
 			//已有订单重新签发

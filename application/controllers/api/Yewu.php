@@ -331,11 +331,11 @@ class Yewu extends Wx_Tdkc_Controller {
 	
 	 public function getEvaluateByYewuId(){
 	 	$yewuId = $this->postJson['yewu_id'];
-	 	$evaluateInfo = $this->Evaluate->getFirstByKey($yewuId,'yewu_id');
+	 	$evaluateInfo = $this->Evaluate_Model->getFirstByKey($yewuId,'yewu_id');
 	 	if($evaluateInfo){
 			$this->jsonOutput2(RESP_SUCCESS,array('evaluateInfo' => $evaluateInfo));
 		}else{
-			$this->jsonOutput2('未评价');
+			$this->jsonOutput2('该业务用户暂未评价');
 		}
 	 }
 
@@ -382,6 +382,10 @@ class Yewu extends Wx_Tdkc_Controller {
 			$yewuDetailList[$key]['operation'] = $OperationList[$item['operation']];
 			if('发起业务' == $yewuDetailList[$key]['operation']){
 				$yewuDetailList[$key]['identity'] = '申请人';
+			}elseif('结款' == $yewuDetailList[$key]['operation']){
+				$yewuDetailList[$key]['identity'] = '付款人';
+			}elseif('开票' == $yewuDetailList[$key]['operation']){
+				$yewuDetailList[$key]['identity'] = '开票人';
 			}else{
 				$yewuDetailList[$key]['identity'] = '作业人员';
 			}
@@ -402,7 +406,7 @@ class Yewu extends Wx_Tdkc_Controller {
 		$yewuInfo = $this->Yewu_Model->getFirstByKey($id,'id');
 		$yewuInfo['work_category'] = $basicData[$yewuInfo['work_category']]['show_name'];
 		$yewuInfo['user_name'] = mask_name($yewuInfo['user_name']);
-		$yewuInfo['user_mobile'] = mask_name($yewuInfo['user_mobile']);
+		$yewuInfo['user_mobile'] = mask_mobile($yewuInfo['user_mobile']);
 		$yewuInfo['plan_money'] = $yewuInfo['plan_money'] / 100;
 		$yewuInfo['receivable_money'] = $yewuInfo['receivable_money'] / 100;
 		$this->jsonOutput2(RESP_SUCCESS,array('yewuInfo' => $yewuInfo));
@@ -418,7 +422,7 @@ class Yewu extends Wx_Tdkc_Controller {
 	public function nextStage(){
 		$yewuId = $this->postJson['yewu_id'];
 		$yewuInfo = $this->Yewu_Model->getFirstByKey($yewuId);
-		if($yewuInfo['status'] > Operation::$submit){
+		if($yewuInfo['status'] > Operation::$submit && $yewuInfo['status'] < Operation::$examine){
 			$status = $yewuInfo['status'] + 1;
 			$this->Yewu_Model->updateByCondition(
 				array(

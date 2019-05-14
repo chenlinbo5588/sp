@@ -34,7 +34,7 @@ class Order extends Wx_Tdkc_Controller {
 			$callPayJson = $this->order_service->createOrder('yewu_id',$this->postJson,$this->userInfo,$message);
 			
 			if($callPayJson){
-								
+				$this->yewu_service->addYewuDetail($this->userInfo,Operation::$payment,$this->postJson['yewu_id']);				
 				$this->jsonOutput2(RESP_SUCCESS);
 				
 			}else{
