@@ -335,7 +335,7 @@ class Yewu extends Wx_Tdkc_Controller {
 	 	if($evaluateInfo){
 			$this->jsonOutput2(RESP_SUCCESS,array('evaluateInfo' => $evaluateInfo));
 		}else{
-			$this->jsonOutput2(RESP_ERROR);
+			$this->jsonOutput2('未评价');
 		}
 	 }
 
