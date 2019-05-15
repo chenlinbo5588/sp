@@ -206,7 +206,7 @@ class Yewu_service extends Base_service {
 	}
 	
 	
-	public function getYewuList($id,$status,$groupId){
+	public function getYewuList($id,$status,$groupId = null){
 		$ids[] = $id;
 		$condition['where_in'][] = array('key' => 'status', 'value' => $status);
 		if($groupId){

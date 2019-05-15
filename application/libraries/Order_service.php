@@ -409,7 +409,7 @@ class Order_service extends Base_service {
 			$this->_yewuModel->updateByCondition(
 				array(
 					'status' => Operation::$payment,
-					'order_id' => $callPayJson,
+					'order_id' => $callPayJson
 				),
 				array(
 					'where' => array( 'id' => $pParam['yewu_id'])
@@ -440,6 +440,7 @@ class Order_service extends Base_service {
 		if(empty($localOrder)){
 			return false;
 		}
+
 			
 		if($param['order_id']){
 			//已有订单重新签发

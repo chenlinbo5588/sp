@@ -22,10 +22,10 @@ class WxPayConfig
 	 * 获取地址：https://mp.weixin.qq.com/advanced/advanced?action=dev&t=advanced/dev&token=2005451881&lang=zh_CN
 	 * @var string
 	 */
-	const APPID = 'wxb156d72d0f257ba2';
-	const MCHID = '1506987511';
-	const KEY = 'fa3f6c970f97d8ae7caec504c4dfeebb';
-	const APPSECRET = '1b799d65d300b939966e39ecf403427a';
+	const APPID = 'wxb0296a06cfe15d4c';
+	const MCHID = '1457226802';
+	const KEY = 'e3551b28a7c2b6486c2ecc43e9bb1975';
+	const APPSECRET = '58a783ce5f1675bc3fa5f0ddc4a27eee';
 	
 	//=======【证书路径设置】=====================================
 	/**
@@ -38,8 +38,8 @@ class WxPayConfig
 	 * 3.商户服务器要做好病毒和木马防护工作，不被非法侵入者窃取证书文件。
 	 * @var path
 	 */
-	const SSLCERT_PATH = '/var/data/cert/cswy_apiclient_cert.pem';
-	const SSLKEY_PATH = '/var/data/cert/cswy_apiclient_key.pem';
+	const SSLCERT_PATH = 'D:/website/safetyCertificate/apiclient_cert.pem';
+	const SSLKEY_PATH = 'D:/website/safetyCertificate/apiclient_key.pem';
 	
 	//=======【curl代理设置】===================================
 	/**

@@ -112,7 +112,7 @@
 					        <tr class="noborder">
 					          <td class="required"><input type="text" readonly value="{$valus['name']|escape}" name="name" id="name" class="text"></td>
 					          <td class="required"><input type="text" readonly value="{$valus['user_from']|escape}" name="user_from" id="user_from" class="text"></td>
-					          <td class="required"><input type="text" readonly value="{if $valus['sex'] == 1}男{else}女{/if}" name="sex" id="sex" class="text"></td>
+					          <td class="required"><input type="text" readonly value="{if $valus['sex'] == 1}男{else if $valus['sex'] == 2}女{else}未设置{/if}" name="sex1" id="sex1" class="text"></td>
 					          <td>
 					          	<input type="hidden" name="portrait" value="{$valus['portrait']}" id="portrait"/>
 					          	<div>

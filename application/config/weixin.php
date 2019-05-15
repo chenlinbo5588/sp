@@ -25,6 +25,8 @@ $config['mp_xcxTdkc'] = array(
     'app_secret' => '58a783ce5f1675bc3fa5f0ddc4a27eee',
     'token' => '41eba4b3e62bdf6bd9720ca4dac430e7', //用于消息签名验证
     'EncodingAESKey' => 'S0hLztiWysdSv12U40d0HtLDfjbWD55MFNkfHuPfl64', // 消息加解密key
+    'mch_id' => '1457226802',
+    'mch_key' => 'e3551b28a7c2b6486c2ecc43e9bb1975',
 );
 
 
