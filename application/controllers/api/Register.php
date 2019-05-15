@@ -89,7 +89,7 @@ class Register extends Wx_Tdkc_Controller {
 						'templateVar' => array(
 							'code' => $codeInfo['code']
 						),
-						'templateCode' => 'SMS_136055238',
+						'templateCode' => $smsConfig['templates']['用户注册验证码'],
 						'signName' => $smsConfig['signName']
 					));
 					

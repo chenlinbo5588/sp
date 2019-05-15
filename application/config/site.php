@@ -15,7 +15,10 @@ $config['aliyun_dm'] = array(
 );
 
 $config['aliyun_SMS'] = array(
-	'signName' => '盛元城市物业'
+	'signName' => '慈溪市土地勘测规划设计院',
+	'templates' => array(
+		'用户注册验证码' => 'SMS_160425032'
+	)
 );
 
 
