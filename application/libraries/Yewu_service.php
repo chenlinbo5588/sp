@@ -245,4 +245,27 @@ class Yewu_service extends Base_service {
 		return $data;
 	}
 	
+	/**
+	 * 生成流水号
+	 */
+	public function generateSerialNumber($year,$area,$areaName){
+		$countYear = $this->_yewuModet->getCount(array(
+			'where' => array(
+				'year' => $year,
+			)
+		));
+		$countYear = str_pad($countYear,4,"0",STR_PAD_RIGHT);
+		$countArea = $this->_yewuModet->getCount(array(
+			'where' => array(
+				'year' => $year,
+				'service_area' => $area,
+			)
+		));
+		$countArea = str_pad($countArea,4,"0",STR_PAD_RIGHT);
+		$area = str_pad($area,3,"0",STR_PAD_RIGHT);
+		$acceptNumber = $year.$countYear.$area.$countArea;
+		
+		return array('accept_number' => $acceptNumber , 'encryption' => md5($acceptNumber));
+	}
+	
 }

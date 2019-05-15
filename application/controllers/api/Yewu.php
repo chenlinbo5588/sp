@@ -37,10 +37,11 @@ class Yewu extends Wx_Tdkc_Controller {
 			$groupInfo = $this->yewu_service->getGroupInfo($serviceAreaList[$service_area]['id']);
 			
 			$companyInfo = $this->Company_Model->getFirstByKey($companyName,'name');
+			//$acceptNumber = $this->yewu_service->generateSerialNumber(date('Y'),$serviceAreaList[$service_area]['id'],$service_area);
 			 
 			$yewuInfo = array(
   				'mobile' => $mobile,
-  				'work_category' => $work_category,
+  				'year' => date('Y'),
   				'real_name' => $real_name,
   				'yewu_describe' => $yewu_describe,
   				'service_area' => $serviceAreaList[$service_area]['id'],
@@ -51,8 +52,7 @@ class Yewu extends Wx_Tdkc_Controller {
 				'add_username'	=>  $this->userInfo['name'],
 				'status' => Operation::$submit,
 				'group_id' => $groupInfo['id'],
-				'company_name' => $company_name,
-				'company_id' => $companyInfo['id'],
+				//'accept_number' => $acceptNumber,
 			);
 
 
@@ -453,11 +453,10 @@ class Yewu extends Wx_Tdkc_Controller {
 		
 		if($yewuID){
 			
-			$acceptNumber = 'tdkc'.date('Ymdhms').rand(1000,9999);
+			
 			$result = $this->Yewu_Model->updateByCondition(
 				array(
 					'status' => Operation::$accept,
-					'accept_number' => $acceptNumber,
 					'worker_name' => $this->userInfo['name'],
 					'worker_mobile' => $this->userInfo['mobile'],
 					'work_category' => $workCategory,	

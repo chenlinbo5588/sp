@@ -334,54 +334,15 @@ class Order_service extends Base_service {
 		for($i = 0; $i < 1; $i++){
 			
 			if($pParam['order_id']){
-				
-				$pParam['uid'] = $memberInfo['uid'];
+				break;
 
-				self::$CI->form_validation->set_data($pParam);
-				
-				$this->setOrderIdRules();
-		
-				self::$CI->form_validation->set_rules('uid','用户标识', array(
-						'required',
-						array(
-							'checkIsUserOrder_callable['.$pParam['order_id'].']',
-							array(
-								$this,'checkIsUserOrder'
-							)
-						)
-					)
-				);
-				
-				if(!self::$CI->form_validation->run()){
-					$message = self::$CI->form_validation->error_first_html();
-					break;
-				}
-			
-				$orderInfo = $this->getOrderInfoById($pParam['order_id'],'order_id');
-				
-				$whichField = '';
-				
-				$info = self::$CI->House_Model->getFirstByKey($orderInfo['yewu_id'],'id','wuye_expire,nenghao_expire');
-				
-
-				
-				if(time() >= strtotime($orderInfo['time_expire'])){
-					$this->updateOrderStatusByIds(array($orderInfo['id']),OrderStatus::$closed,OrderStatus::$unPayed);
-					$message = '订单已过期';
-					break;
-				}
-				
-				//fixed 用户先选择一个月份在创建订单付款界面取消后， 重新选择缴费月份，然后付款后一笔交易成功后， 最后我的订单中继续付款前一个交易。
-				if($orderInfo['fee_old_expire'] != $info[$whichField]){
-					$this->updateOrderStatusByIds(array($orderInfo['id']),OrderStatus::$closed,OrderStatus::$unPayed);
-					$message = '该订单缴费信息已过期';
-					break;
-				}
-				
 			}else{
 				self::$CI->form_validation->set_data($pParam);
+									
+				//异步回调
+				$pParam['notify_url'] = site_url(self::$orderType['nameKey']['测绘费']['order_url']);
 										
-			//开始创建订单
+				//开始创建订单
 				$yewuInfo = $this->_yewuModel->getFirstByKey($pParam['yewu_id']);
 				$pParam['amount'] = $yewuInfo['receivable_money'];
 				$pParam['yewu_name'] = 	$yewuInfo['name'];
@@ -485,7 +446,7 @@ class Order_service extends Base_service {
 				$input->SetOpenid($param['openid']);
 					
 				$weixinOrder = WxPayApi::unifiedOrder($input);
-			
+				
 				if($this->checkWeixinRespSuccess($weixinOrder)){
 					
 					//将 prepay_id 保存起来, 用来在用户取消订单后，后续可以再次进行下发 换起支付的参数
