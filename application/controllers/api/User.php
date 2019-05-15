@@ -15,9 +15,7 @@ class User extends Wx_Tdkc_Controller {
 		$code = $this->postJson['code'];
 		
 		if($code){
-			$xcxConfig = config_item('mp_xcxTdkc');
 			
-			$this->weixin_service->setConfig($xcxConfig);
 			$weixinUser = $this->weixin_service->getWeixinUserByCode($code);
 			if($weixinUser){
 				$this->session->set_userdata(array(

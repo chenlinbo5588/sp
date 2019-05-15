@@ -11,7 +11,6 @@ class Order extends Wx_Tdkc_Controller {
 		parent::__construct();
 		
 		$this->load->library('Order_service');
-        $this->order_service->setWeixinAppConfig(config_item('mp_xcxCswy'));
 		
     	
     	//print_r(Order_service::$orderType);

@@ -51,9 +51,6 @@ class Wx_Tdkc_Controller extends MY_Controller {
 		
 		$this->initMemberInfo();
 
-		$mpConfig = config_item('mp_xcxTdkc');
-		
-        $this->weixin_service->setConfig($mpConfig);
 		
 	}
 	
