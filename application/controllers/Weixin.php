@@ -28,7 +28,7 @@ class Weixin extends Ydzj_Controller {
     	
     	
     	$groupName = $_SERVER['argv'][3];
-    	if(!in_array($groupName,array('mp','mp_xcxTdkc','mp_xcxCswy'))){
+    	if(!in_array($groupName,array('mp','mp_xcxTdkc'))){
     		die(0);
     	}
     	
