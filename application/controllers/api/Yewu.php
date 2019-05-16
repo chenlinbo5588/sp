@@ -78,11 +78,11 @@ class Yewu extends Wx_Tdkc_Controller {
 
 			$id = $this->userInfo['uid'];
 			$status = $this->postJson['status'];
-			if(!is_array($status)){
+			if(!is_array($status) && $status){
 				$status[] = $status;
 			}
 			$search = $this->postJson['search'];
-			$data = $this->yewu_service->getYewuList($id,$status,$this->userInfo['group_id'],$search);
+			$data = $this->yewu_service->getYewuList($id,$status,$this->userInfo['group_id'],$search,$THIS->userInfo['user_type']);
 			
 			$yewuList = array(
 				'data' =>$data,
@@ -112,15 +112,15 @@ class Yewu extends Wx_Tdkc_Controller {
 		$id = $this->postJson['id'];
 		
 		$data =$this->Yewu_Model->getFirstByKey($id,'id');
-
+		
 		if($data){
 			$usermobileName =array(
 				'user_name' => $data['user_name'],
 				'user_mobile' => $data['user_mobile'],
 			);
 			$workmobileName =array(
-				'user_name' => $data['work_name'],
-				'user_mobile' => $data['work_mobile'],
+				'user_name' => $data['worker_name'],
+				'user_mobile' => $data['worker_mobile'],
 			);
 			$this->jsonOutput2(RESP_SUCCESS,array('user' => $usermobileName , 'worker' => $workmobileName));
 		}else{
@@ -560,6 +560,7 @@ class Yewu extends Wx_Tdkc_Controller {
 	
 	
 	private function invoiceRule(){
+		$type = $this->postJson['type'];
 			for($i = 0;$i < 1; $i++){
 				$this->form_validation->set_data($this->postJson);
 	
@@ -570,10 +571,13 @@ class Yewu extends Wx_Tdkc_Controller {
 				$this->form_validation->set_rules('invoice_company','公司名称','required');
 				$this->form_validation->set_rules('invoice_no','税号','required|alpha_numeric');
 				$invoiceNo = $this->postJson['invoice_no'];
-/*				if(strlen($invoiceNo != 15,)
+				if(strlen($invoiceNo) != 15 && strlen($invoiceNo) != 17 && strlen($invoiceNo) != 18 &&strlen($invoiceNo) != 20){
+					$this->jsonOutput2('纳税人识别号输入错误');
+					break;
+				}
 				if(15 == strlen($invoiceNo)){
-					$regioncode
-				}*/
+					$regioncode = substr ($invoiceNo,2);
+				}
 				if($type == 2){
 					$this->form_validation->set_rules('address','地址','required');
 					$this->form_validation->set_rules('mobile','电话','required');

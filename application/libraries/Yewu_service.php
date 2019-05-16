@@ -206,19 +206,24 @@ class Yewu_service extends Base_service {
 	}
 	
 	
-	public function getYewuList($id,$status = null,$groupId = null,$search){
+	public function getYewuList($id,$status = null,$groupId = null,$search,$userType){
 		$ids[] = $id;
 		$groupIds[] = $groupId;
-		
-		if(is_array($status) && count($status) >0){
-			$condition['where_in'][] = array('key' => 'status', 'value' => $status);
+		//不是区域领导
+		if(4 != $userType){		
+			if(is_array($status) && count($status) >0){
+				$condition['where_in'][] = array('key' => 'status', 'value' => $status);
+			}
+			if($groupId){
+				$condition['where_in'][] = array('key' => 'group_id', 'value' => $groupIds);
+			}else{
+				$condition['where_in'][] = array('key' => 'user_id', 'value' => $ids);
+			}
+			if($search){
+				$condition['like']['yewu_name'] = $search;
+			}
 		}
-		if($groupId){
-			$condition['where_in'][] = array('key' => 'group_id', 'value' => $groupIds);
-		}else{
-			$condition['where_in'][] = array('key' => 'user_id', 'value' => $ids);
-		}
-		$condition['order'] = 'status DESC';
+		$condition['order'] = 'status ASC';
 		$data = $this->_yewuModel->getList($condition);
 		$basicData = $this->_basicDataServiecObj->getBasicDataList();
 		foreach($data  as $key => $item){
@@ -254,20 +259,20 @@ class Yewu_service extends Base_service {
 	 * 生成流水号
 	 */
 	public function generateSerialNumber($year,$area,$areaName){
-		$countYear = $this->_yewuModet->getCount(array(
+		$countYear = $this->_yewuModel->getCount(array(
 			'where' => array(
 				'year' => $year,
 			)
 		));
-		$countYear = str_pad($countYear,4,"0",STR_PAD_RIGHT);
-		$countArea = $this->_yewuModet->getCount(array(
+		$countYear = str_pad($countYear,4,"0",STR_PAD_LEFT);
+		$countArea = $this->_yewuModel->getCount(array(
 			'where' => array(
 				'year' => $year,
 				'service_area' => $area,
 			)
 		));
-		$countArea = str_pad($countArea,4,"0",STR_PAD_RIGHT);
-		$area = str_pad($area,3,"0",STR_PAD_RIGHT);
+		$countArea = str_pad($countArea,4,"0",STR_PAD_LEFT);
+		$area = str_pad($area,3,"0",STR_PAD_LEFT);
 		$acceptNumber = $year.$countYear.$area.$countArea;
 		
 		return array('accept_number' => $acceptNumber , 'encryption' => md5($acceptNumber));
