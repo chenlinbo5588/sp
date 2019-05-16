@@ -28,7 +28,7 @@ class Wx_Tdkc_Controller extends MY_Controller {
 	
 	public function __construct(){
 		parent::__construct();
-		
+
 		$this->load->library(array('Weixin_service','Yewu_service','Register_service'));
 		$this->form_validation->set_error_delimiters('','');
 		
@@ -60,7 +60,6 @@ class Wx_Tdkc_Controller extends MY_Controller {
 	 */
 	protected function initMemberInfo(){
 		
-		
 		$this->sessionInfo = $this->session->all_userdata();
 		
 		//微信用户
@@ -76,14 +75,14 @@ class Wx_Tdkc_Controller extends MY_Controller {
 			}
 			*/
 			
-			$this->memberInfo = $this->yewu_service->initUserInfoBySession($weixinUser,'uid');
+			$this->memberInfo = $this->yewu_service->initMemberInfoBySession($weixinUser,'uid');
 			if($this->memberInfo){
-				$this->userInfo = $this->yewu_service->getUserInfoById($this->memberInfo['user_id']);
+				$this->userInfo = $this->yewu_service->getMenberInfoById($this->memberInfo['member_uid']);
 			}else{
 				$data = $this->register_service->setNewMember($this->sessionInfo);
 				if('success' == $data['code']){
-					$this->memberInfo = $this->yewu_service->initUserInfoBySession($weixinUser,'uid');
-					$this->userInfo = $this->yewu_service->getUserInfoById($this->memberInfo['user_id']);
+					$this->memberInfo = $this->yewu_service->initMemberInfoBySession($weixinUser,'uid');
+					$this->userInfo = $this->yewu_service->getMenberInfoById($this->memberInfo['member_uid']);
 				}else{
 					log_message('error',"新增会员出错,错误信息weixinUser:".$weixinUser);
 				}

@@ -1,9 +1,9 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class User_Extend_Model extends MY_Model {
+class Member_Extend_Model extends MY_Model {
     
-    public $_tableName = 'user_extend';
+    public $_tableName = 'member_extend';
     public static $_tableMeta = null;
 
 

@@ -110,29 +110,27 @@ class Weixin_service extends Base_service {
 			'user_type' => 1, //默认新绑定的用户为普通用户
 			'channel' => 1,   //小程序注册进入的
 		);
-		$member = self::$userExtendModel->getFirstByKey($regData['openid'],'uid');
+		$member = self::$memberExtendModel->getFirstByKey($regData['openid'],'uid');
 		
-		self::$userExtendModel->beginTrans();
-		self::$userExtendModel->update($regData,array('id' => $member['id']));
+		self::$memberExtendModel->beginTrans();
+		self::$memberExtendModel->update($regData,array('id' => $member['id']));
 		
 		if($member){
-			$user = $this->_userModel->getFirstByKey($regData['mobile'],'mobile');
+			$user = $this->_memberModel->getFirstByKey($regData['mobile'],'mobile');
 			if($user){
-				self::$userExtendModel->updateByWhere(array('user_id' => $user['id'],'mobile' => $regData['mobile']),array('uid' => $regData['openid']));
-			}else{
-				$newId = $this->_userModel->_add($regData);
-				self::$userExtendModel->updateByWhere(array('user_id' => $newId,'mobile' => $regData['mobile']),array('uid' => $regData['openid']));
+				self::$memberExtendModel->updateByWhere(array('member_uid' => $user['uid'],'mobile' => $regData['mobile']),array('uid' => $regData['openid']));
+				self::$memberModel->updateByWhere(array('name' => $regData['name'],'user_type' => $regData['user_type'],'mobile' => $regData['mobile']),array('uid' => $user['uid']));
 			}
 
 		}
-		$member = self::$userExtendModel->getFirstByKey($regData['openid'],'uid');
+		$member = self::$memberExtendModel->getFirstByKey($regData['openid'],'uid');
 		
-		if(self::$userExtendModel->getTransStatus() === FALSE){
-			self::$userExtendModel->rollBackTrans();
+		if(self::$memberExtendModel->getTransStatus() === FALSE){
+			self::$memberExtendModel->rollBackTrans();
 			return false;
 		}else{
-			self::$userExtendModel->commitTrans();
-			return $member['user_id'];
+			self::$memberExtendModel->commitTrans();
+			return $member['member_uid'];
 		}
 	}
 

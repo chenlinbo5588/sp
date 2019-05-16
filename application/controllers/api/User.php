@@ -15,7 +15,6 @@ class User extends Wx_Tdkc_Controller {
 		$code = $this->postJson['code'];
 		
 		if($code){
-			
 			$weixinUser = $this->weixin_service->getWeixinUserByCode($code);
 			if($weixinUser){
 				$this->session->set_userdata(array(
@@ -23,7 +22,7 @@ class User extends Wx_Tdkc_Controller {
 				));
 				
 				$bindInfo = $this->weixin_service->checkUserBind($weixinUser);
-
+				
 				$this->initMemberInfo();
 				if($this->memberInfo){
 					if(11 == strlen($this->memberInfo['mobile'])){

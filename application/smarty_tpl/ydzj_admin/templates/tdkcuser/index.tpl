@@ -48,12 +48,12 @@
           <td>{$userType[$item['user_type']]}</td>
           <td>{if $item['sex'] == 1}男{else}女{/if}</td>
           <td class="align-center yes-onoff">
-          	<a href="javascript:void(0);" data-url="{admin_site_url($moduleClassName|cat:'/inline_edit')}" {if $item['user_status']}class="enabled"{else}class="disabled"{/if} data-id="{$item['id']}" data-fieldname="user_status"><img src="{resource_url('img/transparent.gif')}"></a>
+          	<a href="javascript:void(0);" data-url="{admin_site_url($moduleClassName|cat:'/inline_edit')}" {if $item['user_status']}class="enabled"{else}class="disabled"{/if} data-id="{$item['uid']}" data-fieldname="user_status"><img src="{resource_url('img/transparent.gif')}"></a>
           </td>
           <td class="inviter_name">{$item['inviter_name']|escape}</td>
           <td class="align-center">
-            {if isset($permission[$moduleClassName|cat:'/edit'])}<a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}">编辑</a>{/if}&nbsp;&nbsp;
-          	{if isset($permission[$moduleClassName|cat:'/delete'])}<a href="javascript:void(0)" class="deleteBtn" data-url="{admin_site_url($moduleClassName|cat:'/delete')}" data-id="{$item['id']}">删除</a>{/if}
+            {if isset($permission[$moduleClassName|cat:'/edit'])}<a href="{admin_site_url($moduleClassName|cat:'/edit')}?uid={$item['uid']}">编辑</a>{/if}&nbsp;&nbsp;
+          	{if isset($permission[$moduleClassName|cat:'/delete'])}<a href="javascript:void(0)" class="deleteBtn" data-url="{admin_site_url($moduleClassName|cat:'/delete')}" data-id="{$item['uid']}">删除</a>{/if}
           </td>
         </tr>
         {/foreach}

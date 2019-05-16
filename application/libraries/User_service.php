@@ -39,19 +39,19 @@ class User_service extends Base_service {
 		parent::__construct();
 		
 		self::$CI->load->model(array(
-			'User_Model','User_Extend_Model','Company_Model','Yewu_Model','Work_Group_Model','Worker_Member_Model',
-			'Company_Member_Model',
+			'User_Model','Member_Extend_Model','Company_Model','Yewu_Model','Work_Group_Model','Worker_Member_Model',
+			'Company_Member_Model','Member_Model'
 		));
 		
 		$this->_residentModel = self::$CI->Resident_Model;
-		$this->_userModel = self::$CI->User_Model;
+		$this->_memberModel = self::$CI->Member_Model;
 
 		$this->_dataModule = array(-1);
 
 	}
 	public function getUserInfoById($pId,$key = 'uid'){
 		
-		$uesrList = $this->$this->_userModel->getList(array(
+		$uesrList = $this->$this->_memberModel->getList(array(
 			'where' => array(
 				$key => $pId
 			),

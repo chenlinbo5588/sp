@@ -37,7 +37,7 @@ class TdkcUser extends Ydzj_Admin_Controller {
 		$currentPage = $this->input->get_post('page') ? $this->input->get_post('page') : 1;
 	
 		$condition = array(
-			'order' => 'id DESC',
+			'order' => 'uid DESC',
 			'pager' => array(
 				'page_size' => config_item('page_size'),
 				'current_page' => $currentPage,
@@ -59,7 +59,7 @@ class TdkcUser extends Ydzj_Admin_Controller {
 			$condition['where']['user_type'] = $search['user_type'];
 		}
 		
-		$list = $this->User_Model->getList($condition);
+		$list = $this->Member_Model->getList($condition);
 		$this->assign(array(
 			'basicData' => $this->basic_data_service->getBasicData(),
 			'list' => $list,
@@ -74,10 +74,10 @@ class TdkcUser extends Ydzj_Admin_Controller {
 	}
 	public function edit(){
 		$companyList = $this->Company_Model->getList(array('select' => 'id,name'),'name');
-		$id = $this->input->get_post('id');
-		$info = $this->User_Model->getFirstByKey($id);
+		$id = $this->input->get_post('uid');
+		$info = $this->Member_Model->getFirstByKey($id,'uid');
 		$groupList = $this->Work_Group_Model->getList(array('select' => 'id,group_name'),'group_name');
-		$userExtend = $this->User_Extend_Model->getList(array('where' => array('user_id' => $id)));
+		$userExtend = $this->Member_Extend_Model->getList(array('where' => array('member_uid' => $id)));
 		$this->_subNavs[] = array('url' => $this->_className.'/edit?id='.$id, 'title' => '编辑');
 		
 		if($this->isPostRequest()){
@@ -96,7 +96,7 @@ class TdkcUser extends Ydzj_Admin_Controller {
 				if($updateData['group_name']){
 					//$updateData['group_id'] = $companyList[$updateData['group_name']]['id'];
 				}
-				$returnVal = $this->User_Model->update($updateData,array('id' => $id));
+				$returnVal = $this->Member_Model->update($updateData,array('uid' => $id));
 				
 				if($returnVal < 0){
 					$this->jsonOutput('保存失败',$this->getFormHash());
@@ -125,12 +125,12 @@ class TdkcUser extends Ydzj_Admin_Controller {
 				if(!is_array($ids)){
 					$ids = (array)$ids;
 				}
-				$userList = $this->User_Model->getList(array('where_in'=>array(array('key' => 'id', 'value' => $ids))));
+				$userList = $this->Member_Model->getList(array('where_in'=>array(array('key' => 'id', 'value' => $ids))));
 				$who = $this->addWhoHasOperated('edit');
 				
 				foreach($userList as $key => $item){
 					$password = $this->encrypt->encode(trim('123456'),config_item('encryption_key').md5(trim($item['mobile'])));
-					$returnstatusVal = $this->User_Model->updateByCondition(
+					$returnstatusVal = $this->Member_Model->updateByCondition(
 						array(
 							'user_type' => 2,
 							'password' => $password,
@@ -173,7 +173,7 @@ class TdkcUser extends Ydzj_Admin_Controller {
 				if($insertData['group_name']){
 					$insertData['group_id'] = $companyList[$insertData['group_name']]['id'];
 				}
-				$newid =$this->User_Model->_add($insertData);
+				$newid =$this->Member_Model->_add($insertData);
 				if($newid){
 					$this->jsonOutput('保存成功,页面即将刷新',array('redirectUrl' => admin_site_url($this->_className.'/index')));
 				}
@@ -203,9 +203,9 @@ class TdkcUser extends Ydzj_Admin_Controller {
 				$ids = (array)$ids;
 			}
 			
-			$deleteRows = $this->User_Model->deleteByCondition(array(
+			$deleteRows = $this->Member_Model->deleteByCondition(array(
 				'where_in' => array(
-					array('key' => 'id','value' => $ids)
+					array('key' => 'uid','value' => $ids)
 				)
 			));
 			
@@ -225,14 +225,14 @@ class TdkcUser extends Ydzj_Admin_Controller {
 		for($i = 0 ; $i < 1; $i++){
 			
 			$data = array(
-				'id' => $id,
+				'uid' => $id,
 				'fieldname' => $fieldName,
 				$fieldName => $newValue
 			);
 			
 			$this->form_validation->set_data($data);
 			
-			$this->form_validation->set_rules('id','数据标识','required');
+			$this->form_validation->set_rules('uid','数据标识','required');
 
 			$message = '修改失败';
 			
@@ -241,7 +241,7 @@ class TdkcUser extends Ydzj_Admin_Controller {
 				$message = $this->form_validation->error_html();
 			}else{
 				
-				if($this->User_Model->update(array($fieldName => $newValue),array('id' => $id)) < 0){
+				if($this->Member_Model->update(array($fieldName => $newValue),array('uid' => $id)) < 0){
 					$message = '数据修改失败';
 				}else{
 					$message = '修改成功';

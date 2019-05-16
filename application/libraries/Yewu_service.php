@@ -51,23 +51,23 @@ class Yewu_service extends Base_service {
 		parent::__construct();
 		
 		self::$CI->load->model(array(
-			'User_Model','Yewu_Model','Work_Group_Model','Yewu_Transfer_Model','Evaluate_Model','User_Extend_Model',
+			'Member_Model','Yewu_Model','Work_Group_Model','Yewu_Transfer_Model','Evaluate_Model','Member_Extend_Model',
 			'Company_Model','Yewu_Detail_Model','Invoice_Model'
 		));
 		self::$CI->load->library(array('Basic_data_service','Admin_pm_service'));
-		$this->_userModel = self::$CI->User_Model;
+		$this->_memberModel = self::$CI->Member_Model;
 		$this->_yewuModel = self::$CI->Yewu_Model;
 		$this->_workGroupModel = self::$CI->Work_Group_Model;
 		$this->_companyModel = self::$CI->Company_Model;
 		$this->_yewuTransferModel = self::$CI->Yewu_Transfer_Model;
-		$this->_userExtendModel = self::$CI->User_Extend_Model;
+		$this->_memberExtendModel = self::$CI->Member_Extend_Model;
 		$this->_yewuDetailModel = self::$CI->Yewu_Detail_Model;
 		$this->_basicDataServiecObj = self::$CI->basic_data_service;
 
 	}
-	public function getUserInfoById($pId,$key = 'id'){
+	public function getMenberInfoById($pId,$key = 'uid'){
 		
-		$uesrList = $this->_userModel->getList(array(
+		$uesrList = $this->_memberModel->getList(array(
 			'where' => array(
 				$key => $pId
 			),
@@ -85,10 +85,10 @@ class Yewu_service extends Base_service {
 	 * 根据会话 初始话 相关数据
 	 * 
 	 */
-	public function initUserInfoBySession($pSession,$idKey = 'uid'){
+	public function initMemberInfoBySession($pSession,$idKey = 'uid'){
 		
 		$idVal = $pSession['openid'];
-		return $this->_userExtendModel->getFirstByKey($idVal,$idKey);
+		return $this->_memberExtendModel->getFirstByKey($idVal,$idKey);
 		
 	}
 	
@@ -208,41 +208,45 @@ class Yewu_service extends Base_service {
 	
 	public function getYewuList($id,$status = null,$groupId = null,$search){
 		$ids[] = $id;
-		if($status){
+		$groupIds[] = $groupId;
+		
+		if(is_array($status) && count($status) >0){
 			$condition['where_in'][] = array('key' => 'status', 'value' => $status);
 		}
 		if($groupId){
-			$data = $this->_yewuModel->getList(array(
-				'where' => array(
-					'group_id' => $groupId,
-			)));
+			$condition['where_in'][] = array('key' => 'group_id', 'value' => $groupIds);
 		}else{
+			
 			$condition['where_in'][] = array('key' => 'user_id', 'value' => $ids);
-			if(is_array($status)){
-				$data = $this->_yewuModel->getList($condition);
-			}
 		}
 		
+		
+		$data = $this->_yewuModel->getList($condition);
 		$basicData = $this->_basicDataServiecObj->getBasicDataList();
 		foreach($data  as $key => $item){
-			$data[$key]['time'] =date("Y-m-d H:i",$data[$key]['gmt_create']) ;
-			$data[$key]['mobile'] =mask_mobile($data[$key]['mobile']);
-			$data[$key]['real_name'] =mask_name($data[$key]['real_name']);
-			$data[$key]['user_name'] =mask_name($data[$key]['user_name']);
-			$data[$key]['user_mobile'] =mask_mobile($data[$key]['user_mobile']);
-			$data[$key]['work_category'] = $basicData[$item['work_category']]['show_name'];
-			if($data[$key]['status'] == Operation::$transfer){
-				$transfer = $this->_yewuTransferModel->getList(array('yewu_id' => $item['id'],'status' => '1'));
+			if($data[$key]['status'] != Operation::$revoke){
+				$data[$key]['time'] =date("Y-m-d H:i",$data[$key]['gmt_create']) ;
+				$data[$key]['mobile'] =mask_mobile($data[$key]['mobile']);
+				$data[$key]['real_name'] =mask_name($data[$key]['real_name']);
+				$data[$key]['user_name'] =mask_name($data[$key]['user_name']);
+				$data[$key]['user_mobile'] =mask_mobile($data[$key]['user_mobile']);
+				$data[$key]['work_category'] = $basicData[$item['work_category']]['show_name'];
+				
+				
+				if($data[$key]['status'] == Operation::$transfer){
+					$transfer = $this->_yewuTransferModel->getList(array('yewu_id' => $item['id'],'status' => '1'));
+				}
+				
+				if($transfer){
+					$data[$key]['group_name_from'] = $transfer[0]['group_name_from'];
+					$data[$key]['group_name_to'] = $transfer[0]['group_name_to'];
+				}
+	
+
+				$yewuDetailInfo = $this->_yewuDetailModel->getList(array('where' => array('operation' => $data[$key]['status'],'yewu_id' =>$key)));
+				$data[$key]['worker_name'] =mask_name($yewuDetailInfo[0]['name']);
+				$data[$key]['worker_mobile'] =mask_mobile($yewuDetailInfo[0]['mobile']);
 			}
-			if($transfer){
-				$data[$key]['group_name_from'] = $transfer[0]['group_name_from'];
-				$data[$key]['group_name_to'] = $transfer[0]['group_name_to'];
-			}
-			
-			$yewuDetailInfo = $this->_yewuDetailModel->getList(array('where' => array('yewu_id' => $key , 'status' => $status)));
-			$data[$key]['worker_name'] =mask_name($yewuDetailInfo[0]['name']);
-			$data[$key]['worker_mobile'] =mask_mobile($yewuDetailInfo[0]['mobile']);
-			
 			
 		}
 		return $data;

@@ -318,8 +318,7 @@ $(function(){
 					<li><a class="link" id="nav_my" href="javascript:void(0);" onclick="openItem('my');"><span>个人中心</span></a></li>
 					{if isset($permission['nav_member'])}<li><a class="link" id="nav_member" href="javascript:void(0);" onclick="openItem('member');"><span>会员</span></a></li>{/if}
 					{if isset($permission['nav_service'])}<li><a class="link" id="nav_service" href="javascript:void(0);" onclick="openItem('service');"><span>服务</span></a></li>{/if}
-					{if isset($permission['nav_wuye'])}<li><a class="link" id="nav_wuye" href="javascript:void(0);" onclick="openItem('wuye');"><span>物业</span></a></li>{/if}
-					{if isset($permission['nav_user'])}<li><a class="link" id="nav_user" href="javascript:void(0);" onclick="openItem('user');"><span>用户</span></a></li>{/if}
+					<!--{if isset($permission['nav_wuye'])}<li><a class="link" id="nav_wuye" href="javascript:void(0);" onclick="openItem('wuye');"><span>物业</span></a></li>{/if}-->
 					{*<li><a class="link" id="nav_team" href="javascript:void(0);" onclick="openItem('team');"><span>队伍</span></a></li>
 					<li><a class="link" id="nav_stadium" href="javascript:void(0);" onclick="openItem('stadium');"><span>场馆</span></a></li>
 					<li><a class="link" id="nav_game" href="javascript:void(0);" onclick="openItem('game');"><span>赛事</span></a></li>
@@ -437,12 +436,16 @@ $(function(){
                 <dd>
                   <ol>
                     {if isset($permission['side_basic_data'])}<li><a href="javascript:void(0);" id="category_basic_data" onclick="openItem('category,basic_data,service');">基础数据</a></li>{/if}
-                    {if isset($permission['side_worker'])}<li><a href="javascript:void(0);" id="index_worker" onclick="openItem('index,worker,service');">家政从业人员</a></li>{/if}
+                    {if isset($permission['side_tdkcuser'])}<li><a href="javascript:void(0);" id="index_tdkcuser" onclick="openItem('index,tdkcuser,service');">用户</a></li>{/if}
+                    {if isset($permission['side_company'])}<li><a href="javascript:void(0);" id="index_company" onclick="openItem('index,company,service');">公司</a></li>{/if}
+                    {if isset($permission['side_yewu'])}<li><a href="javascript:void(0);" id="index_yewu" onclick="openItem('index,yewu,service');">业务</a></li>{/if}
+                  	{if isset($permission['side_work_group'])}<li><a href="javascript:void(0);" id="index_work_group" onclick="openItem('index,work_group,service');">工作组</a></li>{/if}
+                    <!--{if isset($permission['side_worker'])}<li><a href="javascript:void(0);" id="index_worker" onclick="openItem('index,worker,service');">家政从业人员</a></li>{/if}
                     {if isset($permission['side_yuesao'])}<li><a href="javascript:void(0);" id="index_yuesao" onclick="openItem('index,yuesao,service');">月嫂</a></li>{/if}
                     {if isset($permission['side_baomu'])}<li><a href="javascript:void(0);" id="index_baomu" onclick="openItem('index,baomu,service');">保姆</a></li>{/if}
                     {if isset($permission['side_hugong'])}<li><a href="javascript:void(0);" id="index_hugong" onclick="openItem('index,hugong,service');">护工</a></li>{/if}
                     {if isset($permission['side_service_setting'])}<li><a href="javascript:void(0);" id="base_service_setting" onclick="openItem('base,service_setting,service');">服务设置</a></li>{/if}
-                    {if isset($permission['side_staff_booking'])}<li><a href="javascript:void(0);" id="index_staff_booking" onclick="openItem('index,staff_booking,service');">预约单</a></li>{/if}
+                    {if isset($permission['side_staff_booking'])}<li><a href="javascript:void(0);" id="index_staff_booking" onclick="openItem('index,staff_booking,service');">预约单</a></li>{/if}-->
 
                   </ol>
                 </dd>
@@ -473,10 +476,6 @@ $(function(){
               <dl>
                 <dd>
                   <ol>
-                    {if isset($permission['side_tdkcuser'])}<li><a href="javascript:void(0);" id="index_tdkcuser" onclick="openItem('index,tdkcuser,user');">用户</a></li>{/if}
-                    {if isset($permission['side_company'])}<li><a href="javascript:void(0);" id="index_company" onclick="openItem('index,company,user');">公司</a></li>{/if}
-                    {if isset($permission['side_yewu'])}<li><a href="javascript:void(0);" id="index_yewu" onclick="openItem('index,yewu,user');">业务</a></li>{/if}
-                  	{if isset($permission['side_work_group'])}<li><a href="javascript:void(0);" id="index_work_group" onclick="openItem('index,work_group,user');">工作组</a></li>{/if}
                   </ol>
                 </dd>
               </dl>

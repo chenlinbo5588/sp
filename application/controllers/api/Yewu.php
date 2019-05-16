@@ -78,6 +78,9 @@ class Yewu extends Wx_Tdkc_Controller {
 
 			$id = $this->userInfo['id'];
 			$status = $this->postJson['status'];
+			if(!is_array($status)){
+				$status[] = $status;
+			}
 			$search = $this->postJson['search'];
 			$data = $this->yewu_service->getYewuList($id,$status,$this->userInfo['group_id'],$search);
 			
@@ -112,16 +115,12 @@ class Yewu extends Wx_Tdkc_Controller {
 
 		if($data){
 			$usermobileName =array(
-				'name' =>$data['real_name'],
-				'mobile' => $data['mobile'],
-				'user_name' => $data['user_name'],
-				'user_mobile' => $data['user_mobile'],
+				'user_name' => mask_name($data['user_name']),
+				'user_mobile' => mask_mobile($data['user_mobile']),
 			);
 			$workmobileName =array(
-				'name' =>$data['real_name'],
-				'mobile' => $data['mobile'],
-				'user_name' => $data['user_name'],
-				'user_mobile' => $data['user_mobile'],
+				'user_name' => $data['work_name'],
+				'user_mobile' => $data['work_mobile'],
 			);
 			$this->jsonOutput2(RESP_SUCCESS,array('user' => $usermobileName , 'worker' => $workmobileName));
 		}else{
