@@ -11,6 +11,7 @@ class Order extends Wx_Tdkc_Controller {
 		parent::__construct();
 		
 		$this->load->library('Order_service');
+		$this->order_service->setWeixinAppConfig(config_item('mp_xcxTdkc'));
 		
     	
     	//print_r(Order_service::$orderType);
@@ -34,7 +35,7 @@ class Order extends Wx_Tdkc_Controller {
 			
 			if($callPayJson){
 				$this->yewu_service->addYewuDetail($this->userInfo,Operation::$payment,$this->postJson['yewu_id']);				
-				$this->jsonOutput2(RESP_SUCCESS);
+				$this->jsonOutput2(RESP_SUCCESS,$callPayJson);
 				
 			}else{
 				$this->jsonOutput2($message);

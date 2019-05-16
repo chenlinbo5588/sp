@@ -367,15 +367,6 @@ class Order_service extends Base_service {
 				$message = $pParam['yewu_name']."订单创建失败";
 				break;
 			}
-			$this->_yewuModel->updateByCondition(
-				array(
-					'status' => Operation::$payment,
-					'order_id' => $callPayJson
-				),
-				array(
-					'where' => array( 'id' => $pParam['yewu_id'])
-				)
-			);
 			$message = RESP_SUCCESS;
 		}
 
@@ -819,7 +810,21 @@ class Order_service extends Base_service {
 		
 		
 	}
-	
+	public function updateOrderRelation($orderInfo){
+		$this->_orderModel->updateByCondition(
+			array('status' => 2),
+			array('where' => array('id' => $orderInfo['id']))
+		);
+		$this->_yewuModel->updateByCondition(
+			array(
+				'status' => Operation::$payment,
+				'order_id' => $orderInfo['id'],
+			),
+			array(
+				'where' => array( 'id' => $orderInfo['yewu_id'])
+			)
+		);
+	}
 	
 
 }

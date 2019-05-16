@@ -52,6 +52,7 @@ class Yewu extends Wx_Tdkc_Controller {
 				'add_username'	=>  $this->userInfo['name'],
 				'status' => Operation::$submit,
 				'group_id' => $groupInfo['id'],
+				'company_name' => $company_name
 				//'accept_number' => $acceptNumber,
 			);
 
@@ -76,8 +77,9 @@ class Yewu extends Wx_Tdkc_Controller {
 
 
 			$id = $this->userInfo['id'];
-			$status = $this->postJson['status'];			
-			$data = $this->yewu_service->getYewuList($id,$status,$this->userInfo['group_id']);
+			$status = $this->postJson['status'];
+			$search = $this->postJson['search'];
+			$data = $this->yewu_service->getYewuList($id,$status,$this->userInfo['group_id'],$search);
 			
 			$yewuList = array(
 				'data' =>$data,
@@ -109,13 +111,19 @@ class Yewu extends Wx_Tdkc_Controller {
 		$data =$this->Yewu_Model->getFirstByKey($id,'id');
 
 		if($data){
-			$mobileName =array(
+			$usermobileName =array(
 				'name' =>$data['real_name'],
 				'mobile' => $data['mobile'],
 				'user_name' => $data['user_name'],
 				'user_mobile' => $data['user_mobile'],
 			);
-			$this->jsonOutput2(RESP_SUCCESS,$mobileName);
+			$workmobileName =array(
+				'name' =>$data['real_name'],
+				'mobile' => $data['mobile'],
+				'user_name' => $data['user_name'],
+				'user_mobile' => $data['user_mobile'],
+			);
+			$this->jsonOutput2(RESP_SUCCESS,array('user' => $usermobileName , 'worker' => $workmobileName));
 		}else{
 			$this->jsonOutput2(RESP_ERROR);
 		}
@@ -380,6 +388,8 @@ class Yewu extends Wx_Tdkc_Controller {
 		$OperationList = Operation::$typeName;
 		foreach($yewuDetailList as $key => $item){
 			$yewuDetailList[$key]['operation'] = $OperationList[$item['operation']];
+			$yewuDetailList[$key]['name'] = mask_name($yewuDetailList[$key]['name']);
+			$yewuDetailList[$key]['mobile'] = mask_name($yewuDetailList[$key]['mobile']);
 			if('发起业务' == $yewuDetailList[$key]['operation']){
 				$yewuDetailList[$key]['identity'] = '申请人';
 			}elseif('结款' == $yewuDetailList[$key]['operation']){
@@ -546,6 +556,7 @@ class Yewu extends Wx_Tdkc_Controller {
 				
 				$this->form_validation->set_rules('invoice_company','公司名称','required');
 				$this->form_validation->set_rules('invoice_no','税号','required|alpha_numeric');
+				
 				if($type == 2){
 					$this->form_validation->set_rules('address','地址','required');
 					$this->form_validation->set_rules('mobile','电话','required');

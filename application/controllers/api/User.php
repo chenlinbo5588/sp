@@ -27,7 +27,7 @@ class User extends Wx_Tdkc_Controller {
 				$this->initMemberInfo();
 				if($this->memberInfo){
 					if(11 == strlen($this->memberInfo['mobile'])){
-						$bindInfo['mobile'] = $this->memberInfo['mobile'];
+						$bindInfo['mobile'] = mask_name($this->memberInfo['mobile']);
 					}
 				}
 				$bindInfo['user_type'] = $this->userInfo['user_type'];

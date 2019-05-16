@@ -206,23 +206,20 @@ class Yewu_service extends Base_service {
 	}
 	
 	
-	public function getYewuList($id,$status,$groupId = null){
+	public function getYewuList($id,$status = null,$groupId = null,$search){
 		$ids[] = $id;
-		$condition['where_in'][] = array('key' => 'status', 'value' => $status);
+		if($status){
+			$condition['where_in'][] = array('key' => 'status', 'value' => $status);
+		}
 		if($groupId){
 			$data = $this->_yewuModel->getList(array(
 				'where' => array(
-					'group_id' => $groupId, 
+					'group_id' => $groupId,
 			)));
 		}else{
 			$condition['where_in'][] = array('key' => 'user_id', 'value' => $ids);
 			if(is_array($status)){
 				$data = $this->_yewuModel->getList($condition);
-			}else{
-				$data = $this->_yewuModel->getList(array(
-					'where' => array(
-						'user_id' => $id, 
-				)));
 			}
 		}
 		
@@ -241,6 +238,12 @@ class Yewu_service extends Base_service {
 				$data[$key]['group_name_from'] = $transfer[0]['group_name_from'];
 				$data[$key]['group_name_to'] = $transfer[0]['group_name_to'];
 			}
+			
+			$yewuDetailInfo = $this->_yewuDetailModel->getList(array('where' => array('yewu_id' => $key , 'status' => $status)));
+			$data[$key]['worker_name'] =mask_name($yewuDetailInfo[0]['name']);
+			$data[$key]['worker_mobile'] =mask_mobile($yewuDetailInfo[0]['mobile']);
+			
+			
 		}
 		return $data;
 	}
