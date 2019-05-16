@@ -8,7 +8,6 @@ $entity = array(
 'password' => 'varchar',
 'status' => 'tinyint',
 'mobile' => 'varchar',
-'name' => 'varchar',
 'sex' => 'tinyint',
 'qq' => 'varchar',
 'weixin' => 'varchar',

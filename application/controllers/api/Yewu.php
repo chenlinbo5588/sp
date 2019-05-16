@@ -9,7 +9,7 @@ class Yewu extends Wx_Tdkc_Controller {
     	
     	$this->load->library('Yewu_service','Admin_pm_service','Basic_data_service');
 
-		if(empty($this->userInfo)){
+		if(11 != strlen($this->userInfo['mobile'])){
 			die();
 		}
 	}
