@@ -184,7 +184,7 @@ class Yewu_service extends Base_service {
 	
 	public function addCompany($companyInfo,$userInfo){
 		$insertData = $companyInfo;
-		$insertData['add_uid'] = $userInfo['id'];
+		$insertData['add_uid'] = $userInfo['uid'];
 		$insertData['add_name'] = $userInfo['name'];
 		$insertData['gmt_create'] = time();
 		$result = $this->_companyModel->_add($insertData);

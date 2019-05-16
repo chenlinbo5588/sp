@@ -76,7 +76,7 @@ class Yewu extends Wx_Tdkc_Controller {
 	public function getYewuList(){
 
 
-			$id = $this->userInfo['id'];
+			$id = $this->userInfo['uid'];
 			$status = $this->postJson['status'];
 			if(!is_array($status)){
 				$status[] = $status;
@@ -176,7 +176,7 @@ class Yewu extends Wx_Tdkc_Controller {
 							'worker_mobile' => $groupInfo['group_leader_mobile'],
 							'current_group' => $groupInfo['id'],
 							'status' => 10,
-							'edit_uid' => $this->userInfo['id'],
+							'edit_uid' => $this->userInfo['uid'],
 							'edit_username' => $this->userInfo['name'],
 							'gmt_modify' => time(),
 							
