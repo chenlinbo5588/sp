@@ -48,7 +48,7 @@ class Yewu extends Wx_Tdkc_Controller {
   				'user_id' => $this->userInfo['uid'],
   				'user_name' => $this->userInfo['name'],
   				'user_mobile' => $this->userInfo['mobile'],
-				'add_uid'	=>  $this->userInfo['id'],
+				'add_uid'	=>  $this->userInfo['uid'],
 				'add_username'	=>  $this->userInfo['name'],
 				'status' => Operation::$submit,
 				'group_id' => $groupInfo['id'],
@@ -191,7 +191,7 @@ class Yewu extends Wx_Tdkc_Controller {
 						'group_id_to' => $groupInfo['id'],
 						'group_name_to' => $groupInfo['group_name'],
 						'status' => 1,
-						'add_uid' => $this->userInfo['id'],
+						'add_uid' => $this->userInfo['uid'],
 						'add_username' => $this->userInfo['name'],
 						'gmt_create' => time(),
 					));
@@ -322,7 +322,7 @@ class Yewu extends Wx_Tdkc_Controller {
   				'work_efficiency' => $workEfficiency,
   				'service_attitude' => $serviceAttitude,
   				'content' => $content,
-				'add_uid' => $this->userInfo['id'],
+				'add_uid' => $this->userInfo['uid'],
 				'add_username' => $this->userInfo['name'],
 				'gmt_create' => time(),
   			));
