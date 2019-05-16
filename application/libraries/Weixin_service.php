@@ -15,12 +15,12 @@ class Weixin_service extends Base_service {
 		
 		self::$CI->load->library(array('Weixin_mp_api'));
 		
-		self::$CI->load->model('Weixin_Message_Model','User_Model');
+		self::$CI->load->model('Weixin_Message_Model','Member_Model');
 		
 		$this->_mpApi = self::$CI->weixin_mp_api;
 		
 		$this->_weixinMessageModel = self::$CI->Weixin_Message_Model;
-		$this->_userModel = self::$CI->User_Model;
+		$this->_memberModel = self::$CI->Member_Model;
 	}
 	
 	
@@ -116,9 +116,9 @@ class Weixin_service extends Base_service {
 		self::$memberExtendModel->update($regData,array('id' => $member['id']));
 		
 		if($member){
-			$user = $this->_memberModel->getFirstByKey($regData['mobile'],'mobile');
+			$user = $this->_memberModel->getFirstByKey($member['member_uid'],'uid');
 			if($user){
-				self::$memberExtendModel->updateByWhere(array('member_uid' => $user['uid'],'mobile' => $regData['mobile']),array('uid' => $regData['openid']));
+				self::$memberExtendModel->updateByWhere(array('name' => $regData['name'],'mobile' => $regData['mobile']),array('uid' => $regData['openid']));
 				self::$memberModel->updateByWhere(array('name' => $regData['name'],'user_type' => $regData['user_type'],'mobile' => $regData['mobile']),array('uid' => $user['uid']));
 			}
 

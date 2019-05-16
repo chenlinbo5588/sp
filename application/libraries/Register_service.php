@@ -64,6 +64,7 @@ class Register_service extends Base_service {
 		$regData = array(
 			'name' => date('YmdHms').$msectime,
 			'mobile' => date('YmdHms').$msectime,
+			'openid' => $param['weixin_user']['openid'],
 			'channel' => 1,   //小程序注册进入的
 		);
 		$resp = $this->createMember($memberRegData,$regData);
@@ -80,9 +81,10 @@ class Register_service extends Base_service {
 		$regParam['reg_ip'] = self::$CI->input->ip_address();
 		$regParam['reg_date'] = self::$CI->input->server('REQUEST_TIME');
 				
-		$uid = self::$memberExtendModel->_add($memberRegData);
-		$uid = self::$memberModel->_add($regParam);
 		
+		$memberUid = self::$memberModel->_add($regParam);
+		$memberRegData['member_uid'] = $memberUid;
+		$uid = self::$memberExtendModel->_add($memberRegData);
 		if($uid > 0){
 			$return = $this->successRetun(array('uid' => $uid));
 			self::$CI->Security_Control_Model->_add(array(

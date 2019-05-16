@@ -119,8 +119,8 @@ class Yewu extends Wx_Tdkc_Controller {
 				'user_mobile' => mask_mobile($data['user_mobile']),
 			);
 			$workmobileName =array(
-				'user_name' => $data['work_name'],
-				'user_mobile' => $data['work_mobile'],
+				'user_name' => mask_name($data['work_name']),
+				'user_mobile' => mask_mobile($data['work_mobile']),
 			);
 			$this->jsonOutput2(RESP_SUCCESS,array('user' => $usermobileName , 'worker' => $workmobileName));
 		}else{
@@ -388,7 +388,7 @@ class Yewu extends Wx_Tdkc_Controller {
 		foreach($yewuDetailList as $key => $item){
 			$yewuDetailList[$key]['operation'] = $OperationList[$item['operation']];
 			$yewuDetailList[$key]['name'] = mask_name($yewuDetailList[$key]['name']);
-			$yewuDetailList[$key]['mobile'] = mask_name($yewuDetailList[$key]['mobile']);
+			$yewuDetailList[$key]['mobile'] = mask_mobile($yewuDetailList[$key]['mobile']);
 			if('发起业务' == $yewuDetailList[$key]['operation']){
 				$yewuDetailList[$key]['identity'] = '申请人';
 			}elseif('结款' == $yewuDetailList[$key]['operation']){

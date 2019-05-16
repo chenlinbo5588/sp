@@ -219,8 +219,7 @@ class Yewu_service extends Base_service {
 			
 			$condition['where_in'][] = array('key' => 'user_id', 'value' => $ids);
 		}
-		
-		
+		$condition['order'] = 'status DESC';
 		$data = $this->_yewuModel->getList($condition);
 		$basicData = $this->_basicDataServiecObj->getBasicDataList();
 		foreach($data  as $key => $item){
