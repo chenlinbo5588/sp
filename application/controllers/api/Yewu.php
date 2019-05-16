@@ -37,7 +37,7 @@ class Yewu extends Wx_Tdkc_Controller {
 			$groupInfo = $this->yewu_service->getGroupInfo($serviceAreaList[$service_area]['id']);
 			
 			$companyInfo = $this->Company_Model->getFirstByKey($companyName,'name');
-			//$acceptNumber = $this->yewu_service->generateSerialNumber(date('Y'),$serviceAreaList[$service_area]['id'],$service_area);
+			$acceptNumber = $this->yewu_service->generateSerialNumber(date('Y'),$serviceAreaList[$service_area]['id'],$service_area);
 			 
 			$yewuInfo = array(
   				'mobile' => $mobile,
@@ -53,7 +53,7 @@ class Yewu extends Wx_Tdkc_Controller {
 				'status' => Operation::$submit,
 				'group_id' => $groupInfo['id'],
 				//'company_name' => $company_name
-				//'accept_number' => $acceptNumber,
+				'accept_number' => $acceptNumber['accept_number'],
 			);
 
 
@@ -115,12 +115,12 @@ class Yewu extends Wx_Tdkc_Controller {
 
 		if($data){
 			$usermobileName =array(
-				'user_name' => mask_name($data['user_name']),
-				'user_mobile' => mask_mobile($data['user_mobile']),
+				'user_name' => $data['user_name'],
+				'user_mobile' => $data['user_mobile'],
 			);
 			$workmobileName =array(
-				'user_name' => mask_name($data['work_name']),
-				'user_mobile' => mask_mobile($data['work_mobile']),
+				'user_name' => $data['work_name'],
+				'user_mobile' => $data['work_mobile'],
 			);
 			$this->jsonOutput2(RESP_SUCCESS,array('user' => $usermobileName , 'worker' => $workmobileName));
 		}else{

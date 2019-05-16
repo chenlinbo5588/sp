@@ -14,6 +14,7 @@ $entity = array(
 'worker_mobile' => 'varchar',
 'user_id' => 'int',
 'user_name' => 'varchar',
+'year' => 'int',
 'user_mobile' => 'varchar',
 'work_category' => 'int',
 'service_area' => 'varchar',

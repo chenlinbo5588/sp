@@ -216,7 +216,6 @@ class Yewu_service extends Base_service {
 		if($groupId){
 			$condition['where_in'][] = array('key' => 'group_id', 'value' => $groupIds);
 		}else{
-			
 			$condition['where_in'][] = array('key' => 'user_id', 'value' => $ids);
 		}
 		$condition['order'] = 'status DESC';
