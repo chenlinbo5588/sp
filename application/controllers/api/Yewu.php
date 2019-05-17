@@ -672,10 +672,8 @@ class Yewu extends Wx_Tdkc_Controller {
 	 */
 	 public function relationYewuInvoice(){
 	 	$yewuId = $this->postJson['yewu_id'];
-	 	
-	 	$type = $this->postJson['type'];
-	 	if('个人' == $type){
-	 		$name = $this->postJson['invoice_name'];
+	 	$name = $this->postJson['invoice_name'];
+	 	if($name){
 	 		$result = $this->Yewu_Model->updateByCondition(
 				array(
 					'invoice_name' => $name,
