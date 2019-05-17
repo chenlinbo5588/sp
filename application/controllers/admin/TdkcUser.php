@@ -102,7 +102,7 @@ class TdkcUser extends Ydzj_Admin_Controller {
 					$this->jsonOutput('保存失败',$this->getFormHash());
 				}
 				else{
-					//$this->jsonOutput('保存成功,页面即将刷新',array('redirectUrl' => admin_site_url($this->_className.'/index')));
+					$this->jsonOutput('保存成功,页面即将刷新',array('redirectUrl' => admin_site_url($this->_className.'/index')));
 				}
 				
 			}

@@ -289,4 +289,5 @@ class Yewu_service extends Base_service {
 		return array('accept_number' => $acceptNumber , 'encryption' => md5($acceptNumber));
 	}
 	
+	
 }
