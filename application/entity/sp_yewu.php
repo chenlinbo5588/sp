@@ -33,5 +33,6 @@ $entity = array(
 'edit_username' => 'varchar',
 'gmt_create' => 'int',
 'gmt_modify' => 'int',
-'year' => 'int'
+'invoice_id' => 'int',
+'invoice_name' => 'varchar'
 );

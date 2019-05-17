@@ -624,13 +624,25 @@ class Yewu extends Wx_Tdkc_Controller {
 	
 	 public function relationYewuInvoice(){
 	 	$yewuId = $this->postJson['yewu_id'];
-	 	$invoiceId = $this->postJson['invoice_id'];
-	 	$result = $this->Yewu_Model->updateByCondition(
-			array(
-				'invoice_id' => $invoiceId,
-			),
-			array('where' => array('id' => $yewuId))
-		);
+	 	
+	 	$type = $this->postJson['type'];
+	 	if('个人' == $type){
+	 		$name = $this->postJson['invoice_name'];
+	 		$result = $this->Yewu_Model->updateByCondition(
+				array(
+					'invoice_name' => $name,
+				),
+				array('where' => array('id' => $yewuId))
+			);
+	 	}else{
+	 		$invoiceId = $this->postJson['invoice_id'];
+		 	$result = $this->Yewu_Model->updateByCondition(
+				array(
+					'invoice_id' => $invoiceId,
+				),
+				array('where' => array('id' => $yewuId))
+			);
+	 	}
 	 	if($result){
 	 		$this->jsonOutput2(RESP_SUCCESS,'申请已接收,正在打印发票');
 	 	}else{
@@ -641,13 +653,20 @@ class Yewu extends Wx_Tdkc_Controller {
 	 public function getInvoiceByYewuId(){
 	 	$yewuId = $this->postJson['yewu_id'];
 	 	$yewuInfo = $this->Yewu_Model->getFirstByKey($yewuId);
-	 	$invoiceId = $yewuInfo['invoice_id'];
-	 	$invoiceInfo = $this->Invoice_Model->getFirstByKey($invoiceId);
-	 	if($invoiceInfo){
-	 		$this->jsonOutput2(RESP_SUCCESS,array('invoiceInfo' => $invoiceInfo));
+	 	if($yewuInfo['invoice_name']){
+	 		$this->jsonOutput2(RESP_SUCCESS,array('invoiceInfo' => $yewuInfo['invoice_name']));
+	 	}
+	 	if($yewuInfo['invoice_id']){
+		 	$invoiceInfo = $this->Invoice_Model->getFirstByKey($yewuInfo['invoice_id']);
+		 	if($invoiceInfo){
+		 		$this->jsonOutput2(RESP_SUCCESS,array('invoiceInfo' => $invoiceInfo));
+		 	}else{
+		 		$this->jsonOutput2(RESP_ERROR);
+		 	}
 	 	}else{
 	 		$this->jsonOutput2(RESP_ERROR);
 	 	}
+
 	 }
 	
 }
