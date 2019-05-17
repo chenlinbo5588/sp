@@ -817,7 +817,7 @@ class Order_service extends Base_service {
 		);
 		$this->_yewuModel->updateByCondition(
 			array(
-				'status' => Operation::$payment,
+				'is_payed' => Operation::$payment,
 				'order_id' => $orderInfo['id'],
 			),
 			array(

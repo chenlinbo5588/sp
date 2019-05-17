@@ -519,11 +519,11 @@ class Admin_pm_service extends Base_service {
 	/**
 	 * 业务站内信
 	 */
-	public function addYewuMessage($yewuInfo,$id){
+	public function addYewuMessage($yewuInfo,$id,$title){
 		
 		$jumpUrl  = admin_site_url('yewu/edit?id='.$id);
 		$this->addMessage(array(
-			'title' => '新业务 '.$yewuInfo['service_area'].$yewuInfo['yewu_name'],
+			'title' => $title,
 			'content' => '<div>业务描述:<a target="workspace" href="'. $jumpUrl.'">'.$yewuInfo['yewu_describe'].' 点击描述查看详情</a></div>',
 			'form_id' => $yewuInfo['user_id'],
 		));

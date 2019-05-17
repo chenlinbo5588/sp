@@ -57,11 +57,11 @@ class Yewu extends Wx_Tdkc_Controller {
 				'encryption_number' => $acceptNumber['encryption'],
 			);
 
-
+			$title = $service_area.'新业务';
 			$newYewuId = $this->Yewu_Model->_add($yewuInfo);
 			if($newYewuId){
 				$this->yewu_service->addYewuDetail($this->userInfo,Operation::$submit,$newYewuId);
-				$this->admin_pm_service->addYewuMessage($yewuInfo,$newYewuId);
+				$this->admin_pm_service->addYewuMessage($yewuInfo,$newYewuId,$title);
 				$this->jsonOutput2(RESP_SUCCESS);
 				break;
 			}
@@ -655,6 +655,9 @@ class Yewu extends Wx_Tdkc_Controller {
 		}
 	}
 	
+	/**
+	 * 开票
+	 */
 	 public function relationYewuInvoice(){
 	 	$yewuId = $this->postJson['yewu_id'];
 	 	
@@ -664,6 +667,7 @@ class Yewu extends Wx_Tdkc_Controller {
 	 		$result = $this->Yewu_Model->updateByCondition(
 				array(
 					'invoice_name' => $name,
+					'is_invoice' => Operation::$invoice,
 				),
 				array('where' => array('id' => $yewuId))
 			);
@@ -672,17 +676,25 @@ class Yewu extends Wx_Tdkc_Controller {
 		 	$result = $this->Yewu_Model->updateByCondition(
 				array(
 					'invoice_id' => $invoiceId,
+					'is_invoice' => Operation::$invoice,
 				),
 				array('where' => array('id' => $yewuId))
 			);
 	 	}
 	 	if($result){
+	 		$this->yewu_service->addYewuDetail($this->userInfo,Operation::$invoice,$yewuId);
+	 		$yewuInfo = $this->Yewu_Model->getFirstByKey($yewuId);
+	 		$title = $yewuInfo['name'].'开票';
+	 		$this->admin_pm_service->addYewuMessage($yewuInfo,$yewuId,$title);
 	 		$this->jsonOutput2(RESP_SUCCESS,'申请已接收,正在打印发票');
 	 	}else{
 	 		$this->jsonOutput2('申请失败,请重新申请');
 	 	}
 	 }
 	 
+	 /**
+	  * 获得开票信息
+	  */
 	 public function getInvoiceByYewuId(){
 	 	$yewuId = $this->postJson['yewu_id'];
 	 	$yewuInfo = $this->Yewu_Model->getFirstByKey($yewuId);
@@ -700,6 +712,58 @@ class Yewu extends Wx_Tdkc_Controller {
 	 		$this->jsonOutput2(RESP_ERROR);
 	 	}
 
+	 }
+	 
+	 
+	 
+	 /**
+	  * 设置已缴费
+	  */
+	 public function setUpPayed(){
+	 	$yewuId = $this->postJson['yewu_id'];
+	 	$type = $this->userInfo['user_type'];
+	 	if(3 == $type){
+	 		$result = $this->Yewu_Model->updateByCondition(
+				array(
+					'is_payed' => Operation::$payment,
+				),
+				array('where' => array('id' => $yewuId))
+			);
+			if($result){
+				$this->yewu_service->addYewuDetail($this->userInfo,Operation::$payment,$yewuId);
+				$this->jsonOutput2(RESP_SUCCESS);
+			}else{
+				$this->jsonOutput2(RESP_ERROR);
+			}	
+	 	}else{
+	 		$this->jsonOutput2('只有工作组组长才能设置已缴费');
+	 	}
+	 }
+	 
+	 
+	 
+	 /**
+	  * 设置已开票
+	  */
+ 	 public function setUpInvoice(){
+	 	$yewuId = $this->postJson['yewu_id'];
+	 	$type = $this->userInfo['user_type'];
+	 	if(3 == $type){
+	 		$result = $this->Yewu_Model->updateByCondition(
+				array(
+					'is_invoice' => Operation::$invoice,
+				),
+				array('where' => array('id' => $yewuId))
+			);
+			if($result){
+				$this->yewu_service->addYewuDetail($this->userInfo,Operation::$invoice,$yewuId);
+				$this->jsonOutput2(RESP_SUCCESS);
+			}else{
+				$this->jsonOutput2(RESP_ERROR);
+			}	
+	 	}else{
+	 		$this->jsonOutput2('只有工作组组长才能设置已缴费');
+	 	}
 	 }
 	
 }

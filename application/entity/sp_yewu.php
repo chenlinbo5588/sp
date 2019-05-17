@@ -34,5 +34,7 @@ $entity = array(
 'gmt_create' => 'int',
 'gmt_modify' => 'int',
 'invoice_id' => 'int',
-'invoice_name' => 'varchar'
+'invoice_name' => 'varchar',
+'is_payed' => 'tinyint',
+'is_invoice' => 'tinyint'
 );
