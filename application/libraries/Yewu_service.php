@@ -176,7 +176,9 @@ class Yewu_service extends Base_service {
 				'edit_uid' => $user['uid'],
 				'edit_username' => $user['name'],
 				'gmt_modify' => time(),
-			),array('where' => array('id' => $yewuId)));	
+			),array('where' => array('id' => $yewuId)));
+			$result = "业务需审核";	
+			
 		}
 		return $result;
 	}

@@ -52,39 +52,24 @@ class Order extends Wx_Tdkc_Controller {
 	 * 获得订单列表
 	 */
 	public function getList(){
-		if($this->memberInfo){
-			
-			$page = $this->postJson['page'];
-			$statusName = $this->postJson['statusName'];
-			
-			if(empty($page)){
-				$page = 1;
+		if($this->userInfo){
+			$basicData = $this->_basicDataServiecObj->getBasicDataList();
+			$userId = $this->userInfo['uid'];
+			$orderList = $this->Order_model->getList(array('where' => array('uid' => $userId)));
+			foreach($orderList as $key => $Item){
+				if($Item['status'] == 2){
+					$yewuId[] = $Item['yewu_id'];
+					$orderPayedList[] = $Item;
+				}
 			}
-			
-			$statusNameList = OrderStatus::$statusName;
-			$orderStatus = 0;
-			
-			if (in_array ($statusName, $statusNameList)) {
-				$orderStatus = array_search($statusName,$statusNameList);
-			}else{
-				$orderStatus = -1;
+			$yewuList = $this->Yewu_Model->getList(array('where_in' => array(array('key' => 'id','value' => $yewuId))));
+			foreach($orderPayedList as $key => $item){
+				if(in_array($item['yewu_id'],$yewuList)){
+					$orderPayedList['encryption_number'] = $yewuList[$item['yewu_id']]['encryption_number'];
+					$orderPayedList['work_category'] = $basicData[$yewuList[$item['yewu_id']]['work_category']]['show_name'];
+				}
 			}
-			
-			$condition = array(
-				'where' => array(
-					'uid' => $this->memberInfo['uid'],
-					'status' => $orderStatus
-				),
-				'pager' => array(
-					'page_size' => config_item('page_size'),
-					'current_page' => $page,
-				),
-				'order' => 'id DESC'
-			);
-			
-			$orderList = $this->order_service->getOrderListByCondition($condition);
-			$this->jsonOutput2(RESP_SUCCESS,$orderList);
-			
+			$this->jsonOutput2(RESP_SUCCESS,array('orderList' => $orderPayedList));	
 		}else{
 			$this->jsonOutput2(UNBINDED,$this->unBind);
 		}

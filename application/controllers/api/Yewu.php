@@ -299,7 +299,7 @@ class Yewu extends Wx_Tdkc_Controller {
 			if($yewuId && $money > 0){
 				$result = $this->yewu_service->setYewuMoney($yewuId,$money,$this->userInfo);
 				if($result){
-					$this->jsonOutput2(RESP_SUCCESS);
+					$this->jsonOutput2(RESP_SUCCESS,array('title' =>$result));
 				}else{
 					$this->jsonOutput2(RESP_ERROR);
 				}
@@ -742,12 +742,7 @@ class Yewu extends Wx_Tdkc_Controller {
 				),
 				array('where' => array('id' => $yewuId))
 				);
-				if($result){
-					$this->yewu_service->addYewuDetail($this->userInfo,Operation::$payment,$yewuId);
-					$this->jsonOutput2(RESP_SUCCESS);
-				}else{
-					$this->jsonOutput2(RESP_ERROR);
-				}
+				$this->yewu_service->addYewuDetail($this->userInfo,Operation::$payment,$yewuId);
 	 		}
 	 		if($invoiced){
 	 			$result = $this->Yewu_Model->updateByCondition(
@@ -756,36 +751,9 @@ class Yewu extends Wx_Tdkc_Controller {
 				),
 				array('where' => array('id' => $yewuId))
 				);
-				if($result){
-					$this->yewu_service->addYewuDetail($this->userInfo,Operation::$invoice,$yewuId);
-					$this->jsonOutput2(RESP_SUCCESS);
-				}else{
-					$this->jsonOutput2(RESP_ERROR);
-				}
-	 		}
-	 			
-	 	}else{
-	 		$this->jsonOutput2('只有工作组组长才能设置已缴费');
-	 	}
-	 }
-	 
-	 
-	 
-	 /**
-	  * 设置已开票
-	  */
- 	 public function setUpInvoice(){
-	 	$yewuId = $this->postJson['yewu_id'];
-	 	$type = $this->userInfo['user_type'];
-	 	if(3 == $type){
-	 		$result = $this->Yewu_Model->updateByCondition(
-				array(
-					'is_invoice' => Operation::$invoice,
-				),
-				array('where' => array('id' => $yewuId))
-			);
-			if($result){
 				$this->yewu_service->addYewuDetail($this->userInfo,Operation::$invoice,$yewuId);
+	 		}
+			if($result){
 				$this->jsonOutput2(RESP_SUCCESS);
 			}else{
 				$this->jsonOutput2(RESP_ERROR);
@@ -807,8 +775,16 @@ class Yewu extends Wx_Tdkc_Controller {
 				),
 				array('where' => array('id' => $yewuId))
 			);
+			$this->yewu_service->addYewuDetail($this->userInfo,Operation::$examine,$yewuId);
 	 	}
+		if($result){
+			$this->jsonOutput2(RESP_SUCCESS);
+		}else{
+			$this->jsonOutput2(RESP_ERROR);
+		}
 	 }
+	 
+	 
 
 }
 
