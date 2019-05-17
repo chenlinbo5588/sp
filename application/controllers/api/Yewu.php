@@ -54,6 +54,7 @@ class Yewu extends Wx_Tdkc_Controller {
 				'group_id' => $groupInfo['id'],
 				//'company_name' => $company_name
 				'accept_number' => $acceptNumber['accept_number'],
+				'encryption_number' => $acceptNumber['encryption'],
 			);
 
 
@@ -101,6 +102,7 @@ class Yewu extends Wx_Tdkc_Controller {
 		
 		$type = array(
 			'type' => $this->userInfo['user_type'],
+			'name' => $this->userInfo['name'],
 		);
 		$this->jsonOutput2(RESP_SUCCESS,$type);
 	}
@@ -206,6 +208,8 @@ class Yewu extends Wx_Tdkc_Controller {
 					$this->jsonOutput2(RESP_ERROR,array('status' => '请选择业务和移交小组'));
 				}
 			}
+		}else{
+			$this->jsonOutput2('只有组长才能转让小组');
 		}
 	}
 	
@@ -289,19 +293,22 @@ class Yewu extends Wx_Tdkc_Controller {
 	  
 	  
  	public function setYewuMoney(){
-
-		$yewuId = $this->postJson['yewu_id'];
-		$money = $this->postJson['money'];
-		if($yewuId && $money){
-			$result = $this->yewu_service->setYewuMoney($yewuId,$money,$this->userInfo);
-			if($result){
-				$this->jsonOutput2(RESP_SUCCESS);
-			}else{
-				$this->jsonOutput2(RESP_ERROR);
+		if($this->userInfo['user_type'] == 3){
+			$yewuId = $this->postJson['yewu_id'];
+			$money = $this->postJson['money'];
+			if($yewuId && $money > 0){
+				$result = $this->yewu_service->setYewuMoney($yewuId,$money,$this->userInfo);
+				if($result){
+					$this->jsonOutput2(RESP_SUCCESS);
+				}else{
+					$this->jsonOutput2(RESP_ERROR);
+				}
 			}
+		}else{
+			$this->jsonOutput2('只有组长才能设置金额');
 		}
+
 	}
-	  
 	  
 	  
 	  /**

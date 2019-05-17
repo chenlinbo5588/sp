@@ -10,7 +10,7 @@
 		.footer1 {
 			margin: 15px 0 ;
 			font-size:14px;
-			color:#aeaeae;
+			color:#2d3c50;
 		}
 	</style>
 	<div id="wrap">

@@ -1,8 +1,8 @@
 {include file="common/main_header_navs.tpl"}
   {config_load file="user.conf"}
-  {if $info['id']}
-  {form_open(site_url($uri_string|cat:'?id='|cat:$info['id']),'id="infoform"')}
-  <input type="hidden" name="id" value="{$info['id']}"/>
+  {if $info['uid']}
+  {form_open(site_url($uri_string|cat:'?id='|cat:$info['uid']),'uid="infoform"')}
+  <input type="hidden" name="uid" value="{$info['uid']}"/>
   {else}
   {form_open(site_url($uri_string),'id="infoform"')}
   {/if}

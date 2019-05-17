@@ -78,10 +78,10 @@ class TdkcUser extends Ydzj_Admin_Controller {
 		$info = $this->Member_Model->getFirstByKey($id,'uid');
 		$groupList = $this->Work_Group_Model->getList(array('select' => 'id,group_name'),'group_name');
 		$userExtend = $this->Member_Extend_Model->getList(array('where' => array('member_uid' => $id)));
-		$this->_subNavs[] = array('url' => $this->_className.'/edit?id='.$id, 'title' => '编辑');
+		$this->_subNavs[] = array('url' => $this->_className.'/edit?uid='.$id, 'title' => '编辑');
 		
 		if($this->isPostRequest()){
-			
+			$id = $this->input->get_post('uid');
 			for($i = 0; $i < 1; $i++){
 				$this->_setRule();		
 				if(!$this->form_validation->run()){
@@ -102,11 +102,12 @@ class TdkcUser extends Ydzj_Admin_Controller {
 					$this->jsonOutput('保存失败',$this->getFormHash());
 				}
 				else{
-					$this->jsonOutput('保存成功,页面即将刷新',array('redirectUrl' => admin_site_url($this->_className.'/index')));
+					//$this->jsonOutput('保存成功,页面即将刷新',array('redirectUrl' => admin_site_url($this->_className.'/index')));
 				}
 				
 			}
 		}else{
+			
 			$this->assign('groupList',$groupList);
 			$this->assign('info',$info);
 			$this->assign('userExtend',$userExtend);

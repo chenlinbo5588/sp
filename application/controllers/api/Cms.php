@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Cms extends Wx_Controller {
+class Cms extends Wx_Tdkc_Controller {
 	
 	public function __construct(){
 		parent::__construct();

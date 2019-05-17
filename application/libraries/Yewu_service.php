@@ -55,6 +55,7 @@ class Yewu_service extends Base_service {
 			'Company_Model','Yewu_Detail_Model','Invoice_Model'
 		));
 		self::$CI->load->library(array('Basic_data_service','Admin_pm_service'));
+		self::$CI->load->helper('date');
 		$this->_memberModel = self::$CI->Member_Model;
 		$this->_yewuModel = self::$CI->Yewu_Model;
 		$this->_workGroupModel = self::$CI->Work_Group_Model;
@@ -207,6 +208,7 @@ class Yewu_service extends Base_service {
 	
 	
 	public function getYewuList($id,$status = null,$groupId = null,$search,$userType){
+		
 		$ids[] = $id;
 		$groupIds[] = $groupId;
 		//不是区域领导
@@ -223,18 +225,19 @@ class Yewu_service extends Base_service {
 				$condition['like']['yewu_name'] = $search;
 			}
 		}
-		$condition['order'] = 'status ASC';
+		$condition['order'] = 'gmt_create DESC';
 		$data = $this->_yewuModel->getList($condition);
 		$basicData = $this->_basicDataServiecObj->getBasicDataList();
 		foreach($data  as $key => $item){
 			if($data[$key]['status'] != Operation::$revoke){
-				$data[$key]['time'] =date("Y-m-d H:i",$data[$key]['gmt_create']) ;
-				$data[$key]['mobile'] =mask_mobile($data[$key]['mobile']);
-				$data[$key]['real_name'] =mask_name($data[$key]['real_name']);
-				$data[$key]['user_name'] =mask_name($data[$key]['user_name']);
-				$data[$key]['user_mobile'] =mask_mobile($data[$key]['user_mobile']);
+				$data[$key]['time'] = timediff($data[$key]['gmt_create'],time()) ;
+				$data[$key]['mobile'] = mask_mobile($data[$key]['mobile']);
+				$data[$key]['real_name'] = mask_name($data[$key]['real_name']);
+				$data[$key]['user_name'] = mask_name($data[$key]['user_name']);
+				$data[$key]['user_mobile'] = mask_mobile($data[$key]['user_mobile']);
 				$data[$key]['work_category'] = $basicData[$item['work_category']]['show_name'];
-				
+				$data[$key]['worker_name'] = mask_name($data[$key]['worker_name']);
+				$data[$key]['worker_mobile'] = mask_mobile($data[$key]['worker_mobile']);
 				
 				if($data[$key]['status'] == Operation::$transfer){
 					$transfer = $this->_yewuTransferModel->getList(array('yewu_id' => $item['id'],'status' => '1'));
@@ -245,10 +248,12 @@ class Yewu_service extends Base_service {
 					$data[$key]['group_name_to'] = $transfer[0]['group_name_to'];
 				}
 	
-
-				$yewuDetailInfo = $this->_yewuDetailModel->getList(array('where' => array('operation' => $data[$key]['status'],'yewu_id' =>$key)));
-				$data[$key]['worker_name'] =mask_name($yewuDetailInfo[0]['name']);
-				$data[$key]['worker_mobile'] =mask_mobile($yewuDetailInfo[0]['mobile']);
+				if(Operation::$payment == $item['status']){
+					$yewuDetailInfo = $this->_yewuDetailModel->getList(array('where' => array('operation' => $data[$key]['status'],'yewu_id' => $item['id'])));
+					$data[$key]['worker_name'] =mask_name($yewuDetailInfo[0]['name']);
+					$data[$key]['worker_mobile'] =mask_mobile($yewuDetailInfo[0]['mobile']);
+				}
+				
 			}
 			
 		}

@@ -793,4 +793,60 @@ if ( ! function_exists('date_range'))
 
 		return $range;
 	}
+	
+	
+	function timediff($begin_time,$end_time)
+
+	{
+	
+		if($begin_time < $end_time){
+		
+			$starttime = $begin_time;
+			
+			$endtime = $end_time;
+		
+		}else{
+		
+			$starttime = $end_time;
+			
+			$endtime = $begin_time;
+		
+		}
+		
+		//计算天数
+		
+		$timediff = $endtime-$starttime;
+		
+		$days = intval($timediff/86400);
+		
+		//计算小时数
+		
+		$remain = $timediff%86400;
+		
+		$hours = intval($remain/3600);
+		
+		//计算分钟数
+		
+		$remain = $remain%3600;
+		
+		$mins = intval($remain/60);
+		
+		//计算秒数
+		
+		$secs = $remain%60;
+
+		if($days){
+			return $days.'天前';
+		}
+		if($hours){
+			return $hours.'小时前';
+		}
+		if($mins){
+			return $mins.'分钟前';
+		}
+		if($secs){
+			return $secs.'秒前';
+		}
+	
+	}
 }

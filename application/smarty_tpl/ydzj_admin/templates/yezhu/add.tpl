@@ -4,7 +4,7 @@
   {form_open(site_url($uri_string|cat:'?id='|cat:$info['id']),'id="infoform"')}
   <input type="hidden" name="id" value="{$info['id']}"/>
   {else}
-  {form_open(site_url($uri_string),'id="infoform"')}
+  {form_open(site_url($uri_string),'uid="infoform"')}
   {/if}
 </body>
 
