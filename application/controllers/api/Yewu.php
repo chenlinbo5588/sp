@@ -458,6 +458,18 @@ class Yewu extends Wx_Tdkc_Controller {
 		$yewuInfo['user_mobile'] = mask_mobile($yewuInfo['user_mobile']);
 		$yewuInfo['plan_money'] = $yewuInfo['plan_money'] / 100;
 		$yewuInfo['receivable_money'] = $yewuInfo['receivable_money'] / 100;
+		$yewuInfo['status'] = Operation::$typeName[$yewuInfo['status']];
+		if($yewuInfo['is_payed']){
+			$yewuInfo['is_payed'] == '已缴费';
+		}else{
+			$yewuInfo['is_payed'] == '未缴费';
+		}
+		if($yewuInfo['is_invoice']){
+			$yewuInfo['is_invoice'] == '已开票';
+		}else{
+			$yewuInfo['is_invoice'] == '未开票';
+		}
+		
 		$this->jsonOutput2(RESP_SUCCESS,array('yewuInfo' => $yewuInfo));
 
 	}
