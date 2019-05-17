@@ -37,7 +37,7 @@ class Yewu extends Wx_Tdkc_Controller {
 			$groupInfo = $this->yewu_service->getGroupInfo($serviceAreaList[$service_area]['id']);
 			
 			$companyInfo = $this->Company_Model->getFirstByKey($companyName,'name');
-			$acceptNumber = $this->yewu_service->generateSerialNumber(date('Y'),$serviceAreaList[$service_area]['id'],$service_area);
+			$acceptNumber = $this->yewu_service->generateSerialNumber(date('Y'),$service_area,$service_area);
 			 
 			$yewuInfo = array(
   				'mobile' => $mobile,
@@ -76,23 +76,23 @@ class Yewu extends Wx_Tdkc_Controller {
 	
 	public function getYewuList(){
 
-
-			$id = $this->userInfo['uid'];
-			$status = $this->postJson['status'];
-			if(!is_array($status) && $status){
-				$status[] = $status;
-			}
-			$search = $this->postJson['search'];
-			$data = $this->yewu_service->getYewuList($id,$status,$this->userInfo['group_id'],$search,$THIS->userInfo['user_type']);
-			
-			$yewuList = array(
-				'data' =>$data,
-			);
-			if($yewuList){
-				$this->jsonOutput2(RESP_SUCCESS,$yewuList);
-			}else{
-				$this->jsonOutput2(RESP_ERROR);
-			}
+		$yewuId  = $this->postJson['yewu_id'];
+		$id = $this->userInfo['uid'];
+		$status = $this->postJson['status'];
+		if(!is_array($status) && $status){
+			$status[] = $status;
+		}
+		$search = $this->postJson['search'];
+		$data = $this->yewu_service->getYewuList($id,$status,$this->userInfo['group_id'],$search,$THIS->userInfo['user_type'],$yewuId);
+		
+		$yewuList = array(
+			'data' =>$data,
+		);
+		if($yewuList){
+			$this->jsonOutput2(RESP_SUCCESS,$yewuList);
+		}else{
+			$this->jsonOutput2(RESP_ERROR);
+		}
 		
 	}
 	

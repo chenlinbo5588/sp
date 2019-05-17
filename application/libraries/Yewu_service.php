@@ -207,7 +207,7 @@ class Yewu_service extends Base_service {
 	}
 	
 	
-	public function getYewuList($id,$status = null,$groupId = null,$search,$userType){
+	public function getYewuList($id,$status = null,$groupId = null,$search,$userType,$yewuId){
 		
 		$ids[] = $id;
 		$groupIds[] = $groupId;
@@ -224,6 +224,10 @@ class Yewu_service extends Base_service {
 			if($search){
 				$condition['like']['yewu_name'] = $search;
 			}
+		}
+		if($yewuId){
+			$yewuId[] = $yewuId;
+			$condition['where_in'][] = array('key' => 'id', 'value' => $yewuId);
 		}
 		$condition['order'] = 'gmt_create DESC';
 		$data = $this->_yewuModel->getList($condition);
@@ -248,7 +252,7 @@ class Yewu_service extends Base_service {
 					$data[$key]['group_name_to'] = $transfer[0]['group_name_to'];
 				}
 	
-				if(Operation::$payment == $item['status']){
+				if(Operation::$payment != $item['status']){
 					$yewuDetailInfo = $this->_yewuDetailModel->getList(array('where' => array('operation' => $data[$key]['status'],'yewu_id' => $item['id'])));
 					$data[$key]['worker_name'] =mask_name($yewuDetailInfo[0]['name']);
 					$data[$key]['worker_mobile'] =mask_mobile($yewuDetailInfo[0]['mobile']);
@@ -264,6 +268,8 @@ class Yewu_service extends Base_service {
 	 * 生成流水号
 	 */
 	public function generateSerialNumber($year,$area,$areaName){
+		$area_service = config_item('area_service');
+		$area = $area_service[$area];
 		$countYear = $this->_yewuModel->getCount(array(
 			'where' => array(
 				'year' => $year,
@@ -279,7 +285,7 @@ class Yewu_service extends Base_service {
 		$countArea = str_pad($countArea,4,"0",STR_PAD_LEFT);
 		$area = str_pad($area,3,"0",STR_PAD_LEFT);
 		$acceptNumber = $year.$countYear.$area.$countArea;
-		
+
 		return array('accept_number' => $acceptNumber , 'encryption' => md5($acceptNumber));
 	}
 	

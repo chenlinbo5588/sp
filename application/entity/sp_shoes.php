@@ -10,6 +10,6 @@ $entity = array(
 'data_cnt' => 'int',
 'total_page' => 'int',
 'is_ready' => 'tinyint',
-'products' => 'text',
-'gmt_create' => 'int'
+'gmt_create' => 'int',
+'products' => 'text'
 );

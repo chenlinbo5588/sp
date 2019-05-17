@@ -176,6 +176,27 @@ $config['payment'] = array(
 	)
 );
 
+$config['area_service'] = array(
+	'周巷镇' => 'AA',
+	'长河镇' => 'AB',
+	'横河镇' => 'AC',
+	'浒山街道' => 'AD',
+	'古塘街道' => 'AE',
+	'白沙路街道' => 'AF',
+	'宗汉街道' => 'AG',
+	'坎墩街道' => 'AH',
+	'胜山镇' => 'AI',
+	'崇寿镇' => 'AJ',
+	'桥头镇' => 'AK',
+	'匡堰镇' => 'AL',
+	'附海镇' => 'AM',
+	'观海卫镇' => 'AN',
+	'掌起镇' => 'AO',
+	'龙山镇' => 'AP',
+	'杭州湾新区' => 'AQ',
+);
+
+
 //
 $config['excel_export_limit'] = 5000;
 $config['excel_import_limit'] = 5000;

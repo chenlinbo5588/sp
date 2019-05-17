@@ -4,6 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $entity = array(
 'id' => 'int',
 'accept_number' => 'varchar',
+'encryption_number' => 'varchar',
 'yewu_name' => 'varchar',
 'yewu_describe' => 'varchar',
 'mobile' => 'varchar',
@@ -31,5 +32,6 @@ $entity = array(
 'edit_uid' => 'int',
 'edit_username' => 'varchar',
 'gmt_create' => 'int',
-'gmt_modify' => 'int'
+'gmt_modify' => 'int',
+'year' => 'int'
 );
