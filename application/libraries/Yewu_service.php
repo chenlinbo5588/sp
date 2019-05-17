@@ -242,19 +242,19 @@ class Yewu_service extends Base_service {
 				$data[$key]['work_category'] = $basicData[$item['work_category']]['show_name'];
 				$data[$key]['worker_name'] = mask_name($data[$key]['worker_name']);
 				$data[$key]['worker_mobile'] = mask_mobile($data[$key]['worker_mobile']);
-				$yewuInfo['status'] = Operation::$typeName[$yewuInfo['status']];
+				$data[$key]['status_name'] = Operation::$typeName[$item['status']];
 				if($data[$key]['status'] == Operation::$transfer){
 					$transfer = $this->_yewuTransferModel->getList(array('yewu_id' => $item['id'],'status' => '1'));
 				}
 				if($item['is_payed']){
-					$data[$key]['is_payed'] == '已缴费';
+					$data[$key]['is_payed'] = '已缴费';
 				}else{
-					$data[$key]['is_payed'] == '未缴费';
+					$data[$key]['is_payed'] = '未缴费';
 				}
 				if($item['is_invoice']){
-					$data[$key]['is_invoice'] == '已开票';
+					$data[$key]['is_invoice'] = '已开票';
 				}else{
-					$data[$key]['is_invoice'] == '未开票';
+					$data[$key]['is_invoice'] = '未开票';
 				}
 				if($transfer){
 					$data[$key]['group_name_from'] = $transfer[0]['group_name_from'];
