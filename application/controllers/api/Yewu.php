@@ -315,7 +315,6 @@ class Yewu extends Wx_Tdkc_Controller {
 	   * 设置评价
 	   */
 	public function setEvaluate(){
-
   		$yewuId = $this->postJson['yewu_id'];
   		$yewuInfo = $this->Yewu_Model->getFirstByKey($yewuId,'id');
   		$workEfficiency = $this->postJson['work_efficiency'];
@@ -339,7 +338,40 @@ class Yewu extends Wx_Tdkc_Controller {
   				$this->jsonOutput2(RESP_ERROR);
   			}
   		}
-	  		
+
+	}
+	
+	
+	public function editEvaluate(){
+  		$evaluateId = $this->postJson['evaluate_id'];
+  		$evaluateInfo = $this->Evaluate_Model->getFirstByKey($evaluateId);
+  		$workEfficiency = $this->postJson['work_efficiency'];
+  		$serviceAttitude = $this->postJson['service_attitude'];
+  		$time = time() - $evaluateInfo['gmt_create'];
+  		$day = intval($time / 86400);
+  		$content = $this->postJson['content'];
+  		if($evaluateInfo && $workEfficiency && $serviceAttitude && $content && $day < 30 && $evaluateInfo['gmt_create'] == $evaluateInfo['gmt_modify']){
+  			$result = $this->Evaluate_Model->updateByCondition(
+				array(
+					'content' => $content,
+					'service_attitude' => $serviceAttitude,
+					'work_efficiency' => $workEfficiency,
+					'gmt_modify' => time(),
+				),
+				array('where' => array('id' => $evaluateInfo['id']))
+			);
+  			if($result){
+  				$this->jsonOutput2(RESP_SUCCESS);
+  			}else{
+  				$this->jsonOutput2(RESP_ERROR);
+  			}
+
+  		}else{
+  			$this->jsonOutput2(RESP_ERROR);
+  		}
+
+  		
+
 	}
 	
 	
@@ -421,6 +453,7 @@ class Yewu extends Wx_Tdkc_Controller {
 		$basicData = $this->basic_data_service->getBasicDataList();
 		$yewuInfo = $this->Yewu_Model->getFirstByKey($id,'id');
 		$yewuInfo['work_category'] = $basicData[$yewuInfo['work_category']]['show_name'];
+		$yewuInfo['service_area'] = $basicData[$yewuInfo['service_area']]['show_name'];
 		$yewuInfo['user_name'] = mask_name($yewuInfo['user_name']);
 		$yewuInfo['user_mobile'] = mask_mobile($yewuInfo['user_mobile']);
 		$yewuInfo['plan_money'] = $yewuInfo['plan_money'] / 100;

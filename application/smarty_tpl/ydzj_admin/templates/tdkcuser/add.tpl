@@ -1,7 +1,7 @@
 {include file="common/main_header_navs.tpl"}
   {config_load file="user.conf"}
   {if $info['uid']}
-  {form_open(site_url($uri_string|cat:'?id='|cat:$info['uid']),'uid="infoform"')}
+  {form_open(site_url($uri_string|cat:'?uid='|cat:$info['uid']),'id="infoform"')}
   <input type="hidden" name="uid" value="{$info['uid']}"/>
   {else}
   {form_open(site_url($uri_string),'id="infoform"')}
@@ -11,7 +11,6 @@
   <input type="hidden" name="gobackUrl" value="{$gobackUrl}"/>
     <table class="table tb-type2">
       <tbody>
-         
         <tr class="noborder">
           <td colspan="2" class="required"><label class="validation" for="mobile">{#mobile#}</label></td>
         </tr>
@@ -24,7 +23,6 @@
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input type="text" value="{$info['name']|escape}" name="name" id="name" class="txt"></td>
-
         </tr>
         <tr class="noborder">
           <td colspan="2" class="required">{#company_name#}</label></td>

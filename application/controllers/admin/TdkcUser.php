@@ -88,18 +88,16 @@ class TdkcUser extends Ydzj_Admin_Controller {
 					$this->jsonOutput('数据校验失败,'.$this->form_validation->error_html('<div>','<div>'),array('errors' => $this->form_validation->error_array()));
 					break;
 				}
-				
 				$updateData = array_merge($_POST,$this->addWhoHasOperated('edit'));
 				if($updateData['company_name']){
 					$updateData['company_id'] = $companyList[$updateData['company_name']]['id'];
 				}
 				if($updateData['group_name']){
-					//$updateData['group_id'] = $companyList[$updateData['group_name']]['id'];
+					$updateData['group_id'] = $companyList[$updateData['group_name']]['id'];
 				}
-				$returnVal = $this->Member_Model->update($updateData,array('uid' => $id));
-				
+				$returnVal = $this->Member_Model->updateByCondition($updateData,array('where' => array('uid' => $id)));
 				if($returnVal < 0){
-					$this->jsonOutput('保存失败',$this->getFormHash());
+					$this->jsonOutput('保存失败');
 				}
 				else{
 					$this->jsonOutput('保存成功,页面即将刷新',array('redirectUrl' => admin_site_url($this->_className.'/index')));
