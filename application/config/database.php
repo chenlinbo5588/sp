@@ -86,9 +86,9 @@ $db['default'] = array(
 */
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'localhost',
-	'username' => 'root',
-	'password' => 'lkynihao123',
+	'hostname' => '116.62.68.25',
+	'username' => 'yzb',
+	'password' => 'yzb123',
 	'database' => 'tdkc_newbuss',
 	'dbdriver' => 'mysql',
 	'dbprefix' => '',

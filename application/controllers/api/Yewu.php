@@ -82,7 +82,7 @@ class Yewu extends Wx_Tdkc_Controller {
 		if(!is_array($status) && $status){
 			$status[] = $status;
 		}
-		$search = $this->postJson['search'];
+		$search = $this->postJson['yewu_name'];
 		$data = $this->yewu_service->getYewuList($id,$status,$this->userInfo['group_id'],$search,$THIS->userInfo['user_type'],$yewuId);
 		
 		$yewuList = array(
@@ -316,13 +316,13 @@ class Yewu extends Wx_Tdkc_Controller {
 	public function getIfEvaluate(){
 		$yewuId = $this->postJson['yewu_id'];
 		$judge = array();
-		$yewuDetailList = $this->Yewu_Detail_Model->getList(array('where' => array('yewu_id' => $yewuId ,'status' => Operation::$payment)));
+		$yewuDetailList = $this->Yewu_Detail_Model->getList(array('where' => array('yewu_id' => $yewuId ,'operation' => Operation::$payment)));
 		$evaluateInfo = $this->Evaluate_Model->getFirstByKey($yewuId,'yewu_id');
 		if($yewuDetailList){
 
 			$time = time() - $yewuDetailList[0]['gmt_create'];
   			$day = intval($time / 86400);
-  			if($day < 30 && (!$evaluateInfo || $evaluateInfo['gmt_modify'])){
+  			if($day < 30 && !($evaluateInfo && ($evaluateInfo['gmt_create'] != $evaluateInfo['gmt_modify']))){
   				$judge['if_Evaluate'] = true;
   			}else{
   				$judge['if_Evaluate'] = false;
@@ -334,7 +334,7 @@ class Yewu extends Wx_Tdkc_Controller {
 		}else{
 			$judge['is_Evaluate'] = false;
 		}
-		$this->jsonOutput2(RESP_SUCCESS,array('evaluate' => $evaluateInfo));
+		$this->jsonOutput2(RESP_SUCCESS,array('evaluate' => $judge));
 	}
 	  
 	  /**
@@ -369,8 +369,8 @@ class Yewu extends Wx_Tdkc_Controller {
 	
 	
 	public function editEvaluate(){
-  		$evaluateId = $this->postJson['evaluate_id'];
-  		$evaluateInfo = $this->Evaluate_Model->getFirstByKey($evaluateId);
+  		$yewuId = $this->postJson['yewu_id'];
+  		$evaluateInfo = $this->Evaluate_Model->getFirstByKey($yewuId,'yewu_id');
   		$workEfficiency = $this->postJson['work_efficiency'];
   		$serviceAttitude = $this->postJson['service_attitude'];
   		$time = time() - $evaluateInfo['gmt_create'];
@@ -698,7 +698,6 @@ class Yewu extends Wx_Tdkc_Controller {
 	 */
 	 public function relationYewuInvoice(){
 	 	$yewuId = $this->postJson['yewu_id'];
-	 	$this->jsonOutput2('申请失败,请重新申请');
 	 	$name = $this->postJson['invoice_name'];
 	 	$invoiceId = $this->postJson['invoice_id'];
 	 	if($name){
@@ -712,7 +711,7 @@ class Yewu extends Wx_Tdkc_Controller {
 	 	}
 	 	if($invoiceId){		
 	 		$invoiceInfo = $this->Invoice_Model->getFirstByKey($invoiceId);
-		 	$result = $this->Yewu_Model->updateByCondition(
+		 	$resultinvoice = $this->Yewu_Model->updateByCondition(
 				array(
 					'invoice_id' => $invoiceId,
 					'invoice_name' => $invoiceInfo['invoice_company'],
@@ -721,12 +720,12 @@ class Yewu extends Wx_Tdkc_Controller {
 				array('where' => array('id' => $yewuId))
 			);
 	 	}
-	 	if($result){
+	 	if($result || $resultinvoice){
 	 		$this->yewu_service->addYewuDetail($this->userInfo,Operation::$invoice,$yewuId);
 	 		$yewuInfo = $this->Yewu_Model->getFirstByKey($yewuId);
 	 		//$title = $yewuInfo['name'].'开票';
 	 		//$this->admin_pm_service->addYewuMessage($yewuInfo,$yewuId,$title);
-	 		$this->jsonOutput2(RESP_SUCCESS,'申请已接收,正在打印发票');
+	 		$this->jsonOutput2('申请已接收,正在打印发票');
 	 	}else{
 	 		$this->jsonOutput2('申请失败,请重新申请');
 	 	}
@@ -800,7 +799,7 @@ class Yewu extends Wx_Tdkc_Controller {
 	 	if($idea == 'pass'){
 	 		$result = $this->Yewu_Model->updateByCondition(
 				array(
-					'money' => $money,
+					'receivable_money' => $money,
 					'status' => Operation::$complete,
 				),
 				array('where' => array('id' => $yewuId))
@@ -816,6 +815,7 @@ class Yewu extends Wx_Tdkc_Controller {
 	 
 	 public function getInvoicedList(){
 	 	$userId = $this->userInfo['uid'];
+	 	$userId[0] = $userId;
 	 	$yewuList = $this->Yewu_Model->getList(array('select' => 'id,invoice_name','where' => array('is_invoice' => Operation::$invoice)));
 	 	foreach($yewuList as $key => $item){
 	 		if($item['invoice_name']){
@@ -823,7 +823,9 @@ class Yewu extends Wx_Tdkc_Controller {
 	 			$invoiceList[] = $item;
 	 		}
 	 	}
-	 	$orderList = $this->Order_Model->getList(array('where_in' => array(array('key' => 'yewu_id','value' => $yewuId))),'yewu_id');
+	 	$orderList = $this->Order_Model->getList(array(
+			'where_in' => array(array('key' => 'yewu_id','value' => $yewuId)),
+			'where_in ' => array(array('key' => 'uid','value' => $userId))),'yewu_id');
 	 	foreach($invoiceList as $key => $item){
 	 		if($orderList[$item['id']]){
 	 			$invoiceList[$key]['amount'] = $orderList[$item['id']]['amount'];

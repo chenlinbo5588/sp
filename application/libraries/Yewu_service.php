@@ -171,7 +171,7 @@ class Yewu_service extends Base_service {
 			),array('where' => array('id' => $yewuId)));
 		}else{
 			$result = $this->_yewuModel->updateByCondition(array(
-				'planmoney' => $money,
+				'plan_money' => $money,
 				'status' => Operation::$examine,
 				'edit_uid' => $user['uid'],
 				'edit_username' => $user['name'],
@@ -210,7 +210,6 @@ class Yewu_service extends Base_service {
 	
 	
 	public function getYewuList($id,$status = null,$groupId = null,$search,$userType,$yewuId){
-		
 		$ids[] = $id;
 		$groupIds[] = $groupId;
 		//不是区域领导
