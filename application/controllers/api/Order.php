@@ -53,6 +53,7 @@ class Order extends Wx_Tdkc_Controller {
 	 */
 	public function getList(){
 		if($this->userInfo){
+			
 			$basicData = $this->basic_data_service->getBasicDataList();
 			$userId = $this->userInfo['uid'];
 			$orderList = $this->Order_Model->getList(array('where' => array('uid' => $userId)));
@@ -62,11 +63,11 @@ class Order extends Wx_Tdkc_Controller {
 					$orderPayedList[] = $Item;
 				}
 			}
-			$yewuList = $this->Yewu_Model->getList(array('where_in' => array(array('key' => 'id','value' => $yewuId))));
+			$yewuList = $this->Yewu_Model->getList(array('where_in' => array(array('key' => 'id','value' => $yewuId))),'id');
 			foreach($orderPayedList as $key => $item){
-				if(in_array($item['yewu_id'],$yewuList)){
-					$orderPayedList['encryption_number'] = $yewuList[$item['yewu_id']]['encryption_number'];
-					$orderPayedList['work_category'] = $basicData[$yewuList[$item['yewu_id']]['work_category']]['show_name'];
+				if($yewuList[$item['yewu_id']]){
+					$orderPayedList[$key]['encryption_number'] = $yewuList[$item['yewu_id']]['encryption_number'];
+					$orderPayedList[$key]['work_category'] = $basicData[$yewuList[$item['yewu_id']]['work_category']]['show_name'];
 				}
 			}
 			$this->jsonOutput2(RESP_SUCCESS,array('orderList' => $orderPayedList));	

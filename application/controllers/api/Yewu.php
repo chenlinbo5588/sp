@@ -173,9 +173,6 @@ class Yewu extends Wx_Tdkc_Controller {
 					$this->Yewu_Model->beginTrans();
 				 	$this->Yewu_Model->updateByCondition(
 						array(
-							'worker_id' => $groupInfo['group_leaderid'],
-							'worker_name' => $groupInfo['group_leader_name'],
-							'worker_mobile' => $groupInfo['group_leader_mobile'],
 							'group_id' => $groupInfo['id'],
 							'status' => 10,
 							'edit_uid' => $this->userInfo['uid'],
