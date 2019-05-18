@@ -83,7 +83,7 @@ class Yewu extends Wx_Tdkc_Controller {
 			$status[] = $status;
 		}
 		$search = $this->postJson['yewu_name'];
-		$data = $this->yewu_service->getYewuList($id,$status,$this->userInfo['group_id'],$search,$THIS->userInfo['user_type'],$yewuId);
+		$data = $this->yewu_service->getYewuList($id,$status,$this->userInfo['group_id'],$search,$this->userInfo['user_type'],$yewuId);
 		
 		$yewuList = array(
 			'data' =>$data,
@@ -795,17 +795,14 @@ class Yewu extends Wx_Tdkc_Controller {
 	 public function examine(){
 	 	$yewuId = $this->postJson['yewu_id'];
 	 	$money = $this->postJson['money'];
-	 	$idea = $this->postJsonp['idea'];
-	 	if($idea == 'pass'){
-	 		$result = $this->Yewu_Model->updateByCondition(
-				array(
-					'receivable_money' => $money,
-					'status' => Operation::$complete,
-				),
-				array('where' => array('id' => $yewuId))
-			);
-			$this->yewu_service->addYewuDetail($this->userInfo,Operation::$examine,$yewuId);
-	 	}
+ 		$result = $this->Yewu_Model->updateByCondition(
+			array(
+				'receivable_money' => $money,
+				'status' => Operation::$complete,
+			),
+			array('where' => array('id' => $yewuId))
+		);
+		$this->yewu_service->addYewuDetail($this->userInfo,Operation::$examine,$yewuId);
 		if($result){
 			$this->jsonOutput2(RESP_SUCCESS);
 		}else{
@@ -815,7 +812,7 @@ class Yewu extends Wx_Tdkc_Controller {
 	 
 	 public function getInvoicedList(){
 	 	$userId = $this->userInfo['uid'];
-	 	$userId[0] = $userId;
+	 	$userIds[0] = $userId;
 	 	$yewuList = $this->Yewu_Model->getList(array('select' => 'id,invoice_name','where' => array('is_invoice' => Operation::$invoice)));
 	 	foreach($yewuList as $key => $item){
 	 		if($item['invoice_name']){
@@ -824,22 +821,34 @@ class Yewu extends Wx_Tdkc_Controller {
 	 		}
 	 	}
 	 	$orderList = $this->Order_Model->getList(array(
-			'where_in' => array(array('key' => 'yewu_id','value' => $yewuId)),
-			'where_in ' => array(array('key' => 'uid','value' => $userId))),'yewu_id');
+			'where_in' => array(array('key' => 'yewu_id','value' => $yewuId))),'yewu_id');
 	 	foreach($invoiceList as $key => $item){
-	 		if($orderList[$item['id']]){
+	 		if($orderList[$item['id']]['uid'] == $userId){
 	 			$invoiceList[$key]['amount'] = $orderList[$item['id']]['amount'];
 	 			$time = $orderList[$item['id']]['pay_time_end'];
 	 			$time = substr($time,0,4).'年'.substr($time,4,2).'月'.substr($time,6,2).'日'.substr($time,8,2).':'.substr($time,10,2);
 	 			$invoiceList[$key]['pay_time'] = $time;
+	 		}else{
+	 			array_splice($invoiceList,$key);
 	 		}
+	 		
 	 	}
 	 	if($invoiceList){
 	 		$this->jsonOutput2(RESP_SUCCESS,array('invoiceList' => $invoiceList));	
 	 	}else{
-	 		$this->jsonOutput2(RESP_ERROR);
+	 		$this->jsonOutput2(RESP_SUCCESS,array('invoiceList' => ''));
 	 	}
 	 
+	 }
+	 
+	 public function isInvoice(){
+	 	$yewuId = $this->postJson['yewu_id'];
+	 	$invoiceInfo = $this->Invoice_Model->getFirstByKey($yewuId,'yewu_id');
+	 	if($invoiceInfo){
+	 		$this->jsonOutput2('发票只能申请一次');	
+	 	}else{
+	 		$this->jsonOutput2(RESP_SUCCESS);
+	 	}
 	 }
 
 }

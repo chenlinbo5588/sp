@@ -171,7 +171,7 @@ class Yewu_service extends Base_service {
 			),array('where' => array('id' => $yewuId)));
 		}else{
 			$result = $this->_yewuModel->updateByCondition(array(
-				'plan_money' => $money,
+				'plan_money' => $money * 100,
 				'status' => Operation::$examine,
 				'edit_uid' => $user['uid'],
 				'edit_username' => $user['name'],
@@ -217,14 +217,14 @@ class Yewu_service extends Base_service {
 			if(is_array($status) && count($status) >0){
 				$condition['where_in'][] = array('key' => 'status', 'value' => $status);
 			}
-			if($groupId){
+			if($groupId && $userType != 1){
 				$condition['where_in'][] = array('key' => 'group_id', 'value' => $groupIds);
 			}else{
 				$condition['where_in'][] = array('key' => 'user_id', 'value' => $ids);
 			}
-			if($search){
+		}
+		if($search){
 				$condition['like']['yewu_name'] = $search;
-			}
 		}
 		if($yewuId){
 			$yewuId[] = $yewuId;
@@ -268,6 +268,8 @@ class Yewu_service extends Base_service {
 					$data[$key]['worker_mobile'] =mask_mobile($yewuDetailInfo[0]['mobile']);
 				}
 				
+			}else{
+				array_splice($data,$key);
 			}
 			
 		}
