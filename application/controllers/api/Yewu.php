@@ -176,7 +176,7 @@ class Yewu extends Wx_Tdkc_Controller {
 							'worker_id' => $groupInfo['group_leaderid'],
 							'worker_name' => $groupInfo['group_leader_name'],
 							'worker_mobile' => $groupInfo['group_leader_mobile'],
-							'current_group' => $groupInfo['id'],
+							'group_id' => $groupInfo['id'],
 							'status' => 10,
 							'edit_uid' => $this->userInfo['uid'],
 							'edit_username' => $this->userInfo['name'],
@@ -297,12 +297,18 @@ class Yewu extends Wx_Tdkc_Controller {
 			$yewuId = $this->postJson['yewu_id'];
 			$money = $this->postJson['money'];
 			if($yewuId && $money > 0){
-				$result = $this->yewu_service->setYewuMoney($yewuId,$money,$this->userInfo);
-				if($result){
-					$this->jsonOutput2(RESP_SUCCESS,array('title' =>$result));
+				$yewuInfo = $this->Yewu_Model->getFirstByKey($yewuId);
+				if(!$yewuInfo['is_payed']){
+					$result = $this->yewu_service->setYewuMoney($yewuId,$money,$this->userInfo);
+					if($result){
+						$this->jsonOutput2(RESP_SUCCESS,array('title' =>$result));
+					}else{
+						$this->jsonOutput2(RESP_ERROR);
+					}
 				}else{
-					$this->jsonOutput2(RESP_ERROR);
+					$this->jsonOutput2("该业务已缴费不能修改金额");
 				}
+
 			}
 		}else{
 			$this->jsonOutput2('只有组长才能设置金额');
@@ -672,7 +678,10 @@ class Yewu extends Wx_Tdkc_Controller {
 	 */
 	 public function relationYewuInvoice(){
 	 	$yewuId = $this->postJson['yewu_id'];
+	 	print_r(aa);
+	 	$this->jsonOutput2('申请失败,请重新申请');
 	 	$name = $this->postJson['invoice_name'];
+	 	$invoiceId = $this->postJson['invoice_id'];
 	 	if($name){
 	 		$result = $this->Yewu_Model->updateByCondition(
 				array(
@@ -681,8 +690,8 @@ class Yewu extends Wx_Tdkc_Controller {
 				),
 				array('where' => array('id' => $yewuId))
 			);
-	 	}else{
-	 		$invoiceId = $this->postJson['invoice_id'];
+	 	}
+	 	if($invoiceId){		
 		 	$result = $this->Yewu_Model->updateByCondition(
 				array(
 					'invoice_id' => $invoiceId,
@@ -732,8 +741,9 @@ class Yewu extends Wx_Tdkc_Controller {
 	 public function setUpPayed(){
 	 	$yewuId = $this->postJson['yewu_id'];
 	 	$type = $this->userInfo['user_type'];
-	 	$payed = $this->userInfo['payed'];
-	 	$invoiced = $this->userInfo['invoiced'];
+	 	$payed = $this->postJson['payed'];
+	 	$invoiced = $this->postJson['invoiced'];
+	 	print_r($invoiced);
 	 	if(3 == $type){
 	 		if($payed){
 	 			$result = $this->Yewu_Model->updateByCondition(

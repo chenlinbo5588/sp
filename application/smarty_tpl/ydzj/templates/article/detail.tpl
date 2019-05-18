@@ -28,7 +28,10 @@
 		.articleContent{
 			background-color: #2d3c50;
 		}
-
+		.articleSubTitle{
+			font-weight:normal;
+		}
+		
 
 	</style>
 	<div id="wrap">
@@ -54,21 +57,21 @@
 						<a href="javascript:void(0);">哈哈杀手撒谎好</a>
 						<h4></h4>
 					</div>
-					<div class="articleImg"><img src="http://img01.sogoucdn.com/net/a/04/link?appid=100520033&url=http%3A%2F%2Fmmbiz.qpic.cn%2Fmmbiz_jpg%2FO9F3NTo58yrsqSGEFAozFSJ8IYoN5UeCvsePbH1Jjc3Ar3fpibg4ZgQml4O5o7ll6rdWTtMyOf5jKmAPPxQz7QA%2F0%3Fwx_fmt%3Djpeg"/></div> 
+					<div class="articleImg"><img src="http://img01.sogoucdn.com/net/a/04/link?appid=100520033&url=http%3A%2F%2Fmmbiz.qpic.cn%2Fmmbiz_jpg%2FO9F3NTo58yrsqSGEFAozFSJ8IYoN5UeCvsePbH1Jjc3Ar3fpibg4ZgQml4O5o7ll6rdWTtMyOf5jKmAPPxQz7QA%2F0%3Fwx_fmt%3Djpeg"/></div>  
 				</div>
 				<div class="articleItem clearfix">
 					<div class="articleTxt">
 						<a href="javascript:void(0);">哈哈杀手撒谎好</a>
 						<h4></h4>
 					</div>
-					<div class="articleImg"><img src="http://img01.sogoucdn.com/net/a/04/link?appid=100520033&url=http%3A%2F%2Fmmbiz.qpic.cn%2Fmmbiz_jpg%2FO9F3NTo58yrsqSGEFAozFSJ8IYoN5UeCvsePbH1Jjc3Ar3fpibg4ZgQml4O5o7ll6rdWTtMyOf5jKmAPPxQz7QA%2F0%3Fwx_fmt%3Djpeg"/></div> 
+					<div class="articleImg"><img src="http://img01.sogoucdn.com/net/a/04/link?appid=100520033&url=http%3A%2F%2Fmmbiz.qpic.cn%2Fmmbiz_jpg%2FO9F3NTo58yrsqSGEFAozFSJ8IYoN5UeCvsePbH1Jjc3Ar3fpibg4ZgQml4O5o7ll6rdWTtMyOf5jKmAPPxQz7QA%2F0%3Fwx_fmt%3Djpeg"/></div>  
 				</div>
 				<div class="articleItem clearfix">
 					<div class="articleTxt">
 						<a href="javascript:void(0);">哈哈杀手撒谎好</a>
 						<h4></h4>
 					</div>
-					<div class="articleImg"><img src="http://img01.sogoucdn.com/net/a/04/link?appid=100520033&url=http%3A%2F%2Fmmbiz.qpic.cn%2Fmmbiz_jpg%2FO9F3NTo58yrsqSGEFAozFSJ8IYoN5UeCvsePbH1Jjc3Ar3fpibg4ZgQml4O5o7ll6rdWTtMyOf5jKmAPPxQz7QA%2F0%3Fwx_fmt%3Djpeg"/></div> 
+					<div class="articleImg"><img src="http://img01.sogoucdn.com/net/a/04/link?appid=100520033&url=http%3A%2F%2Fmmbiz.qpic.cn%2Fmmbiz_jpg%2FO9F3NTo58yrsqSGEFAozFSJ8IYoN5UeCvsePbH1Jjc3Ar3fpibg4ZgQml4O5o7ll6rdWTtMyOf5jKmAPPxQz7QA%2F0%3Fwx_fmt%3Djpeg"/></div>  
 				</div>
 			</div>
 		</div>

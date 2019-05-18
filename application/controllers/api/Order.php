@@ -10,7 +10,7 @@ class Order extends Wx_Tdkc_Controller {
 	public function __construct(){
 		parent::__construct();
 		
-		$this->load->library('Order_service');
+		$this->load->library('Order_service','Basic_data_service');
 		$this->order_service->setWeixinAppConfig(config_item('mp_xcxTdkc'));
 		
     	
@@ -53,9 +53,9 @@ class Order extends Wx_Tdkc_Controller {
 	 */
 	public function getList(){
 		if($this->userInfo){
-			$basicData = $this->_basicDataServiecObj->getBasicDataList();
+			$basicData = $this->basic_data_service->getBasicDataList();
 			$userId = $this->userInfo['uid'];
-			$orderList = $this->Order_model->getList(array('where' => array('uid' => $userId)));
+			$orderList = $this->Order_Model->getList(array('where' => array('uid' => $userId)));
 			foreach($orderList as $key => $Item){
 				if($Item['status'] == 2){
 					$yewuId[] = $Item['yewu_id'];

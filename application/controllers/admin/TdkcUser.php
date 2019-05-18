@@ -93,7 +93,7 @@ class TdkcUser extends Ydzj_Admin_Controller {
 					$updateData['company_id'] = $companyList[$updateData['company_name']]['id'];
 				}
 				if($updateData['group_name']){
-					$updateData['group_id'] = $companyList[$updateData['group_name']]['id'];
+					$updateData['group_id'] = $groupList[$updateData['group_name']]['id'];
 				}
 				$returnVal = $this->Member_Model->updateByCondition($updateData,array('where' => array('uid' => $id)));
 				if($returnVal < 0){
