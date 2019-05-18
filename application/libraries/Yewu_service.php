@@ -224,7 +224,7 @@ class Yewu_service extends Base_service {
 			}
 		}
 		if($search){
-				$condition['like']['yewu_name'] = $search;
+			$condition['like']['yewu_name'] = $search;
 		}
 		if($yewuId){
 			$yewuId[] = $yewuId;
@@ -233,7 +233,7 @@ class Yewu_service extends Base_service {
 		$condition['order'] = 'gmt_create DESC';
 		$data = $this->_yewuModel->getList($condition);
 		$basicData = $this->_basicDataServiecObj->getBasicDataList();
-		foreach($data  as $key => $item){
+		foreach($data as $key => $item){
 			if($data[$key]['status'] != Operation::$revoke){
 				$data[$key]['time'] = timediff($data[$key]['gmt_create'],time()) ;
 				$data[$key]['mobile'] = mask_mobile($data[$key]['mobile']);
@@ -268,8 +268,9 @@ class Yewu_service extends Base_service {
 					$data[$key]['worker_mobile'] =mask_mobile($yewuDetailInfo[0]['mobile']);
 				}
 				
-			}else{
-				array_splice($data,$key);
+			}
+			if($data[$key]['status'] == Operation::$revoke){
+				array_splice($data,$key,1);
 			}
 			
 		}

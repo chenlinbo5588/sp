@@ -293,19 +293,25 @@ class Yewu extends Wx_Tdkc_Controller {
 		if($this->userInfo['user_type'] == 3){
 			$yewuId = $this->postJson['yewu_id'];
 			$money = $this->postJson['money'];
-			if($yewuId && $money > 0){
-				$yewuInfo = $this->Yewu_Model->getFirstByKey($yewuId);
-				if(!$yewuInfo['is_payed']){
-					$result = $this->yewu_service->setYewuMoney($yewuId,$money,$this->userInfo);
-					if($result){
-						$this->jsonOutput2(RESP_SUCCESS,array('title' =>$result));
+			$this->form_validation->set_data($this->postJson);
+  			$this->form_validation->set_rules('money','缴费金额','required|numeric');
+  			if(!$this->form_validation->run()){
+				$this->jsonOutput2($this->form_validation->error_first_html());
+			}else{
+				if($yewuId){
+					$yewuInfo = $this->Yewu_Model->getFirstByKey($yewuId);
+					if(!$yewuInfo['is_payed']){
+						$result = $this->yewu_service->setYewuMoney($yewuId,$money,$this->userInfo);
+						if($result){
+							$this->jsonOutput2(RESP_SUCCESS,array('title' =>$result));
+						}else{
+							$this->jsonOutput2(RESP_ERROR);
+						}
 					}else{
-						$this->jsonOutput2(RESP_ERROR);
+						$this->jsonOutput2("该业务已缴费不能修改金额");
 					}
-				}else{
-					$this->jsonOutput2("该业务已缴费不能修改金额");
+	
 				}
-
 			}
 		}else{
 			$this->jsonOutput2('只有组长才能设置金额');
@@ -482,6 +488,8 @@ class Yewu extends Wx_Tdkc_Controller {
 		$yewuInfo['service_area'] = $basicData[$yewuInfo['service_area']]['show_name'];
 		$yewuInfo['user_name'] = mask_name($yewuInfo['user_name']);
 		$yewuInfo['user_mobile'] = mask_mobile($yewuInfo['user_mobile']);
+		$yewuInfo['worker_name'] = mask_name($yewuInfo['worker_name']);
+		$yewuInfo['worker_mobile'] = mask_mobile($yewuInfo['worker_mobile']);
 		$yewuInfo['plan_money'] = $yewuInfo['plan_money'] / 100;
 		$yewuInfo['receivable_money'] = $yewuInfo['receivable_money'] / 100;
 		$yewuInfo['status_name'] = Operation::$typeName[$yewuInfo['status']];
@@ -795,18 +803,24 @@ class Yewu extends Wx_Tdkc_Controller {
 	 public function examine(){
 	 	$yewuId = $this->postJson['yewu_id'];
 	 	$money = $this->postJson['money'];
- 		$result = $this->Yewu_Model->updateByCondition(
-			array(
-				'receivable_money' => $money,
-				'status' => Operation::$complete,
-			),
-			array('where' => array('id' => $yewuId))
-		);
-		$this->yewu_service->addYewuDetail($this->userInfo,Operation::$examine,$yewuId);
-		if($result){
-			$this->jsonOutput2(RESP_SUCCESS);
+		$this->form_validation->set_data($this->postJson);
+		$this->form_validation->set_rules('money','缴费金额','required|numeric');
+		if(!$this->form_validation->run()){
+			$this->jsonOutput2($this->form_validation->error_first_html());
 		}else{
-			$this->jsonOutput2(RESP_ERROR);
+	 		$result = $this->Yewu_Model->updateByCondition(
+				array(
+					'receivable_money' => $money * 100,
+					'status' => Operation::$complete,
+				),
+				array('where' => array('id' => $yewuId))
+			);
+			$this->yewu_service->addYewuDetail($this->userInfo,Operation::$examine,$yewuId);
+			if($result){
+				$this->jsonOutput2(RESP_SUCCESS);
+			}else{
+				$this->jsonOutput2(RESP_ERROR);
+			}
 		}
 	 }
 	 
@@ -829,7 +843,7 @@ class Yewu extends Wx_Tdkc_Controller {
 	 			$time = substr($time,0,4).'年'.substr($time,4,2).'月'.substr($time,6,2).'日'.substr($time,8,2).':'.substr($time,10,2);
 	 			$invoiceList[$key]['pay_time'] = $time;
 	 		}else{
-	 			array_splice($invoiceList,$key);
+	 			array_splice($invoiceList,$key,1);
 	 		}
 	 		
 	 	}
@@ -843,8 +857,8 @@ class Yewu extends Wx_Tdkc_Controller {
 	 
 	 public function isInvoice(){
 	 	$yewuId = $this->postJson['yewu_id'];
-	 	$invoiceInfo = $this->Invoice_Model->getFirstByKey($yewuId,'yewu_id');
-	 	if($invoiceInfo){
+	 	$yewuInfo = $this->Yewu_Model->getFirstByKey($yewuId);
+	 	if($yewuInfo['is_invoice']){
 	 		$this->jsonOutput2('发票只能申请一次');	
 	 	}else{
 	 		$this->jsonOutput2(RESP_SUCCESS);
