@@ -56,7 +56,10 @@ class Order extends Wx_Tdkc_Controller {
 			
 			$basicData = $this->basic_data_service->getBasicDataList();
 			$userId = $this->userInfo['uid'];
-			$orderList = $this->Order_Model->getList(array('select' => 'order_id,yewu_id,yewu_name,amount','where' => array('uid' => $userId)));
+			$orderList = $this->Order_Model->getList(array(
+				'select' => 'order_id,yewu_id,yewu_name,amount,status',
+				'where' => array('uid' => $userId)
+			));
 			foreach($orderList as $key => $Item){
 				if($Item['status'] == 2){
 					$yewuId[] = $Item['yewu_id'];
