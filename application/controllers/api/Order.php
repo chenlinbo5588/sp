@@ -66,6 +66,7 @@ class Order extends Wx_Tdkc_Controller {
 					$orderPayedList[] = $Item;
 				}
 			}
+
 			$yewuList = $this->Yewu_Model->getList(array('where_in' => array(array('key' => 'id','value' => $yewuId))),'id');
 			foreach($orderPayedList as $key => $item){
 				if($yewuList[$item['yewu_id']]){

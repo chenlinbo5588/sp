@@ -312,7 +312,30 @@ class Yewu extends Wx_Tdkc_Controller {
 		}
 
 	}
-	  
+	
+	public function getIfEvaluate(){
+		$yewuId = $this->postJson['yewu_id'];
+		$judge = array();
+		$yewuDetailList = $this->Yewu_Detail_Model->getList(array('where' => array('yewu_id' => $yewuId ,'status' => Operation::$payment)));
+		$evaluateInfo = $this->Evaluate_Model->getFirstByKey($yewuId,'yewu_id');
+		if($yewuDetailList){
+
+			$time = time() - $yewuDetailList[0]['gmt_create'];
+  			$day = intval($time / 86400);
+  			if($day < 30 && (!$evaluateInfo || $evaluateInfo['gmt_modify'])){
+  				$judge['if_Evaluate'] = true;
+  			}else{
+  				$judge['if_Evaluate'] = false;
+  			}
+		}
+		if($evaluateInfo){
+			$judge['is_Evaluate'] = true;
+			$judge['time'] = $evaluateInfo['gmt_create'];
+		}else{
+			$judge['is_Evaluate'] = false;
+		}
+		$this->jsonOutput2(RESP_SUCCESS,array('evaluate' => $evaluateInfo));
+	}
 	  
 	  /**
 	   * 设置评价
@@ -675,7 +698,6 @@ class Yewu extends Wx_Tdkc_Controller {
 	 */
 	 public function relationYewuInvoice(){
 	 	$yewuId = $this->postJson['yewu_id'];
-	 	print_r(aa);
 	 	$this->jsonOutput2('申请失败,请重新申请');
 	 	$name = $this->postJson['invoice_name'];
 	 	$invoiceId = $this->postJson['invoice_id'];
@@ -689,9 +711,11 @@ class Yewu extends Wx_Tdkc_Controller {
 			);
 	 	}
 	 	if($invoiceId){		
+	 		$invoiceInfo = $this->Invoice_Model->getFirstByKey($invoiceId);
 		 	$result = $this->Yewu_Model->updateByCondition(
 				array(
 					'invoice_id' => $invoiceId,
+					'invoice_name' => $invoiceInfo['invoice_company'],
 					'is_invoice' => Operation::$invoice,
 				),
 				array('where' => array('id' => $yewuId))
@@ -740,7 +764,6 @@ class Yewu extends Wx_Tdkc_Controller {
 	 	$type = $this->userInfo['user_type'];
 	 	$payed = $this->postJson['payed'];
 	 	$invoiced = $this->postJson['invoiced'];
-	 	print_r($invoiced);
 	 	if(3 == $type){
 	 		if($payed){
 	 			$result = $this->Yewu_Model->updateByCondition(
@@ -791,7 +814,31 @@ class Yewu extends Wx_Tdkc_Controller {
 		}
 	 }
 	 
+	 public function getInvoicedList(){
+	 	$userId = $this->userInfo['uid'];
+	 	$yewuList = $this->Yewu_Model->getList(array('select' => 'id,invoice_name','where' => array('is_invoice' => Operation::$invoice)));
+	 	foreach($yewuList as $key => $item){
+	 		if($item['invoice_name']){
+	 			$yewuId[] = $item['id'];
+	 			$invoiceList[] = $item;
+	 		}
+	 	}
+	 	$orderList = $this->Order_Model->getList(array('where_in' => array(array('key' => 'yewu_id','value' => $yewuId))),'yewu_id');
+	 	foreach($invoiceList as $key => $item){
+	 		if($orderList[$item['id']]){
+	 			$invoiceList[$key]['amount'] = $orderList[$item['id']]['amount'];
+	 			$time = $orderList[$item['id']]['pay_time_end'];
+	 			$time = substr($time,0,4).'年'.substr($time,4,2).'月'.substr($time,6,2).'日'.substr($time,8,2).':'.substr($time,10,2);
+	 			$invoiceList[$key]['pay_time'] = $time;
+	 		}
+	 	}
+	 	if($invoiceList){
+	 		$this->jsonOutput2(RESP_SUCCESS,array('invoiceList' => $invoiceList));	
+	 	}else{
+	 		$this->jsonOutput2(RESP_ERROR);
+	 	}
 	 
+	 }
 
 }
 

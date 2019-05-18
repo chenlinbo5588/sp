@@ -52,7 +52,7 @@ class Yewu_service extends Base_service {
 		
 		self::$CI->load->model(array(
 			'Member_Model','Yewu_Model','Work_Group_Model','Yewu_Transfer_Model','Evaluate_Model','Member_Extend_Model',
-			'Company_Model','Yewu_Detail_Model','Invoice_Model'
+			'Company_Model','Yewu_Detail_Model','Invoice_Model','Order_Model'
 		));
 		self::$CI->load->library(array('Basic_data_service','Admin_pm_service'));
 		self::$CI->load->helper('date');
