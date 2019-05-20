@@ -325,7 +325,6 @@ class Yewu extends Wx_Tdkc_Controller {
 		$yewuDetailList = $this->Yewu_Detail_Model->getList(array('where' => array('yewu_id' => $yewuId ,'operation' => Operation::$payment)));
 		$evaluateInfo = $this->Evaluate_Model->getFirstByKey($yewuId,'yewu_id');
 		if($yewuDetailList){
-
 			$time = time() - $yewuDetailList[0]['gmt_create'];
   			$day = intval($time / 86400);
   			if($day < 30 && !($evaluateInfo && ($evaluateInfo['gmt_create'] != $evaluateInfo['gmt_modify']))){
@@ -333,6 +332,8 @@ class Yewu extends Wx_Tdkc_Controller {
   			}else{
   				$judge['if_Evaluate'] = false;
   			}
+		}else{
+			$judge['if_Evaluate'] = false;
 		}
 		if($evaluateInfo){
 			$judge['is_Evaluate'] = true;
