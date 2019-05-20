@@ -75,7 +75,7 @@
           <td colspan="2" class="required"><label class="validation">文章内容:</label>{form_error('content')}</td>
         </tr>
         <tr>
-        	<td colspan="2" ><textarea id="content" name="content" style="width:100%;height:480px;visibility:hidden;">{$info['content']}</textarea></td>
+        	<td colspan="2" ><textarea id="content" name="content" style="width:100%;height:480px;color:#333333;background-color:#FFFFFF;visibility:hidden;">{$info['content']}</textarea></td>
         	{include file="common/ke.tpl"}
 			<script type="text/javascript">
 	            var editor1;

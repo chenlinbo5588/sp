@@ -93,7 +93,7 @@ class Cms extends Wx_Tdkc_Controller {
 				else{
 					$information[$key]['image_url'] = '';
 				}
-				$information[$key]['publish_time'] = date('Y-m-d H:i',$item['publish_time']);
+				$information[$key]['publish_time'] = date('Y-m-d',$item['publish_time']);
 				$information[$key]['jump_url'] = site_url('article/detail?id='.$item['id']);   
 
 				

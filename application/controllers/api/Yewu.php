@@ -342,6 +342,21 @@ class Yewu extends Wx_Tdkc_Controller {
 		}
 		$this->jsonOutput2(RESP_SUCCESS,array('evaluate' => $judge));
 	}
+	
+	
+	
+	 public function getEvaluateType(){
+	 	$evaluateTypeList = array(
+	 		array('name' => '工作效率','field_name' => 'work_efficiency'),
+	 		array('name' => '服务态度','field_name' => 'service_attitude'),
+	 		array('name' => '成果质量','field_name' => 'outcome_quality'),
+	 	);
+	 	
+	 	$this->jsonOutput2(RESP_SUCCESS,array('evaluateTypeList' => $evaluateTypeList));
+	 }
+	 
+	 
+	
 	  
 	  /**
 	   * 设置评价
@@ -351,6 +366,7 @@ class Yewu extends Wx_Tdkc_Controller {
   		$yewuInfo = $this->Yewu_Model->getFirstByKey($yewuId,'id');
   		$workEfficiency = $this->postJson['work_efficiency'];
   		$serviceAttitude = $this->postJson['service_attitude'];
+  		$outcomeQuality = $this->postJson['outcome_quality'];
   		$content = $this->postJson['content'];
   		if($yewuInfo){
   			$result = $this->Evaluate_Model->_add(array(
@@ -359,6 +375,7 @@ class Yewu extends Wx_Tdkc_Controller {
   				'worker_name' => $yewuInfo['worker_name'],
   				'work_efficiency' => $workEfficiency,
   				'service_attitude' => $serviceAttitude,
+  				'outcome_quality' => $outcomeQuality,
   				'content' => $content,
 				'add_uid' => $this->userInfo['uid'],
 				'add_username' => $this->userInfo['name'],
@@ -379,6 +396,7 @@ class Yewu extends Wx_Tdkc_Controller {
   		$evaluateInfo = $this->Evaluate_Model->getFirstByKey($yewuId,'yewu_id');
   		$workEfficiency = $this->postJson['work_efficiency'];
   		$serviceAttitude = $this->postJson['service_attitude'];
+  		$outcomeQuality = $this->postJson['outcome_quality'];
   		$time = time() - $evaluateInfo['gmt_create'];
   		$day = intval($time / 86400);
   		$content = $this->postJson['content'];
@@ -388,6 +406,7 @@ class Yewu extends Wx_Tdkc_Controller {
 					'content' => $content,
 					'service_attitude' => $serviceAttitude,
 					'work_efficiency' => $workEfficiency,
+					'outcome_quality' => $outcomeQuality,
 					'gmt_modify' => time(),
 				),
 				array('where' => array('id' => $evaluateInfo['id']))
@@ -486,9 +505,9 @@ class Yewu extends Wx_Tdkc_Controller {
 		$yewuInfo = $this->Yewu_Model->getFirstByKey($id,'id');
 		$yewuInfo['work_category'] = $basicData[$yewuInfo['work_category']]['show_name'];
 		$yewuInfo['service_area'] = $basicData[$yewuInfo['service_area']]['show_name'];
-		$yewuInfo['user_name'] = mask_name($yewuInfo['user_name']);
+		$yewuInfo['user_name'] = $yewuInfo['user_name'];
 		$yewuInfo['user_mobile'] = mask_mobile($yewuInfo['user_mobile']);
-		$yewuInfo['worker_name'] = mask_name($yewuInfo['worker_name']);
+		$yewuInfo['worker_name'] = $yewuInfo['worker_name'];
 		$yewuInfo['worker_mobile'] = mask_mobile($yewuInfo['worker_mobile']);
 		$yewuInfo['plan_money'] = $yewuInfo['plan_money'] / 100;
 		$yewuInfo['receivable_money'] = $yewuInfo['receivable_money'] / 100;
@@ -733,7 +752,7 @@ class Yewu extends Wx_Tdkc_Controller {
 	 		$yewuInfo = $this->Yewu_Model->getFirstByKey($yewuId);
 	 		//$title = $yewuInfo['name'].'开票';
 	 		//$this->admin_pm_service->addYewuMessage($yewuInfo,$yewuId,$title);
-	 		$this->jsonOutput2('申请已接收,正在打印发票');
+	 		$this->jsonOutput2('开票申请已接收');
 	 	}else{
 	 		$this->jsonOutput2('申请失败,请重新申请');
 	 	}
@@ -827,7 +846,7 @@ class Yewu extends Wx_Tdkc_Controller {
 	 public function getInvoicedList(){
 	 	$userId = $this->userInfo['uid'];
 	 	$userIds[0] = $userId;
-	 	$yewuList = $this->Yewu_Model->getList(array('select' => 'id,invoice_name','where' => array('is_invoice' => Operation::$invoice)));
+	 	$yewuList = $this->Yewu_Model->getList(array('select' => 'id,invoice_name,invoice_id','where' => array('is_invoice' => Operation::$invoice)));
 	 	foreach($yewuList as $key => $item){
 	 		if($item['invoice_name']){
 	 			$yewuId[] = $item['id'];
@@ -838,12 +857,21 @@ class Yewu extends Wx_Tdkc_Controller {
 			'where_in' => array(array('key' => 'yewu_id','value' => $yewuId))),'yewu_id');
 	 	foreach($invoiceList as $key => $item){
 	 		if($orderList[$item['id']]['uid'] == $userId){
+	 			if($item['invoice_id']){
+	 				$invoiceInfo = $this->Invoice_Model->getFirstByKey($item['invoice_id']);
+	 				if($invoiceInfo['type'] == 1){
+	 					$invoiceList[$key]['type'] = '普通发票';
+	 				}else{
+	 					$invoiceList[$key]['type'] = '增值税发票';
+	 				}
+	 			}
+	 			$invoiceList[$key]['invoice_name'] = $item['invoice_name'];
 	 			$invoiceList[$key]['amount'] = $orderList[$item['id']]['amount'];
 	 			$time = $orderList[$item['id']]['pay_time_end'];
 	 			$time = substr($time,0,4).'年'.substr($time,4,2).'月'.substr($time,6,2).'日'.substr($time,8,2).':'.substr($time,10,2);
 	 			$invoiceList[$key]['pay_time'] = $time;
 	 		}else{
-	 			array_splice($invoiceList,$key,1);
+	 			unset($invoiceList,$key);
 	 		}
 	 		
 	 	}
@@ -864,6 +892,7 @@ class Yewu extends Wx_Tdkc_Controller {
 	 		$this->jsonOutput2(RESP_SUCCESS);
 	 	}
 	 }
+	 
 
 }
 

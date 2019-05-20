@@ -94,7 +94,10 @@ class TdkcUser extends Ydzj_Admin_Controller {
 				}
 				if($updateData['group_name']){
 					$updateData['group_id'] = $groupList[$updateData['group_name']]['id'];
+				}else{
+					$updateData['group_id'] = 0;
 				}
+				
 				$returnVal = $this->Member_Model->updateByCondition($updateData,array('where' => array('uid' => $id)));
 				if($returnVal < 0){
 					$this->jsonOutput('保存失败');

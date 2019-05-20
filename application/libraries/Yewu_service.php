@@ -270,7 +270,8 @@ class Yewu_service extends Base_service {
 				
 			}
 			if($data[$key]['status'] == Operation::$revoke){
-				array_splice($data,$key,1);
+				unset($data[$key]);
+				//array_slice($data,$key);
 			}
 			
 		}
@@ -298,7 +299,6 @@ class Yewu_service extends Base_service {
 		$countArea = str_pad($countArea,4,"0",STR_PAD_LEFT);
 		$area = str_pad($area,3,"0",STR_PAD_LEFT);
 		$acceptNumber = $year.$countYear.$area.$countArea;
-
 		return array('accept_number' => $acceptNumber , 'encryption' => md5($acceptNumber));
 	}
 	
