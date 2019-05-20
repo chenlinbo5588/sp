@@ -364,18 +364,16 @@ class Yewu extends Wx_Tdkc_Controller {
 	public function setEvaluate(){
   		$yewuId = $this->postJson['yewu_id'];
   		$yewuInfo = $this->Yewu_Model->getFirstByKey($yewuId,'id');
-  		$workEfficiency = $this->postJson['work_efficiency'];
-  		$serviceAttitude = $this->postJson['service_attitude'];
-  		$outcomeQuality = $this->postJson['outcome_quality'];
+  		$score = $this->postJson['score'];
   		$content = $this->postJson['content'];
   		if($yewuInfo){
   			$result = $this->Evaluate_Model->_add(array(
   				'yewu_id' => $yewuId,
   				'worker_id' => $yewuInfo['worker_id'],
   				'worker_name' => $yewuInfo['worker_name'],
-  				'work_efficiency' => $workEfficiency,
-  				'service_attitude' => $serviceAttitude,
-  				'outcome_quality' => $outcomeQuality,
+  				'work_efficiency' => $score[0],
+  				'service_attitude' => $score[1],
+  				'outcome_quality' => $score[2],
   				'content' => $content,
 				'add_uid' => $this->userInfo['uid'],
 				'add_username' => $this->userInfo['name'],
@@ -394,19 +392,17 @@ class Yewu extends Wx_Tdkc_Controller {
 	public function editEvaluate(){
   		$yewuId = $this->postJson['yewu_id'];
   		$evaluateInfo = $this->Evaluate_Model->getFirstByKey($yewuId,'yewu_id');
-  		$workEfficiency = $this->postJson['work_efficiency'];
-  		$serviceAttitude = $this->postJson['service_attitude'];
-  		$outcomeQuality = $this->postJson['outcome_quality'];
+  		$score = $this->postJson['score'];
   		$time = time() - $evaluateInfo['gmt_create'];
   		$day = intval($time / 86400);
   		$content = $this->postJson['content'];
-  		if($evaluateInfo && $workEfficiency && $serviceAttitude && $content && $day < 30 && $evaluateInfo['gmt_create'] == $evaluateInfo['gmt_modify']){
+  		if($evaluateInfo && $day < 30 && $evaluateInfo['gmt_create'] == $evaluateInfo['gmt_modify']){
   			$result = $this->Evaluate_Model->updateByCondition(
 				array(
 					'content' => $content,
-					'service_attitude' => $serviceAttitude,
-					'work_efficiency' => $workEfficiency,
-					'outcome_quality' => $outcomeQuality,
+					'service_attitude' => $score[0],
+					'work_efficiency' => $score[1],
+					'outcome_quality' => $score[2],
 					'gmt_modify' => time(),
 				),
 				array('where' => array('id' => $evaluateInfo['id']))
@@ -429,6 +425,7 @@ class Yewu extends Wx_Tdkc_Controller {
 	 public function getEvaluateByYewuId(){
 	 	$yewuId = $this->postJson['yewu_id'];
 	 	$evaluateInfo = $this->Evaluate_Model->getFirstByKey($yewuId,'yewu_id');
+	 	$evaluateInfo['score'] = array('工作效率' =>$evaluateInfo['service_attitude'] ,'服务态度' => $evaluateInfo['work_efficiency'],'成果质量' => $evaluateInfo['outcome_quality']);
 	 	if($evaluateInfo){
 			$this->jsonOutput2(RESP_SUCCESS,array('evaluateInfo' => $evaluateInfo));
 		}else{
@@ -750,8 +747,8 @@ class Yewu extends Wx_Tdkc_Controller {
 	 	if($result || $resultinvoice){
 	 		$this->yewu_service->addYewuDetail($this->userInfo,Operation::$invoice,$yewuId);
 	 		$yewuInfo = $this->Yewu_Model->getFirstByKey($yewuId);
-	 		//$title = $yewuInfo['name'].'开票';
-	 		//$this->admin_pm_service->addYewuMessage($yewuInfo,$yewuId,$title);
+	 		$title = $yewuInfo['yewu_name'].'开票';
+	 		$this->admin_pm_service->addYewuMessage($yewuInfo,$yewuId,$title);
 	 		$this->jsonOutput2('开票申请已接收');
 	 	}else{
 	 		$this->jsonOutput2('申请失败,请重新申请');
@@ -846,7 +843,11 @@ class Yewu extends Wx_Tdkc_Controller {
 	 public function getInvoicedList(){
 	 	$userId = $this->userInfo['uid'];
 	 	$userIds[0] = $userId;
-	 	$yewuList = $this->Yewu_Model->getList(array('select' => 'id,invoice_name,invoice_id','where' => array('is_invoice' => Operation::$invoice)));
+	 	$yewuList = $this->Yewu_Model->getList(array(
+			'select' => 'id,invoice_name,invoice_id',
+			'where' => array('is_invoice' => Operation::$invoice),
+	 		//'order' => 'gmt_create DESC',
+	 	));
 	 	foreach($yewuList as $key => $item){
 	 		if($item['invoice_name']){
 	 			$yewuId[] = $item['id'];
@@ -864,6 +865,8 @@ class Yewu extends Wx_Tdkc_Controller {
 	 				}else{
 	 					$invoiceList[$key]['type'] = '增值税发票';
 	 				}
+	 			}else{
+ 					$invoiceList[$key]['type'] = '个人发票';
 	 			}
 	 			$invoiceList[$key]['invoice_name'] = $item['invoice_name'];
 	 			$invoiceList[$key]['amount'] = $orderList[$item['id']]['amount'];

@@ -38,19 +38,6 @@
           </td>
         </tr> 
         <tr class="noborder">
-          <td colspan="2" class="required"><label class="validation" for="mobile">联系{#mobile#}</label></td>
-        </tr>
-        <tr class="noborder">
-          <td class="vatop rowform"><input type="text" value="{$info['mobile']|escape}" name="mobile" id="mobile" class="txt"></td>
-        </tr>
-        
-        <tr class="noborder">
-          <td colspan="2" class="required"><label class="validation" for="name">{#real_name#}</label></td>
-        </tr>
-        <tr class="noborder">
-          <td class="vatop rowform"><input type="text" value="{$info['real_name']|escape}" name="real_name" id="real_name" class="txt"></td>
-        </tr>
-        <tr class="noborder">
           <td colspan="2" class="required">{#address#}</label></td>
         </tr>
         <tr class="noborder">
@@ -81,15 +68,9 @@
 	        <tr class="noborder">
 	          <td class="vatop rowform"><input type="text" value="{$info['user_mobile']|escape}" name="user_mobile" id="user_mobile" class="txt"></td>
 	        </tr>
-	        <tr class="noborder">
-	          <td colspan="2" class="required">{#company_name#}</label></td>
-	        </tr>
-	        <tr class="noborder">
-	          <td class="vatop rowform"><input type="text" value="{$info['company_name']|escape}" name="company_name" id="company_name" class="txt"></td>
-	        </tr>
         {/if}
         <tr class="noborder">
-          <td colspan="2" class="required"><label class="validation" for="remark">{#yewu_describe#}:</label><label id="error_remark"></label></td>
+          <td colspan="2" class="required">{#yewu_describe#}:</label><label id="error_remark"></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><textarea style="height:150px" name="yewu_describe" id="yewu_describe">{$info['yewu_describe']|escape}</textarea></td>

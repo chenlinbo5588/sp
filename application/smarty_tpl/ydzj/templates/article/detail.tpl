@@ -31,13 +31,23 @@
 		.articleSubTitle{
 			font-weight:normal;
 		}
-		
+		.articleSubPublisher{
+			display: inline-block;
+			width: 50%;
+		}
+		.articleSubTime{
+			float: right;
+			display: inline-block;
+		}
 
 	</style>
 	<div id="wrap">
 		<header class="articleTitle">
 			<h1 class="articleMainTitle">{$article['article_title']|escape}</h1>
-			<h4 class="articleSubTitle">{$siteSetting['site_name']|escape} {$article['publish_time']|date_format:"%Y-%m-%d %H:%M"}</h4>
+			<div class="articleSubTitle">
+				<h4 class="articleSubTitle articleSubPublisher">{$siteSetting['site_name']|escape}</h4>
+				<h4 class="articleSubTitle articleSubTime">{$article['publish_time']|date_format:"%Y-%m-%d %H:%M"}</h4>
+			</div>
 		</header>
 		<div class="fgx"></div>
 		<article class="articleContent">
@@ -57,21 +67,21 @@
 						<a href="javascript:void(0);">哈哈杀手撒谎好</a>
 						<h4></h4>
 					</div>
-					<div class="articleImg"><img src="http://img01.sogoucdn.com/net/a/04/link?appid=100520033&url=http%3A%2F%2Fmmbiz.qpic.cn%2Fmmbiz_jpg%2FO9F3NTo58yrsqSGEFAozFSJ8IYoN5UeCvsePbH1Jjc3Ar3fpibg4ZgQml4O5o7ll6rdWTtMyOf5jKmAPPxQz7QA%2F0%3Fwx_fmt%3Djpeg"/></div>  
+					<div class="articleImg"><img src="http://img01.sogoucdn.com/net/a/04/link?appid=100520033&url=http%3A%2F%2Fmmbiz.qpic.cn%2Fmmbiz_jpg%2FO9F3NTo58yrsqSGEFAozFSJ8IYoN5UeCvsePbH1Jjc3Ar3fpibg4ZgQml4O5o7ll6rdWTtMyOf5jKmAPPxQz7QA%2F0%3Fwx_fmt%3Djpeg"/></div>   
 				</div>
 				<div class="articleItem clearfix">
 					<div class="articleTxt">
 						<a href="javascript:void(0);">哈哈杀手撒谎好</a>
 						<h4></h4>
 					</div>
-					<div class="articleImg"><img src="http://img01.sogoucdn.com/net/a/04/link?appid=100520033&url=http%3A%2F%2Fmmbiz.qpic.cn%2Fmmbiz_jpg%2FO9F3NTo58yrsqSGEFAozFSJ8IYoN5UeCvsePbH1Jjc3Ar3fpibg4ZgQml4O5o7ll6rdWTtMyOf5jKmAPPxQz7QA%2F0%3Fwx_fmt%3Djpeg"/></div>  
+					<div class="articleImg"><img src="http://img01.sogoucdn.com/net/a/04/link?appid=100520033&url=http%3A%2F%2Fmmbiz.qpic.cn%2Fmmbiz_jpg%2FO9F3NTo58yrsqSGEFAozFSJ8IYoN5UeCvsePbH1Jjc3Ar3fpibg4ZgQml4O5o7ll6rdWTtMyOf5jKmAPPxQz7QA%2F0%3Fwx_fmt%3Djpeg"/></div>   
 				</div>
 				<div class="articleItem clearfix">
 					<div class="articleTxt">
 						<a href="javascript:void(0);">哈哈杀手撒谎好</a>
 						<h4></h4>
 					</div>
-					<div class="articleImg"><img src="http://img01.sogoucdn.com/net/a/04/link?appid=100520033&url=http%3A%2F%2Fmmbiz.qpic.cn%2Fmmbiz_jpg%2FO9F3NTo58yrsqSGEFAozFSJ8IYoN5UeCvsePbH1Jjc3Ar3fpibg4ZgQml4O5o7ll6rdWTtMyOf5jKmAPPxQz7QA%2F0%3Fwx_fmt%3Djpeg"/></div>  
+					<div class="articleImg"><img src="http://img01.sogoucdn.com/net/a/04/link?appid=100520033&url=http%3A%2F%2Fmmbiz.qpic.cn%2Fmmbiz_jpg%2FO9F3NTo58yrsqSGEFAozFSJ8IYoN5UeCvsePbH1Jjc3Ar3fpibg4ZgQml4O5o7ll6rdWTtMyOf5jKmAPPxQz7QA%2F0%3Fwx_fmt%3Djpeg"/></div>   
 				</div>
 			</div>
 		</div>

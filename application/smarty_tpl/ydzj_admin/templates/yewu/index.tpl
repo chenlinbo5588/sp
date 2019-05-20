@@ -7,8 +7,6 @@
 	        <tr>
 	          <th><label for="name">{#yewu_name#}</label></th>
 	          <td><input class="txt" name="yewu_name" value="{$smarty.get['yewu_name']|escape}" type="text"></td>
-	          <th><label for="name">{#real_name#}</label></th>
-	          <td><input class="txt" name="real_name" value="{$smarty.get['real_name']|escape}" type="text"></td>
   	          <th>{#work_category#}:</th>
 	          <td>
 	          	<select name="work_category">
@@ -55,17 +53,11 @@
         <tr class="thead">
           <th class="w24"></th>
           <th>{#yewu_name#}</th>
-          <th>{#real_name#}</th>
-          <th>联系{#mobile#}</th>
-          <th>{#worker_name#}</th>
-          <th>{#worker_mobile#}</th>
-          <th>{#user_name#}</th>
-          <th>{#user_mobile#}</th>
+          <th>{#worker_name#}<br>{#worker_mobile#}</th>
+          <th>{#user_name#}<br>{#user_mobile#}</th>
           <th>{#work_category#}</th>
           <th>{#service_area#}</th>
-          <th>{#initial_group#}</th>
           <th>{#current_group#}</th>
-          <th>{#company_name#}</th>
           <th>业务{#status#}</th>
           <th>{#handle_date#}</th>
           <th>{#money#}</th>
@@ -78,17 +70,11 @@
       	<tr class="hover edit" id="row{$item['id']}">
           <td><input value="{$item['id']}" class="checkitem" group="chkVal" type="checkbox" name="id[]"></td>
           <td class="yewu_name">{$item['yewu_name']|escape}</td>
-          <td class="real_name">{mask_name($item['real_name'])|escape}</td>
-          <td class="mobile">{mask_mobile($item['mobile'])|escape}</td>
-          <td class="worker_name">{mask_name($item['worker_name'])|escape}</td>
-          <td class="worker_mobile">{mask_mobile($item['worker_mobile'])|escape}</td>
-          <td class="user_name">{mask_name($item['user_name'])|escape}</td>
-          <td class="user_mobile">{mask_mobile($item['user_mobile'])|escape}</td>
+          <td class="worker_name">{mask_name($item['worker_name'])|escape}<br>{mask_mobile($item['worker_mobile'])|escape}</td>
+          <td class="user_name">{mask_name($item['user_name'])|escape}<br>{mask_mobile($item['user_mobile'])|escape}</td>
           <td>{$basicData[$item['work_category']]['show_name']}</td>
           <td>{$basicData[$item['service_area']]['show_name']}</td>
-          <td class="initial_group">{$item['initial_group']|escape}</td>
           <td class="current_group">{$item['current_group']|escape}</td>
-          <td class="company_name"><a href="{admin_site_url(company|cat:'/index')}?id={$item['company_id']}">{$item['company_name']|escape}</td>
           <td class="status">{$operation[$item['status']]|escape}</td>
           <td class="handle_date">{$item['handle_date']|escape}</td>
           <td class="money">{$item['receivable_money']|escape}</td>
