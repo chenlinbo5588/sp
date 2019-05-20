@@ -425,7 +425,11 @@ class Yewu extends Wx_Tdkc_Controller {
 	 public function getEvaluateByYewuId(){
 	 	$yewuId = $this->postJson['yewu_id'];
 	 	$evaluateInfo = $this->Evaluate_Model->getFirstByKey($yewuId,'yewu_id');
-	 	$evaluateInfo['score'] = array('工作效率' =>$evaluateInfo['service_attitude'] ,'服务态度' => $evaluateInfo['work_efficiency'],'成果质量' => $evaluateInfo['outcome_quality']);
+	 	$evaluateInfo['score'] = array(
+	 		array('name' => '工作效率','score' => $evaluateInfo['work_efficiency']),
+	 		array('name' => '服务态度','score' => $evaluateInfo['service_attitude']),
+	 		array('name' => '成果质量','score' => $evaluateInfo['outcome_quality']),
+	 	);
 	 	if($evaluateInfo){
 			$this->jsonOutput2(RESP_SUCCESS,array('evaluateInfo' => $evaluateInfo));
 		}else{
@@ -844,9 +848,9 @@ class Yewu extends Wx_Tdkc_Controller {
 	 	$userId = $this->userInfo['uid'];
 	 	$userIds[0] = $userId;
 	 	$yewuList = $this->Yewu_Model->getList(array(
-			'select' => 'id,invoice_name,invoice_id',
+			'select' => 'id,invoice_name,invoice_id,gmt_create',
 			'where' => array('is_invoice' => Operation::$invoice),
-	 		//'order' => 'gmt_create DESC',
+	 		'order' => 'gmt_create DESC',
 	 	));
 	 	foreach($yewuList as $key => $item){
 	 		if($item['invoice_name']){
@@ -856,30 +860,28 @@ class Yewu extends Wx_Tdkc_Controller {
 	 	}
 	 	$orderList = $this->Order_Model->getList(array(
 			'where_in' => array(array('key' => 'yewu_id','value' => $yewuId))),'yewu_id');
+			$invoicedList = array();
 	 	foreach($invoiceList as $key => $item){
 	 		if($orderList[$item['id']]['uid'] == $userId){
 	 			if($item['invoice_id']){
 	 				$invoiceInfo = $this->Invoice_Model->getFirstByKey($item['invoice_id']);
 	 				if($invoiceInfo['type'] == 1){
-	 					$invoiceList[$key]['type'] = '普通发票';
+	 					$invoicedList[$key]['type'] = '普通发票';
 	 				}else{
-	 					$invoiceList[$key]['type'] = '增值税发票';
+	 					$invoicedList[$key]['type'] = '增值税发票';
 	 				}
 	 			}else{
- 					$invoiceList[$key]['type'] = '个人发票';
+ 					$invoicedList[$key]['type'] = '个人发票';
 	 			}
-	 			$invoiceList[$key]['invoice_name'] = $item['invoice_name'];
-	 			$invoiceList[$key]['amount'] = $orderList[$item['id']]['amount'];
+	 			$invoicedList[$key]['invoice_name'] = $item['invoice_name'];
+	 			$invoicedList[$key]['amount'] = $orderList[$item['id']]['amount'];
 	 			$time = $orderList[$item['id']]['pay_time_end'];
 	 			$time = substr($time,0,4).'年'.substr($time,4,2).'月'.substr($time,6,2).'日'.substr($time,8,2).':'.substr($time,10,2);
-	 			$invoiceList[$key]['pay_time'] = $time;
-	 		}else{
-	 			unset($invoiceList,$key);
+	 			$invoicedList[$key]['pay_time'] = $time;
 	 		}
-	 		
 	 	}
-	 	if($invoiceList){
-	 		$this->jsonOutput2(RESP_SUCCESS,array('invoiceList' => $invoiceList));	
+	 	if($invoicedList){
+	 		$this->jsonOutput2(RESP_SUCCESS,array('invoiceList' => $invoicedList));	
 	 	}else{
 	 		$this->jsonOutput2(RESP_SUCCESS,array('invoiceList' => ''));
 	 	}
