@@ -39,6 +39,9 @@
 			float: right;
 			display: inline-block;
 		}
+		.text{
+			text-indent: 2em;
+		}
 
 	</style>
 	<div id="wrap">
@@ -52,7 +55,7 @@
 		<div class="fgx"></div>
 		<article class="articleContent">
 			{*<div class="digest">{$article['digest']|escape}</div>*}
-			<div>{$article['content']}</div>
+			<div class="text">{$article['content']}</div>
 			
 			<div class="footer1">
 				阅读数：{$article['article_click']}
