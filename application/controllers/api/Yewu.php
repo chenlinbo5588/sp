@@ -740,7 +740,7 @@ class Yewu extends Wx_Tdkc_Controller {
 	 	for($i = 0;$i < 1;$i++){
 	 		if($yewuInfo && $orderInfo['status'] == 2){
 				$addData = array(
-					'yeuw_id' => $yewuId,
+					'yewu_id' => $yewuId,
 					'invoice_name' => $name,
 					'amount_receive' => $yewuInfo['receivable_money'],
 					'pay_time' => $orderInfo['pay_time_end'],
