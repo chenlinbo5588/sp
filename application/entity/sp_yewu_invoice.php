@@ -5,6 +5,7 @@ $entity = array(
 'id' => 'int',
 'yewu_id' => 'int',
 'invoice_id' => 'int',
+'invoice_name' => 'varchar',
 'pay_time' => 'int',
 'amount_receive' => 'float',
 'amount_payed' => 'float',

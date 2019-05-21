@@ -52,7 +52,7 @@ class Yewu_service extends Base_service {
 		
 		self::$CI->load->model(array(
 			'Member_Model','Yewu_Model','Work_Group_Model','Yewu_Transfer_Model','Evaluate_Model','Member_Extend_Model',
-			'Company_Model','Yewu_Detail_Model','Invoice_Model','Order_Model'
+			'Company_Model','Yewu_Detail_Model','Invoice_Model','Order_Model','Yewu_Invoice_Model'
 		));
 		self::$CI->load->library(array('Basic_data_service','Admin_pm_service'));
 		self::$CI->load->helper('date');
@@ -202,6 +202,8 @@ class Yewu_service extends Base_service {
 			'time' => time(),
 			'name' => $userInfo['name'],
 			'mobile' => $userInfo['mobile'],
+			'add_uid' => $userInfo['uid'],
+			'add_username' => $userInfo['username'],
 		);
 		$result = $this->_yewuDetailModel->_add($addInfo);
 		return $result;
@@ -213,7 +215,7 @@ class Yewu_service extends Base_service {
 		$ids[] = $id;
 		$groupIds[] = $groupId;
 		//不是区域领导
-		if(4 != $userType){		
+		if(4 != $userType){
 			if(is_array($status) && count($status) >0){
 				$condition['where_in'][] = array('key' => 'status', 'value' => $status);
 			}
@@ -232,50 +234,41 @@ class Yewu_service extends Base_service {
 		}
 		$condition['order'] = 'gmt_create DESC';
 		$data = $this->_yewuModel->getList($condition);
+		$yewuList = array();
 		$basicData = $this->_basicDataServiecObj->getBasicDataList();
 		foreach($data as $key => $item){
 			if($data[$key]['status'] != Operation::$revoke){
-				$data[$key]['time'] = timediff($data[$key]['gmt_create'],time()) ;
-				$data[$key]['mobile'] = mask_mobile($data[$key]['mobile']);
-				$data[$key]['real_name'] = mask_name($data[$key]['real_name']);
-				$data[$key]['user_name'] = mask_name($data[$key]['user_name']);
-				$data[$key]['user_mobile'] = mask_mobile($data[$key]['user_mobile']);
-				$data[$key]['work_category'] = $basicData[$item['work_category']]['show_name'];
-				$data[$key]['worker_name'] = mask_name($data[$key]['worker_name']);
-				$data[$key]['worker_mobile'] = mask_mobile($data[$key]['worker_mobile']);
-				$data[$key]['status_name'] = Operation::$typeName[$item['status']];
-				if($data[$key]['status'] == Operation::$transfer){
-					$transfer = $this->_yewuTransferModel->getList(array('yewu_id' => $item['id'],'status' => '1'));
-				}
+				$yewuList[$key] = $item;
+				$yewuList[$key]['time'] = timediff($data[$key]['gmt_create'],time()) ;
+				$yewuList[$key]['mobile'] = mask_mobile($data[$key]['mobile']);
+				$yewuList[$key]['real_name'] = mask_name($data[$key]['real_name']);
+				$yewuList[$key]['user_name'] = mask_name($data[$key]['user_name']);
+				$yewuList[$key]['user_mobile'] = mask_mobile($data[$key]['user_mobile']);
+				$yewuList[$key]['work_category'] = $basicData[$item['work_category']]['show_name'];
+				$yewuList[$key]['worker_name'] = mask_name($data[$key]['worker_name']);
+				$yewuList[$key]['worker_mobile'] = mask_mobile($data[$key]['worker_mobile']);
+				$yewuList[$key]['status_name'] = Operation::$typeName[$item['status']];
 				if($item['is_payed']){
-					$data[$key]['is_payed'] = '已缴费';
+					$yewuList[$key]['is_payed'] = '已缴费';
 				}else{
-					$data[$key]['is_payed'] = '未缴费';
+					$yewuList[$key]['is_payed'] = '未缴费';
 				}
 				if($item['is_invoice']){
-					$data[$key]['is_invoice'] = '已开票';
+					$yewuList[$key]['is_invoice'] = '已开票';
 				}else{
-					$data[$key]['is_invoice'] = '未开票';
+					$yewuList[$key]['is_invoice'] = '未开票';
 				}
-				if($transfer){
-					$data[$key]['group_name_from'] = $transfer[0]['group_name_from'];
-					$data[$key]['group_name_to'] = $transfer[0]['group_name_to'];
-				}
-	
+
 				if(Operation::$payment != $item['status']){
 					$yewuDetailInfo = $this->_yewuDetailModel->getList(array('where' => array('operation' => $data[$key]['status'],'yewu_id' => $item['id'])));
-					$data[$key]['worker_name'] =mask_name($yewuDetailInfo[0]['name']);
-					$data[$key]['worker_mobile'] =mask_mobile($yewuDetailInfo[0]['mobile']);
+					$yewuList[$key]['worker_name'] = mask_name($yewuDetailInfo[0]['name']);
+					$yewuList[$key]['worker_mobile'] = mask_mobile($yewuDetailInfo[0]['mobile']);
 				}
 				
 			}
-			if($data[$key]['status'] == Operation::$revoke){
-				unset($data[$key]);
-				//array_slice($data,$key);
-			}
 			
 		}
-		return $data;
+		return $yewuList;
 	}
 	
 	/**
@@ -299,7 +292,7 @@ class Yewu_service extends Base_service {
 		$countArea = str_pad($countArea,4,"0",STR_PAD_LEFT);
 		$area = str_pad($area,3,"0",STR_PAD_LEFT);
 		$acceptNumber = $year.$countYear.$area.$countArea;
-		return array('accept_number' => $acceptNumber , 'encryption' => md5($acceptNumber));
+		return array('accept_number' => $acceptNumber , 'encryption' => sprintf("%u",crc32($acceptNumber)));
 	}
 	
 	

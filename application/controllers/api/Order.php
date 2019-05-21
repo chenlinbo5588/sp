@@ -60,23 +60,28 @@ class Order extends Wx_Tdkc_Controller {
 				'select' => 'order_id,yewu_id,yewu_name,amount,status,pay_time_end',
 				'where' => array('uid' => $userId)
 			));
-			foreach($orderList as $key => $Item){
-				if($Item['status'] == 2){
-					$yewuId[] = $Item['yewu_id'];
-					$orderPayedList[] = $Item;
-				}
+			if($orderList){
+				foreach($orderList as $key => $Item){
+					if($Item['status'] == 2){
+						$yewuId[] = $Item['yewu_id'];
+						$orderPayedList[] = $Item;
+					}
+				}	
 			}
 
 			$yewuList = $this->Yewu_Model->getList(array('where_in' => array(array('key' => 'id','value' => $yewuId))),'id');
-			foreach($orderPayedList as $key => $item){
-				if($yewuList[$item['yewu_id']]){
-					$orderPayedList[$key]['encryption_number'] = $yewuList[$item['yewu_id']]['encryption_number'];
-					$orderPayedList[$key]['work_category'] = $basicData[$yewuList[$item['yewu_id']]['work_category']]['show_name'];
-					$time = $orderPayedList[$key]['pay_time_end'];
-					$time = substr($time,0,4).'年'.substr($time,4,2).'月'.substr($time,6,2).'日'.substr($time,8,2).':'.substr($time,10,2);
-					$orderPayedList[$key]['pay_time'] = $time;
+			if($orderPayedList){
+				foreach($orderPayedList as $key => $item){
+					if($yewuList[$item['yewu_id']]){
+						$orderPayedList[$key]['encryption_number'] = $yewuList[$item['yewu_id']]['encryption_number'];
+						$orderPayedList[$key]['work_category'] = $basicData[$yewuList[$item['yewu_id']]['work_category']]['show_name'];
+						$time = $orderPayedList[$key]['pay_time_end'];
+						$time = substr($time,0,4).'年'.substr($time,4,2).'月'.substr($time,6,2).'日'.substr($time,8,2).':'.substr($time,10,2);
+						$orderPayedList[$key]['pay_time'] = $time;
+					}
 				}
 			}
+			
 			$this->jsonOutput2(RESP_SUCCESS,array('orderList' => $orderPayedList));	
 		}else{
 			$this->jsonOutput2(UNBINDED,$this->unBind);
