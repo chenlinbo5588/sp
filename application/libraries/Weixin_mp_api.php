@@ -8,83 +8,11 @@
 
 class Weixin_Mp_Api extends Weixin_api {
     
-    private $_mpConfig = array();
-    
-    //新的 access token
-    private $_mpAccessToken = '';
-    
-    //老的 access token ,防止新的解密失败
-    private $_mpAccessTokenOld = '';
-    
-    
-    public $msgCrypt = null;
-    
-    
     
     public function __construct(){
         parent::__construct();
         
-        $this->_CI->load->model(array('Mp_Ticket_Model'));
-        
     }
-    
-    
-    public function fetchToken(){
-        $tickets = $this->_CI->Mp_Ticket_Model->getList(array(
-            'where' => array(
-            	'appid' => $this->_mpConfig['appid'],
-                'gmt_create >= ' => $this->_CI->_reqtime - 10800
-            ),
-            'order' => 'id DESC',
-            'limit' => 2
-        ));
-        
-        if(!empty($tickets)){
-        	return $tickets[0]['access_token'];
-        }else{
-        	//log_message('error',"Ticket已失效,更新处理异常");
-            return '';
-        }
-    	
-    }
-    
-    
-    /**
-     * 获得当前配置
-     */
-    public function getSetting(){
-    	return $this->_mpConfig;
-    }
-    
-    
-    public function initSetting($config){
-        $this->_mpConfig = $config;
-        
-        $this->msgCrypt = new WXBizMsgCrypt($config['token'],$config['EncodingAESKey'],$config['appid']);
-        
-        $this->_mpAccessToken = $this->fetchToken();
-
-
-    }
-    
-    
-    
-    public function getAccessToken($pConfig){
-        $param = array(
-            'url' => '/cgi-bin/token?grant_type=client_credential&appid='.$pConfig['appid'].'&secret='.$pConfig['app_secret'],
-            'method' => 'get'
-        );
-        $respone = $this->request($param);
-        $result = json_decode($respone,true);
-        
-        if($result['access_token']){
-        	return $result;
-        }else{
-        	log_message('error',"获取Ticket失败,".$respone);
-        	return '';
-        }
-    }
-    
     
     
     /**
