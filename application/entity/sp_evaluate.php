@@ -8,7 +8,6 @@ $entity = array(
 'worker_name' => 'varchar',
 'work_efficiency' => 'tinyint',
 'service_attitude' => 'tinyint',
-'outcome_quality' => 'tinyint',
 'content' => 'varchar',
 'add_uid' => 'int',
 'add_username' => 'varchar',

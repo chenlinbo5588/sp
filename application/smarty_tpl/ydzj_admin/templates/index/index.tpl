@@ -279,6 +279,8 @@ $(function(){
 	        <dd><a href="javascript:void(0)" onclick="openItem('index,cms_article,cms')">文章管理</a></dd>
 	        <dd><a href="javascript:void(0)" onclick="openItem('category,cms_article,cms')">文章分类</a></dd>
 	        <dd><a href="javascript:void(0)" onclick="openItem('setting,cms,cms')">CMS设置</a></dd>
+	        <dd><a href="javascript:void(0)" onclick="openItem('index,recommend,cms')">推荐管理</a></dd>
+	        <dd><a href="javascript:void(0)" onclick="openItem('index,template,cms')">模板管理</a></dd>
 	        {*<dd><a href="javascript:void(0)" onclick="openItem('index,magazine,cms')">画报管理</a></dd>
 	        <dd><a href="javascript:void(0)" onclick="openItem('category,magazine,cms')">画报分类</a></dd>
 	        <dd><a href="javascript:void(0)" onclick="openItem('index,special,cms')">专题管理</a></dd>
@@ -631,6 +633,8 @@ $(function(){
                     {if isset($permission['side_cms_article'])}<li><a href="javascript:void(0);" id="index_cms_article" onclick="openItem('index,cms_article,cms');">CMS文章管理</a></li>{/if}
                     {if isset($permission['side_cms_article_class'])}<li><a href="javascript:void(0);" id="category_cms_article_class" onclick="openItem('category,cms_article_class,cms');">CMS文章分类</a></li>{/if}
                     {if isset($permission['side_cms'])}<li><a href="javascript:void(0);" id="index_cms" onclick="openItem('index,cms,cms');">CMS设置</a></li>{/if}
+                    {if isset($permission['side_recommend'])}<li><a href="javascript:void(0);" id="index_recommend" onclick="openItem('index,recommend,cms');">推荐管理</a></li>{/if}
+                    {if isset($permission['side_template'])}<li><a href="javascript:void(0);" id="index_template" onclick="openItem('index,template,cms');">模板管理</a></li>{/if}
                     {*<li><a href="javascript:void(0);" id="index_magazine" onclick="openItem('index,magazine,cms');">画报管理</a></li>
                     <li><a href="javascript:void(0);" id="category_magazine" onclick="openItem('category,magazine,cms');">画报分类</a></li>
                     <li><a href="javascript:void(0);" id="index_special" onclick="openItem('index,special,cms');">专题管理</a></li>*}

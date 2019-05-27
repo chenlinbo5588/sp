@@ -49,3 +49,4 @@ web.config
 
 
 application/third_party/aliyun-dysms-php-sdk/
+.application/config/database.php

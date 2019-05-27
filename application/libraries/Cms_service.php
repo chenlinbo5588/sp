@@ -55,7 +55,9 @@ class Cms_service extends Base_service {
 	public function __construct(){
 		parent::__construct();
 		
-		self::$CI->load->model(array('Cms_Article_Model', 'Cms_Article_Class_Model'));
+		self::$CI->load->model(array('Cms_Article_Model', 'Cms_Article_Class_Model','Recommend_Model',
+			'Recommend_Detail_Model'
+		));
 		
 		$this->_cmsArticleModel = self::$CI->Cms_Article_Model;
 		$this->_cmsArticleClassModel = self::$CI->Cms_Article_Class_Model;
