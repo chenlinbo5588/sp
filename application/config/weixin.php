@@ -41,3 +41,14 @@ $config['mp_test'] = array(
     'token' => 'd40e1b820344c570a6c23d945eb9f3c3', //用于消息签名验证
     'EncodingAESKey' => '3dDKk1ULklHSW6Fx5BJUgWpb6SUyhqX3VBtswp1bAGp', // 消息加解密key
 );
+
+
+// 微信服务号测试账户
+$config['mp_gzhtest'] = array(
+	'folder' => 'gzhtdkc',
+	'EncodingType' => '明文模式',//兼容模式  安全模式
+	'appid' => 'wxd97c68da4f0b51f7',
+    'app_secret' => 'a513de114510f14a37b42c4e1b700b8c',
+    'token' => 'e40e1b820344c570a6c23d825eb9f3c3', //用于消息签名验证
+    'EncodingAESKey' => '3dDKk1ULklHSW6Fx5BJUgWpb6SUyhqX3VBtswp1bAGp', // 消息加解密key
+);

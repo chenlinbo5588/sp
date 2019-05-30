@@ -12,7 +12,12 @@
     padding:6px 10px;
     text-align:right;
     -webkit-border-radius:5px;
+    margin-right:20px;
 }
+.align-center{
+	width:60px;
+}
+
 	</style>
 	 <table class="tb-type1 noborder search" >
 	 
@@ -22,22 +27,31 @@
 	          <th><label for="name">名称</label></th>
 	          <td><input class="txt" name="name" readonly value="{$recommendInfo['name']|escape}" type="text"></td>
 	          <th><label for="name">风格</label></th>
-	          <td><input class="txt" name="name" readonly value="{$recommendInfo['name']|escape}" type="text"></td>
+	          <td><input class="txt" name="style" readonly value="{$basicData[$recommendInfo['style']]['show_name']|escape}" type="text"></td>
 	          <th><label for="name">显示条数</label></th>
-	          <td><input class="txt" name="name" readonly value="{$recommendInfo['name']|escape}" type="text"></td>
+	          <td><input class="txt" name="show_number" readonly value="{$recommendInfo['show_number']|escape}" type="text"></td>
 	          <th><label for="name">模板名称</label></th>
-	          <td><input class="txt" name="name" readonly value="{$recommendInfo['name']|escape}" type="text"></td>
+	          <td><input class="txt" name="template_name" readonly value="{$recommendInfo['template_name']|escape}" type="text"></td>
 			</tr>
 			
 	        <tr>
 	        <th><label for="name">时间格式</label></th>
-	          <td><input class="txt" name="name" readonly value="{$recommendInfo['name']|escape}" type="text"></td>
+	          <td><input class="txt" name="dateformat" readonly value="{$basicData[$recommendInfo['dateformat']]['show_name']|escape}" type="text"></td>
 	          <th><label for="name">缓存时间</label></th>
-	          <td><input class="txt" name="name" readonly value="{$recommendInfo['name']|escape}" type="text"></td>
+	          <td><input class="txt"  name="cachetime" readonly value="{$recommendInfo['cachetime']|escape}分钟" type="text"></td>
 	          <th><label for="name">标题最大字数</label></th>
-	          <td><input class="txt" name="name" readonly value="{$recommendInfo['name']|escape}" type="text"></td>
+	          <td><input class="txt" name="max_title" readonly value="{$recommendInfo['max_title']|escape}" type="text"></td>
+		        <th></th>
+		        <td>
+		        	<a href="javascript:void(0);" class="addbutton" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/uploadMaterial')}"><span>刷新素材</span></a>
+		        	
+		        	<a href="javascript:void(0);" class="addbutton" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/uploadMaterial')}"><span>刷新素材</span></a>
+		        		
+					{if isset($permission[$moduleClassName|cat:'/add_detail'])}<a class="addbutton" href="{admin_site_url($moduleClassName|cat:'/add_detail')}?id={$recommendInfo['id']}">添加</a>{/if}&nbsp;
+		        	
+		        </td>
 	        <td>
-				{if isset($permission[$moduleClassName|cat:'/add_detail'])}<a class="addbutton" href="{admin_site_url($moduleClassName|cat:'/add_detail')}?id={$item['id']}">添加</a>{/if}&nbsp;
+	        	
 	        </td>
 	        </tr>    
 
@@ -65,11 +79,12 @@
 				<td>{$item['title']|escape}</td>
 				<td>{$item['url']|escape}</td>
 				<td>{$item['synopsis']|escape}</td>
-				<td>{$item['release_time']|escape}</td>
-				<td>{$item['startdate']|escape}</td>
-				<td>{$item['enddate']|escape}</td>
+				<td>{date('Y-m-d h:i:s;',$item['release_time'])|escape}</td>
+				<td>{date('Y-m-d h:i:s;',$item['startdate'])|escape}</td>
+				<td>{date('Y-m-d h:i:s;',$item['enddate'])|escape}</td>
 				<td class="align-center">
-				{if isset($permission[$moduleClassName|cat:'/edit'])}<a href="{admin_site_url($moduleClassName|cat:'/edit')}?id={$item['id']}">编辑</a>{/if}&nbsp;
+					{if isset($permission[$moduleClassName|cat:'/edit_detail'])}<a href="{admin_site_url($moduleClassName|cat:'/edit_detail')}?id={$item['id']}">编辑</a>{/if}&nbsp;
+	        		{if isset($permission[$moduleClassName|cat:'/delete'])}<a class="delete" href="javascript:void(0);" data-url="{admin_site_url($moduleClassName|cat:'/delete')}?id={$item['id']}" data-id="{$item['id']}">删除</a>{/if} 
 	        	</td>
 	        </tr>  
 	      </tbody>
@@ -90,7 +105,7 @@
   	var submitUrl = [new RegExp("{admin_site_url($moduleClassName|cat:'/dispatch')}"),new RegExp("{admin_site_url($moduleClassName|cat:'/complete_repair')}")];
     
 	$(function(){
-	    {if isset($permission[$moduleClassName|cat:'/delete'])}bindDeleteEvent();{/if}
+		{if isset($permission[$moduleClassName|cat:'/delete'])}bindDeleteEvent();{/if}
 	    
 	    {if isset($permission[$moduleClassName|cat:'/inline_edit'])}
 	    $("span.editable").inline_edit({ 

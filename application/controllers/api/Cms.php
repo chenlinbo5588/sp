@@ -102,5 +102,6 @@ class Cms extends Wx_Tdkc_Controller {
 		return $information;
 	}
 	
+
 	
 }

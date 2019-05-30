@@ -10,6 +10,7 @@
 <script type="text/javascript" src="{resource_url('js/jquery.js')}"></script>
 <script type="text/javascript" src="{resource_url('js/jquery-ui/i18n/zh-CN.js')}"></script>
 
+
 <script>
 var cookiedomain = "{config_item('cookie_domain')}",
     cookiepath = "{config_item('cookie_path')}",

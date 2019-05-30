@@ -52,7 +52,7 @@ class Register_service extends Base_service {
 	/**
 	 * 登录时自动创建一个会员
 	 */
-	public function setNewMember($param){
+	public function setNewMember($param,$inviterId){
 		list($msec, $sec) = explode(' ', microtime());
 		$msectime = (float)sprintf('%.0f', floatval($msec) * 1000);
 		$memberRegData = array(
@@ -64,6 +64,7 @@ class Register_service extends Base_service {
 		$regData = array(
 			'name' => date('YmdHms').$msectime,
 			'mobile' => date('YmdHms').$msectime,
+			'inviter_id' => $inviterId,
 			'openid' => $param['weixin_user']['openid'],
 			'channel' => 1,   //小程序注册进入的
 		);

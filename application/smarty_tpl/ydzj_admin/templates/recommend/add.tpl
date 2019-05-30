@@ -33,6 +33,8 @@
           </td>
         </tr>
         
+
+        
  	 	<tr class="noborder">
           <td colspan="2" class="required"><label class="validation" for="show_number">显示条数</label></td>
         </tr>
@@ -59,6 +61,27 @@
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input type="text" value="{$info['cachetime']|escape}" name="cachetime" id="cachetime" class="txt"></td>
+        </tr>
+        
+ 	 	<tr class="noborder">
+          <td colspan="2" class="required"><label class="validation" for="cachetime">标题最大长度</label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform"><input type="text" value="{$info['max_title']|escape}" name="max_title" id="max_title" class="txt"></td>
+        </tr>
+        
+      	<tr class="noborder">
+          <td colspan="2" class="required"><label class="validation" for="name">模板名称</label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform">
+          	<select name="template_id">
+	          <option value="">请选择...</option>
+	          {foreach from=$mouldList key=key item=item}
+	          <option {if $info['template_id'] == $item['id']}selected{/if} value="{$item['id']}">{$item['name']}</option>
+	          {/foreach}
+	        </select>
+          </td>
         </tr>
         
         <tr class="noborder">

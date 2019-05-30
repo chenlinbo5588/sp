@@ -79,7 +79,7 @@ class Wx_Tdkc_Controller extends MY_Controller {
 			if($this->memberInfo){
 				$this->userInfo = $this->yewu_service->getMenberInfoById($this->memberInfo['member_uid']);
 			}else{
-				$data = $this->register_service->setNewMember($this->sessionInfo);
+				$data = $this->register_service->setNewMember($this->sessionInfo,$this->postJson['inviter_id']);
 				if('success' == $data['code']){
 					$this->memberInfo = $this->yewu_service->initMemberInfoBySession($weixinUser,'uid');
 					$this->userInfo = $this->yewu_service->getMenberInfoById($this->memberInfo['member_uid']);

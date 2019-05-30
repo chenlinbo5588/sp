@@ -6,11 +6,14 @@
  * 公众平台 API 实现
  */
 
+
 class Weixin_Mp_Api extends Weixin_api {
+
     
     
     public function __construct(){
         parent::__construct();
+
         
     }
     
@@ -93,36 +96,9 @@ class Weixin_Mp_Api extends Weixin_api {
 	    $result = json_decode($respone,true);
         
         return $result;
+
         
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     ///////////////////@todo 待重构/////////////////////////
@@ -137,21 +113,7 @@ class Weixin_Mp_Api extends Weixin_api {
      * {"errcode":0,"errmsg":"ok"}
      */
     
-    public function uploadImg($file){
-        
-        $param = array(
-            'url' => '/cgi-bin/media/uploadimg?access_token='.$this->_mpAccessToken,
-            'method' => 'post',
-            'data' => array(
-            	'media' => '@'.$file
-            )
-        );
-        
-        $respone = $this->request($param);
-        $result = json_decode($respone,true);
-        
-        return $result;
-    }
+
     
     
     
@@ -259,44 +221,18 @@ class Weixin_Mp_Api extends Weixin_api {
      * {"errcode":0,"errmsg":"ok"}
      * 上传图文消息
      */
-    public function uploadnews($info){
+    public function uploadnews($articles){
         
-        $param = array(
-            'url' => '/cgi-bin/media/uploadnews?access_token='.$this->_mpAccessToken ,
-            'method' => 'post',
-        );
-        
-        $url = base_url("wxnews/detail/id/{$info['id']}");
-        
-        if($info['jump_url']){
-        	$url = $info['jump_url'];
-        }
-        
-        $info['content'] = $this->getMessageTopHTML().$info['content'] . $this->getMessageBottomHTML();
-        $info['content'] = addslashes(str_replace(array("\r\n", "\r", "\n"), "", $info['content']));
-        
-        $info['digest'] = addslashes($info['digest']);
-        
-        
-        $param['data'] = <<< EOF
- {
-   "articles": [
-		 {
-             "thumb_media_id":"{$info[media_id]}",
-             "author":"",
-			 "title":"{$info[title]}",
-			 "content_source_url":"{$url}",
-			 "content":"{$info[content]}",
-			 "digest":"{$info[digest]}",
-             "show_cover_pic":"0"
-		 }
-   ]
-}
-EOF;
-
-        $respone = $this->request($param);
+		$type= 'image';
+		$data = array(
+		  'method' =>"POST",
+		   'url' => '/cgi-bin/media/uploadnews?access_token='.$this->_mpAccessToken ,
+		  
+		  "data"=>json_encode(array('articles' => $articles),JSON_UNESCAPED_UNICODE)
+		);
+		
+        $respone = $this->request($data);
         $result = json_decode($respone,true);
-        
         return $result;
     }
     
@@ -314,7 +250,7 @@ EOF;
         
         $param['data'] = <<< EOF
 {
-   "touser":"otBYfs1fulwVFWLKJ8naDJ5Shnjs", 
+   "towxname":"a772021683", 
    "mpnews":{              
        "media_id":"{$media_id}"    
     },
@@ -328,7 +264,31 @@ EOF;
         return $result;
     	
     }
-    
+    public function sendMessageNews($media_id){
+		
+		
+		$param = array(
+		  'method' =>"POST",
+		  'url' => "/cgi-bin/message/mass/sendall?access_token=".$this->_mpAccessToken,
+		  "data"=>json_encode(array(
+			   "filter"=>array(
+			   		"is_to_all" =>true,
+			   ),
+			   "mpnews"=>array(
+    			  "media_id"=>$media_id
+ 		 		),
+ 		 	   "msgtype"=>"mpnews",
+   			   "send_ignore_reprint"=>0
+		  ))
+		);   
+		
+		$respone = $this->request($param);
+        $result = json_decode($respone,true);
+        
+        return $result;
+		
+		
+	}
     /**
      * 群发消息
      */
@@ -361,8 +321,114 @@ EOF;
         
         return $result;
     }
-    
-    
+    public function getAllUser(){
+		
+		$param = array(
+		  'method' =>"GET",
+		  'url' => "/cgi-bin/user/get?access_token=".$this->_mpAccessToken,
+		 
+		);   
+		$respone = $this->request($param);
+	 	$result = json_decode($respone,true);
+        
+        return $result;
+		
+	}
+    public function getAllsucai(){
+		
+		$param = array(
+		  'method' =>"POST",
+		  'url' => "/cgi-bin/material/batchget_material?access_token=".$this->_mpAccessToken,
+		  "data"=>json_encode(array(
+			    "type"=>"news",
+			    "offset"=>0,
+			    "count"=>20
+		  ),JSON_UNESCAPED_UNICODE)
+		);   
+		
+		$respone = $this->request($param);
+	 	$result = json_decode($respone,true);
+        
+        return $result;
+		
+	}
+	
+	public function addOtherSucai($filepath,$type){
+		
+	
+		$param = array(
+		  'method' =>"POST",
+		  'url' => "/cgi-bin/material/add_material?access_token=".$this->_mpAccessToken."&type=".$type,
+		  "data"=>array('media' => new CURLFile($filepath))
+		);   
+		
+		$respone = $this->request($param);
+	 	$result = json_decode($respone,true);
+        return $result;
+		
+		
+	}
+	
+	public function addNew($title,$author,$digest,$content,$content_source_url,$thumb_media_id){
+		
+		
+	
+		$param = array(
+		  'method' =>"POST",
+		  'url' => "/cgi-bin/material/add_news?access_token=".$this->_mpAccessToken,
+		  "data"=>json_encode(array('articles' => array(array(
+			   "title"=> $title,
+			   "thumb_media_id"=> $thumb_media_id,
+			   "author"=> $author,
+			   "digest"=> $digest,
+			   "show_cover_pic"=> 1,
+			   "content"=> $content,
+			   "content_source_url"=>$content_source_url,
+			   "need_open_comment"=>0,
+			   "only_fans_can_comment"=>1
+		  ))),JSON_UNESCAPED_UNICODE)
+		);   
+		
+		$respone = $this->request($param);
+	 	$result = json_decode($respone,true);
+        
+        return $result;
+		
+		
+	}
+	
+	public function uploadImg($filepath){
+		
+		$param = array(
+		  'method' =>"POST",
+		  'url' => "/cgi-bin/media/uploadimg?access_token=".$this->_mpAccessToken,
+		  
+		  "data"=>array('media' => new CURLFile($filepath))
+		);   
+		
+		$respone = $this->request($param);
+	 	$result = json_decode($respone,true);
+        
+        return $result;
+		
+	}
+	public function upload($filepath,$type){
+		
+	
+		
+		$param = array(
+		  'method' =>"POST",
+		  'url' => "/cgi-bin/media/upload?access_token=".$this->_mpAccessToken."&type=".$type,
+		  //"data"=>array('media' => new CURLFile($filename))
+		  "data"=>array('media' => new CURLFile($filepath))
+		);   
+		
+		$respone = $this->request($param);
+	 	$result = json_decode($respone,true);
+        
+        return $result;
+		
+	}
     
 }
 

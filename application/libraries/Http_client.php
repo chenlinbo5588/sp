@@ -141,4 +141,15 @@ class Http_Client {
         return $result;
     }
     
+    /**
+     * 
+     */
+	public function download($url){
+	    return $this->request(array(
+            'url' => $url,
+            'method' => 'get',
+        ));
+	}
+
+    
 }

@@ -147,7 +147,7 @@ class Company extends Ydzj_Admin_Controller {
 				)
 			));
 			$this->Company_Member_Model->deleteByCondition(array(
-				'whrer_in' => array(
+				'where_in' => array(
 					array('key' => 'company_id','value' => $ids)
 				)
 			));

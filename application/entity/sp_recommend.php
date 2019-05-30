@@ -5,10 +5,13 @@ $entity = array(
 'id' => 'int',
 'name' => 'varchar',
 'style' => 'varchar',
-'template' => 'text',
+'max_title' => 'int',
+'template_id' => 'int',
+'template_name' => 'varchar',
 'show_number' => 'int',
 'dateformat' => 'varchar',
 'cachetime' => 'int',
+'media_id' => 'varchar',
 'gmt_create' => 'int',
 'gmt_edit' => 'int'
 );
