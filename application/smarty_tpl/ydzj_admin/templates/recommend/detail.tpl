@@ -14,6 +14,8 @@
     -webkit-border-radius:5px;
     margin-right:20px;
 }
+
+。
 .align-center{
 	width:60px;
 }
@@ -43,9 +45,11 @@
 	          <td><input class="txt" name="max_title" readonly value="{$recommendInfo['max_title']|escape}" type="text"></td>
 		        <th></th>
 		        <td>
-		        	<a href="javascript:void(0);" class="addbutton" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/uploadMaterial')}"><span>刷新素材</span></a>
+		        	<a href="javascript:void(0);" class="addbutton opBtn " data-title="确定群发该素材吗？"  ids={$recommendInfo['id']} data-url="{admin_site_url($moduleClassName|cat:'/group_send')}?id={$recommendInfo['id']}"><span>群发素材</span></a>
 		        	
-		        	<a href="javascript:void(0);" class="addbutton" data-checkbox="id[]" data-url="{admin_site_url($moduleClassName|cat:'/uploadMaterial')}"><span>刷新素材</span></a>
+		        	<a href="javascript:void(0);" class="addbutton opBtn " data-title="确认预览该素材吗？"  ids={$recommendInfo['id']} data-url="{admin_site_url($moduleClassName|cat:'/preview')}?id={$recommendInfo['id']}"><span>预览</span></a>
+		        	
+		        	<a href="javascript:void(0);" class="addbutton opBtn " data-title="确实刷新数据吗?刷新素材需要时间，请耐心等候"  ids={$recommendInfo['id']} data-url="{admin_site_url($moduleClassName|cat:'/uploadMaterial')}?id={$recommendInfo['id']}"  data-ajaxformid="#verifyForm"><span>刷新素材</span></a>
 		        		
 					{if isset($permission[$moduleClassName|cat:'/add_detail'])}<a class="addbutton" href="{admin_site_url($moduleClassName|cat:'/add_detail')}?id={$recommendInfo['id']}">添加</a>{/if}&nbsp;
 		        	
@@ -76,7 +80,7 @@
 	        <tr> 
 	        	<td><input value="{$item['id']}" class="checkitem" group="chkVal" type="checkbox" name="id[]"></td>
 				<td><span class="editable" data-id="{$item['id']}" data-fieldname="display">{$item['display']}</span></td>
-				<td>{$item['title']|escape}</td>
+				<td class="title"><a href="{admin_site_url(cms_article|cat:'/index')}?article_title={$item['title']}">{$item['title']|escape}</td>
 				<td>{$item['url']|escape}</td>
 				<td>{$item['synopsis']|escape}</td>
 				<td>{date('Y-m-d h:i:s;',$item['release_time'])|escape}</td>
@@ -106,14 +110,14 @@
     
 	$(function(){
 		{if isset($permission[$moduleClassName|cat:'/delete'])}bindDeleteEvent();{/if}
-	    
+		
 	    {if isset($permission[$moduleClassName|cat:'/inline_edit'])}
 	    $("span.editable").inline_edit({ 
 	    	url: "{admin_site_url($moduleClassName|cat:'/inline_edit')}",
 	    	clickNameSpace:'inlineEdit'
 	    });
-	    {/if}
-		    
+	    {/if}   
 	});
  
   </script>
+ <script type="text/javascript" src="{resource_url('js/recommend/upload.js',true)}"></script>

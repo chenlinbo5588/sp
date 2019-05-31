@@ -58,7 +58,7 @@
           <td colspan="2" class="required"><label class="validation" for="release_time">{#release_time#}</label></td>
         </tr>
         <tr class="noborder">
-          <td class="vatop rowform"><input type="text" value="{date('Y-m-d h:i:s',$info['release_time'])|escape}" name="release_time" id="release_time" class="txt"></td>
+          <td class="vatop rowform"><input type="text" value="{if $info['release_time']}{date('Y-m-d h:i:s',$info['release_time'])|escape}{/if}" name="release_time" id="release_time" class="txt"></td>
         </tr>
 
         
@@ -73,14 +73,14 @@
           <td colspan="2" class="required"><label class="validation" for="startdate">{#startdate#}</label></td>
         </tr>
         <tr class="noborder">
-          <td class="vatop rowform"><input type="text" value="{date('Y-m-d h:i:s',$info['startdate'])|escape}" name="startdate" id="startdate" class="datepicker"></td>
+          <td class="vatop rowform"><input type="text" value="{if $info['startdate']}{date('Y-m-d h:i:s',$info['startdate'])|escape}{/if}" name="startdate" id="startdate" class="datepicker"></td>
         </tr>
         
  	 	<tr class="noborder">
           <td colspan="2" class="required"><label class="validation" for="enddate">{#enddate#}</label></td>
         </tr>
         <tr class="noborder">
-          <td class="vatop rowform"><input data-field="datetime" type="text" value="{date('Y-m-d h:i:s',$info['enddate'])|escape}" name="enddate" id="enddate" class="datepicker"></td>
+          <td class="vatop rowform"><input data-field="datetime" type="text" value="{if $info['enddate']}{date('Y-m-d h:i:s',$info['enddate'])|escape}{/if}" name="enddate" id="enddate" class="datepicker"></td>
         </tr>
         
         <tr class="noborder">

@@ -193,7 +193,7 @@ class Recommend extends Ydzj_Admin_Controller {
 						break;
 					}
 				}
-				if(!$this->judgeRepeat($recommendInfo['id'],$updateInfo['display'])){
+				if(!$this->judgeRepeat($recommendInfo['id'],$updateInfo['display'],$id)){
 					$this->jsonOutput('显示位置输入错误');
 					break;
 				}
@@ -353,10 +353,16 @@ class Recommend extends Ydzj_Admin_Controller {
 		$this->form_validation->set_rules('display','位置','required');
 	}
 	
-	private function judgeRepeat($recommendId,$showNumber){
+	private function judgeRepeat($recommendId,$showNumber,$recommendDetailId = 0){
 		$recommendInfo = $this->Recommend_Model->getFirstByKey($recommendId);
 		$recommendDetailList =$this->Recommend_Detail_Model->getList(array('where' => array('recommend_id' => $recommendId)),'display');
 		if($showNumber > 0 && $showNumber <= $recommendInfo['show_number']){
+			if($recommendDetailId){
+				$recommendDetailIfon = $this->Recommend_Detail_Model->getFirstByKey($recommendDetailId);
+				if($recommendDetailIfon['display'] == $showNumber){
+					return true;
+				}
+			}
 			if(in_array($showNumber,array_keys($recommendDetailList))){
 				return false;
 			}else{
@@ -369,21 +375,24 @@ class Recommend extends Ydzj_Admin_Controller {
 	}
 	
 	public function uploadMaterial(){
-		
-		$recommendinfo = $this->Recommend_Model->getFirstByKey("公众号-新闻",'name');
-		$newList = $this->Recommend_Detail_Model->getList(array('where' => array('recommend_id' => $recommendinfo['id'])));
+		$id = $this->input->get_post('id');
+		$recommendinfo = $this->Recommend_Model->getFirstByKey($id);
+		$condition['where']['startdate >='] = time();
+		$condition['where']['enddate >='] = time();
+		$condition['where']['recommend_id'] = $recommendinfo['id'];
+		$newList = $this->Recommend_Detail_Model->getList($condition);
 		foreach($newList as $key => $item){
 			$arctleInfo = $this->Cms_Article_Model->getFirstByKey($item['cms_id']);
 			$content = $this->handleContent($arctleInfo['content']);
-			file_put_contents('1.jpg',$this->weixin_mp_api->download($item['img_url']));
-			$result = $this->weixin_mp_api->upload($_SERVER['DOCUMENT_ROOT'].'\1.jpg','image');
+			file_put_contents('temp\1.jpg',$this->weixin_mp_api->download($item['img_url']));
+			$result = $this->weixin_mp_api->upload($_SERVER['DOCUMENT_ROOT'].'\temp\1.jpg','image');
 			if($result['media_id']){
-				unlink($_SERVER['DOCUMENT_ROOT'].'\1.jpg');
+				unlink($_SERVER['DOCUMENT_ROOT'].'\temp\1.jpg');
 				$thumb_media_id = $result['media_id'];
 				$articles[] = array(
 					"title"=> $item['title'],
 					"thumb_media_id"=> $thumb_media_id,
-	   				"author"=> $arctleInfo['author'],
+	   				"author"=> '孙亚龙',
 					"show_cover_pic"=> 0,
 					"content"=> $content,
 					"content_source_url"=>$item['url'],
@@ -395,13 +404,18 @@ class Recommend extends Ydzj_Admin_Controller {
 		
 		$resulr = $this->weixin_mp_api->uploadnews($articles);
 		if($resulr['media_id']){
-			$this->Recommend_Model->updateByCondition(array(
+			$result = $this->Recommend_Model->updateByCondition(array(
 				'media_id' => $resulr['media_id']
 			),array(
 				'where' => array(
 					'id' => $recommendinfo['id'],
 				)
 			));
+			if($result){
+				$this->jsonOutput('上传素材成功',array('jsReload' => true));
+			}else{
+				$this->jsonOutput('请求非法',$this->getFormHash());
+			}
 		}
 		
 	}
@@ -410,7 +424,7 @@ class Recommend extends Ydzj_Admin_Controller {
 		preg_match_all('/<img[^>]*?src="([^"]*?)"[^>]*?>/i',$content,$match);
 		if(is_array($match[1])){
 			foreach($match[1] as $key => $item){
-				file_put_contents('1.jpg',$this->weixin_mp_api->download($item));
+				file_put_contents('temp\1.jpg',$this->weixin_mp_api->download($item));
 				$result = $this->weixin_mp_api->uploadImg($_SERVER['DOCUMENT_ROOT'].'\temp\1.jpg');
 				if($result['url']){
 					unlink($_SERVER['DOCUMENT_ROOT'].'\temp\1.jpg');
@@ -423,5 +437,32 @@ class Recommend extends Ydzj_Admin_Controller {
 		$content = $this->weixin_mp_api->getMessageTopHTML().$content. $this->weixin_mp_api->getMessageBottomHTML();
 		return $content;
 	}
+	
+	
+	public function preview(){
+		$id = $this->input->get_post('id');
+		$recommendInfo = $this->Recommend_Model->getFirstByKey($id);
+		$result = $this->weixin_mp_api->preview($recommendInfo['media_id']);
+		if($result['errcode'] == QUERY_OK){
+			$this->jsonOutput('预览成功',array('jsReload' => true));
+		}else{
+			$this->jsonOutput('请求非法',$this->getFormHash());
+		}
+	}
+	
+	
+	public function group_send(){
+		$id = $this->input->get_post('id');
+		$recommendInfo = $this->Recommend_Model->getFirstByKey($id);
+		$result = $this->weixin_mp_api->sendMessageNews($recommendInfo['media_id']);
+		if($result['errcode'] == QUERY_OK){
+			$this->jsonOutput('群发成功',array('jsReload' => true));
+		}else{
+			print_r($result);
+			$this->jsonOutput('请求非法',$this->getFormHash());
+		}
+		
+	}
+	
 	
 }

@@ -50,8 +50,7 @@ class Cms_Article extends Ydzj_Admin_Controller {
 		$search['article_title'] = $this->input->get_post('article_title');
 		$search['article_state'] = $this->input->get_post('article_state') ? $this->input->get_post('article_state') : '';
 		$search['articleClassId'] = $this->input->get_post('id') ? $this->input->get_post('id') : 0;
-		
-		
+
 		if(empty($search['article_state'])){
 			unset($search['article_state']);
 		}
@@ -73,7 +72,6 @@ class Cms_Article extends Ydzj_Admin_Controller {
 		
 		
 		
-		
 		if($search['article_title']){
 			$condition['like']['article_title'] = $search['article_title'];
 		}
@@ -89,8 +87,8 @@ class Cms_Article extends Ydzj_Admin_Controller {
 		}
 		
 		
-		//print_r($condition);
 		$list = $this->Cms_Article_Model->getList($condition);
+		
 		
 		$this->assign(array(
 			'articleClassList' => $treelist,
