@@ -180,6 +180,13 @@ class Weixin_Mp_Api extends Weixin_api {
         }
         
         if(file_exists($filePath)){
+        	
+        	if($className == "viewnews" ){
+		        $recommendInfo = $this->_CI->Recommend_Model->getFirstByKey('公众号-新闻','name');
+		        $newInfo = $this->_CI->Recommend_Detail_Model->getList(array('where' => array('recommend_id' => $recommendInfo['id'])));
+				$message['newinfo'] = $newInfo;
+        	}
+        	
             include_once($filePath);
             $responseObj = new $className();
             $responseObj->delegate = $this;

@@ -8,7 +8,7 @@ class Weixin_test extends Ydzj_Controller {
     public function __construct(){
         parent::__construct();
         
-    	$this->load->library('Weixin_mp_api');
+    	$this->load->library(array('Weixin_mp_api','Cms_service'));
     }
     
     
@@ -22,9 +22,9 @@ class Weixin_test extends Ydzj_Controller {
     public function message(){
         
         ///signature=ce40a74f36a702b9754b9b120623e1c749e81315&timestamp=1418015929&nonce=2097909623&encrypt_type=aes&msg_signature=0e35c960849aa61f38f73fae23bc9e667644dce9 
+        //file_put_contents("data1.txt","aaaa");
         
-        
-        $mpConfig = config_item('mp_test');
+        $mpConfig = config_item('mp_gzhtest');
         $this->weixin_mp_api->initSetting($mpConfig);
 		/*
     	if($this->weixin_mp_api->checkSignature($mpConfig['token'])){
@@ -36,7 +36,6 @@ class Weixin_test extends Ydzj_Controller {
         //valid signature , option
         if($this->weixin_mp_api->checkSignature($mpConfig['token'])){
             $postStr = $GLOBALS["HTTP_RAW_POST_DATA"];
-            
             //?signature=21b04411b91ca74175cf9a4f2bb56ccaa712bb08&timestamp=1418017063&nonce=459089760&encrypt_type=aes&msg_signature=5f0b52560150baab17196a5c571ea1f7633a7f3d
             /*
             $postStr = '<xml>
@@ -45,6 +44,7 @@ class Weixin_test extends Ydzj_Controller {
 </xml>';
             */
             $message = $this->user_event($postStr);
+            
             $this->weixin_mp_api->responseMessage($message);
         }
     }
@@ -52,7 +52,7 @@ class Weixin_test extends Ydzj_Controller {
     public function user_event($postStr){
     	 $message = '';
         $xml = new DOMDocument();
-        $xml->loadXML($message);
+        $xml->loadXML($postStr);
         
         
         $rt['ToUserName'] = $xml->getElementsByTagName('ToUserName');
@@ -71,18 +71,19 @@ class Weixin_test extends Ydzj_Controller {
     }
     
     public function responseMessage($message){
-    	
+    	$mpConfig = config_item('mp_gzhtest');
     	$filePath = '';
-
     	if('CLICK' == strtoupper($message['Event'])){
             /** 自定义菜单事件 key **/
             $className = strtolower($message['EventKey']);
             
-            $filePath = APPPATH.'libraries'.DIRECTORY_SEPARATOR.$this->_mpConfig['folder'].DIRECTORY_SEPARATOR.$className.'.php';
+            $filePath = APPPATH.'libraries'.DIRECTORY_SEPARATOR.$mpConfig['folder'].DIRECTORY_SEPARATOR.$className.'.php';
             
         }
         
 
+		
+		
         include_once($filePath);
         $responseObj = new $className();
         $responseObj->delegate = $this;
@@ -90,14 +91,9 @@ class Weixin_test extends Ydzj_Controller {
         $encryptMsg = '';
         $respMessage = $responseObj->response($message);
         
-        if(!empty($respMessage)){
-        	$return = $this->msgCrypt->encryptMsg($respMessage,$_GET['timestamp'],$_GET['nonce'],$encryptMsg);
-	        if(ErrorCode::$OK == $return){
-	            echo $encryptMsg;
-	        }
-        }else{
-        	echo "";
-        }
+          echo $respMessage;
+          
+        
     }
     
 }

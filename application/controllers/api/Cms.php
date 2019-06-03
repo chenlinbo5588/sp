@@ -102,6 +102,25 @@ class Cms extends Wx_Tdkc_Controller {
 		return $information;
 	}
 	
+	public function getCertificate(){
+		$address = array('资质证书' => array(
+			'url' =>array(
+				'https://www.cxmap.net/static/img/zzry/yingyezhizhao.png', 
+			    'https://www.cxmap.net/static/img/zzry/jigoudengji.png', 
+			    'https://www.cxmap.net/static/img/zzry/cehuizizhi.png', 
+			    'https://www.cxmap.net/static/img/zzry/jigouzhuce.png', 
+			    'https://www.cxmap.net/static/img/zzry/linyezizhizhengshu.png', 
+			    'https://www.cxmap.net/static/img/zzry/budongchandiaochadengjidaili.png' 
+			) 
+		),'荣誉证书' => array(
+			'url' => array(
+				'https://www.cxmap.net/static/img/zzry/hedaozhilijinjiang.png', 
+			    'https://www.cxmap.net/static/img/zzry/tianyuwantongjiang.png', 
+			    'https://www.cxmap.net/static/img/zzry/zuijuhuoliqiyezhengshu.png', 
+			) 
+		));
+		$this->jsonOutput2(RESP_SUCCESS,array('imageurlList' => $address));
+	}
 
 	
 }

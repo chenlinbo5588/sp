@@ -434,7 +434,7 @@ class Recommend extends Ydzj_Admin_Controller {
 			}
 		}
 		
-		$content = $this->weixin_mp_api->getMessageTopHTML().$content. $this->weixin_mp_api->getMessageBottomHTML();
+		$content = $content. $this->weixin_mp_api->getMessageBottomHTML();
 		return $content;
 	}
 	
