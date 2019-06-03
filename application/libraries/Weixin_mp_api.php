@@ -14,7 +14,7 @@ class Weixin_Mp_Api extends Weixin_api {
     public function __construct(){
         parent::__construct();
 
-        $this->_mpAccessToken ='22_LS0Sksibay09Got5eLfEasSbXCiLWC7yDaWszRbHdVRF-k8hDTHqQPYRB_0VLEfL6LUVeeoxTSeMoNh5tZrGhPeHv-fyEJzraALFZdqRFAorY0kZFHcP5dhcRTT_ki8MJPfPduMNdlfnplnLFTLcAIAJXP';
+       
     }
     
     
