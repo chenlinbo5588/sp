@@ -6,7 +6,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 /**
  * 关注 
  */
-class Subscribe {
+class CompanyProfile {
     public $delegate;
     
     public function __construct(){
@@ -16,9 +16,10 @@ class Subscribe {
     
     public function response($message){
     	
-    	$ci = $this->delegate->getCI();
     	
-        $welcomeText = "尊敬的用户，感谢您关注".$ci->_siteSetting['site_name'];
+    
+        $welcomeText = "慈溪市土地勘测规划设计院有限公司是慈溪市国土资源局所属的原国有企业（慈溪市土地勘测规划设计院）改制后的股份制民营企业。";
+      
         $respXML = <<< EOF
 <xml>
 <ToUserName><![CDATA[$message[FromUserName]]]></ToUserName>
@@ -28,7 +29,7 @@ class Subscribe {
 <Content><![CDATA[$welcomeText]]></Content>
 </xml> 
 EOF;
+
         return $respXML;
     }
 }
-

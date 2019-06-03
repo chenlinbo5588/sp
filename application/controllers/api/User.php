@@ -57,5 +57,27 @@ class User extends Wx_Tdkc_Controller {
 			}
 		}
 	}
+	
+	public function setInviter(){
+		if($this->userInfo){
+			$inviterId = $this->postJson('inviter_id');
+			$inviterInfo = $this->Member_Model->getFirstByKey($inviterId,'uid');
+			if($inviterId){
+			 	$result = $this->Member_Model->updateByCondition(
+					array(
+						'inviter_id' => $inviterInfo['uid'],
+						'inviter_name' => $inviterInfo['name'],
+						
+					),
+					array('where' => array('uid' => $this->userInfo['uid']))
+				);
+			}
+			if($result){
+				$this->jsonOutput2(RESP_SUCCESS,'邀请人绑定成功');
+			}else{
+				$this->jsonOutput2(RESP_ERROR,'邀请人绑定失败');
+			}
+		}
+	}
 
 }
