@@ -37,7 +37,7 @@ class Weixin_api extends Http_Client {
         $this->_CI = get_instance();
         $this->_CI->load->config('weixin');
         
-        $this->_CI->load->model(array('Mp_Ticket_Model'));
+        $this->_CI->load->model(array('Mp_Ticket_Model','Recommend_Model','Recommend_Detail_Model'));
         
         $this->setBaseUrl('https://api.weixin.qq.com');
     }
