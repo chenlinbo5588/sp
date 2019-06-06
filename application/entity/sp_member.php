@@ -12,6 +12,7 @@ $entity = array(
 'qq' => 'varchar',
 'weixin' => 'varchar',
 'openid' => 'varchar',
+'service_openid' => 'varchar',
 'unionid' => 'varchar',
 'aid' => 'mediumint',
 'avatar_middle' => 'varchar',

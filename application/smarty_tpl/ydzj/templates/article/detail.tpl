@@ -132,14 +132,14 @@
 		
 	</div>
 	<script type="text/javascript">
-		document.ge tElementById("big").onclick = function(){
-			document.ge tElementById("text").className = "text font-big"; 
+		document.getElementById("big").onclick = function(){
+			document.getElementById("text").className = "text font-big"; 
 		}
-		document.ge tElementById("middle").onclick = function(){
-			document.ge tElementById("text").className = "text font-middle"; 
+		document.getElementById("middle").onclick = function(){
+			document.getElementById("text").className = "text font-middle"; 
 		}
-		document.ge tElementById("small").onclick = function(){
-			document.ge tElementById("text").className = "text font-small"; 
+		document.getElementById("small").onclick = function(){
+			document.getElementById("text").className = "text font-small"; 
 		}
 	</script>
 </body>

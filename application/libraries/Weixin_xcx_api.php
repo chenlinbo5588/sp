@@ -95,6 +95,45 @@ class Weixin_Xcx_Api extends Weixin_api {
         
     }
    
+   
+   public function createQR($id){
+	 	
+		$param =config_item('mp_xcxTdkc');
+		
+		$this->initSetting($param);
+		
+		
+
+		$path ='./qrImage/'.$id.'.jpg';
+		$imgurl ='/qrImage/'.$id.'.jpg';
+		
+
+		$data = array(
+		  'data'=>json_encode(array(
+			  'scene'=>'pid='.$id, 
+			  'page'=>'pages/index/webview/webview',
+			  'width'=>430,
+			  'auto_color'=>false,)),
+		  'method' =>"POST"
+		);   	 
+	
+		$url = "/wxa/getwxacodeunlimit?access_token=".$this->_mpAccessToken;
+		$data['url'] =$url;
+		
+	    $da = $this->request($data);
+	    
+
+		
+	  	if($da){
+	 		$fanhuistr = file_put_contents($path,$da);
+	 		$information =array(
+	 			'imgurl' => $imgurl,
+	 		);
+	 		return array('data' => $information);
+	  	}else{
+	  		return false;
+	  	}
+	}
     
 }
 

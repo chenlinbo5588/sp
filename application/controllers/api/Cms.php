@@ -121,6 +121,17 @@ class Cms extends Wx_Tdkc_Controller {
 		));
 		$this->jsonOutput2(RESP_SUCCESS,array('imageurlList' => $address));
 	}
+	
+	public function getIndexInformation(){
+		$address = array('首页公告' => array(
+			'notice' => '慈溪市土地勘测规划设计院有限公司是慈溪市国土资源局所属的原有企业（慈溪市土地勘测规划设计院）改制后的股份制民营企业。.....'
+		),'首页照片' => array(
+			'url' => array(
+				'www.cxmap.net/static/img/xcxposter/haibao.png'
+			)
+		));
+		$this->jsonOutput2(RESP_SUCCESS,array('infromationList' => $address));
+	}
 
 	
 }

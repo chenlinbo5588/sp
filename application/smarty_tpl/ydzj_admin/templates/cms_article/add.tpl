@@ -192,10 +192,10 @@
           <td class="vatop tips"></td>
         </tr>
         <tr>
-          <td colspan="2" class="required"><label>发布人/发布时间</label></td>
+          <td colspan="2" class="required"><label>发布时间</label></td>
         </tr>
         <tr>
-          <td class="vatop rowform">{if $info['article_state'] == 3}<label>{$info['publish_username']|escape}/{$info['publish_time']|date_format:"%Y-%m-%d %H:%M:%S"}</label>{/if}</td>
+           <td class="vatop rowform"><input type="text" value="{if $info['publish_time']}{date('Y-m-d h:i:s',$info['publish_time'])|escape}{/if}" name="publish_time" id="publish_time" class="datepicker"></td>
           <td class="vatop tips"></td>
         </tr>
         
@@ -259,6 +259,9 @@
 		uploadbutton.fileBox.change(function(e) {
 			uploadbutton.submit();
 		});
+	});
+	$(function(){
+		$(".datepicker").datepicker();
 	});
  </script>
 {include file="common/main_footer.tpl"}

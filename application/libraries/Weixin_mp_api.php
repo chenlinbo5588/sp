@@ -135,6 +135,7 @@ class Weixin_Mp_Api extends Weixin_api {
                 $rt['MsgType'] = $xml->getElementsByTagName('MsgType');
                 $rt['Event'] = $xml->getElementsByTagName('Event');
                 $rt['EventKey'] = $xml->getElementsByTagName('EventKey');
+                $rt['Content'] = $xml->getElementsByTagName('Content');
 
 				
                 $toUserName = $rt['ToUserName']->item(0)->nodeValue;
@@ -142,7 +143,8 @@ class Weixin_Mp_Api extends Weixin_api {
                 $msgType = $rt['MsgType']->item(0)->nodeValue;
                 $event = $rt['Event']->item(0)->nodeValue;
                 $eventKey = $rt['EventKey']->item(0)->nodeValue;
-                return array('code' => 0,'ToUserName' => $toUserName,'FromUserName' => $fromUserName, 'MsgType' => $msgType,'Event' => $event , 'EventKey' => $eventKey);
+                $content = $rt['Content']->item(0)->nodeValue;
+                return array('code' => 0,'ToUserName' => $toUserName,'FromUserName' => $fromUserName, 'MsgType' => $msgType,'Event' => $event , 'EventKey' => $eventKey,'Content' => $content);
             }else{
                 return array('code' => ErrorCode::$ParseXmlError,'ToUserName' => null,'FromUserName' => null, 'MsgType' => null,'Event' => null, 'EventKey' => null);
             }
@@ -434,6 +436,30 @@ EOF;
 	 	$result = json_decode($respone,true);
         
         return $result;
+		
+	}
+	
+	public function senCard($message){
+		
+		$open_id ="otBYfszSULhV493iA13xPaGsi1gM";
+		
+		
+		$data = array(
+		  'method' =>"POST",
+		  'url' => "/cgi-bin/message/custom/send?access_token=".$this->_mpAccessToken,
+		  'data' =>json_encode(array(
+		  			"touser"=>$message["FromUserName"],
+		  			"msgtype"=>"miniprogrampage",
+		  			"miniprogrampage"=>array(
+		  			 	"title"=>"212121",
+			        	"appid"=>"wxb0296a06cfe15d4c",
+			       	 	"pagepath"=>"pages/index/index",
+		        		"thumb_media_id"=>"O4_374n861Di63_0HaGQKv4B4imHIYQYLPU-oMCvQ44Ux9l1c5psGg5ZFp29wdJu",
+		  			)
+		  )),
+		);
+		
+		$da = $this->weixin_xcx_api->request($data);
 		
 	}
     

@@ -5,6 +5,7 @@ class User extends Wx_Tdkc_Controller {
 	
 	public function __construct(){
 		parent::__construct();
+		$this->load->library('Weixin_xcx_api');
 	}
 	
 	
@@ -46,11 +47,11 @@ class User extends Wx_Tdkc_Controller {
 	
 	public function getUserInfo(){
 		if($this->userInfo){
-			$userId = $this->postJson('uesr_id');
+			$userId = $this->postJson['uid'];
 			if($userId){
-				$userInfo = $this->User_Model->getList(array(
-					'select' => 'id,mobile,name,company_name,group_name,user_type',
-					'where' => array('id' => $userId),
+				$userInfo = $this->Member_Model->getList(array(
+					'select' => 'uid,mobile,name,user_type',
+					'where' => array('uid' => $userId),
 				));
 				if($userInfo)
 					$this->jsonOutput2(RESP_SUCCESS,$userInfo);
@@ -60,24 +61,83 @@ class User extends Wx_Tdkc_Controller {
 	
 	public function setInviter(){
 		if($this->userInfo){
-			$inviterId = $this->postJson('inviter_id');
-			$inviterInfo = $this->Member_Model->getFirstByKey($inviterId,'uid');
-			if($inviterId){
-			 	$result = $this->Member_Model->updateByCondition(
-					array(
-						'inviter_id' => $inviterInfo['uid'],
-						'inviter_name' => $inviterInfo['name'],
-						
-					),
-					array('where' => array('uid' => $this->userInfo['uid']))
-				);
-			}
-			if($result){
-				$this->jsonOutput2(RESP_SUCCESS,'邀请人绑定成功');
+			$userInfo = $this->Member_Model->getFirstByKey($this->userInfo['uid'],'uid');
+			if(!$userInfo['inviter_id']){
+				$inviterId = $this->postJson['inviter_id'];
+				$inviterInfo = $this->Member_Model->getFirstByKey($inviterId,'uid');
+				if($inviterId){
+				 	$result = $this->Member_Model->updateByCondition(
+						array(
+							'inviter_id' => $inviterInfo['uid'],
+							'inviter_name' => $inviterInfo['name'],
+							
+						),
+						array('where' => array('uid' => $this->userInfo['uid']))
+					);
+				}
+				if($result){
+					$this->jsonOutput2(RESP_SUCCESS,array('data' => '邀请人绑定成功'));
+				}else{
+					$this->jsonOutput2(RESP_ERROR,array('data' => '邀请人绑定失败'));
+				}
 			}else{
-				$this->jsonOutput2(RESP_ERROR,'邀请人绑定失败');
+				$this->jsonOutput2(RESP_ERROR,array('data' => '邀请人已绑定'));
 			}
+			
 		}
+	}
+	
+	public function getuid(){
+		if($this->userInfo){
+			$this->jsonOutput2(RESP_SUCCESS,array('uid' => $this->userInfo['uid']));
+		}else{
+			$this->jsonOutput2(RESP_SUCCESS,array('data' => '用户未创建'));
+		}
+	}
+	
+	public function createQR(){
+	 	
+		$id =$this->userInfo['uid'];
+
+		$information = $this->weixin_xcx_api->createQR($id);
+
+		$this->jsonOutput2(RESP_SUCCESS,$information);
+	}
+	
+	public function judgeBindGZH(){
+		if($this->userInfo){
+			$uid = $this->userInfo['uid'];
+			$memberInfo = $this->Member_Model->getFirstByKey($uid,'uid');
+			if($memberInfo['service_openid']){
+				$this->jsonOutput2(RESP_SUCCESS,array('data' => '已绑定'));
+			}else{
+				$this->jsonOutput2(RESP_SUCCESS,array('data' => '未绑定'));
+			}
+		}else{
+			$this->jsonOutput2(RESP_SUCCESS,array('data' => '用户未创建'));
+		}
+	}
+	
+	public function getopenid(){
+	 	$code = $_GET["code"];
+		$param =config_item('mp');
+
+		$data = array(
+		  'method' =>"GET",
+		  'url' =>"/sns/oauth2/access_token?appid=".$param['appid']."&secret=".$param['app_secret']."&code=".$code."&grant_type=authorization_code",
+		);   	 
+		
+		$openArr= $this->weixin_xcx_api->request($data);
+
+		$openid =$openArr['openid'];
+
+		$result = $this->Member_Model->updateByCondition(
+			array(
+				'service_openid' => $openid,		
+			),
+			array('where' => array('uid' => $this->userInfo['uid']))
+		);
+		
 	}
 
 }

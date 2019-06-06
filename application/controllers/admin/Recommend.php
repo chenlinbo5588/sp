@@ -377,30 +377,33 @@ class Recommend extends Ydzj_Admin_Controller {
 	public function uploadMaterial(){
 		$id = $this->input->get_post('id');
 		$recommendinfo = $this->Recommend_Model->getFirstByKey($id);
-		$condition['where']['startdate >='] = time();
+		$condition['where']['startdate <='] = time();
 		$condition['where']['enddate >='] = time();
 		$condition['where']['recommend_id'] = $recommendinfo['id'];
 		$newList = $this->Recommend_Detail_Model->getList($condition);
-		foreach($newList as $key => $item){
-			$arctleInfo = $this->Cms_Article_Model->getFirstByKey($item['cms_id']);
-			$content = $this->handleContent($arctleInfo['content']);
-			file_put_contents('temp\1.jpg',$this->weixin_mp_api->download($item['img_url']));
-			$result = $this->weixin_mp_api->upload($_SERVER['DOCUMENT_ROOT'].'\temp\1.jpg','image');
-			if($result['media_id']){
-				unlink($_SERVER['DOCUMENT_ROOT'].'\temp\1.jpg');
-				$thumb_media_id = $result['media_id'];
-				$articles[] = array(
-					"title"=> $item['title'],
-					"thumb_media_id"=> $thumb_media_id,
-	   				"author"=> '孙亚龙',
-					"show_cover_pic"=> 0,
-					"content"=> $content,
-					"content_source_url"=>$item['url'],
-					"need_open_comment"=>0,
-					"only_fans_can_comment"=>1,
-				);
-			}		
+		if($newList){
+			foreach($newList as $key => $item){
+				$arctleInfo = $this->Cms_Article_Model->getFirstByKey($item['cms_id']);
+				$content = $this->handleContent($arctleInfo['content']);
+				file_put_contents('temp\1.jpg',$this->weixin_mp_api->download($item['img_url']));
+				$result = $this->weixin_mp_api->upload($_SERVER['DOCUMENT_ROOT'].'\temp\1.jpg','image');
+				if($result['media_id']){
+					unlink($_SERVER['DOCUMENT_ROOT'].'\temp\1.jpg');
+					$thumb_media_id = $result['media_id'];
+					$articles[] = array(
+						"title"=> $item['title'],
+						"thumb_media_id"=> $thumb_media_id,
+		   				"author"=> '孙亚龙',
+						"show_cover_pic"=> 0,
+						"content"=> $content,
+						"content_source_url"=>$item['url'],
+						"need_open_comment"=>0,
+						"only_fans_can_comment"=>1,
+					);
+				}		
+			}
 		}
+
 		
 		$resulr = $this->weixin_mp_api->uploadnews($articles);
 		if($resulr['media_id']){

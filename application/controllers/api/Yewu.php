@@ -4,16 +4,26 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Yewu extends Wx_Tdkc_Controller {
 	
+	private $_isBind = false;
 	public function __construct(){
 		parent::__construct();
     	
     	$this->load->library('Yewu_service','Admin_pm_service','Basic_data_service');
 
-		if(11 != strlen($this->userInfo['mobile'])){
-			die();
-		}
 	}
 
+	public function _remap($method)
+	{
+		
+	    if (11 == strlen($this->userInfo['mobile']))
+	    {
+	        $this->$method();
+	    }
+	    else
+	    {
+	        $this->jsonOutput2('请先绑定用户再进行操作');
+	    }
+	}
 
 
 	public function setYewu(){
@@ -259,33 +269,6 @@ class Yewu extends Wx_Tdkc_Controller {
 	
 	
 
-	public function getopenid(){
-		
-	 	$code = $_GET["code"];
-
-		$url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wxba86a9496e907b03&secret=9f65076ccd3368ec24fd6b729f9a28e1&code=".$code."&grant_type=authorization_code";
-		$openArr=json_decode($this->gettoken($url),true);
-
-		$this->display("yewu/yewu");
-	}
-	
-	
-	
-	public function gettoken($url){
-	  
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_HEADER, 0);
-		curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.22 (KHTML, like Gecko) Chrome/25.0.1364.172 Safari/537.22");
-		curl_setopt($ch, CURLOPT_ENCODING ,'gzip'); //加入gzip解析
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-		$output = curl_exec($ch);
-		
-		
-		curl_close($ch);
-		return $output;
-	  }
 	  
 	  
 	  
