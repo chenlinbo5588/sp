@@ -18,7 +18,7 @@ class Subscribe {
     	
     	$ci = $this->delegate->getCI();
     	
-        $welcomeText = "尊敬的用户，感谢您关注".$ci->_siteSetting['site_name'].'办理业务请回复1';
+        $welcomeText = "尊敬的用户，感谢您关注".$ci->_siteSetting['site_name'].",办理业务请回复1";
         $respXML = <<< EOF
 <xml>
 <ToUserName><![CDATA[$message[FromUserName]]]></ToUserName>

@@ -439,10 +439,7 @@ EOF;
 		
 	}
 	
-	public function senCard($message){
-		
-		$open_id ="otBYfszSULhV493iA13xPaGsi1gM";
-		
+	public function senCard($message,$thumb_media_id = "O4_374n861Di63_0HaGQKv4B4imHIYQYLPU-oMCvQ44Ux9l1c5psGg5ZFp29wdJu"){
 		
 		$data = array(
 		  'method' =>"POST",
@@ -451,10 +448,10 @@ EOF;
 		  			"touser"=>$message["FromUserName"],
 		  			"msgtype"=>"miniprogrampage",
 		  			"miniprogrampage"=>array(
-		  			 	"title"=>"212121",
+		  			 	"title"=>$ci->_siteSetting['site_name'],
 			        	"appid"=>"wxb0296a06cfe15d4c",
-			       	 	"pagepath"=>"pages/index/index",
-		        		"thumb_media_id"=>"O4_374n861Di63_0HaGQKv4B4imHIYQYLPU-oMCvQ44Ux9l1c5psGg5ZFp29wdJu",
+			       	 	"pagepath"=>"pages/index/index?gzh_openid=".$message["FromUserName"],
+		        		"thumb_media_id"=>$thumb_media_id,
 		  			)
 		  )),
 		);

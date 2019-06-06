@@ -375,6 +375,9 @@ class Recommend extends Ydzj_Admin_Controller {
 	}
 	
 	public function uploadMaterial(){
+		
+		$mpConfig = config_item('mp');
+        $this->weixin_mp_api->initSetting($mpConfig);
 		$id = $this->input->get_post('id');
 		$recommendinfo = $this->Recommend_Model->getFirstByKey($id);
 		$condition['where']['startdate <='] = time();

@@ -96,10 +96,14 @@ class User extends Wx_Tdkc_Controller {
 	}
 	
 	public function createQR(){
-	 	
+		$param =config_item('mp_xcxTdkc');
+		
+		$this->weixin_xcx_api->initSetting($param);
+		
 		$id =$this->userInfo['uid'];
-
-		$information = $this->weixin_xcx_api->createQR($id);
+		$path ='./qrImage/'.$id.'.jpg';
+		$imgurl ='/qrImage/'.$id.'.jpg';
+		$information = $this->weixin_xcx_api->createQR($id,$path,$imgurl);
 
 		$this->jsonOutput2(RESP_SUCCESS,$information);
 	}
@@ -118,7 +122,9 @@ class User extends Wx_Tdkc_Controller {
 		}
 	}
 	
-	public function getopenid(){
+/*	public function getopenid(){
+		
+		
 	 	$code = $_GET["code"];
 		$param =config_item('mp');
 
@@ -138,6 +144,29 @@ class User extends Wx_Tdkc_Controller {
 			array('where' => array('uid' => $this->userInfo['uid']))
 		);
 		
+	}*/
+	public function bingService(){
+		if($this->userInfo['uid']){
+			$serviceOpenid = $this->postJson['service_openid'];
+			$memberInfo = $this->Member_Model->getFirstByKey($this->userInfo['uid'],'uid');
+			if(!$memberInfo['service_openid']){
+				$result = $this->Member_Model->updateByCondition(
+					array(
+						'service_openid' => $serviceOpenid,		
+					),
+					array('where' => array('uid' => $this->userInfo['uid']))
+				);
+				if($result){
+					$this->jsonOutput2(RESP_SUCCESS,array('data' => '公众号绑定成功'));
+				}else{
+					$this->jsonOutput2(RESP_SUCCESS,array('data' => '公众号绑定失败'));
+				}
+			}else{
+				$this->jsonOutput2(RESP_SUCCESS,array('data' => '已绑定公众号'));
+			}
+		}else{
+			$this->jsonOutput2(RESP_SUCCESS,array('data' => '用户未创建'));
+		}
+		
 	}
-
 }
