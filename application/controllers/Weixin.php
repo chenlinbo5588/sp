@@ -140,11 +140,9 @@ class Weixin extends Ydzj_Controller {
 </xml>';
             */
             $message = $this->weixin_mp_api->user_event($postStr);
-			if(1 == $message['Content']){
-				$this->weixin_mp_api->senCard($message);
-			}else{
-				$this->weixin_mp_api->responseMessage($message);
-			}
+
+			$this->weixin_mp_api->responseMessage($message);
+
         }
     }
     

@@ -164,31 +164,25 @@ class Weixin_Mp_Api extends Weixin_api {
     	
     	$filePath = '';
 
-    	if('CLICK' == strtoupper($message['Event'])){
-            /** 自定义菜单事件 key **/
-            $className = strtolower($message['EventKey']);
-            
-            $filePath = APPPATH.'libraries'.DIRECTORY_SEPARATOR.$this->_mpConfig['folder'].DIRECTORY_SEPARATOR.$className.'.php';
-            
-        }else if($message['Event']){
-        	$className = strtolower($message['Event']);
-
-			/*
-            if(in_array($className,array('subscribe','unsubscribe','scan','location','view'))){
-                
-            }
-            */
+		
+		if($message['Event']){
+			$className = strtolower($message['Event']);
+			if('CLICK' == strtoupper($message['Event'])){
+				 $className = strtolower($message['EventKey']);
+			}
 			$filePath = APPPATH.'libraries'.DIRECTORY_SEPARATOR.$this->_mpConfig['folder'].DIRECTORY_SEPARATOR.$className.'.php';
-        }
-        
+		}else{
+			if(1 == $message['Content']){
+				$this->senCard($message);
+			}
+		}
+			
         if(file_exists($filePath)){
-        	
         	if($className == "viewnews" ){
 		        $recommendInfo = $this->_CI->Recommend_Model->getFirstByKey('公众号-新闻','name');
 		        $newInfo = $this->_CI->Recommend_Detail_Model->getList(array('where' => array('recommend_id' => $recommendInfo['id'])));
 				$message['newinfo'] = $newInfo;
         	}
-        	
             include_once($filePath);
             $responseObj = new $className();
             $responseObj->delegate = $this;
