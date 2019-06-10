@@ -249,7 +249,7 @@ class Weixin_Mp_Api extends Weixin_api {
     /**
      * 预览消息 
      */
-    public function preview($media_id){
+    public function preview($media_id,$openId){
     	
     	
     	$param = array(
@@ -259,7 +259,7 @@ class Weixin_Mp_Api extends Weixin_api {
         
         $param['data'] = <<< EOF
 {
-   "towxname":"a772021683", 
+   "touser":$openId, 
    "mpnews":{              
        "media_id":"{$media_id}"    
     },
@@ -301,7 +301,7 @@ EOF;
     /**
      * 群发消息
      */
-    public function sendMessageByOpenIds($media_id , $openids){
+    public function sendMessageByOpenIds($media_id,$openids){
     	$param = array(
             'url' => '/cgi-bin/message/mass/send?access_token='.$this->_mpAccessToken ,
             'method' => 'post',
@@ -361,10 +361,13 @@ EOF;
         return $result;
 		
 	}
+	/**
+	 * 新增其他素材
+	 */
 	
 	public function addOtherSucai($filepath,$type){
 		
-	
+
 		$param = array(
 		  'method' =>"POST",
 		  'url' => "/cgi-bin/material/add_material?access_token=".$this->_mpAccessToken."&type=".$type,
@@ -439,7 +442,7 @@ EOF;
 		
 	}
 	
-	public function senCard($message,$thumb_media_id = "O4_374n861Di63_0HaGQKv4B4imHIYQYLPU-oMCvQ44Ux9l1c5psGg5ZFp29wdJu"){
+	public function senCard($message,$appid = "wxb0296a06cfe15d4c" ,$thumb_media_id = "L8IzN0Rw_JL4a9GruVnZXhr-YwkEsop2FvpMTwDgPBE"){
 		
 		$data = array(
 		  'method' =>"POST",
@@ -449,14 +452,14 @@ EOF;
 		  			"msgtype"=>"miniprogrampage",
 		  			"miniprogrampage"=>array(
 		  			 	"title"=>$ci->_siteSetting['site_name'],
-			        	"appid"=>"wxb0296a06cfe15d4c",
+			        	"appid"=>$appid,
 			       	 	"pagepath"=>"pages/index/index?gzh_openid=".$message["FromUserName"],
 		        		"thumb_media_id"=>$thumb_media_id,
 		  			)
 		  )),
 		);
 		
-		$da = $this->weixin_xcx_api->request($data);
+		$da = $this->request($data);
 		
 	}
     
