@@ -124,7 +124,7 @@ class Cms extends Wx_Tdkc_Controller {
 	
 	public function getIndexInformation(){
 		$address = array('首页公告' => array(
-			'notice' => '慈溪市土地勘测规划设计院有限公司是慈溪市国土资源局所属的原有企业（慈溪市土地勘测规划设计院）改制后的股份制民营企业。.....'
+			'notice' => ''/*'慈溪市土地勘测规划设计院有限公司是慈溪市国土资源局所属的原有企业（慈溪市土地勘测规划设计院）改制后的股份制民营企业。.....'*/
 		),'首页照片' => array(
 			'url' => array(
 				'https://www.cxmap.net/static/img/xcxposter/haibao.png'

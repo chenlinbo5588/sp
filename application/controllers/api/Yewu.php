@@ -21,7 +21,7 @@ class Yewu extends Wx_Tdkc_Controller {
 	    }
 	    else
 	    {
-	        $this->jsonOutput2('请先绑定用户再进行操作');
+	        $this->jsonOutput2('请先绑定用户再进行操作',array('isbingding' => false));
 	    }
 	}
 

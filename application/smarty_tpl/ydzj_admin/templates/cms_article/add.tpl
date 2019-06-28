@@ -195,7 +195,7 @@
           <td colspan="2" class="required"><label>发布时间</label></td>
         </tr>
         <tr>
-           <td class="vatop rowform"><input type="text" value="{if $info['publish_time']}{date('Y-m-d h:i:s',$info['publish_time'])|escape}{/if}" name="publish_time" id="publish_time" class="datepicker"></td>
+           <td class="vatop rowform"><input type="text" value="{if $info['publish_time']}{date('Y-m-d',$info['publish_time'])|escape}{/if}" name="publish_time" id="publish_time" class="datepicker"></td>
           <td class="vatop tips"></td>
         </tr>
         

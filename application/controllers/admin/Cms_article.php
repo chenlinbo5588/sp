@@ -606,6 +606,7 @@ class Cms_Article extends Ydzj_Admin_Controller {
 				}
 				
 				$info = array_merge($info,$this->addWhoHasOperated('edit'));
+				$info['publish_time'] = strtotime($info['publish_time']);
 				$this->Cms_Article_Model->update($info,array('id' => $id));
 				
 				$error = $this->Cms_Article_Class_Model->getError();
