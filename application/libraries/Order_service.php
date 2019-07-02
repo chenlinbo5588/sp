@@ -824,6 +824,8 @@ class Order_service extends Base_service {
 				'where' => array( 'id' => $orderInfo['yewu_id'])
 			)
 		);
+		$userInfo = $this->_memberModel->getFirstByKey($orderInfo['add_uid'],'uid');
+		$this->addYewuDetail($userInfo,Operation::$payment,$orderInfo['yewu_id']);		
 	}
 	
 

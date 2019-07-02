@@ -98,7 +98,7 @@ class Register extends Wx_Tdkc_Controller {
 					break;
 				}
 				
-				
+				//$rt['message'] = $sendResult->Code;
 				if('OK' == $sendResult->Code){
 					$rt['code'] = 'success';
 					
@@ -143,7 +143,7 @@ class Register extends Wx_Tdkc_Controller {
 				//校验重复性, 不允许 多个号码  与一个微信号码 关联
 				//$this->form_validation->set_rules('openid','微信用户号','required|is_unique['.$this->Member_Model->getTableRealName().'.openid]');
 				
-				$this->form_validation->set_rules('phoneNo','手机号码',array(
+/*				$this->form_validation->set_rules('phoneNo','手机号码',array(
 						'required',
 						'valid_mobile',
 						array(
@@ -166,11 +166,11 @@ class Register extends Wx_Tdkc_Controller {
 				if(!$this->form_validation->run()){
 					$rt['message'] = $this->form_validation->error_first_html();
 					break;
-				}
+				}*/
 				
 				//$this->register_service->getIpLimit($this->input->ip_address());
-				
-				$uid = $this->weixin_service->bindMobile($this->postJson,$this->sessionInfo['weixin_user']);
+				$message = null;
+				$uid = $this->weixin_service->bindMobile($this->postJson,$this->sessionInfo['weixin_user'],$message);
 				if(!$uid){
 					$rt['message'] = '绑定失败';
 					break;
@@ -182,7 +182,7 @@ class Register extends Wx_Tdkc_Controller {
 			if($rt['code'] == 'success'){
 				$this->jsonOutput2(RESP_SUCCESS);
 			}else{
-				$this->jsonOutput2($rt['message']);
+				$this->jsonOutput2($message);
 			}
 			
 		}else{
@@ -199,12 +199,12 @@ class Register extends Wx_Tdkc_Controller {
 			
 			$this->load->library(array('Verify_service'));
 			
-			if($this->verify_service->isAuthCodeValidate($this->postJson['phoneNo'],$this->postJson['code'])){
+			//if($this->verify_service->isAuthCodeValidate($this->postJson['phoneNo'],$this->postJson['code'])){
 				$this->jsonOutput2(RESP_SUCCESS);
-			}else{
+/*			}else{
 				//$this->jsonOutput2(RESP_SUCCESS);
 				$this->jsonOutput2('验证码错误');
-			}
+			}*/
 		}else{
 			$this->jsonOutput2(RESP_ERROR);
 		}

@@ -99,15 +99,17 @@ class Weixin_service extends Base_service {
 	/**
 	 * 绑定手机号码
 	 */
-		public function bindMobile($param,$weixinInfo){
-		$memberinfo = self::$memberExtendModel->getFirstByKey($param['phoneNo'],'mobile');
+		public function bindMobile($param,$weixinInfo,&$message = null){
+		$memberinfo = self::$memberModel->getFirstByKey($param['phoneNo'],'mobile');
 		if($memberinfo){
 			if($memberinfo['openid']){
+				$message = '该号码已被绑定';
 				return false;
 			}else{
-				self::$memberModel->updateByWhere(array('openid' => $param['openid']),array('uid' => $memberinfo['uid']));
-				self::$memberExtendModel->updateByWhere(array('name' => $memberinfo['name'],'mobile' => $memberinfo['mobile'],'member_uid' =>$memberinfo['uid']),array('uid' => $memberinfo['openid']));
-				return true;
+				self::$memberModel->deleteByCondition(array('where' =>array('openid' => $weixinInfo['openid'])));
+				self::$memberModel->updateByWhere(array('openid' => $weixinInfo['openid'],'name' => $param['name']),array('uid' => $memberinfo['uid']));
+				self::$memberExtendModel->updateByWhere(array('name' => $param['name'],'mobile' => $memberinfo['mobile'],'member_uid' =>$memberinfo['uid']),array('uid' => $weixinInfo['openid']));
+				return $memberinfo['uid'];
 			}
 		}
 		self::$CI->load->library(array('Register_service'));

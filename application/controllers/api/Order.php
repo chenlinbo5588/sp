@@ -24,17 +24,13 @@ class Order extends Wx_Tdkc_Controller {
 	
 	
 	
-	/**
-	 * 创建物业费、能耗费 订单
-	 */
 	public function createOrder(){
 		if($this->userInfo){
 			$message = '';
 			
 			$callPayJson = $this->order_service->createOrder('yewu_id',$this->postJson,$this->userInfo,$message);
 			
-			if($callPayJson){
-				$this->yewu_service->addYewuDetail($this->userInfo,Operation::$payment,$this->postJson['yewu_id']);				
+			if($callPayJson){				
 				$this->jsonOutput2(RESP_SUCCESS,$callPayJson);
 				
 			}else{

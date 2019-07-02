@@ -267,11 +267,7 @@ class Yewu extends Wx_Tdkc_Controller {
 	 }
 	
 	
-	
 
-	  
-	  
-	  
  	public function setYewuMoney(){
 		if($this->userInfo['user_type'] == 3){
 			$yewuId = $this->postJson['yewu_id'];
@@ -470,6 +466,8 @@ class Yewu extends Wx_Tdkc_Controller {
 				$yewuDetailList[$key]['identity'] = '付款人';
 			}elseif('开票' == $yewuDetailList[$key]['operation']){
 				$yewuDetailList[$key]['identity'] = '开票人';
+			}elseif('审核' == $yewuDetailList[$key]['operation']){
+				$yewuDetailList[$key]['identity'] = '审核操作人';
 			}else{
 				$yewuDetailList[$key]['identity'] = '作业人员';
 			}
@@ -744,6 +742,7 @@ class Yewu extends Wx_Tdkc_Controller {
 	 	}
 	 	if($result){
 	 		$this->yewu_service->addYewuDetail($this->userInfo,Operation::$invoice,$yewuId);
+	 		$this->Yewu_Model->updateByWhere(array('is_invoice' => Operation::$invoice),array('id' =>$yewuId));
 	 		$yewuInfo = $this->Yewu_Model->getFirstByKey($yewuId);
 	 		$title = $yewuInfo['yewu_name'].'开票';
 	 		$this->admin_pm_service->addYewuMessage($yewuInfo,$yewuId,$title);
