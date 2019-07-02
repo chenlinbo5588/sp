@@ -80,9 +80,9 @@ class Work_group extends Ydzj_Admin_Controller {
 				
 				$updateData = array_merge($_POST,$this->addWhoHasOperated('add'));
 				$updateData['service_area'] = json_encode($updateData['service_area']);
-				$groupLeaderInfo = $this->User_Model->getFirstByKey($updateData['group_leader_mobile'],'mobile');
+				$groupLeaderInfo = $this->Member_Model->getFirstByKey($updateData['group_leader_mobile'],'mobile');
 				$updateData['group_leader_name'] = $groupLeaderInfo['name'];
-				$updateData['group_leaderid'] = $groupLeaderInfo['id'];
+				$updateData['group_leaderid'] = $groupLeaderInfo['uid'];
 				 
 				$returnVal = $this->Work_Group_Model->update($updateData,array('id' => $id));
 				$groupMemberList = $this->getGroupMemberList($updateData,$id);
@@ -114,9 +114,9 @@ class Work_group extends Ydzj_Admin_Controller {
 				$inPost = true;
 				$insertData = array_merge($_POST,$this->addWhoHasOperated('add'));
 				$insertData['service_area'] = json_encode($insertData['service_area']);
-				$groupLeaderInfo = $this->User_Model->getFirstByKey($insertData['group_leader_mobile'],'mobile');
+				$groupLeaderInfo = $this->Member_Model->getFirstByKey($insertData['group_leader_mobile'],'mobile');
 				$insertData['group_leader_name'] = $groupLeaderInfo['name'];
-				$insertData['group_leaderid'] = $groupLeaderInfo['id'];
+				$insertData['group_leaderid'] = $groupLeaderInfo['uid'];
 				 
 				$newid =$this->Work_Group_Model->_add($insertData);
 				$groupMemberList = $this->getGroupMemberList($insertData,$newid);

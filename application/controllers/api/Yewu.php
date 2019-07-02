@@ -380,8 +380,8 @@ class Yewu extends Wx_Tdkc_Controller {
   			$result = $this->Evaluate_Model->updateByCondition(
 				array(
 					'content' => $content,
-					'service_attitude' => $score[0],
-					'work_efficiency' => $score[1],
+					'work_efficiency' => $score[0],
+					'service_attitude' => $score[1],
 					'outcome_quality' => $score[2],
 					'gmt_modify' => time(),
 				),

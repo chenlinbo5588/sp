@@ -44,11 +44,12 @@ class Order_service extends Base_service {
 		
 		
 		self::$CI->load->model(array(
-			'Order_Model','Order_Type_Model','Feetype_Model','Yewu_Model'
+			'Order_Model','Order_Type_Model','Feetype_Model','Yewu_Model','Member_Model',
 		));
 		
 		$this->_orderModel = self::$CI->Order_Model;
 		$this->_yewuModel = self::$CI->Yewu_Model;
+		$this->_memberModel = self::$CI->Member_Model;
 		
 		$this->_weixinServiceObj = self::$CI->weixin_service;
 		$this->_yewuServiecObj = self::$CI->yewu_service;
@@ -825,7 +826,7 @@ class Order_service extends Base_service {
 			)
 		);
 		$userInfo = $this->_memberModel->getFirstByKey($orderInfo['add_uid'],'uid');
-		$this->addYewuDetail($userInfo,Operation::$payment,$orderInfo['yewu_id']);		
+		$this->_yewuServiecObj->addYewuDetail($userInfo,Operation::$payment,$orderInfo['yewu_id']);		
 	}
 	
 
