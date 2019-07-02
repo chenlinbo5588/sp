@@ -105,12 +105,11 @@ class Cms extends Wx_Tdkc_Controller {
 	public function getCertificate(){
 		$address = array('资质证书' => array(
 			'url' =>array(
-				'https://www.cxmap.net/static/img/zzry/yingyezhizhao.png', 
-			    'https://www.cxmap.net/static/img/zzry/jigoudengji.png', 
-			    'https://www.cxmap.net/static/img/zzry/cehuizizhi.png', 
-			    'https://www.cxmap.net/static/img/zzry/jigouzhuce.png', 
-			    'https://www.cxmap.net/static/img/zzry/linyezizhizhengshu.png', 
-			    'https://www.cxmap.net/static/img/zzry/budongchandiaochadengjidaili.png' 
+				'https://www.cxmap.net/static/img/zzry/zczs.jpg', 
+			    'https://www.cxmap.net/static/img/zzry/chzzzsfb.jpg', 
+			    'https://www.cxmap.net/static/img/zzry/yyzzfb.jpg', 
+			    'https://www.cxmap.net/static/img/zzry/yyzz.jpg', 
+			    'https://www.cxmap.net/static/img/zzry/chzzzs.jpg',
 			) 
 		),'荣誉证书' => array(
 			'url' => array(

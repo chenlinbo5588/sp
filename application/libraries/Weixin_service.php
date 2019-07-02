@@ -100,7 +100,16 @@ class Weixin_service extends Base_service {
 	 * 绑定手机号码
 	 */
 		public function bindMobile($param,$weixinInfo){
-		
+		$memberinfo = self::$memberExtendModel->getFirstByKey($param['phoneNo'],'mobile');
+		if($memberinfo){
+			if($memberinfo['openid']){
+				return false;
+			}else{
+				self::$memberModel->updateByWhere(array('openid' => $param['openid']),array('uid' => $memberinfo['uid']));
+				self::$memberExtendModel->updateByWhere(array('name' => $memberinfo['name'],'mobile' => $memberinfo['mobile'],'member_uid' =>$memberinfo['uid']),array('uid' => $memberinfo['openid']));
+				return true;
+			}
+		}
 		self::$CI->load->library(array('Register_service'));
 		$regData = array(
 			'name' => $param['name'],
