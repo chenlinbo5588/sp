@@ -21,7 +21,6 @@ class User extends Wx_Tdkc_Controller {
 				$this->session->set_userdata(array(
 					'weixin_user' =>  $weixinUser
 				));
-				
 				$bindInfo = $this->weixin_service->checkUserBind($weixinUser);
 				
 				$this->initMemberInfo();

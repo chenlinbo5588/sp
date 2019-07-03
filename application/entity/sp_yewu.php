@@ -27,6 +27,7 @@ $entity = array(
 'plan_money' => 'float',
 'receivable_money' => 'float',
 'order_id' => 'varchar',
+'from_id' => 'varchar',
 'add_uid' => 'int',
 'add_username' => 'varchar',
 'edit_uid' => 'int',

@@ -62,6 +62,7 @@ class Yewu extends Wx_Tdkc_Controller {
 				'add_username'	=>  $this->userInfo['name'],
 				'status' => Operation::$submit,
 				'group_id' => $groupInfo['id'],
+				'from_id' => $from_id,
 				//'company_name' => $company_name
 				'accept_number' => $acceptNumber['accept_number'],
 				'encryption_number' => $acceptNumber['encryption'],
@@ -574,6 +575,7 @@ class Yewu extends Wx_Tdkc_Controller {
 					array('where' => array('id' => $yewuID))
 				);
 				$this->yewu_service->addYewuDetail($this->userInfo,Operation::$accept,$yewuID);
+				$this->_ci->weixin_service->yewuNotify($yewuID,Operation::$typeName[Operation::$accept]);
 				if($result){
 					$this->jsonOutput2(RESP_SUCCESS);
 				}

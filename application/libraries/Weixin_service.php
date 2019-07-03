@@ -15,7 +15,7 @@ class Weixin_service extends Base_service {
 		
 		self::$CI->load->library(array('Weixin_mp_api'));
 		
-		self::$CI->load->model('Weixin_Message_Model','Member_Model');
+		self::$CI->load->model('Weixin_Message_Model','Member_Model','Yewu_Model');
 		
 		$this->_mpApi = self::$CI->weixin_mp_api;
 		
@@ -255,7 +255,7 @@ class Weixin_service extends Base_service {
         
 		$data = array(
 	    	'touser' => $weixinUser['openid'],
-	    	'template_id' => 'thLs5shnt45ne7y6IWy9sIfJNrUxgMuFG3lN4dK2MvA',
+	    	'template_id' => 'ouyjN79THMoy-aVNE4bFkHaj6gRLcw2w8hRAWJ6VCRA',
 	    	'page' => "pages/select/select?id=".$orderInfo['order_id'],
 	    	'form_id' => $orderInfo['prepay_id'],
 	    	'data' => array(
@@ -263,7 +263,7 @@ class Weixin_service extends Base_service {
 			       "value" => $orderInfo['order_id'],
 			   ),
 			   'keyword2' => array(
-			       "value" => $orderInfo['order_typename'],
+			       "value" => sprintf("%.2f",$orderInfo['amount']/100),
 			   ),
 			   'keyword3' => array(
 			       "value" => date('Y-m-d H:i:s'),
@@ -272,10 +272,13 @@ class Weixin_service extends Base_service {
 			       "value" => $orderInfo['yewu_name'],
 			   ),
 			   'keyword5' => array(
-			       "value" => sprintf("%.2f",$orderInfo['amount']/100),
+					"value" => $orderInfo['order_typename'],
 			   ),
-			   'keyword6' => array(
-			       "value" => '缴费起止时间: 从'.date('Y年m月d日',$orderInfo['fee_start']).'到'.date('Y年m月d日',$orderInfo['fee_expire']),
+   			   'keyword6' => array(
+					 "value" => "微信支付",
+			   ),
+   			   'keyword7' => array(
+					 "value" => sprintf("%.2f",$orderInfo['amount']/100),
 			   ),
 	    	)
 	    );
@@ -287,47 +290,31 @@ class Weixin_service extends Base_service {
 	}
 	
 	
-	/**
-	 * 发送微信 月嫂 、保姆、 护工
-	 */
-	public function staffOrderNotify($orderInfo){
-        
-        $weixinUser = self::$CI->Member_Model->getFirstByKey($orderInfo['uid'],'uid','openid');
-        
-        $cartList = $orderInfo['extra_info']['cart'];
+
+	public function yewuNotify($yewuId,$status){
+        $yewuInfo = self::$CI->Member_Model->getFirstByKey($yewuId);
+        $weixinUser = self::$CI->Member_Model->getFirstByKey($yewuInfo['add_uid'],'uid','openid');
         
 		$data = array(
 	    	'touser' => $weixinUser['openid'],
-	    	'template_id' => 'AYpZNqIt3yAbbP6psq3lwXtIvbBAYgNoR-Afen5RgfY',
-	    	'page' => "pages/select/select?id=".$orderInfo['order_id'],
-	    	'form_id' => $orderInfo['prepay_id'],
+	    	'template_id' => 'P6nesPjbqa5VkywJfGiLOpAkCpWwXZvC-QKDkxpUM2I',
+	    	'page' => "pages/index/index?url=pages/order/orderdetail/orderdetail?id=".$yewuInfo['id'],
+	    	'form_id' => $yewuInfo['from_id'],
 	    	'data' => array(
 	    	  'keyword1' => array(
-			       "value" => $orderInfo['order_id'],
+			       "value" => $status,
 			   ),
 			   'keyword2' => array(
-			       "value" => $orderInfo['yewu_name'],
+			       "value" => $yewuInfo['gmt_create'],
 			   ),
 			   'keyword3' => array(
-			       "value" => $orderInfo['extra_info']['booking_time'],
+			       "value" => $yewuInfo['worker_name'],
 			   ),
 			   'keyword4' => array(
-			       "value" => $orderInfo['extra_info']['address'],
+			       "value" => $yewuInfo['workre_mobile'],
 			   ),
 			   'keyword5' => array(
-			       "value" => date('Y-m-d H:i:s',$orderInfo['gmt_create']),
-			   ),
-			   'keyword6' => array(
-			       "value" => count(array_keys($cartList)),
-			   ),
-			   'keyword7' => array(
-			       "value" => $orderInfo['order_typename'],
-			   ),
-			   'keyword8' => array(
-			       "value" => '正常',
-			   ),
-			   'keyword9' => array(
-			       "value" => '',
+			       "value" => date('Y-m-d H:i:s'),
 			   ),
 	    	)
 	    );
@@ -335,7 +322,7 @@ class Weixin_service extends Base_service {
 	    
 	    //return $this->queueSend($orderInfo,$data,array());
 	    
-	    return $this->weixinNotifyCommon($orderInfo,$data);
+	    return $this->weixinNotifyCommon($yewuInfo,$data);
 		
 	}
 	
