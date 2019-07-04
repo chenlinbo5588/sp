@@ -8,7 +8,7 @@ class Yewu extends Wx_Tdkc_Controller {
 	public function __construct(){
 		parent::__construct();
     	
-    	$this->load->library('Yewu_service','Admin_pm_service','Basic_data_service');
+    	$this->load->library('Yewu_service','Admin_pm_service','Weixin_service','Basic_data_service');
 
 	}
 
@@ -531,6 +531,7 @@ class Yewu extends Wx_Tdkc_Controller {
 				array('where' => array('id' => $yewuId))
 			);
 			if($this->yewu_service->addYewuDetail($this->userInfo,$status,$yewuId)){
+				//$this->weixin_service->yewuNotify($yewuId,Operation::$typeName[$status]);
 				$this->jsonOutput2(RESP_SUCCESS);
 			}else{
 				$this->jsonOutput2(RESP_ERROR);
@@ -575,7 +576,7 @@ class Yewu extends Wx_Tdkc_Controller {
 					array('where' => array('id' => $yewuID))
 				);
 				$this->yewu_service->addYewuDetail($this->userInfo,Operation::$accept,$yewuID);
-				$this->_ci->weixin_service->yewuNotify($yewuID,Operation::$typeName[Operation::$accept]);
+				$this->weixin_service->yewuNotify($yewuID,Operation::$typeName[Operation::$accept]);
 				if($result){
 					$this->jsonOutput2(RESP_SUCCESS);
 				}
@@ -643,7 +644,7 @@ class Yewu extends Wx_Tdkc_Controller {
 				'deposit_bank' => $deposit_bank,
 				'deposit_account' => $deposit_account,
 				'type' => $type,
-				'edit_uid' => $this->userInfop['uid'],
+				'edit_uid' => $this->userInfo['uid'],
 				'edit_name' => $this->userInfo['name'],
 				
 				),
@@ -719,15 +720,15 @@ class Yewu extends Wx_Tdkc_Controller {
 	 	$invoiceId = $this->postJson['invoice_id'];
 	 	$yewuInfo = $this->Yewu_Model->getFirstByKey($yewuId);
 	 	$invoiceInfo = $this->Invoice_Model->getFirstByKey($invoiceId);
-	 	$orderInfo = $this->Order_Model->getFirstByKey($yewuId,'yewu_id');
+	 	$orderInfo = $this->Order_Model->getList(array('where' => array('yewu_id' => $yewuId ,'status' => 2)));
 	 	for($i = 0;$i < 1;$i++){
-	 		if($yewuInfo && $orderInfo['status'] == 2){
+	 		if($yewuInfo && $orderInfo){
 				$addData = array(
 					'yewu_id' => $yewuId,
 					'invoice_name' => $name,
 					'amount_receive' => $yewuInfo['receivable_money'],
-					'pay_time' => $orderInfo['pay_time_end'],
-					'amount_payed' => $orderInfo['amount'],
+					'pay_time' => $orderInfo[0]['pay_time_end'],
+					'amount_payed' => $orderInfo[0]['amount'],
 					'order_id' => $yewuInfo['order_id'],
 					'add_uid' => $this->userInfo['uid'],
 					'add_username' => $this->userInfo['name'],

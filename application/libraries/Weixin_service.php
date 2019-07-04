@@ -292,28 +292,31 @@ class Weixin_service extends Base_service {
 	
 
 	public function yewuNotify($yewuId,$status){
-        $yewuInfo = self::$CI->Member_Model->getFirstByKey($yewuId);
+        $yewuInfo = self::$CI->Yewu_Model->getFirstByKey($yewuId);
         $weixinUser = self::$CI->Member_Model->getFirstByKey($yewuInfo['add_uid'],'uid','openid');
         
 		$data = array(
 	    	'touser' => $weixinUser['openid'],
-	    	'template_id' => 'P6nesPjbqa5VkywJfGiLOpAkCpWwXZvC-QKDkxpUM2I',
-	    	'page' => "pages/index/index?url=pages/order/orderdetail/orderdetail?id=".$yewuInfo['id'],
+	    	'template_id' => 'P6nesPjbqa5VkywJfGiLOq2wDu-uXuC9ZBRY7YqHUbs',
+	    	'page' => "pages/index/index?url=/pages/order/orderdetail/orderdetail?id=".$yewuInfo['id'],
 	    	'form_id' => $yewuInfo['from_id'],
 	    	'data' => array(
 	    	  'keyword1' => array(
 			       "value" => $status,
 			   ),
 			   'keyword2' => array(
-			       "value" => $yewuInfo['gmt_create'],
+			       "value" => date('Y-m-d H:i:s',$yewuInfo['gmt_create']),
 			   ),
 			   'keyword3' => array(
+			       "value" => $yewuInfo['user_name'],
+			   ),
+   			   'keyword4' => array(
 			       "value" => $yewuInfo['worker_name'],
 			   ),
-			   'keyword4' => array(
-			       "value" => $yewuInfo['workre_mobile'],
-			   ),
 			   'keyword5' => array(
+			       "value" => $yewuInfo['worker_mobile'],
+			   ),
+			   'keyword6' => array(
 			       "value" => date('Y-m-d H:i:s'),
 			   ),
 	    	)
