@@ -676,7 +676,7 @@ class Yewu extends Wx_Tdkc_Controller {
 				}
 				if($type == 2){
 					$this->form_validation->set_rules('address','地址','required');
-					$this->form_validation->set_rules('mobile','电话','required');
+					$this->form_validation->set_rules('mobile','电话','required|valid_telephone');
 					$this->form_validation->set_rules('deposit_bank','开户行','required');
 					$this->form_validation->set_rules('deposit_account','开户账号','required|numeric');
 				}

@@ -71,9 +71,9 @@ class Upload extends Ydzj_Admin_Controller {
 			)
 		));
 		
-		
+		print_r(config_item('image_max_filesize'));
 		if($this->isPostRequest()){
-			$this->form_validation->set_rules('image_max_filesize','图片文件大小', 'required|is_natural_no_zero|less_than_equal_to[4096]');
+			$this->form_validation->set_rules('image_max_filesize','图片文件大小', 'required|is_natural_no_zero|less_than_equal_to['.config_item('image_max_filesize').']');
 			$this->form_validation->set_rules('forground_image_allow_ext','前台图片扩展名','required|callback_imagetype_check');
 			$this->form_validation->set_rules('background_image_allow_ext','后台图片扩展名','required|callback_imagetype_check');
 			

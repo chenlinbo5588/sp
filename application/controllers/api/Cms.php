@@ -131,6 +131,28 @@ class Cms extends Wx_Tdkc_Controller {
 		));
 		$this->jsonOutput2(RESP_SUCCESS,array('infromationList' => $address));
 	}
+	
+	public function getEngineeringCase(){
+		$artileClassAssoc = $this->cms_service->getAssocDataTree();
+		$notifyArticleClassInfo = $this->Cms_Article_Class_Model->getList(array(
+			'where' => array(
+				'name' => '工程案例'
+			)
+		));
+		if($notifyArticleClassInfo[0]['status'] ==1){
+			$notify = $this->Cms_Article_Model->getList(array(
+				'select' => 'id,image_url,article_title,publish_time,jump_url',
+				'where' => array(
+					'ac_id' => $artileClassAssoc['工程案例']['id'],
+					'article_state' => CmsArticleStatus::$published,
+				),
+				'order' => 'publish_time DESC',
+			));	
+		}
+		$notify = $this->editInformation($notify);
+		
+		$this->jsonOutput2(RESP_SUCCESS,$notify);
+	}
 
 	
 }

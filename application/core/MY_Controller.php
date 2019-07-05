@@ -194,7 +194,7 @@ class MY_Controller extends CI_Controller {
     	
     	$this->assign('siteSetting',$this->_siteSetting);
     	$this->config->set_item('site_name',$this->_siteSetting['site_name']);
-    	$this->config->set_item('image_max_filesize',$this->_siteSetting['image_max_filesize']);
+    	//$this->config->set_item('image_max_filesize',$this->_siteSetting['image_max_filesize']);
     	
     	//转成 Mb 用于显示
     	$this->config->set_item('max_upload_size',$this->_siteSetting['image_max_filesize']/1024);
