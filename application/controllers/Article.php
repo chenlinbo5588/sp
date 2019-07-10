@@ -5,7 +5,7 @@ class Article extends Ydzj_Controller {
 	
 	public function __construct(){
 		parent::__construct();
-		
+		$this->_className = strtolower(get_class());
 		
 	}
 	
@@ -42,8 +42,12 @@ class Article extends Ydzj_Controller {
 		$this->assign(array(
 			'article' => $cmsArticleInfo
 		));
-
-		$this->display();
+		
+		if($cmsArticleInfo['ac_id'] == 24){
+			$this->display($this->_className.'/engineering_case');
+		}else{
+			$this->display();
+		}
 		
 	}
 	
