@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Index extends Ydzj_Controller {
+class Contact extends Ydzj_Controller {
 	
 	public function __construct(){
 		parent::__construct();
@@ -21,11 +21,6 @@ class Index extends Ydzj_Controller {
 		$this->display();
 	}
 	
-	public function gsjstk()
-	
-	{
-		$this->display();
-	}
-	
+
 
 }

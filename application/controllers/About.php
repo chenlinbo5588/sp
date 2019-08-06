@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Index extends Ydzj_Controller {
+class About extends Ydzj_Controller {
 	
 	public function __construct(){
 		parent::__construct();
@@ -9,23 +9,29 @@ class Index extends Ydzj_Controller {
 		
 	}
 	
+	
+	
 	/**
 	 * 首页
 	 */
-	public function index()
-	{
-	
-		
-		
-		
-		$this->display();
-	}
-	
-	public function gsjstk()
-	
+	public function introduce()
 	{
 		$this->display();
 	}
 	
+
+
+
+	public function bussiness(){
+		$this->display();		
+	}
+	
+	
+	
+	public function doc(){
+		
+		$this->display();
+	}
+
 
 }

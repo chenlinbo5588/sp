@@ -86,11 +86,11 @@ $db['default'] = array(
 */
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => '116.62.68.25',
-	'username' => 'yzb',
-	'password' => 'yzb123',
+	'hostname' => '192.168.5.116',
+	'username' => 'lzw123',
+	'password' => '123456',
 	'database' => 'tdkc_newbuss',
-	'dbdriver' => 'mysql',
+	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
 	'db_debug' => TRUE,
