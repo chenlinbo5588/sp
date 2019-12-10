@@ -140,13 +140,13 @@
             <div class="yibuFrameContent con_248_35  listnews_Style7  " style="overflow:visible;;"> 
              <div class="w-al xn-resize"> 
               <ul class="w-al-list clearfix" id="ulList_con_248_35"> 
-               <li class="w-al-unit "> <a href="-5910.html" target="_self"> 
+               <li class="w-al-unit "> <a href="{resource_url('staticNews/1.html')}" target="_self"> 
                  <div class="w-al-pic">
-                  <img src="{resource_url('img/tdkcImg/-35581.jpg')}" />
+                  <img src="{resource_url('staticNews/image/20190430085750965096.jpg')}" />
                  </div> 
                  <div class="w-al-text"> 
-                  <h5 class="w-al-title">华南大数据战略提速，数据价值亟待实现</h5> 
-                  <p class="w-al-desc">华南地区在中国区域经济中占有重要地位，随着近年来产业带和经济圈蓬勃发展，优秀的新兴企业不断涌现，带来了真正意义上的海量数据。今年&nbsp;5月，经广东省十二届人大常委会第九次会议表决通过，进一步推进了对于“大数据”技术的立法扶持。</p> 
+                  <h5 class="w-al-title">英姿飒爽的土勘小伙子接受民兵点验</h5> 
+                  <p class="w-al-desc">慈溪土勘院的小伙子作为测绘导航排参加点验，他们精神抖擞、饱满热情，纷纷表示会积极为慈溪打造一支“精干、可靠、管用”的拳头力量贡献自己的一份力量！</p> 
                  </div> </a> </li> 
               </ul> 
              </div> 
@@ -184,11 +184,11 @@
                 </div> 
                 <div class="w-list-r"> 
                  <div class="w-list-r-in"> 
-                  <h3 class="w-list-title"> <a href="-5916.html" target="_self" class="w-list-titlelink">为企业打造一款专属APP势在必行</a> </h3> 
-                  <p class="w-list-desc ">移动终端的进入门槛并没有那么高，这也决定了没有什么企业是不可以做定制App的。但基于目前企业App普遍是广告渠道的功能，企业应该注意到其与传统广告渠道的差异，两者之间做好互补、整合，尤其发挥其不受时间、空间限制，适合快速、精准传达精简信息的特性，不要将其等同于硬广。</p> 
+                  <h3 class="w-list-title"> <a href=""{resource_url('staticNews/2.html')}"" target="_self" class="w-list-titlelink">市规划局组织我院及各单位参观联合国世界地理信息大会技术与应用展览</a> </h3> 
+                  <p class="w-list-desc ">市规划局组织全市规划系统、测绘资质单位参观了联合国世界地理信息大会技术与应用展览。</p> 
                   <div class="w-list-bottom clearfix "> 
                    <span class="w-list-viewnum w-hide"><i class="w-list-viewicon mw-iconfont">넶</i><span class="AR" data-dt="nvc" data-v="-5916">0</span></span> 
-                   <span class="w-list-date ">2017-11-22</span> 
+                   <span class="w-list-date ">2018-11-26</span> 
                   </div> 
                  </div> 
                 </div> </li> 
@@ -198,11 +198,11 @@
                 </div> 
                 <div class="w-list-r"> 
                  <div class="w-list-r-in"> 
-                  <h3 class="w-list-title"> <a href="-5915.html" target="_self" class="w-list-titlelink">大数据、物联网等最新规定规定</a> </h3> 
-                  <p class="w-list-desc ">华南地区在中国区域经济中占有重要地位，随着近年来产业带和经济圈蓬勃发展，优秀的新兴企业不断涌现，带来了真正意义上的海量数据。广东省于&nbsp;2012年底就提出《广东省实施大数据战略工作方案》，计划到&nbsp;2020年基本建成“智慧广东”。今年&nbsp;5月，经广东省十二届人大常委会第九次会议表决通过《广东省信息化促进条例》，对大数据、物联网等都做出了规定，进一步推进了对于“大数据”技术的立法扶持。</p> 
+                  <h3 class="w-list-title"> <a href="{resource_url('staticNews/3.html')}" target="_self" class="w-list-titlelink">我院领导赴一线慰问送清凉</a> </h3> 
+                  <p class="w-list-desc ">公司领导一行来到了外业工作地，对在高温酷暑下仍坚持作业的一线员工表示关心和慰问，对他们为公司的辛勤付出表示感谢！并嘱咐他们要做好防暑降温工作，合理调整作息时间，避开高温时段作业，安全作业。随后送上了慰问品。</p> 
                   <div class="w-list-bottom clearfix "> 
                    <span class="w-list-viewnum w-hide"><i class="w-list-viewicon mw-iconfont">넶</i><span class="AR" data-dt="nvc" data-v="-5915">0</span></span> 
-                   <span class="w-list-date ">2017-11-22</span> 
+                   <span class="w-list-date ">2018-8-13</span> 
                   </div> 
                  </div> 
                 </div> </li> 
@@ -212,11 +212,12 @@
                 </div> 
                 <div class="w-list-r"> 
                  <div class="w-list-r-in"> 
-                  <h3 class="w-list-title"> <a href="-5913.html" target="_self" class="w-list-titlelink">网盘纷退场但“云存储”仍是刚需</a> </h3> 
-                  <p class="w-list-desc ">网盘对于大多数人来说不会陌生，随着科技的发展，它渐渐地走入了我们的生活、工作和学习。最近，国内几大主流网盘陷入关停潮，一开始是115网盘、UC网盘、新浪微盘、金山快盘，后来则是腾讯微云、华为网盘等，多家网盘纷纷停止存储服务。这会给我们日常生活带来了哪些影响?我们真的离不开网盘了吗？</p> 
+                  <h3 class="w-list-title"> <a href=""{resource_url('staticNews/4.html')}"" target="_self" class="w-list-titlelink">风雨同行,共创辉煌
+</a> </h3> 
+                  <p class="w-list-desc ">2月9日晚,慈溪土勘院年会在慈溪白金汉爵大酒店隆重举行,慈溪土勘全体员工欢聚一堂,共话今昔。</p> 
                   <div class="w-list-bottom clearfix "> 
                    <span class="w-list-viewnum w-hide"><i class="w-list-viewicon mw-iconfont">넶</i><span class="AR" data-dt="nvc" data-v="-5913">0</span></span> 
-                   <span class="w-list-date ">2017-11-22</span> 
+                   <span class="w-list-date ">2018-3-15</span> 
                   </div> 
                  </div> 
                 </div> </li> 
@@ -774,13 +775,7 @@
             </div>
            </div>
            <div id="smv_con_438_33" ctype="button" class="esmartMargin smartAbs " cpid="459757" cstyle="Style1" ccolor="Item3" areaid="Area0" iscontainer="False" pvid="con_309_25" tareaid="" re-direction="all" daxis="All" isdeletable="True" style="height: 19px; width: 75px; left: 926px; top: 298px;z-index:37;">
-            <div class="yibuFrameContent con_438_33  button_Style1  " style="overflow:visible;;">
-             <a target="_self" href="" class="w-button f-ellipsis" style="width: 73px; height: 17px; line-height: 17px;"> <span class="w-button-position"> <em class="w-button-text f-ellipsis"> <i class="mw-iconfont w-button-icon w-icon-hide"></i>查看更多 </em> </span> </a> 
-             <script type="text/javascript">
-        $(function () {
-        });
-    </script> 
-            </div>
+            
            </div>
           </div> 
           <div id="bannerWrap_con_309_25" class="fullcolumn-outer" style="position: absolute; top: 0; bottom: 0;"> 
@@ -841,12 +836,12 @@
             <li class="w-cs-list w-cs-clockBtn "> <a href="javascript:void(0);" class="w-cs-icon"><i class="mw-iconfont icon-clock">뀥</i></a> 
              <ul class="w-cs-menu w-cs-clock"> 
               <li><h3>服务时间</h3></li> 
-              <li>周一至周五 9:00-18:00</li> 
+              <li>周一至周五 8:00-17:00</li> 
              </ul> </li> 
             <li class="w-cs-list w-cs-qrcodeBtn "> <a href="javascript:void(0);" class="w-cs-icon"><i class="mw-iconfont icon-qrcode">낃</i></a> 
              <ul class="w-cs-menu w-cs-qrcode"> 
               <li><h3>微信二维码</h3></li> 
-              <li class="w-cs-qrcode-img"><img src="{resource_url('img/tdkcImg/mob-ewm.png')}" alt="" /></li> 
+              <li class="w-cs-qrcode-img"><img src="{resource_url('img/tdkcImg/ewm.jpg')}" alt="" /></li> 
              </ul> </li> 
             <li class="w-cs-list w-cs-upBtn "> <a href="javascript:void(0);" onclick="gotoTop();return false;" class="w-cs-icon"><i class="mw-iconfont icon-up">녕</i></a> </li> 
            </ul> 
@@ -927,7 +922,7 @@
               <div id="smv_con_636_48" ctype="image" class="esmartMargin smartAbs " cpid="459757" cstyle="Style1" ccolor="Item0" areaid="Area0" iscontainer="False" pvid="con_628_48" tareaid="" re-direction="all" daxis="All" isdeletable="True" style="height: 388px; width: 483px; left: 457px; top: 47px;z-index:10;">
                <div class="yibuFrameContent con_636_48  image_Style1  " style="overflow:visible;;"> 
                 <div class="w-image-box" data-filltype="2" id="div_con_636_48"> 
-                 <a target="_self" href=""> <img src="{resource_url('img/tdkcImg/2000000631.png')}" alt="pic01_06" title="pic01_06" id="img_smv_con_636_48" style="width: 483px; height:388px;" /> </a> 
+                 <a target="_self" href=""> <img src="{resource_url('img/tdkcImg/201012221426469036.jpg')}" alt="pic01_06" title="pic01_06" id="img_smv_con_636_48" style="width: 483px; height:388px;" /> </a> 
                 </div> 
                 <script type="text/javascript">
     $(function () {
@@ -944,16 +939,16 @@
                    <div class="yibuFrameContent con_632_48  text_Style1  " style="overflow:hidden;;">
                     <div id="txt_con_632_48" style="height: 100%;"> 
                      <div class="editableContent" id="txtc_con_632_48" style="height: 100%; word-wrap:break-word;"> 
-                      <p><span style="font-family:&quot;Arial Black&quot;"><span style="color:#ff9d44"><span style="font-size:84px">Nature</span></span></span></p> 
+                      <p><span style="line-height:1.5"><span style="color:#143a42"><span style="font-size:30px"><span style="font-family:&quot;Microsoft YaHei&quot;">慈溪市开心基础设施</span></span></span></span></p> 
+                  <p><span style="line-height:1.5"><span style="color:#75a19f"><span style="font-size:12px"><span style="font-family:&quot;Microsoft YaHei&quot;">规划设计图</span></span></span></span></p> 
+                     
                      </div> 
                     </div> 
                    </div>
                   </div>
                   <div id="smv_con_630_48" ctype="image" smanim="{ &quot;delay&quot;:0.25,&quot;duration&quot;:0.75,&quot;direction&quot;:&quot;Left&quot;,&quot;animationName&quot;:&quot;slideIn&quot;,&quot;infinite&quot;:&quot;1&quot; }" class="esmartMargin smartAbs animated" cpid="459757" cstyle="Style1" ccolor="Item0" areaid="Area0" iscontainer="False" pvid="con_629_48" tareaid="" re-direction="all" daxis="All" isdeletable="True" style="height: 342px; width: 226px; left: 48px; top: 28px;z-index:2;">
                    <div class="yibuFrameContent con_630_48  image_Style1  " style="overflow:visible;;"> 
-                    <div class="w-image-box" data-filltype="2" id="div_con_630_48"> 
-                     <a target="_self" href=""> <img src="{resource_url('img/tdkcImg/2000000630.png')}" alt="线条" title="线条" id="img_smv_con_630_48" style="width: 226px; height:342px;" /> </a> 
-                    </div> 
+                    
                     <script type="text/javascript">
     $(function () {
         InitImageSmv("con_630_48", "226", "342", "2");
@@ -986,8 +981,8 @@
                <div class="yibuFrameContent con_645_48  text_Style1  " style="overflow:hidden;;">
                 <div id="txt_con_645_48" style="height: 100%;"> 
                  <div class="editableContent" id="txtc_con_645_48" style="height: 100%; word-wrap:break-word;"> 
-                  <p><span style="line-height:1.5"><span style="color:#143a42"><span style="font-size:30px"><span style="font-family:&quot;Microsoft YaHei&quot;">打造专属于你的储物柜</span></span></span></span></p> 
-                  <p><span style="line-height:1.5"><span style="color:#75a19f"><span style="font-size:12px"><span style="font-family:&quot;Microsoft YaHei&quot;">极简主义风格的居室设计</span></span></span></span></p> 
+                  <p><span style="line-height:1.5"><span style="color:#143a42"><span style="font-size:22px"><span style="font-family:&quot;Microsoft YaHei&quot;">慈溪市水云浦-半掘浦段围涂地</span></span></span></span></p> 
+                  <p><span style="line-height:1.5"><span style="color:#75a19f"><span style="font-size:12px"><span style="font-family:&quot;Microsoft YaHei&quot;">开发造地项目规划图</span></span></span></span></p> 
                  </div> 
                 </div> 
                </div>
@@ -1000,10 +995,10 @@
                 </div>
                </div>
               </div>
-              <div id="smv_con_638_48" ctype="image" class="esmartMargin smartAbs " cpid="459757" cstyle="Style1" ccolor="Item0" areaid="Area1" iscontainer="False" pvid="con_628_48" tareaid="" re-direction="all" daxis="All" isdeletable="True" style="height: 405px; width: 567px; left: 81px; top: 55px;z-index:2;">
+              <div id="smv_con_638_48" ctype="image" class="esmartMargin smartAbs " cpid="459757" cstyle="Style1" ccolor="Item0" areaid="Area1" iscontainer="False" pvid="con_628_48" tareaid="" re-direction="all" daxis="All" isdeletable="True" style="height: 405px; width: 300px; left: 50px; top: 20px;z-index:2;">
                <div class="yibuFrameContent con_638_48  image_Style1  " style="overflow:visible;;"> 
                 <div class="w-image-box" data-filltype="2" id="div_con_638_48"> 
-                 <a target="_self" href=""> <img src="{resource_url('img/tdkcImg/2000000629.png')}" alt="pic01_15" title="pic01_15" id="img_smv_con_638_48" style="width: 567px; height:405px;" /> </a> 
+                 <a target="_self" href=""> <img src="{resource_url('img/tdkcImg/201012221432874070.jpg')}" alt="pic01_15" title="pic01_15" id="img_smv_con_638_48" style="width: 483px; height:405px;" /> </a> 
                 </div> 
                 <script type="text/javascript">
     $(function () {

@@ -16,14 +16,15 @@ class Index extends Ydzj_Controller {
 	{
 	
 		
-		
-		
+		$this->assign('url',$_SERVER['PHP_SELF']);
+	
 		$this->display();
 	}
 	
 	public function gsjstk()
 	
 	{
+		$this->assign('url',$_SERVER['PHP_SELF']);
 		$this->display();
 	}
 	

@@ -38,7 +38,7 @@
 </head>
 <body>
 <!-- begin of mainContentWrapper -->
-	<div id="mainContentWrapper" style="background-color: transparent; background-image: none; background-repeat: no-repeat;background-position:0 0; background:-moz-linear-gradient(top, none, none);background:-webkit-gradient(linear, left top, left bottom, from(none), to(none));background:-o-linear-gradient(top, none, none);background:-ms-linear-gradient(top, none, none);background:linear-gradient(top, none, none);;
+	<div id="mainContentWrapper " style="background-color: transparent; background-image: none; background-repeat: no-repeat;background-position:0 0; background:-moz-linear-gradient(top, none, none);background:-webkit-gradient(linear, left top, left bottom, from(none), to(none));background:-o-linear-gradient(top, none, none);background:-ms-linear-gradient(top, none, none);background:linear-gradient(top, none, none);;
      position: relative; width: 100%;min-width:1300px;background-size: auto;" bgscroll="none"> 
    <div style="background-color: transparent; background-image: none; background-repeat: no-repeat;background-position:0 0; background:-moz-linear-gradient(top, none, none);background:-webkit-gradient(linear, left top, left bottom, from(none), to(none));background:-o-linear-gradient(top, none, none);background:-ms-linear-gradient(top, none, none);background:linear-gradient(top, none, none);;
          position: relative; width: 100%;min-width:1300px;background-size: auto;" bgscroll="none"> 
@@ -59,7 +59,7 @@
       <div class="yibuFrameContent tem_3_20  text_Style1  " style="overflow:hidden;;">
        <div id="txt_tem_3_20" style="height: 100%;"> 
         <div class="editableContent" id="txtc_tem_3_20" style="height: 100%; word-wrap:break-word;"> 
-         <p><strong><span style="color:#555555"><span style="font-family:Source Han Sans,Geneva,sans-serif; font-size:24px">慈溪土地勘测规划设计院有限公司</span></span></strong></p> 
+         <p><strong><span style="color:#555555"><span style="font-family:Source Han Sans,Geneva,sans-serif; font-size:24px">慈溪土地勘测规划设计院有限公司 </span></span></strong></p> 
         </div> 
        </div> 
       </div>
@@ -69,31 +69,31 @@
        <div id="nav_tem_4_19" class="nav_pc_t_2"> 
         <ul class="w-nav" navstyle="style2"> 
          <li class="w-nav-inner"> 
-          <div class="w-nav-item"> 
-           <a href="{base_url('index.php/index/index')}" target="_self" class="w-nav-item-link"> <span class="mw-iconfont"></span> <span class="w-link-txt">首页</span> </a> 
+          <div class="w-nav-item" style="{if $url == '/index.php/index/index'}border:1px solid #059fe9{/if}"> 
+           <a href="{base_url('index.php/index/index')}" target="_self" class="w-nav-item-link" > <span class="mw-iconfont"></span> <span class="w-link-txt">首页</span> </a> 
           </div> </li> 
          <li class="w-nav-inner"> 
-          <div class="w-nav-item"> 
+          <div class="w-nav-item" style="{if $url == '/index.php/about/introduce'}border:1px solid #059fe9{/if}"> 
            <a href="{base_url('index.php/about/introduce')}" target="_self" class="w-nav-item-link"> <span class="mw-iconfont"></span> <span class="w-link-txt">公司简介</span> </a> 
           </div> </li> 
          <li class="w-nav-inner"> 
-          <div class="w-nav-item"> 
+          <div class="w-nav-item" style="{if $url == '/index.php/about/bussiness'}border:1px solid #059fe9{/if}"> 
            <a href="{base_url('index.php/about/bussiness')}" target="_self" class="w-nav-item-link"> <span class="mw-iconfont"></span> <span class="w-link-txt">业务介绍</span> </a> 
           </div> </li> 
          <li class="w-nav-inner"> 
-          <div class="w-nav-item"> 
+          <div class="w-nav-item" style="{if $url == '/index.php/about/doc'}border:1px solid #059fe9{/if}"> 
            <a href="{base_url('index.php/about/doc')}" target="_self" class="w-nav-item-link"> <span class="mw-iconfont"></span> <span class="w-link-txt">资质荣誉</span> </a> 
           </div> </li> 
          <li class="w-nav-inner"> 
-          <div class="w-nav-item"> 
+          <div class="w-nav-item" style="{if $url == '/index.php/news/index'}border:1px solid #059fe9{/if}"> 
            <a href="{base_url('index.php/news/index')}" target="_self" class="w-nav-item-link"> <span class="mw-iconfont"></span> <span class="w-link-txt">新闻中心</span> </a> 
           </div> </li> 
          <li class="w-nav-inner"> 
-          <div class="w-nav-item"> 
+          <div class="w-nav-item" style="{if $url == '/index.php/news/detail'}border:1px solid #059fe9{/if}"> 
            <a href="{base_url('index.php/news/detail')}" target="_self" class="w-nav-item-link"> <span class="mw-iconfont"></span> <span class="w-link-txt">工程案例</span> </a> 
           </div> </li> 
          <li class="w-nav-inner"> 
-          <div class="w-nav-item"> 
+          <div class="w-nav-item" style="{if $url == '/index.php/contact/index'}border:1px solid #059fe9{/if}"> 
            <a href="{base_url('index.php/contact/index')}" target="_self" class="w-nav-item-link"> <span class="mw-iconfont"></span> <span class="w-link-txt">联系方式</span> </a> 
           </div> </li> 
         </ul> 

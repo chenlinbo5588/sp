@@ -122,7 +122,7 @@
      </div> 
      <div class="" id="smv_MainContent" rel="mainContentWrapper" style="width: 100%; min-height: 300px; position: relative; "> 
       <div class="smvWrapper" style="min-width:1000px;  position: relative; background-color: transparent; background-image: none; background-repeat: no-repeat; background:-moz-linear-gradient(top, none, none);background:-webkit-gradient(linear, left top, left bottom, from(none), to(none));background:-o-linear-gradient(top, none, none);background:-ms-linear-gradient(top, none, none);background:linear-gradient(top, none, none);;background-position:0 0;background-size:;" bgscroll="none">
-       <div class="smvContainer" id="smv_Main" cpid="461385" style="min-height:400px;width:1000px;height:1539px;  position: relative; ">
+       <div class="smvContainer" id="smv_Main" cpid="461385" style="min-height:400px;width:1000px;height:850px;  position: relative; ">
         <div id="smv_con_71_27" ctype="banner" class="esmartMargin smartAbs " cpid="461385" cstyle="Style1" ccolor="Item0" areaid="" iscontainer="True" pvid="" tareaid="" re-direction="y" daxis="Y" isdeletable="True" style="height: 327px; width: 100%; left: 0px; top: 0px;z-index:1;">
          <div class="yibuFrameContent con_71_27  banner_Style1  " style="overflow:visible;;">
           <div class="fullcolumn-inner smAreaC" id="smc_Area0" cid="con_71_27" style="width:1000px"> 
@@ -172,94 +172,23 @@
 </script> 
          </div>
         </div>
-        <div id="smv_con_70_9" ctype="banner" class="esmartMargin smartAbs " cpid="461385" cstyle="Style1" ccolor="Item0" areaid="" iscontainer="True" pvid="" tareaid="" re-direction="y" daxis="Y" isdeletable="True" style="height: 839px; width: 100%; left: 0px; top: 700px;z-index:1;">
-         <div class="yibuFrameContent con_70_9  banner_Style1  " style="overflow:visible;;">
-          <div class="fullcolumn-inner smAreaC" id="smc_Area0" cid="con_70_9" style="width:1000px"> 
-           <div id="smv_con_103_56" ctype="area" class="esmartMargin smartAbs " cpid="461385" cstyle="Style1" ccolor="Item0" areaid="Area0" iscontainer="True" pvid="con_70_9" tareaid="" re-direction="all" daxis="All" isdeletable="True" style="height: 751px; width: 1000px; left: 0px; top: 65px;z-index:0;">
-            <div class="yibuFrameContent con_103_56  area_Style1  " style="overflow:visible;;">
-             <div class="w-container"> 
-              <div class="smAreaC" id="smc_Area0" cid="con_103_56"> 
-               <div id="smv_con_108_24" ctype="text" class="esmartMargin smartAbs " cpid="461385" cstyle="Style1" ccolor="Item0" areaid="Area0" iscontainer="False" pvid="con_103_56" tareaid="" re-direction="all" daxis="All" isdeletable="True" style="height: 25px; width: 240px; left: 35px; top: -18px;z-index:10032;">
-                <div class="yibuFrameContent con_108_24  text_Style1  " style="overflow:hidden;;">
-                 <div id="txt_con_108_24" style="height: 100%;"> 
-                  <div class="editableContent" id="txtc_con_108_24" style="height: 100%; word-wrap:break-word;"> 
-                   <p><span style="color:#4e5f70; font-family:Microsoft YaHei; font-size:medium"><strong>快讯</strong></span></p> 
-                  </div> 
-                 </div> 
-                </div>
-               </div>
-               <div id="smv_con_114_44" ctype="listnews" class="esmartMargin smartAbs " cpid="461385" cstyle="Style4" ccolor="Item0" areaid="Area0" iscontainer="False" pvid="con_103_56" tareaid="" re-direction="all" daxis="All" isdeletable="True" style="height: 649px; width: 938px; left: 32px; top: 26px;z-index:10030;">
-                <div class="yibuFrameContent con_114_44  listnews_Style4  " style="overflow:visible;;">
-                 <div class="m-nodata f-clearfix">
-                  <div class="m-datain">
-                   <img src="{resource_url('img/tdkcImg/no-data.png')}" class="m-dataimg" />
-                   <div class="m-datatext">
-                    您还没有选择文章数据，请先选择数据
-                   </div>
-                  </div>
-                 </div>
-                </div>
-               </div> 
-              </div> 
-             </div>
-            </div>
-           </div>
-           <div id="smv_con_106_4" ctype="line" class="esmartMargin smartAbs " cpid="461385" cstyle="Style1" ccolor="Item0" areaid="Area0" iscontainer="False" pvid="con_70_9" tareaid="" re-direction="x" daxis="All" isdeletable="True" style="height: 20px; width: 960px; left: 20px; top: 66px;z-index:10033;">
-            <div class="yibuFrameContent con_106_4  line_Style1  " style="overflow:visible;;">
-             <!-- w-line --> 
-             <div style="position:relative; height:100%"> 
-              <div class="w-line" style="position:absolute;top:50%;" linetype="horizontal"></div> 
-             </div> 
-            </div>
-           </div>
-           <div id="smv_con_109_58" ctype="line" class="esmartMargin smartAbs " cpid="461385" cstyle="Style2" ccolor="Item3" areaid="Area0" iscontainer="False" pvid="con_70_9" tareaid="" re-direction="y" daxis="All" isdeletable="True" style="height: 20px; width: 20px; left: 10px; top: 46px;z-index:10034;">
-            <div class="yibuFrameContent con_109_58  line_Style2  " style="overflow:visible;;">
-             <!-- w-line --> 
-             <div style="position:relative; width:100%"> 
-              <div class="w-line" style="position:absolute;left:50%;" linetype="vertical"></div> 
-             </div> 
-            </div>
-           </div>
-          </div> 
-          <div id="bannerWrap_con_70_9" class="fullcolumn-outer" style="position: absolute; top: 0px; bottom: 0px; left: -456px; width: 1912px;"> 
-          </div> 
-          <script type="text/javascript">
-
-    $(function () {
-        var resize = function () {
-            $("#smv_con_70_9 >.yibuFrameContent>.fullcolumn-inner").width($("#smv_con_70_9").parent().width());
-            $('#bannerWrap_con_70_9').fullScreen(function (t) {
-                if (VisitFromMobile()) {
-                    t.css("min-width", t.parent().width())
-                }
-            });
-        }
-        $(window).resize(function (e) {
-            if (e.target == this) {
-                resize();
-            }
-        });
-        resize();
-    });
-</script> 
-         </div>
-        </div>
+        
         <div id="smv_con_99_51" ctype="listnews" class="esmartMargin smartAbs " cpid="461385" cstyle="Style6" ccolor="Item0" areaid="" iscontainer="False" pvid="" tareaid="" re-direction="all" daxis="All" isdeletable="True" style="height: 321px; width: 1000px; left: 20px; top: 390px;z-index:10030;">
          <div class="yibuFrameContent con_99_51  listnews_Style6  " style="overflow:visible;;"> 
           <div class="w-list xn-resize"> 
            <ul class="w-list-ul f-clearfix" id="ulList_con_99_51" data-title-autolines="1" data-desc-autolines="1"> 
-            <li class="w-list-item"> <a href="https://c1797065108ffy.scd.wezhan.cn/newsinfo/-1798.html" target="_self" class="w-list-link"> 
+            <li class="w-list-item"> <a href="{resource_url('staticNews/1.html')}" target="_self" class="w-list-link"> 
               <div class="w-list-pic"> 
-               <img class="w-listpic-in" src="{resource_url('img/tdkcImg/-10275.png')}" autofill="ok" init="ok" style="width: auto; height: 220px; margin-left: -9.12698px;" /> 
-              </div> <p class="w-list-title" style="height: 28px;">联合办公形势大好</p> <p class="w-list-info " style="height: 24px;">可以说，科创大厦社区自开业起就备受瞩目，目前，今日头条武汉分部、男人袜等均入驻在此，社区入驻率为110%。在此次中共武汉市常委等领导考察的过程中，与科创大厦社区入驻企业进行了密切交流，其中包括武XX网络有限公司、北京XX科技有限公司、湖北XX通用航空有限公司、武汉中观XX科技有限公司等科技创新型企业。</p> <p class="w-list-date ">08-14</p> </a> </li> 
-            <li class="w-list-item"> <a href="https://c1797065108ffy.scd.wezhan.cn/newsinfo/-1797.html" target="_self" class="w-list-link"> 
+               <img class="w-listpic-in" src="{resource_url('staticNews/image/20190430085750965096.jpg')}" autofill="ok" init="ok" style="width: auto; height: 220px; margin-left: -9.12698px;" /> 
+              </div> <p class="w-list-title" style="height: 28px;">英姿飒爽的土勘小伙子接受民兵点验</p> <p class="w-list-info " style="height: 24px;">慈溪土勘院的小伙子作为测绘导航排参加点验，他们精神抖擞、饱满热情，纷纷表示会积极为慈溪打造一支“精干、可靠、管用”的拳头力量贡献自己的一份力量！</p> <p class="w-list-date ">2019-4-30</p> </a> </li> 
+            <li class="w-list-item"> <a href="{resource_url('staticNews/2.html')}" target="_self" class="w-list-link"> 
               <div class="w-list-pic"> 
-               <img class="w-listpic-in" src="{resource_url('img/tdkcImg/-10274.png')}" autofill="ok" init="ok" style="width: auto; height: 220px; margin-left: -9.12px;" /> 
-              </div> <p class="w-list-title" style="height: 28px;">每一件事与你息息相关</p> <p class="w-list-info " style="height: 24px;">可以说，科创大厦社区自开业起就备受瞩目，目前，今日头条武汉分部、男人袜等均入驻在此，社区入驻率为110%。在此次中共武汉市常委等领导考察的过程中，与科创大厦社区入驻企业进行了密切交流，其中包括武XX网络有限公司、北京XX科技有限公司、湖北XX通用航空有限公司、武汉中观XX科技有限公司等科技创新型企业。</p> <p class="w-list-date ">08-14</p> </a> </li> 
-            <li class="w-list-item"> <a href="https://c1797065108ffy.scd.wezhan.cn/newsinfo/-1799.html" target="_self" class="w-list-link"> 
+               <img class="w-listpic-in" src="{resource_url('staticNews/image/20181126194438373837.jpg')}" autofill="ok" init="ok" style="width: auto; height: 220px; margin-left: -9.12px;" /> 
+              </div> <p class="w-list-title" style="height: 28px;">市规划局组织我院及各单位参观联合国世界地理信息大会技术与应用展览</p> <p class="w-list-info " style="height: 24px;">市规划局组织全市规划系统、测绘资质单位参观了联合国世界地理信息大会技术与应用展览。</p> <p class="w-list-date ">2018-11-26</p> </a> </li> 
+            <li class="w-list-item"> <a href="{resource_url('staticNews/3.html')}" target="_self" class="w-list-link"> 
               <div class="w-list-pic"> 
-               <img class="w-listpic-in" src="{resource_url('img/tdkcImg/-10276.png')}" autofill="ok" init="ok" style="width: auto; height: 220px; margin-left: -9.12px;" /> 
-              </div> <p class="w-list-title" style="height: 28px;">中国品牌新媒体联盟成立</p> <p class="w-list-info " style="height: 24px;">可以说，科创大厦社区自开业起就备受瞩目，目前，今日头条武汉分部、男人袜等均入驻在此，社区入驻率为110%。在此次中共武汉市常委等领导考察的过程中，与科创大厦社区入驻企业进行了密切交流，其中包括武XX网络有限公司、北京XX科技有限公司、湖北XX通用航空有限公司、武汉中观XX科技有限公司等科技创新型企业。</p> <p class="w-list-date ">08-14</p> </a> </li> 
+               <img class="w-listpic-in" src="{resource_url('staticNews/image/20180813141769216921.jpg')}" autofill="ok" init="ok" style="width: auto; height: 220px; margin-left: -9.12px;" /> 
+              </div> <p class="w-list-title" style="height: 28px;">我院领导赴一线慰问送清凉</p> <p class="w-list-info " style="height: 24px;">公司领导一行来到了外业工作地，对在高温酷暑下仍坚持作业的一线员工表示关心和慰问，对他们为公司的辛勤付出表示感谢！并嘱咐他们要做好防暑降温工作，合理调整作息时间，避开高温时段作业，安全作业。随后送上了慰问品。</p> <p class="w-list-date ">2018-8-13</p> </a> </li> 
            </ul> 
           </div> 
           <script>
@@ -293,7 +222,7 @@
          <div class="yibuFrameContent con_105_14  text_Style1  " style="overflow:hidden;;">
           <div id="txt_con_105_14" style="height: 100%;"> 
            <div class="editableContent" id="txtc_con_105_14" style="height: 100%; word-wrap:break-word;"> 
-            <p><span style="color:#4e5f70"><strong><span style="font-size:16px"><span style="font-family:Microsoft YaHei">热门推荐</span></span></strong></span></p> 
+            <p><span style="color:#4e5f70"><strong><span style="font-size:16px"><span style="font-family:Microsoft YaHei">新闻推荐</span></span></strong></span></p> 
            </div> 
           </div> 
          </div>

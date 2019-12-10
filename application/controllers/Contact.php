@@ -17,7 +17,7 @@ class Contact extends Ydzj_Controller {
 	
 		
 		
-		
+		$this->assign('url',$_SERVER['PHP_SELF']);
 		$this->display();
 	}
 	

@@ -86,7 +86,7 @@ $db['default'] = array(
 */
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => '192.168.5.116',
+	'hostname' => '192.168.5.105',
 	'username' => 'lzw123',
 	'password' => '123456',
 	'database' => 'tdkc_newbuss',

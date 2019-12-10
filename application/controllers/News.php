@@ -16,6 +16,7 @@ class News extends Ydzj_Controller {
 	 */
 	public function index()
 	{
+		$this->assign('url',$_SERVER['PHP_SELF']);
 		$this->display();
 	}
 	
@@ -23,6 +24,7 @@ class News extends Ydzj_Controller {
 
 
 	public function detail(){
+		$this->assign('url',$_SERVER['PHP_SELF']);
 		$this->display();
 		
 		

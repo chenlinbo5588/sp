@@ -127,7 +127,7 @@
      </div> 
      <div class="" id="smv_MainContent" rel="mainContentWrapper" style="width: 100%; min-height: 300px; position: relative; "> 
       <div class="smvWrapper" style="min-width:1180px;  position: relative; background-color: transparent; background-image: none; background-repeat: no-repeat; background:-moz-linear-gradient(top, none, none);background:-webkit-gradient(linear, left top, left bottom, from(none), to(none));background:-o-linear-gradient(top, none, none);background:-ms-linear-gradient(top, none, none);background:linear-gradient(top, none, none);;background-position:0 0;background-size:auto;" bgscroll="none">
-       <div class="smvContainer" id="smv_Main" cpid="461386" style="min-height:400px;width:1180px;height:903px;  position: relative; ">
+       <div class="smvContainer" id="smv_Main" cpid="461386" style="min-height:400px;width:1180px;height:750px;  position: relative; ">
         <div id="smv_con_26_24" ctype="slideset" class="esmartMargin smartAbs " cpid="461386" cstyle="Style2" ccolor="Item0" areaid="" iscontainer="True" pvid="" tareaid="" re-direction="all" daxis="All" isdeletable="True" style="height: 656px; width: 1147px; left: 32px; top: 158px;z-index:10;" selectarea="Area0">
          <div class="yibuFrameContent con_26_24  slideset_Style2  " style="overflow:visible;;"> 
           <!--w-slide--> 
@@ -141,7 +141,7 @@
               <div style="top: 0px; left: 0px; width: 1147px; height: 656px; position: absolute; background-color: rgb(0, 0, 0); opacity: 0; z-index: 0;"></div> 
               <div class="content-box" data-area="Area0" style="z-index: 1; top: 0px; left: 0px; width: 1147px; height: 656px; position: absolute; overflow: hidden;"> 
                <div id="smc_Area0" cid="con_26_24" class="smAreaC slideset_AreaC" style="z-index: 1; width: 1180px; position: relative; margin: 0px auto;"> 
-                <div id="smv_con_27_57" ctype="area" class="esmartMargin smartAbs " cpid="461386" cstyle="Style1" ccolor="Item0" areaid="Area0" iscontainer="True" pvid="con_26_24" tareaid="" re-direction="all" daxis="All" isdeletable="True" style="height: 635px; width: 1127px; left: 10px; top: 15px; z-index: 3;">
+                <div id="smv_con_27_57" ctype="area" class="esmartMargin smartAbs " cpid="461386" cstyle="Style1" ccolor="Item0" areaid="Area0" iscontainer="True" pvid="con_26_24" tareaid="" re-direction="all" daxis="All" isdeletable="True" style="height: 480px; width: 1127px; left: 10px; top: 15px; z-index: 3;">
                  <div class="yibuFrameContent con_27_57  area_Style1  " style="overflow: visible; z-index: 1;">
                   <div class="w-container" style="z-index: 1;"> 
                    <div class="smAreaC" id="smc_Area0" cid="con_27_57" style="z-index: 1;"> 
@@ -149,9 +149,9 @@
                      <div class="yibuFrameContent con_72_58  altas_Style2  " style="overflow: visible; z-index: 1;">
                       <div class="w-atlas xn-resize" id="altas_con_72_58" style="z-index: 1;"> 
                        <ul class="w-atlas-ul" id="ulList_con_72_58" style="z-index: 1;"> 
-                        <li style="z-index: 1;"> <a style="z-index: 1;"> <img class="lazyload NoCutFill" src="{resource_url('img/tdkcImg/-18999.jpg')}" data-original="{resource_url('img/tdkcImg/-18999.jpg')}" alt="it产品2" style="z-index: 1; display: block;" /> <h3 style="margin-top: 150px; width: 232px; z-index: 9;">it产品2</h3> </a> </li> 
-                        <li style="z-index: 1;"> <a style="z-index: 1;"> <img class="lazyload NoCutFill" src="{resource_url('img/tdkcImg/-18998.jpg')}" data-original="{resource_url('img/tdkcImg/-18998.jpg')}" alt="it产品1" style="z-index: 1; display: block;" /> <h3 style="margin-top: 150px; width: 232px; z-index: 9;">it产品1</h3> </a> </li> 
-                        <li style="z-index: 1;"> <a style="z-index: 1;"> <img class="lazyload NoCutFill" src="{resource_url('img/tdkcImg/-19001.jpg')}" data-original="{resource_url('img/tdkcImg/-19001.jpg')}" alt="it产品4" style="z-index: 1; display: block;" /> <h3 style="margin-top: 150px; width: 232px; z-index: 9;">it产品4</h3> </a> </li> 
+                        <li style="z-index: 1;"> <a style="z-index: 1;"> <img class="lazyload NoCutFill" src="{resource_url('img/tdkcImg/201012221426469036.jpg')}" data-original="{resource_url('img/tdkcImg/201012221426469036.jpg')}" alt="慈溪市开心基础设施规划" style="z-index: 1; display: block;" /> <h3 style="margin-top: 150px; width: 232px; z-index: 9;">慈溪市开心基础设施规划</h3> </a> </li> 
+                        <li style="z-index: 1;"> <a style="z-index: 1;"> <img class="lazyload NoCutFill" src="{resource_url('img/tdkcImg/201012221432874070.jpg')}" data-original="{resource_url('img/tdkcImg/201012221432874070.jpg')}" alt="慈溪市水云浦-半掘浦段围涂地开发造地项目" style="z-index: 1; display: block;" /> <h3 style="margin-top: 150px; width: 232px; z-index: 9;">慈溪市水云浦-半掘浦段围涂地开发造地项目</h3> </a> </li> 
+                        <li style="z-index: 1;"> <a style="z-index: 1;"> <img class="lazyload NoCutFill" src="{resource_url('img/tdkcImg/201012221435019953.jpg')}" data-original="{resource_url('img/tdkcImg/201012221435019953.jpg')}" alt="慈溪市周巷镇西三畈土地整理项目" style="z-index: 1; display: block;" /> <h3 style="margin-top: 150px; width: 232px; z-index: 9;">慈溪市周巷镇西三畈土地整理项目</h3> </a> </li> 
                        </ul> 
                       </div> 
                       <script type="text/javascript" style="z-index: 1;">
@@ -179,9 +179,9 @@
 
           $('#smv_con_72_58').lzpreview({
                 cssLink:'/Content/css/atlas-preview.css',
-                pageSize: 3,//每页最大图片数
-                imgUrl: ["../../../../../static/img/tdkcImg/-18999.jpg","../../../../../static/img/tdkcImg/-18998.jpg","../../../../../static/img/tdkcImg/-19001.jpg","../../../../../static/img/tdkcImg/-12483.jpg","../../../../../static/img/tdkcImg/-12482.jpg","../../../../../static/img/tdkcImg/-12481.jpg"],
-                imgAlt: ["it产品2","it产品1","it产品4","UI设计","创意设计","创意设计"],
+                pageSize: 6,//每页最大图片数
+                imgUrl: ["../../../../../static/img/tdkcImg/201012221426469036.jpg","../../../../../static/img/tdkcImg/201012221432874070.jpg","../../../../../static/img/tdkcImg/201012221435019953.jpg","../../../../../static/img/tdkcImg/2010122214253657269.jpg","../../../../../static/img/tdkcImg/2010122214262160424.jpg","../../../../../static/img/tdkcImg/2016371444743984.jpg"],
+                imgAlt: ["慈溪市开心基础设施规划","慈溪市水云浦-半掘浦段围涂地开发造地项目","慈溪市周巷镇西三畈土地整理项目","慈溪市开心农场规划","慈溪市横河镇上剑山村土地综合整治项目","胜山至陆埠公路（横河-余慈界段）方案"],
                 imgLink: ["javascript:void(0)","javascript:void(0)","javascript:void(0)","javascript:void(0)","javascript:void(0)","javascript:void(0)"],
                 imgTarget: ["_self","_self","_self","_self","_self","_self"]
                 });
@@ -206,17 +206,13 @@
                       </div> 
                      </div>
                     </div>
-                    <div id="smv_con_71_15" ctype="altas" class="esmartMargin smartAbs " cpid="461386" cstyle="Style2" ccolor="Item0" areaid="Area0" iscontainer="False" pvid="con_27_57" tareaid="" re-direction="all" daxis="All" isdeletable="True" style="height: 380px; width: 1041px; left: 42px; top: 224px; z-index: 1;">
+                    <div id="smv_con_71_15" ctype="altas" class="esmartMargin smartAbs " cpid="461386" cstyle="Style2" ccolor="Item0" areaid="Area0" iscontainer="False" pvid="con_27_57" tareaid="" re-direction="all" daxis="All" isdeletable="True" style="height: 180px; width: 1041px; left: 42px; top: 224px; z-index: 1;">
                      <div class="yibuFrameContent con_71_15  altas_Style2  " style="overflow: visible; z-index: 1;">
                       <div class="w-atlas xn-resize" id="altas_con_71_15" style="z-index: 1;"> 
                        <ul class="w-atlas-ul" id="ulList_con_71_15" style="z-index: 1;"> 
-                        <li style="z-index: 1;"> <a style="z-index: 1;"> <img class="lazyload NoCutFill" src="../../../../../static/img/tdkcImg/-12480.jpg" data-original="../../../../../static/img/tdkcImg/-12480.jpg" alt="logo设计" style="z-index: 1; display: block;" /> <h3 style="margin-top: 150px; width: 232px; z-index: 9;">logo设计</h3> </a> </li> 
-                        <li style="z-index: 1;"> <a style="z-index: 1;"> <img class="lazyload NoCutFill" src="../../../../../static/img/tdkcImg/-12479.jpg" data-original="../../../../../static/img/tdkcImg/-12479.jpg" alt="企业标识" style="z-index: 1; display: block;" /> <h3 style="margin-top: 150px; width: 232px; z-index: 9;">企业标识</h3> </a> </li> 
-                        <li style="z-index: 1;"> <a style="z-index: 1;"> <img class="lazyload NoCutFill" src="../../../../../static/img/tdkcImg/-11330.jpg" data-original="../../../../../static/img/tdkcImg/-11330.jpg" alt="VI设计" style="z-index: 1; display: block; width: 252px; height: 180px;" /> <h3 style="margin-top: 150px; width: 232px; z-index: 9; margin-left: 0px; padding-right: 10px;">VI设计</h3> </a> </li> 
-                        <li style="z-index: 1;"> <a style="z-index: 1;"> <img class="lazyload NoCutFill" src="../../../../../static/img/tdkcImg/-12587.jpeg" data-original="../../../../../static/img/tdkcImg/-12587.jpeg" alt="珠宝设计" style="z-index: 1; display: block; width: 252px; height: 180px;" /> <h3 style="margin-top: 150px; width: 232px; z-index: 9; margin-left: 0px; padding-right: 10px;">珠宝设计</h3> </a> </li> 
-                        <li style="z-index: 1;"> <a style="z-index: 1;"> <img class="lazyload NoCutFill" src="../../../../../static/img/tdkcImg/-12483.jpg" data-original="../../../../../static/img/tdkcImg/-12483.jpg" alt="UI设计" style="z-index: 1; display: block;" /> <h3 style="margin-top: 150px; width: 232px; z-index: 9;">UI设计</h3> </a> </li> 
-                        <li style="z-index: 1;"> <a style="z-index: 1;"> <img class="lazyload NoCutFill" src="../../../../../static/img/tdkcImg/-12482.jpg" data-original="../../../../../static/img/tdkcImg/-12482.jpg" alt="创意设计" style="z-index: 1; display: block;" /> <h3 style="margin-top: 150px; width: 232px; z-index: 9;">创意设计</h3> </a> </li> 
-                        <li style="z-index: 1;"> <a style="z-index: 1;"> <img class="lazyload NoCutFill" src="../../../../../static/img/tdkcImg/-12481.jpg" data-original="../../../../../static/img/tdkcImg/-12481.jpg" alt="创意设计" style="z-index: 1; display: block;" /> <h3 style="margin-top: 150px; width: 232px; z-index: 9;">创意设计</h3> </a> </li> 
+                        <li style="z-index: 1;"> <a style="z-index: 1;"> <img class="lazyload NoCutFill" src="../../../../../static/img/tdkcImg/2010122214253657269.jpg" data-original="../../../../../static/img/tdkcImg/2010122214253657269.jpg" alt="慈溪市开心农场规划" style="z-index: 1; display: block;" /> <h3 style="margin-top: 150px; width: 232px; z-index: 9;">慈溪市开心农场规划</h3> </a> </li> 
+                        <li style="z-index: 1;"> <a style="z-index: 1;"> <img class="lazyload NoCutFill" src="../../../../../static/img/tdkcImg/2010122214262160424.jpg" data-original="../../../../../static/img/tdkcImg/2010122214262160424.jpg" alt="慈溪市横河镇上剑山村土地综合整治项目" style="z-index: 1; display: block;" /> <h3 style="margin-top: 150px; width: 232px; z-index: 9;">慈溪市横河镇上剑山村土地综合整治项目</h3> </a> </li> 
+                        <li style="z-index: 1;"> <a style="z-index: 1;"> <img class="lazyload NoCutFill" src="../../../../../static/img/tdkcImg/2016371444743984.jpg" data-original="../../../../../static/img/tdkcImg/2016371444743984.jpg" alt="胜山至陆埠公路（横河-余慈界段）方案" style="z-index: 1; display: block; width: 252px; height: 180px;" /> <h3 style="margin-top: 150px; width: 232px; z-index: 9; margin-left: 0px; padding-right: 10px;">胜山至陆埠公路（横河-余慈界段）方案</h3> </a> </li> 
                        </ul> 
                       </div> 
                       <script type="text/javascript" style="z-index: 1;">
@@ -244,9 +240,10 @@
 
           $('#smv_con_71_15').lzpreview({
                 cssLink:'/Content/css/atlas-preview.css',
-                pageSize: 7,//每页最大图片数
-                imgUrl: ["../../../../../static/img/tdkcImg/-12480.jpg","../../../../../static/img/tdkcImg/-12479.jpg","../../../../../static/img/tdkcImg/-11330.jpg","../../../../../static/img/tdkcImg/-12587.jpeg","../../../../../static/img/tdkcImg/-12483.jpg","../../../../../static/img/tdkcImg/-12482.jpg","../../../../../static/img/tdkcImg/-12481.jpg"],
-                imgAlt: ["logo设计","企业标识","VI设计","珠宝设计","UI设计","创意设计","创意设计"],
+              
+                 pageSize: 6,//每页最大图片数
+                imgUrl: ["../../../../../static/img/tdkcImg/2010122214253657269.jpg","../../../../../static/img/tdkcImg/2010122214262160424.jpg","../../../../../static/img/tdkcImg/2016371444743984.jpg","../../../../../static/img/tdkcImg/201012221426469036.jpg","../../../../../static/img/tdkcImg/201012221432874070.jpg","../../../../../static/img/tdkcImg/201012221435019953.jpg"],
+                imgAlt: ["慈溪市开心农场规划","慈溪市横河镇上剑山村土地综合整治项目","胜山至陆埠公路（横河-余慈界段）方案","慈溪市开心基础设施规划","慈溪市水云浦-半掘浦段围涂地开发造地项目","慈溪市周巷镇西三畈土地整理项目",],
                 imgLink: ["javascript:void(0)","javascript:void(0)","javascript:void(0)","javascript:void(0)","javascript:void(0)","javascript:void(0)","javascript:void(0)"],
                 imgTarget: ["_self","_self","_self","_self","_self","_self","_self"]
                 });
@@ -261,18 +258,7 @@
                     </div>
                     <div id="smv_con_75_16" ctype="area" class="esmartMargin smartAbs " cpid="461386" cstyle="Style1" ccolor="Item0" areaid="Area0" iscontainer="True" pvid="con_27_57" tareaid="" re-direction="all" daxis="All" isdeletable="True" style="height: 180px; width: 252px; left: 828px; top: 415px; z-index: 17;">
                      <div class="yibuFrameContent con_75_16  area_Style1  " style="overflow: visible; z-index: 1;">
-                      <div class="w-container" style="z-index: 1;"> 
-                       <div class="smAreaC" id="smc_Area0" cid="con_75_16" style="z-index: 1;"> 
-                        <div id="smv_con_76_16" ctype="button" smanim="{ &quot;delay&quot;:0.5,&quot;duration&quot;:0.75,&quot;direction&quot;:&quot;&quot;,&quot;animationName&quot;:&quot;zoomIn&quot;,&quot;infinite&quot;:&quot;1&quot; }" class="esmartMargin smartAbs animated" cpid="461386" cstyle="Style1" ccolor="Item1" areaid="Area0" iscontainer="False" pvid="con_75_16" tareaid="" re-direction="all" daxis="All" isdeletable="True" style="height: 38px; width: 135px; left: 52px; top: 62px; z-index: 3; opacity: 1;" sm-finished="true" smexecuted="1">
-                         <div class="yibuFrameContent con_76_16  button_Style1  " style="overflow: visible; z-index: 1;">
-                          <a target="_self" class="w-button f-ellipsis" style="width: 133px; height: 36px; line-height: 36px; z-index: 1;"> <span class="w-button-position" style="z-index: 1;"> <em class="w-button-text f-ellipsis" style="z-index: 1;"> <i class="mw-iconfont w-button-icon w-icon-hide" style="z-index: 1;"></i>VIEW MORE &gt; </em> </span> </a> 
-                          <script type="text/javascript" style="z-index: 1;">
-        $(function () {
-        });
-    </script> 
-                         </div>
-                        </div> 
-                       </div> 
+                     
                       </div>
                      </div>
                     </div> 
@@ -282,7 +268,7 @@
                 </div> 
                </div> 
                <div class="content-box-inner" style="background-image: none; background-color: rgb(255, 255, 255); opacity: 1; z-index: 1;"></div> 
-               <div style="top: 0px; left: 0px; width: 1147px; height: 656px; z-index: 1000; display: none;"></div>
+               <div style="top: 0px; left: 0px; width: 1147px; height: 500px; z-index: 1000; display: none;"></div>
               </div> 
               <div class="content-box" data-area="Area1" style="z-index: 1; top: 0px; left: 1147px; width: 1147px; height: 656px; position: absolute; overflow: hidden;"> 
                <div id="smc_Area1" cid="con_26_24" class="smAreaC slideset_AreaC" style="z-index: 1; width: 1180px; position: relative; margin: 0px auto;"> 
@@ -319,60 +305,7 @@
                       </div>
                      </div>
                     </div>
-                    <div id="smv_con_80_6" ctype="altas" class="esmartMargin smartAbs " cpid="461386" cstyle="Style2" ccolor="Item0" areaid="Area0" iscontainer="False" pvid="con_77_6" tareaid="" re-direction="all" daxis="All" isdeletable="True" style="height: 380px; width: 1041px; left: 58px; top: 228px; z-index: 1;">
-                     <div class="yibuFrameContent con_80_6  altas_Style2  " style="overflow: visible; z-index: 1;">
-                      <div class="w-atlas xn-resize" id="altas_con_80_6" style="z-index: 1;"> 
-                       <ul class="w-atlas-ul" id="ulList_con_80_6" style="z-index: 1;"> 
-                        <li style="z-index: 1;"> <a style="z-index: 1;"> <img class="lazyload NoCutFill" src="../../../../../static/img/tdkcImg/-12480.jpg" data-original="../../../../../static/img/tdkcImg/-12480.jpg" alt="logo设计" style="z-index: 1; display: block;" /> </a> </li> 
-                        <li style="z-index: 1;"> <a style="z-index: 1;"> <img class="lazyload NoCutFill" src="../../../../../static/img/tdkcImg/-12479.jpg" data-original="../../../../../static/img/tdkcImg/-12479.jpg" alt="企业标识" style="z-index: 1; display: block;" /> </a> </li> 
-                        <li style="z-index: 1;"> <a style="z-index: 1;"> <img class="lazyload NoCutFill" src="../../../../../static/img/tdkcImg/-11330.jpg" data-original="../../../../../static/img/tdkcImg/-11330.jpg" alt="VI设计" style="z-index: 1;" /> </a> </li> 
-                        <li style="z-index: 1;"> <a style="z-index: 1;"> <img class="lazyload NoCutFill" src="../../../../../static/img/tdkcImg/-12587.jpeg" data-original="../../../../../static/img/tdkcImg/-12587.jpeg" alt="珠宝设计" style="z-index: 1;" /> </a> </li> 
-                        <li style="z-index: 1;"> <a style="z-index: 1;"> <img class="lazyload NoCutFill" src="../../../../../static/img/tdkcImg/-12483.jpg" data-original="../../../../../static/img/tdkcImg/-12483.jpg" alt="UI设计" style="z-index: 1; display: block;" /> </a> </li> 
-                        <li style="z-index: 1;"> <a style="z-index: 1;"> <img class="lazyload NoCutFill" src="../../../../../static/img/tdkcImg/-12482.jpg" data-original="../../../../../static/img/tdkcImg/-12482.jpg" alt="创意设计" style="z-index: 1; display: block;" /> </a> </li> 
-                        <li style="z-index: 1;"> <a style="z-index: 1;"> <img class="lazyload NoCutFill" src="../../../../../static/img/tdkcImg/-12481.jpg" data-original="../../../../../static/img/tdkcImg/-12481.jpg" alt="创意设计" style="z-index: 1;" /> </a> </li> 
-                       </ul> 
-                      </div> 
-                      <script type="text/javascript" style="z-index: 1;">
-	var con_80_6_firstClick = true;
-    function callback_con_80_6() {
-        con_80_6_Init();
-    }
-    function  con_80_6_Init() {
-          $("#smv_con_80_6 .w-atlas-ul li img").hover(function () {
-            var hovermargintop = parseInt("150px") - 5;
-            var hoverwidth = parseInt("252") - 10;
-            var hoverheight = parseInt("180") - 10;
-            $(this).css("width", hoverwidth + "px");
-            $(this).css("height", hoverheight + "px");
-            $(this).siblings("h3").css("margin-top", hovermargintop + "px");
-            $(this).siblings("h3").css("marginLeft", "5px").css("paddingRight", "0px");
-        }, function () {
-            var width = parseInt("252");
-            var height = parseInt("180");
-            $(this).css("width", width + "px");
-            $(this).css("height", height + "px");
-            $(this).siblings("h3").css("margin-top", "150px");
-            $(this).siblings("h3").css("marginLeft", "0px").css("paddingRight", "10px");
-            });
-
-          $('#smv_con_80_6').lzpreview({
-                cssLink:'/Content/css/atlas-preview.css',
-                pageSize: 7,//每页最大图片数
-                imgUrl: ["../../../../../static/img/tdkcImg/-12480.jpg","../../../../../static/img/tdkcImg/-12479.jpg","../../../../../static/img/tdkcImg/-11330.jpg","../../../../../static/img/tdkcImg/-12587.jpeg","img/-12483.jpg","../../../../../static/img/tdkcImg/-12482.jpg","../../../../../static/img/tdkcImg/-12481.jpg"],
-                imgAlt: ["logo设计","企业标识","VI设计","珠宝设计","UI设计","创意设计","创意设计"],
-                imgLink: ["javascript:void(0)","javascript:void(0)","javascript:void(0)","javascript:void(0)","javascript:void(0)","javascript:void(0)","javascript:void(0)"],
-                imgTarget: ["_self","_self","_self","_self","_self","_self","_self"]
-                });
-
-          $('#smv_con_80_6').lzpreview('arrowSwitch', 'on'=="on" ? true : false);
-         }
-    $(function () {
-        con_80_6_Init();
-     });
-    </script> 
-                     </div>
-                    </div>
-                    <div id="smv_con_78_6" ctype="altas" class="esmartMargin smartAbs " cpid="461386" cstyle="Style2" ccolor="Item0" areaid="Area0" iscontainer="False" pvid="con_77_6" tareaid="" re-direction="all" daxis="All" isdeletable="True" style="height: 182px; width: 780px; left: 310px; top: 48px; z-index: 25;">
+                                        <div id="smv_con_78_6" ctype="altas" class="esmartMargin smartAbs " cpid="461386" cstyle="Style2" ccolor="Item0" areaid="Area0" iscontainer="False" pvid="con_77_6" tareaid="" re-direction="all" daxis="All" isdeletable="True" style="height: 182px; width: 780px; left: 310px; top: 48px; z-index: 25;">
                      <div class="yibuFrameContent con_78_6  altas_Style2  " style="overflow: visible; z-index: 1;">
                       <div class="w-atlas xn-resize" id="altas_con_78_6" style="z-index: 1;"> 
                        <ul class="w-atlas-ul" id="ulList_con_78_6" style="z-index: 1;"> 
@@ -408,7 +341,7 @@
                 cssLink:'/Content/css/atlas-preview.css',
                 pageSize: 3,//每页最大图片数
                 imgUrl: ["../../../../../static/img/tdkcImg/-18999.jpg","../../../../../static/img/tdkcImg/-18998.jpg","../../../../../static/img/tdkcImg/-19001.jpg","../../../../../static/img/tdkcImg/-12483.jpg","../../../../../static/img/tdkcImg/-12482.jpg","../../../../../static/img/tdkcImg/-12481.jpg"],
-                imgAlt: ["it产品2","it产品1","it产品4","UI设计","创意设计","创意设计"],
+                imgAlt: ["it产品22","it产品12","it产品42","UI设计","创意设计","创意设计"],
                 imgLink: ["javascript:void(0)","javascript:void(0)","javascript:void(0)","javascript:void(0)","javascript:void(0)","javascript:void(0)"],
                 imgTarget: ["_self","_self","_self","_self","_self","_self"]
                 });
@@ -441,12 +374,6 @@
             </div>
            </div> 
            <!-- 1Arrow Navigator --> 
-           <div style="position: absolute; display: block; top: 321.5px; left: 10px; width: 12px; height: 13px;">
-            <span data-u="arrowleft" id="left_con_26_24" class="w-slide-arrowl slideArrow" data-autocenter="2" data-jssor-button="1" data-scale-ratio="1" style="top: -18.5px; left: 0px;"> <i class="w-itemicon mw-iconfont">넳</i> </span>
-           </div> 
-           <div style="position: absolute; display: block; top: 321.5px; right: 5px; width: 12px; height: 13px;">
-            <span data-u="arrowright" id="right_con_26_24" class="w-slide-arrowr slideArrow" data-autocenter="2" data-jssor-button="1" data-scale-ratio="1" style="top: -18.5px; left: 0px;"> <i class="w-itemicon mw-iconfont">넲</i> </span>
-           </div> 
           </div> 
           <!--/w-slide--> 
           <script type="text/javascript">

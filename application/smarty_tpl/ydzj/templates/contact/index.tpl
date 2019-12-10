@@ -122,7 +122,7 @@
      </div> 
      <div class="" id="smv_MainContent" rel="mainContentWrapper" style="width: 100%; min-height: 300px; position: relative; "> 
       <div class="smvWrapper" style="min-width:1000px;  position: relative; background-color: transparent; background-image: none; background-repeat: no-repeat; background:-moz-linear-gradient(top, none, none);background:-webkit-gradient(linear, left top, left bottom, from(none), to(none));background:-o-linear-gradient(top, none, none);background:-ms-linear-gradient(top, none, none);background:linear-gradient(top, none, none);;background-position:0 0;background-size:;" bgscroll="none">
-       <div class="smvContainer" id="smv_Main" cpid="461397" style="min-height:400px;width:1000px;height:872px;  position: relative; ">
+       <div class="smvContainer" id="smv_Main" cpid="461397" style="min-height:400px;width:1000px;  position: relative; ">
         <div id="smv_con_2_19" ctype="text" smanim="{ &quot;delay&quot;:0.75,&quot;duration&quot;:0.75,&quot;direction&quot;:&quot;Down&quot;,&quot;animationName&quot;:&quot;slideIn&quot;,&quot;infinite&quot;:&quot;1&quot; }" class="esmartMargin smartAbs animated" cpid="461397" cstyle="Style1" ccolor="Item2" areaid="" iscontainer="False" pvid="" tareaid="" re-direction="all" daxis="All" isdeletable="True" style="height: 27px; width: 94px; left: 456px; top: 69px; z-index: 3; opacity: 1;" sm-finished="true" smexecuted="1">
          <div class="yibuFrameContent con_2_19  text_Style1  " style="overflow:hidden;;">
           <div id="txt_con_2_19" style="height: 100%;"> 
@@ -136,7 +136,7 @@
          <div class="yibuFrameContent con_58_50  line_Style1  " style="overflow:visible;;">
           <!-- w-line --> 
           <div style="position:relative; height:100%"> 
-           <div class="w-line" style="position:absolute;top:50%;" linetype="horizontal"></div> 
+           
           </div> 
          </div>
         </div>
@@ -144,7 +144,7 @@
          <div class="yibuFrameContent con_60_50  line_Style1  " style="overflow:visible;;">
           <!-- w-line --> 
           <div style="position:relative; height:100%"> 
-           <div class="w-line" style="position:absolute;top:50%;" linetype="horizontal"></div> 
+          
           </div> 
          </div>
         </div>
@@ -163,8 +163,7 @@
          <div class="yibuFrameContent con_11_24  banner_Style1  " style="overflow:visible;;">
           <div class="fullcolumn-inner smAreaC" id="smc_Area0" cid="con_11_24" style="width:1000px"> 
           </div> 
-          <div id="bannerWrap_con_11_24" class="fullcolumn-outer" style="position: absolute; top: 0px; bottom: 0px; left: -456px; width: 1912px;"> 
-          </div> 
+          
           <script type="text/javascript">
 
     $(function () {
@@ -183,46 +182,7 @@
         });
         resize();
     });
-</script> 
-         </div>
-        </div>
-        <div id="smv_con_12_7" ctype="banner" class="esmartMargin smartAbs " cpid="461397" cstyle="Style1" ccolor="Item0" areaid="Main" iscontainer="True" pvid="" tareaid="Main" re-direction="y" daxis="Y" isdeletable="True" style="height: 98px; width: 100%; left: 0px; top: 751px;z-index:10001;">
-         <div class="yibuFrameContent con_12_7  banner_Style1  " style="overflow:visible;;">
-          <div class="fullcolumn-inner smAreaC" id="smc_Area0" cid="con_12_7" style="width:1000px"> 
-           <div id="smv_con_16_1" ctype="image" class="esmartMargin smartAbs " cpid="461397" cstyle="Style1" ccolor="Item0" areaid="Area0" iscontainer="False" pvid="con_12_7" tareaid="Main" re-direction="all" daxis="All" isdeletable="True" style="height: 30px; width: 30px; left: 319px; top: 36px;z-index:2;">
-            <div class="yibuFrameContent con_16_1  image_Style1  " style="overflow:visible;;"> 
-             <div class="w-image-box" data-filltype="2" id="div_con_16_1" style="width: 30px; height: 30px;"> 
-              <a target="_self" style="width: 100%; height: 100%;"> <img src="../../../../../static/img/tdkcImg/-2613.png" alt="wb" title="wb" id="img_smv_con_16_1" style="width: 30px; height:30px;" /> </a> 
-             </div> 
-             <script type="text/javascript">
-    $(function () {
-        InitImageSmv("con_16_1", "30", "30", "2");
-    });
-</script> 
-            </div>
-           </div>
-           <div id="smv_con_17_6" ctype="image" class="esmartMargin smartAbs " cpid="461397" cstyle="Style1" ccolor="Item0" areaid="Area0" iscontainer="False" pvid="con_12_7" tareaid="Main" re-direction="all" daxis="All" isdeletable="True" style="height: 32px; width: 32px; left: 458px; top: 35px;z-index:2;">
-            <div class="yibuFrameContent con_17_6  image_Style1  " style="overflow:visible;;"> 
-             <div class="w-image-box" data-filltype="2" id="div_con_17_6" style="width: 32px; height: 32px;"> 
-              <a target="_self" style="width: 100%; height: 100%;"> <img src="../../../../../static/img/tdkcImg/-2612.png" alt="QQ" title="QQ" id="img_smv_con_17_6" style="width: 32px; height:32px;" /> </a> 
-             </div> 
-             <script type="text/javascript">
-    $(function () {
-        InitImageSmv("con_17_6", "32", "32", "2");
-    });
-</script> 
-            </div>
-           </div>
-           <div id="smv_con_18_10" ctype="image" class="esmartMargin smartAbs " cpid="461397" cstyle="Style1" ccolor="Item0" areaid="Area0" iscontainer="False" pvid="con_12_7" tareaid="Main" re-direction="all" daxis="All" isdeletable="True" style="height: 31px; width: 33px; left: 593px; top: 36px;z-index:2;">
-            <div class="yibuFrameContent con_18_10  image_Style1  " style="overflow:visible;;"> 
-             <div class="w-image-box" data-filltype="2" id="div_con_18_10" style="width: 33px; height: 31px;"> 
-              <a target="_self" style="width: 100%; height: 100%;"> <img src="../../../../../static/img/tdkcImg/-2611.png" alt="wx" title="wx" id="img_smv_con_18_10" style="width: 33px; height:31px;" /> </a> 
-             </div> 
-             <script type="text/javascript">
-    $(function () {
-        InitImageSmv("con_18_10", "33", "31", "2");
-    });
-</script> 
+
             </div>
            </div>
           </div> 
@@ -282,97 +242,9 @@
     $(function () {
         InitImageSmv("con_28_4", "20", "20", "2");
     });
-</script> 
-         </div>
-        </div>
-        <div id="smv_con_29_43" ctype="line" class="esmartMargin smartAbs " cpid="461397" cstyle="Style1" ccolor="Item0" areaid="" iscontainer="False" pvid="" tareaid="" re-direction="x" daxis="All" isdeletable="True" style="height: 10px; width: 18px; left: 470px; top: 277px;z-index:10005;">
-         <div class="yibuFrameContent con_29_43  line_Style1  " style="overflow:visible;;">
-          <!-- w-line --> 
-          <div style="position:relative; height:100%"> 
-           <div class="w-line" style="position:absolute;top:50%;" linetype="horizontal"></div> 
-          </div> 
-         </div>
-        </div>
-        <div id="smv_con_33_13" ctype="line" class="esmartMargin smartAbs " cpid="461397" cstyle="Style1" ccolor="Item0" areaid="" iscontainer="False" pvid="" tareaid="" re-direction="x" daxis="All" isdeletable="True" style="height: 10px; width: 29px; left: -853px; top: 22px;z-index:10005;">
-         <div class="yibuFrameContent con_33_13  line_Style1  " style="overflow:visible;;">
-          <!-- w-line --> 
-          <div style="position:relative; height:100%"> 
-           <div class="w-line" style="position:absolute;top:50%;" linetype="horizontal"></div> 
-          </div> 
-         </div>
-        </div>
-        <div id="smv_con_32_20" ctype="line" class="esmartMargin smartAbs " cpid="461397" cstyle="Style1" ccolor="Item0" areaid="" iscontainer="False" pvid="" tareaid="" re-direction="x" daxis="All" isdeletable="True" style="height: 10px; width: 29px; left: -859px; top: 20px;z-index:10005;">
-         <div class="yibuFrameContent con_32_20  line_Style1  " style="overflow:visible;;">
-          <!-- w-line --> 
-          <div style="position:relative; height:100%"> 
-           <div class="w-line" style="position:absolute;top:50%;" linetype="horizontal"></div> 
-          </div> 
-         </div>
-        </div>
-        <div id="smv_con_34_12" ctype="line" class="esmartMargin smartAbs " cpid="461397" cstyle="Style1" ccolor="Item0" areaid="Main" iscontainer="False" pvid="" tareaid="Main" re-direction="x" daxis="All" isdeletable="True" style="height: 10px; width: 18px; left: 513px; top: 277px;z-index:10005;">
-         <div class="yibuFrameContent con_34_12  line_Style1  " style="overflow:visible;;">
-          <!-- w-line --> 
-          <div style="position:relative; height:100%"> 
-           <div class="w-line" style="position:absolute;top:50%;" linetype="horizontal"></div> 
-          </div> 
-         </div>
-        </div>
-        <div id="smv_con_57_7" ctype="leaveword" smanim="{ &quot;delay&quot;:1.2,&quot;duration&quot;:1.8,&quot;direction&quot;:&quot;&quot;,&quot;animationName&quot;:&quot;fadeIn&quot;,&quot;infinite&quot;:&quot;1&quot; }" class="esmartMargin smartAbs animated" cpid="461397" cstyle="Style4" ccolor="Item0" areaid="Main" iscontainer="False" pvid="" tareaid="Main" re-direction="x" daxis="All" isdeletable="True" style="height: 238px; width: 480px; left: 273px; top: 431px; z-index: 10019; opacity: 1;" sm-finished="true" smexecuted="1">
-         <div class="yibuFrameContent con_57_7  leaveword_Style4  " style="overflow:visible;;">
-          <div class="w-guestbook f-clearfix"> 
-           <div class="w-verify w-hide"> 
-            <span class="w-verify-in"><i class="mw-iconfont">끸</i><span class="w-verify-text"></span></span> 
-           </div> 
-           <!--w-guestbook-container--> 
-           <div class="w-guestbook-container"> 
-            <!--w-guestbook-item  验证错误样式--> 
-            <div class="w-guestbook-item w-placeholder"> 
-             <input type="text" class="w-guestbook-input" placeholder="输入你的名字" autocomplete="off" name="Subject" /> 
-            </div> 
-            <!--/w-guestbook-item--> 
-            <!--w-guestbook-item--> 
-            <div class="w-guestbook-item w-placeholder"> 
-             <input class="w-guestbook-input" placeholder="输入地址" autocomplete="off" name="Message" /> 
-            </div> 
-            <!--/w-guestbook-item--> 
-            <!--w-guestbook-item--> 
-            <div class="w-guestbook-item w-placeholder"> 
-             <input type="text" class="w-guestbook-input" placeholder="项目名称" autocomplete="off" name="Email" /> 
-            </div> 
-            <!--/w-guestbook-item--> 
-            <!--w-guestbook-item--> 
-            <div class="w-guestbook-code f-clearfix"> 
-             <div class="w-guestbook-item w-placeholder"> 
-              <input type="text" class="w-guestbook-input" placeholder="验证码" autocomplete="off" name="Captcha" /> 
-             </div> 
-             <div class="w-guestbook-codeimg">
-              <img src="js/GenerateLeavewordCaptcha" alt="验证码" />
-             </div> 
-            </div> 
-            <!--/w-guestbook-item--> 
-           </div> 
-           <!--/w-guestbook-container--> 
-           <!--w-guestbook-bottom--> 
-           <div class="w-guestbook-bottom f-clearfix"> 
-            <a href="javascript:void(0)" class="w-guestbook-btn" name="Submit">提交</a> 
-           </div> 
-           <!--/w-guestbook-bottom--> 
-          </div> 
-          <!--/w-guestbook--> 
-          <script type="text/javascript">
-    $(function () {
-            
-        $('#smv_con_57_7').smartNPLeavewordControl({ controlId: 'smv_con_57_7', emptyPrefix:'请输入', correctMailPrefix: '请输入正确的', contentMaxLength: '不能超过200个字符', postSucess: '提交成功', postFail: '提交失败', correctMailValidate:'请输入正确格式的邮箱！'});
-            
-    });
-    (function () {
-        JPlaceHolder(leavewordPlaceHolder);
-        function leavewordPlaceHolder() {
-            var placeHeight = $(".w-guestbook-item.w-placeholder .placeholder-text .placeholder-text-in").height();
-            $(".w-guestbook-item.w-placeholder .placeholder-text .placeholder-text-in").css("lineHeight", placeHeight + "px");
-        }
 
-    })(jQuery);
+   
+   
 </script>
          </div>
         </div>
@@ -388,19 +260,10 @@
 </script> 
          </div>
         </div>
-        <div id="smv_con_46_21" ctype="text" smanim="{ &quot;delay&quot;:1.1,&quot;duration&quot;:1.1,&quot;direction&quot;:&quot;Up&quot;,&quot;animationName&quot;:&quot;slideIn&quot;,&quot;infinite&quot;:&quot;1&quot; }" class="esmartMargin smartAbs animated" cpid="461397" cstyle="Style1" ccolor="Item2" areaid="Main" iscontainer="False" pvid="" tareaid="Main" re-direction="all" daxis="All" isdeletable="True" style="height: 28px; width: 120px; left: 444px; top: 371px; z-index: 3; opacity: 1;" sm-finished="true" smexecuted="1">
-         <div class="yibuFrameContent con_46_21  text_Style1  " style="overflow:hidden;;">
-          <div id="txt_con_46_21" style="height: 100%;"> 
-           <div class="editableContent" id="txtc_con_46_21" style="height: 100%; word-wrap:break-word;"> 
-            <p style="text-align:center"><span style="font-size:20px"><span style="color:#555555">联系我们</span></span></p> 
-           </div> 
-          </div> 
-         </div>
-        </div>
+        
         <div id="smv_con_61_58" ctype="banner" class="esmartMargin smartAbs " cpid="461397" cstyle="Style1" ccolor="Item0" areaid="" iscontainer="True" pvid="" tareaid="" re-direction="y" daxis="Y" isdeletable="True" style="height: 320px; width: 100%; left: 0px; top: 0px;z-index:0;">
          <div class="yibuFrameContent con_61_58  banner_Style1  " style="overflow:visible;;">
-          <div class="fullcolumn-inner smAreaC" id="smc_Area0" cid="con_61_58" style="width:1000px"> 
-          </div> 
+          
           <div id="bannerWrap_con_61_58" class="fullcolumn-outer" style="position: absolute; top: 0px; bottom: 0px; left: -456px; width: 1912px;"> 
           </div> 
           <script type="text/javascript">
