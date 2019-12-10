@@ -833,17 +833,18 @@
              <ul class="w-cs-menu w-cs-qq"> 
               <li><a href="//wpa.qq.com/msgrd?v=3&amp;uin=123456&amp;site=qq&amp;menu=yes" target="_blank">QQ客服</a></li> 
              </ul> </li> 
-            <li class="w-cs-list w-cs-clockBtn "> <a href="javascript:void(0);" class="w-cs-icon"><i class="mw-iconfont icon-clock">뀥</i></a> 
+            <li class="w-cs-list w-cs-clockBtn "> <a href="javascript:void(0);" class="w-cs-icon"><i class="mw-iconfont icon-clock">☀</i></a> 
              <ul class="w-cs-menu w-cs-clock"> 
               <li><h3>服务时间</h3></li> 
               <li>周一至周五 8:00-17:00</li> 
              </ul> </li> 
-            <li class="w-cs-list w-cs-qrcodeBtn "> <a href="javascript:void(0);" class="w-cs-icon"><i class="mw-iconfont icon-qrcode">낃</i></a> 
+            <li class="w-cs-list w-cs-qrcodeBtn "> <a href="javascript:void(0);" class="w-cs-icon"><i class="mw-iconfont icon-qrcode">▩</i></a> 
              <ul class="w-cs-menu w-cs-qrcode"> 
               <li><h3>微信二维码</h3></li> 
-              <li class="w-cs-qrcode-img"><img src="{resource_url('img/tdkcImg/ewm.jpg')}" alt="" /></li> 
+              <li class="w-cs-qrcode-img"><img src="https://www.cxmap.net/static/img/tdkcImg/ewm.jpg" alt="" /></li> 
              </ul> </li> 
-            <li class="w-cs-list w-cs-upBtn "> <a href="javascript:void(0);" onclick="gotoTop();return false;" class="w-cs-icon"><i class="mw-iconfont icon-up">녕</i></a> </li> 
+
+            <li class="w-cs-list w-cs-upBtn "> <a href="javascript:void(0);" onclick="gotoTop();return false;" class="w-cs-icon"><i class="mw-iconfont icon-up">↑</i></a> </li> 
            </ul> 
           </div> 
           <!--/w-cs--> 
@@ -1017,8 +1018,8 @@
             <div class="w-slide-btn" data-u="prototype"></div> 
            </div> 
            <!-- 1Arrow Navigator --> 
-           <span data-u="arrowleft" id="left_con_628_48" class="w-slide-arrowl slideArrow " data-autocenter="2"> <i class="w-itemicon mw-iconfont">ꂃ</i> </span> 
-           <span data-u="arrowright" id="right_con_628_48" class="w-slide-arrowr slideArrow " data-autocenter="2"> <i class="w-itemicon mw-iconfont">ꁹ</i> </span> 
+           <span data-u="arrowleft" id="left_con_628_48" class="w-slide-arrowl slideArrow " data-autocenter="2"> <i class="w-itemicon mw-iconfont"><</i> </span> 
+           <span data-u="arrowright" id="right_con_628_48" class="w-slide-arrowr slideArrow " data-autocenter="2"> <i class="w-itemicon mw-iconfont">></i> </span> 
           </div> 
           <!--/w-slide--> 
           <script type="text/javascript">
