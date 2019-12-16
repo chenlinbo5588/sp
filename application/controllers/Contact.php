@@ -18,6 +18,7 @@ class Contact extends Ydzj_Controller {
 		
 		
 		$this->assign('url',$_SERVER['PHP_SELF']);
+		$this->seoTitle('联系方式');
 		$this->display();
 	}
 	

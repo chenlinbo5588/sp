@@ -55,11 +55,11 @@
 </script> 
       </div>
      </div>
-     <div id="smv_tem_3_20" ctype="text" class="esmartMargin smartAbs " cpid="459647" cstyle="Style1" ccolor="Item0" areaid="Area0" iscontainer="False" pvid="" tareaid="Area0" re-direction="all" daxis="All" isdeletable="True" style="height: 36px; width: 360px; left: 72px; top: 28px;z-index:4;">
+     <div id="smv_tem_3_20" ctype="text" class="esmartMargin smartAbs " cpid="459647" cstyle="Style1" ccolor="Item0" areaid="Area0" iscontainer="False" pvid="" tareaid="Area0" re-direction="all" daxis="All" isdeletable="True" style="height: 36px; width: 400px; left: 72px; top: 28px;z-index:4;">
       <div class="yibuFrameContent tem_3_20  text_Style1  " style="overflow:hidden;;">
        <div id="txt_tem_3_20" style="height: 100%;"> 
         <div class="editableContent" id="txtc_tem_3_20" style="height: 100%; word-wrap:break-word;"> 
-         <p><strong><span style="color:#555555"><span style="font-family:Source Han Sans,Geneva,sans-serif; font-size:24px">慈溪土地勘测规划设计院有限公司 </span></span></strong></p> 
+         <p><strong><span style="color:#555555"><span style="font-family:Source Han Sans,Geneva,sans-serif; font-size:24px">慈溪市土地勘测规划设计院有限公司</span></span></strong></p> 
         </div> 
        </div> 
       </div>

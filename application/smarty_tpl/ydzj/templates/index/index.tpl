@@ -184,7 +184,7 @@
                 </div> 
                 <div class="w-list-r"> 
                  <div class="w-list-r-in"> 
-                  <h3 class="w-list-title"> <a href=""{resource_url('staticNews/2.html')}"" target="_self" class="w-list-titlelink">市规划局组织我院及各单位参观联合国世界地理信息大会技术与应用展览</a> </h3> 
+                  <h3 class="w-list-title"> <a href="{resource_url('staticNews/2.html')}" target="_self" class="w-list-titlelink">市规划局组织我院及各单位参观联合国世界地理信息大会技术与应用展览</a> </h3> 
                   <p class="w-list-desc ">市规划局组织全市规划系统、测绘资质单位参观了联合国世界地理信息大会技术与应用展览。</p> 
                   <div class="w-list-bottom clearfix "> 
                    <span class="w-list-viewnum w-hide"><i class="w-list-viewicon mw-iconfont">넶</i><span class="AR" data-dt="nvc" data-v="-5916">0</span></span> 
@@ -212,7 +212,7 @@
                 </div> 
                 <div class="w-list-r"> 
                  <div class="w-list-r-in"> 
-                  <h3 class="w-list-title"> <a href=""{resource_url('staticNews/4.html')}"" target="_self" class="w-list-titlelink">风雨同行,共创辉煌
+                  <h3 class="w-list-title"> <a href="{resource_url('staticNews/4.html')}" target="_self" class="w-list-titlelink">风雨同行,共创辉煌
 </a> </h3> 
                   <p class="w-list-desc ">2月9日晚,慈溪土勘院年会在慈溪白金汉爵大酒店隆重举行,慈溪土勘全体员工欢聚一堂,共话今昔。</p> 
                   <div class="w-list-bottom clearfix "> 

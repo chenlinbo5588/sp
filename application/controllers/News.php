@@ -17,6 +17,7 @@ class News extends Ydzj_Controller {
 	public function index()
 	{
 		$this->assign('url',$_SERVER['PHP_SELF']);
+		$this->seoTitle('新闻中心');
 		$this->display();
 	}
 	
@@ -25,6 +26,7 @@ class News extends Ydzj_Controller {
 
 	public function detail(){
 		$this->assign('url',$_SERVER['PHP_SELF']);
+		$this->seoTitle('工程案例');
 		$this->display();
 		
 		

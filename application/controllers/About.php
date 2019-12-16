@@ -17,6 +17,8 @@ class About extends Ydzj_Controller {
 	public function introduce()
 	{
 		$this->assign('url',$_SERVER['PHP_SELF']);
+		
+		$this->seoTitle('公司简介');
 		$this->display();
 	}
 	
@@ -25,6 +27,7 @@ class About extends Ydzj_Controller {
 
 	public function bussiness(){
 		$this->assign('url',$_SERVER['PHP_SELF']);
+		$this->seoTitle('业务介绍');
 		$this->display();		
 	}
 	
@@ -32,6 +35,7 @@ class About extends Ydzj_Controller {
 	
 	public function doc(){
 		$this->assign('url',$_SERVER['PHP_SELF']);
+		$this->seoTitle('资质荣誉');
 		$this->display();
 	}
 
