@@ -146,7 +146,7 @@
                  </div> 
                  <div class="w-al-text"> 
                   <h5 class="w-al-title">我单位收到上海菩悦房地产开发有限公司锦旗</h5> 
-                  <p class="w-al-desc">客户的认可，是我们行动的动力！</p> 
+                  <p class="w-al-desc">客户的认可，是我们前进的动力！</p> 
                  </div> </a> </li> 
               </ul> 
              </div> 
