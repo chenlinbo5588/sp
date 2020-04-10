@@ -122,7 +122,7 @@
      </div> 
      <div class="" id="smv_MainContent" rel="mainContentWrapper" style="width: 100%; min-height: 300px; position: relative; "> 
       <div class="smvWrapper" style="min-width:1000px;  position: relative; background-color: transparent; background-image: none; background-repeat: no-repeat; background:-moz-linear-gradient(top, none, none);background:-webkit-gradient(linear, left top, left bottom, from(none), to(none));background:-o-linear-gradient(top, none, none);background:-ms-linear-gradient(top, none, none);background:linear-gradient(top, none, none);;background-position:0 0;background-size:;" bgscroll="none">
-       <div class="smvContainer" id="smv_Main" cpid="461385" style="min-height:400px;width:1000px;height:850px;  position: relative; ">
+       <div class="smvContainer" id="smv_Main" cpid="461385" style="min-height:400px;width:1000px;height:1050px;  position: relative; ">
         <div id="smv_con_71_27" ctype="banner" class="esmartMargin smartAbs " cpid="461385" cstyle="Style1" ccolor="Item0" areaid="" iscontainer="True" pvid="" tareaid="" re-direction="y" daxis="Y" isdeletable="True" style="height: 327px; width: 100%; left: 0px; top: 0px;z-index:1;">
          <div class="yibuFrameContent con_71_27  banner_Style1  " style="overflow:visible;;">
           <div class="fullcolumn-inner smAreaC" id="smc_Area0" cid="con_71_27" style="width:1000px"> 
@@ -177,20 +177,32 @@
          <div class="yibuFrameContent con_99_51  listnews_Style6  " style="overflow:visible;;"> 
           <div class="w-list xn-resize"> 
            <ul class="w-list-ul f-clearfix" id="ulList_con_99_51" data-title-autolines="1" data-desc-autolines="1"> 
-            <li class="w-list-item"> <a href="{resource_url('staticNews/1.html')}" target="_self" class="w-list-link"> 
+            <li class="w-list-item"> <a href="{resource_url('staticNews/5.html')}" target="_self" class="w-list-link"> 
               <div class="w-list-pic"> 
-               <img class="w-listpic-in" src="{resource_url('staticNews/image/20190430085750965096.jpg')}" autofill="ok" init="ok" style="width: auto; height: 220px; margin-left: -9.12698px;" /> 
-              </div> <p class="w-list-title" style="height: 28px;">英姿飒爽的土勘小伙子接受民兵点验</p> <p class="w-list-info " style="height: 24px;">慈溪土勘院的小伙子作为测绘导航排参加点验，他们精神抖擞、饱满热情，纷纷表示会积极为慈溪打造一支“精干、可靠、管用”的拳头力量贡献自己的一份力量！</p> <p class="w-list-date ">2019-4-30</p> </a> </li> 
+               <img class="w-listpic-in" src="{resource_url('staticNews/image/1.jpg')}" autofill="ok" init="ok" style="width: auto; height: 220px; margin-left: -9.12698px;" /> 
+              </div> <p class="w-list-title" style="height: 28px;">我单位收到上海菩悦房地产开发有限公司锦旗</p> <p class="w-list-info " style="height: 24px;">客户的认可，是我们前进的动力！</p> <p class="w-list-date ">2020-04-10</p> </a> </li> 
             <li class="w-list-item"> <a href="{resource_url('staticNews/2.html')}" target="_self" class="w-list-link"> 
               <div class="w-list-pic"> 
                <img class="w-listpic-in" src="{resource_url('staticNews/image/20181126194438373837.jpg')}" autofill="ok" init="ok" style="width: auto; height: 220px; margin-left: -9.12px;" /> 
-              </div> <p class="w-list-title" style="height: 28px;">市规划局组织我院及各单位参观联合国世界地理信息大会技术与应用展览</p> <p class="w-list-info " style="height: 24px;">市规划局组织全市规划系统、测绘资质单位参观了联合国世界地理信息大会技术与应用展览。</p> <p class="w-list-date ">2018-11-26</p> </a> </li> 
+              </div> <p class="w-list-title" style="height: 28px;">英姿飒爽的土勘小伙子接受民兵点验</p> <p class="w-list-info " style="height: 24px;">慈溪土勘院的小伙子作为测绘导航排参加点验，他们精神抖擞、饱满热情，纷纷表示会积极为慈溪打造一支“精干、可靠、管用”的拳头力量贡献自己的一份力量！</p> <p class="w-list-date ">2019-04-20</p> </a> </li> 
             <li class="w-list-item"> <a href="{resource_url('staticNews/3.html')}" target="_self" class="w-list-link"> 
               <div class="w-list-pic"> 
                <img class="w-listpic-in" src="{resource_url('staticNews/image/20180813141769216921.jpg')}" autofill="ok" init="ok" style="width: auto; height: 220px; margin-left: -9.12px;" /> 
-              </div> <p class="w-list-title" style="height: 28px;">我院领导赴一线慰问送清凉</p> <p class="w-list-info " style="height: 24px;">公司领导一行来到了外业工作地，对在高温酷暑下仍坚持作业的一线员工表示关心和慰问，对他们为公司的辛勤付出表示感谢！并嘱咐他们要做好防暑降温工作，合理调整作息时间，避开高温时段作业，安全作业。随后送上了慰问品。</p> <p class="w-list-date ">2018-8-13</p> </a> </li> 
+              </div> <p class="w-list-title" style="height: 28px;">我院领导赴一线慰问送清凉</p> <p class="w-list-info " style="height: 24px;">公司领导一行来到了外业工作地，对在高温酷暑下仍坚持作业的一线员工表示关心和慰问，对他们为公司的辛勤付出表示感谢！并嘱咐他们要做好防暑降温工作，合理调整作息时间，避开高温时段作业，安全作业。随后送上了慰问品。</p> <p class="w-list-date ">2018-11-13</p> </a> </li> 
+           </ul> 
+           <ul class="w-list-ul f-clearfix" id="ulList_con_99_51" data-title-autolines="1" data-desc-autolines="1"> 
+            <li class="w-list-item"> <a href="{resource_url('staticNews/1.html')}" target="_self" class="w-list-link"> 
+              <div class="w-list-pic"> 
+               <img class="w-listpic-in" src="{resource_url('staticNews/image/20190430085750965096.jpg')}" autofill="ok" init="ok" style="width: auto; height: 220px; margin-left: -9.12698px;" /> 
+              </div> <p class="w-list-title" style="height: 28px;">市规划局组织我院及各单位参观联合国世界地理信息大会技术与应用展览</p> <p class="w-list-info " style="height: 24px;">市规划局组织全市规划系统、测绘资质单位参观了联合国世界地理信息大会技术与应用展览。</p> <p class="w-list-date ">2019-08-13</p> </a> </li> 
+            <li class="w-list-item"> <a href="{resource_url('staticNews/2.html')}" target="_self" class="w-list-link"> 
+              <div class="w-list-pic"> 
+               <img class="w-listpic-in" src="{resource_url('staticNews/image/20181126194438373837.jpg')}" autofill="ok" init="ok" style="width: auto; height: 220px; margin-left: -9.12px;" /> 
+              </div> <p class="w-list-title" style="height: 28px;">风雨同行,共创辉煌</p> <p class="w-list-info " style="height: 24px;">2月9日晚,慈溪土勘院年会在慈溪白金汉爵大酒店隆重举行,慈溪土勘全体员工欢聚一堂,共话今昔。</p> <p class="w-list-date ">2018-02-09</p> </a> </li> 
+           
            </ul> 
           </div> 
+           
           <script>
         var callback_con_99_51 = function () {
             var sv = $("#smv_con_99_51");
