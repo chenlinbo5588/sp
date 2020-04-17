@@ -146,12 +146,12 @@
             <ul class="w-imglist-ul" id="ulList_con_57_20"> 
              <li class="w-imglist-item"> 
               <div class="w-imglist-in"> 
-               <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/7584544.jpg')}" alt="zuijuhuoliqiyezhengshu" title="荣誉证书" init="ok" style="width: auto; height: 240px; margin-left: -5px;" /> </a> 
+               <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/2018.jpg')}" alt="zuijuhuoliqiyezhengshu" title="荣誉证书" init="ok" style="width: auto; height: 240px; margin-left: -5px;" /> </a> 
                <div class="w-imglist-title-bg"></div> 
                <a class="w-imglist-title">荣誉证书</a> 
               </div> 
               <div class="w-imglist-bigimg" style="z-index: 78"> 
-               <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/7584544.jpg')}" alt="zuijuhuoliqiyezhengshu" title="荣誉证书" init="ok" style="width: auto; height: 336px; margin-left: -7.5px;" /> </a> 
+               <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/2018.jpg')}" alt="zuijuhuoliqiyezhengshu" title="荣誉证书" init="ok" style="width: auto; height: 336px; margin-left: -7.5px;" /> </a> 
                <div class="w-imglist-title-bg"></div> 
                <a class="w-imglist-title">荣誉证书</a> 
               </div></li> 
@@ -168,12 +168,12 @@
               </div></li> 
              <li class="w-imglist-item"> 
               <div class="w-imglist-in"> 
-               <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/7584542.jpg')}" alt="tianyuwantongjiang" title="荣誉证书" init="ok" style="width: auto; height: 240px; margin-left: -5px;" /> </a> 
+               <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/2019ryzs.jpg')}" alt="tianyuwantongjiang" title="荣誉证书" init="ok" style="width: auto; height: 240px; margin-left: -5px;" /> </a> 
                <div class="w-imglist-title-bg"></div> 
                <a class="w-imglist-title">荣誉证书</a> 
               </div> 
               <div class="w-imglist-bigimg" style="z-index: 78"> 
-               <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/7584542.jpg')}" alt="tianyuwantongjiang" title="荣誉证书" init="ok" style="width: auto; height: 336px; margin-left: -7.5px;" /> </a> 
+               <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/2019ryzs.jpg')}" alt="tianyuwantongjiang" title="荣誉证书" init="ok" style="width: auto; height: 336px; margin-left: -7.5px;" /> </a> 
                <div class="w-imglist-title-bg"></div> 
                <a class="w-imglist-title">荣誉证书</a> 
               </div></li> 
@@ -314,12 +314,12 @@
               <div class="w-imglist-in"> 
                <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/tdgh.jpg')}" alt="dengjidaili" title="土地调查登记代理机构注册证书" init="ok" style="width: auto; height: 240px; margin-left: -5px;" /> </a> 
                <div class="w-imglist-title-bg"></div> 
-               <a class="w-imglist-title">土地调查登记代理机构注册证书</a> 
+               <a class="w-imglist-title">土地规划机构等级证书</a> 
               </div> 
               <div class="w-imglist-bigimg" style="z-index: 78"> 
                <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/tdgh.jpg')}" alt="dengjidaili" title="土地调查登记代理机构注册证书" init="ok" style="width: auto; height: 336px; margin-left: -7.5px;" /> </a> 
                <div class="w-imglist-title-bg"></div> 
-               <a class="w-imglist-title">土地调查登记代理机构注册证书</a> 
+               <a class="w-imglist-title">土地规划机构等级证书</a> 
               </div></li>
              <li class="w-imglist-item"> 
               <div class="w-imglist-in"> 
