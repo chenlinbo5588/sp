@@ -14,11 +14,9 @@ class Cms extends Ydzj_Admin_Controller {
 			'moduleTitle' => $this->_moduleTitle,
 			'moduleClassName' => $this->_className,
 		));
-		
 		$this->_subNavs = array(
 			array('url' => $this->_className.'/index','title' => '基本设置'),
 		);
-		
 	}
 	
 	

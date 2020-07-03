@@ -84,10 +84,6 @@ class Cms_Article_Class extends Ydzj_Admin_Controller {
 		
 	}
 	
-	
-	
-	
-	
 	public function delete(){
 		
 		$delId = $this->input->post('id');
@@ -147,6 +143,9 @@ class Cms_Article_Class extends Ydzj_Admin_Controller {
 				}
 				
 				$info = array_merge($info,$this->addWhoHasOperated('add'));
+				
+				
+				
 				$newid = $this->Cms_Article_Class_Model->_add($info);
 				
 				unset($info['id']);

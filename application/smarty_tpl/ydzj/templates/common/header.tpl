@@ -4,10 +4,9 @@
 <meta charset="utf-8"/>
 <title>{$SEO_title}</title>
 <meta http-equiv="X-UA-Compatible" content="IE=Edge">
-<meta name="description" content="{$SEO_description}" />
-<meta name="keywords" content="{$SEO_keywords}" />
+<meta name="description" content="{$SEO_description|escape}" />
+<meta name="keywords" content="{$SEO_keywords|escape}" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,minimal-ui">
-
 <script src="{resource_url('js/tdkcJs/jquery-1.10.2.min.js')}" type="text/javascript"></script>
 <script src="{resource_url('js/tdkcJs/jquery.lazyload.min.js')}" type="text/javascript"></script>
 <script src="{resource_url('js/tdkcJs/smart.animation.min.js')}" type="text/javascript"></script>
@@ -15,6 +14,7 @@
 <script src="{resource_url('js/tdkcJs/common.min.js?v=20190620')}" type="text/javascript"></script>
 <script src="{resource_url('js/tdkcJs/admin.validator.min.js')}" type="text/javascript"></script>
 <script src="{resource_url('js/tdkcJs/jquery.cookie.js')}" type="text/javascript"></script>
+ 
 
 <link href="{resource_url('css/tdkcCss/view.css')}" rel="stylesheet" type="text/css"/>
 <link href="{resource_url('css/tdkcCss/reset.css')}" rel="stylesheet" type="text/css"/>
@@ -25,6 +25,7 @@
 <link rel="icon" href="{resource_url('img/tdkcImg/logo.png')}"/>
 <link rel="shortcut icon" href="{resource_url('img/tdkcImg/logo.png')}"/>
 <link rel="bookmark" href="{resource_url('img/tdkcImg/logo.png')}"/>
+
 <script type="text/javascript">
     $.ajaxSetup({
         cache: false,
@@ -35,8 +36,10 @@
         }
     });
 </script>
+
 </head>
 <body>
+
 <!-- begin of mainContentWrapper -->
 	<div id="mainContentWrapper " style="background-color: transparent; background-image: none; background-repeat: no-repeat;background-position:0 0; background:-moz-linear-gradient(top, none, none);background:-webkit-gradient(linear, left top, left bottom, from(none), to(none));background:-o-linear-gradient(top, none, none);background:-ms-linear-gradient(top, none, none);background:linear-gradient(top, none, none);;
      position: relative; width: 100%;min-width:1300px;background-size: auto;" bgscroll="none"> 
@@ -68,8 +71,8 @@
       <div class="yibuFrameContent tem_4_19  nav_Style2  " style="overflow:visible;;">
        <div id="nav_tem_4_19" class="nav_pc_t_2"> 
         <ul class="w-nav" navstyle="style2"> 
-         <li class="w-nav-inner"> 
-          <div class="w-nav-item" style="{if $url == '/index.php/index/index'}border:1px solid #059fe9{/if}"> 
+         <li class="w-nav-inner" > 
+          <div class="w-nav-item" style="{if $url == '/index.php/index/index'} border:1px solid #059fe9 ; border-width:1px;{/if} height: 48px; line-height: 48px; "> 
            <a href="{base_url('index.php/index/index')}" target="_self" class="w-nav-item-link" > <span class="mw-iconfont"></span> <span class="w-link-txt">首页</span> </a> 
           </div> </li> 
          <li class="w-nav-inner"> 
@@ -89,8 +92,8 @@
            <a href="{base_url('index.php/news/index')}" target="_self" class="w-nav-item-link"> <span class="mw-iconfont"></span> <span class="w-link-txt">新闻中心</span> </a> 
           </div> </li> 
          <li class="w-nav-inner"> 
-          <div class="w-nav-item" style="{if $url == '/index.php/news/detail'}border:1px solid #059fe9{/if}"> 
-           <a href="{base_url('index.php/news/detail')}" target="_self" class="w-nav-item-link"> <span class="mw-iconfont"></span> <span class="w-link-txt">工程案例</span> </a> 
+          <div class="w-nav-item" style="{if $url == '/index.php/news/project'}border:1px solid #059fe9{/if}"> 
+           <a href="{base_url('index.php/news/project')}" target="_self" class="w-nav-item-link"> <span class="mw-iconfont"></span> <span class="w-link-txt">工程案例</span> </a> 
           </div> </li> 
          <li class="w-nav-inner"> 
           <div class="w-nav-item" style="{if $url == '/index.php/contact/index'}border:1px solid #059fe9{/if}"> 

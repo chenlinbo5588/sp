@@ -9,7 +9,6 @@
 		.table td { 
 			border: 1px solid #d0d0d0;border-width: 1px 0 1px 0;padding:3px; 
 		}
-		
 		.tip_success {
 		    font-weight: bold;
 		    background-color: green;
@@ -17,15 +16,12 @@
 		    padding: 5px;
 		    margin:5px 0;
 		}
-		
 		.ok {
 			color:green;
 		}
-		
 		.failed {
 			color:red;
 		}
-
 	</style>
 	<script type="text/javascript">
 		var btn = window.parent.document.getElementById('importBtn'); 

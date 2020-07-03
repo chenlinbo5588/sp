@@ -140,13 +140,13 @@
             <div class="yibuFrameContent con_248_35  listnews_Style7  " style="overflow:visible;;"> 
              <div class="w-al xn-resize"> 
               <ul class="w-al-list clearfix" id="ulList_con_248_35"> 
-               <li class="w-al-unit "> <a href="{resource_url('staticNews/5.html')}" target="_self"> 
+               <li class="w-al-unit "> <a href="{base_url('index.php/news/detail?id=')}{$info[0]['id']}" target="_self"> 
                  <div class="w-al-pic">
-                  <img src="{resource_url('staticNews/image/1.jpg')}" />
+                  <img src="{base_url($info[0]['image_url'])}" />
                  </div> 
                  <div class="w-al-text"> 
-                  <h5 class="w-al-title">我单位收到上海菩悦房地产开发有限公司锦旗</h5> 
-                  <p class="w-al-desc">客户的认可，是我们前进的动力！</p> 
+                  <h5 class="w-al-title">{$info[0]['article_title']}</h5> 
+                  <p class="w-al-desc" style="padding-right:30px;">{$info[0]['digest']}</p> 
                  </div> </a> </li> 
               </ul> 
              </div> 
@@ -180,43 +180,43 @@
               <ul class="w-list-ul w-list-imgno" id="ulList_con_239_33" data-title-autolines="1" data-desc-autolines="2"> 
                <li class="w-list-item f-clearfix"> 
                 <div class="w-list-pic"> 
-                 <a href="5916.html" target="_self" class="w-list-piclink"> <img class="w-listpic-in" src="{resource_url('img/tdkcImg/-27748.png')}" /> </a> 
+                 <a href="5916.html" target="_self" class="w-list-piclink"> <img class="w-listpic-in" src="{base_url($info[1]['image_url'])}" /> </a> 
                 </div> 
                 <div class="w-list-r"> 
                  <div class="w-list-r-in"> 
-                  <h3 class="w-list-title"> <a href="{resource_url('staticNews/1.html')}" target="_self" class="w-list-titlelink">英姿飒爽的土勘小伙子接受民兵点验</a> </h3> 
-                  <p class="w-list-desc ">慈溪土勘院的小伙子作为测绘导航排参加点验，他们精神抖擞、饱满热情，纷纷表示会积极为慈溪打造一支“精干、可靠、管用”的拳头力量贡献自己的一份力量！</p> 
+                  <h3 class="w-list-title"> <a href="{base_url('index.php/news/detail?id=')}{$info[1]['id']}" target="_self" class="w-list-titlelink">{$info[1]['article_title']}</a> </h3> 
+                  <p class="w-list-desc ">{$info[1]['digest']}</p> 
                   <div class="w-list-bottom clearfix "> 
-                   <span class="w-list-viewnum w-hide"><i class="w-list-viewicon mw-iconfont">넶</i><span class="AR" data-dt="nvc" data-v="-5916">0</span></span> 
-                   <span class="w-list-date ">2019-4-26</span> 
+                   <span class="w-list-viewnum w-hide"><i class="w-list-viewicon mw-iconfont"></i><span class="AR" data-dt="nvc" data-v="-5916">0</span></span> 
+                   <span class="w-list-date ">{$info[1]['time']}</span> 
                   </div> 
                  </div> 
                 </div> </li> 
                <li class="w-list-item f-clearfix"> 
                 <div class="w-list-pic"> 
-                 <a href="-5915.html" target="_self" class="w-list-piclink"> <img class="w-listpic-in" src="{resource_url('img/tdkcImg/-27749.png')}" /> </a> 
+                 <a target="_self" class="w-list-piclink"> <img class="w-listpic-in" src="{base_url($info[2]['image_url'])}" /> </a> 
                 </div> 
                 <div class="w-list-r"> 
                  <div class="w-list-r-in"> 
-                  <h3 class="w-list-title"> <a href="{resource_url('staticNews/2.html')}" target="_self" class="w-list-titlelink">市规划局组织我院及各单位参观联合国世界地理信息大会技术与应用展览</a> </h3> 
-                  <p class="w-list-desc ">市规划局组织全市规划系统、测绘资质单位参观了联合国世界地理信息大会技术与应用展览。</p> 
+                  <h3 class="w-list-title"> <a href="{base_url('index.php/news/detail?id=')}{$info[2]['id']}" target="_self" class="w-list-titlelink">{$info[2]['article_title']}</a> </h3> 
+                  <p class="w-list-desc ">{$info[2]['digest']}</p> 
                   <div class="w-list-bottom clearfix "> 
                    <span class="w-list-viewnum w-hide"><i class="w-list-viewicon mw-iconfont">넶</i><span class="AR" data-dt="nvc" data-v="-5915">0</span></span> 
-                   <span class="w-list-date ">2018-11-26</span> 
+                   <span class="w-list-date ">{$info[2]['time']}</span> 
                   </div> 
                  </div> 
                 </div> </li> 
                <li class="w-list-item f-clearfix"> 
                 <div class="w-list-pic"> 
-                 <a href="-5913.html" target="_self" class="w-list-piclink"> <img class="w-listpic-in" src="{resource_url('img/tdkcImg/-27750.png')}" /> </a> 
+                 <a href="-5913.html" target="_self" class="w-list-piclink"> <img class="w-listpic-in" src="{base_url($info[3]['image_url'])}" /> </a> 
                 </div> 
                 <div class="w-list-r"> 
                  <div class="w-list-r-in"> 
-                  <h3 class="w-list-title"> <a href="{resource_url('staticNews/3.html')}" target="_self" class="w-list-titlelink">我院领导赴一线慰问送清凉</a> </h3> 
-                  <p class="w-list-desc ">公司领导一行来到了外业工作地，对在高温酷暑下仍坚持作业的一线员工表示关心和慰问，对他们为公司的辛勤付出表示感谢！并嘱咐他们要做好防暑降温工作，合理调整作息时间，避开高温时段作业，安全作业。随后送上了慰问品。</p> 
+                  <h3 class="w-list-title"> <a href="{base_url('index.php/news/detail?id=')}{$info[3]['id']}" target="_self" class="w-list-titlelink">{$info[3]['article_title']}</a> </h3> 
+                  <p class="w-list-desc ">{$info[3]['digest']}</p> 
                   <div class="w-list-bottom clearfix "> 
                    <span class="w-list-viewnum w-hide"><i class="w-list-viewicon mw-iconfont">넶</i><span class="AR" data-dt="nvc" data-v="-5913">0</span></span> 
-                   <span class="w-list-date ">2018-8-13</span> 
+                   <span class="w-list-date ">{$info[3]['time']}</span> 
                   </div> 
                  </div> 
                 </div> </li> 
@@ -823,27 +823,27 @@
           <!--w-cs--> 
           <div class="con_421_38_c w-cs" id="qqservice_con_421_38"> 
            <ul class="w-cs-btn"> 
-            <li class="w-cs-list w-cs-phoneBtn w-hide"> <a href="javascript:void(0);" class="w-cs-icon"><i class="mw-iconfont icon-phone">끅</i></a> 
+            <li class="w-cs-list w-cs-phoneBtn w-hide"> <a href="javascript:void(0);" class="w-cs-icon"><img src="{resource_url('img/btns/1.jpg')}" class="mw-iconfont icon-phone"></img></a> 
              <ul class="w-cs-menu w-cs-phone"> 
               <li><h3>客服电话</h3></li> 
               <li>88888888</li> 
              </ul> </li> 
-            <li class="w-cs-list w-cs-qqBtn w-hide"> <a href="javascript:void(0);" class="w-cs-icon"><i class="mw-iconfont">뀩</i></a> 
+            <li class="w-cs-list w-cs-qqBtn w-hide"> <a href="javascript:void(0);" class="w-cs-icon"><img  class="mw-iconfont"></img></a> 
              <ul class="w-cs-menu w-cs-qq"> 
               <li><a href="//wpa.qq.com/msgrd?v=3&amp;uin=123456&amp;site=qq&amp;menu=yes" target="_blank">QQ客服</a></li> 
              </ul> </li> 
-            <li class="w-cs-list w-cs-clockBtn "> <a href="javascript:void(0);" class="w-cs-icon"><i class="mw-iconfont icon-clock">☀</i></a> 
+            <li class="w-cs-list w-cs-clockBtn "> <a href="javascript:void(0);" class="w-cs-icon"><img  src="{resource_url('img/btns/1.jpg')}" class="mw-iconfont icon-clock"></img></a> 
              <ul class="w-cs-menu w-cs-clock"> 
-              <li><h3>服务时间</h3></li> 
-              <li>周一至周五 8:00-17:00</li> 
+              <li><h3>电话热线</h3></li> 
+              <li>{$siteSetting['site_phone']}</li> 
              </ul> </li> 
-            <li class="w-cs-list w-cs-qrcodeBtn "> <a href="javascript:void(0);" class="w-cs-icon"><i class="mw-iconfont icon-qrcode">▩</i></a> 
+            <li class="w-cs-list w-cs-qrcodeBtn "> <a href="javascript:void(0);" class="w-cs-icon"><img src="{resource_url('img/btns/2.jpg')}" class="mw-iconfont icon-qrcode" ></img></a> 
              <ul class="w-cs-menu w-cs-qrcode"> 
               <li><h3>微信二维码</h3></li> 
               <li class="w-cs-qrcode-img"><img src="https://www.cxmap.net/static/img/tdkcImg/ewm.jpg" alt="" /></li> 
              </ul> </li> 
 
-            <li class="w-cs-list w-cs-upBtn "> <a href="javascript:void(0);" onclick="gotoTop();return false;" class="w-cs-icon"><i class="mw-iconfont icon-up">↑</i></a> </li> 
+            <li class="w-cs-list w-cs-upBtn "> <a href="javascript:void(0);" onclick="gotoTop();return false;" class="w-cs-icon"><img src="{resource_url('img/btns/3.jpg')}" class="mw-iconfont icon-up"></img></a> </li> 
            </ul> 
           </div> 
           <!--/w-cs--> 

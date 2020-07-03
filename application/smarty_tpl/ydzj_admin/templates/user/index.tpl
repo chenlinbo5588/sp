@@ -24,7 +24,6 @@
           <th class="align-center">启用状态</th>
           <th class="align-center">上次登录时间</th>
           <th class="align-center">上次登录IP</th>
-          <th class="align-center">用户组</th>
           <th class="align-center">所属角色</th>
           <th class="align-center">操作</th>
         </tr>
@@ -38,7 +37,6 @@
           <td class="align-center">已{if $item['enable'] == 0}禁用{else}启用{/if}</td>
           <td class="align-center">{$item['last_login']|date_format:"%Y-%m-%d %H:%M:%S"}</td>
           <td class="align-center">{$item['last_loginip']}</td>
-          <td class="align-center">{if $item['group_id'] == 0}未挂载任何祖{else}{$groupList[$item['group_id']]['name']|escape}{/if}</td>
           <td class="align-center">{if $item['role_id'] == 0}未挂载角色{else}{$roleList[$item['role_id']]['name']|escape}{/if}</td>
           <td class="align-center">
           	{if isset($permission[$moduleClassName|cat:'/edit'])}<a href="{admin_site_url($moduleClassName|cat:'/edit')}?uid={$item['uid']}">编辑</a>{/if} &nbsp;

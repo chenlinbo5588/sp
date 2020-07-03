@@ -155,7 +155,6 @@ class User extends Ydzj_Admin_Controller {
 		$this->form_validation->set_rules('enable','状态','required|in_list[0,1]');
 		
 		$this->form_validation->set_rules('role_id','所属角色','required|is_natural_no_zero');
-		$this->form_validation->set_rules('group_id','用户组','required|is_natural_no_zero');
 		
 		
 		if($action == 'add'){

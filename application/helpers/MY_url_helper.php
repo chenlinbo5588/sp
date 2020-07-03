@@ -56,7 +56,6 @@ if ( ! function_exists('resource_url'))
 }
 
 
-
 if ( ! function_exists('admin_site_url'))
 {
 	/**

@@ -122,7 +122,7 @@
      </div> 
      <div class="" id="smv_MainContent" rel="mainContentWrapper" style="width: 100%; min-height: 300px; position: relative; "> 
       <div class="smvWrapper" style="min-width:1000px;  position: relative; background-color: transparent; background-image: none; background-repeat: no-repeat; background:-moz-linear-gradient(top, none, none);background:-webkit-gradient(linear, left top, left bottom, from(none), to(none));background:-o-linear-gradient(top, none, none);background:-ms-linear-gradient(top, none, none);background:linear-gradient(top, none, none);;background-position:0 0;background-size:;" bgscroll="none">
-       <div class="smvContainer" id="smv_Main" cpid="461385" style="min-height:400px;width:1000px;height:1050px;  position: relative; ">
+       <div class="smvContainer" id="smv_Main" cpid="461385" style="min-height:350px;width:1000px; position: relative; ">
         <div id="smv_con_71_27" ctype="banner" class="esmartMargin smartAbs " cpid="461385" cstyle="Style1" ccolor="Item0" areaid="" iscontainer="True" pvid="" tareaid="" re-direction="y" daxis="Y" isdeletable="True" style="height: 327px; width: 100%; left: 0px; top: 0px;z-index:1;">
          <div class="yibuFrameContent con_71_27  banner_Style1  " style="overflow:visible;;">
           <div class="fullcolumn-inner smAreaC" id="smc_Area0" cid="con_71_27" style="width:1000px"> 
@@ -172,79 +172,181 @@
 </script> 
          </div>
         </div>
-        
-        <div id="smv_con_99_51" ctype="listnews" class="esmartMargin smartAbs " cpid="461385" cstyle="Style6" ccolor="Item0" areaid="" iscontainer="False" pvid="" tareaid="" re-direction="all" daxis="All" isdeletable="True" style="height: 321px; width: 1000px; left: 20px; top: 390px;z-index:10030;">
-         <div class="yibuFrameContent con_99_51  listnews_Style6  " style="overflow:visible;;"> 
-          <div class="w-list xn-resize"> 
-           <ul class="w-list-ul f-clearfix" id="ulList_con_99_51" data-title-autolines="1" data-desc-autolines="1"> 
-            <li class="w-list-item"> <a href="{resource_url('staticNews/5.html')}" target="_self" class="w-list-link"> 
-              <div class="w-list-pic"> 
-               <img class="w-listpic-in" src="{resource_url('staticNews/image/1.jpg')}" autofill="ok" init="ok" style="width: auto; height: 220px; margin-left: -9.12698px;" /> 
-              </div> <p class="w-list-title" style="height: 28px;">我单位收到上海菩悦房地产开发有限公司锦旗</p> <p class="w-list-info " style="height: 24px;">客户的认可，是我们前进的动力！</p> <p class="w-list-date ">2020-04-10</p> </a> </li> 
-            <li class="w-list-item"> <a href="{resource_url('staticNews/2.html')}" target="_self" class="w-list-link"> 
-              <div class="w-list-pic"> 
-               <img class="w-listpic-in" src="{resource_url('staticNews/image/20181126194438373837.jpg')}" autofill="ok" init="ok" style="width: auto; height: 220px; margin-left: -9.12px;" /> 
-              </div> <p class="w-list-title" style="height: 28px;">英姿飒爽的土勘小伙子接受民兵点验</p> <p class="w-list-info " style="height: 24px;">慈溪土勘院的小伙子作为测绘导航排参加点验，他们精神抖擞、饱满热情，纷纷表示会积极为慈溪打造一支“精干、可靠、管用”的拳头力量贡献自己的一份力量！</p> <p class="w-list-date ">2019-04-20</p> </a> </li> 
-            <li class="w-list-item"> <a href="{resource_url('staticNews/3.html')}" target="_self" class="w-list-link"> 
-              <div class="w-list-pic"> 
-               <img class="w-listpic-in" src="{resource_url('staticNews/image/20180813141769216921.jpg')}" autofill="ok" init="ok" style="width: auto; height: 220px; margin-left: -9.12px;" /> 
-              </div> <p class="w-list-title" style="height: 28px;">我院领导赴一线慰问送清凉</p> <p class="w-list-info " style="height: 24px;">公司领导一行来到了外业工作地，对在高温酷暑下仍坚持作业的一线员工表示关心和慰问，对他们为公司的辛勤付出表示感谢！并嘱咐他们要做好防暑降温工作，合理调整作息时间，避开高温时段作业，安全作业。随后送上了慰问品。</p> <p class="w-list-date ">2018-11-13</p> </a> </li> 
-           </ul> 
-           <ul class="w-list-ul f-clearfix" id="ulList_con_99_51" data-title-autolines="1" data-desc-autolines="1"> 
-            <li class="w-list-item"> <a href="{resource_url('staticNews/1.html')}" target="_self" class="w-list-link"> 
-              <div class="w-list-pic"> 
-               <img class="w-listpic-in" src="{resource_url('staticNews/image/20190430085750965096.jpg')}" autofill="ok" init="ok" style="width: auto; height: 220px; margin-left: -9.12698px;" /> 
-              </div> <p class="w-list-title" style="height: 28px;">市规划局组织我院及各单位参观联合国世界地理信息大会技术与应用展览</p> <p class="w-list-info " style="height: 24px;">市规划局组织全市规划系统、测绘资质单位参观了联合国世界地理信息大会技术与应用展览。</p> <p class="w-list-date ">2019-08-13</p> </a> </li> 
-            <li class="w-list-item"> <a href="{resource_url('staticNews/2.html')}" target="_self" class="w-list-link"> 
-              <div class="w-list-pic"> 
-               <img class="w-listpic-in" src="{resource_url('staticNews/image/20181126194438373837.jpg')}" autofill="ok" init="ok" style="width: auto; height: 220px; margin-left: -9.12px;" /> 
-              </div> <p class="w-list-title" style="height: 28px;">风雨同行,共创辉煌</p> <p class="w-list-info " style="height: 24px;">2月9日晚,慈溪土勘院年会在慈溪白金汉爵大酒店隆重举行,慈溪土勘全体员工欢聚一堂,共话今昔。</p> <p class="w-list-date ">2018-02-09</p> </a> </li> 
-           
-           </ul> 
-          </div> 
-           
-          <script>
-        var callback_con_99_51 = function () {
-            var sv = $("#smv_con_99_51");
-            var titlelines = parseInt(sv.find(".w-list-ul").attr("data-title-autolines"));
-            var desclines = parseInt(sv.find(".w-list-ul").attr("data-desc-autolines"));
-
-            var titleItem = sv.find(".w-list-title");
-            var title_line_height = titleItem.css("line-height");
-            titleItem.css("height", parseInt(title_line_height) * titlelines);
-
-            var desc_line_height = sv.find(".w-list-info").css("line-height");
-            sv.find(".w-list-info").css("height", parseInt(desc_line_height) * desclines);
-
-            sv.find("img").cutFill();
-        }
-        callback_con_99_51();
-    </script> 
-         </div>
-        </div>
-        <div id="smv_con_107_54" ctype="line" class="esmartMargin smartAbs " cpid="461385" cstyle="Style2" ccolor="Item3" areaid="" iscontainer="False" pvid="" tareaid="" re-direction="y" daxis="All" isdeletable="True" style="height: 20px; width: 20px; left: 6px; top: 355px;z-index:10034;">
-         <div class="yibuFrameContent con_107_54  line_Style2  " style="overflow:visible;;">
-          <!-- w-line --> 
-          <div style="position:relative; width:100%"> 
-           <div class="w-line" style="position:absolute;left:50%;" linetype="vertical"></div> 
-          </div> 
-         </div>
-        </div>
-        <div id="smv_con_105_14" ctype="text" class="esmartMargin smartAbs " cpid="461385" cstyle="Style1" ccolor="Item0" areaid="" iscontainer="False" pvid="" tareaid="" re-direction="all" daxis="All" isdeletable="True" style="height: 23px; width: 360px; left: 33px; top: 356px;z-index:10032;">
-         <div class="yibuFrameContent con_105_14  text_Style1  " style="overflow:hidden;;">
-          <div id="txt_con_105_14" style="height: 100%;"> 
-           <div class="editableContent" id="txtc_con_105_14" style="height: 100%; word-wrap:break-word;"> 
-            <p><span style="color:#4e5f70"><strong><span style="font-size:16px"><span style="font-family:Microsoft YaHei">新闻推荐</span></span></strong></span></p> 
-           </div> 
-          </div> 
-         </div>
-        </div>
-       </div>
-      </div>
-     </div>
-    </div>
    </div>
-  </div>
+   <style>
+   		.box{
+			display:flex; 
+			flex-direction: column;
+		}
+		.boxh{
+			display:flex; 
+		}
+		.imgbox{
+			width:35%;
+			height:250px;
+			padding:10px 10px;
+		}
+		.czjz{
+			justify-content:center;
+			align-items:center;
+		}
+		.jz{
+			align-items:center;
+		}
+
+		.line{
+			height:200px;
+			border-left:1px solid #030000;
+		}
+		.duan{
+			text-indent:15px;
+		}
+	
+		
+		.search{
+			color:#424242;
+			font-weight:bold;
+			font-size:22px;
+			margin-right:30px;
+		}
+		.searchbox{
+			height:200px;
+			margin-top:60px;
+		
+		}
+		.quding{
+			font-size:14px;
+			background-color:#00479d;
+			color:#e9ecf3;
+			border:none;
+			width:65px;
+			height:30px;
+			margin-left:30px;
+		}
+		.inputbox{
+			width:270px;
+			height:25px;
+			font-size:14px;
+			color:#000;
+			margin-top:15px;
+			margin-bottom:15px;
+			padding-left:5px;
+		}
+		.lineh{
+			width:100%;
+			margin-top:50px;
+			border:1px solid #e5e5e5;
+			
+		}
+		.lineh2{
+			width:60%;
+			
+			border:1px solid #e5e5e5;
+		}
+		
+		.imgbox2{
+			width:270px;
+			height:180px;
+		}
+		
+		
+		
+		.title{
+			font-size:20px;
+			font-weight:bold;
+			height:60%;
+			align-items:center;
+			display:flex;
+			line-height:35px;
+		}
+		.content{
+			font-size:14px;
+			color:#a3a3a3;
+			width:80%;
+			line-height:25px;
+			white-space:nowrap;
+			overflow:hidden;
+			text-overflow:ellipsis;
+			height:30%;
+		}
+		.time{
+			color:#a3a3a3;
+			font-size:12px;
+			height:10%;
+			align-items:flex-end;
+			display:flex;
+			justify-content:flex-end;
+		}
+		
+		.morebox{
+			width:180px;
+			height:50px;
+			border:1px solid #191616;
+			margin-top:50px;
+			border-radius:50px;
+		}
+		.dianji{
+			cursor:pointer;
+		}
+		.count{
+			font-size:14px;
+			color:#a3a3a3;
+			
+		}
+		
+		
+   </style>
+   <script>
+		
+	   	function selectMore() {
+	   			$("div[id=news]").each(function(){     
+					$(this).css("display","flex");  
+				});
+				$("div[id=more]").css("display","none");  
+				
+	   	}
+   </script>
+   	<div class="box czjz" style="width:100%">
+   	<form action="{base_url('index.php/news/index')}" id="formSearch" method="get" accept-charset="utf-8" class="boxh jz" style="width:60%;height:50px;">
+	   	 <div class="boxh jz" >
+			 	<div class="search">新闻搜索</div>
+			 	<input class="inputbox" type="text" value="{$search}" name="search">
+			 	<input class="quding"  type="submit" value="搜索"></input>
+	   	 </div>
+   	 </form>
+   	 <div class="boxh jz" style="margin-left:30px;  width:60%;height:50px;" >
+   	 		<div class="boxh jz" style=" width:100%; {if $newCount==""}display:none;{/if}">
+	   	 		<div class="count" >当前新闻列表搜索关键字"</div>
+	   	 		<div class="count" style="color:red">{$search}</div>   	 		
+	   	 		<div class="count" style="">"的相关结果为"</div>   	 		
+	   	 		<div class="count" style="color:red">{$newCount}</div> 
+	   	 		<div class="count" style="{if $newCount ==0}display:none;{/if}">"条记录数。</div>  
+	   	 		<div class="count" style="{if $newCount !=0}display:none;{/if}">"条记录数,已为您推荐其他新闻</div>   
+   			</div>
+   	 </div>
+   	<div class="lineh2"></div>
+   
+   	<div class="box czjz dianji" style="width:60%;">
+   	  	{foreach from=$info key=key item=item}
+	   	 	<div class="box czjz display dianji" style="width:100%; margin-top:30px; {if $item['isNotDisplay']}display:none{/if} " id="news" onclick="window.open('{base_url('index.php/news/detail?id=')}{$item['id']}','_self')">
+			   		<div class="boxh " style="width:100%;">
+					 	<image src="{base_url($item['image_url'])}" class="imgbox"></image>
+					 	<div class="box " style="padding-left:30px; width:60%;">
+					 		<div class="title">{$item['article_title']}</div>
+					 		<div class="duan content">{$item['digest']}</div>
+					 		<div class="time">{$item['time']}</div>
+					 	</div>
+					</div>
+					<div class="lineh"></div>
+			</div> 
+		{/foreach}	 	 
+   	  	  	 	
+   	</div>
+   	<div class="box morebox czjz" style="cursor:pointer; {if $isNotDisplay}display:none{/if} " onclick="selectMore();" id="more">
+   		<div class="" style="font-size:16px;color:#424242"  onselectstart="return false">查看更多</div>
+   	</div>
+   		
+   
   
   {include file="common/footer.tpl"}
 	

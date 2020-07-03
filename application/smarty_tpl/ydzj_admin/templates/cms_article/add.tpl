@@ -102,15 +102,24 @@
 	            });
 	        </script>
         </tr>
-        {*
+        
         <tr>
-          <td colspan="2" class="required"><label class="validation">{#keyword#}:</label></td>
+          <td colspan="2" class="required"><label class="">{#keyword#}:</label></td>
         </tr>
         <tr class="noborder">
           <td class="vatop rowform"><input type="text" name="keyword" value="{$info['keyword']|escape}" class="txt"/></td>
           <td class="vatop tips">{form_error('keyword')}</td>
         </tr>
-        *}
+        
+        <tr>
+          <td colspan="2" class="required"><label class="">{#digest#}:</label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform"><input type="text" name="digest" value="{$info['digest']|escape}" class="txt"/></td>
+          <td class="vatop tips">{form_error('digest')}</td>
+        </tr>
+        
+        
         <tr>
           <td colspan="2" class="required"><label>文章作者:</label></td>
         </tr>

@@ -18,10 +18,7 @@
         <tr class="noborder">
           <td colspan="2" class="required"><label class="validation" for="username">用户真实名称:</label></td>
         </tr>
-        <tr class="noborder">
-          <td class="vatop rowform"><input type="text" id="username" value="{$info['username']|escape}" name="username" class="txt"></td>
-          <td class="vatop tips"><label id="error_username" class="errortip"></label> 请输入用户真实名称</td>
-        </tr>
+        
         <tr class="noborder">
           <td class="required"><label class="validation">状态:</label></td>
         </tr>
@@ -59,9 +56,7 @@
 	          	</ul>
           </td>
         </tr>
-        <tr>
-          <td colspan="2"><label class="validation" for="group_id">用户组:</label>请选择一个用户组，如果还未设置， <a href="{admin_site_url('group/add')}">点击马上设置</a></td>
-        </tr>
+        
         <tr class="noborder">
           <td class="vatop rowform" colspan="2">
           	<ul class="ulListStyle1 clearfix">

@@ -522,7 +522,7 @@ class Cms_Article extends Ydzj_Admin_Controller {
 		$feedback = '';
 		
 		$treelist = $this->cms_service->getArticleClassTreeHTML();
-		
+	
 		if($this->isPostRequest()){
 			$this->_getRules();
 			for($i = 0; $i < 1; $i++){
@@ -537,7 +537,15 @@ class Cms_Article extends Ydzj_Admin_Controller {
 					$avatarImg = getImgPathArray($info['image_url'],array('b','m','s'),'image_url');
 					$info = array_merge($info,$avatarImg);
 				}
+				if( $info['digest'] == ""){
+					$info['digest'] =cutText(strip_tags($info['content']),80);
+				}
+				if(!$info['publish_time']){
+					$info['publish_time']=time();
+				}
+				
 				$info = array_merge($info,$this->addWhoHasOperated('add'));
+				
 				$newid = $this->Cms_Article_Model->_add($info);
 				$error = $this->Cms_Article_Class_Model->getError();
 				
@@ -606,6 +614,7 @@ class Cms_Article extends Ydzj_Admin_Controller {
 				}
 				
 				$info = array_merge($info,$this->addWhoHasOperated('edit'));
+			
 				$info['publish_time'] = strtotime($info['publish_time']);
 				$this->Cms_Article_Model->update($info,array('id' => $id));
 				

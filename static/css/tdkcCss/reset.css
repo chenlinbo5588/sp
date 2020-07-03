@@ -17,7 +17,6 @@ a:hover {text-decoration:none; transition:box-shadow .3s, border .3s, background
 a:active,a:visited{text-decoration:none;}
 a:not([href]):not([tabindex]):focus, a:not([href]):not([tabindex]):hover{}
 
-
 h1 { font-size:16px; line-height:36px;}
 h2 { font-size:14px; line-height:30px;}
 h3 { line-height:24px;}

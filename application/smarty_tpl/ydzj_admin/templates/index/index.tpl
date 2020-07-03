@@ -303,7 +303,7 @@ $(function(){
 	          <!-- Top navigation -->
 	          <div id="topnav" class="top-nav">
 	            <ul>
-	              <li class="adminid" title="您好:{$manage_profile['basic']['username']|escape}">您好&nbsp;:&nbsp;<strong>{$manage_profile['basic']['username']|escape}【{$manage_profile['basic']['group_name']|escape}】</strong></li>
+	              <li class="adminid" title="您好:{$manage_profile['basic']['username']|escape}">您好&nbsp;:&nbsp;<strong>{$manage_profile['basic']['username']|escape}</strong></li>
 	              <li><a href="{admin_site_url('my/profile')}" target="workspace" ><span>修改密码</span></a></li>
 	              <li><a href="{admin_site_url('pm/unread')}" target="workspace" ><span>消息中心</span></a></li>
 	              <li><a href="{admin_site_url('my/logout')}" title="退出"><span>退出</span></a></li>
