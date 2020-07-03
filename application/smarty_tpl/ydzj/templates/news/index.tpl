@@ -330,7 +330,7 @@
    	  	{foreach from=$info key=key item=item}
 	   	 	<div class="box czjz display dianji" style="width:100%; margin-top:30px; {if $item['isNotDisplay']}display:none{/if} " id="news" onclick="window.open('{base_url('index.php/news/detail?id=')}{$item['id']}','_self')">
 			   		<div class="boxh " style="width:100%;">
-					 	<image src="{base_url($item['image_url'])}" class="imgbox"></image>
+					 	<image src="{base_url($item['image_url'])}" onerror="this.src='{base_url('static/img/defult.jpg')}'" class="imgbox"></image>
 					 	<div class="box " style="padding-left:30px; width:60%;">
 					 		<div class="title">{$item['article_title']}</div>
 					 		<div class="duan content">{$item['digest']}</div>

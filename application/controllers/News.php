@@ -28,6 +28,9 @@ class News extends Ydzj_Controller {
 			$condition = array(
 				'where' => array(
 					'article_state'=>CmsArticleStatus::$published,
+					//新闻分类
+					'ac_id' =>14,
+					
 				),
 				'order' => 'id DESC',
 				'like'  => array(
@@ -43,6 +46,7 @@ class News extends Ydzj_Controller {
 					'order' => 'id DESC',
 					'where' => array(
 						'article_state'=>CmsArticleStatus::$published,
+						'ac_id' =>14,
 					)
 				);
 				$info = $this->Cms_Article_Model->getList($condition);
@@ -61,6 +65,7 @@ class News extends Ydzj_Controller {
 			);
 			$info = $this->Cms_Article_Model->getList($condition);
 		}
+		//新闻少于4条的时候页面下方查看更多不显示
 		if(count($info,2)<3){
 			$this->assign('isNotDisplay',"false");
 		}

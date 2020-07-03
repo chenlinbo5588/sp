@@ -23,6 +23,7 @@ class Index extends Ydzj_Controller {
 				'limit' => 4,
 				'where' => array(
 					'article_state'=>CmsArticleStatus::$published,
+					'ac_id' =>14,
 				)
 			);
 		$info = $this->Cms_Article_Model->getList($condition);
