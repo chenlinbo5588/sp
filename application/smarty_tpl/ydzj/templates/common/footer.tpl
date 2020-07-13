@@ -6,8 +6,8 @@
        <ul class="w-company-info iconStyle2"> 
         <li class="company-info-item"> <a href="javascript:void(0)"> <span class="company-info-icon "> <i class="ltd-icon gs-gongsi"></i> </span><span class="company-text"><span class="company-info-title" style="white-space:pre"></span><span class="company-info-text">慈溪市土地勘测规划设计研究院有限公司</span> </span> </a> </li> 
         <li class="company-info-item"> <a href="javascript:void(0)"> <span class="company-info-icon "> <i class="ltd-icon gs-dizhi"></i> </span><span class="company-text"><span class="company-info-title" style="white-space:pre"></span><span class="company-info-text">慈溪市浒山街道孙塘南路98号</span> </span> </a> </li> 
-        <li class="company-info-item"> <a href="tel:0574-82359787"> <span class="company-info-icon "> <i class="ltd-icon gs-dianhua"></i> </span><span class="company-text"><span class="company-info-title" style="white-space:pre"></span><span class="company-info-text">0574-63112003</span> </span> </a> </li> 
-        <li class="company-info-item"> <a href="mailto:name@example.xxx"> <span class="company-info-icon "> <i class="ltd-icon gs-youxiang"></i> </span><span class="company-text"><span class="company-info-title" style="white-space:pre"></span><span class="company-info-text">sale@cxtdkc.com</span> </span> </a> </li> 
+        <li class="company-info-item"> <a href="tel:0574-63112012"> <span class="company-info-icon "> <i class="ltd-icon gs-dianhua"></i> </span><span class="company-text"><span class="company-info-title" style="white-space:pre"></span><span class="company-info-text">0574-63112012</span> </span> </a> </li> 
+        <li class="company-info-item"> <a href="905918166@qq.com"> <span class="company-info-icon "> <i class="ltd-icon gs-youxiang"></i> </span><span class="company-text"><span class="company-info-title" style="white-space:pre"></span><span class="company-info-text">905918166@qq.com</span> </span> </a> </li> 
        </ul>
       </div>
      </div>

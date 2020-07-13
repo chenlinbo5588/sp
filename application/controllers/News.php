@@ -61,6 +61,7 @@ class News extends Ydzj_Controller {
 				'order' => 'id DESC',
 				'where' => array(
 					'article_state'=>CmsArticleStatus::$published,
+					'ac_id' =>14,
 				)
 			);
 			$info = $this->Cms_Article_Model->getList($condition);
@@ -101,6 +102,7 @@ class News extends Ydzj_Controller {
 			'where' => array(
 				'id' => $id,
 				'article_state'=>CmsArticleStatus::$published,
+				'ac_id' =>14,
 			)
 		));
 		if(!$info){
@@ -117,6 +119,7 @@ class News extends Ydzj_Controller {
 				'limit' => 10,
 				'where' => array(
 					'article_state'=>CmsArticleStatus::$published,
+					'ac_id' =>14,
 				)
 			);
 			$news = $this->Cms_Article_Model->getList($condition);
