@@ -4,18 +4,18 @@
      <div id="smv_tem_5_24" ctype="companyinfo" class="esmartMargin smartAbs " cpid="459647" cstyle="Style1" ccolor="Item0" areaid="Area3" iscontainer="False" pvid="" tareaid="Area3" re-direction="all" daxis="All" isdeletable="True" style="height: 150px; width: 510px; left: 424px; top: 168px;z-index:2;">
       <div class="yibuFrameContent tem_5_24  companyinfo_Style1  " style="overflow:hidden;;">
        <ul class="w-company-info iconStyle2"> 
-        <li class="company-info-item"> <a href="javascript:void(0)"> <span class="company-info-icon "> <i class="ltd-icon gs-gongsi"></i> </span><span class="company-text"><span class="company-info-title" style="white-space:pre"></span><span class="company-info-text">慈溪市土地勘测规划设计研究院有限公司</span> </span> </a> </li> 
-        <li class="company-info-item"> <a href="javascript:void(0)"> <span class="company-info-icon "> <i class="ltd-icon gs-dizhi"></i> </span><span class="company-text"><span class="company-info-title" style="white-space:pre"></span><span class="company-info-text">慈溪市浒山街道孙塘南路98号</span> </span> </a> </li> 
-        <li class="company-info-item"> <a href="tel:0574-63112012"> <span class="company-info-icon "> <i class="ltd-icon gs-dianhua"></i> </span><span class="company-text"><span class="company-info-title" style="white-space:pre"></span><span class="company-info-text">0574-63112012</span> </span> </a> </li> 
-        <li class="company-info-item"> <a href="905918166@qq.com"> <span class="company-info-icon "> <i class="ltd-icon gs-youxiang"></i> </span><span class="company-text"><span class="company-info-title" style="white-space:pre"></span><span class="company-info-text">905918166@qq.com</span> </span> </a> </li> 
+        <li class="company-info-item"> <a href="javascript:void(0)"> <span class="company-info-icon "> <i class="ltd-icon gs-gongsi"></i> </span><span class="company-text"><span class="company-info-title" style="white-space:pre"></span><span class="company-info-text">{$siteSetting['site_name']|escape}</span> </span> </a> </li> 
+        <li class="company-info-item"> <a href="javascript:void(0)"> <span class="company-info-icon "> <i class="ltd-icon gs-dizhi"></i> </span><span class="company-text"><span class="company-info-title" style="white-space:pre"></span><span class="company-info-text">{$siteSetting['company_address']|escape}</span> </span> </a> </li> 
+        <li class="company-info-item"> <a href="tel:0574-82359787"> <span class="company-info-icon "> <i class="ltd-icon gs-dianhua"></i> </span><span class="company-text"><span class="company-info-title" style="white-space:pre"></span><span class="company-info-text">{$siteSetting['site_tel']|escape}</span> </span> </a> </li> 
+        <li class="company-info-item"> <a href="mailto:name@example.xxx"> <span class="company-info-icon "> <i class="ltd-icon gs-youxiang"></i> </span><span class="company-text"><span class="company-info-title" style="white-space:pre"></span><span class="company-info-text">{$siteSetting['site_email']|escape}</span> </span> </a> </li> 
        </ul>
       </div>
      </div>
      <div id="smv_tem_6_29" ctype="companyinfo" class="esmartMargin smartAbs " cpid="459647" cstyle="Style4" ccolor="Item0" areaid="Area3" iscontainer="False" pvid="" tareaid="Area3" re-direction="all" daxis="All" isdeletable="True" style="height: 45px; width: 500px; left: 483px; top: 343px;z-index:3;">
       <div class="yibuFrameContent tem_6_29  companyinfo_Style4  " style="overflow:hidden;;">
        <div class="w-company-info iconStyle1"> 
-        <span class="company-info-item"> <a href="javascript:void(0)"> <span class="icon company-info-icon    mw-icon-hide "> <i class="ltd-icon gs-gongsi"></i> </span> <span class="company-info-title" style="white-space:pre">版权所有：</span> <span class="company-info-text">慈溪土地勘测规划设计研究院有限公司</span> </a> </span> 
-        <span class="company-info-item"> <a href="http://www.beian.miit.gov.cn" target="_blank"> <span class="icon company-info-icon    mw-icon-hide "> <i class="ltd-icon gs-beian"></i> </span> <span class="company-info-title" style="white-space:pre">备案号</span> <span class="company-info-text">浙ICP备11018646号</span> </a> </span> 
+        <span class="company-info-item"> <a href="javascript:void(0)"> <span class="icon company-info-icon    mw-icon-hide "> <i class="ltd-icon gs-gongsi"></i> </span> <span class="company-info-title" style="white-space:pre">版权所有：</span> <span class="company-info-text">{$siteSetting['site_name']|escape}</span> </a> </span> 
+        <span class="company-info-item"> <a href="https://beian.miit.gov.cn/" target="_blank"> <span class="icon company-info-icon    mw-icon-hide "> <i class="ltd-icon gs-beian"></i> </span> <span class="company-info-title" style="white-space:pre">备案号</span> <span class="company-info-text">{$siteSetting['icp_number']|escape}</span> </a> </span> 
        </div>
       </div>
      </div>

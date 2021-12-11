@@ -47,7 +47,7 @@ class MY_Controller extends CI_Controller {
 		
 		$this->_initSiteSetting();
 		$this->_initSeoSetting();
-		
+
 		$this->smartyConfig();
 	}
 	
@@ -124,9 +124,7 @@ class MY_Controller extends CI_Controller {
     
     private function _initMobile(){
     	//print_r($this->agent);
-    	
-    	
-    	$this->assign('isMobile',$this->agent->is_mobile());
+//    	$this->assign('isMobile',$this->agent->is_mobile());
     }
     
     private function _initApp(){
@@ -350,9 +348,9 @@ class MY_Controller extends CI_Controller {
 			if($this->input->is_ajax_request()){
 	    		$viewname = $viewname.'_ajax';
 	    	}else{
-	    		if($this->agent->is_mobile()){
-	    			$viewname = $viewname . '_mobile';
-	    		}
+//	    		if($this->agent->is_mobile()){
+//	    			$viewname = $viewname . '_mobile';
+//	    		}
 	    	}
 	    	
 	    	$realPath = $tplDirItem.$viewname.'.tpl';
