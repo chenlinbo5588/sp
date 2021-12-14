@@ -10,12 +10,12 @@ static/js/arcgis_js_api/
 static/js/arcgis_js_api
 static/js/arcgis_js_api.lnk
 /js/arcgis_js_api/
-
+.idea/
 license.txt
 composer.json
 contributing.md
 readme.rst
-
+cswyphp.iml
 /application/cache/*
 !/application/cache/index.html
 !/application/cache/.htaccess

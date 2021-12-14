@@ -1118,10 +1118,10 @@
          </div>
         </div>
         <div id="smv_con_413_32" ctype="banner" class="esmartMargin smartAbs " cpid="459757" cstyle="Style1" ccolor="Item0" areaid="" iscontainer="True" pvid="" tareaid="" re-direction="y" daxis="Y" isdeletable="True" style="height: 1018px; width: 100%; left: 0px; top: 0px;z-index:2;">
-         <div class="yibuFrameContent con_413_32  banner_Style1  " style="overflow:visible;;">
+         <div class="yibuFrameContent con_413_32  banner_Style1  " style="overflow:visible;">
           <div class="fullcolumn-inner smAreaC" id="smc_Area0" cid="con_413_32" style="width:1200px"> 
           </div> 
-          <div id="bannerWrap_con_413_32" class="fullcolumn-outer" style="position: absolute; top: 0; bottom: 0;"> 
+          <div id="bannerWrap_con_413_32" class="fullcolumn-outer" style="position: absolute; top: 0; bottom: 0;right:0;left:0; background-size:100% 100%;">
           </div> 
           <script type="text/javascript">
 
