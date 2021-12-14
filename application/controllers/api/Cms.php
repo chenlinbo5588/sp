@@ -105,18 +105,26 @@ class Cms extends Wx_Tdkc_Controller {
 	public function getCertificate(){
 		$address = array('资质证书' => array(
 			'url' =>array(
-				'https://www.cxmap.net/static/img/zzry/zczs.jpg', 
-			    'https://www.cxmap.net/static/img/zzry/chzzzsfb.jpg', 
-			    'https://www.cxmap.net/static/img/zzry/yyzzfb.jpg', 
-			    'https://www.cxmap.net/static/img/zzry/yyzz.jpg', 
-			    'https://www.cxmap.net/static/img/zzry/chzzzs.jpg',
-			) 
+				'https://www.cxmap.net/static/img/tdkcImg/zzzs/营业执照.jpg',
+				'https://www.cxmap.net/static/img/tdkcImg/zzzs/土地勘测机构注册证书.jpg',
+				'https://www.cxmap.net/static/img/tdkcImg/zzzs/土地规划机构等级证书.jpg',
+				'https://www.cxmap.net/static/img/tdkcImg/zzzs/林业调查资质.jpg',
+				'https://www.cxmap.net/static/img/tdkcImg/zzzs/测绘资质证书.jpg',
+				'https://www.cxmap.net/static/img/tdkcImg/zzzs/不动产调查登记证书.jpg',
+				'https://www.cxmap.net/static/img/tdkcImg/zzzs/备案证书.jpg',
+			)
 		),'荣誉证书' => array(
 			'url' => array(
-				'https://www.cxmap.net/static/img/zzry/hedaozhilijinjiang.png', 
-			    'https://www.cxmap.net/static/img/zzry/tianyuwantongjiang.png', 
-			    'https://www.cxmap.net/static/img/zzry/zuijuhuoliqiyezhengshu.png', 
-			) 
+                'https://www.cxmap.net/static/img/tdkcImg/ryzs/2021信息产业优秀工程.jpg',
+                'https://www.cxmap.net/static/img/tdkcImg/zzzs/2020优秀测绘与地理信息工程银奖.jpg',
+                'https://www.cxmap.net/static/img/tdkcImg/zzzs/2020年优秀测绘地理信息工程.jpg',
+                'https://www.cxmap.net/static/img/tdkcImg/zzzs/2020地理信息产业优秀工程金奖.jpg',
+                'https://www.cxmap.net/static/img/tdkcImg/zzzs/2018优秀测绘地理信息工程铜奖.jpg',
+                'https://www.cxmap.net/static/img/tdkcImg/zzzs/2016年地理信息工程铜奖.jpg',
+                'https://www.cxmap.net/static/img/tdkcImg/zzzs/2015年地理信息工程金奖.jpg',
+                'https://www.cxmap.net/static/img/tdkcImg/zzzs/2014年地理信息工程二等奖.jpg',
+                'https://www.cxmap.net/static/img/tdkcImg/zzzs/2013年地理信息工程二等奖.jpg',
+			)
 		));
 		$this->jsonOutput2(RESP_SUCCESS,array('imageurlList' => $address));
 	}
