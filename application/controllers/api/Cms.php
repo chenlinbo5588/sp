@@ -116,14 +116,14 @@ class Cms extends Wx_Tdkc_Controller {
 		),'荣誉证书' => array(
 			'url' => array(
                 'https://www.cxmap.net/static/img/tdkcImg/ryzs/2021信息产业优秀工程.jpg',
-                'https://www.cxmap.net/static/img/tdkcImg/zzzs/2020优秀测绘与地理信息工程银奖.jpg',
-                'https://www.cxmap.net/static/img/tdkcImg/zzzs/2020年优秀测绘地理信息工程.jpg',
-                'https://www.cxmap.net/static/img/tdkcImg/zzzs/2020地理信息产业优秀工程金奖.jpg',
-                'https://www.cxmap.net/static/img/tdkcImg/zzzs/2018优秀测绘地理信息工程铜奖.jpg',
-                'https://www.cxmap.net/static/img/tdkcImg/zzzs/2016年地理信息工程铜奖.jpg',
-                'https://www.cxmap.net/static/img/tdkcImg/zzzs/2015年地理信息工程金奖.jpg',
-                'https://www.cxmap.net/static/img/tdkcImg/zzzs/2014年地理信息工程二等奖.jpg',
-                'https://www.cxmap.net/static/img/tdkcImg/zzzs/2013年地理信息工程二等奖.jpg',
+                'https://www.cxmap.net/static/img/tdkcImg/ryzs/2020优秀测绘与地理信息工程银奖.jpg',
+                'https://www.cxmap.net/static/img/tdkcImg/ryzs/2020年优秀测绘地理信息工程.jpg',
+                'https://www.cxmap.net/static/img/tdkcImg/ryzs/2020地理信息产业优秀工程金奖.jpg',
+                'https://www.cxmap.net/static/img/tdkcImg/ryzs/2018优秀测绘地理信息工程铜奖.jpg',
+                'https://www.cxmap.net/static/img/tdkcImg/ryzs/2016年地理信息工程铜奖.jpg',
+                'https://www.cxmap.net/static/img/tdkcImg/ryzs/2015年地理信息工程金奖.jpg',
+                'https://www.cxmap.net/static/img/tdkcImg/ryzs/2014年地理信息工程二等奖.jpg',
+                'https://www.cxmap.net/static/img/tdkcImg/ryzs/2013年地理信息工程二等奖.jpg',
 			)
 		));
 		$this->jsonOutput2(RESP_SUCCESS,array('imageurlList' => $address));
