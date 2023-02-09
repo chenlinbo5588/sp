@@ -1,9 +1,9 @@
 {include file="common/header.tpl"}
   <script type="text/javascript" id="SuperSlide" src="{resource_url('js/tdkcJs/jquery.SuperSlide.2.1.1.js')}"></script>
-  <script type="text/javascript" id="jqPaginator" src="{resource_url('js/tdkcJs/jqPaginator.min.js')}"></script>
+<link href="{resource_url('css/viewer.css')}" rel="stylesheet">
+<script src="{resource_url('js/viewer.js')}"></script>
   <link href="{resource_url('css/tdkcCss/461159_Pc_zh-CN.css')}" rel="stylesheet">
-  <link href="{resource_url('css/tdkcCss/view.css')}" rel="stylesheet" type="text/css" />
-
+  
   <input type="hidden" id="pageinfo" value="461159" data-type="1" data-device="Pc" data-entityid="461159" />
   <input id="txtDeviceSwitchEnabled" value="show" type="hidden" />
   <input type="hidden" id="secUrl" data-host="c1797065108ffy.scd.wezhan.cn" data-pathname="/ryzztk" data-search="" data-hash="" />
@@ -123,7 +123,7 @@
      <div style="display: none">
      </div>
      <div class="" id="smv_MainContent" rel="mainContentWrapper" style="width: 100%; min-height: 300px; position: relative; ">
-      <div class="smvWrapper" style="min-width:1120px; height:2020px; position: relative; background-color: rgb(250, 250, 250); background-image: none; background-repeat: no-repeat; background:-moz-linear-gradient(top, none, none);background:-webkit-gradient(linear, left top, left bottom, from(none), to(none));background:-o-linear-gradient(top, none, none);background:-ms-linear-gradient(top, none, none);background:linear-gradient(top, none, none);;background-position:0 0;background-size:auto;" bgscroll="none">
+      <div class="smvWrapper" style="min-width:1120px; height:3020px; position: relative; background-color: rgb(250, 250, 250); background-image: none; background-repeat: no-repeat; background:-moz-linear-gradient(top, none, none);background:-webkit-gradient(linear, left top, left bottom, from(none), to(none));background:-o-linear-gradient(top, none, none);background:-ms-linear-gradient(top, none, none);background:linear-gradient(top, none, none);;background-position:0 0;background-size:auto;" bgscroll="none">
        <div class="smvContainer" id="smv_Main" cpid="461159" style="min-height:400px;width:1120px;height:1300px;  position: relative; ">
 
         <div id="smv_con_47_46" ctype="text" class="esmartMargin smartAbs " cpid="461159" cstyle="Style1" ccolor="Item0" areaid="" iscontainer="False" pvid="" tareaid="" re-direction="all" daxis="All" isdeletable="True" style="height: 38px; width: 123px; left: 479px; top: 46px;z-index:10;">
@@ -144,69 +144,58 @@
             <ul class="w-imglist-ul" id="ulList_con_57_20">
              <li class="w-imglist-item">
               <div class="w-imglist-in">
-               <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/ryzs/2021信息产业优秀工程.jpg')}" alt="zuijuhuoliqiyezhengshu" title="2021信息产业优秀工程" init="ok" style="width: auto; height: 240px; margin-left: -5px;" /> </a>
+               <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/ryzs/2021年 慈溪市水域资源调查.jpg')}" alt="zuijuhuoliqiyezhengshu" title="2021年 慈溪市水域资源调查" init="ok" style="width: auto; height: 240px; margin-left: -5px;" /> </a>
                <div class="w-imglist-title-bg"></div>
-               <a class="w-imglist-title">2021信息产业优秀工程</a>
+               <a class="w-imglist-title">2021年 慈溪市水域资源调查</a>
               </div>
               <div class="w-imglist-bigimg" style="z-index: 78">
-               <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/ryzs/2021信息产业优秀工程.jpg')}" alt="zuijuhuoliqiyezhengshu" title="2021信息产业优秀工程" init="ok" style="width: auto; height: 336px; margin-left: -7.5px;" /> </a>
+               <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/ryzs/2021年 慈溪市水域资源调查.jpg')}" alt="zuijuhuoliqiyezhengshu" title="2021年 慈溪市水域资源调查" init="ok" style="width: auto; height: 336px; margin-left: -7.5px;" /> </a>
                <div class="w-imglist-title-bg"></div>
-               <a class="w-imglist-title">2021信息产业优秀工程</a>
+               <a class="w-imglist-title">2021年 慈溪市水域资源调查</a>
               </div></li>
                 <li class="w-imglist-item">
                     <div class="w-imglist-in">
-                        <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/ryzs/2020年优秀测绘地理信息工程.jpg')}" alt="zuijuhuoliqiyezhengshu" title="2020年优秀测绘地理信息工程" init="ok" style="width: auto; height: 240px; margin-left: -5px;" /> </a>
+                        <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/ryzs/2020年 慈溪市水利四等水准网布设.jpg')}" alt="zuijuhuoliqiyezhengshu" title="2020年 慈溪市水利四等水准网布设" init="ok" style="width: auto; height: 240px; margin-left: -5px;" /> </a>
                         <div class="w-imglist-title-bg"></div>
-                        <a class="w-imglist-title">2020年优秀测绘地理信息工程</a>
+                        <a class="w-imglist-title">2020年 慈溪市水利四等水准网布设</a>
                     </div>
                     <div class="w-imglist-bigimg" style="z-index: 78">
-                        <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/ryzs/2020年优秀测绘地理信息工程.jpg')}" alt="zuijuhuoliqiyezhengshu" title="2020年优秀测绘地理信息工程" init="ok" style="width: auto; height: 336px; margin-left: -7.5px;" /> </a>
+                        <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/ryzs/2020年 慈溪市水利四等水准网布设.jpg')}" alt="zuijuhuoliqiyezhengshu" title="2020年 慈溪市水利四等水准网布设" init="ok" style="width: auto; height: 336px; margin-left: -7.5px;" /> </a>
                         <div class="w-imglist-title-bg"></div>
-                        <a class="w-imglist-title">2020年优秀测绘地理信息工程</a>
+                        <a class="w-imglist-title">2020年 慈溪市水利四等水准网布设</a>
                     </div></li>
                 <li class="w-imglist-item">
                     <div class="w-imglist-in">
-                        <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/ryzs/2020优秀测绘与地理信息工程银奖.jpg')}" alt="zuijuhuoliqiyezhengshu" title="2020优秀测绘与地理信息工程银奖" init="ok" style="width: auto; height: 240px; margin-left: -5px;" /> </a>
+                        <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/ryzs/2020年 慈溪市农村土地承包经营权确权登记领证采购项目.jpg')}" alt="zuijuhuoliqiyezhengshu" title="2020年 慈溪市农村土地承包经营权确权登记领证采购项目" init="ok" style="width: auto; height: 240px; margin-left: -5px;" /> </a>
                         <div class="w-imglist-title-bg"></div>
-                        <a class="w-imglist-title">2020优秀测绘与地理信息工程银奖</a>
+                        <a class="w-imglist-title">2020年 慈溪市农村土地承包经营权确权登记领证采购项目</a>
                     </div>
                     <div class="w-imglist-bigimg" style="z-index: 78">
-                        <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/ryzs/2020优秀测绘与地理信息工程银奖.jpg')}" alt="zuijuhuoliqiyezhengshu" title="2020优秀测绘与地理信息工程银奖" init="ok" style="width: auto; height: 336px; margin-left: -7.5px;" /> </a>
+                        <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/ryzs/2020年 慈溪市农村土地承包经营权确权登记领证采购项目.jpg')}" alt="zuijuhuoliqiyezhengshu" title="2020年 慈溪市农村土地承包经营权确权登记领证采购项目" init="ok" style="width: auto; height: 336px; margin-left: -7.5px;" /> </a>
                         <div class="w-imglist-title-bg"></div>
-                        <a class="w-imglist-title">2020优秀测绘与地理信息工程银奖</a>
+                        <a class="w-imglist-title">2020年 慈溪市农村土地承包经营权确权登记领证采购项目</a>
                     </div></li>
                 <li class="w-imglist-item">
                     <div class="w-imglist-in">
-                        <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/ryzs/2020地理信息产业优秀工程金奖.jpg')}" alt="zuijuhuoliqiyezhengshu" title="2020地理信息产业优秀工程金奖" init="ok" style="width: auto; height: 240px; margin-left: -5px;" /> </a>
+                        <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/ryzs/2020年 慈溪市存量建筑管控平台.jpg')}" alt="zuijuhuoliqiyezhengshu" title="2020年 慈溪市存量建筑管控平台" init="ok" style="width: auto; height: 240px; margin-left: -5px;" /> </a>
                         <div class="w-imglist-title-bg"></div>
-                        <a class="w-imglist-title">2020地理信息产业优秀工程金奖</a>
+                        <a class="w-imglist-title">2020年 慈溪市存量建筑管控平台</a>
                     </div>
                     <div class="w-imglist-bigimg" style="z-index: 78">
-                        <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/ryzs/2020地理信息产业优秀工程金奖.jpg')}" alt="zuijuhuoliqiyezhengshu" title="2020地理信息产业优秀工程金奖" init="ok" style="width: auto; height: 336px; margin-left: -7.5px;" /> </a>
+                        <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/ryzs/2020年 慈溪市存量建筑管控平台.jpg')}" alt="zuijuhuoliqiyezhengshu" title="2020年 慈溪市存量建筑管控平台" init="ok" style="width: auto; height: 336px; margin-left: -7.5px;" /> </a>
                         <div class="w-imglist-title-bg"></div>
-                        <a class="w-imglist-title">2020地理信息产业优秀工程金奖</a>
+                        <a class="w-imglist-title">2020年 慈溪市存量建筑管控平台</a>
                     </div></li>
-{*                <li class="w-imglist-item">*}
-{*                    <div class="w-imglist-in">*}
-{*                        <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/ryzs/2019优秀测绘地理信息工程银奖.jpg')}" alt="zuijuhuoliqiyezhengshu" title="2019优秀测绘地理信息工程银奖" init="ok" style="width: auto; height: 240px; margin-left: -5px;" /> </a>*}
-{*                        <div class="w-imglist-title-bg"></div>*}
-{*                        <a class="w-imglist-title">2019优秀测绘地理信息工程银奖</a>*}
-{*                    </div>*}
-{*                    <div class="w-imglist-bigimg" style="z-index: 78">*}
-{*                        <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/ryzs/2019优秀测绘地理信息工程银奖.jpg')}" alt="zuijuhuoliqiyezhengshu" title="2019优秀测绘地理信息工程银奖" init="ok" style="width: auto; height: 336px; margin-left: -7.5px;" /> </a>*}
-{*                        <div class="w-imglist-title-bg"></div>*}
-{*                        <a class="w-imglist-title">2019优秀测绘地理信息工程银奖</a>*}
-{*                    </div></li>*}
                 <li class="w-imglist-item">
                     <div class="w-imglist-in">
-                        <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/ryzs/2018优秀测绘地理信息工程铜奖.jpg')}" alt="zuijuhuoliqiyezhengshu" title="2018优秀测绘地理信息工程铜奖" init="ok" style="width: auto; height: 240px; margin-left: -5px;" /> </a>
+                        <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/ryzs/2019年 浙江慈溪滨海经济开发区地籍测绘和地形测绘采购项目.jpg')}" alt="zuijuhuoliqiyezhengshu" title="2019年 浙江慈溪滨海经济开发区地籍测绘和地形测绘采购项目" init="ok" style="width: auto; height: 240px; margin-left: -5px;" /> </a>
                         <div class="w-imglist-title-bg"></div>
-                        <a class="w-imglist-title">2018优秀测绘地理信息工程铜奖</a>
+                        <a class="w-imglist-title">2019年 浙江慈溪滨海经济开发区地籍测绘和地形测绘采购项目</a>
                     </div>
                     <div class="w-imglist-bigimg" style="z-index: 78">
-                        <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/ryzs/2018优秀测绘地理信息工程铜奖.jpg')}" alt="zuijuhuoliqiyezhengshu" title="2018优秀测绘地理信息工程铜奖" init="ok" style="width: auto; height: 336px; margin-left: -7.5px;" /> </a>
+                        <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/ryzs/2019年 浙江慈溪滨海经济开发区地籍测绘和地形测绘采购项目.jpg')}" alt="zuijuhuoliqiyezhengshu" title="2019年 浙江慈溪滨海经济开发区地籍测绘和地形测绘采购项目" init="ok" style="width: auto; height: 336px; margin-left: -7.5px;" /> </a>
                         <div class="w-imglist-title-bg"></div>
-                        <a class="w-imglist-title">2018优秀测绘地理信息工程铜奖</a>
+                        <a class="w-imglist-title">2019年 浙江慈溪滨海经济开发区地籍测绘和地形测绘采购项目</a>
                     </div></li>
 {*             <li class="w-imglist-item">*}
 {*              <div class="w-imglist-in">*}
@@ -232,27 +221,27 @@
 {*              </div></li>*}
             <li class="w-imglist-item">
                 <div class="w-imglist-in">
-                    <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/ryzs/2016年地理信息工程铜奖.jpg')}" alt="tianyuwantongjiang" title="2016年地理信息工程铜奖" init="ok" style="width: auto; height: 240px; margin-left: -5px;" /> </a>
+                    <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/ryzs/2018年 慈溪市水利四等水准网布设.jpg')}" alt="tianyuwantongjiang" title="2018年 慈溪市水利四等水准网布设" init="ok" style="width: auto; height: 240px; margin-left: -5px;" /> </a>
                     <div class="w-imglist-title-bg"></div>
-                    <a class="w-imglist-title">2016年地理信息工程铜奖</a>
+                    <a class="w-imglist-title">2018年 慈溪市水利四等水准网布设</a>
                 </div>
                 <div class="w-imglist-bigimg" style="z-index: 78">
-                    <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/ryzs/2016年地理信息工程铜奖.jpg')}" alt="tianyuwantongjiang" title="2016年地理信息工程铜奖" init="ok" style="width: auto; height: 336px; margin-left: -7.5px;" /> </a>
+                    <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/ryzs/2018年 慈溪市水利四等水准网布设.jpg')}" alt="tianyuwantongjiang" title="2018年 慈溪市水利四等水准网布设" init="ok" style="width: auto; height: 336px; margin-left: -7.5px;" /> </a>
                     <div class="w-imglist-title-bg"></div>
-                    <a class="w-imglist-title">2016年地理信息工程铜奖</a>
+                    <a class="w-imglist-title">2018年 慈溪市水利四等水准网布设</a>
                 </div></li>
             <li class="w-imglist-item">
                 <div class="w-imglist-in">
-                    <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/ryzs/2015年地理信息工程金奖.jpg')}" alt="tianyuwantongjiang" title="2015年地理信息工程金奖" init="ok" style="width: auto; height: 240px; margin-left: -5px;" /> </a>
+                    <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/ryzs/2015年 慈溪河道水环境综合治理信息系统.jpg')}" alt="tianyuwantongjiang" title="2015年 慈溪河道水环境综合治理信息系统" init="ok" style="width: auto; height: 240px; margin-left: -5px;" /> </a>
                     <div class="w-imglist-title-bg"></div>
-                    <a class="w-imglist-title">2015年地理信息工程金奖</a>
+                    <a class="w-imglist-title">2015年 慈溪河道水环境综合治理信息系统</a>
                 </div>
                 <div class="w-imglist-bigimg" style="z-index: 78">
-                    <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/ryzs/2015年地理信息工程金奖.jpg')}" alt="tianyuwantongjiang" title="2015年地理信息工程金奖" init="ok" style="width: auto; height: 336px; margin-left: -7.5px;" /> </a>
+                    <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/ryzs/2015年 慈溪河道水环境综合治理信息系统.jpg')}" alt="tianyuwantongjiang" title="2015年 慈溪河道水环境综合治理信息系统" init="ok" style="width: auto; height: 336px; margin-left: -7.5px;" /> </a>
                     <div class="w-imglist-title-bg"></div>
-                    <a class="w-imglist-title">2015年地理信息工程金奖</a>
+                    <a class="w-imglist-title">2015年 慈溪河道水环境综合治理信息系统</a>
                 </div></li>
-                <li class="w-imglist-item">
+               {* <li class="w-imglist-item">
                     <div class="w-imglist-in">
                         <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/ryzs/2014年地理信息工程二等奖.jpg')}" alt="tianyuwantongjiang" title="2014年地理信息工程二等奖" init="ok" style="width: auto; height: 240px; margin-left: -5px;" /> </a>
                         <div class="w-imglist-title-bg"></div>
@@ -273,7 +262,7 @@
                         <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/ryzs/2013年地理信息工程二等奖.jpg')}" alt="tianyuwantongjiang" title="2013年地理信息工程二等奖" init="ok" style="width: auto; height: 336px; margin-left: -7.5px;" /> </a>
                         <div class="w-imglist-title-bg"></div>
                         <a class="w-imglist-title">2013年地理信息工程二等奖</a>
-                    </div></li>
+                    </div></li>*}
              <div style="clear:both;"></div>
             </ul>
            </div>
@@ -288,7 +277,7 @@
             return "<div class='w-imglist-bigimg' style='z-index: 78'>" + ht + "</div>";
         });
         $("#con_57_20_collections .w-imglist-item .w-imglist-in img").cutFill("350", "240");
-        $("#con_57_20_collections .w-imglist-item .w-imglist-bigimg img").cutFill("489.99999999999994", "336");
+        $("#con_57_20_collections .w-imglist-item .w-imglist-bigimg img").cutFill("583.33333333", "400");
     }
 
     function  con_57_20_InitImg() {
@@ -365,80 +354,102 @@
             <ul class="w-imglist-ul" id="ulList_con_56_7">
                 <li class="w-imglist-item">
                     <div class="w-imglist-in">
-                        <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/zzzs/营业执照.jpg')}" alt="yingyezhizhao" title="营业执照" init="ok" style="width: auto; height: 240px; margin-left: -5px;" /> </a>
+                        <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/zzzs/01营业执照.jpg')}" alt="yingyezhizhao" title="营业执照" init="ok" style="width: auto; height: 240px; margin-left: -5px;" /> </a>
                         <div class="w-imglist-title-bg"></div>
                         <a class="w-imglist-title">营业执照</a>
                     </div>
                     <div class="w-imglist-bigimg" style="z-index: 78">
-                        <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/zzzs/营业执照.jpg')}" alt="yingyezhizhao" title="营业执照" init="ok" style="width: auto; height: 336px; margin-left: -7.5px;" /> </a>
+                        <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/zzzs/01营业执照.jpg')}" alt="yingyezhizhao" title="营业执照" init="ok" style="width: auto; height: 336px; margin-left: -7.5px;" /> </a>
                         <div class="w-imglist-title-bg"></div>
                         <a class="w-imglist-title">营业执照</a>
                     </div></li>
                 <li class="w-imglist-item">
               <div class="w-imglist-in">
-               <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/zzzs/测绘资质证书.jpg')}" alt="yingyezhizhao" title="乙级测绘资质证书" init="ok" style="width: auto; height: 240px; margin-left: -5px;" /> </a>
+               <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/zzzs/02测绘甲级资质证书.jpg')}" alt="yingyezhizhao" title="测绘甲级资质证书" init="ok" style="width: auto; height: 240px; margin-left: -5px;" /> </a>
                <div class="w-imglist-title-bg"></div>
-               <a class="w-imglist-title">乙级测绘资质证书</a>
+               <a class="w-imglist-title">测绘甲级资质证书</a>
               </div>
               <div class="w-imglist-bigimg" style="z-index: 78">
-               <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/zzzs/测绘资质证书.jpg')}" alt="yingyezhizhao" title="乙级测绘资质证书" init="ok" style="width: auto; height: 336px; margin-left: -7.5px;" /> </a>
+               <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/zzzs/02测绘甲级资质证书.jpg')}" alt="yingyezhizhao" title="测绘甲级资质证书" init="ok" style="width: auto; height: 336px; margin-left: -7.5px;" /> </a>
                <div class="w-imglist-title-bg"></div>
-               <a class="w-imglist-title">乙级测绘资质证书</a>
+               <a class="w-imglist-title">测绘甲级资质证书</a>
               </div></li>
               <li class="w-imglist-item" style="height: 240px;">
               <div class="w-imglist-in" style="left: 0px;">
-               <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/zzzs/不动产调查登记证书.jpg')}" alt="cehuizizhi" title="浙江省不动产调查注册登记证书" init="ok" style="width: auto; height: 240px; margin-left: -5px;" /> </a>
+               <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/zzzs/03不动产调查注册登记证书.jpg')}" alt="cehuizizhi" title="不动产调查注册登记证书" init="ok" style="width: auto; height: 240px; margin-left: -5px;" /> </a>
                <div class="w-imglist-title-bg"></div>
-               <a class="w-imglist-title">浙江省不动产调查注册登记证书</a>
+               <a class="w-imglist-title">不动产调查注册登记证书</a>
               </div>
               <div class="w-imglist-bigimg" style="z-index: 78">
-               <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/zzzs/不动产调查登记证书.jpg')}" alt="cehuizizhi" title="浙江省不动产调查注册登记证书" init="ok" style="width: auto; height: 336px; margin-left: -252px; margin-top: -168px;" /> </a>
+               <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/zzzs/03不动产调查注册登记证书.jpg')}" alt="cehuizizhi" title="不动产调查注册登记证书" init="ok" style="width: auto; height: 336px; margin-left: -252px; margin-top: -168px;" /> </a>
                <div class="w-imglist-title-bg"></div>
-               <a class="w-imglist-title">浙江省不动产调查注册登记证书</a>
+               <a class="w-imglist-title">不动产调查注册登记证书</a>
               </div></li>
               <li class="w-imglist-item" style="height: 240px;">
               <div class="w-imglist-in" style="left: 0px;">
-               <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/zzzs/土地勘测机构注册证书.jpg')}" alt="kancejigou" title="土地勘测机构注册证书" init="ok" style="width: auto; height: 240px; margin-left: -5px;" /> </a>
+               <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/zzzs/04土地规划等级证书.jpg')}" alt="kancejigou" title="土地规划等级证书" init="ok" style="width: auto; height: 240px; margin-left: -5px;" /> </a>
                <div class="w-imglist-title-bg"></div>
-               <a class="w-imglist-title">土地勘测机构注册证书</a>
+               <a class="w-imglist-title">土地规划等级证书</a>
               </div>
               <div class="w-imglist-bigimg" style="z-index: 78">
-               <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/zzzs/土地勘测机构注册证书.jpg')}" alt="kancejigou" title="土地勘测机构注册证书" init="ok" style="width: auto; height: 336px; margin-left: -252px; margin-top: -168px;" /> </a>
+               <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/zzzs/04土地规划等级证书.jpg')}" alt="kancejigou" title="土地规划等级证书" init="ok" style="width: auto; height: 336px; margin-left: -252px; margin-top: -168px;" /> </a>
                <div class="w-imglist-title-bg"></div>
-               <a class="w-imglist-title">土地勘测机构注册证书</a>
+               <a class="w-imglist-title">土地规划等级证书</a>
               </div></li>
               <li class="w-imglist-item">
               <div class="w-imglist-in">
-               <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/zzzs/林业调查资质.jpg')}" alt="budongchandiaochadengjidaili" title="林业调查规划设计资质证书" init="ok" style="width: auto; height: 240px; margin-left: -5px;" /> </a>
+               <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/zzzs/04土地勘测机构证书.jpg')}" alt="budongchandiaochadengjidaili" title="土地勘测机构证书" init="ok" style="width: auto; height: 240px; margin-left: -5px;" /> </a>
+               <div class="w-imglist-title-bg"></div>
+               <a class="w-imglist-title">土地勘测机构证书</a>
+              </div>
+              <div class="w-imglist-bigimg" style="z-index: 78">
+               <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/zzzs/04土地勘测机构证书.jpg')}" alt="budongchandiaochadengjidaili" title="土地勘测机构证书" init="ok" style="width: auto; height: 336px; margin-left: -7.5px;" /> </a>
+               <div class="w-imglist-title-bg"></div>
+               <a class="w-imglist-title">土地勘测机构证书</a>
+              </div></li>
+              <li class="w-imglist-item">
+              <div class="w-imglist-in">
+               <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/zzzs/05林业调查规划设计资质证书.jpg')}" alt="dengjidaili" title="林业调查规划设计资质证书" init="ok" style="width: auto; height: 240px; margin-left: -5px;" /> </a>
                <div class="w-imglist-title-bg"></div>
                <a class="w-imglist-title">林业调查规划设计资质证书</a>
               </div>
               <div class="w-imglist-bigimg" style="z-index: 78">
-               <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/zzzs/林业调查资质.jpg')}" alt="budongchandiaochadengjidaili" title="林业调查规划设计资质证书" init="ok" style="width: auto; height: 336px; margin-left: -7.5px;" /> </a>
+               <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/zzzs/05林业调查规划设计资质证书.jpg')}" alt="dengjidaili" title="林业调查规划设计资质证书" init="ok" style="width: auto; height: 336px; margin-left: -7.5px;" /> </a>
                <div class="w-imglist-title-bg"></div>
                <a class="w-imglist-title">林业调查规划设计资质证书</a>
-              </div></li>
-              <li class="w-imglist-item">
-              <div class="w-imglist-in">
-               <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/zzzs/土地规划机构等级证书.jpg')}" alt="dengjidaili" title="土地规划机构等级证书" init="ok" style="width: auto; height: 240px; margin-left: -5px;" /> </a>
-               <div class="w-imglist-title-bg"></div>
-               <a class="w-imglist-title">土地规划机构等级证书</a>
-              </div>
-              <div class="w-imglist-bigimg" style="z-index: 78">
-               <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/zzzs/土地规划机构等级证书.jpg')}" alt="dengjidaili" title="土地规划机构等级证书" init="ok" style="width: auto; height: 336px; margin-left: -7.5px;" /> </a>
-               <div class="w-imglist-title-bg"></div>
-               <a class="w-imglist-title">土地规划机构等级证书</a>
               </div></li>
              <li class="w-imglist-item">
               <div class="w-imglist-in">
-               <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/zzzs/备案证书.jpg')}" alt="linyezizhizhengshu" title="浙江省重大决策社会风险评估机构备案证书" init="ok" style="width: auto; height: 240px; margin-left: -5px;" /> </a>
+               <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/zzzs/06风险评估机构.jpg')}" alt="linyezizhizhengshu" title="风险评估机构" init="ok" style="width: auto; height: 240px; margin-left: -5px;" /> </a>
                <div class="w-imglist-title-bg"></div>
-               <a class="w-imglist-title">备案证书</a>
+               <a class="w-imglist-title">风险评估机构</a>
               </div>
               <div class="w-imglist-bigimg" style="z-index: 78">
-               <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/zzzs/备案证书.jpg')}" alt="linyezizhizhengshu" title="浙江省重大决策社会风险评估机构备案证书" init="ok" style="width: auto; height: 336px; margin-left: -7.5px;" /> </a>
+               <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/zzzs/06风险评估机构.jpg')}" alt="linyezizhizhengshu" title="风险评估机构" init="ok" style="width: auto; height: 336px; margin-left: -7.5px;" /> </a>
                <div class="w-imglist-title-bg"></div>
-               <a class="w-imglist-title">备案证书</a>
+               <a class="w-imglist-title">风险评估机构</a>
+              </div></li>
+              <li class="w-imglist-item">
+              <div class="w-imglist-in">
+               <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/zzzs/07工商AAA证书.jpg')}" alt="linyezizhizhengshu" title="工商AAA证书" init="ok" style="width: auto; height: 240px; margin-left: -5px;" /> </a>
+               <div class="w-imglist-title-bg"></div>
+               <a class="w-imglist-title">工商AAA证书</a>
+              </div>
+              <div class="w-imglist-bigimg" style="z-index: 78">
+               <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/zzzs/07工商AAA证书.jpg')}" alt="linyezizhizhengshu" title="工商AAA证书" init="ok" style="width: auto; height: 336px; margin-left: -7.5px;" /> </a>
+               <div class="w-imglist-title-bg"></div>
+               <a class="w-imglist-title">工商AAA证书</a>
+              </div></li>
+              <li class="w-imglist-item">
+              <div class="w-imglist-in">
+               <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/zzzs/08最具活力企业证书.jpg')}" alt="linyezizhizhengshu" title="最具活力企业证书" init="ok" style="width: auto; height: 240px; margin-left: -5px;" /> </a>
+               <div class="w-imglist-title-bg"></div>
+               <a class="w-imglist-title">最具活力企业证书</a>
+              </div>
+              <div class="w-imglist-bigimg" style="z-index: 78">
+               <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/zzzs/08最具活力企业证书.jpg')}" alt="linyezizhizhengshu" title="最具活力企业证书" init="ok" style="width: auto; height: 336px; margin-left: -7.5px;" /> </a>
+               <div class="w-imglist-title-bg"></div>
+               <a class="w-imglist-title">最具活力企业证书</a>
               </div></li>
 
 
@@ -458,7 +469,7 @@
             return "<div class='w-imglist-bigimg' style='z-index: 78'>" + ht + "</div>";
         });
         $("#con_56_7_collections .w-imglist-item .w-imglist-in img").cutFill("350", "240");
-        $("#con_56_7_collections .w-imglist-item .w-imglist-bigimg img").cutFill("489.99999999999994", "336");
+        $("#con_56_7_collections .w-imglist-item .w-imglist-bigimg img").cutFill("583.33333333", "400");
     }
 
     function  con_56_7_InitImg() {
@@ -497,6 +508,177 @@
     $(function () {
         if ("Prev" != "Design") { $(".w-imglist-collections").parent().removeClass("overflow_hidden"); }
         con_56_7_InitImg();
+    });
+</script>
+         </div>
+        </div>
+        
+        <div id="smv_con_52_38" ctype="text" class="esmartMargin smartAbs " cpid="461159" cstyle="Style1" ccolor="Item0" areaid="" iscontainer="False" pvid="" tareaid="" re-direction="all" daxis="All" isdeletable="True" style="height: 38px; width: 300px; left: 392px; top: 2050px;z-index:10;">
+         <div class="yibuFrameContent con_52_38  text_Style1  " style="overflow:hidden;;">
+          <div id="txt_con_52_38" style="height: 100%;">
+           <div class="editableContent" id="txtc_con_52_38" style="height: 100%; word-wrap:break-word;">
+            <p><span style="color:#444444"><span style="font-size:30px"><span style="font-family:Tahoma,Geneva,sans-serif">专利、软件著作</span></span></span><span style="color:#444444"><span style="font-size:30px"><span style="font-family:Tahoma,Geneva,sans-serif">证书</span></span></span></p>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div id="smv_con_53_48" ctype="text" class="esmartMargin smartAbs " cpid="461159" cstyle="Style1" ccolor="Item3" areaid="" iscontainer="False" pvid="" tareaid="" re-direction="all" daxis="All" isdeletable="True" style="height: 24px; width: 300px; left: 420px; top: 2100px;z-index:5;">
+         <div class="yibuFrameContent con_53_48  text_Style1  " style="overflow:hidden;;">
+          <div id="txt_con_53_48" style="height: 100%;">
+           <div class="editableContent" id="txtc_con_53_48" style="height: 100%; word-wrap:break-word;">
+            <p><span style="color:#888888"><span style="font-family:&quot;Microsoft YaHei&quot;; font-size:14px">Patent, software works certificate</span></span></p>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div id="smv_con_76_7" ctype="altas" class="esmartMargin smartAbs " cpid="461159" cstyle="Style1" ccolor="Item0" areaid="" iscontainer="False" pvid="" tareaid="" re-direction="all" daxis="All" isdeletable="True" style="height: 513px; width: 1140px; left: -14px; top: 2180px; z-index: 1;">
+         <div class="yibuFrameContent con_56_7  altas_Style1" style="overflow:visible;;">
+          <div class="w-imglist-collections xn-resize">
+           <div id="con_76_7_collections" class="w-imglist-list">
+            <ul class="w-imglist-ul" id="ulList_con_76_7">
+                <li class="w-imglist-item">
+                    <div class="w-imglist-in">
+                        <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/zlrj/不动产入库助手软件V1.0.jpg')}" alt="yingyezhizhao" title="不动产入库助手软件V1.0" init="ok" style="width: auto; height: 240px; margin-left: -5px;" /> </a>
+                        <div class="w-imglist-title-bg"></div>
+                        <a class="w-imglist-title" >不动产入库助手软件V1.0</a>
+                    </div>
+                    <div class="w-imglist-bigimg" style="z-index: 78">
+                        <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/zlrj/不动产入库助手软件V1.0.jpg')}" alt="yingyezhizhao" title="不动产入库助手软件V1.0" init="ok" style="width: auto; height: 336px; margin-left: -7.5px;" /> </a>
+                        <div class="w-imglist-title-bg"></div>
+                        <a class="w-imglist-title">不动产入库助手软件V1.0</a>
+                    </div></li>
+                <li class="w-imglist-item">
+              <div class="w-imglist-in">
+               <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/zlrj/慈溪河道水环境综合治理系统V1.0.jpg')}" alt="yingyezhizhao" title="慈溪河道水环境综合治理系统V1.0" init="ok" style="width: auto; height: 240px; margin-left: -5px;" /> </a>
+               <div class="w-imglist-title-bg"></div>
+               <a class="w-imglist-title">慈溪河道水环境综合治理系统V1.0</a>
+              </div>
+              <div class="w-imglist-bigimg" style="z-index: 78">
+               <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/zlrj/慈溪河道水环境综合治理系统V1.0.jpg')}" alt="yingyezhizhao" title="慈溪河道水环境综合治理系统V1.0" init="ok" style="width: auto; height: 336px; margin-left: -7.5px;" /> </a>
+               <div class="w-imglist-title-bg"></div>
+               <a class="w-imglist-title">慈溪河道水环境综合治理系统V1.0</a>
+              </div></li>
+              <li class="w-imglist-item" style="height: 240px;">
+              <div class="w-imglist-in" style="left: 0px;">
+               <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/zlrj/慈溪市城建规划APP信息系统V1.0.jpg')}" alt="cehuizizhi" title="慈溪市城建规划APP信息系统V1.0" init="ok" style="width: auto; height: 240px; margin-left: -5px;" /> </a>
+               <div class="w-imglist-title-bg"></div>
+               <a class="w-imglist-title">慈溪市城建规划APP信息系统V1.0</a>
+              </div>
+              <div class="w-imglist-bigimg" style="z-index: 78">
+               <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/zlrj/慈溪市城建规划APP信息系统V1.0.jpg')}" alt="cehuizizhi" title="慈溪市城建规划APP信息系统V1.0" init="ok" style="width: auto; height: 336px; margin-left: -252px; margin-top: -168px;" /> </a>
+               <div class="w-imglist-title-bg"></div>
+               <a class="w-imglist-title">慈溪市城建规划APP信息系统V1.0</a>
+              </div></li>
+              <li class="w-imglist-item" style="height: 240px;">
+              <div class="w-imglist-in" style="left: 0px;">
+               <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/zlrj/慈溪市存量建筑管控平台V1.3.6.jpg')}" alt="kancejigou" title="慈溪市存量建筑管控平台V1.3.6" init="ok" style="width: auto; height: 240px; margin-left: -5px;" /> </a>
+               <div class="w-imglist-title-bg"></div>
+               <a class="w-imglist-title">慈溪市存量建筑管控平台V1.3.6</a>
+              </div>
+              <div class="w-imglist-bigimg" style="z-index: 78">
+               <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/zlrj/慈溪市存量建筑管控平台V1.3.6.jpg')}" alt="kancejigou" title="慈溪市存量建筑管控平台V1.3.6" init="ok" style="width: auto; height: 336px; margin-left: -252px; margin-top: -168px;" /> </a>
+               <div class="w-imglist-title-bg"></div>
+               <a class="w-imglist-title">慈溪市存量建筑管控平台V1.3.6</a>
+              </div></li>
+              <li class="w-imglist-item">
+              <div class="w-imglist-in">
+               <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/zlrj/慈溪市土地勘测规划设计有限公司协同办公系统V4.1.4.jpg')}" alt="budongchandiaochadengjidaili" title="慈溪市土地勘测规划设计有限公司协同办公系统V4.1.4" init="ok" style="width: auto; height: 240px; margin-left: -5px;" /> </a>
+               <div class="w-imglist-title-bg"></div>
+               <a class="w-imglist-title">慈溪市土地勘测规划设计有限公司协同办公系统V4.1.4</a>
+              </div>
+              <div class="w-imglist-bigimg" style="z-index: 78">
+               <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/zlrj/慈溪市土地勘测规划设计有限公司协同办公系统V4.1.4.jpg')}" alt="budongchandiaochadengjidaili" title="慈溪市土地勘测规划设计有限公司协同办公系统V4.1.4" init="ok" style="width: auto; height: 336px; margin-left: -7.5px;" /> </a>
+               <div class="w-imglist-title-bg"></div>
+               <a class="w-imglist-title">慈溪市土地勘测规划设计有限公司协同办公系统V4.1.4</a>
+              </div></li>
+              <li class="w-imglist-item">
+              <div class="w-imglist-in">
+               <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/zlrj/防汛一体化专题综合管理系统V2.0.jpg')}" alt="dengjidaili" title="防汛一体化专题综合管理系统V2.0" init="ok" style="width: auto; height: 240px; margin-left: -5px;" /> </a>
+               <div class="w-imglist-title-bg"></div>
+               <a class="w-imglist-title">防汛一体化专题综合管理系统V2.0</a>
+              </div>
+              <div class="w-imglist-bigimg" style="z-index: 78">
+               <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/zlrj/防汛一体化专题综合管理系统V2.0.jpg')}" alt="dengjidaili" title="防汛一体化专题综合管理系统V2.0" init="ok" style="width: auto; height: 336px; margin-left: -7.5px;" /> </a>
+               <div class="w-imglist-title-bg"></div>
+               <a class="w-imglist-title">防汛一体化专题综合管理系统V2.0</a>
+              </div></li>
+             <li class="w-imglist-item">
+              <div class="w-imglist-in">
+               <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/zlrj/盛元城市物业智能服务管理平台V2.0.jpeg')}" alt="linyezizhizhengshu" title="盛元城市物业智能服务管理平台V2.0" init="ok" style="width: auto; height: 240px; margin-left: -5px;" /> </a>
+               <div class="w-imglist-title-bg"></div>
+               <a class="w-imglist-title">盛元城市物业智能服务管理平台V2.0</a>
+              </div>
+              <div class="w-imglist-bigimg" style="z-index: 78">
+               <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/zlrj/盛元城市物业智能服务管理平台V2.0.jpeg')}" alt="linyezizhizhengshu" title="盛元城市物业智能服务管理平台V2.0" init="ok" style="width: auto; height: 336px; margin-left: -7.5px;" /> </a>
+               <div class="w-imglist-title-bg"></div>
+               <a class="w-imglist-title">盛元城市物业智能服务管理平台V2.0</a>
+              </div></li>
+              <li class="w-imglist-item">
+              <div class="w-imglist-in">
+               <a target="_self" class="w-imglist-img"> <img class="lazyload CutFill" src="{resource_url('img/tdkcImg/zlrj/用地管理系统V1.0.jpg')}" alt="linyezizhizhengshu" title="用地管理系统V1.0" init="ok" style="width: auto; height: 240px; margin-left: -5px;" /> </a>
+               <div class="w-imglist-title-bg"></div>
+               <a class="w-imglist-title">用地管理系统V1.0</a>
+              </div>
+              <div class="w-imglist-bigimg" style="z-index: 78">
+               <a target="_self" class="w-imglist-img"> <img id= "aaa" class="lazyload CutFill" data-original="{resource_url('img/tdkcImg/zlrj/用地管理系统V1.0.jpg')}" src="{resource_url('img/tdkcImg/zlrj/用地管理系统V1.0.jpg')}" alt="linyezizhizhengshu" title="用地管理系统V1.0" init="ok" style="width: auto; height: 336px; margin-left: -7.5px;" /> </a>
+               <div class="w-imglist-title-bg"></div>
+               <a class="w-imglist-title">用地管理系统V1.0</a>
+              </div></li>
+             <div style="clear:both;"></div>
+            </ul>
+           </div>
+          </div>
+          <!--//End w-imglist-collections-->
+          <script type="text/javascript">
+         
+    var con_76_7_navIndex = $('#smv_con_76_7').css("z-index");
+    //图片横向竖向居中显示
+    function  con_76_7_imgZoomInit() {
+        $('#con_76_7_collections .w-imglist-item').append(function () {
+            ht = $(this).find('.w-imglist-in').html();
+            return "<div class='w-imglist-bigimg' style='z-index: 78'>" + ht + "</div>";
+        });
+        $("#con_76_7_collections .w-imglist-item .w-imglist-in img").cutFill("350", "240");
+        //$("#con_76_7_collections .w-imglist-item .w-imglist-bigimg img").cutFill("489.99999999999994", "336");
+         $("#con_76_7_collections .w-imglist-item .w-imglist-bigimg img").cutFill("583.33333333", "400");
+    }
+
+    function  con_76_7_InitImg() {
+        con_76_7_imgZoomInit();
+        if ("on" == "on") {
+            $('#con_76_7_collections .w-imglist-item').hover(function () {
+                $('#smv_con_76_7').css("z-Index", "9999999");
+                var img = $(this).find(".w-imglist-bigimg img");
+                var realWidth;//原始宽度
+                var realHeight;//原始高度
+                var height = parseInt(240);
+                var IntHeight = height;
+                $(this).addClass('on');
+                realWidth = img.width();
+                realHeight = img.height();
+                img.css("marginLeft", (-realWidth / 2) + "px").css("marginTop", (-realHeight / 2) + "px");
+                if (realWidth < IntHeight) {
+                    $(this).find('.w-imglist-in').css('left', '0')
+                } else {
+                    $(this).find('.w-imglist-in').css('left', -realWidth / 4)
+                };
+            }, function () {
+                var img = $(this).find(".w-imglist-in img");
+                $(this).animate({
+                    height: 240 + "px"
+                },
+                100).removeClass('on');
+                $('#smv_con_76_7').css("z-Index", con_76_7_navIndex);
+                $(this).find('.w-imglist-in').css('left', '0')
+            });
+        }
+    }
+    function callback_con_56_7() {
+        con_76_7_InitImg();
+    }
+    $(function () {
+        if ("Prev" != "Design") { $(".w-imglist-collections").parent().removeClass("overflow_hidden"); }
+        con_76_7_InitImg();
     });
 </script>
          </div>

@@ -152,7 +152,7 @@
          <div class="yibuFrameContent con_7_29  text_Style1  " style="overflow:hidden;;">
           <div id="txt_con_7_29" style="height: 100%;"> 
            <div class="editableContent" id="txtc_con_7_29" style="height: 100%; word-wrap:break-word;"> 
-            <p style="text-align:center"><span style="line-height:1.5"><span style="color:#ffffff"><span style="font-size:14px">我司是国家乙级测绘企业，</span></span></span></p> 
+            <p style="text-align:center"><span style="line-height:1.5"><span style="color:#ffffff"><span style="font-size:14px">我司是国家甲级测绘企业，</span></span></span></p> 
             <p style="text-align:center"><span style="line-height:1.5"><span style="color:#ffffff"><span style="font-size:14px">拥有多名中高级技术人员以及完整的服务团队和高端的测量仪器，</span></span></span></p> 
             <p style="text-align:center"><span style="line-height:1.5"><span style="color:#ffffff"><span style="font-size:14px">具有完成多种高难度的工程的能力</span></span></span></p> 
            </div> 

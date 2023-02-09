@@ -1,4 +1,5 @@
 {include file="common/share_header.tpl"}
+<script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.3.2.js"></script>
 <body bgcolor ="2d3c50" {if $bodyClass}class="{$bodyClass}"{/if}>
 	<style>
 		img { 
@@ -73,5 +74,23 @@
 		
 		
 	</div>
+
+<script>
+
+function PreviewImage(){
+	var objs = document.getElementsByTagName("img");
+
+	for(var i=0; i < objs.length; i++){
+		objs[i].onclick = function(e){
+			var imgurl = e.srcElement.src;
+			wx.previewImage({
+				urls: [imgurl],
+			})
+		}
+	}
+}
+
+PreviewImage();
+</script>
 </body>
 </html>

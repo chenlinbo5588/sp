@@ -1,0 +1,71 @@
+.czjz {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
+.ewmImg {
+    width: 100% !important;
+    height: auto !important;
+}
+
+body {
+    min-height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    min-height: 100%;
+}
+.content{
+    /*display: flex;
+    flex-direction: column;*/
+    text-align: center;
+    padding: 10px;
+}
+.tableTitle{
+    font-size: 16px;
+    color: #1e4935;
+    font-weight: bold;
+    height: 40px;
+    line-height: 40px;
+    letter-spacing: 2px;
+}
+table{
+    margin-top: 10px;
+}
+table,table tr th, table tr td {
+    border:1px solid black;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 10px;
+    color: black;
+}
+table tr th{
+    background-color: #1f4933;
+    color: white;
+}
+.tb{
+    border-collapse:collapse;
+}
+a{
+    text-decoration: none;
+    color: black;
+}
+.box{
+    display: flex;
+    flex-direction: column;
+}
+
+#footer {
+    background:url(../img/ewmbottom.jpg) no-repeat center center;
+    height:43px;
+    width:100%;
+}

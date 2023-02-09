@@ -305,7 +305,7 @@
                       </div>
                      </div>
                     </div>
-                                        <div id="smv_con_78_6" ctype="altas" class="esmartMargin smartAbs " cpid="461386" cstyle="Style2" ccolor="Item0" areaid="Area0" iscontainer="False" pvid="con_77_6" tareaid="" re-direction="all" daxis="All" isdeletable="True" style="height: 182px; width: 780px; left: 310px; top: 48px; z-index: 25;">
+                <div id="smv_con_78_6" ctype="altas" class="esmartMargin smartAbs " cpid="461386" cstyle="Style2" ccolor="Item0" areaid="Area0" iscontainer="False" pvid="con_77_6" tareaid="" re-direction="all" daxis="All" isdeletable="True" style="height: 182px; width: 780px; left: 310px; top: 48px; z-index: 25;">
                      <div class="yibuFrameContent con_78_6  altas_Style2  " style="overflow: visible; z-index: 1;">
                       <div class="w-atlas xn-resize" id="altas_con_78_6" style="z-index: 1;"> 
                        <ul class="w-atlas-ul" id="ulList_con_78_6" style="z-index: 1;"> 
